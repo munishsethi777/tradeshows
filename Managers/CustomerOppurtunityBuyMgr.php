@@ -40,7 +40,18 @@ class CustomerOppurtunityBuyMgr
     public function findArrByCustomerSeq($customerSeq){
     	$condition = array("customerseq"=>$customerSeq);
     	$customerOppurtunityBuys = self::$dataStore->executeConditionQueryForArray($condition);
-    	return $customerOppurtunityBuys;
+    	if(!empty($customerOppurtunityBuys)){
+    	    $customerOppurtunityBuys = $customerOppurtunityBuys[0];
+    	    $customerOppurtunityBuys["isxmascateloglinksent"] = $this->getYesNo($customerOppurtunityBuys["isxmascateloglinksent"]);
+    	    return $customerOppurtunityBuys;
+    	}
+    	return null;
+    }
+    private function getYesNo($bool){
+        if(!empty($bool)){
+            return "Yes";
+        }
+        return "No";
     }
     
     private function convertDateFormat($customerOppurtunityBuys){

@@ -97,6 +97,34 @@ class CustomerSpringQuestionMgr
         return $customerSpringQuestions;
     }
     
+     public function findCategoryAndSeqByCustomerSeq($customerSeq){
+        $query = "select seq,category from customerspringquestions where customerseq = $customerSeq";
+        $customerSpringQuestions = self::$dataStore->executeQuery($query,false,true);
+        $mainArr = array();
+        foreach($customerSpringQuestions as $customerSpringQuestion){
+            $arr = array();
+            $seq = $customerSpringQuestion["seq"];
+            $categoryNames = $customerSpringQuestion["category"];
+            $categoryArr = explode(",", $categoryNames);
+            $categoryValueArr = array();
+            foreach ($categoryArr as $category){
+                $categoryValue = BuyerCategoryType::getValue($category);
+                array_push($categoryValueArr,$categoryValue);
+            }
+            $arr["id"] = $seq;
+            $arr["category"] = implode(", ",$categoryValueArr);
+            array_push($mainArr,$arr);
+        }
+        return $mainArr;
+    }
+    public function findArrBySeq($seq){
+        $query = "select * from customerspringquestions where seq = $seq";
+        $customerSpringQuestions = self::$dataStore->executeQuery($query,false,true);
+        if(!empty($customerSpringQuestions)){
+            return $customerSpringQuestions[0];
+        }
+        return $customerSpringQuestions;
+    }
     public function findbySeq($seq){
         $customerSpringQuestion = self::$dataStore->findBySeq($seq);
         $customerSpringQuestion = $this->convertDateFormat($customerSpringQuestion);

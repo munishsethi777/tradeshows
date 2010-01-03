@@ -39,7 +39,25 @@ class AlpineSpecialProgramMgr{
     	$condition = array("customerseq"=>$customerSeq);
     	$alpineSpProg = self::$dataStore->executeConditionQueryForArray($condition);
     	if(!empty($alpineSpProg)){
-    		return $alpineSpProg[0];
+    		$alpineSpProg = $alpineSpProg[0];
+    	    $isEditCustomer = "No";
+    	    if(!empty($alpineSpProg["isedicustomer"])){
+    	        $isEditCustomer = "Yes";
+    	    }
+    	    $alpineSpProg["isedicustomer"] = $isEditCustomer;
+    	    
+    	    $isdefectiveallowancesigned = "No";
+    	    if(!empty($alpineSpProg["isdefectiveallowancesigned"])){
+    	        $isdefectiveallowancesigned = "Yes";
+    	    }
+    	    $alpineSpProg["isdefectiveallowancesigned"] = $isdefectiveallowancesigned;
+    	    
+    	    $isBackOrderAccepted = "No";
+    	    if(!empty($alpineSpProg["isbackorderaccepted"])){
+    	        $isBackOrderAccepted = "Yes";
+    	    }
+    	    $alpineSpProg["isbackorderaccepted"] = $isBackOrderAccepted;
+    	    return $alpineSpProg;
     	}
     	return null;
     }

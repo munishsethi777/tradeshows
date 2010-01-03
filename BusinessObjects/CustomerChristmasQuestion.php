@@ -52,8 +52,8 @@ class CustomerChristmasQuestion{
         return $this->customerseq;
     }
     
-    public function setCustomerSeq($customerseq){
-        $this->customerseq = $customerseq;
+    public function setCustomerSeq($customerseq_){
+        $this->customerseq = $customerseq_;
     }
     
     public function getIsInterested(){

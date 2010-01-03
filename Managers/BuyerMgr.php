@@ -100,6 +100,12 @@ class BuyerMgr{
         return $buyer;
     }
     
+    public function updateBuyerImage($buyerSeq,$imageExtension_){
+        $attr = array("imageextension" => $imageExtension_);
+        $condition = array("seq" => $buyerSeq);
+        self::$dataStore->updateByAttributesWithBindParams($attr,$condition);
+    }
+    
     //Mobile API
     public function getBuyerDetailBySeq($seq){
         $buyer = $this->findBySeq($seq);
@@ -138,7 +144,8 @@ class BuyerMgr{
         $response["buyerfirstname"] = $buyer->getFirstName();
         $response["buyerlastname"] = $buyer->getLastName();
         $response["buyercellphone"] = $cellPhone;
-         $response["buyeremail"] = $buyer->getEmail();
+        $response["buyeremail"] = $buyer->getEmail();
+        $response["buyerimage"] = $buyer->getImageExtension();
         $response["buyer"] = $mainArr;
         return $response;
     }

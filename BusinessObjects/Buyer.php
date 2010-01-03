@@ -1,7 +1,7 @@
 <?php
 class Buyer{
     private $seq,$firstname,$lastname,$email,$officephone,$cellphone,$notes,$customerseq,$createdby,$createdon,$lastmodifiedon,$category;
-    
+    private $imageextension;
     public static $className = "Buyer";
     public static $tableName = "buyers";
     
@@ -88,6 +88,13 @@ class Buyer{
     }
     public function getCategory(){
         return $this->category;
+    }
+    
+    public function getImageExtension(){
+        return $this->imageextension;
+    }
+    public function setImageExtension($imageExtention_){
+        $this->imageextension = $imageExtention_;
     }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {

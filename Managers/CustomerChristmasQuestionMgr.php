@@ -41,7 +41,29 @@ class CustomerChristmasQuestionMgr{
     public function findArrByCustomerSeq($customerSeq){
     	$condition = array("customerseq"=>$customerSeq);
     	$customerChritmasQuestion = self::$dataStore->executeConditionQueryForArray($condition);
-    	return $customerChritmasQuestion;
+    	if(!empty($customerChritmasQuestion)){
+    	    $customerChritmasQuestion = $customerChritmasQuestion[0];
+    	    $customerChritmasQuestion["isinterested"] = $this->getYesNo($customerChritmasQuestion["isinterested"]);
+    	    $customerChritmasQuestion["iscataloglinksent"] = $this->getYesNo($customerChritmasQuestion["iscataloglinksent"]);
+    	    $customerChritmasQuestion["isxmassamplessent"] = $this->getYesNo($customerChritmasQuestion["isinterested"]);
+    	    $customerChritmasQuestion["isstrategicplanningmeetingappointment"] = $this->getYesNo($customerChritmasQuestion["isstrategicplanningmeetingappointment"]);
+    	    $customerChritmasQuestion["isinvitedtoxmasshowroom"] = $this->getYesNo($customerChritmasQuestion["isinvitedtoxmasshowroom"]);
+    	    $customerChritmasQuestion["isholidayshopcompleted"] = $this->getYesNo($customerChritmasQuestion["isholidayshopcompleted"]);
+    	    $customerChritmasQuestion["isholidayshopcomsummaryemailsent"] = $this->getYesNo($customerChritmasQuestion["isholidayshopcomsummaryemailsent"]);
+    	    $customerChritmasQuestion["ismainvendor"] = $this->getYesNo($customerChritmasQuestion["ismainvendor"]);
+    	    $customerChritmasQuestion["isxmasbuylastyear"] = $this->getYesNo($customerChritmasQuestion["isxmasbuylastyear"]);
+    	    $customerChritmasQuestion["isreceivingsellthru"] = $this->getYesNo($customerChritmasQuestion["isreceivingsellthru"]);
+    	    $customerChritmasQuestion["isrobbyreviewedsellthrough"] = $this->getYesNo($customerChritmasQuestion["isrobbyreviewedsellthrough"]);
+    	    $customerChritmasQuestion["isvisitcustomerin4qtr"] = $this->getYesNo($customerChritmasQuestion["isvisitcustomerin4qtr"]);
+    	    return $customerChritmasQuestion;
+    	}
+    	return null;
+    }
+    private function getYesNo($bool){
+        if(!empty($bool)){
+            return "Yes";
+        }
+        return "No";
     }
     private function convertDateFormat($customerChritmasQuestion){
         $fromFormat = "Y-m-d";

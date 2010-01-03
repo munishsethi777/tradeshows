@@ -19,7 +19,7 @@ class SeasonShowNameType extends BasicEnum{
     const fall_arett_show = "Fall_Arett_show";
     const fall_jensen_show = "Fall_jensen_show";
     const fall_bfg_show = "Fall_BFGShow";
-    const fail_truevalue_show = "fail_TrueValueShow";
+    const fail_truevalue_show = "Fail_TrueValueShow";
     const fall_DoItBest = "Fall_DoItBest";
    
 }

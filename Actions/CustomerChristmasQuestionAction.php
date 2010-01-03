@@ -16,12 +16,13 @@ $customerChristmassQuesMgr = CustomerChristmasQuestionMgr::getInstance();
 if($call == "savechristmasQuestion"){
     try{
         $message = StringConstants::SAVED_SUCCESSFULLY;
-        $seq =  $_REQUEST["seq"];
+        //$seq =  $_REQUEST["seq"];
         $christmasQuestion = new CustomerChristmasQuestion();
         $christmasQuestion->from_array($_REQUEST);
-        if($seq > 0){
-            $message = StringConstants::UPDATED_SUCCESSFULLY;
-        }
+        //if($seq > 0){
+        //    $message = StringConstants::UPDATED_SUCCESSFULLY;
+       // }
+      // var_dump($_REQUEST);
         $customerChristmassQuesMgr->saveCustomerSpecialProgram($christmasQuestion);
     }catch(Exception $e){
         $success = 0;

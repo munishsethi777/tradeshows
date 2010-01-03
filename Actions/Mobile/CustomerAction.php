@@ -3,6 +3,8 @@ require_once('../../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ImageUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/FileUtil.php");
 $sessionUtil = SessionUtil::getInstance();
 $userMgr = UserMgr::getInstance();
 $call = "";
@@ -125,6 +127,13 @@ if($call == "addBuyer"){
         }else{
             $message = StringConstants::BUYER_UPDATE_SUCCESSFULLY;
         }
+        $imageName = "";
+        if($_FILES["imagefile"]){
+            $file = $_FILES["imagefile"];
+            $uploaddir = $ConstantsArray["imagefolderpath"]."/buyerimages/";
+            $imageName = ImageUtil::uploadUserImage($file,$id,$uploaddir);
+        }
+        $buyerMgr->updateBuyerImage($id, $imageName);
     }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();
