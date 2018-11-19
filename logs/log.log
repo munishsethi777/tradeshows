@@ -1,0 +1,12 @@
+Tue Oct 16 06:47:02 2018,453 [98604] ERROR logger - Error occured :exception 'Exception' with message 'Cannot delete or update a parent row: a foreign key constraint fails (`dinner`.`menutimeslots`, CONSTRAINT `menu` FOREIGN KEY (`menuseq`) REFERENCES `menus` (`seq`))' in /Applications/XAMPP/xamppfiles/htdocs/dinner/DataStores/BeanDataStore.php:789
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/dinner/DataStores/BeanDataStore.php(287): BeanDataStore->throwException(Array)
+#1 /Applications/XAMPP/xamppfiles/htdocs/dinner/Managers/MenuMgr.php(68): BeanDataStore->deleteInList('12')
+#2 /Applications/XAMPP/xamppfiles/htdocs/dinner/Actions/MenuAction.php(74): MenuMgr->deleteBySeqs('12', '')
+#3 {main}
+Tue Oct 16 06:47:16 2018,569 [70732] ERROR logger - Error occured :exception 'Exception' with message 'Cannot delete or update a parent row: a foreign key constraint fails (`dinner`.`menutimeslots`, CONSTRAINT `menu` FOREIGN KEY (`menuseq`) REFERENCES `menus` (`seq`))' in /Applications/XAMPP/xamppfiles/htdocs/dinner/DataStores/BeanDataStore.php:789
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/dinner/DataStores/BeanDataStore.php(287): BeanDataStore->throwException(Array)
+#1 /Applications/XAMPP/xamppfiles/htdocs/dinner/Managers/MenuMgr.php(68): BeanDataStore->deleteInList('12')
+#2 /Applications/XAMPP/xamppfiles/htdocs/dinner/Actions/MenuAction.php(74): MenuMgr->deleteBySeqs('12', '')
+#3 {main}
