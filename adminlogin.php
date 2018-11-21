@@ -116,9 +116,9 @@ require_once('IConstants.inc');
 
 <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
-        	<img src="images/black-logo.png" style="width:200px;height:auto;margin-bottom:20px;">
-            <h3 style="line-height: 20px">Welcome to FlyDining.com Administrator Area</h3>
-            <p>Login in. To see it in action.</p>
+        	<img src="images/logo.png" style="margin-bottom:20px;">
+            <h3 style="line-height: 20px">Welcome to TradeShows Administrator Area</h3>
+            <p>Login. To see it in action.</p>
             <form class="form-horizontal" id="loginForm" method="POST" name="loginForm">
                   <div class="form-group">
                   		<input type="text" name="username" class="form-control" id="usernameInput" placeholder="Username" >

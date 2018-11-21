@@ -1,5 +1,5 @@
 <?php
-require_once ("MainDB.php5");
+require_once ("MainDB");
 //require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
 //Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );

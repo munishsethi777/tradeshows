@@ -24,7 +24,7 @@ if($file == "dashboard.php"){
                     	<a data-toggle="dropdown" class="dropdown-toggle" href="#"> 
 	                    	<span class="clear"> 
 	                    		<span class="block m-t-xs"> 
-	                    			<strong class="font-bold">FLY DINING BOOKINGS</strong>
+	                    			<strong class="font-bold">Alpine Tradeshows Management</strong>
 	                    		</span>
 							</span>
 						</a>
@@ -33,17 +33,17 @@ if($file == "dashboard.php"){
                 </li>
                 <li class="<?php echo $isBookings;?>">
                     <a href="dashboard.php"><i class="fa fa-cube"></i> 
-                    	<span class="nav-label ">Bookings</span>  
+                    	<span class="nav-label ">Task Categories</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminShowMenus.php"><i class="fa fa-coffee"></i> 
-                    	<span class="nav-label">Menus</span>  
+                    	<span class="nav-label">Tasks</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminShowTimeSlots.php"><i class="fa fa-clock-o"></i> 
-                    	<span class="nav-label">Time Slots</span>  
+                    	<span class="nav-label">TradeShows</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
@@ -57,9 +57,6 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
             </ul>
-            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-				
-			</ul>
 
         </div>
     </nav>
