@@ -1,5 +1,5 @@
 <?php
-  require_once("DBvars.php5");
+  require_once("DBvars.php");
 
   class MainDB extends DBvars{
 
@@ -22,7 +22,7 @@
         {
             if (!self::$mainDataStore)
             {
-                self::$mainDataStore = new MainDB();
+                self::$mainDataStore = new MainDB.php();
                 return self::$mainDataStore;
             }
             return self::$mainDataStore;
