@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 19, 2018 at 04:18 PM
+-- Generation Time: Nov 21, 2018 at 10:43 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 5.6.38
 
@@ -21,6 +21,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `alpinetradeshows`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `seq` bigint(20) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `isenable` tinyint(4) NOT NULL,
+  `createdon` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`seq`, `username`, `name`, `password`, `isenable`, `createdon`) VALUES
+(1, 'admin', 'Administrator', '123', 1, '2018-10-08 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -58,10 +80,10 @@ CREATE TABLE `showtasks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `taskcategory`
+-- Table structure for table `taskcategories`
 --
 
-CREATE TABLE `taskcategory` (
+CREATE TABLE `taskcategories` (
   `seq` bigint(20) NOT NULL,
   `title` varchar(50) NOT NULL,
   `description` varchar(250) NOT NULL,
@@ -69,10 +91,10 @@ CREATE TABLE `taskcategory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `taskcategory`
+-- Dumping data for table `taskcategories`
 --
 
-INSERT INTO `taskcategory` (`seq`, `title`, `description`, `type`) VALUES
+INSERT INTO `taskcategories` (`seq`, `title`, `description`, `type`) VALUES
 (1, 'Show Information', '', 'PRE'),
 (2, 'Registration', '', 'PRE'),
 (3, 'Staffing', '', 'PRE'),
@@ -281,6 +303,12 @@ INSERT INTO `tasks` (`seq`, `taskcategoryseq`, `title`, `description`, `daysrequ
 --
 
 --
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`seq`);
+
+--
 -- Indexes for table `shows`
 --
 ALTER TABLE `shows`
@@ -293,9 +321,9 @@ ALTER TABLE `showtasks`
   ADD PRIMARY KEY (`seq`);
 
 --
--- Indexes for table `taskcategory`
+-- Indexes for table `taskcategories`
 --
-ALTER TABLE `taskcategory`
+ALTER TABLE `taskcategories`
   ADD PRIMARY KEY (`seq`);
 
 --
@@ -307,6 +335,12 @@ ALTER TABLE `tasks`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `shows`
@@ -321,9 +355,9 @@ ALTER TABLE `showtasks`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `taskcategory`
+-- AUTO_INCREMENT for table `taskcategories`
 --
-ALTER TABLE `taskcategory`
+ALTER TABLE `taskcategories`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
