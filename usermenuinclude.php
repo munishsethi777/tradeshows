@@ -1,0 +1,62 @@
+<?php 
+
+$isProduct = "";
+$isProductGroup = "";
+$isReport = "";
+$isChangePassword="";
+$isBookings="";
+$parts = Explode('/', $_SERVER["PHP_SELF"]);
+$file =  $parts[count($parts) - 1];
+
+
+//echo  $file;
+if($file == "userdashboard.php"){
+	$isBookings = "active";
+}
+
+?>
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                    	<a data-toggle="dropdown" class="dropdown-toggle" href="#"> 
+	                    	<span class="clear"> 
+	                    		<span class="block m-t-xs"> 
+	                    			<strong class="font-bold">Alpine Tradeshows Management</strong>
+	                    		</span>
+							</span>
+						</a>
+                    </div>
+					
+                </li>
+                <li class="<?php echo $isBookings;?>">
+                    <a href="dashboard.php"><i class="fa fa-cube"></i> 
+                    	<span class="nav-label ">Upcoming Shows</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isChangePassword;?>">
+                    <a href="adminShowMenus.php"><i class="fa fa-coffee"></i> 
+                    	<span class="nav-label">Show History</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isChangePassword;?>">
+                    <a href="adminCreateShow.php"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Show Progress</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isChangePassword;?>">
+                    <a href="adminChangePassword.php"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Change Password</span>  
+                    </a>
+                </li>
+                <li>
+                    <a href="logout.php"><i class="fa fa-sign-out"></i> 
+                    	<span class="nav-label">Logout</span>  
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
