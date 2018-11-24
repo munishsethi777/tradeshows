@@ -1,5 +1,5 @@
 <?php
-require_once ("MainDB");
+require_once ("MainDB.php");
 //require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
 //Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
@@ -105,6 +105,13 @@ class BeanDataStore {
 		return $id;
 	}
 	
+	public function getConnection(){
+		$db_New = MainDB::getInstance ();
+		$conn = $db_New->getConnection ();
+		$conn->beginTransaction();
+		return $conn;
+	}
+	
 	// RollBack
 	public function saveObject($object, $conn) {
 		$columnValueArry [] = array ();
@@ -164,7 +171,8 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $id;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$conn->rollback();
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 		return null;

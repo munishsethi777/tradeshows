@@ -22,7 +22,7 @@
         {
             if (!self::$mainDataStore)
             {
-                self::$mainDataStore = new MainDB.php();
+                self::$mainDataStore = new MainDB();
                 return self::$mainDataStore;
             }
             return self::$mainDataStore;
