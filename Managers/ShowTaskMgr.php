@@ -41,7 +41,9 @@ class ShowTaskMgr{
 		}
 	}
 	
-	public function getTaskByShow($showSeq){
+	public function getTaskByShowJson($showSeq){
 		$colVal["showseq"] = $showSeq;
+		$showTasks = self::$dataStore->executeConditionQuery($colVal);
+		return json_encode($showTasks);
 	}
 }
