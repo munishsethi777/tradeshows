@@ -112,7 +112,6 @@
 	<script type="text/javascript">
 	 	isSelectAll = false;
         $(document).ready(function(){
-          
            $('#bookingDate').datetimepicker({
                timepicker:false,
                format:'d-m-Y',

@@ -46,4 +46,17 @@ class Admin{
 		return $this->createdon;
 	}
 	
+	function createFromRequest($request){
+		if (is_array($request)){
+			$this->from_array($request);
+		}
+		return $this;
+	}
+	
+	public function from_array($array)
+	{
+		foreach(get_object_vars($this) as $attrName => $attrValue)
+			$this->{$attrName} = $array[$attrName];
+	}
+	
 }

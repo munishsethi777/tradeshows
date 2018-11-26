@@ -48,7 +48,7 @@ class BeanDataStore {
 			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" )) {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {
@@ -99,7 +99,7 @@ class BeanDataStore {
 			}
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured in BeanDataStore:" . $e );
+			$this->logger->error ( "Error occured in BeanDataStore:" . $e );
 			throw $e ;
 		}
 		return $id;
@@ -203,6 +203,24 @@ class BeanDataStore {
 					}
 				}
 			}
+		}
+	}
+	function findAllArr($isApplyFilter = false) {
+		try {
+			$db = MainDB::getInstance ();
+			$conn = $db->getConnection ();
+			$sql = "select * from " . $this->tableName;
+			if ($isApplyFilter) {
+				$sql = FilterUtil::applyFilter ( $sql );
+			}
+			$STH = $conn->prepare ( $sql );
+			$STH->execute ();
+			$objList = $STH->fetchAll (PDO::FETCH_ASSOC);
+			$this->throwException ( $STH->errorInfo () );
+			return $objList;
+		} catch ( Exception $e ) {
+			$this->logger->error ( "Error occured :" . $e );
+			throw $e;
 		}
 	}
 	
