@@ -42,6 +42,6 @@ class ShowTaskMgr{
 	}
 	
 	public function getTaskByShow($showSeq){
-		
+		$colVal["showseq"] = $showSeq;
 	}
 }
