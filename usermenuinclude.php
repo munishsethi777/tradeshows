@@ -5,13 +5,12 @@ $isProductGroup = "";
 $isReport = "";
 $isChangePassword="";
 $isBookings="";
-$isDashboard="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
 
 //echo  $file;
-if($file == "dashboard.php"){
+if($file == "userdashboard.php"){
 	$isBookings = "active";
 }
 
@@ -32,24 +31,19 @@ if($file == "dashboard.php"){
                     </div>
 					
                 </li>
-                 <li class="<?php echo $isDashboard;?>">
-                    <a href="dashboard.php"><i class="fa fa-cube"></i> 
-                    	<span class="nav-label ">Dashboard</span>  
-                    </a>
-                </li>
                 <li class="<?php echo $isBookings;?>">
                     <a href="dashboard.php"><i class="fa fa-cube"></i> 
-                    	<span class="nav-label ">Task Categories</span>  
+                    	<span class="nav-label ">Upcoming Shows</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminShowMenus.php"><i class="fa fa-coffee"></i> 
-                    	<span class="nav-label">Tasks</span>  
+                    	<span class="nav-label">Show History</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminCreateShow.php"><i class="fa fa-clock-o"></i> 
-                    	<span class="nav-label">Create TradeShow</span>  
+                    	<span class="nav-label">Show Progress</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
