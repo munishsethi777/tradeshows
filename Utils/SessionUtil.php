@@ -5,31 +5,15 @@ class SessionUtil{
     private static $ADMIN_NAME = "adminName";
     private static $ADMIN_USERNAME = "adminUserName";
     private static $ADMIN_LOGGED_IN = "adminLoggedIn";
-    private static $ADMIN_COMPANY_SEQ = "adminCompanySeq";
-    private static $ADMIN_COMPANY_NAME = "adminCompanyName";
-    private static $MANAGER_LEARNER_SEQ = "managerLearnerSeq";
-    
-    //manager credentials
-    private static $MANAGER_LEARNINGPLANS = "managerLearningPlans";
-    private static $MANAGER_LEARNERPROFILES = "managerLearnerProfiles";
 
     private static $USER_SEQ = "userSeq";
     private static $USER_USERNAME = "userUserName";
     private static $USER_LOGGED_IN = "userLoggedIn";
-    private static $USER_COMPANY_SEQ = "userCompanyseq";
-    private static $USER_COMPANY_NAME = "userCompanyName";
-    private static $LEARNER_MANAGER_SEQ = "learnerManagerSeq";
-    private static $COMPANY_TYPE = "companyType";
 
 	private static $USER_IMAGE = "userimage";
-
-
-    private static $ROOM_ID = "roomId";
-
     private static $ROLE = "role";
     
   
-    
 	private static $sessionUtil;	
 	public static function getInstance(){
 		if(!self::$sessionUtil){
@@ -47,7 +31,14 @@ class SessionUtil{
         $arr[2] = $admin->getUserName();
         $_SESSION[self::$ADMIN_LOGGED_IN] = $arr;
     }
-
+    
+    public function createUserSession(User $user){
+    	$arr = new ArrayObject();
+    	$arr[0] = $user->getSeq();
+    	$arr[1] = $user->getFullName();
+    	$arr[2] = $user->getEmail();
+    	$_SESSION[self::$USER_LOGGED_IN] = $arr;
+    }
 
     public function refreshAdminSession(){
     	$adminSeq = self::getAdminLoggedInSeq();
@@ -81,10 +72,39 @@ class SessionUtil{
 	    				return $arr[0];
 	    }
     }
+    
+    public function getUserLoggedInName(){
+    	if( $_SESSION[self::$USER_LOGGED_IN] != null){
+    		$arr = $_SESSION[self::$USER_LOGGED_IN];
+    		return $arr[1];
+    	}
+    }
+    
+    public function getUserLoggedInUserName(){
+    	if($_SESSION[self::$USER_LOGGED_IN] != null){
+    		$arr = $_SESSION[self::$USER_LOGGED_IN];
+    		return $arr[2];
+    	}
+    }
+    
+    
+    public function getUserLoggedInSeq(){
+    	if($_SESSION[self::$USER_LOGGED_IN] != null){
+    		$arr = $_SESSION[self::$USER_LOGGED_IN];
+    		return $arr[0];
+    	}
+    }
 
 
 	public function isSessionAdmin(){
 		if(	$_SESSION[self::$ADMIN_LOGGED_IN] != null){
+			return true;
+		}
+		return false;
+	}
+	
+	public function isSessionUser(){
+		if(	$_SESSION[self::$USER_LOGGED_IN] != null){
 			return true;
 		}
 		return false;
@@ -98,12 +118,24 @@ class SessionUtil{
 		}
 	}
 	
+	public function sessionCheckUser(){
+		$bool = self::isSessionUser();
+		if($bool == false){
+			header("location: userlogin.php");
+			die;
+		}
+	}
+	
+	
 	public function destroySession(){
 		$boolAdmin = self::isSessionAdmin();
 		$_SESSION = array();
 		session_destroy();
 		if($boolAdmin == true){
 			header("Location:adminlogin.php");
+			die;
+		}else{
+			header("Location:userlogin.php");
 			die;
 		}
 	}

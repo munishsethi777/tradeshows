@@ -5,6 +5,7 @@ $isProductGroup = "";
 $isReport = "";
 $isChangePassword="";
 $isBookings="";
+$isDashboard="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
@@ -30,6 +31,11 @@ if($file == "dashboard.php"){
 						</a>
                     </div>
 					
+                </li>
+                 <li class="<?php echo $isDashboard;?>">
+                    <a href="dashboard.php"><i class="fa fa-cube"></i> 
+                    	<span class="nav-label ">Dashboard</span>  
+                    </a>
                 </li>
                 <li class="<?php echo $isBookings;?>">
                     <a href="dashboard.php"><i class="fa fa-cube"></i> 
