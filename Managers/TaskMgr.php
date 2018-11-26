@@ -21,12 +21,11 @@ class TaskMgr{
 		$tasks = self::$dataStore->executeQuery($query);
 		$key = "category";
 		$tasks = $this->_group_by($tasks, $key);
-		$startDateObj = DateUtil::StringToDateByGivenFormat("m-d-Y", $startDate);
-		$calculatedTasks = $this->calculateStartEndDate($tasks, $startDateObj);
+		$calculatedTasks = $this->calculateStartEndDate($tasks);
 		return $calculatedTasks;
 	}
 	private $allTasksArr;
-	function calculateStartEndDate($categoryTasks,$startDate){
+	function calculateStartEndDate($categoryTasks){
 		$categoryTasksArr = array();
 		$this->allTasksArr = array();
 		foreach ($categoryTasks as $key=>$tasks){
