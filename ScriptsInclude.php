@@ -309,10 +309,12 @@ $(document).ready(function() {
                         $("#" + formId)[0].reset();
                     }
                     toastr.success(message);
+                    return true;
                 }else{
                    removeMessagesDivs();
                    var errorDiv = getErrorDiv(message);
                    $("." + divClassName).append(errorDiv);
+                   return false;
                 }
             }
             function isInArray(value, array) {

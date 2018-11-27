@@ -34,7 +34,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	        </div>
         	<div class="row">
 	            <div class="col-lg-12">
-	                <div class="ibox">
+	                <div class="ibox" id="ibox1">
 	                    <div class="ibox-title">
 	                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
@@ -44,8 +44,12 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	                        
 	                    </div>
 	                    <div class="ibox-content">
-	                    	
-	                        <form id="taskForm" method="post" action="Actions/ShowAction.php" class="m-t-lg">
+                                <div class="sk-spinner sk-spinner-three-bounce">
+                                    <div class="sk-bounce1"></div>
+                                    <div class="sk-bounce2"></div>
+                                    <div class="sk-bounce3"></div>
+                                </div>
+                            <form id="taskForm" method="post" action="Actions/ShowAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveShow"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
 	                        		<div class="form-group row">
@@ -57,8 +61,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	                               		<div class="form-group row">
 	                               			<label class="col-lg-2 col-form-label">Show Description</label>
 	                                		<div class="col-lg-8">
-	                               				<input type="text" value="<?php echo $show->getDescription()?>" id="description" name="description" required 
-			                                    placeholder="Enter Show Description" class="form-control">
+	                               				<input type="text" value="<?php echo $show->getDescription()?>" id="description" name="description" required placeholder="Enter Show Description" class="form-control">
 		                                    </div>
 		                                </div>
 		                                <div class="form-group row">
@@ -124,11 +127,16 @@ $(document).ready(function(){
 		}
 	}
 	function generateTasks(){
-		var startDate = $("#startDate").val();
-		var url = 'Actions/TaskAction.php?call=getAllTasks&startDate='+startDate;
-		populateTasks(url)
+		if($("#taskForm")[0].checkValidity()) {
+			var startDate = $("#startDate").val();
+			var url = 'Actions/TaskAction.php?call=getAllTasks&startDate='+startDate;
+			populateTasks(url)
+		}else{
+			$("#taskForm")[0].reportValidity();
+		}
 	}
 	function populateTasks(url){
+		showHideLoading()
 		$.get(url, function(data){
 			data = $.parseJSON(data);
 			var html =""
@@ -148,10 +156,13 @@ $(document).ready(function(){
 		        format:'m-d-Y'
 		    });
 			$(".chosen-select").chosen({width:"100%"});
+			showHideLoading()
 		});
 	}
 	
-
+	function showHideLoading(){
+		$('#ibox1').children('.ibox-content').toggleClass('sk-loading');	
+	}
 	function getHtml(categoryTitle,tasksData,users,taskAssignees,i){
 		var html = '<div class="panel panel-default">';
         	html += '<div class="panel-heading">';
@@ -206,9 +217,18 @@ $(document).ready(function(){
 	}
 
 	function saveShow(){
-		$('#taskForm').ajaxSubmit(function( data ){
-	       location.href = "adminShowList.php";
-	    })	
+		if($("#taskForm")[0].checkValidity()) {
+			showHideLoading()
+			$('#taskForm').ajaxSubmit(function( data ){
+			   showHideLoading();
+			   var flag = showResponseToastr(data,null,"taskForm","ibox");
+			   if(flag){
+				   window.setTimeout(function(){window.location.href = "adminShowList.php"},500);
+			   }
+		    })	
+		}else{
+			$("#taskForm")[0].reportValidity();
+		}
 	}
 	
 	function updateDates1(taskSeq,isChild){

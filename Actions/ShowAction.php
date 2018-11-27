@@ -14,11 +14,13 @@ if(isset($_GET["call"])){
 $showManager = ShowMgr::getInstance();
 if($call == "saveShow"){
 	try{
+		$message = "Show saved successfully.";
 		$show = new Show();
 		$show->createFromRequest($_REQUEST);
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
+			$message = "Show updated successfully.";
 		}
 		$show->setSeq($seq);
 		$startDate = $_REQUEST["startdate"];
