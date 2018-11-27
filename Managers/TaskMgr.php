@@ -2,6 +2,8 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Task.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskAssigneeMgr.php");
 class TaskMgr{
 	private static  $TaskMgr;
 	private static $dataStore;
@@ -22,7 +24,13 @@ class TaskMgr{
 		$key = "category";
 		$tasks = $this->_group_by($tasks, $key);
 		$calculatedTasks = $this->calculateStartEndDate($tasks);
-		return $calculatedTasks;
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getAllUserArr();
+		$taskAssigneeMgr = TaskAssigneeMgr::getInstance();
+		$mainArr["tasks"] = $calculatedTasks;
+		$mainArr["users"] = $users;
+		$mainArr["taskAssignees"] = $taskAssigneeMgr->getAllTaskAssignee();
+		return $mainArr;
 	}
 	
 	public function getShowTasksByUser($showSeq,$userSeq){

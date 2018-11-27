@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTask.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskAssigneeMgr.php");
 class ShowTaskMgr{
 	private static  $ShowTaskMgr;
 	private static $dataStore;
@@ -17,7 +18,8 @@ class ShowTaskMgr{
 	}
 	
 	public function saveShowTask($ShowTaskObject){
-		self::$dataStore->save($ShowTaskObject);
+		$id = self::$dataStore->save($ShowTaskObject);
+		return $id;
 	}
 	
 	public function deleteByShowSeq($showSeq){
@@ -26,25 +28,29 @@ class ShowTaskMgr{
 	}
 	public function saveShowTaskFromRequest($showId){
 		$categorySeqs = $_REQUEST["category"];
+		$showTaskAssignee = ShowTaskAssigneeMgr::getInstance();
 		foreach ($categorySeqs as $categorySeq){
 			$titles = $_REQUEST[$categorySeq."_title"];
 			$taskSeqs = $_REQUEST[$categorySeq."_taskSeq"];
 			$startDates = $_REQUEST[$categorySeq."_startdate"];
 			$endDates = $_REQUEST[$categorySeq."_enddate"];
+			$assignees = $_REQUEST[$categorySeq."_assignees"];
 			$showTask = new ShowTask();
 			foreach ($titles as $key=>$title){
-				$showTask->setTaskSeq($taskSeqs[$key]);
+				$taskSeq = $taskSeqs[$key];
+				$showTask->setTaskSeq($taskSeq);
 				$startDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $startDates[$key]);
 				$endDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $endDates[$key]);
 				$showTask->setStartDate($startDate);
 				$showTask->setEndDate($endDate);
 				$showTask->setStatus("pending");
 				$showTask->setShowSeq($showId);
-				$this->saveShowTask($showTask);
+				$id = $this->saveShowTask($showTask);
+				$assignees = $showTaskAssignee->saveFromRequest($assignees, $id, $taskSeq);
 			}
 		}
 	}
-	
+
 	public function updateShowTaskCommentsStatus($showTask){
 		$colVal = array();
 		$colVal["status"] = $showTask->getStatus();
@@ -67,12 +73,20 @@ inner join tasks on tasks.seq = showtasks.taskseq where showtasks.seq = $showTas
 		$showTasks = self::$dataStore->executeConditionQuery($colVal);
 		return json_encode($showTasks);
 	}
-	public function getTaskByShowSeq($showSeq){
+
+	public function getShowTaskDataByShowSeq($showSeq){
 		$query = "select tasks.seq,tasks.daysrequired,tasks.parenttaskseq,tasks.title,tasks.taskcategoryseq,taskcategories.title as categorytitle ,showtasks.startdate,showtasks.enddate from showtasks inner join tasks on showtasks.taskseq = tasks.seq inner join taskcategories on tasks.taskcategoryseq = taskcategories.seq 
 where showtasks.showseq = $showSeq";
 		$showTasks = self::$dataStore->executeQuery($query);
 		$showTasks = $this->_group_by($showTasks, "categorytitle");
-		return $showTasks;
+		$mainArr["tasks"] = $showTasks;
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getAllUserArr();
+		$mainArr["users"] = $users;
+		$showTaskAssigneeMgr = ShowTaskAssigneeMgr::getInstance();
+		$showTaskAssignes = $showTaskAssigneeMgr->getAllShowTaskAssignee();
+		$mainArr["taskAssignees"] = $showTaskAssignes;
+		return $mainArr;
 	}
 	
 	function _group_by($array, $key) {

@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Show.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskAssigneeMgr.php");
 class ShowMgr{
 	private static  $showMgr;
 	private static $dataStore;
@@ -20,6 +21,8 @@ class ShowMgr{
 		$id = self::$dataStore->save($showObject);
 		if(!empty($id)){
 			$showTaskManager = ShowTaskMgr::getInstance();
+			$showTaskAssignee = ShowTaskAssigneeMgr::getInstance();
+			$showTaskAssignee->deleteByShowSeq($id);
 			$showTaskManager->deleteByShowSeq($id);
 			$showTaskManager->saveShowTaskFromRequest($id);
 		}

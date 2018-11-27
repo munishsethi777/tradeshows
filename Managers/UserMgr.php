@@ -35,7 +35,7 @@ class UserMgr{
 		$attr["password"] = $password;
 		$condition["seq"] = $adminSeq;
 		$sql = "update users set password = '$password'";
-		self::$adminDataStore->executeQuery($sql);
+		self::$userDataStore->executeQuery($sql);
 	}
 	
 	public function toArray($user){
@@ -44,5 +44,10 @@ class UserMgr{
 		$adminArr["email"] = $user->getEmail();
 		$adminArr["name"] = $user->getFullName();
 		return $adminArr;
+	}
+	
+	public function getAllUserArr(){
+		$users = self::$userDataStore->findAllArr();
+		return $users;
 	}
 }

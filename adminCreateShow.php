@@ -125,7 +125,7 @@ $(document).ready(function(){
 	}
 	function generateTasks(){
 		var startDate = $("#startDate").val();
-		var url = 'Actions/TaskAction.php?call=getAllTasks&startDate="+startDate='+startDate;
+		var url = 'Actions/TaskAction.php?call=getAllTasks&startDate='+startDate;
 		populateTasks(url)
 	}
 	function populateTasks(url){
@@ -133,23 +133,26 @@ $(document).ready(function(){
 			data = $.parseJSON(data);
 			var html =""
 			var tasks = data.tasks;
+			var users = data.users;
+			var taskAssignees = data.taskAssignees;
 			var i = 1;
 			$.each( tasks, function( k, taskDetail ) {	
 				var categorySeq = taskDetail[0].taskcategoryseq;
 				html += '<input type="hidden" value="'+categorySeq+'" id ="category" name="category[]"/>';
-				html += getHtml(k,taskDetail,i);
+				html += getHtml(k,taskDetail,users,taskAssignees,i);
 				i++;
 			});	
 			$("#accordion").html(html);
-			 $('.datePicker').datetimepicker({
-		         timepicker:false,
-		         format:'m-d-Y'
-		     });
+			$('.datePicker').datetimepicker({
+		        timepicker:false,
+		        format:'m-d-Y'
+		    });
+			$(".chosen-select").chosen({width:"100%"});
 		});
 	}
 	
 
-	function getHtml(categoryTitle,tasksData,i){
+	function getHtml(categoryTitle,tasksData,users,taskAssignees,i){
 		var html = '<div class="panel panel-default">';
         	html += '<div class="panel-heading">';
         	html += '<h5 class="panel-title">';
@@ -173,10 +176,19 @@ $(document).ready(function(){
                 childHtml += '<input type="hidden" name="'+categorySeq+'_taskSeq[]"  value="'+seq+'"/>';
                 childHtml += '<div class="form-group row">';
             	childHtml += '<div class="col-lg-4 col-form-label">';
-            	childHtml += taskDetail.startdatereferencedays + '-' + taskDetail.seq + '<input type="text" value="(' +  taskDetail.parenttaskseq + ')' +taskDetail.title + '" name="'+categorySeq+'_title[]" class="form-control"><br>';
+            	childHtml += '<input type="text" value="' +taskDetail.title + '" name="'+categorySeq+'_title[]" class="form-control"><br>';
             	childHtml += '</div>';
             	childHtml += '<div class="col-lg-4 col-form-label">';
-            	childHtml += '<input type="text" value="'+taskDetail.assignee+'" name="'+categorySeq+'_assignees[]" class="form-control"><br>';
+            	childHtml += '<select class="form-control chosen-select" name="'+categorySeq+'_assignees[]" required id="menuDD" multiple>';
+            	$.each( users, function( key, value ) {
+                	var selected = "";
+                	var assignees = taskAssignees[seq];
+                	if($.inArray(value.seq, assignees) !== -1){
+                		selected = "selected";		
+                	}
+            		childHtml += "<option "+selected+" value='"+seq + "_"+value.seq+"'>"+ value.fullname +"</option>";	
+            	});
+                childHtml += '</select>';
             	childHtml += '</div>';
             	childHtml += '<div class="'+parentTaskSeq+'_dates">';
             	childHtml += '<div class="col-lg-2 col-form-label">';
@@ -195,7 +207,7 @@ $(document).ready(function(){
 
 	function saveShow(){
 		$('#taskForm').ajaxSubmit(function( data ){
-	        alert("Action Completed Successfully");
+	       location.href = "adminShowList.php";
 	    })	
 	}
 	

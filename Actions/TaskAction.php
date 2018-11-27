@@ -21,7 +21,8 @@ $showTaskMgr = ShowTaskMgr::getInstance();
 if($call == "getAllTasks"){
 	try{
 		$tasks = $taskMgr->getAll();
-		$response["tasks"]  = $tasks;
+		echo json_encode($tasks);
+		return;
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

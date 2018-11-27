@@ -13,8 +13,7 @@ if(isset($_GET["call"])){
 $showTaskMgr = ShowTaskMgr::getInstance();
 if($call == "getShowTasks"){
 	$showSeq = $_GET["showSeq"];
-	$taskJson = $showTaskMgr->getTaskByShowSeq($showSeq);
-	$response["tasks"]= $taskJson;
-	echo json_encode($response);
+	$taskJson = $showTaskMgr->getShowTaskDataByShowSeq($showSeq);
+	echo json_encode($taskJson);
 	return;
 }
