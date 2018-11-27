@@ -1,7 +1,7 @@
 <?php
 class Admin{
 	
-	private $seq,$username,$name,$password,$isenable,$createdon;
+	private $seq,$username,$name,$password,$isenable,$createdon,$email;
 	public static $className = "Admin";
 	public static $tableName = "admins";
 	public function setSeq($seq_){
@@ -44,6 +44,13 @@ class Admin{
 	}
 	public function getCreatedOn(){
 		return $this->createdon;
+	}
+	
+	public function setEmail($email_){
+		$this->email = $email_;
+	}
+	public function getEmail(){
+		return $this->email;
 	}
 	
 	function createFromRequest($request){
