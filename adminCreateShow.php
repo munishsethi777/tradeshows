@@ -1,18 +1,21 @@
 <?
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 $show = new Show();
 $startDate = "";
 $endDate = "";
+$seq = 0;
 if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	$seq = $_POST["id"];
 	$showManager = ShowMgr::getInstance();
 	$show = $showManager->findBySeq($seq);
-	$startDate = DateUtil::StringToDateByGivenFormat("Y-m-d h:i:s", $show->getStartDate());
-	$endDate = DateUtil::StringToDateByGivenFormat("Y-m-d h:i:s", $show->getEndDate());
+	$startDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $show->getStartDate());
+	$endDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $show->getEndDate());
 	$startDate = $startDate->format("m-d-Y");
 	$endDate = $endDate->format("m-d-Y");
+	$showTaskMgr = ShowTaskMgr::getInstance();
 }
 ?>
 <!DOCTYPE html>
@@ -44,6 +47,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	                    	
 	                        <form id="taskForm" method="post" action="Actions/ShowAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveShow"/>
+	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
 	                        		<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Show Title</label>
 	                                    <div class="col-lg-8">
@@ -74,7 +78,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
                                  	<div class="form-group row">
                                  		<label class="col-lg-2 col-form-label"></label>
                                 		<div class="col-lg-2">
-	                                		<button class="btn btn-primary" onclick="getTasks()" type="button" style="width:85%">
+	                                		<button class="btn btn-primary" onclick="generateTasks()" type="button" style="width:85%">
 	                                			Generate Dates
 		                                	</button>
 		                                </div>
@@ -104,14 +108,28 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
    </body>
 </html>
 <script type="text/javascript">
+$(document).ready(function(){
 	$('.datePicker').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y'
 	});
+	loadShowTasks();
+});
 
-	function getTasks(){
+	function loadShowTasks(){
+		var seq = "<?php echo $seq?>";
+		if(seq != "0"){
+			var url = 'Actions/ShowTaskAction.php?call=getShowTasks&showSeq=<?php echo $seq?>';
+			populateTasks(url);
+		}
+	}
+	function generateTasks(){
 		var startDate = $("#startDate").val();
-		$.get("Actions/TaskAction.php?call=getAllTasks&startDate="+startDate, function(data){
+		var url = 'Actions/TaskAction.php?call=getAllTasks&startDate="+startDate='+startDate;
+		populateTasks(url)
+	}
+	function populateTasks(url){
+		$.get(url, function(data){
 			data = $.parseJSON(data);
 			var html =""
 			var tasks = data.tasks;
@@ -128,8 +146,8 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 		         format:'m-d-Y'
 		     });
 		});
-		
 	}
+	
 
 	function getHtml(categoryTitle,tasksData,i){
 		var html = '<div class="panel panel-default">';

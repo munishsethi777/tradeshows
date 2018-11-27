@@ -20,9 +20,12 @@ class ShowMgr{
 		$id = self::$dataStore->save($showObject);
 		if(!empty($id)){
 			$showTaskManager = ShowTaskMgr::getInstance();
+			$showTaskManager->deleteByShowSeq($id);
 			$showTaskManager->saveShowTaskFromRequest($id);
 		}
 	}
+	
+
 	
 	public function getShowsForGrid($isApplyFilter = false){
 		$shows = $this->findAllArr($isApplyFilter);

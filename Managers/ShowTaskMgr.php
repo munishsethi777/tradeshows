@@ -1,6 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTask.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 class ShowTaskMgr{
 	private static  $ShowTaskMgr;
 	private static $dataStore;
@@ -17,9 +18,12 @@ class ShowTaskMgr{
 	
 	public function saveShowTask($ShowTaskObject){
 		self::$dataStore->save($ShowTaskObject);
-		
 	}
 	
+	public function deleteByShowSeq($showSeq){
+		$colVal["showseq"] = $showSeq;
+		self::$dataStore->deleteByAttribute($colVal);
+	}
 	public function saveShowTaskFromRequest($showId){
 		$categorySeqs = $_REQUEST["category"];
 		foreach ($categorySeqs as $categorySeq){
@@ -62,5 +66,28 @@ inner join tasks on tasks.seq = showtasks.taskseq where showtasks.seq = $showTas
 		$colVal["showseq"] = $showSeq;
 		$showTasks = self::$dataStore->executeConditionQuery($colVal);
 		return json_encode($showTasks);
+	}
+	public function getTaskByShowSeq($showSeq){
+		$query = "select tasks.seq,tasks.daysrequired,tasks.parenttaskseq,tasks.title,tasks.taskcategoryseq,taskcategories.title as categorytitle ,showtasks.startdate,showtasks.enddate from showtasks inner join tasks on showtasks.taskseq = tasks.seq inner join taskcategories on tasks.taskcategoryseq = taskcategories.seq 
+where showtasks.showseq = $showSeq";
+		$showTasks = self::$dataStore->executeQuery($query);
+		$showTasks = $this->_group_by($showTasks, "categorytitle");
+		return $showTasks;
+	}
+	
+	function _group_by($array, $key) {
+		$return = array();
+		foreach($array as $val) {
+			$startDate = $val["startdate"];
+			$endDate = $val["enddate"];
+			$startDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $startDate);
+			$endDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $endDate);
+			$startDateStr = $startDate->format("m-d-Y");
+			$endDateStr = $endDate->format("m-d-Y");
+			$val["startDate"] = $startDateStr;
+			$val["endDate"] = $endDateStr;
+			$return[$val[$key]][] = $val;
+		}
+		return $return;
 	}
 }

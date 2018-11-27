@@ -1,6 +1,6 @@
 <?php
 class ShowTask{
-	private $seq,$showseq,$taskseq,$daysrequired,$assignee,$starteddatereferencedays,$startdate,$enddate,$comments,$status;
+	private $seq,$showseq,$taskseq,$assignee,$starteddatereferencedays,$startdate,$enddate,$comments,$status;
 	public static $className = "ShowTask";
 	public static $tableName = "showtasks";
 	
@@ -23,13 +23,6 @@ class ShowTask{
 	}
 	public function getTaskSeq(){
 		return $this->taskseq;
-	}
-	
-	public function setDaysRequired($daysRequired_){
-		$this->daysrequired = $daysRequired_;
-	}
-	public function getDaysRequired(){
-		return $this->daysrequired;
 	}
 	
 	public function setAssignee($assigne_){

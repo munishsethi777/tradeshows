@@ -16,6 +16,11 @@ if($call == "saveShow"){
 	try{
 		$show = new Show();
 		$show->createFromRequest($_REQUEST);
+		$seq = 0;
+		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
+			$seq = $_REQUEST["seq"];
+		}
+		$show->setSeq($seq);
 		$startDate = $_REQUEST["startdate"];
 		$endDate = $_REQUEST["enddate"];
 		$startDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $startDate);
