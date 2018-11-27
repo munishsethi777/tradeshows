@@ -95,6 +95,7 @@ where showtasks.showseq = $showSeq";
 		inner join users on showtaskassignees.userseq = users.seq where shows.seq = $showSeq";
 		$showTaskAssignees = self::$dataStore->executeQuery($query);
 		$showTaskAssignees = $this->_group_by($showTaskAssignees, "seq");
+		return $showTaskAssignees;
 	}
 	
 	function _group_by($array, $key) {
