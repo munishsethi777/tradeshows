@@ -97,14 +97,15 @@ class SessionUtil{
 
 
 	public function isSessionAdmin(){
-		if(	$_SESSION[self::$ADMIN_LOGGED_IN] != null){
+		if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+		//if(	$_SESSION[self::$ADMIN_LOGGED_IN] != null){
 			return true;
 		}
 		return false;
 	}
 	
 	public function isSessionUser(){
-		if(	$_SESSION[self::$USER_LOGGED_IN] != null){
+		if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
 			return true;
 		}
 		return false;
