@@ -35,18 +35,23 @@ class TaskMgr{
 	
 	public function getShowTasksByUser($showSeq,$userSeq){
 		$query = "select showtasks.seq,tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
-inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.showseq
+inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
 inner join tasks on showtasks.taskseq = tasks.seq
-where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq
-GROUP by showtasks.seq";
-		$tasks = self::$dataStore->executeQuery($query);
+where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq";
+		$tasks = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $tasks;
-		$mainArr["TotalRows"] = self::$dataStore->executeCountQueryWithSql($query);
+		$mainArr["TotalRows"] = $this->getShowTaskCount($showSeq, $userSeq);
 		return $mainArr;
 		
 	}
-	
-	
+	private function getShowTaskCount($showSeq,$userSeq){
+		$query = "select count(*) from showtasks
+		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
+		inner join tasks on showtasks.taskseq = tasks.seq
+		where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq";
+		$count = self::$dataStore->executeCountQueryWithSql($query,true);
+		return $count;
+	}
 	private $allTasksArr;
 	function calculateStartEndDate($categoryTasks){
 		$categoryTasksArr = array();

@@ -32,7 +32,8 @@ if($call == "getShowTasks"){
 	try{
 		$showSeq = $_GET["showSeq"];
 		$tasks = $taskMgr->getShowTasksByUser($showSeq, $userSeq);
-		$response["tasks"]  = $tasks;
+		echo json_encode($tasks);
+		return;
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

@@ -184,7 +184,7 @@ function loadGrid(showSeq){
       { text: 'Task', datafield: 'title', width:"60%"},
       { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
       { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'5%'}
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'10%'}
     ]
    
     var source =
@@ -228,7 +228,6 @@ function loadGrid(showSeq){
     };
     
     var dataAdapter = new $.jqx.dataAdapter(source);
-    // initialize jqxGrid
     $("#showGrid").jqxGrid(
     {
     	width: '100%',
@@ -248,7 +247,7 @@ function loadGrid(showSeq){
 		virtualmode: true,
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
-   		 },
+   		},
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Update</span></div>");

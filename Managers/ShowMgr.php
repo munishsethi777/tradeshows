@@ -40,7 +40,7 @@ class ShowMgr{
 	public function getUpcomingShowsByUser($userSeq){
 		$sql = "select shows.* from shows
 inner join showtasks on showtasks.showseq = shows.seq
-inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.taskseq
+inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
 where showtaskassignees.userseq = $userSeq 
 GROUP by shows.seq";
 		$shows = self::$dataStore->executeObjectQuery($sql);
