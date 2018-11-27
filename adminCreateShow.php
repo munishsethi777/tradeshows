@@ -86,12 +86,12 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 		                                	</button>
 		                                </div>
 		                                <div class="col-lg-2">
-	                                		<button class="btn btn-primary" onclick="saveShow()" type="button" style="width:80%">
+	                                		<button class="btn btn-primary disabled" id="saveButton" onclick="saveShow()"  type="button" style="width:80%">
 	                                			Save Tasks
 		                                	</button>
 		                                </div>
 		                                <div class="col-lg-2" style="text-align: right">
-	                                		<button class="btn btn-default" onclick="" type="button" style="width:80%">
+	                                		<button class="btn btn-default" onclick="cancelForm()" type="button" style="width:80%">
 	                                			Cancel
 		                                	</button>
 	                                	</div>
@@ -119,6 +119,9 @@ $(document).ready(function(){
 	loadShowTasks();
 });
 
+	function cancelForm(){
+		window.location.href = "adminShowList.php";	
+	}
 	function loadShowTasks(){
 		var seq = "<?php echo $seq?>";
 		if(seq != "0"){
@@ -138,6 +141,7 @@ $(document).ready(function(){
 	function populateTasks(url){
 		showHideLoading()
 		$.get(url, function(data){
+			$("#saveButton").removeClass("disabled")
 			data = $.parseJSON(data);
 			var html =""
 			var tasks = data.tasks;

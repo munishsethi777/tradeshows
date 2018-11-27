@@ -126,22 +126,22 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-            var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+           // var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
-            container.append(deleteButton);
+          //  container.append(deleteButton);
             container.append(reloadButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
-            deleteButton.jqxButton({  width: 65, height: 18 });
+          //  deleteButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("adminCreateShow.php");
             });
-            deleteButton.click(function (event) {
-            	deleteRows("showGrid","Actions/ShowAction.php?call=deleteShows");
-            });
+           // deleteButton.click(function (event) {
+           // 	deleteRows("showGrid","Actions/ShowAction.php?call=deleteShows");
+          //  });
              $("#showGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2018 at 10:43 AM
--- Server version: 10.1.36-MariaDB
--- PHP Version: 5.6.38
+-- Generation Time: Nov 27, 2018 at 02:12 PM
+-- Server version: 10.1.34-MariaDB
+-- PHP Version: 5.6.37
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -61,6 +61,18 @@ CREATE TABLE `shows` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `showtaskassignees`
+--
+
+CREATE TABLE `showtaskassignees` (
+  `seq` bigint(20) NOT NULL,
+  `showtaskseq` bigint(20) NOT NULL,
+  `userseq` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `showtasks`
 --
 
@@ -68,14 +80,353 @@ CREATE TABLE `showtasks` (
   `seq` bigint(20) NOT NULL,
   `showseq` bigint(20) NOT NULL,
   `taskseq` bigint(20) NOT NULL,
-  `daysrequired` int(11) NOT NULL,
-  `assignee` varchar(500) NOT NULL,
-  `startdatereferencedays` int(11) NOT NULL,
+  `assignee` varchar(500) DEFAULT NULL,
+  `starteddatereferencedays` int(11) DEFAULT NULL,
   `startdate` date NOT NULL,
   `enddate` date NOT NULL,
-  `comments` varchar(500) NOT NULL,
+  `comments` varchar(500) DEFAULT NULL,
   `status` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taskassignees`
+--
+
+CREATE TABLE `taskassignees` (
+  `seq` bigint(20) NOT NULL,
+  `taskseq` bigint(20) NOT NULL,
+  `userseq` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `taskassignees`
+--
+
+INSERT INTO `taskassignees` (`seq`, `taskseq`, `userseq`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 1),
+(4, 2, 2),
+(5, 3, 1),
+(6, 3, 2),
+(7, 4, 1),
+(8, 4, 2),
+(9, 5, 1),
+(10, 5, 2),
+(11, 6, 1),
+(12, 6, 2),
+(13, 7, 1),
+(14, 7, 2),
+(15, 8, 1),
+(16, 8, 2),
+(17, 9, 1),
+(18, 9, 2),
+(19, 10, 1),
+(20, 10, 2),
+(21, 11, 1),
+(22, 11, 2),
+(23, 12, 1),
+(24, 12, 2),
+(25, 13, 1),
+(26, 13, 2),
+(27, 14, 1),
+(28, 14, 2),
+(29, 15, 1),
+(30, 15, 2),
+(31, 16, 1),
+(32, 16, 2),
+(33, 17, 1),
+(34, 17, 2),
+(35, 18, 1),
+(36, 18, 2),
+(37, 19, 1),
+(38, 19, 2),
+(39, 20, 1),
+(40, 20, 2),
+(41, 21, 1),
+(42, 21, 2),
+(43, 22, 1),
+(44, 22, 2),
+(45, 23, 1),
+(46, 23, 2),
+(47, 24, 1),
+(48, 24, 2),
+(49, 25, 1),
+(50, 25, 2),
+(51, 26, 1),
+(52, 26, 2),
+(53, 27, 1),
+(54, 27, 2),
+(55, 28, 1),
+(56, 28, 2),
+(57, 29, 1),
+(58, 29, 2),
+(59, 30, 1),
+(60, 30, 2),
+(61, 31, 1),
+(62, 31, 2),
+(63, 32, 1),
+(64, 32, 2),
+(65, 33, 1),
+(66, 33, 2),
+(67, 34, 1),
+(68, 34, 2),
+(69, 35, 1),
+(70, 35, 2),
+(71, 36, 1),
+(72, 36, 2),
+(73, 37, 1),
+(74, 37, 2),
+(75, 38, 1),
+(76, 38, 2),
+(77, 39, 1),
+(78, 39, 2),
+(79, 40, 1),
+(80, 40, 2),
+(81, 41, 1),
+(82, 41, 2),
+(83, 42, 1),
+(84, 42, 2),
+(85, 43, 1),
+(86, 43, 2),
+(87, 44, 1),
+(88, 44, 2),
+(89, 45, 1),
+(90, 45, 2),
+(91, 46, 1),
+(92, 46, 2),
+(93, 47, 1),
+(94, 47, 2),
+(95, 48, 1),
+(96, 48, 2),
+(97, 49, 1),
+(98, 49, 2),
+(99, 50, 1),
+(100, 50, 2),
+(101, 51, 1),
+(102, 51, 2),
+(103, 52, 1),
+(104, 52, 2),
+(105, 53, 1),
+(106, 53, 2),
+(107, 54, 1),
+(108, 54, 2),
+(109, 55, 1),
+(110, 55, 2),
+(111, 56, 1),
+(112, 56, 2),
+(113, 57, 1),
+(114, 57, 2),
+(115, 58, 1),
+(116, 58, 2),
+(117, 59, 1),
+(118, 59, 2),
+(119, 60, 1),
+(120, 60, 2),
+(121, 61, 1),
+(122, 61, 2),
+(123, 62, 1),
+(124, 62, 2),
+(125, 63, 1),
+(126, 63, 2),
+(127, 64, 1),
+(128, 64, 2),
+(129, 65, 1),
+(130, 65, 2),
+(131, 66, 1),
+(132, 66, 2),
+(133, 67, 1),
+(134, 67, 2),
+(135, 68, 1),
+(136, 68, 2),
+(137, 69, 1),
+(138, 69, 2),
+(139, 70, 1),
+(140, 70, 2),
+(141, 71, 1),
+(142, 71, 2),
+(143, 72, 1),
+(144, 72, 2),
+(145, 73, 1),
+(146, 73, 2),
+(147, 74, 1),
+(148, 74, 2),
+(149, 75, 1),
+(150, 75, 2),
+(151, 76, 1),
+(152, 76, 2),
+(153, 77, 1),
+(154, 77, 2),
+(155, 78, 1),
+(156, 78, 2),
+(157, 79, 1),
+(158, 79, 2),
+(159, 80, 1),
+(160, 80, 2),
+(161, 81, 1),
+(162, 81, 2),
+(163, 82, 1),
+(164, 82, 2),
+(165, 83, 1),
+(166, 83, 2),
+(167, 84, 1),
+(168, 84, 2),
+(169, 85, 1),
+(170, 85, 2),
+(171, 86, 1),
+(172, 86, 2),
+(173, 87, 1),
+(174, 87, 2),
+(175, 88, 1),
+(176, 88, 2),
+(177, 89, 1),
+(178, 89, 2),
+(179, 90, 1),
+(180, 90, 2),
+(181, 91, 1),
+(182, 91, 2),
+(183, 92, 1),
+(184, 92, 2),
+(185, 93, 1),
+(186, 93, 2),
+(187, 94, 1),
+(188, 94, 2),
+(189, 95, 1),
+(190, 95, 2),
+(191, 96, 1),
+(192, 96, 2),
+(193, 97, 1),
+(194, 97, 2),
+(195, 98, 1),
+(196, 98, 2),
+(197, 99, 1),
+(198, 99, 2),
+(199, 100, 1),
+(200, 100, 2),
+(201, 101, 1),
+(202, 101, 2),
+(203, 102, 1),
+(204, 102, 2),
+(205, 103, 1),
+(206, 103, 2),
+(207, 104, 1),
+(208, 104, 2),
+(209, 105, 1),
+(210, 105, 2),
+(211, 106, 1),
+(212, 106, 2),
+(213, 107, 1),
+(214, 107, 2),
+(215, 108, 1),
+(216, 108, 2),
+(217, 109, 1),
+(218, 109, 2),
+(219, 110, 1),
+(220, 110, 2),
+(221, 111, 1),
+(222, 111, 2),
+(223, 112, 1),
+(224, 112, 2),
+(225, 113, 1),
+(226, 113, 2),
+(227, 114, 1),
+(228, 114, 2),
+(229, 115, 1),
+(230, 115, 2),
+(231, 116, 1),
+(232, 116, 2),
+(233, 117, 1),
+(234, 117, 2),
+(235, 118, 1),
+(236, 118, 2),
+(237, 119, 1),
+(238, 119, 2),
+(239, 120, 1),
+(240, 120, 2),
+(241, 121, 1),
+(242, 121, 2),
+(243, 122, 1),
+(244, 122, 2),
+(245, 123, 1),
+(246, 123, 2),
+(247, 124, 1),
+(248, 124, 2),
+(249, 125, 1),
+(250, 125, 2),
+(251, 126, 1),
+(252, 126, 2),
+(253, 127, 1),
+(254, 127, 2),
+(255, 128, 1),
+(256, 128, 2),
+(257, 129, 1),
+(258, 129, 2),
+(259, 130, 1),
+(260, 130, 2),
+(261, 131, 1),
+(262, 131, 2),
+(263, 132, 1),
+(264, 132, 2),
+(265, 133, 1),
+(266, 133, 2),
+(267, 134, 1),
+(268, 134, 2),
+(269, 135, 1),
+(270, 135, 2),
+(271, 136, 1),
+(272, 136, 2),
+(273, 137, 1),
+(274, 137, 2),
+(275, 138, 1),
+(276, 138, 2),
+(277, 139, 1),
+(278, 139, 2),
+(279, 140, 1),
+(280, 140, 2),
+(281, 141, 1),
+(282, 141, 2),
+(283, 142, 1),
+(284, 142, 2),
+(285, 143, 1),
+(286, 143, 2),
+(287, 144, 1),
+(288, 144, 2),
+(289, 145, 1),
+(290, 145, 2),
+(291, 146, 1),
+(292, 146, 2),
+(293, 147, 1),
+(294, 147, 2),
+(295, 148, 1),
+(296, 148, 2),
+(297, 149, 1),
+(298, 149, 2),
+(299, 150, 1),
+(300, 150, 2),
+(301, 151, 1),
+(302, 151, 2),
+(303, 152, 1),
+(304, 152, 2),
+(305, 153, 1),
+(306, 153, 2),
+(307, 154, 1),
+(308, 154, 2),
+(309, 155, 1),
+(310, 155, 2),
+(311, 156, 1),
+(312, 156, 2),
+(313, 157, 1),
+(314, 157, 2),
+(315, 158, 1),
+(316, 158, 2),
+(317, 159, 1),
+(318, 159, 2),
+(319, 160, 1),
+(320, 160, 2),
+(321, 161, 1),
+(322, 161, 2);
 
 -- --------------------------------------------------------
 
@@ -298,6 +649,30 @@ INSERT INTO `tasks` (`seq`, `taskcategoryseq`, `title`, `description`, `daysrequ
 (160, 18, 'Sales Report', '', 3, 'munishsethi777@gmail.com', 180, 4),
 (161, 18, 'Profitability Report -P/L Statement', '', 3, 'munishsethi777@gmail.com', 180, 4);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `seq` bigint(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `fullname` varchar(100) NOT NULL,
+  `mobile` varchar(25) NOT NULL,
+  `isenabled` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`seq`, `email`, `password`, `fullname`, `mobile`, `isenabled`) VALUES
+(1, 'munishsethi777@gmail.com', '123', 'Munish Sethi', '9814600356', 1),
+(2, 'baljeetgaheer@gmail.com', '123', 'Baljeet Gaheer', '9814600356', 1),
+(3, 'satyainfopages@gmail.com', '123', 'Satya Infopages', '9814600356', 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -315,9 +690,21 @@ ALTER TABLE `shows`
   ADD PRIMARY KEY (`seq`);
 
 --
+-- Indexes for table `showtaskassignees`
+--
+ALTER TABLE `showtaskassignees`
+  ADD PRIMARY KEY (`seq`);
+
+--
 -- Indexes for table `showtasks`
 --
 ALTER TABLE `showtasks`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- Indexes for table `taskassignees`
+--
+ALTER TABLE `taskassignees`
   ADD PRIMARY KEY (`seq`);
 
 --
@@ -330,6 +717,12 @@ ALTER TABLE `taskcategories`
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
   ADD PRIMARY KEY (`seq`);
 
 --
@@ -349,10 +742,22 @@ ALTER TABLE `shows`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `showtaskassignees`
+--
+ALTER TABLE `showtaskassignees`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `showtasks`
 --
 ALTER TABLE `showtasks`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `taskassignees`
+--
+ALTER TABLE `taskassignees`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=323;
 
 --
 -- AUTO_INCREMENT for table `taskcategories`
@@ -365,6 +770,12 @@ ALTER TABLE `taskcategories`
 --
 ALTER TABLE `tasks`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
