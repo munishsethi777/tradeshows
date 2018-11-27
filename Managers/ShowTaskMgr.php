@@ -89,6 +89,14 @@ where showtasks.showseq = $showSeq";
 		return $mainArr;
 	}
 	
+	public function getShowTaskWithAssignee($showSeq){
+		$query = "select users.seq,users.email,users.fullname,tasks.title,showtasks.startdate,showtasks.enddate from shows
+		inner join showtasks on shows.seq = showtasks.showseq inner join tasks on showtasks.taskseq = tasks.seq inner join showtaskassignees on showtasks.seq = showtaskassignees.showtaskseq
+		inner join users on showtaskassignees.userseq = users.seq where shows.seq = $showSeq";
+		$showTaskAssignees = self::$dataStore->executeQuery($query);
+		$showTaskAssignees = $this->_group_by($showTaskAssignees, "seq");
+	}
+	
 	function _group_by($array, $key) {
 		$return = array();
 		foreach($array as $val) {

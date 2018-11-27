@@ -37,7 +37,7 @@ if($call == "saveShow"){
 }
 if($call == "getShows"){
 	try{
-		$shows = $showManager->getShowsForGrid($showObject);
+		$shows = $showManager->getShowsForGrid(true);
 		echo json_encode($shows);
 		return;
 	}catch(Exception $e){
