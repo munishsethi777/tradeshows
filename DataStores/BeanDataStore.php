@@ -438,9 +438,9 @@ class BeanDataStore {
 			throw  $e ;
 		}
 	}
-	public function updateByAttributes($colValuePair, $condiationPair = null) {
+	public function updateByAttributes($colValuePair, $conditionPair = null) {
 		try {
-			foreach ( $condiationPair as $key => $value ) {
+			foreach ( $conditionPair as $key => $value ) {
 				$query_array [] = $key . ' = ' . "'" . $value . "'";
 			}
 			foreach ( $colValuePair as $key => $value ) {
@@ -450,7 +450,7 @@ class BeanDataStore {
 				$attribute_array [] = $key . ' = ' . "'" . $value . "'";
 			}
 			$query = "update " . $this->tableName . " set " . implode ( " , ", $attribute_array );
-			if ($condiationPair != null) {
+			if ($conditionPair != null) {
 				$query .= " WHERE " . implode ( " AND ", $query_array );
 			}
 			$db = MainDB::getInstance ();

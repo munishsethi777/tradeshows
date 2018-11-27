@@ -7,7 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin | Dashboard</title>
     <?include "ScriptsInclude.php"?>
     <style type="text/css">
     	.flot-chart{height:130px;}
@@ -25,7 +25,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"
 									href="#"><i class="fa fa-bars"></i> </a>
-							<h3 class="p-h-sm font-normal"> Administrator Dashboard</h3>
+							<h4 class="p-h-sm font-normal"> Administrator Dashboard</h4>
 						</nav>
 						
 					</div>

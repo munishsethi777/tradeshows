@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Bookings</title>
+    <title>Admin | Manage TradeShows</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -18,7 +18,7 @@
 		                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 									<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 										href="#"><i class="fa fa-bars"></i> </a>
-										<h5 class="pageTitle">Shows</h5>
+										<h4 class="p-h-sm font-normal"> Trade Shows</h4>
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">

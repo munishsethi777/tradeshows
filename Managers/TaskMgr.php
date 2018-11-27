@@ -24,6 +24,21 @@ class TaskMgr{
 		$calculatedTasks = $this->calculateStartEndDate($tasks);
 		return $calculatedTasks;
 	}
+	
+	public function getShowTasksByUser($showSeq,$userSeq){
+		$query = "select showtasks.seq,tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
+inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.showseq
+inner join tasks on showtasks.taskseq = tasks.seq
+where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq
+GROUP by showtasks.seq";
+		$tasks = self::$dataStore->executeQuery($query);
+		$mainArr["Rows"] = $tasks;
+		$mainArr["TotalRows"] = self::$dataStore->executeCountQueryWithSql($query);
+		return $mainArr;
+		
+	}
+	
+	
 	private $allTasksArr;
 	function calculateStartEndDate($categoryTasks){
 		$categoryTasksArr = array();

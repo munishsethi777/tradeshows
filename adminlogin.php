@@ -13,7 +13,7 @@ require_once('IConstants.inc');
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Administration - Fly Dining</title>
+        <title>Administration | Alpine TradeShows Management</title>
         <?include "ScriptsInclude.php"?>
         <script type="text/javascript">
             $(document).ready(function () {

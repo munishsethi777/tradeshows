@@ -1,5 +1,5 @@
 <?php
-	 class DBvars.php{
+	 class DBvars{
 		public $database = "alpinetradeshows";
 		public $username = "root";
         public $password = "";

@@ -81,11 +81,10 @@ class ShowTask{
 		return $this;
 	}
 	
-	public function from_array($array)
-	{
+	public function from_array($array){
 		foreach(get_object_vars($this) as $attrName => $attrValue){
 			$flag = property_exists(self::$className, $attrName);
-			if($flag){
+			if($flag && array_key_exists($attrName, $array)){
 				$this->{$attrName} = $array[$attrName];
 			}
 		}

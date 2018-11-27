@@ -41,6 +41,23 @@ class ShowTaskMgr{
 		}
 	}
 	
+	public function updateShowTaskCommentsStatus($showTask){
+		$colVal = array();
+		$colVal["status"] = $showTask->getStatus();
+		$colVal["comments"] = $showTask->getComments();
+		
+		$colValCondition = array();
+		$colValCondition["seq"] = $showTask->getSeq();
+		
+		self::$dataStore->updateByAttributes($colVal,$colValCondition);
+	}
+	public function getShowTaskDetails($showTaskSeq){
+		$query = "SELECT showtasks.seq,tasks.title,tasks.description,showtasks.startdate,showtasks.enddate,showtasks.comments,showtasks.status FROM `showtasks`
+inner join tasks on tasks.seq = showtasks.taskseq where showtasks.seq = $showTaskSeq";
+		$taskDetails = self::$dataStore->executeQuery($query);
+		return $taskDetails;
+	}
+	
 	public function getTaskByShowJson($showSeq){
 		$colVal["showseq"] = $showSeq;
 		$showTasks = self::$dataStore->executeConditionQuery($colVal);

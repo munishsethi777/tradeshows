@@ -30,7 +30,17 @@ class ShowMgr{
 		$mainArr["TotalRows"] = $this->getAllShowsCount($isApplyFilter);
 		return $mainArr;
 	}
-
+	
+	public function getUpcomingShowsByUser($userSeq){
+		$sql = "select shows.* from shows
+inner join showtasks on showtasks.showseq = shows.seq
+inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.taskseq
+where showtaskassignees.userseq = $userSeq 
+GROUP by shows.seq";
+		$shows = self::$dataStore->executeObjectQuery($sql);
+		return $shows;
+	}
+	
 	public function getAllShowsCount($isApplyFilter){
 		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
 		return $count;

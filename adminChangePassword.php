@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Bookings</title>
+    <title>Admin | Change Password</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -21,8 +21,9 @@
 	                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 									href="#"><i class="fa fa-bars"></i> </a>
+									<h4 class="p-h-sm font-normal"> Change Password</h4>
 							</nav>
-	                        <h5>Change Password</h5>
+	                        
 	                    </div>
 	                     <div class="ibox-content">
 	                        <form id="changePasswordForm" action="Actions/AdminAction.php" class="m-t-lg">
