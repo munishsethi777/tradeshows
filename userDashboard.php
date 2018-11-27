@@ -9,7 +9,7 @@ $userFullName = $session->getUserLoggedInName();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>User | Dashboard</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -24,8 +24,9 @@ $userFullName = $session->getUserLoggedInName();
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 									href="#"><i class="fa fa-bars"></i> </a>
+									<h4 class="p-h-sm font-normal"> Dashboard</h4>
 						</nav>
-						<h4>Dashboard</h4>
+						
 					</div>
 					
 					

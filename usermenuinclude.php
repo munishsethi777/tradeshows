@@ -1,17 +1,19 @@
 <?php 
 
-$isProduct = "";
-$isProductGroup = "";
-$isReport = "";
+$isDashboard="";
+$isUpcomingTasks="";
 $isChangePassword="";
-$isBookings="";
+
+
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
 
 //echo  $file;
-if($file == "userdashboard.php"){
-	$isBookings = "active";
+if($file == "userDashboard.php"){
+	$isDashboard = "active";
+}elseif($file == "userUpcomingShows.php"){
+	$isUpcomingTasks = "active";
 }
 
 ?>
@@ -31,23 +33,23 @@ if($file == "userdashboard.php"){
                     </div>
 					
                 </li>
-                <li class="<?php echo $isBookings;?>">
-                    <a href="dashboard.php"><i class="fa fa-cube"></i> 
-                    	<span class="nav-label ">Upcoming Shows</span>  
+                <li class="<?php echo $isDashboard;?>">
+                    <a href="userDashboard.php"><i class="fa fa-tachometer"></i> 
+                    	<span class="nav-label ">Dashboard</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isUpcomingTasks;?>">
+                    <a href="userUpcomingShows.php"><i class="fa fa-life-ring"></i> 
+                    	<span class="nav-label ">Upcoming Tasks</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
-                    <a href="adminShowMenus.php"><i class="fa fa-coffee"></i> 
-                    	<span class="nav-label">Show History</span>  
+                    <a href="#"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Historical Tasks</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
-                    <a href="adminCreateShow.php"><i class="fa fa-clock-o"></i> 
-                    	<span class="nav-label">Show Progress</span>  
-                    </a>
-                </li>
-                <li class="<?php echo $isChangePassword;?>">
-                    <a href="adminChangePassword.php"><i class="fa fa-clock-o"></i> 
+                    <a href="#"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Change Password</span>  
                     </a>
                 </li>
