@@ -1,11 +1,12 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/class.phpmailer.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 class MailUtil{
 	
-	public function sendTaskAssignedNotification($showSeq){
+	public static function sendTaskAssignedNotification($showSeq){
 		$showTaskMgr = ShowTaskMgr::getInstance();
 		$showData = $showTaskMgr->getShowTaskWithAssignee($showSeq);
 		foreach ($showData as $key=>$showTasks){
@@ -39,6 +40,24 @@ class MailUtil{
 		}
 	}
 	
+	public static function sendUpdateStatusNotification($showTaskSeq){
+		$sessionUtil = SessionUtil::getInstance();
+		$userName = $sessionUtil->getUserLoggedInName();
+		$admins = AdminMgr::getInstance()->getAllAdmins();
+		$showTaskMgr = ShowTaskMgr::getInstance();
+		$showTaskDetail = $showTaskMgr->getShowTaskDetails($showTaskSeq);
+		if(!empty($showTaskDetail)){
+			$showTaskDetail = $showTaskDetail[0];
+			foreach ($admins as $admin){
+				$adminName = $admin->getName();
+				$email = $admin->getEmail();
+				$html = "Hello $adminName, <br>";
+				$html .= "<p>User $userName has updated status as " . $showTaskDetail["status"] . " for task - '". $showTaskDetail["title"] . "'</p>";
+				$toEmails = array(0=>$email);
+				MailUtil::sendSmtpMail("Updated Task Status", $html, $toEmails, false);
+			}
+		}
+	}
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 			//self::$logger->info("sending email for " . $subject);
