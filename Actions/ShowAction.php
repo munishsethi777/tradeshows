@@ -3,6 +3,7 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTask.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 $success = 1;
 $call = "";
 $response = new ArrayObject();
@@ -29,7 +30,8 @@ if($call == "saveShow"){
 		$endDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $endDate);
 		$show->setStartDate($startDate);
 		$show->setEndDate($endDate);
-		$showManager->saveShow($show);
+		$id = $showManager->saveShow($show);
+		$mailUtil = MailUtil::sendTaskAssignedNotification($id);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

@@ -184,7 +184,7 @@ function loadGrid(showSeq){
       { text: 'Task', datafield: 'title', width:"60%"},
       { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
       { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'10%'}
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%'}
     ]
    
     var source =

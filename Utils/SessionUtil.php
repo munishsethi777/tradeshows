@@ -29,6 +29,7 @@ class SessionUtil{
         $arr[0] = $admin->getSeq();
         $arr[1] = $admin->getName();
         $arr[2] = $admin->getUserName();
+        $arr[3] = $admin->getEmail();
         $_SESSION[self::$ADMIN_LOGGED_IN] = $arr;
     }
     
@@ -64,7 +65,13 @@ class SessionUtil{
     			return $arr[2];
     	}
     }
-
+	
+    public function getAdminLoggedInEmail(){
+    	if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+    		$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
+    		return $arr[3];
+    	}
+    }
     
     public function getAdminLoggedInSeq(){
         if($_SESSION[self::$ADMIN_LOGGED_IN] != null){

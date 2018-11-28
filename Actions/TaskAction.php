@@ -3,6 +3,7 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 $sessionUtil = SessionUtil::getInstance();
 $userSeq = $sessionUtil->getUserLoggedInSeq();
 
@@ -54,6 +55,7 @@ if($call == "updateShowTaskDetails"){
 		$showTask = new ShowTask();
 		$showTask->createFromRequest($_REQUEST);
 		$showTaskMgr->updateShowTaskCommentsStatus($showTask);
+		$mailUtil = MailUtil::sendUpdateStatusNotification($showTask->getSeq());
 		$success = 1;
 		$message = "Task updated Successfully";
 	}catch(Exception $e){

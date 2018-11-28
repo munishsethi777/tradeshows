@@ -26,6 +26,7 @@ class ShowMgr{
 			$showTaskManager->deleteByShowSeq($id);
 			$showTaskManager->saveShowTaskFromRequest($id);
 		}
+		return $id;
 	}
 	
 
