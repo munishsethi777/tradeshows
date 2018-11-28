@@ -17,8 +17,8 @@ require_once('IConstants.inc');
         	<img src="images/logo.png" style="margin-bottom:20px;">
             <h3 style="line-height: 20px">Welcome to TradeShows Management Application</h3>
             <br><br>
-            <a class="btn btn-primary" href="adminLogin.php">Admin Login</a>
-            <a class="btn btn-info" href="userLogin.php">User Login</a>
+            <a class="btn btn-primary" href="adminlogin.php">Admin Login</a>
+            <a class="btn btn-info" href="userlogin.php">User Login</a>
             <p class="m-t"> <small>This is a demonstration application and some parts of the application may have static
             data/information and only few menu items are functional.</small> </p>
         </div>

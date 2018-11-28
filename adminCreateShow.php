@@ -3,6 +3,8 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+
 $show = new Show();
 $startDate = "";
 $endDate = "";
