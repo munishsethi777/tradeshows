@@ -15,7 +15,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 </head>
 <body>
 <div id="wrapper">
-<?php include("adminmenuinclude.php")?>  
+<?php include("adminmenuInclude.php")?>
 	<div id="page-wrapper" class="gray-bg">
 		<div class="row border-bottom"></div>
         <div class="row">
