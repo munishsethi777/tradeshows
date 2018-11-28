@@ -34,7 +34,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	        </div>
         	<div class="row">
 	            <div class="col-lg-12">
-	                <div class="ibox" id="ibox1">
+	                <div class="ibox">
 	                    <div class="ibox-title">
 	                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
@@ -44,24 +44,20 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	                        
 	                    </div>
 	                    <div class="ibox-content">
-                                <div class="sk-spinner sk-spinner-three-bounce">
-                                    <div class="sk-bounce1"></div>
-                                    <div class="sk-bounce2"></div>
-                                    <div class="sk-bounce3"></div>
-                                </div>
+                            <?include "progress.php"?>
                             <form id="taskForm" method="post" action="Actions/ShowAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveShow"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
 	                        		<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Show Title</label>
 	                                    <div class="col-lg-8">
-	                                    	<input type="text" id="title" value="<?php echo $show->getTitle()?>" name="title" required placeholder="Enter Show Title" class="form-control">
+	                                    	<input type="text" id="title" maxLength="250" value="<?php echo $show->getTitle()?>" name="title" required placeholder="Enter Show Title" class="form-control">
 	                                    </div>
 	                               </div>
 	                               		<div class="form-group row">
 	                               			<label class="col-lg-2 col-form-label">Show Description</label>
 	                                		<div class="col-lg-8">
-	                               				<input type="text" value="<?php echo $show->getDescription()?>" id="description" name="description" required placeholder="Enter Show Description" class="form-control">
+	                               				<input type="text" maxLength="500" value="<?php echo $show->getDescription()?>" id="description" name="description" required placeholder="Enter Show Description" class="form-control">
 		                                    </div>
 		                                </div>
 		                                <div class="form-group row">
@@ -139,7 +135,7 @@ $(document).ready(function(){
 		}
 	}
 	function populateTasks(url){
-		showHideLoading()
+		showHideProgress()
 		$.get(url, function(data){
 			$("#saveButton").removeClass("disabled")
 			data = $.parseJSON(data);
@@ -160,13 +156,10 @@ $(document).ready(function(){
 		        format:'m-d-Y'
 		    });
 			$(".chosen-select").chosen({width:"100%"});
-			showHideLoading()
+			showHideProgress()
 		});
 	}
 	
-	function showHideLoading(){
-		$('#ibox1').children('.ibox-content').toggleClass('sk-loading');	
-	}
 	function getHtml(categoryTitle,tasksData,users,taskAssignees,i){
 		var html = '<div class="panel panel-default">';
         	html += '<div class="panel-heading">';
@@ -222,9 +215,9 @@ $(document).ready(function(){
 
 	function saveShow(){
 		if($("#taskForm")[0].checkValidity()) {
-			showHideLoading()
+			showHideProgress()
 			$('#taskForm').ajaxSubmit(function( data ){
-			   showHideLoading();
+			   showHideProgress();
 			   var flag = showResponseToastr(data,null,"taskForm","ibox");
 			   if(flag){
 				   window.setTimeout(function(){window.location.href = "adminShowList.php"},500);

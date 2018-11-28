@@ -57,6 +57,9 @@ $show = $showMgr->findBySeq($showSeq);
     	<div class="modal-content animated fadeInRight">
 
             <div class="modal-body productDetailModalDiv mainDiv">
+            <div class="ibox">
+             <div class="ibox-content">
+             	<?php include 'progress.php';?>
                 <div class="row">
                     <div class="col-sm-12">
                     <h3>Task Details</h3>
@@ -91,7 +94,7 @@ $show = $showMgr->findBySeq($showSeq);
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Comments</label>
                            	<div class="col-lg-10">
-                            	<textarea name="comments" class="form-control taskDetailsComments"></textarea>
+                            	<textarea name="comments" maxLength="500" class="form-control taskDetailsComments"></textarea>
                            </div>
                         </div>
                         <div class="form-group row">
@@ -107,6 +110,8 @@ $show = $showMgr->findBySeq($showSeq);
                         </div>
                         </form>
                     </div>
+                </div>
+                </div>
                 </div>
            	</div>
             <div class="modal-footer">
@@ -129,7 +134,9 @@ $(document).ready(function(){
 		//alert(taskDetails);
 	//});
     $('.saveTaskDetails').on('click', function() {
+    	showHideProgress();
         $('#updateShowTaskDetailsForm').ajaxSubmit(function( data ){
+        	showHideProgress();
             showResponseToastr(data,null,"updateShowTaskDetailsForm","mainDiv");
             $("#showGrid").jqxGrid("updatebounddata");
             $('#taskDetailsModal').modal('hide');
@@ -179,7 +186,7 @@ function loadGrid(showSeq){
       { text: 'Task', datafield: 'title', width:"60%"},
       { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
       { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'10%'}
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%'}
     ]
    
     var source =

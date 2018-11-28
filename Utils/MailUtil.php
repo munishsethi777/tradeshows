@@ -25,18 +25,17 @@ class MailUtil{
 				$title = $task["title"];
 				$startDate = $task["startDate"];
 				$endDate = $task["endDate"];
-				$i;
 				$html .= "<tr>
                        		<td>$i</td>
                        		<td>$title</td>
                        		<td>$startDate</td>
                        		<td>$endDate</td>
                        	  </tr>";
+				$i++;
 			}
 		$html .= "</table>";
-		$i++;
 		$toEmails = array(0=>$userEmail);
-		MailUtil::sendSmtpMail("Tasks Assigned", $html, $toEmails, false);
+		MailUtil::sendSmtpMail("Tasks Assigned", $html, $toEmails, true);
 		}
 	}
 	
@@ -54,27 +53,24 @@ class MailUtil{
 				$html = "Hello $adminName, <br>";
 				$html .= "<p>User $userName has updated status as " . $showTaskDetail["status"] . " for task - '". $showTaskDetail["title"] . "'</p>";
 				$toEmails = array(0=>$email);
-				MailUtil::sendSmtpMail("Updated Task Status", $html, $toEmails, false);
+				MailUtil::sendSmtpMail("Updated Task Status", $html, $toEmails, true);
 			}
 		}
 	}
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
-			//self::$logger->info("sending email for " . $subject);
 			$mail = new PHPMailer();
-			$body = eregi_replace("[\]",'',$body);
 			if($isSmtp){
-				$body = eregi_replace("[\]",'',$body);
 				$mail->IsSMTP(); // telling the class to use SMTP
-				$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
+				//$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
 				$mail->SMTPAuth   = true;                  // enable SMTP authentication
 				$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-				$mail->Host       = "mail.virsacouture.com";      // sets GMAIL as the SMTP server
+				$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
 				$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-				$mail->Username   = "info@virsacouture.com";  // GMAIL username
-				$mail->Password   = "Munish#314";          // GMAIL password
+				$mail->Username   = "munish@satyainfopages.in";  // GMAIL username
+				$mail->Password   = "munish314";          // GMAIL password
 			}
-			$mail->SetFrom('noreply@satyainfopages.com', 'Satya Info Pages');
+			$mail->SetFrom('noreply@satyainfopages.in', 'Satya Info Pages');
 			$mail->Subject = $subject;
 			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 			$mail->MsgHTML($body);
