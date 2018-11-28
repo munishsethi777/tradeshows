@@ -58,7 +58,9 @@ if($call == "updateShowTaskDetails"){
 		$showTask = new ShowTask();
 		$showTask->createFromRequest($_REQUEST);
 		$showTaskMgr->updateShowTaskCommentsStatus($showTask);
-		//$mailUtil = MailUtil::sendUpdateStatusNotification($showTask->getSeq());
+		if($sessionUtil->isSessionUser()){
+			MailUtil::sendUpdateStatusNotification($showTask->getSeq());
+		}
 		$success = 1;
 		$message = "Task updated Successfully";
 	}catch(Exception $e){

@@ -24,18 +24,16 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
         <div class="row">
 			<div class="col-lg-12">
 	        	<div class="ibox">
-					<div class="ibox-title">
+	        	
+	        	 	<div class="ibox-title">
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 									href="#"><i class="fa fa-bars"></i> </a>
 									<h4 class="p-h-sm font-normal"> Upcoming Tradeshow Tasks</h4>
 						</nav>
-						
-					</div>
-					
-					
-		                     <div class="ibox-content">
-		                     	<div class="row">
+						</div>
+					        <div class="ibox-content">
+					         	<div class="row">
 		                     		<div class="form-group">
 	                       				<label class="col-lg-2 col-form-label">Select Tradeshow</label>
 	                                    <div class="col-lg-4">
@@ -64,9 +62,11 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
 <div class="modal inmodal bs-example-modal-md" id="taskDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
     	<div class="modal-content animated fadeInRight">
-
             <div class="modal-body productDetailModalDiv mainDiv">
-                <div class="row">
+            <div class="ibox">
+             <div class="ibox-content">
+             	<?php include 'progress.php';?>
+            	<div class="row">
                     <div class="col-sm-12">
                     <h3>Task Details</h3>
                     <small>You can update task details with comments and status</small>
@@ -117,6 +117,8 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
                         </form>
                     </div>
                 </div>
+                </div>
+                </div>
            	</div>
             <div class="modal-footer">
             	<button type="button" class="btn btn-primary saveTaskDetails" >Save</button>
@@ -134,7 +136,9 @@ $(document).ready(function(){
 	});
     loadGrid($('.showSelect').val());
     $('.saveTaskDetails').on('click', function() {
+        showHideProgress();
         $('#updateShowTaskDetailsForm').ajaxSubmit(function( data ){
+        	showHideProgress();
             showResponseToastr(data,null,"updateShowTaskDetailsForm","mainDiv");
             $("#showGrid").jqxGrid("updatebounddata");
             $('#taskDetailsModal').modal('hide');

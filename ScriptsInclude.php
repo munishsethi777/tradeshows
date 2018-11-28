@@ -454,4 +454,7 @@ $(document).ready(function() {
         	today = dd + '-' + mm + '-' + yyyy;
         	return today;
         }
+        function showHideProgress(){
+    		$('.ibox').children('.ibox-content').toggleClass('sk-loading');	
+    	}
 </script>
