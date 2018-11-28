@@ -86,7 +86,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 	                                			Save Tasks
 		                                	</button>
 		                                </div>
-		                                <div class="col-lg-2" style="text-align: right">
+		                                <div class="col-lg-2">
 	                                		<button class="btn btn-default" onclick="cancelForm()" type="button" style="width:80%">
 	                                			Cancel
 		                                	</button>

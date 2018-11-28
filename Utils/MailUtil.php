@@ -13,27 +13,24 @@ class MailUtil{
 			$i = 1;
 			$userName = $showTasks[0]["fullname"];
 			$userEmail = $showTasks[0]["email"];
-			$html = "<p>Hello $userName,<p><br><p>You have assigned following tasks :- <br>";
-			$html .= "<table style='width:90%'>
-                       			<tr>
-                       				<th>Sr.No.</th>
-                       				<th>Task</th>
-                       				<th>StartsOn</th>
-                       				<th>EndsOn</th>
-                       			</tr>";
+			$html = "<html>";
+			$html .= "<p>Hello $userName,<p><br><p>You have assigned following tasks :- <br>";
+			$html .= "<table style='width:90%' cellpadding='0' cellspacing='0'>";
+			$html .= "<tr><th width='10%' style='text-align:left'>Sr.No.</th><th style='text-align:left' width=\"50%\">Task</th><th style='text-align:left' width=\"20%\">StartsOn</th><th style='text-align:left' width=\"20%\">EndsOn</th></tr>";
 			foreach ($showTasks as $task){
 				$title = $task["title"];
 				$startDate = $task["startDate"];
 				$endDate = $task["endDate"];
-				$html .= "<tr>
-                       		<td>$i</td>
-                       		<td>$title</td>
-                       		<td>$startDate</td>
-                       		<td>$endDate</td>
-                       	  </tr>";
+				$html .= "<tr>";
+				$html .= "<td width='10%'>$i</td>";
+				$html .= "<td width='50%'>$title</td>";
+				$html .= "<td width='20%'>$startDate</td>";
+				$html .= "<td width='20%'>$endDate</td>";
+				$html .= "</tr>";
 				$i++;
 			}
 		$html .= "</table>";
+		$html .="</html>";
 		$toEmails = array(0=>$userEmail);
 		MailUtil::sendSmtpMail("Tasks Assigned", $html, $toEmails, true);
 		}
@@ -70,6 +67,7 @@ class MailUtil{
 				$mail->Username   = "munish@satyainfopages.in";  // GMAIL username
 				$mail->Password   = "munish314";          // GMAIL password
 			}
+			$mail->IsHTML(true);
 			$mail->SetFrom('noreply@satyainfopages.in', 'Satya Info Pages');
 			$mail->Subject = $subject;
 			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
