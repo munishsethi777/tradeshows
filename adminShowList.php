@@ -1,3 +1,4 @@
+<?php include 'SessionCheck.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +57,6 @@ function loadGrid(){
             	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
             	html +=" <a href='javascript:showTasks("+ data['seq'] + ")' ><i class='fa fa-eye' title='Show'></i></a>";
             html += "</div>";
-        
         return html;
     }
     var columns = [

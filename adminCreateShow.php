@@ -64,12 +64,12 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 		                                	<label class="col-lg-2 col-form-label">Start Date</label>
 		                                    <div class="col-lg-3">
 			                       				<input type="text" id="startDate" value="<?php echo $startDate?>" name="startdate" required 
-			                                    placeholder="Enter Start Date" class="form-control datePicker">
+			                                    placeholder="Enter Start Date" class="form-control">
 		                                    </div>
 		                                	<label class="col-lg-2 col-form-label datePicker">End Date</label>
 		                                    <div class="col-lg-3">
 			                       				<input type="text" value="<?php echo $endDate?>" id="endDate" name="enddate" required 
-			                                    placeholder="Enter Start Date" class="form-control datePicker">
+			                                    placeholder="Enter Start Date" class="form-control">
 		                                    </div>
 		                                </div>
 		                                
@@ -110,11 +110,32 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 $(document).ready(function(){
 	$('.datePicker').datetimepicker({
 	    timepicker:false,
-	    format:'m-d-Y'
-	});
+	    format:'m-d-Y',
+	})
+	
+	$('#endDate').datetimepicker({
+		timepicker:false,
+	    format:'m-d-Y',
+	 })
+	$('#startDate').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	    onClose: function(dateText,datePickerInstance) {
+	    	$('#endDate').datetimepicker({
+	    	    timepicker:false,
+	    	    format:'m-d-Y',
+	    	    changeMonth: true,
+	    	    minDate:dateText,
+	    	    defaultDate:dateText
+	    	})
+	    }
+	})
 	loadShowTasks();
 });
-
+	function changeDate(startDate){
+		alert(startDate);
+	}
+	
 	function cancelForm(){
 		window.location.href = "adminShowList.php";	
 	}
