@@ -5,7 +5,6 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 $sessionUtil = SessionUtil::getInstance();
-$userSeq = $sessionUtil->getUserLoggedInSeq();
 
 $success = 1;
 $message ="";
@@ -32,6 +31,10 @@ if($call == "getAllTasks"){
 if($call == "getShowTasks"){
 	try{
 		$showSeq = $_GET["showSeq"];
+		$userSeq = null;
+		if($sessionUtil->isSessionUser()){
+			$userSeq = $sessionUtil->getUserLoggedInSeq();
+		}
 		$tasks = $taskMgr->getShowTasksByUser($showSeq, $userSeq);
 		echo json_encode($tasks);
 		return;

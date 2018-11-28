@@ -33,6 +33,9 @@
    <form id="form1" name="form1" method="post" action="adminCreateShow.php">
      	<input type="hidden" id="id" name="id"/>
    	</form>
+   	<form id="form2" name="form2" method="post" action="adminShowTasks.php">
+     	<input type="hidden" id="showSeq" name="showSeq"/>
+   	</form>
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -42,10 +45,16 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+function showTasks(seq){
+	$("#showSeq").val(seq);                        
+    $("#form2").submit();
+}
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'><a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
+        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
+            	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
+            	html +=" <a href='javascript:showTasks("+ data['seq'] + ")' ><i class='fa fa-eye' title='Show'></i></a>";
             html += "</div>";
         
         return html;

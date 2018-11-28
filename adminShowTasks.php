@@ -1,24 +1,27 @@
-<?include("SessionCheckUser.php");
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
-
-$session = SessionUtil::getInstance();
-$userSeq = $session->getUserLoggedInSeq();
+$showSeq = $_POST["showSeq"];
 $showMgr = ShowMgr::getInstance();
-$shows = $showMgr->getUpcomingShowsByUser($userSeq);
+$show = $showMgr->findBySeq($showSeq);
+
+// $session = SessionUtil::getInstance();
+// $userSeq = $session->getUserLoggedInSeq();
+// $showMgr = ShowMgr::getInstance();
+// $shows = $showMgr->getUpcomingShowsByUser($userSeq);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User | Upcoming Tasks Management</title>
+    <title>Admin | Show Tasks Management</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
 <div id="wrapper">
-<?php include("usermenuinclude.php")?>  
+<?php include("adminmenuinclude.php")?>  
 	<div id="page-wrapper" class="gray-bg">
 		<div class="row border-bottom"></div>
         <div class="row">
@@ -28,30 +31,18 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 									href="#"><i class="fa fa-bars"></i> </a>
-									<h4 class="p-h-sm font-normal"> Upcoming Tradeshow Tasks</h4>
+									<h4 class="p-h-sm font-normal"> Tradeshow Tasks</h4>
 						</nav>
 						
 					</div>
-					
-					
-		                     <div class="ibox-content">
+					<div class="ibox-content">
 		                     	<div class="row">
-		                     		<div class="form-group">
-	                       				<label class="col-lg-2 col-form-label">Select Tradeshow</label>
-	                                    <div class="col-lg-4">
-	                                    	<select name="showSeq" id="showSeq" class="showSelect form-control">
-	                                    	<?php 
-	                                    		foreach($shows as $show){
-	                                    			$html = "<option value='". $show->getSeq()  ."'>".$show->getTitle()."</option>";
-	                                    			echo($html);
-	                                    		}
-	                                    	?>
-	                                    	</select>
-	                                    </div>
-	                               </div>
-		                     	</div>
-		                     	<div class="row m-xs">
+									<h4> Various Tasks assigned for tradeshow : "<?php echo $show->getTitle();?>"</h4>
+								</div>
+		                     	<div class="row">
 		                     		<div id="showGrid"></div>
+		                     		
+		                     		<a class="m-t-s button btn btn-primary btn-sm" href="adminShowList.php">Show all TradeShows</a>
 		                     	</div>
 		                     </div>
 	                    </div>	
@@ -132,7 +123,11 @@ $(document).ready(function(){
 	$('.showSelect').on('change', function() {
 	  loadGrid(this.value);
 	});
-    loadGrid($('.showSelect').val());
+    //loadGrid($('.showSelect').val());
+	loadGrid(<?php echo $showSeq?>);
+	//$.get("Actions/TaskAction.php?call=getShowTasks&showSeq=4", function(taskDetails){
+		//alert(taskDetails);
+	//});
     $('.saveTaskDetails').on('click', function() {
         $('#updateShowTaskDetailsForm').ajaxSubmit(function( data ){
             showResponseToastr(data,null,"updateShowTaskDetailsForm","mainDiv");
@@ -184,7 +179,7 @@ function loadGrid(showSeq){
       { text: 'Task', datafield: 'title', width:"60%"},
       { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
       { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%'}
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'10%'}
     ]
    
     var source =

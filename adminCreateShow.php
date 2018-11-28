@@ -23,7 +23,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Bookings</title>
+    <title>Admin | Create TradeShow</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>

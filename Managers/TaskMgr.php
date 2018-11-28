@@ -35,9 +35,14 @@ class TaskMgr{
 	
 	public function getShowTasksByUser($showSeq,$userSeq){
 		$query = "select showtasks.seq,tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
-inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
-inner join tasks on showtasks.taskseq = tasks.seq
-where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq";
+		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
+		inner join tasks on showtasks.taskseq = tasks.seq
+		where showtasks.showseq = $showSeq";
+		if($userSeq != null){
+			$query .= " and showtaskassignees.userseq = $userSeq";	
+		}
+		$query .= " group by showtasks.seq";
+		
 		$tasks = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $tasks;
 		$mainArr["TotalRows"] = $this->getShowTaskCount($showSeq, $userSeq);
@@ -45,10 +50,15 @@ where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq";
 		
 	}
 	private function getShowTaskCount($showSeq,$userSeq){
-		$query = "select count(*) from showtasks
-		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
-		inner join tasks on showtasks.taskseq = tasks.seq
-		where showtaskassignees.userseq = $userSeq and showtasks.showseq = $showSeq";
+		$query = "select count(*) from showtasks left join tasks on showtasks.taskseq = tasks.seq where showtasks.showseq = $showSeq";
+		if($userSeq != null){
+			$query = "select count(*) from showtasks
+			inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
+			inner join tasks on showtasks.taskseq = tasks.seq
+			where showtasks.showseq = $showSeq and showtaskassignees.userseq = $userSeq";
+		}
+		
+		
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
