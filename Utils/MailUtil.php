@@ -47,9 +47,9 @@ class MailUtil{
 			foreach ($admins as $admin){
 				$adminName = $admin->getName();
 				$email = $admin->getEmail();
+				$toEmails = explode(",", $email);
 				$html = "Hello $adminName, <br>";
 				$html .= "<p>User $userName has updated status as " . $showTaskDetail["status"] . " for task - '". $showTaskDetail["title"] . "'</p>";
-				$toEmails = array(0=>$email);
 				MailUtil::sendSmtpMail("Updated Task Status", $html, $toEmails, true);
 			}
 		}
