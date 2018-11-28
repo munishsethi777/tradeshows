@@ -134,7 +134,7 @@ require_once('IConstants.inc');
                     </div>
                 </form>
             
-            
+            <a class="btn btn-default btn-sm" href="index.php">Home</a>
             <p class="m-t"> <small>Login Credentials/Rights Reserved</small> </p>
         </div>
     </div>

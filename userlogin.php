@@ -88,13 +88,13 @@ require_once('IConstants.inc');
                   </div>
 
                   <div class="form-group">
-                        <button class="btn btn-primary block full-width m-b ladda-button" data-style="expand-right" id="loginButton" type="button">
+                        <button class="btn btn-info block full-width m-b ladda-button" data-style="expand-right" id="loginButton" type="button">
                             <span class="ladda-label">Login</span>
                         </button>
                     </div>
                 </form>
             
-            
+            <a class="btn btn-default btn-sm" href="index.php">HOME</a>
             <p class="m-t"> <small>Login Credentials/Rights Reserved</small> </p>
         </div>
     </div>

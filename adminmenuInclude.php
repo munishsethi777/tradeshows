@@ -1,4 +1,6 @@
 <?php 
+$session = SessionUtil::getInstance();
+$userNameLoggedIn = $session->getAdminLoggedInName();
 
 $isDashboard="";
 $isTradeShows="";
@@ -28,6 +30,7 @@ if($file == "dashboard.php"){
 	                    	<span class="clear"> 
 	                    		<span class="block m-t-xs"> 
 	                    			<strong class="font-bold">Alpine Tradeshows Management</strong>
+	                    			<br><small>Welcome <?php echo $userNameLoggedIn?></small>
 	                    		</span>
 							</span>
 						</a>

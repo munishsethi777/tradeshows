@@ -22,7 +22,7 @@ $userFullName = $session->getUserLoggedInName();
 	        	<div class="ibox">
 					<div class="ibox-title">
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
+								<a class="navbar-minimalize minimalize-styl-2 btn btn-info"
 									href="#"><i class="fa fa-bars"></i> </a>
 									<h4 class="p-h-sm font-normal"> Dashboard</h4>
 						</nav>

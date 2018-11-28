@@ -1,4 +1,6 @@
 <?php 
+$session = SessionUtil::getInstance();
+$userNameLoggedIn = $session->getUserLoggedInName();
 
 $isDashboard="";
 $isUpcomingTasks="";
@@ -27,6 +29,7 @@ if($file == "userDashboard.php"){
 	                    	<span class="clear"> 
 	                    		<span class="block m-t-xs"> 
 	                    			<strong class="font-bold">Alpine Tradeshows Management</strong>
+	                    			<br><small>Welcome <?php echo $userNameLoggedIn?></small>
 	                    		</span>
 							</span>
 						</a>
