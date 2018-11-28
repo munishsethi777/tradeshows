@@ -53,42 +53,48 @@ class SessionUtil{
     }
 
     public function getAdminLoggedInName(){
-      if( $_SESSION[self::$ADMIN_LOGGED_IN] != null){
+    	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+    	//if( $_SESSION[self::$ADMIN_LOGGED_IN] != null){
                 $arr = $_SESSION[self::$ADMIN_LOGGED_IN];
                 return $arr[1];
         }
     }
     
     public function getAdminLoggedInUserName(){
-    	if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+    	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+    	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
     			$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
     			return $arr[2];
     	}
     }
 	
     public function getAdminLoggedInEmail(){
-    	if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+    	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+    	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
     		$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
     		return $arr[3];
     	}
     }
     
     public function getAdminLoggedInSeq(){
-        if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
-	    				$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
-	    				return $arr[0];
+    	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+    	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+	 			$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
+	    		return $arr[0];
 	    }
     }
     
     public function getUserLoggedInName(){
-    	if( $_SESSION[self::$USER_LOGGED_IN] != null){
+    	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+    	//if( $_SESSION[self::$USER_LOGGED_IN] != null){
     		$arr = $_SESSION[self::$USER_LOGGED_IN];
     		return $arr[1];
     	}
     }
     
     public function getUserLoggedInUserName(){
-    	if($_SESSION[self::$USER_LOGGED_IN] != null){
+    	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+    	//if($_SESSION[self::$USER_LOGGED_IN] != null){
     		$arr = $_SESSION[self::$USER_LOGGED_IN];
     		return $arr[2];
     	}
@@ -96,7 +102,8 @@ class SessionUtil{
     
     
     public function getUserLoggedInSeq(){
-    	if($_SESSION[self::$USER_LOGGED_IN] != null){
+    	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+    	//if($_SESSION[self::$USER_LOGGED_IN] != null){
     		$arr = $_SESSION[self::$USER_LOGGED_IN];
     		return $arr[0];
     	}
