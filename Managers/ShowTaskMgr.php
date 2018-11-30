@@ -62,8 +62,8 @@ class ShowTaskMgr{
 		self::$dataStore->updateByAttributes($colVal,$colValCondition);
 	}
 	public function getShowTaskDetails($showTaskSeq){
-		$query = "SELECT showtasks.seq,tasks.title,tasks.description,showtasks.startdate,showtasks.enddate,showtasks.comments,showtasks.status FROM `showtasks`
-inner join tasks on tasks.seq = showtasks.taskseq where showtasks.seq = $showTaskSeq";
+		$query = "SELECT shows.title as showtitle,showtasks.seq,tasks.title,tasks.description,showtasks.startdate,showtasks.enddate,showtasks.comments,showtasks.status FROM `showtasks`
+inner join tasks on tasks.seq = showtasks.taskseq inner join shows on showtasks.showseq = shows.seq where showtasks.seq = $showTaskSeq";
 		$taskDetails = self::$dataStore->executeQuery($query);
 		return $taskDetails;
 	}
