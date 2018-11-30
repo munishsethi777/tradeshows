@@ -49,7 +49,8 @@ class MailUtil{
 				$email = $admin->getEmail();
 				$toEmails = explode(",", $email);
 				$html = "Hello $adminName, <br>";
-				$html .= "<p>User $userName has updated status as " . $showTaskDetail["status"] . " for task - '". $showTaskDetail["title"] . "'</p>";
+				$html .= "<p>User $userName has updated status as " . $showTaskDetail["status"] . " for task - '". $showTaskDetail["title"] . "' for trade show  - '" . $showTaskDetail["showtitle"] ."'</p><br>";
+				$html .= "<p>Comments - ".$showTaskDetail['comments']."</p>";
 				MailUtil::sendSmtpMail("Updated Task Status", $html, $toEmails, true);
 			}
 		}
@@ -68,7 +69,7 @@ class MailUtil{
 				$mail->Password   = "munish314";          // GMAIL password
 			}
 			$mail->IsHTML(true);
-			$mail->SetFrom('noreply@satyainfopages.in', 'Satya Info Pages');
+			$mail->SetFrom('noreply@satyainfopages.in', 'Alpine');
 			$mail->Subject = $subject;
 			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 			$mail->MsgHTML($body);
