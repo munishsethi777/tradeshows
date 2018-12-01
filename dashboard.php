@@ -10,7 +10,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     <title>Admin | Dashboard</title>
     <?include "ScriptsInclude.php"?>
     <style type="text/css">
-    	.flot-chart{height:130px;}
+    	.flot-chart{height:200px;}
     </style>
 </head>
 <body>
@@ -51,8 +51,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                                         
 						</div>
 						<div class="row">	
-							<div class="col-lg-2">
-		                        <div class="widget bg-info">
+							<div class="col-lg-15">
+		                        <div class="widget bg-gray text-center">
 		                        	<div class="row">
 		                        		<span>New Tasks Assigned</span>
 		                                <h1 class="m-t-xs font-bold">567</h1>
@@ -61,8 +61,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                    </div>
 					                    
-		                    <div class="col-lg-2">
-		                        <div class="widget bg-primary">
+		                    <div class="col-lg-15">
+		                        <div class="widget bg-primary text-center">
 		                        	<div class="row">
 		                        		<span>Tasks Completed</span>
 		                                <h1 class="m-t-xs font-bold">337</h1>
@@ -71,18 +71,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                    </div>
 							
-							<div class="col-lg-2">
-		                        <div class="widget bg-danger">
-		                        	<div class="row">
-		                        		<span>Tasks Pending</span>
-		                                <h1 class="m-t-xs font-bold">120</h1>
-		                                <div class="font-bold text-right">30% <i class="fa fa-level-down"></i></div>
-									</div>
-		                        </div>
-		                    </div>
-		                    
-		                    <div class="col-lg-2">
-		                        <div class="widget bg-warning">
+							<div class="col-lg-15">
+		                        <div class="widget bg-info text-center">
 		                        	<div class="row">
 		                        		<span>Tasks inProcess</span>
 		                                <h1 class="m-t-xs font-bold">117</h1>
@@ -90,13 +80,35 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                            </div>
 								</div>
 	                        </div>
+	                        <div class="col-lg-15">
+		                        <div class="widget bg-warning text-center">
+		                        	<div class="row">
+		                        		<span>Tasks Pending</span>
+		                                <h1 class="m-t-xs font-bold">120</h1>
+		                                <div class="font-bold text-right">30% <i class="fa fa-level-down"></i></div>
+									</div>
+		                        </div>
+		                    </div>
 	                        
-	                        
-	                        <div class="col-lg-4">
-	                        	<div class="flot-chart">
-	                                <div class="flot-chart-content" id="flot-line-chart-multi"></div>
-	                            </div>
+	                        <div class="col-lg-15">
+		                        <div class="widget bg-danger text-center">
+		                        	<div class="row">
+		                        		<span>Tasks Delayed</span>
+		                                <h1 class="m-t-xs font-bold">117</h1>
+		                                <div class="font-bold text-right">12% <i class="fa fa-level-up"></i></div>
+		                            </div>
+								</div>
 	                        </div>
+	                        
+	                        <!-- <div class="col-lg-2">
+		                        <div class="widget bg-primary text-center">
+		                        	<div class="row">
+		                        		<span>Shows Completed</span>
+		                                <h1 class="m-t-xs font-bold">6</h1>
+		                                <div class="font-bold text-right">12% <i class="fa fa-level-up"></i></div>
+		                            </div>
+								</div>
+	                        </div> -->
 	                        
 	                    </div>
             			</div>
@@ -126,69 +138,79 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 								<div class="ibox-content">
 							        <ul class="list-group clear-list">
 			                            <li class="list-group-item fist-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">02</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
 			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Nov 30 2018 - Dec 2 2018</h4> <span class="text-muted">The International WorkBoat Show. The Int'l WorkBoat Show.</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">12</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">05</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Dec 10 2018 - Dec 12 2018</h4> <span class="text-muted">FRANCHISE EXPO WEST - LOS ANGELES</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">06</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">05</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">06</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">06</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">22</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">10</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">00</span>
 			                                <h4>Dec 18 2018 - Dec 19 2018</h4> <span class="text-muted">CareerTech Vision. Career Tech Expo</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">01</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">16</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Dec 30 2018 - Jan 2 2019</h4> <span class="text-muted">LA Auto Show. Los Angeles Auto Show.</span>
 			                            </li>
 			                            
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">13</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">04</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">22</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">00</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">00</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 4 2019 - Jan 4 2019</h4> <span class="text-muted">Power-Gen International. The Global Power Generation Exhibition & Conference.</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">15</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">17</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">00</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">09</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">21</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">08</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">02</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">10</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">20</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">12</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">01</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            
@@ -202,6 +224,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                </div>
 		                
 		                <div class="col-lg-7">
+		                	<div class="col-lg-12">
+		                    	<div class="row m-b-lg">
+			                
+		                        	<div class="flot-chart">
+		                                <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+		                            </div>
+		                        </div>
+		                     </div>
 							<div class="ibox float-e-margins">
                             	<div class="ibox-title">
                                 	<h5>New Shows saved in system</h5>
@@ -282,6 +312,46 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
                         <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
                     </tr>
+                   <tr>
+                        <td>Gamma project</td>
+                        <td>Anna Jordan</td>
+                        <td>06/20/2019</td>
+                        <td>06/23/2019</td>
+                        <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
+                        <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
+                    </tr>
+                   <tr>
+                        <td>Gamma project</td>
+                        <td>Anna Jordan</td>
+                        <td>06/20/2019</td>
+                        <td>06/23/2019</td>
+                        <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
+                        <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
+                    </tr>
+                   <tr>
+                        <td>Gamma project</td>
+                        <td>Anna Jordan</td>
+                        <td>06/20/2019</td>
+                        <td>06/23/2019</td>
+                        <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
+                        <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
+                    </tr>
+                   <tr>
+                        <td>Gamma project</td>
+                        <td>Anna Jordan</td>
+                        <td>06/20/2019</td>
+                        <td>06/23/2019</td>
+                        <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
+                        <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
+                    </tr>
+                   <tr>
+                        <td>Gamma project</td>
+                        <td>Anna Jordan</td>
+                        <td>06/20/2019</td>
+                        <td>06/23/2019</td>
+                        <td><span class="pie" style="display: none;">4,9</span><svg class="peity" height="16" width="16"><path d="M 8 8 L 8 0 A 8 8 0 0 1 15.48012994148332 10.836839096340286 Z" fill="#1ab394"></path><path d="M 8 8 L 15.48012994148332 10.836839096340286 A 8 8 0 1 1 7.999999999999998 0 Z" fill="#d7d7d7"></path></svg></td>
+                        <td><a href="#"><i class="fa fa-play text-navy"></i></a></td>
+                    </tr>
                    
                     </tbody>
                 </table>
@@ -318,23 +388,30 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                               [1167951600000, 70], [1168210800000, 50], [1168297200000, 64], 
                               [1168383600000, 105], [1168470000000, 110], [1168556400000, 76], 
                               [1168815600000, 80], [1168902000000, 105], [1168988400000, 70]];
-          	var exchangerates=[ [1167692400000, 90], [1167778800000, 110], [1167865200000, 60], 
+            var exchangerates=[ [1167692400000, 90], [1167778800000, 110], [1167865200000, 60], 
                                 [1167951600000, 170], [1168210800000, 150], [1168297200000, 164], 
                                 [1168383600000, 95], [1168470000000, 110], [1168556400000, 120], 
                                 [1168815600000, 80], [1168902000000, 105], [1168988400000, 170]];
+            var delayedrates=[ [1167692400000, 20], [1167778800000, 40], [1167865200000, 55], 
+                                [1167951600000, 80], [1168210800000, 80], [1168297200000, 110], 
+                                [1168383600000, 80], [1168470000000, 70], [1168556400000, 65], 
+                                [1168815600000, 50], [1168902000000, 45], [1168988400000, 30]];
 
 
             function doPlot(position) {
                 $.plot($("#flot-line-chart-multi"), 
                 	[
-						{
-		                    data: oilprices,
-		                    label: "Tasks Assigned"
-		                }, {
+						
+		                {
 		                    data: exchangerates,
-		                    label: "Tasks Completed",
-		                    yaxis: 1
-		                }
+		                    label: "Tasks Completed"
+		                    
+		                },
+		                {
+		                    data: delayedrates,
+		                    label: "Tasks Delayed",
+		                    	yaxis: 1
+				        }
 	               ], {
                 	series: {
                         lines: {
@@ -345,7 +422,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                             show: true,
                             tension: 0.4,
                             lineWidth: 1,
-                            fill: 0.5
+                            fill: 0.8
                         },
                         points: {
                             radius: 0,
@@ -366,7 +443,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                     legend: {
                         position: 'sw'
                     },
-                    colors: ["#9E9E9E","#1ab394"],
+                    colors: ["#1ab394","#ed5565"],
                     grid: {
                         color: "#999999",
                         hoverable: true,

@@ -31,20 +31,20 @@ $userFullName = $session->getUserLoggedInName();
 					
 					
 					<div class="row">
-	                    <div class="col-lg-3">
+	                    <div class="col-lg-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
-	                                <span class="label label-success float-right">Total</span>
+	                                <span class="label label-default float-right">Total</span>
 	                                <h5>Assigned</h5>
 	                            </div>
 	                            <div class="ibox-content">
 	                                <h1 class="no-margins">567</h1>
 	                                <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-	                                <small>Tasks alloted to you</small>
+	                                <!-- <small>Tasks alloted to you</small> -->
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-3">
+	                    <div class="col-lg-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-primary float-right">Moderate</span>
@@ -53,36 +53,49 @@ $userFullName = $session->getUserLoggedInName();
 	                            <div class="ibox-content">
 	                                <h1 class="no-margins">200</h1>
 	                                <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-	                                <small>Tasks completed by you</small>
+	                                <!--<small>Tasks completed by you</small>-->
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-3">
+	                    <div class="col-lg-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-danger float-right">High Value</span>
-	                                <h5>Pending</h5>
+	                                <h5>InProcess</h5>
 	                            </div>
 	                            <div class="ibox-content">
 	                                <h1 class="no-margins">237</h1>
 	                                <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-	                                <small>Pending task to be processed</small>
+	                                <!--<small>Pending task to be processed</small>-->
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-3">
+	                    <div class="col-lg-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-warning float-right">Low value</span>
-	                                <h5>InProcess</h5>
+	                                <h5>Pending</h5>
 	                            </div>
 	                            <div class="ibox-content">
 	                                <h1 class="no-margins">130</h1>
 	                                <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
-	                                <small>Tasks in process.</small>
+	                                <!--<small>Tasks in process.</small>-->
 	                            </div>
-                        </div>
-            	</div>
+                        	</div>
+                      	</div>
+                      	<div class="col-lg-15">
+	                        <div class="ibox ">
+	                            <div class="ibox-title">
+	                                <span class="label label-warning float-right">Low value</span>
+	                                <h5>Delayed</h5>
+	                            </div>
+	                            <div class="ibox-content">
+	                                <h1 class="no-margins">130</h1>
+	                                <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+	                                <!--<small>Tasks in process.</small>-->
+	                            </div>
+                        	</div>
+                      	</div>
         </div>
 					
 					<div class="row">
