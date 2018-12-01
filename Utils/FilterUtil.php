@@ -1,4 +1,5 @@
 <?php
+require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
   class FilterUtil{
       public static function getFilters(){
         $pagenum = intval($_GET['pagenum']);
@@ -13,7 +14,7 @@
       }
   
   private static function appendLimit($query){
-    if(isset($_GET['pagenum'])){
+   if(isset($_GET['pagenum'])){
         $pagenum = intval($_GET['pagenum']);
         $pagesize = intval($_GET['pagesize']);
         $start = $pagenum;
@@ -30,40 +31,25 @@
 	    	// }
 	    	$query = $query . " limit " . $start . "," . $pagesize;
     }
-    return $query;         
+    return $query;        
   }
+  
+  private static function limit ( $request )
+	{
+		$limit = '';
+		if ( isset($request['start']) && $request['length'] != -1 ) {
+			$limit = "LIMIT ".intval($request['start']).", ".intval($request['length']);
+		}
+		return $limit;
+	}
   
   private static function appendSorting($query){
     if (isset($_GET['sortdatafield']))
     {
         $sortfield = $_GET['sortdatafield'];
-        $sortorder = $_GET['sortorder'];  
-        $where = "";
-        $groupBy = "";
+        $sortorder = $_GET['sortorder'];            
         if ($sortfield != NULL)
         {
-        	
-        	if($sortfield == "menus.title"){
-        		$wherePos = strpos(strtolower ($query),'where');
-        		$where = "";
-        		if ($wherePos !== false) {
-        			$q = substr($query, 0,$wherePos). " ";
-        			$where = substr($query,$wherePos) ;
-        			$query = $q;
-        		}
-        		$groupByPos = strpos(strtolower ($query),'group by');
-        		if ($groupByPos !== false) {
-        			$q = substr($query, 0,$groupByPos). " ";
-        			$groupBy = substr($query,$groupByPos) ;
-        			$query = $q;
-        		}
-        		$joinPos = strpos(strtolower ($query),'inner join bookingdetails');
-        		if($joinPos !== false){
-        		}else{
-        			$query .= " inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join menus on bookingdetails.menuseq = menus.seq";
-        		}
-        	}
-        	$query .= $where . " " . $groupBy;
             if ($sortorder == "desc")
             {
                 $query = $query . " ORDER BY" . " " . $sortfield . " DESC";
@@ -76,9 +62,35 @@
     }  
     return $query;  
   }
-  public static function applyFilter($query,$isApplyLimit = true,$isAppendGroupBy= false){
+  
+  static function order ( $request, $columns )
+  {
+  	$order = '';
+  	if ( isset($request['order']) && count($request['order']) ) {
+  		$orderBy = array();
+  		$dtColumns = self::pluck( $columns, 'dt' );
+  		for ( $i=0, $ien=count($request['order']) ; $i<$ien ; $i++ ) {
+  			// Convert the column index into the column data property
+  			$columnIdx = intval($request['order'][$i]['column']);
+  			$requestColumn = $request['columns'][$columnIdx];
+  			$columnIdx = array_search( $requestColumn['data'], $dtColumns );
+  			$column = $columns[ $columnIdx ];
+  			if ( $requestColumn['orderable'] == 'true' ) {
+  				$dir = $request['order'][$i]['dir'] === 'asc' ?
+  				'ASC' :
+  				'DESC';
+  				$orderBy[] = '`'.$column['db'].'` '.$dir;
+  			}
+  		}
+  		if ( count( $orderBy ) ) {
+  			$order = 'ORDER BY '.implode(', ', $orderBy);
+  		}
+  	}
+  	return $order;
+  }
+  
+  public static function applyFilter($query,$isApplyLimit = true){
     // filter data.
-    $isMenuField = true;
     if (isset($_GET['filterscount']))
     {
         $filterscount = $_GET['filterscount'];
@@ -95,7 +107,6 @@
             $tmpfilteroperator = "";
             for ($i=0; $i < $filterscount; $i++)
             {
-            	
                 // get the filter's value.
                 $filtervalue = $_GET["filtervalue" . $i];
                 // get the filter's condition.
@@ -149,14 +160,23 @@
                         $where .= " BINARY " . $filterdatafield . " = '" . $filtervalue ."'";
                         break;
                     case "EQUAL":
-                    	if($filterdatafield == "menus.title"){
-                    		$joinPos = strpos(strtolower ($query),'inner join bookingdetails');
-                    		if($joinPos !== false){
+                    	if($filterdatafield == "status"){
+                    		if($filtervalue != ShowTaskStatus::delay && $filtervalue != ShowTaskStatus::pending){
+                    			$filtervalue = ShowTaskStatus::getName($filtervalue);
+                    			$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
                     		}else{
-                    			$query .= " inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join menus on bookingdetails.menuseq = menus.seq";
+                    			$date = new DateTime();
+                    			$date = $date->format("Y-m-d");
+                    			if($filtervalue != ShowTaskStatus::pending){
+                    				$where .= " ($filterdatafield = 'pending' or  $filterdatafield = 'inprocess') And enddate < '$date'";
+                    			}else{
+                    				$where .= " $filterdatafield = 'pending' And enddate > '$date'";
+                    			}
+                    			
                     		}
+                    	}else{
+                    		$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
                     	}
-                        $where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
                         break;
                     case "NOT_EQUAL_CASE_SENSITIVE":
                         $where .= " BINARY " . $filterdatafield . " <> '" . $filtervalue ."'";
@@ -165,38 +185,23 @@
                         $where .= " " . $filterdatafield . " <> '" . $filtervalue ."'";
                         break;
                     case "GREATER_THAN":
-                    	$where .= " " . $filterdatafield . " > '" . $filtervalue ."'";
+                        $where .= " " . $filterdatafield . " > '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN":
                         $where .= " " . $filterdatafield . " < '" . $filtervalue ."'";
                         break;
                     case "GREATER_THAN_OR_EQUAL":
-                    	if($filterdatafield == "bookedon"){
-                    		//$filtervalue .= " 00:00:00";
-                    		//$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
-                    		$bookedOn = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
-                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
-                    	}
-                    	if($filterdatafield == "bookingdate"){
-                    		$filtervalue .= " 00:00:00";
-                    		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
-                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
+                    	if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
+                    		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 $filtervalue = $date->format("Y-m-d");  
                     	}
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
-                    	if($filterdatafield == "bookedon"){
-                    		//$filtervalue .= " 00:00:00";
-                    		//$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
-                    		$bookedOn = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
-                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
+               			if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
+                    		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 $filtervalue = $date->format("Y-m-d");  
                     	}
-                    	if($filterdatafield == "bookingdate"){
-                    		$filtervalue .= " 00:00:00";
-                    		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
-                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
-                    	}
-                    	
                         $where .= " " . $filterdatafield . " <= '" . $filtervalue ."'";
                         break;
                     case "STARTS_WITH_CASE_SENSITIVE":
@@ -217,27 +222,19 @@
                 {
                     $where .= ")";
                 }
+                
                 $tmpfilteroperator = $filteroperator;
                 $tmpdatafield = $filterdatafield;            
             }
             // build the query.
-            //if($filterdatafield != "menus.title" || !$isMenuField){
-            	$query = $query . $where;
-            //}
+            $query = $query . $where; 
+           
+            
         }
-        
-        
-          
       }
-      
-      if($isAppendGroupBy){
-      	$query .= " group by bookings.seq ";
-      }
-      
       //apply Sorting
-      $query = FilterUtil::appendSorting($query);
-     
-       
+       $query = FilterUtil::appendSorting($query);
+        
       //apply limit
       if($isApplyLimit){
         $query = FilterUtil::appendLimit($query);
