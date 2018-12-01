@@ -31,7 +31,7 @@ if($call == "saveShow"){
 		$show->setStartDate($startDate);
 		$show->setEndDate($endDate);
 		$id = $showManager->saveShow($show);
-		MailUtil::sendTaskAssignedNotification($id);
+		//MailUtil::sendTaskAssignedNotification($id);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

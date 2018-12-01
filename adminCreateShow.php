@@ -49,6 +49,8 @@ if(isset($_POST["id"]) && !empty($_POST["id"] )){
                             <form id="taskForm" method="post" action="Actions/ShowAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveShow"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
+	                        		<div id="assigneesDiv">
+	                        		</div>
 	                        		<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Show Title</label>
 	                                    <div class="col-lg-8">
@@ -156,6 +158,7 @@ $(document).ready(function(){
 			$("#taskForm")[0].reportValidity();
 		}
 	}
+	var users = [];
 	function populateTasks(url){
 		showHideProgress()
 		$.get(url, function(data){
@@ -163,13 +166,13 @@ $(document).ready(function(){
 			data = $.parseJSON(data);
 			var html =""
 			var tasks = data.tasks;
-			var users = data.users;
+			users = data.users;
 			var taskAssignees = data.taskAssignees;
 			var i = 1;
 			$.each( tasks, function( k, taskDetail ) {	
 				var categorySeq = taskDetail[0].taskcategoryseq;
 				html += '<input type="hidden" value="'+categorySeq+'" id ="category" name="category[]"/>';
-				html += getHtml(k,taskDetail,users,taskAssignees,i);
+				html += getHtml(categorySeq,k,taskDetail,users,taskAssignees,i);
 				i++;
 			});	
 			$("#accordion").html(html);
@@ -181,34 +184,44 @@ $(document).ready(function(){
 			showHideProgress()
 		});
 	}
-	
-	function getHtml(categoryTitle,tasksData,users,taskAssignees,i){
+	var dates = [];
+	var flag = true;
+	function getHtml(categorySeq,categoryTitle,tasksData,users,taskAssignees,i){
 		var html = '<div class="panel panel-default">';
         	html += '<div class="panel-heading">';
         	html += '<h5 class="panel-title">';
             html += '<a data-toggle="collapse" data-parent="#accordion" href="#div'+i+'" class="collapsed" aria-expanded="false">'+categoryTitle+'</a>';
         	html += '</h5></div>';
     		html += '<div id="div'+i+'" class="panel-collapse collapse" style="">';
-        	html += '<div class="panel-body">';
+        	html += '<div  class="panel-body">';
+        	html += '<div id="divCat'+categorySeq+'">';
             html += '<div class="form-group row">';
             html += '<label class="col-lg-4 col-form-label">Title</label>';
-            html += '<label class="col-lg-4 col-form-label">Assignees</label>';
+            html += '<label class="col-lg-3 col-form-label">Assignees</label>';
             html += '<label class="col-lg-2 col-form-label">StartDate</label>';
             html += '<label class="col-lg-2 col-form-label">EndDate</label>';
             html += '</div>';
             var childHtml = "";
+            var categorySeq = 0;
+            
             $.each( tasksData, function( k, taskDetail ) {
                 var seq = taskDetail.seq;
                 var parentTaskSeq = taskDetail.parenttaskseq;
-                var categorySeq = taskDetail.taskcategoryseq;
+                categorySeq = taskDetail.taskcategoryseq;
                 var daysRequired = taskDetail.daysrequired;
+                if(flag){
+	                dates[0] = taskDetail.startDate;
+	                dates[1] = taskDetail.endDate;
+	                flag = false;
+                }
+                childHtml += '<div id="taskDiv">';
                 childHtml += '<input type="hidden" id="'+seq+'_daysRequired" name="'+categorySeq+'_daysRequired[]"  value="'+daysRequired+'"/>';
                 childHtml += '<input type="hidden" name="'+categorySeq+'_taskSeq[]"  value="'+seq+'"/>';
                 childHtml += '<div class="form-group row">';
             	childHtml += '<div class="col-lg-4 col-form-label">';
             	childHtml += '<input type="text" value="' +taskDetail.title + '" name="'+categorySeq+'_title[]" class="form-control"><br>';
             	childHtml += '</div>';
-            	childHtml += '<div class="col-lg-4 col-form-label">';
+            	childHtml += '<div class="col-lg-3 col-form-label">';
             	childHtml += '<select class="form-control chosen-select" name="'+categorySeq+'_assignees[]" required id="menuDD" multiple>';
             	$.each( users, function( key, value ) {
                 	var selected = "";
@@ -216,7 +229,7 @@ $(document).ready(function(){
                 	if($.inArray(value.seq, assignees) !== -1){
                 		selected = "selected";		
                 	}
-            		childHtml += "<option "+selected+" value='"+seq + "_"+value.seq+"'>"+ value.fullname +"</option>";	
+            		childHtml += "<option "+selected+" value='"+value.seq+"'>"+ value.fullname +"</option>";	
             	});
                 childHtml += '</select>';
             	childHtml += '</div>';
@@ -227,17 +240,67 @@ $(document).ready(function(){
             	childHtml += '<div class="col-lg-2 col-form-label">';
             	childHtml += '<input type="text" value="'+taskDetail.endDate+'" id="'+seq+'_endDate" name="'+categorySeq+'_enddate[]" class="form-control datePicker">';
             	childHtml += '</div>';
+            	childHtml += '<label class="col-lg-1 col-form-label">';
+            	childHtml += '<a onClick="removeRow(this)" href="#"><i class="fa fa-times"></i></a>';
+            	childHtml += '</label>';
+            	childHtml += '</div>';
             	childHtml += '</div>';
             	childHtml += '</div>';
             });
             html += childHtml;
-            html += "</div></div></div></div></div>";
+            
+            html += "</div>";
+            html += '<div class="form-group row">';
+            html += '<label class="col-lg-5 col-form-label">';
+            html += '<a onClick="addRow('+categorySeq+')" href="#!"><i class="fa fa-plus"> Add More Task</i></a></label></div>';
+            html += '</div></div></div></div></div>';
             return html;  
 	}
-
+	function removeRow(btn){
+    	$(btn).closest("#taskDiv").remove();
+    }
+    
+    function addRow(categorySeq){
+    	parentTaskSeq = 0;
+    	childHtml = '<div id="taskDiv">';
+        childHtml += '<input type="hidden" name="'+categorySeq+'_daysRequired[]"  value="0"/>';
+        childHtml += '<input type="hidden" name="'+categorySeq+'_taskSeq[]"  value="0"/>';
+        childHtml += '<div class="form-group row">';
+    	childHtml += '<div class="col-lg-4 col-form-label">';
+    	childHtml += '<input type="text" name="'+categorySeq+'_title[]" class="form-control"><br>';
+    	childHtml += '</div>';
+    	childHtml += '<div class="col-lg-3 col-form-label">';
+    	childHtml += '<select class="form-control chosen-select" name="'+categorySeq+'_assignees[]" required id="menuDD" multiple>';
+    	$.each( users, function( key, value ) {
+        	childHtml += "<option value='"+value.seq+"'>"+ value.fullname +"</option>";	
+    	});
+        childHtml += '</select>';
+    	childHtml += '</div>';
+    	childHtml += '<div class="'+parentTaskSeq+'_dates">';
+    	childHtml += '<div class="col-lg-2 col-form-label">';
+    	childHtml += '<input type="text" value="'+dates[0]+'" name="'+categorySeq+'_startdate[]" class="form-control datePicker">';
+    	childHtml += '</div>';
+    	childHtml += '<div class="col-lg-2 col-form-label">';
+    	childHtml += '<input type="text" value="'+dates[1]+'" name="'+categorySeq+'_enddate[]" class="form-control datePicker">';
+    	childHtml += '</div>';
+    	childHtml += '<label class="col-lg-1 col-form-label">';
+    	childHtml += '<a onClick="removeRow(this)" href="#!"><i class="fa fa-times"></i></a>';
+    	childHtml += '</label>';
+    	childHtml += '</div>';
+    	childHtml += '</div>';
+    	childHtml += '</div>';
+    	$("#divCat"+categorySeq).append(childHtml);  
+    	$('.datePicker').datetimepicker({
+	        timepicker:false,
+	        format:'m-d-Y'
+	    });
+		$(".chosen-select").chosen({width:"100%"});
+    }
+        
 	function saveShow(){
 		if($("#taskForm")[0].checkValidity()) {
 			showHideProgress()
+			setData();
 			$('#taskForm').ajaxSubmit(function( data ){
 			   showHideProgress();
 			   var flag = showResponseToastr(data,null,"taskForm","ibox");
@@ -248,6 +311,24 @@ $(document).ready(function(){
 		}else{
 			$("#taskForm")[0].reportValidity();
 		}
+	}
+
+	function setData(){
+		var catAssigneesArr = []
+		$("#assigneesDiv").html("");
+		$('input[name="category[]"]').each(function() {
+			var assigneesArr = [];
+			var categorySeq = this.value;
+			var inputName = categorySeq+'_assignees[]';
+			$('select[name="'+inputName+'"]').each(function() {
+				var selectedOptions = $(this).val();
+				var selectedOptionsStr = selectedOptions.join(",")
+				assigneesArr.push(selectedOptionsStr);
+				var input = '<input type="hidden" value="'+selectedOptionsStr+'" name="'+categorySeq+'_selectedAssignees[]">';
+				$("#assigneesDiv").append(input);
+			});
+			
+		});
 	}
 	
 	function updateDates1(taskSeq,isChild){

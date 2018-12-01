@@ -1,0 +1,1 @@
+ALTER TABLE `tasks` ADD `iscustom` TINYINT NULL AFTER `parenttaskseq`;

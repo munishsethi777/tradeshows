@@ -1,0 +1,1 @@
+ALTER TABLE `showtasks` CHANGE `assignee` `assignee` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;

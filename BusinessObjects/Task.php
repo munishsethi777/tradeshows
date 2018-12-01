@@ -4,6 +4,7 @@ class Task{
 	public static $className = "task";
 
 	private $seq,$taskcategoryseq,$title,$description,$daysrequired,$assignee,$startdatereferencedays,$parenttaskseq;
+	private $isCustom;
 
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -57,6 +58,13 @@ class Task{
 	}
 	public function getParentTaskSeq(){
 		return $this->parenttaskseq;
+	}
+	
+	public function setIsCustom($isCustom_){
+		$this->isCustom = $isCustom_;
+	}
+	public function getIsCustom(){
+		return $this->isCustom;
 	}
 
 }

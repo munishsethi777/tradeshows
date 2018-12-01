@@ -17,9 +17,12 @@ class TaskMgr{
 		}
 		return self::$TaskMgr;
 	}
-	
+	public function saveTask($task){
+		$id = self::$dataStore->save($task);
+		return $id;
+	}
 	public function getAll(){
-		$query = "SELECT tasks.*,taskcategories.title as category FROM `tasks` inner join taskcategories on tasks.taskcategoryseq = taskcategories.seq";
+		$query = "SELECT tasks.*,taskcategories.title as category FROM `tasks` inner join taskcategories on tasks.taskcategoryseq = taskcategories.seq where tasks.iscustom is NULL or tasks.iscustom = 0";
 		$tasks = self::$dataStore->executeQuery($query);
 		$key = "category";
 		$tasks = $this->_group_by($tasks, $key);

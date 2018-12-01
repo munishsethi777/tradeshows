@@ -15,7 +15,7 @@ class ShowTaskAssigneeMgr{
 		return self::$showTaskAssigneeMgr;
 	}
 	
-	public function saveFromRequest($assignees,$showTaskSeq,$taskSeq){
+	public function saveFromRequest($assignees,$showTaskSeq,$taskSeq,$customTaskSeq){
 		$assigneesSeqs = $assignees;
 		foreach ($assigneesSeqs as $key=>$assignee){
 			$assigneeArr = explode("_", $assignee);
@@ -32,6 +32,16 @@ class ShowTaskAssigneeMgr{
 			}
 		}
 		return $assignees;
+	}
+	
+	public function saveAssignees($showTaskSeq,$assignees){
+		$assigneesArr = explode(",", $assignees);
+		foreach ($assigneesArr as $key=>$assignee){
+			$showTaskAssignee = new ShowTaskAssignee();
+			$showTaskAssignee->setShowTaskSeq($showTaskSeq);
+			$showTaskAssignee->setUserSeq($assignee);
+			self::$dataStore->save($showTaskAssignee);
+		}
 	}
 	
 	public function deleteByShowSeq($showSeq){

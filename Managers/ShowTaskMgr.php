@@ -3,6 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTask.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskAssigneeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskMgr.php");
 class ShowTaskMgr{
 	private static  $ShowTaskMgr;
 	private static $dataStore;
@@ -29,15 +30,27 @@ class ShowTaskMgr{
 	public function saveShowTaskFromRequest($showId){
 		$categorySeqs = $_REQUEST["category"];
 		$showTaskAssignee = ShowTaskAssigneeMgr::getInstance();
+		$taskMgr = TaskMgr::getInstance();
 		foreach ($categorySeqs as $categorySeq){
 			$titles = $_REQUEST[$categorySeq."_title"];
 			$taskSeqs = $_REQUEST[$categorySeq."_taskSeq"];
 			$startDates = $_REQUEST[$categorySeq."_startdate"];
 			$endDates = $_REQUEST[$categorySeq."_enddate"];
-			$assignees = $_REQUEST[$categorySeq."_assignees"];
+			$selectedAssignees = $_REQUEST[$categorySeq."_selectedAssignees"];
 			$showTask = new ShowTask();
 			foreach ($titles as $key=>$title){
 				$taskSeq = $taskSeqs[$key];
+				if(empty($taskSeq)){
+					$task = new Task();
+					$task->setTitle($title);
+					$task->setTaskCategorySeq($categorySeq);
+					$task->setStartDateReferenceDays(0);
+					$task->setDaysRequired(0);
+					$task->setParentTaskSeq(0);
+					$task->setDescription($title);
+					$task->setIsCustom(1);
+					$taskSeq = $taskMgr->saveTask($task);
+				}
 				$showTask->setTaskSeq($taskSeq);
 				$startDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $startDates[$key]);
 				$endDate = DateUtil::StringToDateByGivenFormat('m-d-Y', $endDates[$key]);
@@ -46,7 +59,8 @@ class ShowTaskMgr{
 				$showTask->setStatus("pending");
 				$showTask->setShowSeq($showId);
 				$id = $this->saveShowTask($showTask);
-				$assignees = $showTaskAssignee->saveFromRequest($assignees, $id, $taskSeq);
+				$assignees = $selectedAssignees[$key];
+				$showTaskAssignee->saveAssignees($id, $assignees);
 			}
 		}
 	}
