@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Task.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskAssigneeMgr.php");
+
 class TaskMgr{
 	private static  $TaskMgr;
 	private static $dataStore;
@@ -37,17 +38,32 @@ class TaskMgr{
 	}
 	
 	public function getShowTasksByUser($showSeq,$userSeq){
-		$query = "select showtasks.seq,tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
+		$query = "select distinct(showtasks.seq),tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
 		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
 		inner join tasks on showtasks.taskseq = tasks.seq
 		where showtasks.showseq = $showSeq";
 		if($userSeq != null){
 			$query .= " and showtaskassignees.userseq = $userSeq";	
 		}
-		$query .= " group by showtasks.seq";
+		//$query .= " group by showtasks.seq";
 		
 		$tasks = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $tasks;
+		$taskArr = array();
+		foreach ($tasks as $task){
+			$status = $task["status"];
+			if($status != "completed"){
+				$endDate = $task['enddate'];
+				$endDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $endDate);
+				if($endDate < new DateTime()){
+					$status = "delay";	
+				}
+				
+			}
+			$status = ShowTaskStatus::getValue($status);
+			$task["status"] = $status;
+			array_push($taskArr, $task);
+		}
+		$mainArr["Rows"] = $taskArr;
 		$mainArr["TotalRows"] = $this->getShowTaskCount($showSeq, $userSeq);
 		return $mainArr;
 		

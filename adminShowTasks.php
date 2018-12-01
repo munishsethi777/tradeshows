@@ -126,10 +126,10 @@ $show = $showMgr->findBySeq($showSeq);
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.showSelect').on('change', function() {
-	  loadGrid(this.value);
+		loadGridWithStatusMenu(this.value);
 	});
     //loadGrid($('.showSelect').val());
-	loadGrid(<?php echo $showSeq?>);
+	loadGridWithStatusMenu(<?php echo $showSeq?>);
 	//$.get("Actions/TaskAction.php?call=getShowTasks&showSeq=4", function(taskDetails){
 		//alert(taskDetails);
 	//});
@@ -144,7 +144,11 @@ $(document).ready(function(){
   	});
 });
 
-
+function loadGridWithStatusMenu(showSeq){
+	$.getJSON("Actions/ShowTaskAction.php?call=getAllShowTaskStatus",function( statusMenus ){
+	  	loadGrid(showSeq,statusMenus);
+	});
+}
 function editTask(showTaskSeq){
 	removeMessagesDivs();
 	$.getJSON("Actions/TaskAction.php?call=getShowTaskDetails&showTaskSeq="+showTaskSeq, function(taskDetails){
@@ -160,7 +164,7 @@ function editTask(showTaskSeq){
 		
     });
 }
-function loadGrid(showSeq){
+function loadGrid(showSeq,statusMenus){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'><a href='javascript:editTask("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
@@ -171,9 +175,9 @@ function loadGrid(showSeq){
 	var statusrenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
         style = "label-danger";
-        if(data['status'] == "inprocess"){
+        if(data['status'] == "In Process"){
 			style="label-warning";
-        }else if(data['status'] == "completed"){
+        }else if(data['status'] == "Completed"){
 			style="label-primary";
         }
 		var html = "<center><div><span class='label "+style+"' style='line-height:24px'>"+data['status']+"</span></div></center>";
@@ -182,11 +186,11 @@ function loadGrid(showSeq){
     
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Status', datafield: 'status',cellsrenderer:statusrenderer,align:'center',width:"8%"},
-      { text: 'Task', datafield: 'title', width:"60%"},
-      { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%'}
+      { text: 'Status', datafield: 'status',cellsrenderer:statusrenderer,filtertype: 'checkedlist',align:'center',width:"11%",filteritems:statusMenus},
+      { text: 'Task', datafield: 'title', width:"52%"},
+      { text: 'Start On', datafield: 'startdate',filtertype: 'date',cellsformat: 'M-d-yyyy',width:"14%"},
+      { text: 'End On', datafield: 'enddate',filtertype: 'date',cellsformat: 'M-d-yyyy',width:"14%"},
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%',filterable:false}
     ]
    
     var source =
@@ -237,6 +241,7 @@ function loadGrid(showSeq){
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
+		showfilterrow: true,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -244,7 +249,6 @@ function loadGrid(showSeq){
 		enabletooltips: true,
 		columnsresize: true,
 		columnsreorder: true,
-		selectionmode: 'checkbox',
 		showstatusbar: true,
 		virtualmode: true,
 		rendergridrows: function (toolbar) {

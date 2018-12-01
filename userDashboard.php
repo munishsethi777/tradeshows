@@ -172,7 +172,6 @@ $userFullName = $session->getUserLoggedInName();
 			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
-			                            
 			                            <li class="list-group-item">
 			                                <a class="float-right" href="#">Show All</a>
 			                            </li>

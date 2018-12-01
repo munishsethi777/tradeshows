@@ -39,6 +39,12 @@ abstract class BasicEnum {
 		return $value;
 	}
 	
+	public function getName($value){
+		$values = self::getConstants();
+		$name = array_search($value, $values);
+		return $name;
+	}
+	
 		
 	public static function getAll(){
 		return self::getConstants();
