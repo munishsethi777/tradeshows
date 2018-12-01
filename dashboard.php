@@ -51,7 +51,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                                         
 						</div>
 						<div class="row">	
-							<div class="col-lg-15">
+							<div class="col-sm-15">
 		                        <div class="widget bg-gray text-center">
 		                        	<div class="row">
 		                        		<span>New Tasks Assigned</span>
@@ -61,7 +61,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                    </div>
 					                    
-		                    <div class="col-lg-15">
+		                    <div class="col-sm-15">
 		                        <div class="widget bg-primary text-center">
 		                        	<div class="row">
 		                        		<span>Tasks Completed</span>
@@ -71,7 +71,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                    </div>
 							
-							<div class="col-lg-15">
+							<div class="col-sm-15">
 		                        <div class="widget bg-info text-center">
 		                        	<div class="row">
 		                        		<span>Tasks inProcess</span>
@@ -80,7 +80,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                            </div>
 								</div>
 	                        </div>
-	                        <div class="col-lg-15">
+	                        <div class="col-sm-15">
 		                        <div class="widget bg-warning text-center">
 		                        	<div class="row">
 		                        		<span>Tasks Pending</span>
@@ -90,7 +90,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                    </div>
 	                        
-	                        <div class="col-lg-15">
+	                        <div class="col-sm-15">
 		                        <div class="widget bg-danger text-center">
 		                        	<div class="row">
 		                        		<span>Tasks Delayed</span>

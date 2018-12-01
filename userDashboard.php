@@ -31,7 +31,7 @@ $userFullName = $session->getUserLoggedInName();
 					
 					
 					<div class="row">
-	                    <div class="col-lg-15">
+	                    <div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-default float-right">Total</span>
@@ -44,7 +44,7 @@ $userFullName = $session->getUserLoggedInName();
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-15">
+	                    <div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-primary float-right">Moderate</span>
@@ -57,7 +57,7 @@ $userFullName = $session->getUserLoggedInName();
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-15">
+	                    <div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-danger float-right">High Value</span>
@@ -70,7 +70,7 @@ $userFullName = $session->getUserLoggedInName();
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="col-lg-15">
+	                    <div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-warning float-right">Low value</span>
@@ -83,7 +83,7 @@ $userFullName = $session->getUserLoggedInName();
 	                            </div>
                         	</div>
                       	</div>
-                      	<div class="col-lg-15">
+                      	<div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
 	                                <span class="label label-warning float-right">Low value</span>
