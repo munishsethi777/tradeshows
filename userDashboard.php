@@ -37,9 +37,9 @@ $userFullName = $session->getUserLoggedInName();
 	                                <span class="label label-default float-right">Total</span>
 	                                <h5>Assigned</h5>
 	                            </div>
-	                            <div class="ibox-content">
+	                            <div class="ibox-content bg-gray">
 	                                <h1 class="no-margins">567</h1>
-	                                <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
+	                                <div class="stat-percent font-bold">98% <i class="fa fa-bolt"></i></div>
 	                                <!-- <small>Tasks alloted to you</small> -->
 	                            </div>
 	                        </div>
@@ -50,9 +50,9 @@ $userFullName = $session->getUserLoggedInName();
 	                                <span class="label label-primary float-right">Moderate</span>
 	                                <h5>Completed</h5>
 	                            </div>
-	                            <div class="ibox-content">
+	                            <div class="ibox-content bg-primary">
 	                                <h1 class="no-margins">200</h1>
-	                                <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+	                                <div class="stat-percent font-bold">20% <i class="fa fa-level-up"></i></div>
 	                                <!--<small>Tasks completed by you</small>-->
 	                            </div>
 	                        </div>
@@ -63,9 +63,9 @@ $userFullName = $session->getUserLoggedInName();
 	                                <span class="label label-danger float-right">High Value</span>
 	                                <h5>InProcess</h5>
 	                            </div>
-	                            <div class="ibox-content">
+	                            <div class="ibox-content bg-info">
 	                                <h1 class="no-margins">237</h1>
-	                                <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+	                                <div class="stat-percent font-bold">44% <i class="fa fa-level-up"></i></div>
 	                                <!--<small>Pending task to be processed</small>-->
 	                            </div>
 	                        </div>
@@ -76,9 +76,9 @@ $userFullName = $session->getUserLoggedInName();
 	                                <span class="label label-warning float-right">Low value</span>
 	                                <h5>Pending</h5>
 	                            </div>
-	                            <div class="ibox-content">
+	                            <div class="ibox-content bg-warning">
 	                                <h1 class="no-margins">130</h1>
-	                                <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+	                                <div class="stat-percent font-bold">38% <i class="fa fa-level-down"></i></div>
 	                                <!--<small>Tasks in process.</small>-->
 	                            </div>
                         	</div>
@@ -86,12 +86,12 @@ $userFullName = $session->getUserLoggedInName();
                       	<div class="col-sm-15">
 	                        <div class="ibox ">
 	                            <div class="ibox-title">
-	                                <span class="label label-warning float-right">Low value</span>
+	                                <span class="label label-danger float-right">Low value</span>
 	                                <h5>Delayed</h5>
 	                            </div>
-	                            <div class="ibox-content">
+	                            <div class="ibox-content bg-danger">
 	                                <h1 class="no-margins">130</h1>
-	                                <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+	                                <div class="stat-percent font-bold ">38% <i class="fa fa-level-down"></i></div>
 	                                <!--<small>Tasks in process.</small>-->
 	                            </div>
                         	</div>
@@ -107,71 +107,82 @@ $userFullName = $session->getUserLoggedInName();
 								<div class="ibox-content">
 							        <ul class="list-group clear-list">
 			                            <li class="list-group-item fist-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">02</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
 			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Nov 30 2018 - Dec 2 2018</h4> <span class="text-muted">The International WorkBoat Show. The Int'l WorkBoat Show.</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">12</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">05</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Dec 10 2018 - Dec 12 2018</h4> <span class="text-muted">FRANCHISE EXPO WEST - LOS ANGELES</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">06</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">05</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">06</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">06</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">22</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">10</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">00</span>
 			                                <h4>Dec 18 2018 - Dec 19 2018</h4> <span class="text-muted">CareerTech Vision. Career Tech Expo</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">01</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">16</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Dec 30 2018 - Jan 2 2019</h4> <span class="text-muted">LA Auto Show. Los Angeles Auto Show.</span>
 			                            </li>
 			                            
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">13</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">03</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">04</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">22</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">00</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">00</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 4 2019 - Jan 4 2019</h4> <span class="text-muted">Power-Gen International. The Global Power Generation Exhibition & Conference.</span>
 			                            </li>
 			                            
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">15</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">17</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">00</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">02</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">02</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">03</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">10</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">09</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">21</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">08</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">02</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
 			                            <li class="list-group-item">
-			                                <span class="float-right label label-danger m-l-xs" title="Pending Tasks">00</span> 
-			                                <span class="float-right label label-warning m-l-xs"  title="In Process Tasks">10</span>
-			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">08</span>
+			                                <span class="float-right label label-danger m-l-xs" title="Delayed Tasks">10</span> 
+			                                <span class="float-right label label-warning m-l-xs" title="Pending Tasks">20</span> 
+			                                <span class="float-right label label-info m-l-xs"  title="In Process Tasks">12</span>
+			                                <span class="float-right label label-primary m-l-xs"  title="Completed Tasks">01</span>
 			                                <h4>Jan 12 2019 - Jan 18 2019</h4> <span class="text-muted">Critical Infrastructure Protection and Resilience Americas.</span>
 			                            </li>
+			                            
 			                            <li class="list-group-item">
 			                                <a class="float-right" href="#">Show All</a>
 			                            </li>
