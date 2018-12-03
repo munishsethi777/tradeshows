@@ -161,16 +161,18 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                         break;
                     case "EQUAL":
                     	if($filterdatafield == "status"){
-                    		if($filtervalue != ShowTaskStatus::delay && $filtervalue != ShowTaskStatus::pending){
+                    		if($filtervalue == ShowTaskStatus::completed){
                     			$filtervalue = ShowTaskStatus::getName($filtervalue);
                     			$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
                     		}else{
                     			$date = new DateTime();
                     			$date = $date->format("Y-m-d");
-                    			if($filtervalue != ShowTaskStatus::pending){
+                    			if($filtervalue == ShowTaskStatus::delay){
                     				$where .= " ($filterdatafield = 'pending' or  $filterdatafield = 'inprocess') And enddate < '$date'";
-                    			}else{
+                    			}else if($filtervalue == ShowTaskStatus::pending){
                     				$where .= " $filterdatafield = 'pending' And enddate > '$date'";
+                    			}else if($filtervalue == ShowTaskStatus::inprocess){
+                    				$where .= " $filterdatafield = 'inprocess' And enddate > '$date'";
                     			}
                     			
                     		}
