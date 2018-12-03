@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/class.phpmailer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 class MailUtil{
 	
 	public static function sendTaskAssignedNotification($showSeq){
@@ -59,14 +60,18 @@ class MailUtil{
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 			$mail = new PHPMailer();
 			if($isSmtp){
+				$configurationMgr = ConfigurationMgr::getInstance();
+				$smtpUsername = $configurationMgr->getConfiguration(Configuration::$SMTP_USERNAME);
+				$smtpPassword = $configurationMgr->getConfiguration(Configuration::$SMTP_PASSWORD);
+				$smtpHost = $configurationMgr->getConfiguration(Configuration::$SMTP_HOST);
 				$mail->IsSMTP(); // telling the class to use SMTP
-				//$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
+				//$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
 				$mail->SMTPAuth   = true;                  // enable SMTP authentication
 				$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-				$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
+				$mail->Host       = $smtpHost;      // sets GMAIL as the SMTP server
 				$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-				$mail->Username   = "munish@satyainfopages.in";  // GMAIL username
-				$mail->Password   = "munish314";          // GMAIL password
+				$mail->Username   = $smtpUsername;  // GMAIL username
+				$mail->Password   = $smtpPassword;          // GMAIL password
 			}
 			$mail->IsHTML(true);
 			$mail->SetFrom('noreply@satyainfopages.in', 'Alpine');
