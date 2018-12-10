@@ -17,7 +17,26 @@ if(isset($_GET["call"])){
 }
 $taskMgr = TaskMgr::getInstance();
 $showTaskMgr = ShowTaskMgr::getInstance();
-
+if($call == "saveTask"){
+	try{
+		$message = "Task saved successfully.";
+		$task = new Task();
+		$task->createFromRequest($_REQUEST);
+		$task->setIsCustom(1);
+		$seq = 0;
+		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
+			$seq = $_REQUEST["seq"];
+			$message = "Task updated successfully.";
+		}
+		$task->setSeq($seq);
+		$assignees = $_REQUEST["assignees"];
+		$id = $taskMgr->saveTask($task,$assignees);
+		
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 if($call == "getAllTasks"){
 	try{
 		$tasks = $taskMgr->getAll();
@@ -66,6 +85,22 @@ if($call == "updateShowTaskDetails"){
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
+	}
+}
+if($call == "getAllTasksList"){
+	$taskCatJson = $taskMgr->getTasksForGrid();
+	echo json_encode($taskCatJson);
+	return;
+}
+if($call == "deleteTasks"){
+	$ids = $_GET["ids"];
+	try{
+		$flag = $taskMgr->deleteBySeqs($ids);
+		$message = "Task Deleted successfully";
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+		//$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
 	}
 }
 

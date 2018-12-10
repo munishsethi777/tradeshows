@@ -1,6 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Task.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TaskAssignee.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskAssigneeMgr.php");
@@ -18,8 +19,18 @@ class TaskMgr{
 		}
 		return self::$TaskMgr;
 	}
-	public function saveTask($task){
+	public function saveTask($task,$assignees){
 		$id = self::$dataStore->save($task);
+		if(!empty($id)){
+			$taskAssigneeMgr = TaskAssigneeMgr::getInstance();
+			$taskAssigneeMgr->deleteByTaskSeq($id);
+			foreach ($assignees as $assignee){
+				$taskAssignee = new TaskAssignee();
+				$taskAssignee->setTaskSeq($id);
+				$taskAssignee->setUserSeq($assignee);
+				$taskAssigneeMgr->saveTaskAssignee($taskAssignee);
+			}
+		}
 		return $id;
 	}
 	public function getAll(){
@@ -139,5 +150,40 @@ class TaskMgr{
 			$return[$val[$key]][] = $val;
 		}
 		return $return;
+	}
+	
+	public function deleteBySeqs($ids) {
+		$flag = self::$dataStore->deleteInList ( $ids );
+		if($flag){
+			$ids = explode(",", $ids);
+			$taskAssigneeMgr = TaskAssigneeMgr::getInstance();
+			foreach ($ids as $id){
+				$taskAssigneeMgr->deleteByTaskSeq($id);
+			}
+		}
+		return $flag;
+	}
+	
+	function findBySeq($seq){
+		$task = self::$dataStore->findBySeq($seq);
+		return $task;
+	}
+	
+	function findAll(){
+		$tasks = self::$dataStore->findAll();
+		return $tasks;
+	}
+	
+	public function getTasksForGrid(){
+		$query = "select tasks.*,taskcategories.title as taskcategory from tasks inner join taskcategories on tasks.taskcategoryseq = taskcategories.seq ";
+		$tasks = self::$dataStore->executeQuery($query,true);
+		$mainArr["Rows"] = $tasks;
+		$mainArr["TotalRows"] = $this->getAllCount(true);
+		return $mainArr;
+	}
+	
+	public function getAllCount($isApplyFilter){
+		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
+		return $count;
 	}
 }
