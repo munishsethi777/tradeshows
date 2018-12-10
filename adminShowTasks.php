@@ -108,7 +108,22 @@ $show = $showMgr->findBySeq($showSeq);
                             	</select>
                            </div>
                         </div>
-                        </form>
+                         <div class="form-group row fileUpload">
+                       		<label class="col-lg-2 col-form-label">File</label>
+                       		<div class="col-lg-8">
+	                           	<div class="form-control">
+	                            	<input type="file">
+	                           </div>
+	                       </div>
+	                        <label class="col-lg-2 col-form-label">
+	                        	<input type="checkbox"> public</input>
+							</label>
+	                       
+                        </div>
+                        <div class="row">
+                     		<label class="col-lg-12 text-right"><a href="#">+ More File</a></label>
+                     	</div>
+                     </form>
                     </div>
                 </div>
                 </div>
