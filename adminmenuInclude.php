@@ -43,7 +43,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo "inactive";?>">
-                    <a href="#"><i class="fa fa-cube"></i> 
+                    <a href="adminShowTaskCategory.php"><i class="fa fa-cube"></i> 
                     	<span class="nav-label ">Task Categories</span>  
                     </a>
                 </li>
