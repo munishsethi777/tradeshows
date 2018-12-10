@@ -1,4 +1,3 @@
-
 <?php
 include("SessionCheck.php");
 require_once('IConstants.inc');
@@ -43,6 +42,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    	<form id="form2" name="form2" method="post" action="adminShowTasks.php">
      	<input type="hidden" id="showSeq" name="showSeq"/>
    	</form>
+   	<form id="form3" name="form3" method="post" action="adminShowCalendar.php">
+     	<input type="hidden" class="showSeq" name="showSeq"/>
+   	</form>
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -56,22 +58,27 @@ function showTasks(seq){
 	$("#showSeq").val(seq);                        
     $("#form2").submit();
 }
+function showCalendar(seq){
+	$(".showSeq").val(seq);                        
+    $("#form3").submit();
+}
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
-            	html +=" <a href='javascript:showTasks("+ data['seq'] + ")' ><i class='fa fa-eye' title='Show'></i></a>";
-            html += "</div>";
+            	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit Tradeshow'></i></a>";
+            	html +=" <a href='javascript:showTasks("+ data['seq'] + ")' ><i class='fa fa-eye' title='Tradeshow Details'></i></a>";
+            	html +=" <a href='javascript:showCalendar("+ data['seq'] + ")' ><i class='fa fa-calendar' title='Tradeshow Calendar'></i></a>";
+                html += "</div>";
         return html;
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Title', datafield: 'title', width:"25%"},
-      { text: 'Description', datafield: 'description',width:"47%"},
+      { text: 'Description', datafield: 'description',width:"40%"},
       { text: 'Start On', datafield: 'startdate',cellsformat: 'M-d-yyyy',width:"10%"},
       { text: 'End On', datafield: 'enddate',cellsformat: 'M-d-yyyy',width:"10%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'5%'}
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'12%'}
     ]
    
     var source =

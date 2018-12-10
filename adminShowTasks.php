@@ -174,11 +174,13 @@ function loadGrid(showSeq,statusMenus){
 
 	var statusrenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
-        style = "label-danger";
+        style = "label-warning";
         if(data['status'] == "In Process"){
-			style="label-warning";
+			style="label-info";
         }else if(data['status'] == "Completed"){
 			style="label-primary";
+        }else if(data['status'] == "Delay"){
+			style="label-danger";
         }
 		var html = "<center><div><span class='label "+style+"' style='line-height:24px'>"+data['status']+"</span></div></center>";
         return html;

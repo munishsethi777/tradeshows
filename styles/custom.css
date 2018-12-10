@@ -123,8 +123,8 @@ ul.nav-second-level{
 	height:100%;
 }
 .bg-gray{
-	background-color:#b9b9b9;
-	color:white;
+	background-color:#b9b9b9 !important;
+	color:white !important;
 }
 .col-xs-15,
 .col-sm-15,
