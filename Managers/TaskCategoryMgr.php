@@ -41,6 +41,11 @@ class TaskCategoryMgr{
 		return $taskCategory;
 	}
 	
+	public function findAll(){
+		$taskCategories = self::$dataStore->findAll();
+		return $taskCategories;
+	}
+	
 
 	public function deleteBySeqs($ids) {
 		$flag = self::$dataStore->deleteInList ( $ids );

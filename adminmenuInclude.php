@@ -48,7 +48,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo "inactive";?>">
-                    <a href="#"><i class="fa fa-life-ring"></i> 
+                    <a href="adminShowTaskList.php"><i class="fa fa-life-ring"></i> 
                     	<span class="nav-label">Tasks</span>  
                     </a>
                 </li>

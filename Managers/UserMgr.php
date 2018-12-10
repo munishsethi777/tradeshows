@@ -50,4 +50,9 @@ class UserMgr{
 		$users = self::$userDataStore->findAllArr();
 		return $users;
 	}
+	
+	public function saveUser($user){
+		$id = self::$userDataStore->save($user);
+		return $id;
+	}
 }
