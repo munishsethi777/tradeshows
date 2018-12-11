@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TaskMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskFileMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 $sessionUtil = SessionUtil::getInstance();
@@ -76,12 +77,16 @@ if($call == "updateShowTaskDetails"){
 	try{
 		$showTask = new ShowTask();
 		$showTask->createFromRequest($_REQUEST);
-		$showTaskMgr->updateShowTaskCommentsStatus($showTask);
-		if($sessionUtil->isSessionUser()){
-			MailUtil::sendUpdateStatusNotification($showTask->getSeq());
+		$flag = $showTaskMgr->updateShowTaskCommentsStatus($showTask);
+		if($flag){
+			$showTaskFileMgr = ShowTaskFileMgr::getInstance();
+			$showTaskFileMgr->saveFilesFromRequest($showTask->getSeq());
+			if($sessionUtil->isSessionUser()){
+				MailUtil::sendUpdateStatusNotification($showTask->getSeq());
+			}
+			$success = 1;
+			$message = "Task updated Successfully";
 		}
-		$success = 1;
-		$message = "Task updated Successfully";
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

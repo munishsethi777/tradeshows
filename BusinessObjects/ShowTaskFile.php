@@ -1,6 +1,6 @@
 <?php
 class ShowTaskFile{
-	public static $tableName = "taskfiles";
+	public static $tableName = "showtaskfiles";
 	public static $className = "ShowTaskFile";
 	
 	private $seq,$userseq,$showtaskseq,$fileextension,$ispublic,$createdon;

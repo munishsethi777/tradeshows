@@ -73,7 +73,7 @@ class ShowTaskMgr{
 		$colValCondition = array();
 		$colValCondition["seq"] = $showTask->getSeq();
 		
-		self::$dataStore->updateByAttributes($colVal,$colValCondition);
+		return self::$dataStore->updateByAttributes($colVal,$colValCondition);
 	}
 	public function getShowTaskDetails($showTaskSeq){
 		$query = "SELECT shows.title as showtitle,showtasks.seq,tasks.title,tasks.description,showtasks.startdate,showtasks.enddate,showtasks.comments,showtasks.status FROM `showtasks`
