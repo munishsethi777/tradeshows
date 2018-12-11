@@ -27,6 +27,7 @@ class ShowTaskMgr{
 		$colVal["showseq"] = $showSeq;
 		self::$dataStore->deleteByAttribute($colVal);
 	}
+	
 	public function saveShowTaskFromRequest($showId){
 		$categorySeqs = $_REQUEST["category"];
 		$showTaskAssignee = ShowTaskAssigneeMgr::getInstance();
@@ -79,6 +80,7 @@ class ShowTaskMgr{
 		$query = "SELECT shows.title as showtitle,showtasks.seq,tasks.title,tasks.description,showtasks.startdate,showtasks.enddate,showtasks.comments,showtasks.status FROM `showtasks`
 inner join tasks on tasks.seq = showtasks.taskseq inner join shows on showtasks.showseq = shows.seq where showtasks.seq = $showTaskSeq";
 		$taskDetails = self::$dataStore->executeQuery($query);
+		
 		return $taskDetails;
 	}
 	

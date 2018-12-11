@@ -67,7 +67,10 @@ if($call == "getShowTaskDetails"){
 	try{
 		$showTaskSeq = $_GET["showTaskSeq"];
 		$taskDetails = $showTaskMgr->getShowTaskDetails($showTaskSeq);
+		$showTaskFileMgr = ShowTaskFileMgr::getInstance();
+		$showTaskFiles = $showTaskFileMgr->getFilesArrByShowTask($showTaskSeq);
 		$response["taskDetails"]  = $taskDetails;
+		$response["showTaskFiles"] = $showTaskFiles;
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
