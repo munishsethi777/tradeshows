@@ -55,8 +55,7 @@ $show = $showMgr->findBySeq($showSeq);
 <div class="modal inmodal bs-example-modal-md" id="taskDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
     	<div class="modal-content animated fadeInRight">
-
-            <div class="modal-body productDetailModalDiv mainDiv">
+          <div class="modal-body productDetailModalDiv mainDiv">
             <div class="ibox">
              <div class="ibox-content">
              	<?php include 'progress.php';?>
@@ -110,28 +109,10 @@ $show = $showMgr->findBySeq($showSeq);
                         </div>
                         
                         <div class="form-group row">
-	                        <div>
+	                        <div >
 	                        	<label class="col-lg-2 col-form-label">Uploaded Files</label>
-	                        	<div class="col-lg-10">
-	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
-	                        			<i class="fa fa-file-image-o fa-2x"></i><br>
-	                        			ImageName.jpg <br><i class="fa fa-trash"></i>
-	                        		</div>
+	                        	<div id="selectedFilesDiv" class="col-lg-10">
 	                        		
-	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
-	                        			<i class="fa fa-file-pdf-o fa-2x"></i><br>
-	                        			ImageName.pdf <br><i class="fa fa-trash"></i>
-	                        		</div>
-	                        		
-	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
-	                        			<i class="fa fa-file-excel-o fa-2x"></i><br>
-	                        			ImageName.excel <br><i class="fa fa-trash"></i>
-	                        		</div>
-	                        		
-	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
-	                        			<i class="fa fa-file-o fa-2x"></i><br>
-	                        			ImageName.jpg <br><i class="fa fa-trash"></i>
-	                        		</div>
 	                        	</div>
 	                        </div>
                         </div>
@@ -148,11 +129,10 @@ $show = $showMgr->findBySeq($showSeq);
 	                       </label>
 				        </div>
 	                    <div class="fileUplaodRow">
-	                    	
+	                    		
 	                    </div>
                         <div class="row">
                      		<label class="col-lg-12 text-right"><button type="button" class="btn btn-white btn-xs addMore" > + More File</button></label>
-                     		
                      	</div>
                      </form>
                     </div>
@@ -225,9 +205,13 @@ function loadGridWithStatusMenu(showSeq){
 }
 function editTask(showTaskSeq){
 	removeMessagesDivs();
+	$('input[type=file]').val('');
+	$("#selectedFilesDiv").html("");
+	$('input[type=checkbox]').prop('checked',false);
 	$.getJSON("Actions/TaskAction.php?call=getShowTaskDetails&showTaskSeq="+showTaskSeq, function(taskDetails){
 		$('#taskDetailsModal').modal('show');
 		data = taskDetails.taskDetails[0];
+		files = taskDetails.showTaskFiles;
 		$("#showTaskSeq").val(data.seq);
 		$(".taskDetailsTitle").val(data.title);
 		$(".taskDetailsDescription").val(data.description);
@@ -235,8 +219,23 @@ function editTask(showTaskSeq){
 		$(".taskDetailsEndsOn").val(data.enddate);
 		$(".taskDetailsComments").val(data.comments);
 		$(".taskDetailsStatus").val(data.status);
-		
+		loadFiles(files);
     });
+}
+
+function loadFiles(files){
+	 $.each( files, function( key, val ) {
+		 var html = '<div id="imageDiv"><input type="hidden" id ="selectedFileSeqs" name="selectedFileSeqs[]" value="'+val.seq+'"/>';
+		 	 html += '<div class="col-lg-4 text-center p-sm bg-info m-xs">';
+ 			 html += '<i class="fa fa-file-image-o fa-2x"></i><br>';
+			 html +=  val.title + '<br><a href"#" onclick="remove(this)"><i class="fa fa-trash"></i></a>';
+			 html += '</div></div>';
+			 $("#selectedFilesDiv").append(html);	 
+	 });
+}
+
+function remove(btn){
+	$(btn).closest("#imageDiv").remove();
 }
 
 function loadGrid(showSeq,statusMenus){

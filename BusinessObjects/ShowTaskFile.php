@@ -3,7 +3,7 @@ class ShowTaskFile{
 	public static $tableName = "showtaskfiles";
 	public static $className = "ShowTaskFile";
 	
-	private $seq,$userseq,$showtaskseq,$fileextension,$ispublic,$createdon;
+	private $seq,$userseq,$showtaskseq,$fileextension,$ispublic,$title,$createdon;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -38,6 +38,13 @@ public function setShowTaskSeq($val){
 	}
 	public function getIsPublic(){
 		return $this->ispublic;
+	}
+	
+	public function setTitle($title_){
+		$this->title = $title_;
+	}
+	public function getTitle(){
+		return $this->title;
 	}
 	
 	public function setCreatedOn($val){

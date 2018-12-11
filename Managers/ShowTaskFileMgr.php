@@ -16,15 +16,36 @@ class ShowTaskFileMgr{
 		return self::$showTaskFileMgr;
 	}
 	
+	
+	public function deleteTaskFiles($showTaskSeq){
+		$selectedFiles = $this->getFilesArrByShowTask($showTaskSeq);
+		if(!empty($selectedFiles)){
+			$fileSeqs  = array_map(create_function('$o', 'return $o["seq"];'), $selectedFiles);
+			$slectedFilesSeqs = $_REQUEST["selectedFileSeqs"];
+			if(empty($slectedFilesSeqs)){
+				$slectedFilesSeqs = array();
+			}
+			$fileSeqsForDelete = array_diff($fileSeqs, $slectedFilesSeqs);
+			if(!empty($fileSeqsForDelete)){
+				$fileSeqsForDelete = implode(",", $fileSeqsForDelete);
+				$this->deleteInList($fileSeqsForDelete);
+			}
+		}
+	}
 	public function saveFilesFromRequest($showTaskSeq){
+		$this->deleteTaskFiles($showTaskSeq);
+		if(empty($_FILES)){
+			return;
+		}
 		$files = $_FILES["files"];
-		$isPublicArr = $_REQUEST["ispublic"];
 		$fileNames = $files["name"];
+		$isPublicArr = $_REQUEST["ispublic"];
 		$tempNames = $files["tmp_name"];
 		foreach ($fileNames as $key=>$name){
+			$showTaskFile = new ShowTaskFile();
 			$filename = $name;
 			$fileType = pathinfo($filename, PATHINFO_EXTENSION);
-			$showTaskFile = new ShowTaskFile();
+			$showTaskFile->setTitle($filename);
 			$showTaskFile->setCreatedOn(new DateTime());
 			$showTaskFile->setShowTaskSeq($showTaskSeq);
 			$isPublic = 0;
@@ -44,5 +65,16 @@ class ShowTaskFileMgr{
 	public function saveShowTaskFile($showTaskFile){
 		$id = self::$showTaskFileDataStore->save($showTaskFile);
 		return $id;
+	}
+	
+	public function getFilesArrByShowTask($showTaskSeq){
+		$query = "select * from showtaskfiles where showtaskseq = $showTaskSeq";
+		$files = self::$showTaskFileDataStore->executeQuery($query);
+		return $files;
+	}
+	
+	public function deleteInList($fileSeqs){
+		$flag = self::$showTaskFileDataStore->deleteInList($fileSeqs);
+		return $flag;
 	}
 }
