@@ -70,7 +70,7 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
                     <div class="col-sm-12">
                     <h3>Task Details</h3>
                     <small>You can update task details with comments and status</small>
-                    <form id="updateShowTaskDetailsForm" action="Actions/TaskAction.php" class="m-t-lg">
+                    <form id="updateShowTaskDetailsForm" enctype="multipart/form-data" method="post" action="Actions/TaskAction.php" class="m-t-lg">
                         <input type="hidden" id ="call" name="call" value="updateShowTaskDetails"/>
                         <input type="hidden" id ="showTaskSeq" name="seq"/>
                         <div class="form-group row">
@@ -114,6 +114,32 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
                             	</select>
                            </div>
                         </div>
+                        <div class="form-group row">
+	                        <div >
+	                        	<label class="col-lg-2 col-form-label">Uploaded Files</label>
+	                        	<div id="selectedFilesDiv" class="col-lg-10">
+	                        		
+	                        	</div>
+	                        </div>
+                        </div>
+                        
+                         <div class="form-group row fileUpload">
+                       		<label class="col-lg-2 col-form-label">New File</label>
+                       		<div class="col-lg-6">
+	                           	<div class="form-control">
+	                            	<input name="files[]" type="file">
+	                           </div>
+	                       </div>
+	                        <label class="col-lg-2 col-form-label">
+	                        	<input name="ispublic[]" type="checkbox"> Public
+	                       </label>
+				        </div>
+	                    <div class="fileUplaodRow">
+	                    		
+	                    </div>
+                        <div class="row">
+                     		<label class="col-lg-12 text-right"><button type="button" class="btn btn-white btn-xs addMore" > + More File</button></label>
+                     	</div>
                         </form>
                     </div>
                 </div>
@@ -144,19 +170,57 @@ $(document).ready(function(){
             $('#taskDetailsModal').modal('hide');
         })
   	});
+    $('.addMore').on('click', function() {
+    	addFileUploadRow();
+    });
 });
-
+function removeRow(btn){
+	$(btn).closest(".fileUpload").remove();
+}
+function addFileUploadRow(){
+ 	html = '<div class="form-group row fileUpload">';
+   	html += '<label class="col-lg-2 col-form-label"></label>';
+   	html += '<div class="col-lg-6">';
+    html += '<div class="form-control">';
+    html += '<input name="files[]" type="file">';
+    html += '</div></div>';
+    html += '<label class="col-lg-2 col-form-label">';
+    html += '<input type="checkbox"> Public</input>';
+    html += '</label>';
+	html += '<label class="col-lg-1 col-form-label">';
+	html += '<a onClick="removeRow(this)" href="#"><i class="fa fa-times"></i></a>';	
+	html += '</label></div>';
+	$(".fileUplaodRow").append(html);
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+		radioClass: 'iradio_square-green',
+	});
+}
 function loadGridWithStatusMenu(showSeq){
 	$.getJSON("Actions/ShowTaskAction.php?call=getAllShowTaskStatus",function( statusMenus ){
 	  	loadGrid(showSeq,statusMenus);
 	});
 }
-
+function loadFiles(files){
+	 $.each( files, function( key, val ) {
+		 var html = '<div id="imageDiv"><input type="hidden" id ="selectedFileSeqs" name="selectedFileSeqs[]" value="'+val.seq+'"/>';
+		 	 html += '<div class="col-lg-4 text-center p-sm bg-info m-xs">';
+			 html += '<i class="fa fa-file-image-o fa-2x"></i><br>';
+			 html +=  val.title + '<br><a href"#" onclick="remove(this)"><i class="fa fa-trash"></i></a>';
+			 html += '</div></div>';
+			 $("#selectedFilesDiv").append(html);	 
+	 });
+}
 function editTask(showTaskSeq){
 	removeMessagesDivs();
+	$('input[type=file]').val('');
+	$("#selectedFilesDiv").html("");
+	$(".fileUplaodRow").html("");
+	$('input[type=checkbox]').prop('checked',false);
 	$.getJSON("Actions/TaskAction.php?call=getShowTaskDetails&showTaskSeq="+showTaskSeq, function(taskDetails){
 		$('#taskDetailsModal').modal('show');
 		data = taskDetails.taskDetails[0];
+		files = taskDetails.showTaskFiles;
 		$("#showTaskSeq").val(data.seq);
 		$(".taskDetailsTitle").val(data.title);
 		$(".taskDetailsDescription").val(data.description);
@@ -164,8 +228,17 @@ function editTask(showTaskSeq){
 		$(".taskDetailsEndsOn").val(data.enddate);
 		$(".taskDetailsComments").val(data.comments);
 		$(".taskDetailsStatus").val(data.status);
-		
+		loadFiles(files);
     });
+}
+
+function remove(btn){
+	 bootbox.confirm("Are you sure you want to delete this file?", function(result) {
+         if(result){
+			$(btn).closest("#imageDiv").remove();
+         }
+	 });
+	
 }
 function loadGrid(showSeq,statusMenus){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {

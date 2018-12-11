@@ -236,7 +236,11 @@ function loadFiles(files){
 }
 
 function remove(btn){
-	$(btn).closest("#imageDiv").remove();
+	bootbox.confirm("Are you sure you want to delete this file?", function(result) {
+        if(result){
+			$(btn).closest("#imageDiv").remove();
+        }
+	 });
 }
 
 function loadGrid(showSeq,statusMenus){
