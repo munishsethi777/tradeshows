@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 11, 2018 at 10:45 AM
+-- Generation Time: Dec 11, 2018 at 02:59 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 5.6.37
 
@@ -34,7 +34,8 @@ CREATE TABLE `showtaskfiles` (
   `userseq` bigint(20) NOT NULL,
   `fileextension` varchar(10) NOT NULL,
   `ispublic` tinyint(4) NOT NULL,
-  `createdon` datetime NOT NULL
+  `createdon` datetime NOT NULL,
+  `title` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
