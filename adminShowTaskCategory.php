@@ -60,8 +60,8 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Title', datafield: 'title', width:"30%"},
-      { text: 'Description', datafield: 'description',width:"62%"},
+      { text: 'Title', datafield: 'title', width:"60%"},
+      { text: 'Description', datafield: 'description',width:"30%"},
       { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'5%'}
     ]
    

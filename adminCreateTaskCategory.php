@@ -47,7 +47,7 @@ if(isset($_POST["id"])){
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Description</label>
                         	<div class="col-lg-8">
-                            	<input type="text" id="title" maxLength="250" value="<?php echo $taskCategory->getDescription()?>" name="description" required placeholder="Description" class="form-control">
+                            	<input type="text" id="title" maxLength="250" value="<?php echo $taskCategory->getDescription()?>" name="description" placeholder="Description" class="form-control">
                             </div>
                         </div>
                         <div class="form-group row">

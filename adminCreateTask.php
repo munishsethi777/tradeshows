@@ -125,6 +125,11 @@ if(isset($_POST["id"])){
                                 	Save
 	                          	</button>
 	                        </div>
+	                        <div class="col-lg-2">
+	                          	<a class="btn btn-default" href="adminShowTaskList.php" type="button" style="width:85%">
+                                	Cancel
+	                          	</a>
+	                        </div>
 	                    </div>
 	                   </form>
                 	 </div>           

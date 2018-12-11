@@ -59,11 +59,11 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Title', datafield: 'title', width:"20%"},
-      { text: 'Description', datafield: 'description',width:"30%"},
+      { text: 'Title', datafield: 'title', width:"60%"},
+//       { text: 'Description', datafield: 'description',width:"30%"},
       { text: 'Category', datafield: 'taskcategory',width:"20%"},
-      { text: 'Days Required', datafield: 'daysrequired',width:"10%"},
-      { text: 'Reference Days', datafield: 'startdatereferencedays',width:"10%"},
+      { text: 'Days', datafield: 'daysrequired',width:"5%"},
+      { text: 'Ref. Days', datafield: 'startdatereferencedays',width:"6%"},
       { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'5%'}
     ]
    
