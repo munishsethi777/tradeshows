@@ -21,14 +21,14 @@ class ShowTaskFileMgr{
 		$selectedFiles = $this->getFilesArrByShowTask($showTaskSeq);
 		if(!empty($selectedFiles)){
 			$fileSeqs  = array_map(create_function('$o', 'return $o["seq"];'), $selectedFiles);
-			$slectedFilesSeqs = $_REQUEST["selectedFileSeqs"];
-			if(empty($slectedFilesSeqs)){
-				$slectedFilesSeqs = array();
+			$slectedFilesSeqs = array();
+			if(isset($_REQUEST["selectedFileSeqs"])){
+				$slectedFilesSeqs = $_REQUEST["selectedFileSeqs"];
 			}
 			$fileSeqsForDelete = array_diff($fileSeqs, $slectedFilesSeqs);
 			if(!empty($fileSeqsForDelete)){
 				$fileSeqsForDelete = implode(",", $fileSeqsForDelete);
-				$this->deleteInList($fileSeqsForDelete);
+				$this->deleteInList($fileSeqsForDelete,$selectedFiles);
 			}
 		}
 	}
@@ -39,7 +39,10 @@ class ShowTaskFileMgr{
 		}
 		$files = $_FILES["files"];
 		$fileNames = $files["name"];
-		$isPublicArr = $_REQUEST["ispublic"];
+		$isPublicArr = array();
+		if(isset($_REQUEST["ispublic"])){
+			$isPublicArr = $_REQUEST["ispublic"];
+		}
 		$tempNames = $files["tmp_name"];
 		foreach ($fileNames as $key=>$name){
 			$showTaskFile = new ShowTaskFile();
@@ -73,8 +76,16 @@ class ShowTaskFileMgr{
 		return $files;
 	}
 	
-	public function deleteInList($fileSeqs){
+	public function deleteInList($fileSeqs,$selectedFiles){
 		$flag = self::$showTaskFileDataStore->deleteInList($fileSeqs);
+		if($flag){
+			$fileSeqs = explode(",", $fileSeqs);
+			foreach ($selectedFiles as $file){
+				$fileName = $file["seq"] . "." . $file["fileextension"];
+				$path = $_SERVER["DOCUMENT_ROOT"] . "/tradeshows/documents/" . $fileName;
+				FileUtil::deletefile($path);
+			}
+		}
 		return $flag;
 	}
 }

@@ -207,6 +207,7 @@ function editTask(showTaskSeq){
 	removeMessagesDivs();
 	$('input[type=file]').val('');
 	$("#selectedFilesDiv").html("");
+	$(".fileUplaodRow").html("");
 	$('input[type=checkbox]').prop('checked',false);
 	$.getJSON("Actions/TaskAction.php?call=getShowTaskDetails&showTaskSeq="+showTaskSeq, function(taskDetails){
 		$('#taskDetailsModal').modal('show');
