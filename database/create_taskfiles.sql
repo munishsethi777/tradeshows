@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 10, 2018 at 03:47 PM
--- Server version: 10.1.36-MariaDB
--- PHP Version: 5.6.38
+-- Generation Time: Dec 11, 2018 at 10:45 AM
+-- Server version: 10.1.34-MariaDB
+-- PHP Version: 5.6.37
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `taskfiles`
+-- Table structure for table `showtaskfiles`
 --
 
-CREATE TABLE `taskfiles` (
+CREATE TABLE `showtaskfiles` (
   `seq` bigint(20) NOT NULL,
   `showtaskseq` bigint(20) NOT NULL,
   `userseq` bigint(20) NOT NULL,
@@ -42,9 +42,9 @@ CREATE TABLE `taskfiles` (
 --
 
 --
--- Indexes for table `taskfiles`
+-- Indexes for table `showtaskfiles`
 --
-ALTER TABLE `taskfiles`
+ALTER TABLE `showtaskfiles`
   ADD PRIMARY KEY (`seq`);
 
 --
@@ -52,9 +52,9 @@ ALTER TABLE `taskfiles`
 --
 
 --
--- AUTO_INCREMENT for table `taskfiles`
+-- AUTO_INCREMENT for table `showtaskfiles`
 --
-ALTER TABLE `taskfiles`
+ALTER TABLE `showtaskfiles`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

@@ -27,6 +27,20 @@
         }
     }
     
+    public static function uploadFile($tempName,$path,$name){
+    	if(is_array($tempName)){
+    		$tempName = $tempName[0];
+    	}
+    	if(move_uploaded_file($tempName, $path.$name))
+    	{
+    		return $name;
+    	}
+    	else
+    	{
+    		throw new Exception("Error During file upload ".$path);
+    	}
+    }
+    
     public static function getAllFilesFromDir($dirPath){
     	$fileNames = array_slice(scandir($dirPath), 2);    	
     	return $fileNames;

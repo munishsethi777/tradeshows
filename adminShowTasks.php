@@ -64,7 +64,7 @@ $show = $showMgr->findBySeq($showSeq);
                     <div class="col-sm-12">
                     <h3>Task Details</h3>
                     <small>You can update task details with comments and status</small>
-                    <form id="updateShowTaskDetailsForm" action="Actions/TaskAction.php" class="m-t-lg">
+                    <form id="updateShowTaskDetailsForm" enctype="multipart/form-data" method="post" action="Actions/TaskAction.php" class="m-t-lg">
                         <input type="hidden" id ="call" name="call" value="updateShowTaskDetails"/>
                         <input type="hidden" id ="showTaskSeq" name="seq"/>
                         <div class="form-group row">
@@ -110,18 +110,21 @@ $show = $showMgr->findBySeq($showSeq);
                         </div>
                          <div class="form-group row fileUpload">
                        		<label class="col-lg-2 col-form-label">File</label>
-                       		<div class="col-lg-8">
+                       		<div class="col-lg-6">
 	                           	<div class="form-control">
-	                            	<input type="file">
+	                            	<input name="files[]" type="file">
 	                           </div>
 	                       </div>
 	                        <label class="col-lg-2 col-form-label">
-	                        	<input type="checkbox"> public</input>
-							</label>
-	                       
-                        </div>
+	                        	<input name="ispublic[]" type="checkbox"> Public
+	                       </label>
+				        </div>
+	                    <div class="fileUplaodRow">
+	                    	
+	                    </div>
                         <div class="row">
-                     		<label class="col-lg-12 text-right"><a href="#">+ More File</a></label>
+                     		<label class="col-lg-12 text-right"><button type="button" class="btn btn-white btn-xs addMore" > + More File</button></label>
+                     		
                      	</div>
                      </form>
                     </div>
@@ -140,6 +143,10 @@ $show = $showMgr->findBySeq($showSeq);
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+		radioClass: 'iradio_square-green',
+	});
 	$('.showSelect').on('change', function() {
 		loadGridWithStatusMenu(this.value);
 	});
@@ -157,8 +164,32 @@ $(document).ready(function(){
             $('#taskDetailsModal').modal('hide');
         })
   	});
+    $('.addMore').on('click', function() {
+    	addFileUploadRow();
+    });
 });
-
+function removeRow(btn){
+	$(btn).closest(".fileUpload").remove();
+}
+function addFileUploadRow(){
+ 	html = '<div class="form-group row fileUpload">';
+   	html += '<label class="col-lg-2 col-form-label"></label>';
+   	html += '<div class="col-lg-6">';
+    html += '<div class="form-control">';
+    html += '<input name="files[]" type="file">';
+    html += '</div></div>';
+    html += '<label class="col-lg-2 col-form-label">';
+    html += '<input type="checkbox"> Public</input>';
+    html += '</label>';
+	html += '<label class="col-lg-1 col-form-label">';
+	html += '<a onClick="removeRow(this)" href="#"><i class="fa fa-times"></i></a>';	
+	html += '</label></div>';
+	$(".fileUplaodRow").append(html);
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+		radioClass: 'iradio_square-green',
+	});
+}
 function loadGridWithStatusMenu(showSeq){
 	$.getJSON("Actions/ShowTaskAction.php?call=getAllShowTaskStatus",function( statusMenus ){
 	  	loadGrid(showSeq,statusMenus);
@@ -179,6 +210,7 @@ function editTask(showTaskSeq){
 		
     });
 }
+
 function loadGrid(showSeq,statusMenus){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
@@ -301,5 +333,6 @@ function loadGrid(showSeq,statusMenus){
             });
         }
     });
+
 }
 </script>
