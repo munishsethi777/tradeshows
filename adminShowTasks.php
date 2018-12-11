@@ -108,8 +108,36 @@ $show = $showMgr->findBySeq($showSeq);
                             	</select>
                            </div>
                         </div>
+                        
+                        <div class="form-group row">
+	                        <div>
+	                        	<label class="col-lg-2 col-form-label">Uploaded Files</label>
+	                        	<div class="col-lg-10">
+	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
+	                        			<i class="fa fa-file-image-o fa-2x"></i><br>
+	                        			ImageName.jpg <br><i class="fa fa-trash"></i>
+	                        		</div>
+	                        		
+	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
+	                        			<i class="fa fa-file-pdf-o fa-2x"></i><br>
+	                        			ImageName.pdf <br><i class="fa fa-trash"></i>
+	                        		</div>
+	                        		
+	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
+	                        			<i class="fa fa-file-excel-o fa-2x"></i><br>
+	                        			ImageName.excel <br><i class="fa fa-trash"></i>
+	                        		</div>
+	                        		
+	                        		<div class="col-lg-4 text-center p-sm bg-info m-xs">
+	                        			<i class="fa fa-file-o fa-2x"></i><br>
+	                        			ImageName.jpg <br><i class="fa fa-trash"></i>
+	                        		</div>
+	                        	</div>
+	                        </div>
+                        </div>
+                        
                          <div class="form-group row fileUpload">
-                       		<label class="col-lg-2 col-form-label">File</label>
+                       		<label class="col-lg-2 col-form-label">New File</label>
                        		<div class="col-lg-6">
 	                           	<div class="form-control">
 	                            	<input name="files[]" type="file">
