@@ -207,6 +207,7 @@ function editTask(showTaskSeq){
 	removeMessagesDivs();
 	$('input[type=file]').val('');
 	$("#selectedFilesDiv").html("");
+	$(".fileUplaodRow").html("");
 	$('input[type=checkbox]').prop('checked',false);
 	$.getJSON("Actions/TaskAction.php?call=getShowTaskDetails&showTaskSeq="+showTaskSeq, function(taskDetails){
 		$('#taskDetailsModal').modal('show');
@@ -235,7 +236,11 @@ function loadFiles(files){
 }
 
 function remove(btn){
-	$(btn).closest("#imageDiv").remove();
+	bootbox.confirm("Are you sure you want to delete this file?", function(result) {
+        if(result){
+			$(btn).closest("#imageDiv").remove();
+        }
+	 });
 }
 
 function loadGrid(showSeq,statusMenus){
