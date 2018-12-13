@@ -48,6 +48,15 @@ GROUP by shows.seq";
 		return $shows;
 	}
 	
+	public function getAllShows(){
+		$sql = "select shows.* from shows
+		inner join showtasks on showtasks.showseq = shows.seq
+		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
+		GROUP by shows.seq";
+		$shows = self::$dataStore->executeObjectQuery($sql);
+		return $shows;
+	}
+	
 	public function getAllShowsCount($isApplyFilter){
 		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
 		return $count;

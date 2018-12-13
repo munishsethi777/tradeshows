@@ -88,4 +88,16 @@ class ShowTaskFileMgr{
 		}
 		return $flag;
 	}
+	
+	public function getTasksFilesByShow($showSeq){
+		$sql = "select showtaskfiles.seq, tasks.title ttitle, showtaskfiles.title ftitle,showtaskfiles.fileextension,DATE_FORMAT(showtaskfiles.createdon,'%b %d %Y %h:%i %p') createdon,users.fullname from shows
+		inner join showtasks on showtasks.showseq = shows.seq
+		inner join tasks on tasks.seq = showtasks.taskseq
+		inner join showtaskfiles on showtaskfiles.showtaskseq = showtasks.seq
+		inner join users on users.seq = showtaskfiles.userseq
+		where shows.seq = $showSeq
+		ORDER by tasks.title asc";
+		$arr = self::$showTaskFileDataStore->executeQuery($sql);
+		return $arr;
+	}
 }

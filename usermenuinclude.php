@@ -52,6 +52,11 @@ if($file == "userDashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
+                    <a href="userPublicRepository.php"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Public Repository</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isChangePassword;?>">
                     <a href="#"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Change Password</span>  
                     </a>

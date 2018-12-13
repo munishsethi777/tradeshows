@@ -5,7 +5,7 @@ $userNameLoggedIn = $session->getAdminLoggedInName();
 $isDashboard="";
 $isTradeShows="";
 $isChangePassword="";
-
+$isPublicRepository="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
@@ -17,6 +17,8 @@ if($file == "dashboard.php"){
 	$isTradeShows = "active";
 }elseif($file=="adminChangePassword.php"){
 	$isChangePassword = "active";
+}elseif($file=="adminPublicRepository.php"){
+	$isPublicRepository = "active";
 }
 
 ?>
@@ -55,6 +57,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $isTradeShows;?>">
                     <a href="adminShowList.php"><i class="fa fa-globe"></i> 
                     	<span class="nav-label">TradeShows</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isPublicRepository;?>">
+                    <a href="adminPublicRepository.php"><i class="fa fa-globe"></i> 
+                    	<span class="nav-label">Public Repository</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">

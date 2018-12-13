@@ -81,10 +81,10 @@ require_once('IConstants.inc');
             <p>Login. To see it in action.</p>
             <form class="form-horizontal" id="loginForm" method="POST" name="loginForm">
                   <div class="form-group">
-                  		<input type="text" name="username" class="form-control" id="usernameInput" placeholder="Username" value="munishsethi777@gmail.com">
+                  		<input type="text" name="username" class="form-control" id="usernameInput" placeholder="Username">
                   </div>
                   <div class="form-group">
-                      <input type="password" name="password" class="form-control" id="passwordInput" placeholder="Password" value="123">
+                      <input type="password" name="password" class="form-control" id="passwordInput" placeholder="Password">
                   </div>
 
                   <div class="form-group">
