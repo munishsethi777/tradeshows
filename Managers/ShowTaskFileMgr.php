@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTaskFile.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/FileUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 
 class ShowTaskFileMgr{
 	private static $showTaskFileMgr;
@@ -37,6 +38,12 @@ class ShowTaskFileMgr{
 		if(empty($_FILES)){
 			return;
 		}
+		$sessionUtil = SessionUtil::getInstance();
+		$isUserSession = $sessionUtil->isSessionUser();
+		$userSeq = 0;
+		if($isUserSession){
+			$userSeq = $sessionUtil->getUserLoggedInSeq();
+		}
 		$files = $_FILES["files"];
 		$fileNames = $files["name"];
 		$isPublicArr = array();
@@ -57,7 +64,7 @@ class ShowTaskFileMgr{
 			}
 			$showTaskFile->setIsPublic($isPublic);
 			$showTaskFile->setFileExtension($fileType);
-			$showTaskFile->setUserSeq(0);
+			$showTaskFile->setUserSeq($userSeq);
 			$id = $this->saveShowTaskFile($showTaskFile);
 			$filename = $id .".". $fileType;
 			$uploaddir = $_SERVER["DOCUMENT_ROOT"] . "/tradeshows/documents/";
