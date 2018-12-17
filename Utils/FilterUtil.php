@@ -148,7 +148,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                         $where .= " BINARY  " . $filterdatafield . " LIKE '%" . $filtervalue ."%'";
                         break;
                     case "CONTAINS":
-                        $where .= " " . $filterdatafield . " LIKE '%" . $filtervalue ."%'";
+                    	$where .= " " . $filterdatafield . " LIKE '%" . $filtervalue ."%'";
                         break;
                     case "DOES_NOT_CONTAIN_CASE_SENSITIVE":
                         $where .= " BINARY " . $filterdatafield . " NOT LIKE '%" . $filtervalue ."%'";
@@ -177,7 +177,16 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                     			
                     		}
                     	}else{
-                    		$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
+                    		if($filterdatafield == "fullname"){
+                    			if($filtervalue == "Admin"){
+                    				$where .= " $filterdatafield is NULL";
+                    			}else{
+                    				$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
+                    			}
+                    		}else{
+                    			$where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
+                    		}
+                    		
                     	}
                         break;
                     case "NOT_EQUAL_CASE_SENSITIVE":
@@ -197,12 +206,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 $filtervalue = $date->format("Y-m-d");  
                     	}
+                    	if($filterdatafield == "createdon"){
+                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		$date->setTime(0,0);
+                    		$filtervalue = $date->format("Y-m-d H:i:s");
+                    	}
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
                			if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 $filtervalue = $date->format("Y-m-d");  
+                    	}
+                    	if($filterdatafield == "createdon"){
+                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		$date->setTime(23,59);
+                    		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
                         $where .= " " . $filterdatafield . " <= '" . $filtervalue ."'";
                         break;

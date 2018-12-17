@@ -19,5 +19,5 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
 <body>
 <div id="wrapper">
 <?php include("usermenuinclude.php")?>
-<?php include("includePublicRepository.php")?>  
+<?php include("includePublicRepositoryNew.php")?>  
 </div>

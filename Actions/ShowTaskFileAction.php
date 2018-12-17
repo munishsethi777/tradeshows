@@ -16,8 +16,9 @@ if(isset($_GET["call"])){
 if($call == "getTasksFilesByTradeShow"){
 	$showSeq = $_GET["showSeq"];
 	$showTaskFileMgr = ShowTaskFileMgr::getInstance();
-	$taskFiles = $showTaskFileMgr->getTasksFilesByShow($showSeq);
-	$response["taskFiles"] = $taskFiles;
+	$response = $showTaskFileMgr->getShowTaskFilesForGrid($showSeq);
+	echo json_encode($response);
+	return;
 }
 
 $response["success"] = $success;

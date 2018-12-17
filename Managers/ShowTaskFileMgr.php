@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ShowTaskFile.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/FileUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 
 class ShowTaskFileMgr{
@@ -96,15 +97,46 @@ class ShowTaskFileMgr{
 		return $flag;
 	}
 	
-	public function getTasksFilesByShow($showSeq){
-		$sql = "select showtaskfiles.seq, tasks.title ttitle, showtaskfiles.title ftitle,showtaskfiles.fileextension,DATE_FORMAT(showtaskfiles.createdon,'%b %d %Y %h:%i %p') createdon,users.fullname from shows
+	public function getShowTaskFilesForGrid($showSeq){
+		$showTaskFiles = $this->getTasksFilesByShow($showSeq,true);
+		$array = array();		foreach ($showTaskFiles as $showTaskFile){
+			$userName = $showTaskFile["fullname"];
+			$createOn = $showTaskFile["createdon"];
+			$createOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$createOn);
+			$createOn = $createOn->format("m-d-Y H:i");
+			if(empty($userName)){
+				$userName = "Admin";
+			}
+			$showTaskFile["createdon"] = $createOn;
+			$showTaskFile["tasks.title"] = $showTaskFile["ttitle"];
+			$showTaskFile["showtaskfiles.title"] = $showTaskFile["ftitle"];
+			$showTaskFile["fullname"] = $userName;
+			array_push($array, $showTaskFile);
+		}
+		$mainArr["Rows"] = $array;
+		$mainArr["TotalRows"] = $this->getShowTaskFileCountByShow($showSeq,true);
+		return $mainArr;
+	}
+	
+	public function getShowTaskFileCountByShow($showSeq,$isApplyFilter = false){
+		$sql = "select count(*) from shows
 		inner join showtasks on showtasks.showseq = shows.seq
 		inner join tasks on tasks.seq = showtasks.taskseq
 		inner join showtaskfiles on showtaskfiles.showtaskseq = showtasks.seq
-		inner join users on users.seq = showtaskfiles.userseq
-		where shows.seq = $showSeq
-		ORDER by tasks.title asc";
-		$arr = self::$showTaskFileDataStore->executeQuery($sql);
+		left join users on showtaskfiles.userseq = users.seq
+		where shows.seq = $showSeq and showtaskfiles.ispublic != 0";
+		$count = self::$showTaskFileDataStore->executeCountQueryWithSql($sql,$isApplyFilter);
+		return $count;
+	}
+	
+	public function getTasksFilesByShow($showSeq,$isApplyFilter = false){
+		$sql = "select showtaskfiles.seq, tasks.title as ttitle , showtaskfiles.title ftitle ,showtaskfiles.fileextension,showtaskfiles.createdon,users.fullname from shows
+		inner join showtasks on showtasks.showseq = shows.seq
+		inner join tasks on tasks.seq = showtasks.taskseq
+		inner join showtaskfiles on showtaskfiles.showtaskseq = showtasks.seq
+		left join users on showtaskfiles.userseq = users.seq
+		where shows.seq = $showSeq and showtaskfiles.ispublic != 0";
+		$arr = self::$showTaskFileDataStore->executeQuery($sql,$isApplyFilter);
 		return $arr;
 	}
 }

@@ -73,7 +73,11 @@ function loadGridWithStatusMenu(showSeq){
 				str += "<td>"+ file.fileextension.toUpperCase() +"</td>"
 				str += "<td>"+ file.ftitle +"</td>"
 				str += "<td>"+ file.ttitle +"</td>"
-				str += "<td>"+ file.fullname +"</td>"
+				var fullName = file.fullname;
+				if(fullName == null){
+					fullName = 	"Admin";
+				}
+				str += "<td>"+ fullName +"</td>"
 				str += "<td>"+ file.createdon +"</td>"
 				str += "<td align='center'><a target='new' href='documents/"+file.seq+"."+file.fileextension+"'><i class='fa fa-eye' title='View File'></i></a></td>"
 				str += "</tr>";

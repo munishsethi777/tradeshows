@@ -17,5 +17,5 @@ $shows = $showMgr->getAllShows();
 <body>
 <div id="wrapper">
 <?php include("adminmenuInclude.php")?>
-<?php include("includePublicRepository.php")?>  
+<?php include("includePublicRepositoryNew.php")?>  
 </div>

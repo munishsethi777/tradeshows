@@ -64,4 +64,22 @@ where showtasks.showseq = $showSeq";
 		}
 		return $return;
 	}
+	
+	function getAllUserNamesByShowSeq($showSeq){
+		$query = "select users.fullname from shows 
+inner join showtasks on showtasks.showseq = shows.seq
+inner join showtaskassignees on showtasks.seq = showtasks.seq
+inner join users on showtaskassignees.userseq = users.seq
+where shows.seq = $showSeq GROUP by users.seq";
+	  $taskAssignes = self::$dataStore->executeQuery($query);
+	  $mainArr = array();
+	  array_push($mainArr, "Admin");
+	  foreach ($taskAssignes as $taskAssigne){
+	  	array_push($mainArr, $taskAssigne["fullname"]);
+	  }
+	  sort($mainArr);
+	 
+	  return $mainArr;
+	}
+	
 }
