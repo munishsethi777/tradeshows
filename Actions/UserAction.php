@@ -31,10 +31,10 @@ if($call == "changePassword"){
 	$password = $_GET["newPassword"];
 	$earlierPassword = $_GET["earlierPassword"];
 	try{
-		$adminMgr = AdminMgr::getInstance();
-		$isPasswordExists = $adminMgr->isPasswordExist($earlierPassword);
+		$userMgr = UserMgr::getInstance();
+		$isPasswordExists = $userMgr->isPasswordExist($earlierPassword);
 		if($isPasswordExists){
-			$adminMgr->ChangePassword($password);
+			$userMgr->ChangePassword($password);
 			$message = "Password Updated Successfully";
 		}else{
 			$message = "Incorrect Current Password!";

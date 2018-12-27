@@ -6,7 +6,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
 $session = SessionUtil::getInstance();
 $userSeq = $session->getUserLoggedInSeq();
 $showMgr = ShowMgr::getInstance();
-$shows = $showMgr->getUpcomingShowsByUser($userSeq);
+$shows = $showMgr->getAllShows();
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,3 +21,5 @@ $shows = $showMgr->getUpcomingShowsByUser($userSeq);
 <?php include("usermenuinclude.php")?>
 <?php include("includePublicRepositoryNew.php")?>  
 </div>
+</body>
+</html>

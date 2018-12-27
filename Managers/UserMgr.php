@@ -31,11 +31,10 @@ class UserMgr{
 	
 	public function ChangePassword($password){
 		$sessionUtil = SessionUtil::getInstance();
-		$adminSeq = $sessionUtil->getAdminLoggedInSeq();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
 		$attr["password"] = $password;
-		$condition["seq"] = $adminSeq;
-		$sql = "update users set password = '$password'";
-		self::$userDataStore->executeQuery($sql);
+		$condition["seq"] = $userSeq;
+		self::$userDataStore->updateByAttributesWithBindParams($attr,$condition);
 	}
 	
 	public function toArray($user){
@@ -54,5 +53,13 @@ class UserMgr{
 	public function saveUser($user){
 		$id = self::$userDataStore->save($user);
 		return $id;
+	}
+	public function isPasswordExist($password){
+		$sessionUtil = SessionUtil::getInstance();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
+		$params["password"] = $password;
+		$params["seq"] = $userSeq;
+		$count = self::$userDataStore->executeCountQuery($params);
+		return $count > 0;
 	}
 }

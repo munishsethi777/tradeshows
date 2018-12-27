@@ -1,15 +1,4 @@
 <?php ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Show Tasks Management</title>
-    <?include "ScriptsInclude.php"?>
-</head>
-<body>
-<div id="wrapper">
-<?php include("adminmenuInclude.php")?>  
 	<div id="page-wrapper" class="gray-bg">
 		<div class="row border-bottom"></div>
         <div class="row">
@@ -46,8 +35,6 @@
 		            </div>
 	            </div>
 	        </div>
-	     </div>
-</body></html>
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.showSelect').on('change', function() {
@@ -63,7 +50,7 @@ function loadGridWithUsers(showSeq){
 function loadGrid(showSeq,users){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'><a href='documents/"+data["seq"]+"."+data["fileextension"]+"' ><i class='fa fa-eye' title='Edit'></i></a>";
+        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'><a target='new' href='documents/"+data["seq"]+"."+data["fileextension"]+"' ><i class='fa fa-eye' title='Edit'></i></a>";
             html += "</div>";     
         return html;
     }
