@@ -1,6 +1,6 @@
 <?php
 class Configuration{
-	private $configkey,$configvalue;
+	private $configkey,$configvalue,$seq;
 	
 	public static $SMTP_USERNAME = "smtpusername";
 	public static $SMTP_PASSWORD = "smtppassword";
@@ -8,6 +8,7 @@ class Configuration{
 	
 	public static $tableName = "configurations";
 	public static $className = "configuration";
+	
 	public function setConfigKey($configKey){
 		$this->configkey = $configKey;
 	}
