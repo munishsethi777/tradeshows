@@ -51,11 +51,15 @@ if($call == "getAllTasks"){
 if($call == "getShowTasks"){
 	try{
 		$showSeq = $_GET["showSeq"];
+		$isUpcomingTask = 1;
+		if(isset($_GET["isUpcomingTask"])){
+			$isUpcomingTask = $_GET["isUpcomingTask"];
+		}
 		$userSeq = null;
 		if($sessionUtil->isSessionUser()){
 			$userSeq = $sessionUtil->getUserLoggedInSeq();
 		}
-		$tasks = $taskMgr->getShowTasksByUser($showSeq, $userSeq);
+		$tasks = $taskMgr->getShowTasksByUser($showSeq, $userSeq,$isUpcomingTask);
 		echo json_encode($tasks);
 		return;
 	}catch(Exception $e){

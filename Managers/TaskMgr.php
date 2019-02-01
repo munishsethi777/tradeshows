@@ -48,13 +48,20 @@ class TaskMgr{
 		return $mainArr;
 	}
 	
-	public function getShowTasksByUser($showSeq,$userSeq){
+	public function getShowTasksByUser($showSeq,$userSeq,$isUpcomingtask = 0){
 		$query = "select distinct(showtasks.seq),tasks.title,showtasks.startdate,showtasks.enddate,showtasks.status from showtasks
 		inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
 		inner join tasks on showtasks.taskseq = tasks.seq
 		where showtasks.showseq = $showSeq";
 		if($userSeq != null){
-			$query .= " and showtaskassignees.userseq = $userSeq";	
+			$date = new DateTime();
+			$dateStr = $date->format("Y-m-d");
+			$query .= " and showtaskassignees.userseq = $userSeq";
+			if(!empty($isUpcomingtask)){
+				$query .= " and startdate >= '$dateStr'";
+			}else{
+				$query .= " and enddate < '$dateStr'";
+			}
 		}
 		//$query .= " group by showtasks.seq";
 		
@@ -75,23 +82,29 @@ class TaskMgr{
 			array_push($taskArr, $task);
 		}
 		$mainArr["Rows"] = $taskArr;
-		$mainArr["TotalRows"] = $this->getShowTaskCount($showSeq, $userSeq);
+		$mainArr["TotalRows"] = $this->getShowTaskCount($showSeq, $userSeq,$isUpcomingtask);
 		return $mainArr;
 		
 	}
-	private function getShowTaskCount($showSeq,$userSeq){
+	private function getShowTaskCount($showSeq,$userSeq,$isUpcomingTask){
 		$query = "select count(*) from showtasks left join tasks on showtasks.taskseq = tasks.seq where showtasks.showseq = $showSeq";
 		if($userSeq != null){
 			$query = "select count(*) from showtasks
 			inner join showtaskassignees on showtaskassignees.showtaskseq = showtasks.seq
 			inner join tasks on showtasks.taskseq = tasks.seq
 			where showtasks.showseq = $showSeq and showtaskassignees.userseq = $userSeq";
+			$date = new DateTime();
+			$dateStr = $date->format("Y-m-d");
+			if(!empty($isUpcomingTask)){
+				$query .= " and startdate >= '$dateStr'";
+			}else{
+				$query .= " and enddate <= '$dateStr'";
+			}
 		}
-		
-		
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
+	
 	private $allTasksArr;
 	function calculateStartEndDate($categoryTasks){
 		$categoryTasksArr = array();

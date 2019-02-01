@@ -8,6 +8,9 @@ $isChangePassword="";
 $isPublicRepository="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
+$isTaskCategory = "";
+$isMasterTask = "";
+$isShowTasks = "";
 
 
 //echo  $file;
@@ -19,6 +22,12 @@ if($file == "dashboard.php"){
 	$isChangePassword = "active";
 }elseif($file=="adminPublicRepository.php"){
 	$isPublicRepository = "active";
+}elseif($file=="adminShowTaskCategory.php" || $file == "adminCreateTaskCategory.php"){
+	$isTaskCategory = "active";
+}elseif($file=="adminShowTaskList.php"){
+	$isMasterTask = "active";
+}elseif($file=="adminShowTasks.php"){
+	$isShowTasks = "active";
 }
 
 ?>
@@ -44,19 +53,25 @@ if($file == "dashboard.php"){
                     	<span class="nav-label ">Dashboard</span>  
                     </a>
                 </li>
-                <li class="<?php echo "inactive";?>">
+                <li class="<?php echo $isTaskCategory;?>">
                     <a href="adminShowTaskCategory.php"><i class="fa fa-cube"></i> 
                     	<span class="nav-label ">Task Categories</span>  
                     </a>
                 </li>
-                <li class="<?php echo "inactive";?>">
+                <li class="<?php echo $isMasterTask;?>">
                     <a href="adminShowTaskList.php"><i class="fa fa-life-ring"></i> 
-                    	<span class="nav-label">Tasks</span>  
+                    	<span class="nav-label">Master Tasks</span>  
                     </a>
                 </li>
+                 
                 <li class="<?php echo $isTradeShows;?>">
                     <a href="adminShowList.php"><i class="fa fa-globe"></i> 
                     	<span class="nav-label">TradeShows</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isShowTasks;?>">
+                    <a href="adminShowTasks.php"><i class="fa fa-globe"></i> 
+                    	<span class="nav-label">TradeShows Tasks</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isPublicRepository;?>">

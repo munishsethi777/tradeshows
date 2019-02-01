@@ -1,45 +1,39 @@
-<?include("SessionCheck.php");
+<?include("SessionCheckUser.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
-//$showSeq = $_POST["showSeq"];
-//$showMgr = ShowMgr::getInstance();
-//$show = $showMgr->findBySeq($showSeq);
 
+$session = SessionUtil::getInstance();
+$userSeq = $session->getUserLoggedInSeq();
 $showMgr = ShowMgr::getInstance();
-$shows = $showMgr->getAllShows();
-
-// $session = SessionUtil::getInstance();
-// $userSeq = $session->getUserLoggedInSeq();
-// $showMgr = ShowMgr::getInstance();
-// $shows = $showMgr->getUpcomingShowsByUser($userSeq);
+$shows = $showMgr->getUpcomingShowsByUser($userSeq);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Show Tasks Management</title>
+    <title>User | <?php echo $pageTitle?></title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
 <div id="wrapper">
-<?php include("adminmenuInclude.php")?>  
+<?php include("usermenuinclude.php")?>  
 	<div id="page-wrapper" class="gray-bg">
 		<div class="row border-bottom"></div>
         <div class="row">
 			<div class="col-lg-12">
 	        	<div class="ibox">
-					<div class="ibox-title">
+	        	
+	        	 	<div class="ibox-title">
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-								<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
+								<a class="navbar-minimalize minimalize-styl-2 btn btn-info"
 									href="#"><i class="fa fa-bars"></i> </a>
-									<h4 class="p-h-sm font-normal"> Tradeshow Tasks</h4>
+									<h4 class="p-h-sm font-normal"><?php echo $pageTitle?></h4>
 						</nav>
-						
-					</div>
-					<div class="ibox-content">
-		                     	<div class="row">
+						</div>
+					        <div class="ibox-content">
+					         	<div class="row">
 		                     		<div class="form-group">
 	                       				<label class="col-lg-2 col-form-label">Select Tradeshow</label>
 	                                    <div class="col-lg-4">
@@ -54,10 +48,8 @@ $shows = $showMgr->getAllShows();
 	                                    </div>
 	                               </div>
 		                     	</div>
-		                     	<div class="row">
+		                     	<div class="row m-xs">
 		                     		<div id="showGrid"></div>
-		                     		
-		                     		<a class="m-t-s button btn btn-primary btn-sm" href="adminShowList.php">Show all TradeShows</a>
 		                     	</div>
 		                     </div>
 	                    </div>	
@@ -70,11 +62,11 @@ $shows = $showMgr->getAllShows();
 <div class="modal inmodal bs-example-modal-md" id="taskDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
     	<div class="modal-content animated fadeInRight">
-          <div class="modal-body productDetailModalDiv mainDiv">
+            <div class="modal-body productDetailModalDiv mainDiv">
             <div class="ibox">
              <div class="ibox-content">
              	<?php include 'progress.php';?>
-                <div class="row">
+            	<div class="row">
                     <div class="col-sm-12">
                     <h3>Task Details</h3>
                     <small>You can update task details with comments and status</small>
@@ -108,7 +100,7 @@ $shows = $showMgr->getAllShows();
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Comments</label>
                            	<div class="col-lg-10">
-                            	<textarea name="comments" maxLength="500" class="form-control taskDetailsComments"></textarea>
+                            	<textarea name="comments" class="form-control taskDetailsComments"></textarea>
                            </div>
                         </div>
                         <div class="form-group row">
@@ -122,7 +114,6 @@ $shows = $showMgr->getAllShows();
                             	</select>
                            </div>
                         </div>
-                        
                         <div class="form-group row">
 	                        <div >
 	                        	<label class="col-lg-2 col-form-label">Uploaded Files</label>
@@ -149,7 +140,7 @@ $shows = $showMgr->getAllShows();
                         <div class="row">
                      		<label class="col-lg-12 text-right"><button type="button" class="btn btn-white btn-xs addMore" > + More File</button></label>
                      	</div>
-                     </form>
+                        </form>
                     </div>
                 </div>
                 </div>
@@ -166,20 +157,12 @@ $shows = $showMgr->getAllShows();
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.i-checks').iCheck({
-		checkboxClass: 'icheckbox_square-green',
-		radioClass: 'iradio_square-green',
-	});
 	$('.showSelect').on('change', function() {
 		loadGridWithStatusMenu(this.value);
 	});
-    //loadGrid($('.showSelect').val());
 	loadGridWithStatusMenu($('.showSelect').val());
-	//$.get("Actions/TaskAction.php?call=getShowTasks&showSeq=4", function(taskDetails){
-		//alert(taskDetails);
-	//});
     $('.saveTaskDetails').on('click', function() {
-    	showHideProgress();
+        showHideProgress();
         $('#updateShowTaskDetailsForm').ajaxSubmit(function( data ){
         	showHideProgress();
             showResponseToastr(data,null,"updateShowTaskDetailsForm","mainDiv");
@@ -218,6 +201,16 @@ function loadGridWithStatusMenu(showSeq){
 	  	loadGrid(showSeq,statusMenus);
 	});
 }
+function loadFiles(files){
+	 $.each( files, function( key, val ) {
+		 var html = '<div id="imageDiv"><input type="hidden" id ="selectedFileSeqs" name="selectedFileSeqs[]" value="'+val.seq+'"/>';
+		 	 html += '<div class="col-lg-4 text-center p-sm bg-info m-xs">';
+			 html += '<i class="fa fa-file-image-o fa-2x"></i><br>';
+			 html +=  val.title + '<br><a href"#" onclick="remove(this)"><i class="fa fa-trash"></i></a>';
+			 html += '</div></div>';
+			 $("#selectedFilesDiv").append(html);	 
+	 });
+}
 function editTask(showTaskSeq){
 	removeMessagesDivs();
 	$('input[type=file]').val('');
@@ -239,27 +232,14 @@ function editTask(showTaskSeq){
     });
 }
 
-function loadFiles(files){
-	 $.each( files, function( key, val ) {
-		 var imageName = val.seq + "." + val.fileextension;
-		 var html = '<div id="imageDiv"><input type="hidden" id ="selectedFileSeqs" name="selectedFileSeqs[]" value="'+val.seq+'"/>';
-		 	 html += '<div class="col-lg-4 text-center p-sm bg-info m-xs">';
- 			 html += '<i class="fa fa-file-image-o fa-2x"></i><br>';
-			 html +=  val.title + '<br><a href"#" title="Remove" onclick="remove(this)"><i class="fa fa-trash"></i> <a target="_blank" href="documents/'+imageName+'" title="View"><i class="fa fa-eye"></i></a>';
-			 html += '</div></div>';
-			 $("#selectedFilesDiv").append(html);	 
-	 });
-}
-
-
 function remove(btn){
-	bootbox.confirm("Are you sure you want to delete this file?", function(result) {
-        if(result){
+	 bootbox.confirm("Are you sure you want to delete this file?", function(result) {
+         if(result){
 			$(btn).closest("#imageDiv").remove();
-        }
+         }
 	 });
+	
 }
-
 function loadGrid(showSeq,statusMenus){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
@@ -270,13 +250,11 @@ function loadGrid(showSeq,statusMenus){
 
 	var statusrenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#showGrid').jqxGrid('getrowdata', row);
-        style = "label-warning";
+        style = "label-danger";
         if(data['status'] == "In Process"){
-			style="label-info";
+			style="label-warning";
         }else if(data['status'] == "Completed"){
 			style="label-primary";
-        }else if(data['status'] == "Delay"){
-			style="label-danger";
         }
 		var html = "<center><div><span class='label "+style+"' style='line-height:24px'>"+data['status']+"</span></div></center>";
         return html;
@@ -284,11 +262,11 @@ function loadGrid(showSeq,statusMenus){
     
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Status', datafield: 'status',cellsrenderer:statusrenderer,filtertype: 'checkedlist',align:'center',width:"11%",filteritems:statusMenus},
+      { text: 'Status', datafield: 'status',filtertype: 'checkedlist',cellsrenderer:statusrenderer,align:'center',width:"11%",filteritems:statusMenus},
       { text: 'Task', datafield: 'title', width:"52%"},
-      { text: 'Start On', datafield: 'startdate',filtertype: 'date',cellsformat: 'M-d-yyyy',width:"14%"},
-      { text: 'End On', datafield: 'enddate',filtertype: 'date',cellsformat: 'M-d-yyyy',width:"14%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%',filterable:false}
+      { text: 'Start On', datafield: 'startdate', filtertype: 'date', cellsformat: 'M-d-yyyy',width:"14%"},
+      { text: 'End On', datafield: 'enddate', filtertype: 'date' ,cellsformat: 'M-d-yyyy',width:"14%"},
+      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'9%',sortable:false,filterable:false}
     ]
    
     var source =
@@ -305,7 +283,7 @@ function loadGrid(showSeq,statusMenus){
                     { name: 'enddate', type: 'date' },
                     { name: 'action', type: 'string' } 
                     ],                          
-        url: 'Actions/TaskAction.php?call=getShowTasks&showSeq='+showSeq,
+        url: 'Actions/TaskAction.php?call=getShowTasks&isUpcomingTask=<?php echo $isUpcomingTasks?>&showSeq='+showSeq,
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -338,8 +316,8 @@ function loadGrid(showSeq,statusMenus){
 		height: '75%',
 		source: dataAdapter,
 		filterable: true,
-		sortable: true,
 		showfilterrow: true,
+		sortable: true,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -354,11 +332,12 @@ function loadGrid(showSeq,statusMenus){
    		},
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
+            var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(reloadButton);
-            statusbar.append(container);
+            statusbar.append(container); 
             reloadButton.jqxButton({  width: 70, height: 18 });
-             $("#showGrid").bind('rowselect', function (event) {
+            $("#showGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       
                  if($.isArray(selectedRowIndex)){           
@@ -382,6 +361,5 @@ function loadGrid(showSeq,statusMenus){
             });
         }
     });
-
 }
 </script>

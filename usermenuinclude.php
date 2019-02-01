@@ -5,7 +5,8 @@ $userNameLoggedIn = $session->getUserLoggedInName();
 $isDashboard="";
 $isUpcomingTasks="";
 $isChangePassword="";
-
+$isHistoricalTasks="";
+$isPublicRep="";
 
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
@@ -16,8 +17,13 @@ if($file == "userDashboard.php"){
 	$isDashboard = "active";
 }elseif($file == "userUpcomingShows.php"){
 	$isUpcomingTasks = "active";
+}elseif($file == "userHistoricalShowTasks.php"){
+	$isHistoricalTasks = "active";
+}elseif($file == "userPublicRepository.php"){
+	$isPublicRep = "active";
+}elseif($file == "userChangePassword.php"){
+	$isChangePassword = "active";
 }
-
 ?>
 
 <nav class="navbar-default navbar-static-side" role="navigation">
@@ -46,18 +52,18 @@ if($file == "userDashboard.php"){
                     	<span class="nav-label ">Upcoming Tasks</span>  
                     </a>
                 </li>
-                <li class="<?php echo $isChangePassword;?>">
-                    <a href="#"><i class="fa fa-clock-o"></i> 
+                <li class="<?php echo $isHistoricalTasks;?>">
+                    <a href="userHistoricalShowTasks.php"><i class="fa fa-clock-o"></i> 
                     	<span class="nav-label">Historical Tasks</span>  
                     </a>
                 </li>
-                <li class="<?php echo $isChangePassword;?>">
+                <li class="<?php echo $isPublicRep;?>">
                     <a href="userPublicRepository.php"><i class="fa fa-clock-o"></i> 
                     	<span class="nav-label">Public Repository</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
-                    <a href="#"><i class="fa fa-key"></i> 
+                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Change Password</span>  
                     </a>
                 </li>

@@ -193,7 +193,7 @@ $userFullName = $session->getUserLoggedInName();
 		                </div>
 		                
 		                <div class="col-lg-7">
-							<div class="ibox float-e-margins">
+							<!--  div class="ibox float-e-margins">
                             	<div class="ibox-title">
                                 	<h5>Tasks Assigned and Tasks Completed</h5>
 	                                <div class="pull-right">
@@ -213,7 +213,7 @@ $userFullName = $session->getUserLoggedInName();
 		                                </div>
 						           </div>
 				                </div>
-		                	</div>
+		                	</div>-->
 		                	
 		                	<div class="ibox float-e-margins">
                             	<div class="ibox-title">
@@ -432,7 +432,7 @@ $userFullName = $session->getUserLoggedInName();
                 };
 
                 
-                $.plot($("#flot-dashboard-chart"), dataset, options);
+                //$.plot($("#flot-dashboard-chart"), dataset, options);
 
             });
 

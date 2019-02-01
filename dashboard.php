@@ -225,12 +225,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                
 		                <div class="col-lg-7">
 		                	<div class="col-lg-12">
-		                    	<div class="row m-b-lg">
-			                
-		                        	<div class="flot-chart">
+		                    	<!--<div class="row m-b-lg">
+			                    	  div class="flot-chart">
 		                                <div class="flot-chart-content" id="flot-line-chart-multi"></div>
-		                            </div>
-		                        </div>
+		                            </div
+		                        </div>-->
 		                     </div>
 							<div class="ibox float-e-margins">
                             	<div class="ibox-title">
@@ -457,7 +456,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                 });
             }
 
-            doPlot("right");
+           // doPlot("right");
         	 	
 
 
