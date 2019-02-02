@@ -11,6 +11,7 @@ $file =  $parts[count($parts) - 1];
 $isTaskCategory = "";
 $isMasterTask = "";
 $isShowTasks = "";
+$manageItems = "";
 
 
 //echo  $file;
@@ -28,6 +29,8 @@ if($file == "dashboard.php"){
 	$isMasterTask = "active";
 }elseif($file=="adminShowTasks.php"){
 	$isShowTasks = "active";
+}elseif($file=="adminImportItems.php"){
+	$manageItems = "active";
 }
 
 ?>
@@ -51,6 +54,11 @@ if($file == "dashboard.php"){
                  <li class="<?php echo $isDashboard;?>">
                     <a href="dashboard.php"><i class="fa fa-tachometer"></i> 
                     	<span class="nav-label ">Dashboard</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $manageItems;?>">
+                    <a href="adminImportItems.php"><i class="fa fa-globe"></i> 
+                    	<span class="nav-label">Manage Items</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isTaskCategory;?>">
