@@ -124,7 +124,7 @@ class BeanDataStore {
 			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" )) {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {
@@ -139,22 +139,21 @@ class BeanDataStore {
 									$methodName 
 							) );
 							if ($value instanceof DateTime) {
+								if($column == "createdon"){
+									continue;
+								}
 								$value = $value->format ( 'Y-m-d H:i:s' );
 							}
-							// if($id > 0){
-							// $value = "'" . $value . "'";
-							// }
 							$columnValueArry [$column] = $value;
 						}
 					}
-					$count ++;
 				}
+				$count ++;
 			}
 			unset ( $columnValueArry [0] );
 			unset ( $columns [0] );
 			$SQL = "";
 			$db_New = MainDB::getInstance ();
-			
 			if ($id > 0) { // update query
 				$columnString = $this->key_implode ( $columnValueArry );
 				$SQL = "Update " . strtolower ( $this->tableName ) . " set " . $columnString . " where seq = " . $id;
@@ -171,8 +170,77 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $id;
 		} catch ( Exception $e ) {
-			$conn->rollback();
-			$this->logger->error ( "Error occured :" . $e );
+			//$conn->rollback();
+			//$this->logger->error ( "Error occured :" . $e );
+			throw $e;
+		}
+		return null;
+	}
+	
+	
+	function updateObject($object,$condiationPair,$conn){
+		$columnValueArry [] = array ();
+		$columns [] = array ();
+		$count = 0;
+		$class = new ReflectionClass ( $this->className );
+		$methods = $class->getMethods ( ReflectionMethod::IS_PUBLIC );
+		$id = $object->getSeq();
+		try {
+			foreach ( $methods as $method ) {
+				$methodName = $method->name;
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
+					if ($count > 0) {
+						$reflect = new ReflectionMethod ( $object, $methodName );
+						if ($reflect->isPublic ()) {
+							$val = call_user_func ( array (
+									$object,
+									$methodName
+							) );
+							$column = strtolower ( substr ( $methodName, 3 ) );
+							$columns [] = $column;
+							$value = call_user_func ( array (
+									$object,
+									$methodName
+							) );
+							if ($value instanceof DateTime) {
+								if($column == "createdon"){
+									continue;
+								}
+								$value = $value->format ( 'Y-m-d H:i:s' );
+							}
+							$columnValueArry [$column] = $value;
+						}
+					}
+					$count ++;
+				}
+			}
+			unset ( $columnValueArry [0] );
+			unset ( $columns [0] );
+			$SQL = "";
+			$db_New = MainDB::getInstance ();
+			$paramValueArr = array();
+			
+			$attr_arr = array();
+			foreach ( $columnValueArry as $key => $value ) {
+				$attr_arr [] = $key . " = ?";
+				array_push($paramValueArr, $value);
+			}
+			foreach ( $condiationPair as $key => $value ) {
+				$query_array [] = $key . ' = ?';
+				array_push($paramValueArr, $value);
+			}
+			$columnString = implode ( " , ", $attr_arr );
+			$SQL = "Update " . strtolower ( $this->tableName ) . " set " . $columnString ;
+			if ($condiationPair != null) {
+				$SQL .= " WHERE " . implode ( " AND ", $query_array );
+			}
+			$STH = $conn->prepare ( $SQL );
+			$STH->execute ($paramValueArr);
+			$this->throwException ( $STH->errorInfo () );
+			return $id;
+		} catch ( Exception $e ) {
+			//$conn->rollback();
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 		return null;

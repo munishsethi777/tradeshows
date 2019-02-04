@@ -25,6 +25,7 @@
                  	<?include "progress.php"?>
                  	 <form id="importItemForm" method="post" action="Actions/ItemAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="importItems"/>
+                     	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
@@ -56,11 +57,36 @@ function saveTaskCategory(){
 	if($("#importItemForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#importItemForm').ajaxSubmit(function( data ){
+		   $("#isupdate").val(0);
 		   showHideProgress();
-		   var flag = showResponseToastr(data,null,"importItemForm","ibox");
-		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminShowItems.php"},500);
+		   var jsonData = $.parseJSON(data);
+		   if(jsonData.itemalreadyexists > 0){
+			   bootbox.confirm({
+				    message: jsonData.itemalreadyexists + " items already exists in database! Do you want to update these items with new values?",
+				    buttons: {
+				        confirm: {
+				            label: 'Yes',
+				            className: 'btn-success'
+				        },
+				        cancel: {
+				            label: 'No',
+				            className: 'btn-danger'
+				        }
+				    },
+				    callback: function (result) {
+					    if(result){
+							$("#isupdate").val(1);
+							saveTaskCategory(); 
+					    }
+				    }
+				});
+		   }else{
+			   var flag = showResponseToastr(data,null,"importItemForm","ibox");
+			   if(flag){
+				  // window.setTimeout(function(){window.location.href = "adminShowItems.php"},500);
+			   }   
 		   }
+		   $("#isupdate").val(0);
 	    })	
 	}else{
 		$("#importItemForm")[0].reportValidity();
