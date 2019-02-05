@@ -1,6 +1,6 @@
 <?php
 require_once('../IConstants.inc');
-require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -10,19 +10,18 @@ if(isset($_GET["call"])){
 }else{
 	$call = $_POST["call"];
 }
-$itemMgr = ItemMgr::getInstance();
-if($call == "importItems"){
+$customerMgr = CustomerMgr::getInstance();
+if($call == "importCustomers"){
 	try{
 		$isUpdate = false;
-		$updateIds = array();
+		$updateIds = null;
 		if(isset($_POST["isupdate"]) && !empty($_POST["isupdate"])){
 			$isUpdate = true;
 			$updateIds = $_POST["updateIds"];
 			$updateIds = explode(",",$updateIds);
 		}
-		$item = new Item();
 		if(isset($_FILES["file"])){
-			$response = $itemMgr->importItems($_FILES["file"],$isUpdate,$updateIds);
+			$response = $customerMgr->importCustomers($_FILES["file"],$isUpdate,$updateIds);
 			echo json_encode($response);
 			return;
 		}

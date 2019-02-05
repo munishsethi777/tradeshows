@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Import Items</title>
+<title>Admin | Import Customers</title>
 <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -18,15 +18,15 @@
                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 							href="#"><i class="fa fa-bars"></i> </a>
-							<h5 class="pageTitle">Import Items</h5>
+							<h5 class="pageTitle">Import Customers</h5>
 					</nav>
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="importItemForm" method="post" action="Actions/ItemAction.php" class="m-t-lg">
-                     	<input type="hidden" id ="call" name="call"  value="importItems"/>
-                     	<input type="hidden" id ="updateIds" name="updateIds"/>
+                 	 <form id="importCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-lg">
+                     	<input type="hidden" id ="call" name="call"  value="importCustomers"/>
                      	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
+                     	<input type="hidden" id ="updateIds" name="updateIds"/>
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
@@ -36,7 +36,7 @@
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label"></label>
                         	<div class="col-lg-2">
-	                        	<button class="btn btn-primary" onclick="saveTaskCategory()" type="button" style="width:85%">
+	                        	<button class="btn btn-primary" onclick="importCustomers()" type="button" style="width:85%">
                                 	Submit
 	                          	</button>
 	                        </div>
@@ -54,18 +54,18 @@
 </body>
 </html>
 <script type="text/javascript">
-function saveTaskCategory(){
-	if($("#importItemForm")[0].checkValidity()) {
+function importCustomers(){
+	if($("#importCustomerForm")[0].checkValidity()) {
 		showHideProgress()
-		$('#importItemForm').ajaxSubmit(function( data ){
+		$('#importCustomerForm').ajaxSubmit(function( data ){
 		   $("#isupdate").val(0);
 		   $("#updateIds").val("");
 		   showHideProgress();
 		   var jsonData = $.parseJSON(data);
-		   if(jsonData.itemalreadyexists > 0){
-			   $("#updateIds").val(jsonData.existingItemIds);
+		   if(jsonData.customerIdAlreadyExists > 0){
+			   $("#updateIds").val(jsonData.existingCustomerIds);
 			   bootbox.confirm({
-				    message: jsonData.itemalreadyexists + " items already exists in database! Do you want to update these items with new values?",
+				    message: jsonData.customerIdAlreadyExists + " customers already exists in database! Do you want to update these customers with new values?",
 				    buttons: {
 				        confirm: {
 				            label: 'Yes',
@@ -79,7 +79,7 @@ function saveTaskCategory(){
 				    callback: function (result) {
 					    if(result){
 							$("#isupdate").val(1);
-							saveTaskCategory(); 
+							importCustomers(); 
 					    }else{
 					    	 $("#isupdate").val(0);
 							 $("#updateIds").val(""); 
@@ -87,7 +87,7 @@ function saveTaskCategory(){
 				    }
 				});
 		   }else{
-			   var flag = showResponseToastr(data,null,"importItemForm","ibox");
+			   var flag = showResponseToastr(data,null,"importCustomerForm","ibox");
 			   if(flag){
 				  // window.setTimeout(function(){window.location.href = "adminShowItems.php"},500);
 			   }   
@@ -95,7 +95,7 @@ function saveTaskCategory(){
 		   $("#isupdate").val(0);
 	    })	
 	}else{
-		$("#importItemForm")[0].reportValidity();
+		$("#importCustomerForm")[0].reportValidity();
 	}
 }
 </script>

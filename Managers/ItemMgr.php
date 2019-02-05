@@ -26,16 +26,16 @@ class ItemMgr{
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
-	public function importItems($file,$isUpdate){
+	public function importItems($file,$isUpdate,$updateItemNos){
 		$inputFileName = $file['tmp_name'];
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 		$sheet = $objPHPExcel->getActiveSheet();
 		$maxCell = $sheet->getHighestRowAndColumn();
 		$sheetData = $sheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
-		return $this->validateAndSaveFile($sheetData,$isUpdate);
+		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
 	}
 	
-	public function validateAndSaveFile($sheetData,$isUpdate){
+	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
 		$message = "";
 		$this->fieldNames = $sheetData[0];
 		$mainJson = array();
@@ -64,32 +64,39 @@ class ItemMgr{
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		if(empty($messages)){
-			$response = $this->saveArr($itemArr, $isUpdate);
+			$response = $this->saveArr($itemArr, $isUpdate,$updateItemNos);
 		}
 		return $response;
 	}
 	
-	private function saveArr($itemArr,$isUpdate){
+	private function saveArr($itemArr,$isUpdate,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
 		$hasError = false;
 		$messages = "";
 		$itemNoAlreadyExists = 0;
+		$existingItemIds = array();
 		$success = 1;
 		foreach ($itemArr as $item){
+			$itemNo = $item->getItemNo();
 			try {
 				if(!$isUpdate){
 					$this->saveItem($conn, $item);
 				}else{
-					$condition["itemno"] = $item->getItemNo();
-					$this->updateOject($conn, $item, $condition);
+					if(in_array($itemNo, $updateItemNos)){
+						$condition["itemno"] = $itemNo;
+						$this->updateOject($conn, $item, $condition);
+					}else{
+						$this->saveItem($conn, $item);
+					}
 				}
 			}
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
 					$itemNoAlreadyExists++;
+					array_push($existingItemIds, $itemNo);
 				}else{
 					$messages .= $e->getMessage();
 				}
@@ -106,6 +113,7 @@ class ItemMgr{
 		$response["message"] = $messages;
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
+		$response["existingItemIds"] = $existingItemIds;
 		return $response;
 	}
 	

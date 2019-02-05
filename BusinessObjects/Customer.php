@@ -1,7 +1,7 @@
 <?php
 class Customer{
 
-	private $seq,$customerid,$customername,$phone,$address,$address1,$city,$street,$zip,$email,$attention,
+	private $seq,$customerid,$customername,$phone,$address,$address1,$city,$state,$zip,$email,$attention,
 	$fax,$terms,$sales1,$sales2,$sales3,$sales4,$createdate,$createdon,$lastmodifiedon;
 
 	public static $className = "Customer";
@@ -49,11 +49,11 @@ class Customer{
 	public function getCity(){
 		return $this->city;
 	}
-	public function setStreet($val_){
-		$this->street = $val_;
+	public function setState($val_){
+		$this->state = $val_;
 	}
-	public function getStreet(){
-		return $this->street;
+	public function getState(){
+		return $this->state;
 	}
 	public function setZip($val_){
 		$this->zip = $val_;
