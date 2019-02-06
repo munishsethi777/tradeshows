@@ -30,6 +30,20 @@ if($call == "importCustomers"){
 		$message  = $e->getMessage();
 	}
 }
+
+if($call == "getAllCustomers"){
+	$customerJson = $customerMgr->getCustomersForGrid();
+	echo json_encode($customerJson);
+	return;
+}
+if($call == "export"){
+	try{
+		$response = $customerMgr->exportCustomers();
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

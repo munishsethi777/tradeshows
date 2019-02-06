@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 class CustomerMgr{
 	
@@ -9,6 +10,7 @@ class CustomerMgr{
 	private static $dataStore;
 	private $validationErrors;
 	private $fieldNames;
+	private static $FIELD_COUNT = 17;
 	public static function getInstance()
 	{
 		if (!self::$customerMgr)
@@ -47,16 +49,21 @@ class CustomerMgr{
 		$messages = "";
 		$customerIdAlreadyExists = 0;
 		$customerArr = array();
-		foreach ($sheetData as $key=>$data){
-			if($key == 0){
-				continue;
+		if(self::$FIELD_COUNT == count($this->fieldNames)){
+			foreach ($sheetData as $key=>$data){
+				if($key == 0){
+					continue;
+				}
+				$customer = $this->getCustomerObj($data);
+				array_push($customerArr, $customer);
+				if(!empty($this->validationErrors)){
+					$messages .= "<b>Row $key+1 has following validation Errors </b><p>" . $this->validationErrors . "</p>";
+					$success = 0;
+				}
 			}
-			$customer = $this->getCustomerObj($data);
-			array_push($customerArr, $customer);
-			if(!empty($this->validationErrors)){
-				$messages .= "<b>Row $key+1 has following validation Errors </b><p>" . $this->validationErrors . "</p>";
-				$success = 0;
-			}
+		}else{
+			$messages .= "Please import the correct file";
+			$success = 0;
 		}
 		$response = array();
 		$response["message"] = $messages;
@@ -123,6 +130,11 @@ class CustomerMgr{
 			$message = "  - '$fieldName' should be numeric a value!<br>";
 		}
 		return $message;
+	}
+	
+	public function exportCustomers(){
+		$customers = self::$dataStore->findAll();
+		ExportUtil::exportCustomers($customers);
 	}
 	
 	private function getCustomerObj($data){
@@ -209,6 +221,21 @@ class CustomerMgr{
 		return $customer;
 	}
 	
+	public function getCustomersForGrid(){
+		$customers = $this->findAllArr(true);
+		$mainArr["Rows"] = $customers;
+		$mainArr["TotalRows"] = $this->getAllCount(true);
+		return $mainArr;
+	}
 	
-	 
+	public function getAllCount($isApplyFilter){
+		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
+		return $count;
+	}
+	
+	public function findAllArr($isApplyFilter = false){
+		$customerArr = self::$dataStore->findAllArr($isApplyFilter);
+		return $customerArr;
+	}
+	
 }

@@ -30,7 +30,7 @@ if($file == "dashboard.php"){
 	$isMasterTask = "active";
 }elseif($file=="adminShowTasks.php"){
 	$isShowTasks = "active";
-}elseif($file=="adminImportItems.php"){
+}elseif($file=="adminManageItems.php"){
 	$manageItems = "active";
 }elseif($file=="adminImportCustomers.php"){
 	$manageCustomers = "active";
@@ -60,12 +60,12 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageItems;?>">
-                    <a href="adminImportItems.php"><i class="fa fa-globe"></i> 
+                    <a href="adminManageItems.php"><i class="fa fa-globe"></i> 
                     	<span class="nav-label">Manage Items</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">
-                   <a href="adminImportCustomers.php"><i class="fa fa-globe"></i> 
+                   <a href="adminManageCustomers.php"><i class="fa fa-globe"></i> 
                 	   	<span class="nav-label">Manage Customers</span>  
                    </a>
                 </li>

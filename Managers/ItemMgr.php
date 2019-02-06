@@ -2,12 +2,14 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TaskCategory.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Item.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 class ItemMgr{
 	private static  $ItemMgr;
 	private static $dataStore;
 	private $dataTypeErrors;
 	private $fieldNames;
+	private static $FIELD_COUNT = 25;
 	public static function getInstance()
 	{
 		if (!self::$ItemMgr)
@@ -35,29 +37,41 @@ class ItemMgr{
 		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
 	}
 	
+	public function exportItems(){
+		$items = self::$dataStore->findAll();
+		ExportUtil::exportItems($items);
+	}
+	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
 		$message = "";
 		$this->fieldNames = $sheetData[0];
-		$mainJson = array();
-		$json = array();
-		$mainJson["success"] = 1;
-		$mainJson["messages"] = "";
-		$success = 10;
-		$messages = "";
 		$itemNoAlreadyExists = 0;
-		$exstingsItemNos = array();
-		$itemArr = array();
-		foreach ($sheetData as $key=>$data){
-			if($key == 0){
-				continue;
+		$success = 1;
+		$messages = "";
+		if(self::$FIELD_COUNT == count($this->fieldNames)){
+			$mainJson = array();
+			$json = array();
+			$mainJson["success"] = 1;
+			$mainJson["messages"] = "";
+			
+			
+			$exstingsItemNos = array();
+			$itemArr = array();
+			foreach ($sheetData as $key=>$data){
+				if($key == 0){
+					continue;
+				}
+				$item = $this->getItemObj($data);
+				$itemNo = $item->getItemNo();
+				array_push($itemArr, $item);
+				if(!empty($this->dataTypeErrors)){
+					$messages .= "<b>Item $itemNo has following validation Errors </b><p>" . $this->dataTypeErrors . "</p>";
+					$success = 0;
+				}
 			}
-			$item = $this->getItemObj($data);
-			$itemNo = $item->getItemNo();
-			array_push($itemArr, $item);
-			if(!empty($this->dataTypeErrors)){
-				$messages .= "<b>Item $itemNo has following validation Errors </b><p>" . $this->dataTypeErrors . "</p>";
-				$success = 0;
-			}
+		}else{
+			$messages .= "Please import the correct file";
+			$success = 0;
 		}
 		$response = array();
 		$response["message"] = $messages;
@@ -248,6 +262,23 @@ class ItemMgr{
 		$item->setCreatedOn(new DateTime());
 		$item->setIsEnabled(1);
 		return $item;
+	}
+	
+	public function getItemsForGrid(){
+		$items = $this->findAllArr(true);
+		$mainArr["Rows"] = $items;
+		$mainArr["TotalRows"] = $this->getAllCount(true);
+		return $mainArr;
+	}
+	
+	public function getAllCount($isApplyFilter){
+		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
+		return $count;
+	}
+	
+	public function findAllArr($isApplyFilter = false){
+		$itemArr = self::$dataStore->findAllArr($isApplyFilter);
+		return $itemArr;
 	}
 	
 	

@@ -89,7 +89,7 @@ function importCustomers(){
 		   }else{
 			   var flag = showResponseToastr(data,null,"importCustomerForm","ibox");
 			   if(flag){
-				  // window.setTimeout(function(){window.location.href = "adminShowItems.php"},500);
+				   window.setTimeout(function(){window.location.href = "adminManagerCustomers.php"},500);
 			   }   
 		   }
 		   $("#isupdate").val(0);

@@ -1,13 +1,12 @@
 <?php
  $docroot = $_SERVER["DOCUMENT_ROOT"];
   $ConstantsArray = array('dbServerUrl' => $docroot .'/tradeshows/'
-    ,'imagefolderpath' => $docroot .'/dinner/images/'
-    ,'docspath' => $docroot .'/dinner/docs/'
-    ,'ImagePath' => $docroot .'/dinner/Images/menuImages/')
+    ,'imagefolderpath' => $docroot .'/tradeshows/images/'
+    ,'docspath' => $docroot .'/tradeshows/docs/'
+    ,'ImagePath' => $docroot .'/tradeshows/Images/menuImages/')
   ;
-  $ConstantsArray['ApplicationURL'] = "http://localhost/dinner/";
+  $ConstantsArray['ApplicationURL'] = "http://localhost/tradeshows/";
 
-  $ConstantsArray["CUSTOM_FIELD_PREFIX"]  = "cus_";
   //$ConstantsArray = array('dbServerUrl' => '/home/satyain/public_html/giftcard/');
   //Logger::configure($ConstantsArray['dbServerUrl'] .'log4php/log4php.xml');
   $ConstantsArray['ApplicationURL'] = "http://localhost/tradeshows";

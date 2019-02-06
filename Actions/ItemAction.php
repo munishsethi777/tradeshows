@@ -31,6 +31,19 @@ if($call == "importItems"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "getAllItems"){
+	$itemJson = $itemMgr->getItemsForGrid();
+	echo json_encode($itemJson);
+	return;
+}
+if($call == "export"){
+	try{
+		$response = $itemMgr->exportItems();
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
