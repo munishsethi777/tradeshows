@@ -82,6 +82,7 @@ class CustomerMgr{
 		$hasError = false;
 		$messages = "";
 		$customerIdAlreadyExists = 0;
+		$savedCustomerCount = 0;
 		$success = 1;
 		$exstingCustomerIds = array();
 		foreach ($customerArr as $customer){
@@ -89,12 +90,11 @@ class CustomerMgr{
 			try {
 				if(!$isUpdate){
 					$this->saveCustomer($conn, $customer);
+					$savedCustomerCount++;
 				}else{
 					if(in_array($customerId, $updateIds)){
 						$condition["customerid"] = $customer->getCustomerId();
 						$this->updateOject($conn, $customer, $condition);
-					}else{
-						$this->saveCustomer($conn, $customer);
 					}
 				}
 			}
@@ -110,15 +110,14 @@ class CustomerMgr{
 				$success = 0;
 			}
 		}
+		$conn->commit();
 		if(!$hasError){
 			$messages = "Customers Imported Successfully!";
-			$conn->commit();
-		}else{
-			$conn->rollback();
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
 		$response["customerIdAlreadyExists"] = $customerIdAlreadyExists;
+		$response["savedCustomersCount"] = $savedCustomerCount;
 		$response["existingCustomerIds"] = $exstingCustomerIds;
 		return $response;
 	}

@@ -53,8 +53,6 @@ class ItemMgr{
 			$json = array();
 			$mainJson["success"] = 1;
 			$mainJson["messages"] = "";
-			
-			
 			$exstingsItemNos = array();
 			$itemArr = array();
 			foreach ($sheetData as $key=>$data){
@@ -90,6 +88,7 @@ class ItemMgr{
 		$hasError = false;
 		$messages = "";
 		$itemNoAlreadyExists = 0;
+		$savedItemCount = 0;
 		$existingItemIds = array();
 		$success = 1;
 		foreach ($itemArr as $item){
@@ -97,12 +96,11 @@ class ItemMgr{
 			try {
 				if(!$isUpdate){
 					$this->saveItem($conn, $item);
+					$savedItemCount++;
 				}else{
 					if(in_array($itemNo, $updateItemNos)){
 						$condition["itemno"] = $itemNo;
 						$this->updateOject($conn, $item, $condition);
-					}else{
-						$this->saveItem($conn, $item);
 					}
 				}
 			}
@@ -118,15 +116,14 @@ class ItemMgr{
 				$success = 0;
 			}
 		}
+		$conn->commit();
 		if(!$hasError){
 			$messages = "Items Imported Successfully!";
-			$conn->commit();
-		}else{
-			$conn->rollback();
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
+		$response["savedItemCount"] = $savedItemCount;
 		$response["existingItemIds"] = $existingItemIds;
 		return $response;
 	}

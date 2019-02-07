@@ -64,8 +64,13 @@ function importCustomers(){
 		   var jsonData = $.parseJSON(data);
 		   if(jsonData.customerIdAlreadyExists > 0){
 			   $("#updateIds").val(jsonData.existingCustomerIds);
+			   var importedCustomersCount = jsonData.savedCustomersCount;
+			   var message = jsonData.customerIdAlreadyExists + " customers already exists in database! Do you want to update these customers with new values?";
+			   if(importedCustomersCount > 0){
+				   message = importedCustomersCount + " customers imported successfully.<br>" + message;			   
+			   }
 			   bootbox.confirm({
-				    message: jsonData.customerIdAlreadyExists + " customers already exists in database! Do you want to update these customers with new values?",
+				    message: message,
 				    buttons: {
 				        confirm: {
 				            label: 'Yes',
@@ -89,7 +94,7 @@ function importCustomers(){
 		   }else{
 			   var flag = showResponseToastr(data,null,"importCustomerForm","ibox");
 			   if(flag){
-				   window.setTimeout(function(){window.location.href = "adminManagerCustomers.php"},500);
+				   window.setTimeout(function(){window.location.href = "adminManageCustomers.php"},500);
 			   }   
 		   }
 		   $("#isupdate").val(0);

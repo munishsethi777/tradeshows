@@ -64,8 +64,14 @@ function saveTaskCategory(){
 		   var jsonData = $.parseJSON(data);
 		   if(jsonData.itemalreadyexists > 0){
 			   $("#updateIds").val(jsonData.existingItemIds);
+			   var importedItemsCount = jsonData.savedItemCount;
+			   var message = jsonData.itemalreadyexists + " items already exists in database! Do you want to update these items with new values?";
+			   if(importedItemsCount > 0){
+				   message = importedItemsCount + " items imported successfully.<br>" + message;			   
+			   }
+			   
 			   bootbox.confirm({
-				    message: jsonData.itemalreadyexists + " items already exists in database! Do you want to update these items with new values?",
+				    message: message,
 				    buttons: {
 				        confirm: {
 				            label: 'Yes',
@@ -89,7 +95,7 @@ function saveTaskCategory(){
 		   }else{
 			   var flag = showResponseToastr(data,null,"importItemForm","ibox");
 			   if(flag){
-				  // window.setTimeout(function(){window.location.href = "adminShowItems.php"},500);
+				  window.setTimeout(function(){window.location.href = "adminManageItems.php"},500);
 			   }   
 		   }
 		   $("#isupdate").val(0);
