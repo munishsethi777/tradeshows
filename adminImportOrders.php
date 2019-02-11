@@ -7,7 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Import Customers</title>
+<title>Admin | Import Items</title>
 <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -18,18 +18,18 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	    	<div class="col-lg-12">
 	         <div class="ibox">
 	         	<div class="ibox-title">
-                   	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                   	<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 							href="#"><i class="fa fa-bars"></i> </a>
-							<h5 class="pageTitle">Import Customers</h5>
+							<h5 class="pageTitle">Import Orders</h5>
 					</nav>
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="importCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-lg">
-                     	<input type="hidden" id ="call" name="call"  value="importCustomers"/>
-                     	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
+                 	 <form id="importItemForm" method="post" action="Actions/TradeShowOrderAction.php" class="m-t-lg">
+                     	<input type="hidden" id ="call" name="call"  value="importOrders"/>
                      	<input type="hidden" id ="updateIds" name="updateIds"/>
+                     	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
@@ -39,7 +39,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label"></label>
                         	<div class="col-lg-2">
-	                        	<button class="btn btn-primary" onclick="importCustomers()" type="button" style="width:85%">
+	                        	<button class="btn btn-primary" onclick="saveOrders()" type="button" style="width:85%">
                                 	Submit
 	                          	</button>
 	                        </div>
@@ -57,21 +57,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 </body>
 </html>
 <script type="text/javascript">
-function importCustomers(){
-	if($("#importCustomerForm")[0].checkValidity()) {
+function saveOrders(){
+	if($("#importItemForm")[0].checkValidity()) {
 		showHideProgress()
-		$('#importCustomerForm').ajaxSubmit(function( data ){
+		$('#importItemForm').ajaxSubmit(function( data ){
 		   $("#isupdate").val(0);
 		   $("#updateIds").val("");
 		   showHideProgress();
 		   var jsonData = $.parseJSON(data);
-		   if(jsonData.customerIdAlreadyExists > 0){
-			   $("#updateIds").val(jsonData.existingCustomerIds);
-			   var importedCustomersCount = jsonData.savedCustomersCount;
-			   var message = jsonData.customerIdAlreadyExists + " customers already exists in database! Do you want to update these customers with new values?";
-			   if(importedCustomersCount > 0){
-				   message = importedCustomersCount + " customers imported successfully.<br>" + message;			   
+		   if(jsonData.itemalreadyexists > 0){
+			   $("#updateIds").val(jsonData.existingItemIds);
+			   var importedItemsCount = jsonData.savedItemCount;
+			   var message = jsonData.itemalreadyexists + " items already exists in database! Do you want to update these items with new values?";
+			   if(importedItemsCount > 0){
+				   message = importedItemsCount + " items imported successfully.<br>" + message;			   
 			   }
+			   
 			   bootbox.confirm({
 				    message: message,
 				    buttons: {
@@ -87,7 +88,7 @@ function importCustomers(){
 				    callback: function (result) {
 					    if(result){
 							$("#isupdate").val(1);
-							importCustomers(); 
+							saveOrders(); 
 					    }else{
 					    	 $("#isupdate").val(0);
 							 $("#updateIds").val(""); 
@@ -95,15 +96,15 @@ function importCustomers(){
 				    }
 				});
 		   }else{
-			   var flag = showResponseToastr(data,null,"importCustomerForm","ibox");
+			   var flag = showResponseToastr(data,null,"importItemForm","ibox");
 			   if(flag){
-				   window.setTimeout(function(){window.location.href = "adminManageCustomers.php"},500);
+				  window.setTimeout(function(){window.location.href = "adminManageOrders.php"},500);
 			   }   
 		   }
 		   $("#isupdate").val(0);
 	    })	
 	}else{
-		$("#importCustomerForm")[0].reportValidity();
+		$("#importItemForm")[0].reportValidity();
 	}
 }
 </script>

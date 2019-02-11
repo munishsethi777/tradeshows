@@ -8,7 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Manage Customers</title>
+    <title>Admin | Manage TradeShow Orders</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
@@ -23,11 +23,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 									<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 										href="#"><i class="fa fa-bars"></i> </a>
-										<h4 class="p-h-sm font-normal">Manage Customers</h4>
+										<h4 class="p-h-sm font-normal">Manage TradeShow Orders</h4>
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">
-		                     	<div id="customerGrid"></div>
+		                     	<div id="orderGrid"></div>
 		                     </div>
 	                    </div>	
 		            </div>
@@ -53,11 +53,13 @@ function editShow(seq){
 function loadGrid(){
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Customer ID', datafield: 'customerid',width:"10%"},
-      { text: 'Name', datafield: 'customername', width:"25%"},
-      { text: 'Phone', datafield: 'phone',width:"15%"},
-      { text: 'Email', datafield: 'email',width:"30%"},
-      { text: 'State', datafield: 'state',width:'17%'}
+      { text: 'Order Id', datafield: 'salesordernumber',width:"10%"},
+      { text: 'Description', datafield: 'description', width:"40%"},
+      { text: 'Qty', datafield: 'qtyorder',width:"10%"},
+      { text: 'Cust PO', datafield: 'custpo',width:"10%"},
+      { text: 'Price', datafield: 'price',width:"10%"},
+      { text: 'Order Date', datafield: 'orderdate',width:"10%",cellsformat: 'MM-dd-yyyy'},
+      { text: 'Ship Date', datafield: 'shipdt',width:"10%",cellsformat: 'MM-dd-yyyy'}
     ]
    
     var source =
@@ -65,16 +67,18 @@ function loadGrid(){
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'createdon',
+        sortcolumn: 'orderdate',
         sortdirection: 'asc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                     { name: 'customerid', type: 'string' }, 
-                    { name: 'customername', type: 'string' }, 
-                    { name: 'phone', type: 'string' },
-                    { name: 'email', type: 'string' } ,
-                    { name: 'state', type: 'string' } 
+                    { name: 'salesordernumber', type: 'string' }, 
+                    { name: 'description', type: 'string' }, 
+                    { name: 'qtyorder', type: 'string' },
+                    { name: 'price', type: 'string' },
+                    { name: 'custpo', type: 'string' },
+                    { name: 'orderdate', type: 'date' },
+                    { name: 'shipdt', type: 'date' }
                     ],                          
-        url: 'Actions/CustomerAction.php?call=getAllCustomers',
+        url: 'Actions/TradeShowOrderAction.php?call=getAllTradeShowOrders',
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -84,12 +88,12 @@ function loadGrid(){
         filter: function()
         {
             // update the grid and send a request to the server.
-            $("#customerGrid").jqxGrid('updatebounddata', 'filter');
+            $("#orderGrid").jqxGrid('updatebounddata', 'filter');
         },
         sort: function()
         {
             // update the grid and send a request to the server.
-            $("#customerGrid").jqxGrid('updatebounddata', 'sort');
+            $("#orderGrid").jqxGrid('updatebounddata', 'sort');
         },
         addrow: function (rowid, rowdata, position, commit) {
             commit(true);
@@ -104,7 +108,7 @@ function loadGrid(){
     
     var dataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
-    $("#customerGrid").jqxGrid(
+    $("#orderGrid").jqxGrid(
     {
     	width: '100%',
 		height: '75%',
@@ -118,7 +122,6 @@ function loadGrid(){
 		enabletooltips: true,
 		columnsresize: true,
 		columnsreorder: true,
-		selectionmode: 'checkbox',
 		showstatusbar: true,
 		virtualmode: true,
 		rendergridrows: function (toolbar) {
@@ -127,23 +130,23 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
-            var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
+           // var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
-            container.append(exportButton);
+            //container.append(exportButton);
             container.append(reloadButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
-            exportButton.jqxButton({  width: 65, height: 18 });
+          //  exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             // create new row.
             addButton.click(function (event) {
-                location.href = ("adminImportCustomers.php");
+                location.href = ("adminImportOrders.php");
             });
-            exportButton.click(function (event) {
-        	   exportCustomersConfirm();
-           });
-             $("#customerGrid").bind('rowselect', function (event) {
+            //exportButton.click(function (event) {
+        	  // exportCustomersConfirm();
+          // });
+             $("#orderGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       
                  if($.isArray(selectedRowIndex)){           
@@ -152,18 +155,18 @@ function loadGrid(){
                      } else{
                          isSelectAll = true;
                      }                                                                     
-                     $('#customerGrid').jqxGrid('clearselection');
+                     $('#orderGrid').jqxGrid('clearselection');
                      if(isSelectAll){
                          for (i = 0; i <= pageSize; i++) {
-                             var index = $('#customerGrid').jqxGrid('getrowboundindex', i);
-                             $('#customerGrid').jqxGrid('selectrow', index);
+                             var index = $('#orderGrid').jqxGrid('getrowboundindex', i);
+                             $('#orderGrid').jqxGrid('selectrow', index);
                          }    
                      }
                  }                        
             });
             // reload grid data.
             reloadButton.click(function (event) {
-                $("#customerGrid").jqxGrid({ source: dataAdapter });
+                $("#orderGrid").jqxGrid({ source: dataAdapter });
             });
         }
     });

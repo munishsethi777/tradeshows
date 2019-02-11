@@ -1,4 +1,7 @@
-<?include("sessionCheck.php");?>
+<?include("sessionCheck.php");
+require_once('IConstants.inc');
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
