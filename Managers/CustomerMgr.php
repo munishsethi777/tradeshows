@@ -237,4 +237,14 @@ class CustomerMgr{
 		return $customerArr;
 	}
 	
+	public function findSeqByCustomerId($customerId){
+		$condition["customerid"] = $customerId;
+		$attr[0] = "seq";
+		$customer = self::$dataStore->executeAttributeQuery($attr, $condition);
+		if(!empty($customer)){
+			return $customer[0]["seq"];
+		}
+		return 0;
+	}
+	
 }

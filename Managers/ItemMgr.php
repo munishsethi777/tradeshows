@@ -3,7 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TaskCategory.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Item.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
-include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
+require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 class ItemMgr{
 	private static  $ItemMgr;
 	private static $dataStore;
@@ -276,6 +276,16 @@ class ItemMgr{
 	public function findAllArr($isApplyFilter = false){
 		$itemArr = self::$dataStore->findAllArr($isApplyFilter);
 		return $itemArr;
+	}
+	
+	public function findSeqByItemNo($itemNo){
+		$condition["itemno"] = $itemNo;
+		$attr[0] = "seq";
+		$item = self::$dataStore->executeAttributeQuery($attr, $condition);
+		if(!empty($item)){
+			return $item[0][0];
+		}
+		return null;
 	}
 	
 	
