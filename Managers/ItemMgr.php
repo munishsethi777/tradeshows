@@ -287,6 +287,10 @@ class ItemMgr{
 		}
 		return null;
 	}
+	public function findBySeq($seq){
+		$item = self::$dataStore->findArrayBySeq($seq);
+		return $item;
+	}
 	
 	
 	 

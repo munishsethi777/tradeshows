@@ -44,6 +44,15 @@ if($call == "export"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "getItemDetails"){
+	try{
+		$item = $itemMgr->findBySeq($_GET["seq"]);
+		$response["item"] = $item;
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
