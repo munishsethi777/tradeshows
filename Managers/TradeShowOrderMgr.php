@@ -102,6 +102,19 @@ class TradeShowOrderMgr{
 		}
 		return $message;
 	}
+	public function exportOrders(){
+		$orders = $this->getDataForExport();
+		ExportUtil::exportOrders($orders);
+	}
+	
+	public function getDataForExport(){
+		$query = "select items.description,items.itemno, customers.customerid,customers.customername ,tradeshoworders.* , tradeshoworderdetails.* from tradeshoworders 
+inner join tradeshoworderdetails on tradeshoworders.seq = tradeshoworderdetails.orderseq
+inner join customers on tradeshoworders.customerseq = customers.seq
+inner join items on tradeshoworderdetails.itemseq = items.seq";
+		$orders = self::$dataStore->executeQuery($query);
+		return $orders;
+	}
 	
 	private function getTradeShowOrderObj($data){
 		$customerMgr = CustomerMgr::getInstance();

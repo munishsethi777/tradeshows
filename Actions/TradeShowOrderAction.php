@@ -30,3 +30,12 @@ if($call == "getAllTradeShowOrders"){
 	echo json_encode($orderJson);
 	return;
 }
+
+if($call == "export"){
+	try{
+		$response = $tradeShowOrderMgr->exportOrders();
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}

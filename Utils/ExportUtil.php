@@ -130,6 +130,135 @@ class ExportUtil{
 		$objWriter->save('php://output');
 	}
 	
+	
+	public static function exportOrders($orders){
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getProperties()->setCreator("Admin")
+		->setLastModifiedBy("Admin")
+		->setTitle("Orders")
+		->setSubject("Orders")
+		->setDescription("Orders")
+		->setKeywords("office 2007 openxml php")
+		->setCategory("Report");
+		$alphas = range('A', 'Z');
+		$rowCount = 1;
+		$count = 1;
+		$i = 0;
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Date");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Customer ID #");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Cus. Name");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sales Rep");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sales Order Number");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SO Type");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Item#");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Description");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "WareHouse");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Qty Ordered");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Price");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "S/O Amt");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "ShipDt");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Cust. PO#");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Item Note");
+		$count = 2;
+		$i = 0;
+		foreach($orders as $order){
+			$colName = $alphas[$i++]. $count;
+			$date = $order["orderdate"];
+			$dateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $date);
+			$dateStr = $dateObj->format("n/j/y");
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $dateStr);
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["customerid"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["customername"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["salerep"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$order["salesordernumber"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["sotype"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["itemno"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["description"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["warehouse"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["quantity"]);
+	
+			$colName = $alphas[$i++]. $count;
+			
+			$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getNumberFormat()->setFormatCode("$ #,##0.00");
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["price"]);
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getNumberFormat()->setFormatCode("$ #,##0.00");
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["soamount"]);
+				
+			$shipDate = $order["shipdt"];
+			$shipDateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $shipDate);
+			$shipDateStr = $dateObj->format("n/d/Y");
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $shipDateStr);
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["custpo"]);
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $order["itemnote"]);
+			$count++;
+			$i = 0;
+		}
+		$objPHPExcel->getActiveSheet()->setTitle("Orders");
+			
+			
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$objPHPExcel->setActiveSheetIndex(0);
+			
+			
+		// Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="TradeShowOrders.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+			
+		// If you're serving to IE over SSL, then the following may be needed
+		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		ob_end_clean();
+		$objWriter->save('php://output');
+	}
+	
+	
+	
 	public static function exportItems($items){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
