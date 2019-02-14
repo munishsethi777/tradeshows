@@ -2,6 +2,9 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
+$showMgr = ShowMgr::getInstance();
+$shows = $showMgr->getAllShowsWithOrder();
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,6 +30,19 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">
+		                     	<div class="form-group row">
+		                       		<label class="col-lg-2 col-form-label">Select Tradeshow</label>
+		                        	<div class="col-lg-4">
+		                            	<select name="tradeshowseq" id="showSeq" onchange='loadGrid(this.value)' class="showSelect form-control">
+		                                    	<?php 
+		                                    		foreach($shows as $show){
+		                                    			$html = "<option value='". $show->getSeq()  ."'>".$show->getTitle()."</option>";
+		                                    			echo($html);
+		                                    		}
+		                                    	?>
+		                                </select>
+		                            </div>
+		                        </div>
 		                     	<div id="orderGrid"></div>
 		                     </div>
 	                    </div>	
@@ -42,7 +58,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <script type="text/javascript">
 $(document).ready(function(){
 	//$.get("Actions/TaskCategoryAction.php?call=getAllTaskCategories", function(data){
-    	loadGrid()
+		var tradeShowSeq = $("#showSeq").val();
+    	loadGrid(tradeShowSeq);
 	//});
 });
 
@@ -50,14 +67,14 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-function loadGrid(){
+function loadGrid(showSeq){
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Order Id', datafield: 'salesordernumber',width:"10%"},
-      { text: 'Description', datafield: 'description', width:"40%"},
-      { text: 'Qty', datafield: 'qtyorder',width:"10%"},
-      { text: 'Cust PO', datafield: 'custpo',width:"10%"},
-      { text: 'Price', datafield: 'price',width:"10%"},
+      { text: 'Order Id', datafield: 'salesordernumber',width:"11%"},
+      { text: 'Customer Name', datafield: 'customername', width:"30%"},
+      { text: 'Sale Rep', datafield: 'salerep',width:"12%"},
+      { text: 'So Type', datafield: 'sotype',width:"12%"},
+      { text: 'Cust PO', datafield: 'custpo',width:"15%"},
       { text: 'Order Date', datafield: 'orderdate',width:"10%",cellsformat: 'MM-dd-yyyy'},
       { text: 'Ship Date', datafield: 'shipdt',width:"10%",cellsformat: 'MM-dd-yyyy'}
     ]
@@ -71,14 +88,14 @@ function loadGrid(){
         sortdirection: 'asc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'salesordernumber', type: 'string' }, 
-                    { name: 'description', type: 'string' }, 
-                    { name: 'qtyorder', type: 'string' },
-                    { name: 'price', type: 'string' },
+                    { name: 'customername', type: 'string' }, 
+                    { name: 'salerep', type: 'string' },
+                    { name: 'sotype', type: 'string' },
                     { name: 'custpo', type: 'string' },
                     { name: 'orderdate', type: 'date' },
                     { name: 'shipdt', type: 'date' }
                     ],                          
-        url: 'Actions/TradeShowOrderAction.php?call=getAllTradeShowOrders',
+        url: 'Actions/TradeShowOrderAction.php?call=getAllTradeShowOrders&showSeq='+showSeq,
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -105,7 +122,71 @@ function loadGrid(){
             commit(true);
         }
     };
-    
+	var initrowdetails = function (index, parentElement, gridElement, record) {
+        var id = record.uid.toString();
+        var grid = $($(parentElement).children()[0]);
+        var orderSeq =  record.seq;
+        var detailSource =
+        {
+            datatype: "json",
+            id: 'id',
+            pagesize: 20,
+            sortcolumn: 'orderdate',
+            sortdirection: 'asc',
+            datafields: [{ name: 'seq', type: 'integer' }, 
+                        { name: 'warehouse', type: 'string' }, 
+                        { name: 'itemno', type: 'string' }, 
+                        { name: 'quantity', type: 'integer' }, 
+                        { name: 'price', type: 'string' },
+                        { name: 'soamount', type: 'string' },
+                        { name: 'itemnote', type: 'string' }
+                       ],                          
+            url: 'Actions/TradeShowOrderDetailAction.php?call=getDetailByOrderSeq&orderseq='+orderSeq,
+            root: 'Rows',
+            cache: false,
+            beforeprocessing: function(detailData)
+            {        
+            	detailSource.totalrecords = detailData.TotalRows;
+            },
+            filter: function()
+            {
+                // update the grid and send a request to the server.
+                grid.jqxGrid('updatebounddata', 'filter');
+            },
+            sort: function()
+            {
+                // update the grid and send a request to the server.
+                grid.jqxGrid('updatebounddata', 'sort');
+            },
+            addrow: function (rowid, rowdata, position, commit) {
+                commit(true);
+            },
+            deleterow: function (rowid, commit) {
+                commit(true);
+            },
+            updaterow: function (rowid, newdata, commit) {
+                commit(true);
+            }
+        };
+        var nestedGridAdapter = new $.jqx.dataAdapter(detailSource);
+        if (grid != null) {
+            grid.jqxGrid({
+                source: nestedGridAdapter, width: '95%', height: 200,pageable: true,virtualmode: true,
+                columns: [
+                  { text: 'id', datafield: 'seq' , hidden:true},
+                  { text: 'Item Id', datafield: 'itemno', width: 150 },
+                  { text: 'Qty', datafield: 'quantity', width: 100 },
+                  { text: 'Warehouse', datafield: 'warehouse', width: 200 },
+                  { text: 'Price', datafield: 'price', width: 150 },
+                  { text: 'So Amount', datafield: 'soamount', width: 100 },
+                  { text: 'Item Note', datafield: 'itemnote', width: 265 },
+               ],
+               rendergridrows: function (toolbar) {
+                   return nestedGridAdapter.records;     
+            		 },
+            });
+        }
+    }
     var dataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
     $("#orderGrid").jqxGrid(
@@ -124,6 +205,10 @@ function loadGrid(){
 		columnsreorder: true,
 		showstatusbar: true,
 		virtualmode: true,
+		rowdetails: true,
+		initrowdetails: initrowdetails,
+        rowdetailstemplate: { rowdetails: "<div id='grid' style='margin: 10px;'></div>", rowdetailsheight: 220, rowdetailshidden: true },
+        
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
@@ -164,6 +249,16 @@ function loadGrid(){
                      }
                  }                        
             });
+             $('#orderGrid').on('rowexpand', function (event) 
+            		 {
+            		     // event arguments.
+            		     var args = event.args;
+            		     // row details.
+            		     var details = args.details;
+            		     // row's bound index.
+            		     var rowBoundIndex = args.rowindex;
+            		     //$("#orderGrid").jqxGrid('showrowdetails', rowBoundIndex);
+                    });
             // reload grid data.
             reloadButton.click(function (event) {
                 $("#orderGrid").jqxGrid({ source: dataAdapter });
