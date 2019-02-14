@@ -260,19 +260,26 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
+            var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             container.append(addButton);
             container.append(exportButton);
             container.append(reloadButton);
+            container.append(templateButton);
             statusbar.append(container);
+           
             addButton.jqxButton({  width: 65, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
+            templateButton.jqxButton({  width: 150, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("adminImportItems.php");
             });
            exportButton.click(function (event) {
         	     exportItemsConfirm();
+           });
+           templateButton.click(function (event) {
+               location.href = ("files/Items_template.xlsx");
            });
              $("#itemGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
