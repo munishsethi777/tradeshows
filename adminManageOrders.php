@@ -122,8 +122,15 @@ function loadGrid(showSeq){
             commit(true);
         }
     };
+	var parentHolder = {};
 	var initrowdetails = function (index, parentElement, gridElement, record) {
         var id = record.uid.toString();
+        if (!parentElement) {
+            parentElement = parentHolder[index];
+        }
+        else {
+            parentHolder[index] = parentElement;
+        }
         var grid = $($(parentElement).children()[0]);
         var orderSeq =  record.seq;
         var detailSource =
@@ -249,17 +256,14 @@ function loadGrid(showSeq){
                      }
                  }                        
             });
-             $('#orderGrid').on('rowexpand', function (event) 
-            		 {
-            		     // event arguments.
-            		     var args = event.args;
-            		     // row details.
-            		     var details = args.details;
-            		     // row's bound index.
-            		     var rowBoundIndex = args.rowindex;
-            		     //$("#orderGrid").jqxGrid('showrowdetails', rowBoundIndex);
-                    });
-            // reload grid data.
+            $('#orderGrid').on('rowexpand', function (event) {
+            	 var index = $('#orderGrid').jqxGrid('getrowboundindex', event.args.rowindex);
+            	 var rowdata = $('#orderGrid').jqxGrid('getrowdata', index);
+            	 var parentElement = parentHolder[index];
+            	 if(parentElement != undefined){
+            	 	initrowdetails(index, false, $('#orderGrid'), rowdata);
+            	 }
+             });
             reloadButton.click(function (event) {
                 $("#orderGrid").jqxGrid({ source: dataAdapter });
             });
