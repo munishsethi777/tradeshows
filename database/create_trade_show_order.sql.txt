@@ -1,1 +1,98 @@
-CREATE TABLE `alpinetradeshows`.`tradeshoworders` ( `seq` BIGINT NOT NULLAUTO_INCREMENT , `customerseq` INT NOT NULL , `itemseq` INT NOT NULL ,`salerep` INT NULL , `salesordernumber` VARCHAR(50) NULL , `sotype`VARCHAR(10) NULL , `description` VARCHAR(500) NULL , `warehouse` VARCHAR(10)NULL , `qtyorder` INT NULL , `price` DOUBLE NULL , `soamt` DOUBLE NULL ,`shipdt` DATE NULL , `custpo` VARCHAR(20) NULL , `item note` VARCHAR(500)NULL , `orderdate` DATE NOT NULL , PRIMARY KEY (`seq`)) ENGINE = InnoDB;
+-- phpMyAdmin SQL Dump
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Feb 14, 2019 at 12:47 PM
+-- Server version: 10.2.21-MariaDB-log-cll-lve
+-- PHP Version: 7.2.7
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `satyainf_alpinetradeshows`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tradeshoworderdetails`
+--
+
+CREATE TABLE `tradeshoworderdetails` (
+  `seq` int(11) NOT NULL,
+  `itemseq` int(11) NOT NULL,
+  `warehouse` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `soamount` double DEFAULT NULL,
+  `itemnote` varchar(500) DEFAULT NULL,
+  `orderseq` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tradeshoworders`
+--
+
+CREATE TABLE `tradeshoworders` (
+  `seq` bigint(20) NOT NULL,
+  `customerseq` int(11) NOT NULL,
+  `salerep` int(11) DEFAULT NULL,
+  `salesordernumber` varchar(50) DEFAULT NULL,
+  `sotype` varchar(10) DEFAULT NULL,
+  `shipdt` date DEFAULT NULL,
+  `custpo` varchar(20) DEFAULT NULL,
+  `orderdate` date NOT NULL,
+  `tradeshowseq` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tradeshoworders`
+--
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tradeshoworderdetails`
+--
+ALTER TABLE `tradeshoworderdetails`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- Indexes for table `tradeshoworders`
+--
+ALTER TABLE `tradeshoworders`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tradeshoworderdetails`
+--
+ALTER TABLE `tradeshoworderdetails`
+  MODIFY `seq` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+
+--
+-- AUTO_INCREMENT for table `tradeshoworders`
+--
+ALTER TABLE `tradeshoworders`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
