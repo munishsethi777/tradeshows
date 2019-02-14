@@ -5,12 +5,17 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TradeShowOrderDetail.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/TradeShowOrderDetailMgr.php");
+
+
 class TradeShowOrderMgr{
 	private static  $tradeShowOrderMgr;
 	private static $dataStore;
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 15;
+	private $orderIdAndOrders;
 	public static function getInstance()
 	{
 		if (!self::$tradeShowOrderMgr)
@@ -34,13 +39,16 @@ class TradeShowOrderMgr{
 	}
 	
 	
-	public function saveTradeShowOrder($conn,$item){
-		self::$dataStore->saveObject($item, $conn);
+	public function saveTradeShowOrder($item){
+		$id = self::$dataStore->save($item);
+		return $id;
 	}
+	
 	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
 		$message = "";
 		$this->fieldNames = $sheetData[0];
+		$this->orderIdAndOrders = array();
 		$orderAlreadyExists = 0;
 		$success = 1;
 		$messages = "";
@@ -56,9 +64,8 @@ class TradeShowOrderMgr{
 				if($key == 0){
 					continue;
 				}
-				$tradeShowOrder = $this->getTradeShowOrderObj($data);
-				$itemNo = $tradeShowOrder->getItemSeq();
-				array_push($tradeShowOrderArr, $tradeShowOrder);
+				$tradeShowOrderAndDetail = $this->getTradeShowOrderObj($data);
+				array_push($tradeShowOrderArr, $tradeShowOrderAndDetail);
 				if(!empty($this->validationErrors)){
 					$messages .= "<b>Row No. $count has following validation Errors </b><p>" . $this->validationErrors . "</p>";
 					$success = 0;
@@ -74,7 +81,7 @@ class TradeShowOrderMgr{
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $orderAlreadyExists;
 		if(empty($messages)){
-			$response = $this->saveArr($tradeShowOrderArr, $isUpdate,$updateItemNos);
+			$response = $this->saveArr($tradeShowOrderArr);
 		}
 		return $response;
 	}
@@ -100,6 +107,7 @@ class TradeShowOrderMgr{
 		$customerMgr = CustomerMgr::getInstance();
 		$itemMgr = ItemMgr::getInstance();
 		$tradeShowOrder = new TradeShowOrder();
+		$tradeShowOrderDetail = new TradeShowOrderDetail();
 		$date = $data[0];
 		$customerId = $data[1];
 		$saleRep = $data[3];
@@ -114,9 +122,11 @@ class TradeShowOrderMgr{
 		$shipDt = $data[12];
 		$custPo = $data[13];
 		$itemNote = $data[14];
+		$tradeShowSeq = $_POST["tradeshowseq"];
+		$tradeShowOrder->setTradeShowSeq($tradeShowSeq);
 		$message = "";
 		if(!empty($date)){
-			$date = DateUtil::StringToDateByGivenFormat("d-m-Y", $date);
+			$date = DateUtil::StringToDateByGivenFormat("m-d-y", $date);
 			if(!$date){
 				$message .= "-".$this->fieldNames[0] . " -  invalid date<br>";
 			}
@@ -129,7 +139,7 @@ class TradeShowOrderMgr{
 			if(empty($customerSeq)){
 				$message .= "-"."Customer id '$customerId' does not exists in database!<br>";
 			}else{
-				$tradeShowOrder->setCustomerSeq($customerId);
+				$tradeShowOrder->setCustomerSeq($customerSeq);
 			}	
 		}else{
 			$message .= "-"."Customer id is required!<br>";
@@ -144,52 +154,55 @@ class TradeShowOrderMgr{
 		if(!empty($itemNo)){
 			$itemSeq = $itemMgr->findSeqByItemNo($itemNo);
 			if(!empty($itemSeq)){
-				$tradeShowOrder->setItemSeq($itemSeq);
+				$tradeShowOrderDetail->setItemSeq($itemSeq);
 			}else{
 				$message .= "-"."Item No '$itemNo' does not exists in database!<br>";
 			}
 		}else{
 			$message .= "-"."Item No. is required!<br>";
 		}
-		$tradeShowOrder->setItemNote($itemNote);
-		$tradeShowOrder->setDescription($description);
-		$tradeShowOrder->setWareHouse($wareHouse);
-		$tradeShowOrder->setQtyOrder($qtyOrder);
-		$tradeShowOrder->setPrice($price);
-		$tradeShowOrder->setSoAmt($soAmt);
+		$tradeShowOrderDetail->setItemNote($itemNote);
+		$tradeShowOrderDetail->setWarehouse($wareHouse);
+		$tradeShowOrderDetail->setPrice($price);
+		$tradeShowOrderDetail->setSoAmount($soAmt);
+		$tradeShowOrderDetail->setQuantity($qtyOrder);
 		if(!empty($shipDt)){
 			$shipDt = trim($shipDt);
 			$shipDt = DateUtil::StringToDateByGivenFormat("m/d/Y", $shipDt);
 			$tradeShowOrder->setShipDt($shipDt);
 		}		
 		$tradeShowOrder->setCustPo($custPo);
-		$tradeShowOrder->setItemNote($itemNote);
 		$this->validationErrors = $message;
-		return $tradeShowOrder;
+		$tradeShowOrderAndDetail["orders"] = $tradeShowOrder;
+		$tradeShowOrderAndDetail["detail"] = $tradeShowOrderDetail;
+		return $tradeShowOrderAndDetail;
+		
 	}
 	
 	
-	private function saveArr($tradShowOrderArr,$isUpdate,$updateItemNos){
-		$db_New = MainDB::getInstance();
-		$conn = $db_New->getConnection();
-		$conn->beginTransaction();
+	private function saveArr($tradShowOrderArr){
 		$hasError = false;
 		$messages = "";
 		$itemNoAlreadyExists = 0;
 		$savedItemCount = 0;
 		$existingItemIds = array();
 		$success = 1;
-		foreach ($tradShowOrderArr as $tradShowOrder){
+		$orderDetailMgr = TradeShowOrderDetailMgr::getInstance();
+		foreach ($tradShowOrderArr as $tradShowOrderAndDetail){
 			try {
-				if(!$isUpdate){
-					$this->saveTradeShowOrder($conn, $tradShowOrder);
-					$savedItemCount++;
-				}else{
-					if(in_array($itemNo, $updateItemNos)){
-						$condition["itemno"] = $itemNo;
-						$this->updateOject($conn, $item, $condition);
+					$tradShowOrder = $tradShowOrderAndDetail["orders"];
+					$orderNo = $tradShowOrder->getSalesOrderNumber();
+					if(isset($this->orderIdAndOrders[$orderNo])){
+						$tradShowOrder = $this->orderIdAndOrders[$orderNo];
+					}else{
+						$id = $this->saveTradeShowOrder($tradShowOrder);
+						$tradShowOrder->setSeq($id);
+						$this->orderIdAndOrders[$orderNo] = $tradShowOrder;
 					}
-				}
+					$tradShowOrderDetail = $tradShowOrderAndDetail["detail"];
+					$tradShowOrderDetail->setOrderSeq($tradShowOrder->getSeq());
+					$orderDetailMgr->saveOrderDetail($tradShowOrderDetail);
+					$savedItemCount++;		
 			}
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
@@ -203,9 +216,8 @@ class TradeShowOrderMgr{
 				$success = 0;
 			}
 		}
-		$conn->commit();
 		if(!$hasError){
-			$messages = "Items Imported Successfully!";
+			$messages = "Tradeshow orders Imported Successfully!";
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
@@ -215,15 +227,21 @@ class TradeShowOrderMgr{
 		return $response;
 	}
 	
-	public function getOrdersForGrid(){
-		$orders = $this->findAllArr(true);
+	public function getOrdersForGrid($tradeShowSeq){
+		$query = "SELECT tradeshoworders.*,customers.customername FROM tradeshoworders
+inner join customers on tradeshoworders.customerseq = customers.seq
+where tradeshoworders.tradeshowseq = $tradeShowSeq";
+		$orders = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $orders;
-		$mainArr["TotalRows"] = $this->getAllCount(true);
+		$mainArr["TotalRows"] = $this->getAllCount($tradeShowSeq,true);
 		return $mainArr;
 	}
 	
-	public function getAllCount($isApplyFilter){
-		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
+	public function getAllCount($tradeShowSeq,$isApplyFilter){
+		$query = "SELECT count(*) FROM tradeshoworders
+inner join customers on tradeshoworders.customerseq = customers.seq
+where tradeshoworders.tradeshowseq = $tradeShowSeq";
+		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
 		return $count;
 	}
 	

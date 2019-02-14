@@ -25,7 +25,8 @@ if($call == "importOrders"){
 }
 
 if($call == "getAllTradeShowOrders"){
-	$orderJson = $tradeShowOrderMgr->getOrdersForGrid();
+	$tradeShowSeq = $_GET["showSeq"];
+	$orderJson = $tradeShowOrderMgr->getOrdersForGrid($tradeShowSeq);
 	echo json_encode($orderJson);
 	return;
 }

@@ -2,7 +2,7 @@
 class TradeShowOrder{
 	public static $tableName = "tradeshoworders";
 	public static $className = "TradeShowOrder";
-	private $seq,$customerseq,$itemseq,$salerep,$salesordernumber,$sotype,$description,$warehouse,$qtyorder,$price,$soamt,$shipdt,$custpo,$itemnote,$orderdate;
+	private $seq,$customerseq,$salerep,$salesordernumber,$sotype,$custpo,$orderdate,$tradeshowseq,$shipdt;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -16,13 +16,6 @@ class TradeShowOrder{
 	}
 	public function getCustomerSeq(){
 		return $this->customerseq;
-	}
-	
-	public function setItemSeq($itemSeq_){
-		$this->itemseq =$itemSeq_;
-	}
-	public function getItemSeq(){
-		return $this->itemseq;
 	}
 	
 	public function setSaleRep($saleRep_){
@@ -47,60 +40,11 @@ class TradeShowOrder{
 		return $this->sotype;
 	}
 	
-	public function setDescription($description_){
-		$this->description = $description_;
-	}
-	public function getDescription(){
-		return $this->description;
-	}
-	
-	public function setWareHouse($wareHouse_){
-		$this->warehouse = $wareHouse_;
-	}
-	public function getWareHouse(){
-		return $this->warehouse;
-	}
-	
-	public function setQtyOrder($qtyORder){
-		$this->qtyorder  = $qtyORder;
-	}
-	public function getQtyOrder(){
-		return $this->qtyorder;
-	}
-	
-	public function setPrice($price_){
-		$this->price = $price_;
-	}
-	public function getPrice(){
-		return $this->price;
-	}
-	
-	public function setSoAmt($soAmount_){
-		$this->soamt = $soAmount_;
-	}
-	public function getSoAmt(){
-		return $this->soamt;
-	}
-	
-	public function setShipDt($shipDt){
-		$this->shipdt = $shipDt;
-	}
-	public function getShipDt(){
-		return $this->shipdt;
-	}
-	
 	public function setCustPo($custPo){
 		$this->custpo = $custPo;
 	}
 	public function getCustPo(){
 		return $this->custpo;
-	}
-	
-	public function setItemNote($itemNote_){
-		$this->itemnote = $itemNote_;
-	}
-	public function getItemNote(){
-		return $this->itemnote;
 	}
 	
 	public function setOrderDate($orderDate){
@@ -109,4 +53,20 @@ class TradeShowOrder{
 	public function getOrderDate(){
 		return $this->orderdate;
 	}
+	
+	public function setTradeShowSeq($tradeShowSeq_){
+		$this->tradeshowseq = $tradeShowSeq_;
+	}
+	public function getTradeShowSeq(){
+		return $this->tradeshowseq;
+	}
+	
+	public function setShipDt($shipDate_){
+		$this->shipdt = $shipDate_;
+	}
+	public function getShipDt(){
+		return $this->shipdt;
+	}
+	
+	
 }

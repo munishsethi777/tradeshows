@@ -1,6 +1,9 @@
 <?include("sessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowMgr.php");
+$showMgr = ShowMgr::getInstance();
+$shows = $showMgr->getAllShows();
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,9 +33,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                      	<input type="hidden" id ="call" name="call"  value="importOrders"/>
                      	<input type="hidden" id ="updateIds" name="updateIds"/>
                      	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
+                      	<div class="form-group row">
+                       		<label class="col-lg-2 col-form-label">Select Tradeshow</label>
+                        	<div class="col-lg-4">
+                            	<select name="tradeshowseq" id="showSeq" class="showSelect form-control">
+                                    	<?php 
+                                    		foreach($shows as $show){
+                                    			$html = "<option value='". $show->getSeq()  ."'>".$show->getTitle()."</option>";
+                                    			echo($html);
+                                    		}
+                                    	?>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
-                        	<div class="col-lg-8">
+                        	<div class="col-lg-6">
                             	<input type="file" id="title" name="file" class="form-control">
                             </div>
                         </div>
