@@ -62,38 +62,38 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageItems;?>">
-                    <a href="adminManageItems.php"><i class="fa fa-globe"></i> 
+                    <a href="adminManageItems.php"><i class="fa fa-cubes"></i> 
                     	<span class="nav-label">Manage Items</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">
-                   <a href="adminManageCustomers.php"><i class="fa fa-globe"></i> 
+                   <a href="adminManageCustomers.php"><i class="fa fa-group"></i> 
                 	   	<span class="nav-label">Manage Customers</span>  
                    </a>
                 </li>
                 <li class="<?php echo $adminManageOrders;?>">
-                   <a href="adminManageOrders.php"><i class="fa fa-globe"></i> 
+                   <a href="adminManageOrders.php"><i class="fa fa-truck"></i> 
                 	   	<span class="nav-label">Manage Orders</span>  
                    </a>
                 </li>
                 <li class="<?php echo $isTaskCategory;?>">
-                    <a href="adminShowTaskCategory.php"><i class="fa fa-cube"></i> 
+                    <a href="adminShowTaskCategory.php"><i class="fa fa-code-fork"></i> 
                     	<span class="nav-label ">Task Categories</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isMasterTask;?>">
-                    <a href="adminShowTaskList.php"><i class="fa fa-life-ring"></i> 
+                    <a href="adminShowTaskList.php"><i class="fa fa-tasks"></i> 
                     	<span class="nav-label">Master Tasks</span>  
                     </a>
                 </li>
                  
                 <li class="<?php echo $isTradeShows;?>">
-                    <a href="adminShowList.php"><i class="fa fa-globe"></i> 
+                    <a href="adminShowList.php"><i class="fa fa-calendar-o"></i> 
                     	<span class="nav-label">TradeShows</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isShowTasks;?>">
-                    <a href="adminShowTasks.php"><i class="fa fa-globe"></i> 
+                    <a href="adminShowTasks.php"><i class="fa fa-calendar"></i> 
                     	<span class="nav-label">TradeShows Tasks</span>  
                     </a>
                 </li>
