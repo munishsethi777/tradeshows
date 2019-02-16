@@ -54,10 +54,14 @@ class CustomerMgr{
 				if($key == 0){
 					continue;
 				}
+				if(!array_filter($data)) {
+					continue;	
+				}
 				$customer = $this->getCustomerObj($data);
 				array_push($customerArr, $customer);
+				
 				if(!empty($this->validationErrors)){
-					$messages .= "<b>Row $key+1 has following validation Errors </b><p>" . $this->validationErrors . "</p>";
+					$messages .= "<b>Row $key has following validation Errors </b><p>" . $this->validationErrors . "</p>";
 					$success = 0;
 				}
 			}
@@ -245,6 +249,11 @@ class CustomerMgr{
 			return $customer[0]["seq"];
 		}
 		return 0;
+	}
+	
+	public function findBySeq($seq){
+		$customer = self::$dataStore->findArrayBySeq($seq);
+		return $customer;
 	}
 	
 }

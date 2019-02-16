@@ -44,6 +44,15 @@ if($call == "export"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "getCustomerDetails"){
+	try{
+		$customer = $customerMgr->findBySeq($_GET["seq"]);
+		$response["customer"] = $customer;
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
