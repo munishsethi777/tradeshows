@@ -64,10 +64,13 @@ class TradeShowOrderMgr{
 				if($key == 0){
 					continue;
 				}
+				if(!array_filter($data)) {
+					continue;
+				}
 				$tradeShowOrderAndDetail = $this->getTradeShowOrderObj($data);
 				array_push($tradeShowOrderArr, $tradeShowOrderAndDetail);
 				if(!empty($this->validationErrors)){
-					$messages .= "<b>Row No. $count has following validation Errors </b><p>" . $this->validationErrors . "</p>";
+					$messages .= "<b>Row No. $key has following validation Errors </b><p>" . $this->validationErrors . "</p>";
 					$success = 0;
 				}
 				$count++;
@@ -139,11 +142,14 @@ inner join items on tradeshoworderdetails.itemseq = items.seq";
 		$tradeShowOrder->setTradeShowSeq($tradeShowSeq);
 		$message = "";
 		if(!empty($date)){
-			$date = DateUtil::StringToDateByGivenFormat("m-d-y", $date);
-			if(!$date){
+			$dateObj = DateUtil::StringToDateByGivenFormat("m-d-y", $date);
+			if(!$dateObj){
+				$dateObj = DateUtil::StringToDateByGivenFormat("n/j/y", $date);
+			}
+			if(!$dateObj){
 				$message .= "-".$this->fieldNames[0] . " -  invalid date<br>";
 			}
-			$tradeShowOrder->setOrderDate($date);
+			$tradeShowOrder->setOrderDate($dateObj);
 		}else{
 			$message .= "-".$this->fieldNames[0] . " invalid date!<br>";
 		}

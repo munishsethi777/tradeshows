@@ -59,6 +59,9 @@ class ItemMgr{
 				if($key == 0){
 					continue;
 				}
+				if(!array_filter($data)) {
+					continue;
+				}
 				$item = $this->getItemObj($data);
 				$itemNo = $item->getItemNo();
 				array_push($itemArr, $item);
