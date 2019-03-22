@@ -12,6 +12,7 @@ $isTaskCategory = "";
 $isMasterTask = "";
 $isShowTasks = "";
 $manageItems = "";
+$manageItemSpecification = "";
 $manageCustomers = "";
 $adminManageOrders = "";
 
@@ -32,6 +33,8 @@ if($file == "dashboard.php"){
 	$isShowTasks = "active";
 }elseif($file=="adminManageItems.php" || $file=="adminImportItems.php"){
 	$manageItems = "active";
+}elseif($file=="adminManageItemSpecifications.php" || $file=="adminImportItemSpecifications.php"){
+	$manageItemSpecification = "active";
 }elseif($file=="adminImportCustomers.php" || $file=="adminManageCustomers.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
@@ -64,6 +67,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $manageItems;?>">
                     <a href="adminManageItems.php"><i class="fa fa-cubes"></i> 
                     	<span class="nav-label">Manage Items</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $manageItemSpecification;?>">
+                    <a href="adminManageItemSpecifications.php"><i class="fa fa-cubes"></i> 
+                    	<span class="nav-label">Manage Items Specs.</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">
