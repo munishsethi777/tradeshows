@@ -2,45 +2,77 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TaskCategory.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ItemSpecification.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationVersionMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class ItemSpecificationMgr{
-	private static  $ItemSpecificationMgr;
+	private static $ItemSpecificationMgr;
+	private static $ItemSpecificationVersionMgr;
 	private static $dataStore;
 	private $dataTypeErrors;
 	private $fieldNames;
-	private static $FIELD_COUNT = 25;
+	private static $FIELD_COUNT = 66;
+	
 	public static function getInstance()
 	{
 		if (!self::$ItemSpecificationMgr)
 		{
 			self::$ItemSpecificationMgr = new ItemSpecificationMgr();
+			self::$ItemSpecificationVersionMgr = ItemSpecificationVersionMgr::getInstance();
 			self::$dataStore = new BeanDataStore(ItemSpecification::$className, ItemSpecification::$tableName);
 		}
 		return self::$ItemSpecificationMgr;
 	}
 	  
     public function saveItem($conn,$itemSpecification){
+
     	self::$dataStore->saveObject($itemSpecification, $conn);
+    	$itemSpecificationVersionMgr = self::$ItemSpecificationVersionMgr;
+    	$itemSpecificationVersion = new ItemSpecificationVersion();
+    	$itemSpecificationVersion->from_array($itemSpecification);
+    	$itemSpecificationVersion->setSeq(0);
+    	$itemSpecificationVersionMgr->saveVersion($itemSpecificationVersion,$conn);
+    }
+    	
+    private function getItemSpecificationToVersion(){
+    		
     }
     
     public function updateOject($conn,$itemSpecification,$condition){
+    	$existingIS = $this->findByItemNo($itemSpecification->getItemNo());
     	self::$dataStore->updateObject($itemSpecification, $condition, $conn);
+    	if(!empty($itemSpecification)){
+    		$itemSpecificationVersionMgr = self::$ItemSpecificationVersionMgr;
+    		$itemSpecificationVersion = $itemSpecificationVersionMgr->getItemSpecificationVersion($existingIS,$itemSpecification);
+    		if(!empty($itemSpecificationVersion)){
+    			$itemSpecificationVersionMgr->saveVersion($itemSpecificationVersion,$conn);
+    		}
+    	}
     }
 	
+    
+    
+    
 	public function importItems($file){
 		$inputFileName = $file['tmp_name'];
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
-		$sheet = $objPHPExcel->getActiveSheet();
+		$sheets = $objPHPExcel->getAllSheets();
+		$sheet = $sheets[0];
 		$maxCell = $sheet->getHighestRowAndColumn();
-		$sheetData = $sheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
+		$range = 'A1:' . $maxCell['column'] . $maxCell['row'];
+		$sheetData = $sheet->rangeToArray($range); 
 		return $this->validateAndSaveFile($sheetData);
 	}
 	
-	public function exportItems(){
-		$items = self::$dataStore->findAll();
-		ExportUtil::exportItems($items);
+	public function exportItemSpecifications($queryString){
+		$output = array();
+		parse_str($queryString, $output);
+		$_GET = array_merge($_GET,$output);
+		$itemSpecifications = self::$dataStore->findAll(true);
+		ExportUtil::exportItemSpecifications($itemSpecifications);
 	}
 	
 	public function validateAndSaveFile($sheetData){
@@ -55,14 +87,14 @@ class ItemSpecificationMgr{
 			$mainJson["success"] = 1;
 			$mainJson["messages"] = "";
 			$exstingsItemNos = array();
-			$itemArr = array();
+			$itemSpecificationArr = array();
 			foreach ($sheetData as $key=>$data){
-				if($key == 0){
+				if($key < 5){
 					continue;
 				}
-				$item = $this->getItemObj($data);
-				$itemNo = $item->getItemNo();
-				array_push($itemArr, $item);
+				$itemSpecification = $this->getItemSpecificationObj($data);
+				$itemNo = $itemSpecification->getItemNo();
+				array_push($itemSpecificationArr, $itemSpecification);
 				if(!empty($this->dataTypeErrors)){
 					$messages .= "<b>Item $itemNo has following validation Errors </b><p>" . $this->dataTypeErrors . "</p>";
 					$success = 0;
@@ -77,12 +109,12 @@ class ItemSpecificationMgr{
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		if(empty($messages)){
-			$response = $this->saveArr($itemArr, $isUpdate,$updateItemNos);
+			$response = $this->saveArr($itemSpecificationArr);
 		}
 		return $response;
 	}
 	
-	private function saveArr($itemArr,$isUpdate,$updateItemNos){
+	private function saveArr($itemArr){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -95,30 +127,23 @@ class ItemSpecificationMgr{
 		foreach ($itemArr as $item){
 			$itemNo = $item->getItemNo();
 			try {
-				if(!$isUpdate){
-					$this->saveItem($conn, $item);
-					$savedItemCount++;
-				}else{
-					if(in_array($itemNo, $updateItemNos)){
-						$condition["itemno"] = $itemNo;
-						$this->updateOject($conn, $item, $condition);
-					}
-				}
+				$this->saveItem($conn, $item);	
+				$savedItemCount++;
 			}
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
-					$itemNoAlreadyExists++;
-					array_push($existingItemIds, $itemNo);
+					$condition["itemno"] = $item->getItemNo();
+					$this->updateOject($conn, $item, $condition);
 				}else{
 					$messages .= $e->getMessage();
-				}
-				$hasError = true;
-				$success = 0;
+					$hasError = true;
+					$success = 0;
+				}	
 			}
 		}
-		$conn->commit();
 		if(!$hasError){
+			$conn->commit();
 			$messages = "Items Imported Successfully!";
 		}
 		$response["message"] = $messages;
@@ -138,132 +163,305 @@ class ItemSpecificationMgr{
 		return $message;
 	}
 	
-	private function getItemObj($data){
+	private function getItemSpecificationObj($data){
 		$itemNumber = $data[0];
-		$description = $data[1];
-		$class = $data[2];
-		$dept = $data[3];
-		$status = $data[4];
-		$unit = $data[5];
-		$pc = $data[6];
-		$disc = $data[7];
-		$inStockQty = $data[8];
-		$allocQty = $data[9];
-		$soQty = $data[10];
-		$avQty = $data[11];
-		$poQty = $data[12];
-		$owQty = $data[13];
-		$projQty = $data[14];
-		$ytdSoldQty = $data[15];
-		$lastYearSoldQty = $data[16];
-		$comdShip = $data[17];
-		$showSpecial = $data[18];
-		$distributer = $data[19];
-		$dealerPrice = $data[20];
-		$crztDisSp = $data[21];
-		$qtyWt = $data[22];
-		$mlnStock = $data[23];
-		$itemCost = $data[24];
+		$oms = $data[1];
+		$description1 = $data[2];
+		$length1 = $data[3];
+		$width1 = $data[4];
+		$height1 = $data[5];
+		
+		$description2 = $data[6];
+		$length2 = $data[7];
+		$width2 = $data[8];
+		$height2 = $data[9];
+		
+		$description3 = $data[10];
+		$length3 = $data[11];
+		$width3 = $data[12];
+		$height3 = $data[13];
+		
+		$mastercarton1length = $data[14];
+		$mastercarton1width = $data[15];
+		$mastercarton1height = $data[16];
+		
+		$mastercarton2length = $data[17];
+		$mastercarton2width = $data[18];
+		$mastercarton2height = $data[19];
+		$msdescription = $data[20];
+		
+		$port = $data[21];
+		$countryoforigin = $data[22];
+		$material1 = $data[23];
+		$material1percent = $data[24];
+		$material2 = $data[25];
+		$material2percent = $data[26];
+		$material3 = $data[27];
+		$material3percent = $data[28];
+		$material4 = $data[29];
+		$material4percent = $data[30];
+		$material5 = $data[31];
+		$material5percent = $data[32];
+		
+		$materialtotalpercent = $data[33];
+		$light = $data[34];
+		$haslight = 0;
+		$lighttype = null;
+		if($light != "N"){
+			$lighttype = $light;
+			$haslight = 1;
+		}
+		$totallumens = $data[35];
+		$hasbattery = $data[36];
+		if($hasbattery != "N"){
+			$hasbattery = 1;
+		}else{
+			$hasbattery = 0;
+		}
+		$batteryquantity = $data[37];
+		$batterytype = $data[38];
+		$haselectricity = $data[39];
+		if($haselectricity != "N"){
+			$haselectricity = 1;
+		}else{
+			$haselectricity = 0;
+		}
+		$electricitytype = $data[40];
+		$cordlengthfeet = $data[41];
+		$hasassembly = $data[42];
+		if($hasassembly != "N"){
+			$hasassembly = 1;
+		}else{
+			$hasassembly = 0;
+		}
+		$manualpath = $data[43];
+		$part1 = $data[44];
+		$part2 = $data[45];
+		$part3 = $data[46];
+		$part4 = $data[47];
+		$part5 = $data[48];
+		$cordlengthmeter = $data[49];
+		$pumpwattage = $data[50];
+		$pumpvolts = $data[51];
+		$pumpcordlength = $data[52];
+		$transformerwattage = $data[53];
+		$transformervolts = $data[54];
+		$transformercordlength = $data[55];
+		$watercapacity = $data[56];
+		$feature1 = $data[57];
+		$feature2 = $data[58];
+		$feature3 = $data[59];
+		$feature4 = $data[60];
+		$feature5 = $data[61];
+		$feature6 = $data[62];
+		$feature7 = $data[63];
+		$updatedby = $data[64];
+		$troy = $data[65];
+		$sessionUtil = SessionUtil::getInstance();
+		$userSeq = $sessionUtil->getAdminLoggedInSeq();
+		$createOn = new DateTime();
+		$lastModifiedOn = new DateTime();
+		
 		$this->dataTypeErrors = "";	
-		$item = new Item();
+		$itemSpecification = new ItemSpecification();
 		if(!empty($itemNumber)){
-			$item->setItemNo($itemNumber);
+			$itemSpecification->setItemNo($itemNumber);
 		}
-		if(!empty($description)){
-			$item->setDescription($description);
+		if(!empty($description1)){
+			$itemSpecification->setItem1Description($description1);
 		}
-		if(!empty($class)){
-			$item->setClass($class);
+		if(!empty($oms)){
+			$itemSpecification->setOms($oms);
 		}
-		if(!empty($dept)){
-			$item->setDept($dept);
+		if(!empty($length1)){
+			$itemSpecification->setItem1Length($length1);
 		}
-		if(!empty($status)){
-			$item->setStatus($status);
+		if(!empty($width1)){
+			$itemSpecification->setItem1Width($width1);
 		}
-		if(!empty($unit)){
-			$item->setUnit($unit);
+		if(!empty($height1)){
+			$itemSpecification->setItem1Height($height1);
 		}
-		if(!empty($pc)){
-			$this->dataTypeErrors .= $this->validateNumeric($pc, $this->fieldNames[6]);
-			$item->setPccs($pc);
+		if(!empty($description2)){
+			$itemSpecification->setItem2Description($description2);
 		}
-		if(!empty($disc)){
-			$this->dataTypeErrors .= $this->validateNumeric($disc, $this->fieldNames[7]);
-			$item->setDisc($disc);
+		if(!empty($length2)){
+			$itemSpecification->setItem2Length($length2);
 		}
-		if(!empty($inStockQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($inStockQty, $this->fieldNames[9]);
-			$item->setInStockQty($inStockQty);
+		if(!empty($width2)){
+			$itemSpecification->setItem2Width($width2);
 		}
-		if(!empty($allocQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($allocQty, $this->fieldNames[10]);
-			$item->setAllocQty($allocQty);
+		if(!empty($height2)){
+			$itemSpecification->setItem2Height($height2);
 		}
-		if(!empty($soQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($soQty, $this->fieldNames[11]);
-			$item->setSoQty($soQty);
+		
+		if(!empty($description3)){
+			$itemSpecification->setItem3Description($description3);
 		}
-		if(!empty($avQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($avQty, $this->fieldNames[12]);
-			$item->setAvQty($avQty);
+		if(!empty($length2)){
+			$itemSpecification->setItem3Length($length2);
 		}
-		if(!empty($owQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($owQty, $this->fieldNames[13]);
-			$item->setOwQty($owQty);
+		if(!empty($width3)){
+			$itemSpecification->setItem3Width($width3);
 		}
-		if(!empty($projQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($projQty, $this->fieldNames[14]);
-			$item->setProjQty($projQty);
+		if(!empty($height3)){
+			$itemSpecification->setItem3Height($height3);
 		}
-		if(!empty($ytdSoldQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($ytdSoldQty, $this->fieldNames[15]);
-			$item->setYtdSoldQty($ytdSoldQty);
+		
+		if(!empty($mastercarton1length)){
+			$itemSpecification->setMasterCarton1Length($mastercarton1length);
 		}
-		if(!empty($lastYearSoldQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($lastYearSoldQty, $this->fieldNames[16]);
-			$item->setLastYearSoldQty($lastYearSoldQty);
+		if(!empty($mastercarton1width)){
+			$itemSpecification->setMasterCarton1Width($mastercarton1width);
 		}
-		if(!empty($comdShip)){
-			$this->dataTypeErrors .= $this->validateNumeric($comdShip, $this->fieldNames[17]);
-			$item->setComdShip($comdShip);
+		if(!empty($mastercarton1height)){
+			$itemSpecification->setMasterCarton1Height($mastercarton1height);
 		}
-		if(!empty($showSpecial)){
-			$this->dataTypeErrors .= $this->validateNumeric($showSpecial, $this->fieldNames[18]);
-			$item->setShowSpecial($showSpecial);
+		if(!empty($mastercarton2length)){
+			$itemSpecification->setMasterCarton2Length($mastercarton2length);
 		}
-		if(!empty($distributer)){
-			$this->dataTypeErrors .= $this->validateNumeric($distributer, $this->fieldNames[19]);
-			$item->setDistributor($distributer);
+		if(!empty($mastercarton2width)){
+			$itemSpecification->setMasterCarton2Width($mastercarton2width);
 		}
-		if(!empty($dealerPrice)){
-			$this->dataTypeErrors .= $this->validateNumeric($dealerPrice, $this->fieldNames[20]);
-			$item->setDealerPrice($dealerPrice);
+		if(!empty($mastercarton2height)){
+			$itemSpecification->setMasterCarton2Height($mastercarton2height);
 		}
-		if(!empty($crztDisSp)){
-			$this->dataTypeErrors .= $this->validateNumeric($crztDisSp, $this->fieldNames[21]);
-			$item->setCrzyDissp($crztDisSp);
+		if(!empty($msdescription)){
+			$itemSpecification->setMSDescription($msdescription);
 		}
-		if(!empty($qtyWt)){
-			$this->dataTypeErrors .= $this->validateNumeric($qtyWt, $this->fieldNames[22]);
-			$item->setQtyWt($qtyWt);
+		if(!empty($port)){
+			$itemSpecification->setPort($port);
 		}
-		if(!empty($mlnStock)){
-			$this->dataTypeErrors .= $this->validateNumeric($mlnStock, $this->fieldNames[23]);
-			$item->setMinStk($mlnStock);
+		if(!empty($countryoforigin)){
+			$itemSpecification->setCountryOfOrigin($countryoforigin);
 		}
-		if(!empty($itemCost)){
-			$this->dataTypeErrors .= $this->validateNumeric($itemCost, $this->fieldNames[24]);
-			$item->setItemCost($itemCost);
+		if(!empty($material1)){
+			$itemSpecification->setMaterial1($material1);
 		}
-		$item->setLastModifiedOn(new DateTime());
-		$item->setCreatedOn(new DateTime());
-		$item->setIsEnabled(1);
-		return $item;
+		if(!empty($material1percent)){
+			$itemSpecification->setMaterial1Percent($material1percent);
+		}
+		if(!empty($material2)){
+			$itemSpecification->setMaterial2($material2);
+		}
+		if(!empty($material2percent)){
+			$itemSpecification->setMaterial2Percent($material2percent);
+		}
+		if(!empty($material3)){
+			$itemSpecification->setMaterial3($material3);
+		}
+		if(!empty($material3percent)){
+			$itemSpecification->setMaterial3Percent($material3percent);
+		}
+		if(!empty($material4)){
+			$itemSpecification->setMaterial4($material4);
+		}
+		if(!empty($material4percent)){
+			$itemSpecification->setMaterial4Percent($material4percent);
+		}
+		if(!empty($material5)){
+			$itemSpecification->setMaterial5($material5);
+		}
+		if(!empty($material5percent)){
+			$itemSpecification->setMaterial5Percent($material5percent);
+		}
+		if(!empty($materialtotalpercent)){
+			$itemSpecification->setMaterialTotalPercent($materialtotalpercent);
+		}
+		$itemSpecification->setHasLight($haslight);
+		$itemSpecification->setLightType($lighttype);
+		if(!empty($totallumens)){
+			$itemSpecification->setTotalLumens($totallumens);
+		}
+		$itemSpecification->setHasBattery($hasbattery);
+		if(!empty($hasbattery)){
+			$itemSpecification->setBatteryType($batterytype);
+		}
+		$itemSpecification->setHasElectricity($haselectricity);
+		if(!empty($electricitytype)){
+			$itemSpecification->setElectricityType($electricitytype);
+		}
+		if(!empty($cordlengthfeet)){
+			$itemSpecification->setCordLengthFeet($cordlengthfeet);
+		}
+		if(!empty($manualpath)){
+			$itemSpecification->setManualPath($manualpath);
+		}
+		if(!empty($part1)){
+			$itemSpecification->setPart1($part1);
+		}
+		if(!empty($part2)){
+			$itemSpecification->setPart2($part2);
+		}
+		if(!empty($part3)){
+			$itemSpecification->setPart3($part3);
+		}
+		if(!empty($part4)){
+			$itemSpecification->setPart4($part4);
+		}
+		if(!empty($part5)){
+			$itemSpecification->setPart5($part5);
+		}
+		if(!empty($cordlengthmeter)){
+			$itemSpecification->setCordLengthMeter($cordlengthmeter);
+		}
+		if(!empty($pumpwattage)){
+			$itemSpecification->setPumpWattage($pumpwattage);
+		}
+		if(!empty($pumpvolts)){
+			$itemSpecification->setPumpVolts($pumpvolts);
+		}
+		if(!empty($pumpcordlength)){
+			$itemSpecification->setPumpCordLength($pumpcordlength);
+		}
+		if(!empty($transformerwattage)){
+			$itemSpecification->setTransformerWattage($transformerwattage);
+		}
+		if(!empty($transformervolts)){
+			$itemSpecification->setTransformerVolts($transformervolts);
+		}
+		if(!empty($transformercordlength)){
+			$itemSpecification->setTransformerCordLength($transformercordlength);
+		}
+		if(!empty($watercapacity)){
+			$itemSpecification->setWaterCapacity($watercapacity);
+		}
+		if(!empty($feature1)){
+			$itemSpecification->setFeature1($feature1);
+		}
+		if(!empty($feature2)){
+			$itemSpecification->setFeature2($feature2);
+		}
+		if(!empty($feature3)){
+			$itemSpecification->setFeature3($feature3);
+		}
+		if(!empty($feature4)){
+			$itemSpecification->setFeature4($feature4);
+		}
+		if(!empty($feature5)){
+			$itemSpecification->setFeature5($feature5);
+		}
+		if(!empty($feature6)){
+			$itemSpecification->setFeature6($feature6);
+		}
+		if(!empty($feature7)){
+			$itemSpecification->setFeature7($feature7);
+		}
+		if(!empty($updatedby)){
+			$itemSpecification->setUpdatedBy($updatedby);
+		}
+		if(!empty($troy)){
+			$itemSpecification->setTroy($troy);
+		}
+		$itemSpecification->setHasAssembly($hasassembly);
+		$itemSpecification->setLastModifiedOn(new DateTime());
+		$itemSpecification->setCreatedOn(new DateTime());
+		$itemSpecification->setUserSeq($userSeq);
+		return $itemSpecification;
 	}
 	
-	public function getItemsForGrid(){
-		$items = $this->findAllArr(true);
+	public function getItemsgetItemsForGrid(){
+		$items = $this->findAllWithVersions(true);
 		$mainArr["Rows"] = $items;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
 		return $mainArr;
@@ -272,6 +470,14 @@ class ItemSpecificationMgr{
 	public function getAllCount($isApplyFilter){
 		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
 		return $count;
+	}
+	
+	public function findAllWithVersions($isApplyFilter = false){
+		$query = "SELECT count(itemspecificationverions.itemno) as versions ,itemspecifications.* FROM `itemspecifications` 
+left join itemspecificationverions on itemspecifications.itemno = itemspecificationverions.itemno
+group by itemspecificationverions.itemno";
+		$itemSpecifications = self::$dataStore->executeQuery($query,$isApplyFilter);
+		return $itemSpecifications;
 	}
 	
 	public function findAllArr($isApplyFilter = false){
@@ -285,6 +491,14 @@ class ItemSpecificationMgr{
 		$item = self::$dataStore->executeAttributeQuery($attr, $condition);
 		if(!empty($item)){
 			return $item[0][0];
+		}
+		return null;
+	}
+	public function findByItemNo($itemNo){
+		$condition["itemno"] = $itemNo;
+		$item = self::$dataStore->executeConditionQuery($condition);
+		if(!empty($item)){
+			return $item[0];
 		}
 		return null;
 	}

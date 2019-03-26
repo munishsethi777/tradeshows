@@ -1,5 +1,6 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
   class FilterUtil{
       public static function getFilters(){
         $pagenum = intval($_GET['pagenum']);
@@ -204,10 +205,23 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                     case "GREATER_THAN_OR_EQUAL":
                     	if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 if(!$date){
+                    		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    		 }
+                    		 if(!$date){
+                    		 	$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		 }
+                    		 
                     		 $filtervalue = $date->format("Y-m-d");  
                     	}
-                    	if($filterdatafield == "createdon"){
+                    	if($filterdatafield == "createdon" || $filterdatafield == "lastmodifiedon"){
                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		if(!$date){
+                    			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    		}
+                    		if(!$date){
+                    			$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		}
                     		$date->setTime(0,0);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
@@ -216,10 +230,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
                     case "LESS_THAN_OR_EQUAL":
                			if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 if(!$date){
+                    		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    		 }
+                    		 if(!$date){
+                    		 	$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		 }
                     		 $filtervalue = $date->format("Y-m-d");  
                     	}
-                    	if($filterdatafield == "createdon"){
+                    	if($filterdatafield == "createdon" || $filterdatafield == "lastmodifiedon"){
                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		if(!$date){
+                    			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    		}
+                    		if(!$date){
+                    			$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		}
                     		$date->setTime(23,59);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
@@ -253,11 +279,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/ShowTaskStatus.php");
             
         }
       }
-      //apply Sorting
-       $query = FilterUtil::appendSorting($query);
-        
+      //apply Sorting 
       //apply limit
       if($isApplyLimit){
+      	$query = FilterUtil::appendSorting($query);
         $query = FilterUtil::appendLimit($query);
       }
       

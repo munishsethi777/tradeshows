@@ -61,10 +61,11 @@ function saveAction(){
 		$('#importItemSpecificationsForm').ajaxSubmit(function( data ){
 		   showHideProgress();
 		   var jsonData = $.parseJSON(data);
-		   if(flag){
-				window.setTimeout(function(){window.location.href = "adminManageItemSpecificationss.php"},500);
-			}   
-		}
+		   alert(jsonData.message);
+		    if(jsonData.success == 1){
+			    window.setTimeout(function(){window.location.href = "adminManageItemSpecifications.php"},500);
+		    }   
+		});
 			
 	}else{
 		$("#importItemSpecificationsForm")[0].reportValidity();

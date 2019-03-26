@@ -23,14 +23,15 @@ if($call == "importItemSpecifications"){
 		$message  = $e->getMessage();
 	}
 }
-if($call == "getAllItems"){
-	$itemJson = $itemSpecificationMgr->getItemsForGrid();
+if($call == "getAllItemSpecifications"){
+	$itemJson = $itemSpecificationMgr->getItemsgetItemsForGrid();
 	echo json_encode($itemJson);
 	return;
 }
 if($call == "export"){
 	try{
-		$response = $itemSpecificationMgr->exportItems();
+		$queryString = $_GET["queryString"];
+		$response = $itemSpecificationMgr->exportItemSpecifications($queryString);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

@@ -1,7 +1,7 @@
 <?php
 class ItemSpecification{
 
-	private $seq, $itemseq, $oms, $item1description, $item1length, $item1width, $item1height, $item2description, $item2length, $item2width,
+	private $seq, $itemno, $oms, $item1description, $item1length, $item1width, $item1height, $item2description, $item2length, $item2width,
 	$item2height, $item3description, $item3length, $item3width, $item3height, $mastercarton1length, $mastercarton1width, $mastercarton1height,
 	$mastercarton2length, $mastercarton2width, $mastercarton2height, $msdescription, $port, $countryoforigin, $material1, $material1percent,
 	$material2, $material2percent, $material3, $material3percent, $material4, $material4percent, $material5, $material5percent, 
@@ -19,11 +19,11 @@ class ItemSpecification{
 	public function getSeq(){
 		return $this->seq;
 	}
-	public function setItemSeq($val){
-		$this->itemseq = $val;
+	public function setItemNo($val){
+		$this->itemno = $val;
 	}
-	public function getItemSeq(){
-		return $this->itemseq;
+	public function getItemNo(){
+		return $this->itemno;
 	}
 	public function setOms($val){
 		$this->oms = $val;
