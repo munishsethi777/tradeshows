@@ -282,7 +282,7 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
-            container.append(deleteButton);
+            //container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
