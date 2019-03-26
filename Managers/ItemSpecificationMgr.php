@@ -504,7 +504,20 @@ class ItemSpecificationMgr{
 left join itemspecificationverions on itemspecifications.itemno = itemspecificationverions.itemno
 group by itemspecificationverions.itemno";
 		$itemSpecifications = self::$dataStore->executeQuery($query,$isApplyFilter);
-		return $itemSpecifications;
+		$mainArr = array();
+		foreach ($itemSpecifications as $itemSpecification){
+			$arr = array();
+			$arr["seq"] = $itemSpecification["seq"];
+			$arr["itemspecifications.itemno"] = $itemSpecification["itemno"];
+			$arr["itemspecifications.item1description"] = $itemSpecification["item1description"];
+			$arr["versions"] = $itemSpecification["versions"];
+			$arr["itemspecifications.countryoforigin"] = $itemSpecification["countryoforigin"];
+			$arr["itemspecifications.oms"] = $itemSpecification["oms"];
+			$arr["itemspecificationscreatedon"] = $itemSpecification["createdon"];
+			$arr["itemspecifications.lastmodifiedon"] = $itemSpecification["lastmodifiedon"];
+			array_push($mainArr, $arr);
+		}
+		return $mainArr;
 	}
 	
 	public function findAllArr($isApplyFilter = false){

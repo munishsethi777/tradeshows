@@ -190,13 +190,13 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Item No.', datafield: 'itemno', width:"12%"},
-      { text: 'OMS', datafield: 'oms',width:"6%"},
-      { text: 'Description', datafield: 'item1description',width:"27%"},
-      { text: 'Country Of Origin', datafield: 'countryoforigin',width:"14%"},
+      { text: 'Item No.', datafield: 'itemspecifications.itemno', width:"12%"},
+      { text: 'OMS', datafield: 'itemspecifications.oms',width:"6%"},
+      { text: 'Description', datafield: 'itemspecifications.item1description',width:"27%"},
+      { text: 'Country Of Origin', datafield: 'itemspecifications.countryoforigin',width:"14%"},
       { text: 'Versions', datafield: 'versions',width:"8%",filterable:false},
-      { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
-      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
+      { text: 'Created On', datafield: 'itemspecifications.createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
+      { text: 'Modified On', datafield: 'itemspecifications.lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
    
     var source =
@@ -207,13 +207,13 @@ function loadGrid(){
         sortcolumn: 'createdon',
         sortdirection: 'asc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                    { name: 'itemno', type: 'string' }, 
-                    { name: 'item1description', type: 'string' },
+                    { name: 'itemspecifications.itemno', type: 'string' }, 
+                    { name: 'itemspecifications.item1description', type: 'string' },
                     { name: 'versions', type: 'integer' },
-                    { name: 'countryoforigin', type: 'string' } ,
-                    { name: 'oms', type: 'string' },
-                    { name: 'createdon', type: 'date' }, 
-                    { name: 'lastmodifiedon', type: 'date' } 
+                    { name: 'itemspecifications.countryoforigin', type: 'string' } ,
+                    { name: 'itemspecifications.oms', type: 'string' },
+                    { name: 'itemspecifications.createdon', type: 'date' }, 
+                    { name: 'itemspecifications.lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/ItemSpecificationAction.php?call=getAllItemSpecifications',
         root: 'Rows',

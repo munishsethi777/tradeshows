@@ -274,9 +274,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                 $tmpdatafield = $filterdatafield;            
             }
             // build the query.
-            $query = $query . $where; 
-           
-            
+            $groupByPos = strpos(strtolower ($query),'group by');
+            $groupBy = "";
+            if ($groupByPos !== false) {
+            	$q = substr($query, 0,$groupByPos). " ";
+            	$groupBy = substr($query,$groupByPos) ;
+            	$query = $q;
+            }
+            $query = $query . $where ." " . $groupBy;
         }
       }
       //apply Sorting 

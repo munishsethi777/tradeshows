@@ -61,7 +61,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Item No</label>
                         	<div class="col-lg-4">
-                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getOms()?>" name="itemno" class="form-control">
+                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -432,7 +432,6 @@ function saveTaskCategory(){
 	if($("#itemSpecForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#itemSpecForm').ajaxSubmit(function( data ){
-			alert(data);
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
