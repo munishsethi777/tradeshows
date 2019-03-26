@@ -111,7 +111,7 @@ class ItemSpecificationMgr{
 			$exstingsItemNos = array();
 			$itemSpecificationArr = array();
 			foreach ($sheetData as $key=>$data){
-				if($key < 5){
+				if($key < 1){
 					continue;
 				}
 				$itemSpecification = $this->getItemSpecificationObj($data);
