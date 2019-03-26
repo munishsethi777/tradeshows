@@ -246,11 +246,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                             </div>
                             <label class="col-lg-2 col-form-label">Battery Quantity</label>
                         	<div class="col-lg-2">
-                            	<input type="text" value="6" id="batteryquantity" maxLength="250" value="<?php echo $itemSpecification->getBatteryQuantity()?>" name="batteryquantity" class="form-control">
+                            	<input type="text" id="batteryquantity" maxLength="250" value="<?php echo $itemSpecification->getBatteryQuantity()?>" name="batteryquantity" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Battery Type</label>
                         	<div class="col-lg-2">
-                            	<input type="text" value="test bb" id="batterytype" maxLength="250" value="<?php echo $itemSpecification->getBatteryType()?>" name="batterytype" class="form-control">
+                            	<input type="text" id="batterytype" maxLength="250" value="<?php echo $itemSpecification->getBatteryType()?>" name="batterytype" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -391,7 +391,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                             </div>
                             <label class="col-lg-2 col-form-label">Troy</label>
                         	<div class="col-lg-4">
-                            	<input type="text" value="test troy" maxLength="250" value="<?php echo $itemSpecification->getTroy()?>" name="troy" class="form-control">
+                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getTroy()?>" name="troy" class="form-control">
                             </div>
 						</div>
                         
