@@ -2,21 +2,28 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ItemSpecification.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");
-$itemSpecification = new ItemSpecification();
-// $task = new Task();
-// $taskCategoryMgr = TaskCategoryMgr::getInstance();
-// $taskCategories = $taskCategoryMgr->findAll();
-// $userMgr = UserMgr::getInstance();
-// $users = $userMgr->getAllUsers();
-// $selectedAssignees = array();
-// $taskMgr = TaskMgr::getInstance();
-// $tasks = $taskMgr->findAll();
-// $taskAssigneeMgr = TaskAssigneeMgr::getInstance();
-// if(isset($_POST["id"])){
-// 	$seq = $_POST["id"];
-// 	$task = $taskMgr->findBySeq($seq);
-// 	$selectedAssignees = $taskAssigneeMgr->getAssignedUsersByTaskSeq($seq);
-// }
+ $itemSpecification = new ItemSpecification();
+ $itemSpecificationMgr = ItemSpecificationMgr::getInstance();
+ $hasLight = "";
+ $hasElec = "";
+ $hasBattery = "";
+ $hasAssemb = "";
+ if(isset($_POST["id"])){
+ 	$seq = $_POST["id"];
+ 	$itemSpecification = $itemSpecificationMgr->getBySeq($seq);
+ 	if(!empty($itemSpecification->getHasLight())){
+ 		$hasLight = "checked";
+ 	}
+ 	if(!empty($itemSpecification->getHasElectricity())){
+ 		$hasElec = "checked";
+ 	}
+ 	if(!empty($itemSpecification->getHasBattery())){
+ 		$hasBattery = "checked";
+ 	}
+ 	if(!empty($itemSpecification->getHasAssembly())){
+ 		$hasAssemb = "checked";
+ 	}
+ }
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,10 +54,16 @@ $itemSpecification = new ItemSpecification();
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="taskForm" method="post" action="Actions/TaskAction.php" class="m-t-lg">
+                 	 <form id="itemSpecForm" method="post" action="Actions/ItemSpecificationAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="saveItemSpecification"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $itemSpecification->getSeq()?>"/>
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
+                        <div class="form-group row">
+                       		<label class="col-lg-2 col-form-label">Item No</label>
+                        	<div class="col-lg-4">
+                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getOms()?>" name="itemno" class="form-control">
+                            </div>
+                        </div>
                         <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">OMS</label>
                         	<div class="col-lg-4">
@@ -61,7 +74,7 @@ $itemSpecification = new ItemSpecification();
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Item1 Desc</label>
                         	<div class="col-lg-10">
-                            	<input type="text" id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
                             </div>
                             <hr>
                         	<label class="col-lg-2 col-form-label">Item1 Length</label>
@@ -70,88 +83,88 @@ $itemSpecification = new ItemSpecification();
                             </div>
                             <label class="col-lg-2 col-form-label">Item1 Width</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item1width" maxLength="250" value="<?php echo $itemSpecification->getItem1Width()?>" name="item1width" class="form-control">
+                            	<input type="text"  id="item1width" maxLength="250" value="<?php echo $itemSpecification->getItem1Width()?>" name="item1width" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Item1 Height</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item1height" maxLength="250" value="<?php echo $itemSpecification->getItem1Height()?>" name="item1height" class="form-control">
+                            	<input type="text"  id="item1height" maxLength="250" value="<?php echo $itemSpecification->getItem1Height()?>" name="item1height" class="form-control">
                             </div>
                         </div>
                         
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Item2 Desc</label>
                         	<div class="col-lg-10">
-                            	<input type="text" id="item2description" maxLength="250" value="<?php echo $itemSpecification->getItem2Description()?>" name="item2description" class="form-control">
+                            	<input type="text"  id="item2description" maxLength="250" value="<?php echo $itemSpecification->getItem2Description()?>" name="item2description" class="form-control">
                             </div>
                             <hr>
                         	<label class="col-lg-2 col-form-label">Item2 Length</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item2length" maxLength="250" value="<?php echo $itemSpecification->getItem2Length()?>" name="item2length" class="form-control">
+                            	<input type="text"  id="item2length" maxLength="250" value="<?php echo $itemSpecification->getItem2Length()?>" name="item2length" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Item2 Width</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item2width" maxLength="250" value="<?php echo $itemSpecification->getItem2Width()?>" name="item2width" class="form-control">
+                            	<input type="text"  id="item2width" maxLength="250" value="<?php echo $itemSpecification->getItem2Width()?>" name="item2width" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Item2 Height</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item2height" maxLength="250" value="<?php echo $itemSpecification->getItem2Height()?>" name="item2height" class="form-control">
+                            	<input type="text"  id="item2height" maxLength="250" value="<?php echo $itemSpecification->getItem2Height()?>" name="item2height" class="form-control">
                             </div>
                         </div>
                         
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Item3 Desc</label>
                         	<div class="col-lg-10">
-                            	<input type="text" id="item3description" maxLength="250" value="<?php echo $itemSpecification->getItem3Description()?>" name="item3description" class="form-control">
+                            	<input type="text"  id="item3description" maxLength="250" value="<?php echo $itemSpecification->getItem3Description()?>" name="item3description" class="form-control">
                             </div>
                             <hr>
                         	<label class="col-lg-2 col-form-label">Item3 Length</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item3length" maxLength="250" value="<?php echo $itemSpecification->getItem3Length()?>" name="item3length" class="form-control">
+                            	<input type="text"  id="item3length" maxLength="250" value="<?php echo $itemSpecification->getItem3Length()?>" name="item3length" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Item3 Width</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item3width" maxLength="250" value="<?php echo $itemSpecification->getItem3Width()?>" name="item3width" class="form-control">
+                            	<input type="text"  id="item3width" maxLength="250" value="<?php echo $itemSpecification->getItem3Width()?>" name="item3width" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Item3 Height</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="item3height" maxLength="250" value="<?php echo $itemSpecification->getItem3Height()?>" name="item3height" class="form-control">
+                            	<input type="text"  id="item3height" maxLength="250" value="<?php echo $itemSpecification->getItem3Height()?>" name="item3height" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Master Carton1 Length</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton1length" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Length()?>" name="mastercarton1length" class="form-control">
+                            	<input type="text"  id="mastercarton1length" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Length()?>" name="mastercarton1length" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Master Carton1 Width</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton1width" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Width()?>" name="mastercarton1width" class="form-control">
+                            	<input type="text"  id="mastercarton1width" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Width()?>" name="mastercarton1width" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Master Carton1 Height</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton1height" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Height()?>" name="mastercarton1height" class="form-control">
+                            	<input type="text"  id="mastercarton1height" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton1Height()?>" name="mastercarton1height" class="form-control">
                             </div>
                         </div>
                         
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Master Carton2 Length</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton2length" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Length()?>" name="mastercarton2length" class="form-control">
+                            	<input type="text"  id="mastercarton2length" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Length()?>" name="mastercarton2length" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Master Carton2 Width</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton2width" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Width()?>" name="mastercarton2width" class="form-control">
+                            	<input type="text"  id="mastercarton2width" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Width()?>" name="mastercarton2width" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Master Carton2 Height</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="mastercarton2height" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Height()?>" name="mastercarton2height" class="form-control">
+                            	<input type="text"  id="mastercarton2height" maxLength="250" value="<?php echo $itemSpecification->getMasterCarton2Height()?>" name="mastercarton2height" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">MS Description</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="msdescription" maxLength="250" value="<?php echo $itemSpecification->getMSDescription()?>" name="msdescription" class="form-control">
+                            	<input type="text"  id="msdescription" maxLength="250" value="<?php echo $itemSpecification->getMSDescription()?>" name="msdescription" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Port</label>
                         	<div class="col-lg-2">
@@ -166,11 +179,11 @@ $itemSpecification = new ItemSpecification();
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Material1</label>
                         	<div class="col-lg-1">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getMaterial1()?>" name="material1" class="form-control">
+                            	<input type="text"  maxLength="250" value="<?php echo $itemSpecification->getMaterial1()?>" name="material1" class="form-control">
                             </div>
-                            <label class="col-lg-2 col-form-label">Material1 Percent</label>
+                            <label class="col-lg-2  col-form-label">Material1 Percent</label>
                         	<div class="col-lg-1">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getMaterial1Percent()?>" name="material1percent" class="form-control">
+                            	<input type="text"  maxLength="250" value="<?php echo $itemSpecification->getMaterial1Percent()?>" name="material1percent" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Material2</label>
                         	<div class="col-lg-1">
@@ -211,40 +224,40 @@ $itemSpecification = new ItemSpecification();
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group row">
+                        <div class="form-group row i-checks">
                          	<label class="col-lg-2 col-form-label">Has Light</label>
                         	<div class="col-lg-2">
-                        		<input type="checkbox" name="haslight"/>
+                        		<input type="checkbox" <?php echo $hasLight?> value="1" name="haslight"/>
                             </div>
                             <label class="col-lg-2 col-form-label">Light Type</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="lighttype" maxLength="250" value="<?php echo $itemSpecification->getLightType()?>" name="lighttype" class="form-control">
+                            	<input type="text" value="LED" id="lighttype" maxLength="250" value="<?php echo $itemSpecification->getLightType()?>" name="lighttype" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Total Lumens</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="totallumens" maxLength="250" value="<?php echo $itemSpecification->getTotalLumens()?>" name="totallumens" class="form-control">
+                            	<input type="text" value="1800" id="totallumens" maxLength="250" value="<?php echo $itemSpecification->getTotalLumens()?>" name="totallumens" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-                         <div class="form-group row">
+                         <div class="form-group row i-checks">
                          	<label class="col-lg-2 col-form-label">Has Battery</label>
                         	<div class="col-lg-2">
-                        		<input type="checkbox" name="hasbattery"/>
+                        		<input type="checkbox" <?php echo $hasBattery?> value="1" name="hasbattery"/>
                             </div>
                             <label class="col-lg-2 col-form-label">Battery Quantity</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="batteryquantity" maxLength="250" value="<?php echo $itemSpecification->getBatteryQuantity()?>" name="batteryquantity" class="form-control">
+                            	<input type="text" value="6" id="batteryquantity" maxLength="250" value="<?php echo $itemSpecification->getBatteryQuantity()?>" name="batteryquantity" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Battery Type</label>
                         	<div class="col-lg-2">
-                            	<input type="text" id="batterytype" maxLength="250" value="<?php echo $itemSpecification->getBatteryType()?>" name="batterytype" class="form-control">
+                            	<input type="text" value="test bb" id="batterytype" maxLength="250" value="<?php echo $itemSpecification->getBatteryType()?>" name="batterytype" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group row">
+                        <div class="form-group row i-checks">
                          	<label class="col-lg-2 col-form-label">Has Electricity</label>
                         	<div class="col-lg-2">
-                        		<input type="checkbox" name="haselectricity"/>
+                        		<input type="checkbox" <?php echo $hasElec?> value="1" name="haselectricity"/>
                             </div>
                             <label class="col-lg-2 col-form-label">Electricity Type</label>
                         	<div class="col-lg-2">
@@ -256,10 +269,10 @@ $itemSpecification = new ItemSpecification();
                             </div>
                         </div>
                         
-                        <div class="form-group row">
-                         	<label class="col-lg-2 col-form-label">Assembly Required</label>
+                        <div class="form-group row i-checks">
+                         	<label class="col-lg-2 col-form-label ">Assembly Required</label>
                         	<div class="col-lg-2">
-                        		<input type="checkbox" name="hasassembly"/>
+                        		<input type="checkbox" value="1" <?php echo $hasAssemb?> name="hasassembly"/>
                             </div>
                             <label class="col-lg-2 col-form-label">Manual Path</label>
                         	<div class="col-lg-6">
@@ -337,7 +350,7 @@ $itemSpecification = new ItemSpecification();
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Feature 1</label>
                         	<div class="col-lg-4">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getFeature1()?>" name="feature1" class="form-control">
+                            	<input type="text"  maxLength="250" value="<?php echo $itemSpecification->getFeature1()?>" name="feature1" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Feature 2</label>
                         	<div class="col-lg-4">
@@ -374,11 +387,11 @@ $itemSpecification = new ItemSpecification();
 						<div class="form-group row">
                          	<label class="col-lg-2 col-form-label">Reviewed By</label>
                         	<div class="col-lg-4">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getUpdatedBy()?>" name="updatedby" class="form-control">
+                            	<input type="text"  maxLength="250" value="<?php echo $itemSpecification->getUpdatedBy()?>" name="updatedby" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Troy</label>
                         	<div class="col-lg-4">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getTroy()?>" name="troy" class="form-control">
+                            	<input type="text" value="test troy" maxLength="250" value="<?php echo $itemSpecification->getTroy()?>" name="troy" class="form-control">
                             </div>
 						</div>
                         
@@ -391,7 +404,7 @@ $itemSpecification = new ItemSpecification();
 	                          	</button>
 	                        </div>
 	                        <div class="col-lg-2">
-	                          	<a class="btn btn-default" href="adminShowTaskList.php" type="button" style="width:85%">
+	                          	<a class="btn btn-default" href="adminManageItemSpecifications.php" type="button" style="width:85%">
                                 	Cancel
 	                          	</a>
 	                        </div>
@@ -410,26 +423,24 @@ $itemSpecification = new ItemSpecification();
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
-	$(".chosen-select").chosen({width:"100%"});
-	 $(".touchspin3").TouchSpin({
-         verticalbuttons: true,
-         max: 1000000000,
-         buttondown_class: 'btn btn-white',
-         buttonup_class: 'btn btn-white'
-     });
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+	   	radioClass: 'iradio_square-green',
+	});
 });
 function saveTaskCategory(){
-	if($("#taskForm")[0].checkValidity()) {
+	if($("#itemSpecForm")[0].checkValidity()) {
 		showHideProgress()
-		$('#taskForm').ajaxSubmit(function( data ){
+		$('#itemSpecForm').ajaxSubmit(function( data ){
+			alert(data);
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminShowTaskList.php"},100);
+			   window.setTimeout(function(){window.location.href = "adminManageItemSpecifications.php"},100);
 		   }
 	    })	
 	}else{
-		$("#taskForm")[0].reportValidity();
+		$("#itemSpecForm")[0].reportValidity();
 	}
 }
 </script>

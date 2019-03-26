@@ -47,6 +47,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
+   <form id="form2" name="form2" method="post" action="adminCreateItemSpecifications.php">
+    	<input type="hidden" id="id" name="id"/>
+   </form> 
    
    <!-- Modal Box for update comments and status -->  
 <div class="modal inmodal bs-example-modal-lg" id="itemDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -189,7 +192,7 @@ function loadGrid(){
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Item No.', datafield: 'itemno', width:"12%"},
       { text: 'OMS', datafield: 'oms',width:"6%"},
-      { text: 'Description', datafield: 'item1description',width:"30%"},
+      { text: 'Description', datafield: 'item1description',width:"27%"},
       { text: 'Country Of Origin', datafield: 'countryoforigin',width:"14%"},
       { text: 'Versions', datafield: 'versions',width:"8%",filterable:false},
       { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
@@ -245,7 +248,7 @@ function loadGrid(){
     $("#itemGrid").jqxGrid(
     {
     	width: '100%',
-		height: '75%',
+		height: '90%',
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
@@ -259,33 +262,66 @@ function loadGrid(){
 		columnsreorder: true,
 		showstatusbar: true,
 		virtualmode: true,
+		selectionmode: 'checkbox',
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
-            var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
+            var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
+            var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+            var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
+            var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             
             container.append(addButton);
+            container.append(editButton);
+            container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
+            container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
+           	editButton.jqxButton({  width: 65, height: 18 });
+            importButton.jqxButton({  width: 65, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
+            deleteButton.jqxButton({  width: 65, height: 18 });
             // create new row.
             addButton.click(function (event) {
+                location.href = ("adminCreateItemSpecifications.php");
+            });
+            editButton.click(function (event){
+            	var selectedrowindex = $("#itemGrid").jqxGrid('selectedrowindexes');
+                var value = -1;
+                indexes = selectedrowindex.filter(function(item) { 
+                    return item !== value
+                })
+                if(indexes.length != 1){
+                    bootbox.alert("Please Select single row for edit.", function() {});
+                    return;    
+                }
+                var row = $('#itemGrid').jqxGrid('getrowdata', indexes);
+                $("#id").val(row.seq);                        
+                $("#form2").submit();    
+            });
+            // delete row.
+            deleteButton.click(function (event) {
+                gridId = "itemGrid";
+                deleteUrl = "Actions/ProductCategoryAction.php?call=deleteProductCategories";
+                deleteItems(gridId,deleteUrl);
+            });
+            importButton.click(function (event) {
                 location.href = ("adminImportItemSpecifications.php");
             });
-           exportButton.click(function (event) {
+            exportButton.click(function (event) {
         	   filterQstr = getFilterString("itemGrid");
         	   exportItemsConfirm(filterQstr);
-           });
+            });
              $("#itemGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       

@@ -150,7 +150,7 @@ function loadGrid(){
             });
             deleteButton.click(function (event) {
             	deleteRows("taskCategory","Actions/TaskAction.php?call=deleteTasks");
-           });
+            });
              $("#taskCategory").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       

@@ -27,8 +27,37 @@ class ItemSpecificationMgr{
 		return self::$ItemSpecificationMgr;
 	}
 	  
+    public function saveFromForm($itemSpecifications){
+    	if(empty($itemSpecifications->getHasLight())){
+    		$itemSpecifications->setLightType(null);
+    		$itemSpecifications->setTotalLumens(0);
+    	}
+    	if(empty($itemSpecifications->getHasBattery())){
+    		$itemSpecifications->setBatteryType(null);
+    		$itemSpecifications->setBatteryQuantity(null);
+    	}
+    	if(empty($itemSpecifications->getHasElectricity())){
+    		$itemSpecifications->setElectricityType(null);
+    	}
+    	$totalPercent = $this->getTotalMatiralPercent($itemSpecifications);
+    	$itemSpecifications->setMaterialTotalPercent($totalPercent);
+    	$itemSpecificationsArr = array(0=>$itemSpecifications);
+    	$response = $this->saveArr($itemSpecificationsArr);
+    	return $response;
+    }
+	 
+    
+    private function getTotalMatiralPercent($itemSpecifications){
+    	$percent1 = $itemSpecifications->getMaterial1Percent();
+    	$percent2 = $itemSpecifications->getMaterial2Percent();
+    	$percent3 = $itemSpecifications->getMaterial3Percent();
+    	$percent4 = $itemSpecifications->getMaterial4Percent();
+    	$percent5 = $itemSpecifications->getMaterial5Percent();
+    	$totalPercent = $percent1 + $percent2 + $percent3 + $percent4 + $percent5;
+    	return $totalPercent;
+    }
+    
     public function saveItem($conn,$itemSpecification){
-
     	self::$dataStore->saveObject($itemSpecification, $conn);
     	$itemSpecificationVersionMgr = self::$ItemSpecificationVersionMgr;
     	$itemSpecificationVersion = new ItemSpecificationVersion();
@@ -37,10 +66,6 @@ class ItemSpecificationMgr{
     	$itemSpecificationVersionMgr->saveVersion($itemSpecificationVersion,$conn);
     }
     	
-    private function getItemSpecificationToVersion(){
-    		
-    }
-    
     public function updateOject($conn,$itemSpecification,$condition){
     	$existingIS = $this->findByItemNo($itemSpecification->getItemNo());
     	self::$dataStore->updateObject($itemSpecification, $condition, $conn);
@@ -53,9 +78,6 @@ class ItemSpecificationMgr{
     	}
     }
 	
-    
-    
-    
 	public function importItems($file){
 		$inputFileName = $file['tmp_name'];
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
@@ -127,8 +149,13 @@ class ItemSpecificationMgr{
 		foreach ($itemArr as $item){
 			$itemNo = $item->getItemNo();
 			try {
-				$this->saveItem($conn, $item);	
-				$savedItemCount++;
+				if(empty($item->getSeq())){
+					$this->saveItem($conn, $item);	
+					$savedItemCount++;
+				}else{
+					$condition["itemno"] = $item->getItemNo();
+					$this->updateOject($conn, $item, $condition);
+				}
 			}
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
@@ -504,6 +531,11 @@ group by itemspecificationverions.itemno";
 	}
 	public function findBySeq($seq){
 		$item = self::$dataStore->findArrayBySeq($seq);
+		return $item;
+	}
+	
+	public function getBySeq($seq){
+		$item = self::$dataStore->findBySeq($seq);
 		return $item;
 	}
 	

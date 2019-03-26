@@ -451,5 +451,22 @@ class ItemSpecification{
 	public function getLastModifiedOn(){
 		return $this->lastmodifiedon;
 	}
+	
+	public function createFromRequest($request){
+		if (is_array($request)){
+			$this->from_array($request);
+		}
+		return $this;
+	}
+	
+	public function from_array($array){
+		foreach(get_object_vars($this) as $attrName => $attrValue){
+			$flag = property_exists(self::$className, $attrName);
+			$isExists = array_key_exists($attrName, $array);
+			if($flag && $isExists){
+				$this->{$attrName} = $array[$attrName];
+			}
+		}
+	}
 
 }

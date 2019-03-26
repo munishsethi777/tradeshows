@@ -1,6 +1,7 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -11,6 +12,28 @@ if(isset($_GET["call"])){
 	$call = $_POST["call"];
 }
 $itemSpecificationMgr = ItemSpecificationMgr::getInstance();
+$sessionUtil = SessionUtil::getInstance();
+if($call == "saveItemSpecification"){
+	try{
+		$message = "Item Specifications saved successfully."; 
+		$itemSpecification = new ItemSpecification();
+		$itemSpecification->createFromRequest($_REQUEST);
+		$seq = 0;
+		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
+			$seq = $_REQUEST["seq"];
+			$message = "Item Specifications updated successfully.";
+		}
+		$itemSpecification->setSeq($seq);
+		$itemSpecification->setUserSeq($sessionUtil->getAdminLoggedInSeq());
+		$itemSpecification->setCreatedOn(new DateTime());
+		$itemSpecification->setLastModifiedOn(new DateTime());
+		$id = $itemSpecificationMgr->saveFromForm($itemSpecification);
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
+
 if($call == "importItemSpecifications"){
 	try{
 		if(isset($_FILES["file"])){
