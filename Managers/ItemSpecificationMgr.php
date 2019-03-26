@@ -513,7 +513,7 @@ group by itemspecificationverions.itemno";
 			$arr["versions"] = $itemSpecification["versions"];
 			$arr["itemspecifications.countryoforigin"] = $itemSpecification["countryoforigin"];
 			$arr["itemspecifications.oms"] = $itemSpecification["oms"];
-			$arr["itemspecificationscreatedon"] = $itemSpecification["createdon"];
+			$arr["itemspecifications.createdon"] = $itemSpecification["createdon"];
 			$arr["itemspecifications.lastmodifiedon"] = $itemSpecification["lastmodifiedon"];
 			array_push($mainArr, $arr);
 		}
