@@ -203,7 +203,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                         $where .= " " . $filterdatafield . " < '" . $filtervalue ."'";
                         break;
                     case "GREATER_THAN_OR_EQUAL":
-                    	if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
+                    	$startDatePos = strpos(strtolower ($filterdatafield),'startdate');
+                    	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
+                    	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
+                    	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
+                    	if($startDatePos !== false || $endDatePos !== false){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
                     		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
@@ -214,7 +218,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		 
                     		 $filtervalue = $date->format("Y-m-d");  
                     	}
-                    	if($filterdatafield == "createdon" || $filterdatafield == "lastmodifiedon"){
+                    	if($createdOnPos !== false || $lastModifiedPos !== false){
                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		if(!$date){
                     			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
@@ -228,8 +232,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
-               			if($filterdatafield == "startdate" || $filterdatafield == "enddate"){
-                    		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    	$startDatePos = strpos(strtolower ($filterdatafield),'startdate');
+                    	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
+                    	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
+                    	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
+                    	if($startDatePos !== false || $endDatePos !== false){
+               				 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
                     		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
                     		 }
@@ -238,7 +246,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		 }
                     		 $filtervalue = $date->format("Y-m-d");  
                     	}
-                    	if($filterdatafield == "createdon" || $filterdatafield == "lastmodifiedon"){
+                    	if($createdOnPos !== false || $lastModifiedPos !== false){
                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		if(!$date){
                     			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
