@@ -164,7 +164,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                         <div class="form-group row">
                          	<label class="col-lg-2 col-form-label">MS Description</label>
                         	<div class="col-lg-2">
-                            	<input type="text"  id="msdescription" maxLength="250" value="<?php echo $itemSpecification->getMSDescription()?>" name="msdescription" class="form-control">
+                            	<!--  <input type="text"  id="msdescription" maxLength="250" value="" name="msdescription" class="form-control">-->
+                            	<textarea name="msdescription" class="form-control"><?php echo $itemSpecification->getMSDescription()?></textarea>
                             </div>
                             <label class="col-lg-2 col-form-label">Port</label>
                         	<div class="col-lg-2">
@@ -231,11 +232,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                             </div>
                             <label class="col-lg-2 col-form-label">Light Type</label>
                         	<div class="col-lg-2">
-                            	<input type="text" value="LED" id="lighttype" maxLength="250" value="<?php echo $itemSpecification->getLightType()?>" name="lighttype" class="form-control">
+                            	<input type="text" id="lighttype" maxLength="250" value="<?php echo $itemSpecification->getLightType()?>" name="lighttype" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Total Lumens</label>
                         	<div class="col-lg-2">
-                            	<input type="text" value="1800" id="totallumens" maxLength="250" value="<?php echo $itemSpecification->getTotalLumens()?>" name="totallumens" class="form-control">
+                            	<input type="text"  id="totallumens" maxLength="250" value="<?php echo $itemSpecification->getTotalLumens()?>" name="totallumens" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -317,11 +318,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                         	
                         	<label class="col-lg-2 col-form-label">Pump Volts</label>
                         	<div class="col-lg-4">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getPumpVolts()?>" name="cordlengthmeter" class="form-control">
+                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getPumpVolts()?>" name="pumpvolts" class="form-control">
                             </div>
                             <label class="col-lg-2 col-form-label">Pump Cord Length(F.)</label>
                         	<div class="col-lg-4">
-                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getPumpCordLength()?>" name="pumpwattage" class="form-control">
+                            	<input type="text" maxLength="250" value="<?php echo $itemSpecification->getPumpCordLength()?>" name="pumpcordlength" class="form-control">
                             </div>
                         	<span class="col-lg-12 m-b-sm"></span>
                         	
