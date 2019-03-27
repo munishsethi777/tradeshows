@@ -69,6 +69,16 @@ if($call == "getItemDetails"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "deleteItemSpecification"){
+	$ids = $_GET["ids"];
+	try{
+		$flag = $itemSpecificationMgr->deleteItemSpecificationWithVersions($ids);
+		$message = "Item Specifications Deleted successfully";
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

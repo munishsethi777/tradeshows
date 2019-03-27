@@ -282,7 +282,7 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
-            //container.append(deleteButton);
+            container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
@@ -312,8 +312,8 @@ function loadGrid(){
             // delete row.
             deleteButton.click(function (event) {
                 gridId = "itemGrid";
-                deleteUrl = "Actions/ProductCategoryAction.php?call=deleteProductCategories";
-                deleteItems(gridId,deleteUrl);
+                deleteUrl = "Actions/ItemSpecificationAction.php?call=deleteItemSpecification";
+                deleteRows(gridId,deleteUrl);
             });
             importButton.click(function (event) {
                 location.href = ("adminImportItemSpecifications.php");

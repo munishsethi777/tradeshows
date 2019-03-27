@@ -552,6 +552,12 @@ group by itemspecificationverions.itemno";
 		return $item;
 	}
 	
+	public function deleteItemSpecificationWithVersions($ids){
+		$query = "DELETE itemspecifications , itemspecificationverions  FROM itemspecifications  INNER JOIN itemspecificationverions  
+WHERE itemspecifications.itemno= itemspecificationverions.itemno and itemspecifications.seq in($ids)";
+		self::$dataStore->executeQuery($query);
+	}
+	
 	
 	 
 }
