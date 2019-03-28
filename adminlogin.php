@@ -67,7 +67,7 @@ require_once('IConstants.inc');
                     if(data.success == 0){
                         toastr.error("Invaid username or Password",'Login Failed');
                     }else{
-                        window.location = "dashboard.php";
+                        window.location = "dashboardmain.php";
                     }
                 });
             }
