@@ -39,7 +39,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                        <div class="col-lg-6">
 		                        <div class="widget bg-info text-center  p-h-xl">
 		                        	<div class="row">
-		                        		<a href="adminManageItems.php">
+		                        		<a href="adminShowList.php">
 		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-calendar"></i></h1>
 		                                <span>Show Management</span></a>
 		                            </div>
