@@ -15,7 +15,7 @@ $manageItems = "";
 $manageItemSpecification = "";
 $manageCustomers = "";
 $adminManageOrders = "";
-
+$manageQCSchedules = "";
 //echo  $file;
 if($file == "dashboard.php"){
 	$isDashboard = "active";
@@ -39,6 +39,8 @@ if($file == "dashboard.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
 	$adminManageOrders = "active";
+}elseif($file=="adminManageQCSchedules.php"){
+	$manageQCSchedules = "active";
 }
 
 ?>
@@ -72,6 +74,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $manageItemSpecification;?>">
                     <a href="adminManageItemSpecifications.php"><i class="fa fa-cubes"></i> 
                     	<span class="nav-label">Manage Items Specs.</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $manageQCSchedules;?>">
+                    <a href="adminManageQCSchedules.php"><i class="fa fa-cubes"></i> 
+                    	<span class="nav-label">QC Schedules</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">
