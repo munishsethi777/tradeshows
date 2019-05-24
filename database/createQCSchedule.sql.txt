@@ -1,0 +1,67 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.5
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: May 21, 2019 at 01:40 PM
+-- Server version: 5.7.25
+-- PHP Version: 5.6.40
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `alpinetradeshows`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `qcschedules`
+--
+
+CREATE TABLE `qcschedules` (
+  `seq` bigint(20) NOT NULL,
+  `qc` varchar(50) NOT NULL,
+  `classcode` varchar(50) NOT NULL,
+  `po` varchar(50) NOT NULL,
+  `potype` varchar(50) NOT NULL,
+  `itemnumbers` varchar(200) NOT NULL,
+  `shipdate` date NOT NULL,
+  `screadydate` date NOT NULL,
+  `scfinalinspectiondate` date NOT NULL,
+  `scmiddleinspectiondate` date NOT NULL,
+  `scfirstinspectiondate` date NOT NULL,
+  `scproductionstartdate` date NOT NULL,
+  `scgraphicsreceivedate` date NOT NULL,
+  `acreadydate` date NOT NULL,
+  `acfinalinspectiondate` date NOT NULL,
+  `acmiddleinspectiondate` date NOT NULL,
+  `acfirstinspectiondate` date NOT NULL,
+  `acproductionstartdate` date NOT NULL,
+  `acgraphicsreceivedate` date NOT NULL,
+  `notes` varchar(500) NOT NULL,
+  `userseq` bigint(20) NOT NULL,
+  `createdon` date NOT NULL,
+  `lastmodifiedon` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `qcschedules`
+--
+ALTER TABLE `qcschedules`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `qcschedules`
+--
+ALTER TABLE `qcschedules`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
