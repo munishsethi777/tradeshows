@@ -353,6 +353,7 @@ $(document).ready(function() {
                                             var commit = $("#"  + gridId).jqxGrid('deleterow', ids);
                                             //$("#"+gridId).jqxGrid('clearselection');
                                             $("#"+gridId).jqxGrid('updatebounddata');
+                                            $("#"+gridId).jqxGrid('clearselection');
                                         //});
                                     }else{
                                         toastr.error(message,'Failed');

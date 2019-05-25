@@ -1,28 +1,12 @@
 <?include("sessionCheck.php");
 require_once('IConstants.inc');
-require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ItemSpecification.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");
- $itemSpecification = new ItemSpecification();
- $itemSpecificationMgr = ItemSpecificationMgr::getInstance();
- $hasLight = "";
- $hasElec = "";
- $hasBattery = "";
- $hasAssemb = "";
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
+ $qcSchedule = new QCSchedule();
+ $qcScheduleMgr = QCScheduleMgr::getInstance();
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
- 	$itemSpecification = $itemSpecificationMgr->getBySeq($seq);
- 	if(!empty($itemSpecification->getHasLight())){
- 		$hasLight = "checked";
- 	}
- 	if(!empty($itemSpecification->getHasElectricity())){
- 		$hasElec = "checked";
- 	}
- 	if(!empty($itemSpecification->getHasBattery())){
- 		$hasBattery = "checked";
- 	}
- 	if(!empty($itemSpecification->getHasAssembly())){
- 		$hasAssemb = "checked";
- 	}
+ 	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
  }
 ?>
 <!DOCTYPE html>
@@ -68,39 +52,39 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="itemSpecForm" method="post" action="Actions/ItemSpecificationAction.php" class="m-t-lg">
-                     	<input type="hidden" id ="call" name="call"  value="saveItemSpecification"/>
-                        <input type="hidden" id ="seq" name="seq"  value="<?php echo $itemSpecification->getSeq()?>"/>
+                 	 <form id="createQCScheduleForm" method="post" action="Actions/QCScheduleAction.php" class="m-t-lg">
+                     	<input type="hidden" id ="call" name="call"  value="saveQCSchedule"/>
+                        <input type="hidden" id ="seq" name="seq"  value="<?php echo $qcSchedule->getSeq()?>"/>
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
                         <div class="bg-white p-xs outterDiv">
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">QC</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
+	                            	<input type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Class Code</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
+	                            	<input type="text" required id="classcode" maxLength="250" value="<?php echo $qcSchedule->getClassCode()?>" name="classcode" class="form-control">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">PO Number</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
+	                            	<input type="text" required  id="po" maxLength="250" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">PO Type</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
+	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">Item Numbers</label>
 	                        	<div class="col-lg-4">
-	                            	<textarea id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control"></textarea>
+	                            	<textarea id="itemnumbers" required maxLength="250" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Ship Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="itemno" maxLength="250" value="<?php echo $itemSpecification->getItemNo()?>" name="itemno" class="form-control">
+	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        
@@ -110,31 +94,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                         		<h4 class="areaTitle">Scheduled Information</h4><br>
 	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly id="screadydate" maxLength="250" value="<?php echo $qcSchedule->getSCReadyDate()?>" name="screadydate" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly id="scfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCFinalInspectionDate()?>" name="scfinalinspectiondate" class="form-control">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly id="scmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCMiddleInspectionDate()?>" name="scmiddleinspectiondate" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly id="scfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCFirstInspectionDate()?>" name="scfirstinspectiondate" class="form-control">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly id="scproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getSCProductionStartDate()?>" name="scproductionstartdate" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" disabled  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" readonly  id="scgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getSCGraphicsReceiveDate()?>" name="scgraphicsreceivedate" class="form-control">
 	                            </div>
 	                       </div>
 	                  </div>
@@ -144,31 +128,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
                         		<h4 class="areaTitle">Actual Information</h4><br>
 	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date"  id="acreadydate" maxLength="250" value="<?php echo $qcSchedule->getACReadyDate()?>" name="acreadydate" class="form-control dateControl">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date" id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date" id="acmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACMiddleInspectionDate()?>" name="acmiddleinspectiondate" class="form-control dateControl">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date" id="acfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFirstInspectionDate()?>" name="acfirstinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date" id="acproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getACProductionStartDate()?>" name="acproductionstartdate" class="form-control dateControl">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="item1description" maxLength="250" value="<?php echo $itemSpecification->getItem1Description()?>" name="item1description" class="form-control">
+	                            	<input type="text" placeholder="Select Date" id="acgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getACGraphicsReceiveDate()?>" name="acgraphicsreceivedate" class="form-control dateControl">
 	                            </div>
 	                       </div>
 	                  </div>
@@ -178,12 +162,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php"
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label"></label>
 	                        	<div class="col-lg-2">
-		                        	<button class="btn btn-primary" onclick="saveTaskCategory()" type="button" style="width:85%">
+		                        	<button class="btn btn-primary" onclick="saveQCSchedule()" type="button" style="width:85%">
 	                                	Save
 		                          	</button>
 		                        </div>
 		                        <div class="col-lg-2">
-		                          	<a class="btn btn-default" href="adminManageItemSpecifications.php" type="button" style="width:85%">
+		                          	<a class="btn btn-default" href="adminManageQCSchedules.php" type="button" style="width:85%">
 	                                	Cancel
 		                          	</a>
 		                        </div>
@@ -208,19 +192,91 @@ $(document).ready(function(){
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
+	$('.dateControl').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	})
 });
-function saveTaskCategory(){
-	if($("#itemSpecForm")[0].checkValidity()) {
+function setDates(shipDateStr){
+	var shipDate = getDate(shipDateStr);
+	readyDateDays = 14;
+	var scReadyDate = subtractDays(shipDate,readyDateDays);
+	scReadyDateStr = dateToStr(scReadyDate);
+	$("#screadydate").val(scReadyDateStr);
+
+	shipDate = getDate(shipDateStr);
+	finalInspectionDateDays = 10;
+	var finalInspectionDate = subtractDays(shipDate,finalInspectionDateDays);
+	finalInspectionDateStr = dateToStr(finalInspectionDate);
+	$("#scfinalinspectiondate").val(finalInspectionDateStr);
+
+	shipDate = getDate(shipDateStr);
+	middleInspectionDateDays = 15;
+	var middleInspectionDate = subtractDays(shipDate,middleInspectionDateDays);
+	middleInspectionDateStr = dateToStr(middleInspectionDate);
+	$("#scmiddleinspectiondate").val(middleInspectionDateStr);
+
+	shipDate = getDate(shipDateStr);	
+	firstInspectionDateDays = 35;
+	var firstInspectionDate = subtractDays(shipDate,firstInspectionDateDays);
+	firstInspectionDateStr = dateToStr(firstInspectionDate);
+	$("#scfirstinspectiondate").val(firstInspectionDateStr);
+
+	shipDate = getDate(shipDateStr);
+	productionDateDays = 45;
+	var productionDate = subtractDays(shipDate,productionDateDays);
+	productionDateStr = dateToStr(productionDate);
+	$("#scproductionstartdate").val(productionDateStr);
+
+	shipDate = getDate(shipDateStr);
+	graphicsDateDays = 30;
+	var graphicsDate = subtractDays(shipDate,graphicsDateDays);
+	graphicsDateStr = dateToStr(graphicsDate);
+	$("#scgraphicsreceivedate").val(graphicsDateStr);
+}
+function saveQCSchedule(){
+	if($("#createQCScheduleForm")[0].checkValidity()) {
 		showHideProgress()
-		$('#itemSpecForm').ajaxSubmit(function( data ){
+		$('#createQCScheduleForm').ajaxSubmit(function( data ){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminManageItemSpecifications.php"},100);
+			   window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},100);
 		   }
 	    })	
 	}else{
-		$("#itemSpecForm")[0].reportValidity();
+		$("#createQCScheduleForm")[0].reportValidity();
 	}
+}
+function getDate(dateString) {
+    var parts = dateString.split('-');
+    var month = parts[0] - 1;
+    var day = parts[1];
+    var year = parts[2]
+    var dateObj = new Date(year,month,day);
+    return dateObj;
+}
+function dateToStr(date){
+	var dd = date.getDate();
+	var mm = date.getMonth() + 1; //January is 0!
+
+	var yyyy = date.getFullYear();
+	if (dd < 10) {
+	  dd = '0' + dd;
+	} 
+	if (mm < 10) {
+	  mm = '0' + mm;
+	} 
+	var dateStr = mm + '-' +  dd + '-' + yyyy;
+	return dateStr;
+}
+function addDays(date, days) {
+   date.setDate(date.getDate() + days);
+   return date;
+}
+function subtractDays(date, days) {
+	 var sDate = date;
+	 sDate.setDate(sDate.getDate() - days);
+	 return sDate;
 }
 </script>

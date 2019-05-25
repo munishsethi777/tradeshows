@@ -39,7 +39,7 @@ if($file == "dashboard.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
 	$adminManageOrders = "active";
-}elseif($file=="adminManageQCSchedules.php"){
+}elseif($file=="adminManageQCSchedules.php" || $file== "adminCreateQCSchedule.php"){
 	$manageQCSchedules = "active";
 }
 

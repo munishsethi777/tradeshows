@@ -12,35 +12,32 @@ if(isset($_GET["call"])){
 	$call = $_POST["call"];
 }
 $qcScheduleMgr = QCScheduleMgr::getInstance();
-
-$qcScheduleMgr = ItemSpecificationMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveQCSchedule"){
 	try{
-		$message = "QC Schedule saved successfully."; 
+		$message = "QC Schedule saved successfully!"; 
 		$qcSchedule = new QCSchedule();
 		$qcSchedule->createFromRequest($_REQUEST);
-		
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
-			$message = "QC Schedule updated successfully.";
+			$message = "QC Schedule updated successfully!";
 		}
 		$qcSchedule->setSeq($seq);
 		$qcSchedule->setUserSeq($sessionUtil->getAdminLoggedInSeq());
 		$qcSchedule->setCreatedOn(new DateTime());
 		$qcSchedule->setLastModifiedOn(new DateTime());
-		$id = $qcScheduleMgr->saveQCSchedule($qcSchedule);
+		$id = $qcScheduleMgr->save($qcSchedule);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
 	}
 }
 
-if($call == "importItemSpecifications"){
+if($call == "importQCSchedules"){
 	try{
 		if(isset($_FILES["file"])){
-			$response = $qcScheduleMgr->importItems($_FILES["file"]);
+			$response = $qcScheduleMgr->importQCSchedules($_FILES["file"]);
 			echo json_encode($response);
 			return;
 		}
@@ -49,9 +46,9 @@ if($call == "importItemSpecifications"){
 		$message  = $e->getMessage();
 	}
 }
-if($call == "getAllItemSpecifications"){
-	$itemJson = $qcScheduleMgr->getItemsgetItemsForGrid();
-	echo json_encode($itemJson);
+if($call == "getAllQCSchedules"){
+	$qcSchedulesJson = $qcScheduleMgr->getQCScheudlesForGrid();
+	echo json_encode($qcSchedulesJson);
 	return;
 }
 if($call == "export"){
@@ -63,20 +60,20 @@ if($call == "export"){
 		$message  = $e->getMessage();
 	}
 }
-if($call == "getItemDetails"){
+if($call == "getQCSchedule"){
 	try{
-		$item = $qcScheduleMgr->findBySeq($_GET["seq"]);
-		$response["item"] = $item;
+		$qcSchedule = $qcScheduleMgr->findBySeq($_GET["seq"]);
+		$response["item"] = $qcSchedule;
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
 	}
 }
-if($call == "deleteItemSpecification"){
+if($call == "deleteQCSchedule"){
 	$ids = $_GET["ids"];
 	try{
-		$flag = $qcScheduleMgr->deleteItemSpecificationWithVersions($ids);
-		$message = "Item Specifications Deleted successfully";
+		$flag = $qcScheduleMgr->deleteByIds($ids);
+		$message = "QC Schedules Deleted successfully";
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

@@ -158,7 +158,14 @@ class QCSchedule{
 			$flag = property_exists(self::$className, $attrName);
 			$isExists = array_key_exists($attrName, $array);
 			if($flag && $isExists){
-				$this->{$attrName} = $array[$attrName];
+				$datePos = strpos(strtolower ($attrName),'date');
+				$value = $array[$attrName];
+				if($datePos !== false && !empty($value)){
+					$value = DateUtil::StringToDateByGivenFormat("m-d-Y", $value);
+				}
+				if(!empty($value)){
+					$this->{$attrName} = $value;
+				}
 			}
 		}
 	}

@@ -207,6 +207,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
+                    	$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
                     	if($startDatePos !== false || $endDatePos !== false){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
@@ -229,6 +230,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		$date->setTime(0,0);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
+                    	if($shipDatePos !== false){
+                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		$filtervalue = $date->format("Y-m-d");
+                    	}
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
@@ -236,6 +241,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
+                    	$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
                     	if($startDatePos !== false || $endDatePos !== false){
                				 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
@@ -256,6 +262,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		}
                     		$date->setTime(23,59);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
+                    	}
+                    	if($shipDatePos !== false){
+                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		$filtervalue = $date->format("Y-m-d");
                     	}
                         $where .= " " . $filterdatafield . " <= '" . $filtervalue ."'";
                         break;

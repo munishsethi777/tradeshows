@@ -2,6 +2,8 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class QCScheduleMgr{
@@ -9,7 +11,7 @@ class QCScheduleMgr{
 	private static $dataStore;
 	private $dataTypeErrors;
 	private $fieldNames;
-	private static $FIELD_COUNT = 25;
+	private static $FIELD_COUNT = 19;
 	public static function getInstance()
 	{
 		if (!self::$qcScheduleMgr)
@@ -20,20 +22,24 @@ class QCScheduleMgr{
 		return self::$qcScheduleMgr;
 	}
 	
-	public function saveQCSchedule($qcschedule){
-    	self::$dataStore->saveObject($qcschedule);
+	public function saveQCSchedule($conn,$qcschedule){
+    	self::$dataStore->saveObject($qcschedule,$conn);
+    }
+    
+    public function save($qcschedule){
+    	self::$dataStore->save($qcschedule);
     }
     
     public function updateOject($conn,$item,$condition){
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
-	public function importItems($file,$isUpdate,$updateItemNos){
+	public function importQCSchedules($file,$isUpdate,$updateItemNos){
 		$inputFileName = $file['tmp_name'];
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 		$sheet = $objPHPExcel->getActiveSheet();
 		$maxCell = $sheet->getHighestRowAndColumn();
-		$sheetData = $sheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
+		$sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row']);
 		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
 	}
 	
@@ -54,7 +60,15 @@ class QCScheduleMgr{
 			$mainJson["success"] = 1;
 			$mainJson["messages"] = "";
 			$exstingsItemNos = array();
-			$itemArr = array();
+			$qcScheudleArr = array();
+			$sessionUtil = SessionUtil::getInstance();
+			$isAdminSession = $sessionUtil->isSessionAdmin();
+			$userSeq = 0;
+			if($isAdminSession){
+				$userSeq = $sessionUtil->getAdminLoggedInSeq();
+			}else{
+				$userSeq = $sessionUtil->getUserLoggedInSeq();
+			}
 			foreach ($sheetData as $key=>$data){
 				if($key == 0){
 					continue;
@@ -62,13 +76,9 @@ class QCScheduleMgr{
 				if(!array_filter($data)) {
 					continue;
 				}
-				$item = $this->getItemObj($data);
-				$itemNo = $item->getItemNo();
-				array_push($itemArr, $item);
-				if(!empty($this->dataTypeErrors)){
-					$messages .= "<b>Item $itemNo has following validation Errors </b><p>" . $this->dataTypeErrors . "</p>";
-					$success = 0;
-				}
+				$qcSchedule = $this->getQCScheduleObj($data);
+				$qcSchedule->setUserSeq($userSeq);
+				array_push($qcScheudleArr, $qcSchedule);
 			}
 		}else{
 			$messages .= "Please import the correct file";
@@ -77,14 +87,13 @@ class QCScheduleMgr{
 		$response = array();
 		$response["message"] = $messages;
 		$response["success"] = $success;
-		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		if(empty($messages)){
-			$response = $this->saveArr($itemArr, $isUpdate,$updateItemNos);
+			$response = $this->saveArr($qcScheudleArr, $isUpdate,$updateItemNos);
 		}
 		return $response;
 	}
 	
-	private function saveArr($itemArr,$isUpdate,$updateItemNos){
+	private function saveArr($qcScheudleArr,$isUpdate,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -94,40 +103,24 @@ class QCScheduleMgr{
 		$savedItemCount = 0;
 		$existingItemIds = array();
 		$success = 1;
-		foreach ($itemArr as $item){
-			$itemNo = $item->getItemNo();
+		foreach ($qcScheudleArr as $qc){
 			try {
-				if(!$isUpdate){
-					$this->saveItem($conn, $item);
-					$savedItemCount++;
-				}else{
-					if(in_array($itemNo, $updateItemNos)){
-						$condition["itemno"] = $itemNo;
-						$this->updateOject($conn, $item, $condition);
-					}
-				}
-			}
+				$this->saveQCSchedule($conn, $qc);
+				$savedItemCount++;
+			 }
 			catch ( Exception $e) {
-				$trace = $e->getTrace();
-				if($trace[0]["args"][0][1] == "1062"){
-					$itemNoAlreadyExists++;
-					array_push($existingItemIds, $itemNo);
-				}else{
-					$messages .= $e->getMessage();
-				}
+				$messages .= $e->getMessage();
 				$hasError = true;
 				$success = 0;
 			}
 		}
 		$conn->commit();
 		if(!$hasError){
-			$messages = "Items Imported Successfully!";
+			$messages = "Qc Schedules Imported Successfully!";
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
-		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		$response["savedItemCount"] = $savedItemCount;
-		$response["existingItemIds"] = $existingItemIds;
 		return $response;
 	}
 	
@@ -140,131 +133,113 @@ class QCScheduleMgr{
 		return $message;
 	}
 	
-	private function getItemObj($data){
-		$itemNumber = $data[0];
-		$description = $data[1];
-		$class = $data[2];
-		$dept = $data[3];
-		$status = $data[4];
-		$unit = $data[5];
-		$pc = $data[6];
-		$disc = $data[7];
-		$inStockQty = $data[8];
-		$allocQty = $data[9];
-		$soQty = $data[10];
-		$avQty = $data[11];
-		$poQty = $data[12];
-		$owQty = $data[13];
-		$projQty = $data[14];
-		$ytdSoldQty = $data[15];
-		$lastYearSoldQty = $data[16];
-		$comdShip = $data[17];
-		$showSpecial = $data[18];
-		$distributer = $data[19];
-		$dealerPrice = $data[20];
-		$crztDisSp = $data[21];
-		$qtyWt = $data[22];
-		$mlnStock = $data[23];
-		$itemCost = $data[24];
+	private function getQCScheduleObj($data){
+		$qc = $data[0];
+		$classCode = $data[1];
+		$po = $data[2];
+		$poType = $data[3];
+		$itemNo = $data[4];
+		$shipDate = $data[5];
+		
+		$readyDate = $data[6];
+		$finalInspectionDate = $data[7];
+		$middleInspectionDate = $data[8];
+		$firstInspectionDate = $data[9];
+		
+		$productionStartDate = $data[10];
+		$graphicReceiveDate = $data[11];
+		$ac_readyDate = $data[12];
+		$ac_finalInspectionDate = $data[13];
+		
+		$ac_middleInspectionDate = $data[14];
+		$ac_firstInpectionDate = $data[15];
+		
+		$ac_productionStartDate = $data[16];
+		$ac_graphicDateReceive = $data[17];
+		$note = $data[18];
+		
 		$this->dataTypeErrors = "";	
-		$item = new Item();
-		if(!empty($itemNumber)){
-			$item->setItemNo($itemNumber);
+		
+		$qcSchedule = new QCSchedule();
+		
+		if(!empty($qc)){
+			$qcSchedule->setQC($qc);
 		}
-		if(!empty($description)){
-			$item->setDescription($description);
+		if(!empty($classCode)){
+			$qcSchedule->setClassCode($classCode);
 		}
-		if(!empty($class)){
-			$item->setClass($class);
+		if(!empty($po)){
+			$qcSchedule->setPO($po);
 		}
-		if(!empty($dept)){
-			$item->setDept($dept);
+		if(!empty($poType)){
+			$qcSchedule->setPOType($poType);
 		}
-		if(!empty($status)){
-			$item->setStatus($status);
+		if(!empty($itemNo)){
+			$qcSchedule->setItemNumbers($itemNo);
 		}
-		if(!empty($unit)){
-			$item->setUnit($unit);
+		$format = "m-d-y";
+		$na = "N/A";
+		if(!empty($shipDate)){
+			$shipDate = $this->validateDate($shipDate);
+			$qcSchedule->setShipDate($shipDate);
 		}
-		if(!empty($pc)){
-			$this->dataTypeErrors .= $this->validateNumeric($pc, $this->fieldNames[6]);
-			$item->setPccs($pc);
+		if(!empty($readyDate)){
+			$readyDate = $this->validateDate($readyDate);
+			$qcSchedule->setSCReadyDate($readyDate);
 		}
-		if(!empty($disc)){
-			$this->dataTypeErrors .= $this->validateNumeric($disc, $this->fieldNames[7]);
-			$item->setDisc($disc);
+		if(!empty($finalInspectionDate)){
+			$finalInspectionDate = $this->validateDate($finalInspectionDate);
+			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
 		}
-		if(!empty($inStockQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($inStockQty, $this->fieldNames[9]);
-			$item->setInStockQty($inStockQty);
+		if(!empty($middleInspectionDate)){
+			$middleInspectionDate = $this->validateDate($middleInspectionDate);
+			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
 		}
-		if(!empty($allocQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($allocQty, $this->fieldNames[10]);
-			$item->setAllocQty($allocQty);
+		if(!empty($firstInspectionDate)){
+			$firstInspectionDate = $this->validateDate($firstInspectionDate);
+			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
 		}
-		if(!empty($soQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($soQty, $this->fieldNames[11]);
-			$item->setSoQty($soQty);
+		if(!empty($productionStartDate)){
+			$productionStartDate = $this->validateDate($productionStartDate);
+			$qcSchedule->setSCProductionStartDate($productionStartDate);
 		}
-		if(!empty($avQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($avQty, $this->fieldNames[12]);
-			$item->setAvQty($avQty);
+		if(!empty($graphicReceiveDate)){
+			$graphicReceiveDate = $this->validateDate($graphicReceiveDate);
+			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
 		}
-		if(!empty($owQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($owQty, $this->fieldNames[13]);
-			$item->setOwQty($owQty);
+		if(!empty($ac_readyDate)){
+			$ac_readyDate = $this->validateDate($ac_readyDate);
+			$qcSchedule->setACReadyDate($ac_readyDate);
 		}
-		if(!empty($projQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($projQty, $this->fieldNames[14]);
-			$item->setProjQty($projQty);
+		if(!empty($ac_finalInspectionDate)){
+			$ac_finalInspectionDate = $this->validateDate($ac_finalInspectionDate);
+			$qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
 		}
-		if(!empty($ytdSoldQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($ytdSoldQty, $this->fieldNames[15]);
-			$item->setYtdSoldQty($ytdSoldQty);
+		if(!empty($ac_middleInspectionDate)){
+			$ac_middleInspectionDate = $this->validateDate($ac_middleInspectionDate);
+			$qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
 		}
-		if(!empty($lastYearSoldQty)){
-			$this->dataTypeErrors .= $this->validateNumeric($lastYearSoldQty, $this->fieldNames[16]);
-			$item->setLastYearSoldQty($lastYearSoldQty);
+		if(!empty($ac_firstInpectionDate)){
+			$ac_firstInpectionDate =  $this->validateDate($ac_firstInpectionDate);
+			$qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
 		}
-		if(!empty($comdShip)){
-			$this->dataTypeErrors .= $this->validateNumeric($comdShip, $this->fieldNames[17]);
-			$item->setComdShip($comdShip);
+		if(!empty($ac_productionStartDate)){
+			$ac_productionStartDate = $this->validateDate($ac_productionStartDate);
+			$qcSchedule->setACProductionStartDate($ac_productionStartDate);
 		}
-		if(!empty($showSpecial)){
-			$this->dataTypeErrors .= $this->validateNumeric($showSpecial, $this->fieldNames[18]);
-			$item->setShowSpecial($showSpecial);
+		if(!empty($ac_graphicDateReceive)){
+			$ac_graphicDateReceive = $this->validateDate($ac_graphicDateReceive);
+			$qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
 		}
-		if(!empty($distributer)){
-			$this->dataTypeErrors .= $this->validateNumeric($distributer, $this->fieldNames[19]);
-			$item->setDistributor($distributer);
+		if(!empty($note)){
+			$qcSchedule->setNotes($note);
 		}
-		if(!empty($dealerPrice)){
-			$this->dataTypeErrors .= $this->validateNumeric($dealerPrice, $this->fieldNames[20]);
-			$item->setDealerPrice($dealerPrice);
-		}
-		if(!empty($crztDisSp)){
-			$this->dataTypeErrors .= $this->validateNumeric($crztDisSp, $this->fieldNames[21]);
-			$item->setCrzyDissp($crztDisSp);
-		}
-		if(!empty($qtyWt)){
-			$this->dataTypeErrors .= $this->validateNumeric($qtyWt, $this->fieldNames[22]);
-			$item->setQtyWt($qtyWt);
-		}
-		if(!empty($mlnStock)){
-			$this->dataTypeErrors .= $this->validateNumeric($mlnStock, $this->fieldNames[23]);
-			$item->setMinStk($mlnStock);
-		}
-		if(!empty($itemCost)){
-			$this->dataTypeErrors .= $this->validateNumeric($itemCost, $this->fieldNames[24]);
-			$item->setItemCost($itemCost);
-		}
-		$item->setLastModifiedOn(new DateTime());
-		$item->setCreatedOn(new DateTime());
-		$item->setIsEnabled(1);
-		return $item;
+		$qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
+		$qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
+		return $qcSchedule;
 	}
 	
-	public function getItemsForGrid(){
+	public function getQCScheudlesForGrid(){
 		$qcSchedules = $this->findAllArr(true);
 		$mainArr["Rows"] = $qcSchedules;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
@@ -283,9 +258,70 @@ class QCScheduleMgr{
 	
 	
 	public function findBySeq($seq){
-		$item = self::$dataStore->findArrayBySeq($seq);
-		return $item;
+		$qcSchedule = self::$dataStore->findBySeq($seq);
+		$shipDate = $this->getDateStr($qcSchedule->getShipDate());
+		$qcSchedule->setShipDate($shipDate);
+		
+		$scReadyDate = $this->getDateStr($qcSchedule->getSCReadyDate());
+		$qcSchedule->setSCReadyDate($scReadyDate);
+		
+		$scfinalInsDate = $this->getDateStr($qcSchedule->getSCFinalInspectionDate());
+		$qcSchedule->setSCFinalInspectionDate($scfinalInsDate);
+		
+		$scMiddleInsDate = $this->getDateStr($qcSchedule->getSCMiddleInspectionDate());
+		$qcSchedule->setSCMiddleInspectionDate($scMiddleInsDate);
+		
+		$scFirstInsDate = $this->getDateStr($qcSchedule->getSCFirstInspectionDate());
+		$qcSchedule->setSCFirstInspectionDate($scFirstInsDate);
+		
+		$scProductionStartDate = $this->getDateStr($qcSchedule->getSCProductionStartDate());
+		$qcSchedule->setSCProductionStartDate($scProductionStartDate);
+		
+		$scGraphicReceiveDate = $this->getDateStr($qcSchedule->getSCGraphicsReceiveDate());
+		$qcSchedule->setSCGraphicsReceiveDate($scGraphicReceiveDate);
+		
+		$acReadyDate = $this->getDateStr($qcSchedule->getACReadyDate());
+		$qcSchedule->setACReadyDate($acReadyDate);
+		
+		$acFinalInspectionDate = $this->getDateStr($qcSchedule->getACFinalInspectionDate());
+		$qcSchedule->setACFinalInspectionDate($acFinalInspectionDate);
+		
+		$acMiddleInspectionDate = $this->getDateStr($qcSchedule->getACMiddleInspectionDate());
+		$qcSchedule->setACMiddleInspectionDate($acMiddleInspectionDate);
+		
+		$acFirstInspectionDate = $this->getDateStr($qcSchedule->getACFirstInspectionDate());
+		$qcSchedule->setACFirstInspectionDate($acFirstInspectionDate);
+		
+		$acProductionStartDate = $this->getDateStr($qcSchedule->getACProductionStartDate());
+		$qcSchedule->setACProductionStartDate($acProductionStartDate);
+		
+		$acGraphicsReceiveDate = $this->getDateStr($qcSchedule->getACGraphicsReceiveDate());
+		$qcSchedule->setACGraphicsReceiveDate($acGraphicsReceiveDate);
+		return $qcSchedule;
 	}
+	
+	public function deleteByIds($ids){
+		return self::$dataStore->deleteInList($ids);
+	}
+	
+	private function validateDate($date){
+		$format = 'm-d-y';
+		$date = DateUtil::StringToDateByGivenFormat($format, $date);
+		if(!$date){
+			$date = DateUtil::getCurrentDate();
+		}
+		return $date;
+	}
+	
+	private function getDateStr($date){
+		$format = 'Y-m-d';
+		if(!empty($date)){
+			$date = DateUtil::StringToDateByGivenFormat($format, $date);
+			$date = $date->format("m-d-Y");
+		}
+		return $date;
+	}
+	
 	
 	
 	 

@@ -47,120 +47,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
-   <form id="form2" name="form2" method="post" action="adminCreateItemSpecifications.php">
+   <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php">
     	<input type="hidden" id="id" name="id"/>
    </form> 
-   
-   <!-- Modal Box for update comments and status -->  
-<div class="modal inmodal bs-example-modal-lg" id="itemDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-    	<div class="modal-content animated fadeInRight">
-          <div class="modal-body itemDetailsModalDiv mainDiv">
-            <div class="ibox">
-             <div class="ibox-content">
-             	<?php include 'progress.php';?>
-                <div class="row">
-                    <div class="col-sm-12">
-                    <h3>Item Details</h3>
-                    <small>Complete details of the selected item</small>
-                        
-                        <div class="form-group row m-t-sm">
-                       		<label class="col-sm-2 lblTitle">Item #</label>
-                           	<div class="col-sm-4"><label class="itemitemno lblDesc text-primary"></label></div>
-                            <label class="col-sm-2">Department</label>
-                           	<div class="col-sm-4"><label class="itemdept lblDesc"></label></div>
-                        </div>
-                        
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Desc.</label>
-                           	<div class="col-lg-10"><label class="itemdescription lblDesc"></label></div>
-                        </div>
-                        
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Class</label>
-                           	<div class="col-lg-4"><label class="itemclass lblDesc"></label></div>
-                            <label class="col-lg-2">Status</label>
-                           	<div class="col-lg-4"><label class="itemstatus lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Unit</label>
-                           	<div class="col-lg-4"><label class="itemunit lblDesc"></label></div>
-                            <label class="col-lg-2">Pccs</label>
-                           	<div class="col-lg-4"><label class="itempccs lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Disc</label>
-                           	<div class="col-lg-4"><label class="itemdisc lblDesc"></label></div>
-                            <label class="col-lg-2">InstockQty</label>
-                           	<div class="col-lg-4"><label class="iteminstockqty lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">AllocQty</label>
-                           	<div class="col-lg-4"><label class="itemallocqty lblDesc"></label></div>
-                            <label class="col-lg-2">SoQty</label>
-                           	<div class="col-lg-4"><label class="itemsoqty lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">AVQty</label>
-                           	<div class="col-lg-4"><label class="itemavqty lblDesc"></label></div>
-                            <label class="col-lg-2">POQty</label>
-                           	<div class="col-lg-4"><label class="itempoqty lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">OQQty</label>
-                           	<div class="col-lg-4"><label class="itemowqty lblDesc"></label></div>
-                            <label class="col-lg-2">ProjQty</label>
-                           	<div class="col-lg-4"><label class="itemprojqty lblDesc"></label></div>
-                        </div>
-                     	<div class="form-group row">
-                       		<label class="col-lg-2">YTDSoldQty</label>
-                           	<div class="col-lg-4"><label class="itemytdsoldqty lblDesc"></label></div>
-                            <label class="col-lg-2">LastYr Sold Qty</label>
-                           	<div class="col-lg-4"><label class="itemlastyearsoldqty lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Comdship</label>
-                           	<div class="col-lg-4"><label class="itemcomdship lblDesc"></label></div>
-                            <label class="col-lg-2">Show Spcl.</label>
-                           	<div class="col-lg-4"><label class="itemshowspecial lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Distributor</label>
-                           	<div class="col-lg-4"><label class="itemdistributor lblDesc"></label></div>
-                            <label class="col-lg-2">DealerPrice</label>
-                           	<div class="col-lg-4"><label class="itemdealerprice lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">CrzyDissp</label>
-                           	<div class="col-lg-4"><label class="itemcrzydissp lblDesc"></label></div>
-                            <label class="col-lg-2">QtyWt</label>
-                           	<div class="col-lg-4"><label class="itemqtywt lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">MinStock</label>
-                           	<div class="col-lg-4"><label class="itemminstk lblDesc"></label></div>
-                            <label class="col-lg-2">ItemCost</label>
-                           	<div class="col-lg-4"><label class="itemitemcost lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">CreatedOn</label>
-                           	<div class="col-lg-4"><label class="itemcreatedon lblDesc"></label></div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                </div>
-           	</div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Closes -->
-   
-   
-   
+
 </body>
 <script type="text/javascript">
 function showItemDetails(seq){
@@ -190,13 +80,13 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Item No.', datafield: 'itemspecifications.itemno', width:"12%"},
-      { text: 'OMS', datafield: 'itemspecifications.oms',width:"6%"},
-      { text: 'Description', datafield: 'itemspecifications.item1description',width:"27%"},
-      { text: 'Country Of Origin', datafield: 'itemspecifications.countryoforigin',width:"14%"},
-      { text: 'Versions', datafield: 'versions',width:"8%",filterable:false},
-      { text: 'Created On', datafield: 'itemspecifications.createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
-      { text: 'Modified On', datafield: 'itemspecifications.lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
+      { text: 'QC.', datafield: 'qc', width:"15%"},
+      { text: 'Code', datafield: 'classcode',width:"8%"},
+      { text: 'PO', datafield: 'po',width:"10%"},
+      { text: 'potype', datafield: 'potype',width:"14%"},
+      { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"15%"},
+      { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
+      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
    
     var source =
@@ -204,18 +94,18 @@ function loadGrid(){
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'createdon',
-        sortdirection: 'asc',
+        sortcolumn: 'lastmodifiedon',
+        sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                    { name: 'itemspecifications.itemno', type: 'string' }, 
-                    { name: 'itemspecifications.item1description', type: 'string' },
-                    { name: 'versions', type: 'integer' },
-                    { name: 'itemspecifications.countryoforigin', type: 'string' } ,
-                    { name: 'itemspecifications.oms', type: 'string' },
-                    { name: 'itemspecifications.createdon', type: 'date' }, 
-                    { name: 'itemspecifications.lastmodifiedon', type: 'date' } 
+                    { name: 'qc', type: 'string' }, 
+                    { name: 'classcode', type: 'string' },
+                    { name: 'po', type: 'integer' },
+                    { name: 'potype', type: 'string' } ,
+                    { name: 'shipdate', type: 'date' },
+                    { name: 'createdon', type: 'date' }, 
+                    { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
-        url: 'Actions/ItemSpecificationAction.php?call=getAllItemSpecifications',
+        url: 'Actions/QCScheduleAction.php?call=getAllQCSchedules',
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -271,7 +161,7 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
-            var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
+           // var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
@@ -279,15 +169,15 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
             container.append(importButton);
-            container.append(exportButton);
+            //container.append(exportButton);
             container.append(reloadButton);
-            container.append(downloadButton);
+           // container.append(downloadButton);
             container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
             importButton.jqxButton({  width: 65, height: 18 });
-            exportButton.jqxButton({  width: 65, height: 18 });
+            //exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
@@ -312,16 +202,16 @@ function loadGrid(){
             // delete row.
             deleteButton.click(function (event) {
                 gridId = "itemGrid";
-                deleteUrl = "Actions/ItemSpecificationAction.php?call=deleteItemSpecification";
+                deleteUrl = "Actions/QCScheduleAction.php?call=deleteQCSchedule";
                 deleteRows(gridId,deleteUrl);
             });
             importButton.click(function (event) {
-                location.href = ("adminImportItemSpecifications.php");
+                location.href = ("adminImportQCSchedules.php");
             });
-            exportButton.click(function (event) {
-        	   filterQstr = getFilterString("itemGrid");
-        	   exportItemsConfirm(filterQstr);
-            });
+//             exportButton.click(function (event) {
+//         	   filterQstr = getFilterString("itemGrid");
+//         	   exportItemsConfirm(filterQstr);
+//             });
              $("#itemGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       

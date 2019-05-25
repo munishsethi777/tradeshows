@@ -114,7 +114,7 @@ class ItemSpecificationMgr{
 				if($key < 1){
 					continue;
 				}
-				$itemSpecification = $this->getItemSpecificationObj($data);
+				$qcSchedule = $this->getItemSpecificationObj($data);
 				$itemNo = $itemSpecification->getItemNo();
 				array_push($itemSpecificationArr, $itemSpecification);
 				if(!empty($this->dataTypeErrors)){

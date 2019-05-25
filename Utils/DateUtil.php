@@ -175,5 +175,9 @@ class DateUtil {
 		$d = DateTime::createFromFormat($dateFormat, $date);
 		return $d && $d->format($dateFormat) === $date;
 	}
+	
+	public static function getCurrentDate(){
+		return new DateTime();
+	}
 }
 ?>
