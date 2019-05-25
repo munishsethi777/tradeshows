@@ -198,6 +198,15 @@ $(document).ready(function(){
 	})
 });
 function setDates(shipDateStr){
+	if(shipDateStr == ""){
+		$("#screadydate").val("");
+		$("#scfinalinspectiondate").val("");
+		$("#scmiddleinspectiondate").val("");
+		$("#scfirstinspectiondate").val("");
+		$("#scproductionstartdate").val("");
+		$("#scgraphicsreceivedate").val("");
+		return;
+	}
 	var shipDate = getDate(shipDateStr);
 	readyDateDays = 14;
 	var scReadyDate = subtractDays(shipDate,readyDateDays);

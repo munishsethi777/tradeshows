@@ -83,7 +83,7 @@ function loadGrid(){
       { text: 'QC.', datafield: 'qc', width:"15%"},
       { text: 'Code', datafield: 'classcode',width:"8%"},
       { text: 'PO', datafield: 'po',width:"10%"},
-      { text: 'potype', datafield: 'potype',width:"14%"},
+      { text: 'PO Type', datafield: 'potype',width:"14%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"15%"},
       { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
