@@ -35,6 +35,59 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">
+		                     	
+		                     		<div class="form-group row">
+			                       		<label class="col-lg-1 col-form-label">Search</label>
+			                        	<div class="col-lg-3">
+			                            	<select id="qc" name="qc" class="form-control">
+			                            		<option>Select Field</option>
+			                            		<option value="shipdate">Ship Date</option>
+			                            		<optgroup label="Schedule Dates">
+				                            		<option value="scproductionstartdate">Scheduled Production Start</option>
+				                            		<option value="scgraphicsreceivedate">Scheduled Graphics Receive</option>
+				                            		<option value="scfirstinspectiondate">Scheduled First Inspection</option>
+				                            		<option value="scmiddleinspectiondate">Scheduled Middle Inspection</option>
+				                            		<option value="scfinalinspectiondate">Scheduled Final Inspection</option>
+				                            		<option value="screadydate">Scheduled Ready</option>
+			                            		</optgroup>
+			                            		<optgroup label="Actual Dates">
+				                            		<option value="acproductionstartdate">Actual Production Start</option>
+				                            		<option value="acgraphicsreceivedate">Actual Graphics Receive</option>
+				                            		<option value="acfirstinspectiondate">Actual First Inspection</option>
+				                            		<option value="acmiddleinspectiondate">Actual Middle Inspection</option>
+				                            		<option value="acfinalinspectiondate">Actual Final Inspection</option>
+				                            		<option value="acreadydate">Ready</option>
+			                            		</optgroup>
+			                            	</select>
+			                            </div>
+			                            <div class="col-lg-2">
+			                            	<select id="qc" name="qc" class="form-control">
+			                            		<option>still due</option>
+			                            		<option>completed</option>
+			                            	</select>
+			                            </div>
+			                            <div class="col-lg-2">
+			                            	<select id="qc" name="qc" class="form-control">
+			                            		<option>in past</option>
+			                            		<option>for coming</option>
+			                            	</select>
+			                            </div>
+			                            <div class="col-lg-2">
+			                            	<select id="qc" name="qc" class="form-control">
+			                            		<option>1 day</option>
+			                            		<option>3 days</option>
+			                            		<option>5 days</option>
+			                            		<option>10 days</option>
+			                            		<option>15 days</option>
+			                            		<option>30 days</option>
+			                            		<option>45 days</option>
+			                            		<option>60 days</option>
+			                            		<option>90 days</option>
+			                            	</select>
+			                            </div>
+			                            
+			                        </div>
+		                     	
 		                     	<div id="itemGrid"></div>
 		                     </div>
 	                    </div>	
