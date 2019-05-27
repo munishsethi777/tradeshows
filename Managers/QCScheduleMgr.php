@@ -76,9 +76,14 @@ class QCScheduleMgr{
 				if(!array_filter($data)) {
 					continue;
 				}
-				$qcSchedule = $this->getQCScheduleObj($data);
-				$qcSchedule->setUserSeq($userSeq);
-				array_push($qcScheudleArr, $qcSchedule);
+				$imoptedData = $this->getImportedData($data);
+				$qcschedule = $imoptedData["data"];
+				$itemIdsArr = $imoptedData["items"];
+				foreach ($itemIdsArr as $itemId){
+					$qcschedule->setItemNumbers($itemId);
+					$qcschedule->setUserSeq($userSeq);
+					array_push($qcScheudleArr, $qcschedule);
+				}
 			}
 		}else{
 			$messages .= "Please import the correct file";
@@ -133,13 +138,17 @@ class QCScheduleMgr{
 		return $message;
 	}
 	
-	private function getQCScheduleObj($data){
+	private function getImportedData($data){
 		$qc = $data[0];
 		$classCode = $data[1];
 		$po = $data[2];
 		$poType = $data[3];
 		$itemNo = $data[4];
-		$shipDate = $data[5];
+		$itemNoArr = array();
+		if(!empty($itemNo)){
+			$itemNoArr = explode("\n", $itemNo);
+		}
+		$shipDateStr = $data[5];
 		
 		$readyDate = $data[6];
 		$finalInspectionDate = $data[7];
@@ -179,64 +188,90 @@ class QCScheduleMgr{
 		}
 		$format = "m-d-y";
 		$na = "N/A";
-		if(!empty($shipDate)){
-			$shipDate = $this->validateDate($shipDate);
+		if(!empty($shipDateStr)){
+			$shipDate = $this->convertStrToDate($shipDateStr);
 			$qcSchedule->setShipDate($shipDate);
-		}
-		if(!empty($readyDate)){
-			$readyDate = $this->validateDate($readyDate);
+			
+			$readyDate = $this->convertStrToDate($shipDateStr);
+			$readyDate->modify('-14 day');
 			$qcSchedule->setSCReadyDate($readyDate);
-		}
-		if(!empty($finalInspectionDate)){
-			$finalInspectionDate = $this->validateDate($finalInspectionDate);
+			
+			$finalInspectionDate = $this->convertStrToDate($shipDateStr);
+			$finalInspectionDate->modify('-10 day');
 			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-		}
-		if(!empty($middleInspectionDate)){
-			$middleInspectionDate = $this->validateDate($middleInspectionDate);
+			
+			$middleInspectionDate = $this->convertStrToDate($shipDateStr);
+			$middleInspectionDate->modify('-15 day');
 			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-		}
-		if(!empty($firstInspectionDate)){
-			$firstInspectionDate = $this->validateDate($firstInspectionDate);
-			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-		}
-		if(!empty($productionStartDate)){
-			$productionStartDate = $this->validateDate($productionStartDate);
+			
+			$firstInspectionDate = $this->convertStrToDate($shipDateStr);
+			$firstInspectionDate->modify('-35 day');
+			$qcSchedule->setSCFinalInspectionDate($firstInspectionDate);
+			
+			$productionStartDate = $this->convertStrToDate($shipDateStr);
+			$productionStartDate->modify('-45 day');
 			$qcSchedule->setSCProductionStartDate($productionStartDate);
+			
+			$graphicReceiveDate = $this->convertStrToDate($shipDateStr);
+			$graphicReceiveDate->modify('-30 day');
+			$qcSchedule->setSCReadyDate($graphicReceiveDate);
 		}
-		if(!empty($graphicReceiveDate)){
-			$graphicReceiveDate = $this->validateDate($graphicReceiveDate);
-			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-		}
-		if(!empty($ac_readyDate)){
-			$ac_readyDate = $this->validateDate($ac_readyDate);
-			$qcSchedule->setACReadyDate($ac_readyDate);
-		}
-		if(!empty($ac_finalInspectionDate)){
-			$ac_finalInspectionDate = $this->validateDate($ac_finalInspectionDate);
-			$qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
-		}
-		if(!empty($ac_middleInspectionDate)){
-			$ac_middleInspectionDate = $this->validateDate($ac_middleInspectionDate);
-			$qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
-		}
-		if(!empty($ac_firstInpectionDate)){
-			$ac_firstInpectionDate =  $this->validateDate($ac_firstInpectionDate);
-			$qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
-		}
-		if(!empty($ac_productionStartDate)){
-			$ac_productionStartDate = $this->validateDate($ac_productionStartDate);
-			$qcSchedule->setACProductionStartDate($ac_productionStartDate);
-		}
-		if(!empty($ac_graphicDateReceive)){
-			$ac_graphicDateReceive = $this->validateDate($ac_graphicDateReceive);
-			$qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
-		}
+// 		if(!empty($readyDate)){
+// 			$readyDate = $this->validateDate($readyDate);
+// 			$qcSchedule->setSCReadyDate($readyDate);
+// 		}
+// 		if(!empty($finalInspectionDate)){
+// 			$finalInspectionDate = $this->validateDate($finalInspectionDate);
+// 			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
+// 		}
+// 		if(!empty($middleInspectionDate)){
+// 			$middleInspectionDate = $this->validateDate($middleInspectionDate);
+// 			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
+// 		}
+// 		if(!empty($firstInspectionDate)){
+// 			$firstInspectionDate = $this->validateDate($firstInspectionDate);
+// 			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
+// 		}
+// 		if(!empty($productionStartDate)){
+// 			$productionStartDate = $this->validateDate($productionStartDate);
+// 			$qcSchedule->setSCProductionStartDate($productionStartDate);
+// 		}
+// 		if(!empty($graphicReceiveDate)){
+// 			$graphicReceiveDate = $this->validateDate($graphicReceiveDate);
+// 			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
+// 		}
+// 		if(!empty($ac_readyDate)){
+// 			$ac_readyDate = $this->validateDate($ac_readyDate);
+// 			$qcSchedule->setACReadyDate($ac_readyDate);
+// 		}
+// 		if(!empty($ac_finalInspectionDate)){
+// 			$ac_finalInspectionDate = $this->validateDate($ac_finalInspectionDate);
+// 			$qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
+// 		}
+// 		if(!empty($ac_middleInspectionDate)){
+// 			$ac_middleInspectionDate = $this->validateDate($ac_middleInspectionDate);
+// 			$qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
+// 		}
+// 		if(!empty($ac_firstInpectionDate)){
+// 			$ac_firstInpectionDate =  $this->validateDate($ac_firstInpectionDate);
+// 			$qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
+// 		}
+// 		if(!empty($ac_productionStartDate)){
+// 			$ac_productionStartDate = $this->validateDate($ac_productionStartDate);
+// 			$qcSchedule->setACProductionStartDate($ac_productionStartDate);
+// 		}
+// 		if(!empty($ac_graphicDateReceive)){
+// 			$ac_graphicDateReceive = $this->validateDate($ac_graphicDateReceive);
+// 			$qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
+// 		}
 		if(!empty($note)){
 			$qcSchedule->setNotes($note);
 		}
 		$qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
 		$qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
-		return $qcSchedule;
+		$importedData["items"] = $itemNoArr;
+		$importedData["data"] = $qcSchedule;
+		return $importedData;
 	}
 	
 	public function getQCScheudlesForGrid(){
@@ -304,7 +339,7 @@ class QCScheduleMgr{
 		return self::$dataStore->deleteInList($ids);
 	}
 	
-	private function validateDate($date){
+	private function convertStrToDate($date){
 		$format = 'm-d-y';
 		$date = DateUtil::StringToDateByGivenFormat($format, $date);
 		if(!$date){

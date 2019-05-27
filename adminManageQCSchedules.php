@@ -99,7 +99,7 @@ function loadGrid(){
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'qc', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
-                    { name: 'po', type: 'integer' },
+                    { name: 'po', type: 'string' },
                     { name: 'potype', type: 'string' } ,
                     { name: 'shipdate', type: 'date' },
                     { name: 'createdon', type: 'date' }, 
