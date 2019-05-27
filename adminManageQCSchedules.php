@@ -62,12 +62,6 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            </div>
 			                            <div class="col-lg-2">
 			                            	<select id="qc" name="qc" class="form-control">
-			                            		<option>still due</option>
-			                            		<option>completed</option>
-			                            	</select>
-			                            </div>
-			                            <div class="col-lg-2">
-			                            	<select id="qc" name="qc" class="form-control">
 			                            		<option>in past</option>
 			                            		<option>for coming</option>
 			                            	</select>
@@ -85,7 +79,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            		<option>90 days</option>
 			                            	</select>
 			                            </div>
-			                            
+			                            <div class="col-lg-2 i-checks">
+			                            	<input type="checkbox"> task completed</input>
+			                            </div>
 			                        </div>
 		                     	
 		                     	<div id="itemGrid"></div>
@@ -117,6 +113,10 @@ function showItemDetails(seq){
 }
 $(document).ready(function(){
    	loadGrid()
+   	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+	   	radioClass: 'iradio_square-green',
+	});
 });
 
 function editShow(seq){
