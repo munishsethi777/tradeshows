@@ -139,11 +139,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                 {
                     case "NOT_EMPTY":
                     case "NOT_NULL":
-                        $where .= " " . $filterdatafield . " NOT LIKE '" . "" ."'";
+                        $where .= " " . $filterdatafield . " is NOT NULL";
                         break;
                     case "EMPTY":
                     case "NULL":
-                        $where .= " " . $filterdatafield . " LIKE '" . "" ."'";
+                        $where .= " " . $filterdatafield . " is NULL";
                         break;
                     case "CONTAINS_CASE_SENSITIVE":
                         $where .= " BINARY  " . $filterdatafield . " LIKE '%" . $filtervalue ."%'";
@@ -203,12 +203,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                         $where .= " " . $filterdatafield . " < '" . $filtervalue ."'";
                         break;
                     case "GREATER_THAN_OR_EQUAL":
+                    	$date = strpos(strtolower ($filterdatafield),'date');
                     	$startDatePos = strpos(strtolower ($filterdatafield),'startdate');
                     	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
-                    	$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
-                    	if($startDatePos !== false || $endDatePos !== false){
+                    	//$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
+                    	if($startDatePos !== false || $endDatePos !== false || $date !== false){
                     		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
                     		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
@@ -230,19 +231,20 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		$date->setTime(0,0);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
-                    	if($shipDatePos !== false){
-                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		$filtervalue = $date->format("Y-m-d");
-                    	}
+//                     	if($shipDatePos !== false){
+//                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+//                     		$filtervalue = $date->format("Y-m-d");
+//                     	}
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
+                    	$date = strpos(strtolower ($filterdatafield),'date');
                     	$startDatePos = strpos(strtolower ($filterdatafield),'startdate');
                     	$endDatePos = strpos(strtolower ($filterdatafield),'enddate');
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
                     	$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
-                    	if($startDatePos !== false || $endDatePos !== false){
+                    	if($startDatePos !== false || $endDatePos !== false || $date !== false){
                				 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
                     		 if(!$date){
                     		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
@@ -263,10 +265,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     		$date->setTime(23,59);
                     		$filtervalue = $date->format("Y-m-d H:i:s");
                     	}
-                    	if($shipDatePos !== false){
-                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		$filtervalue = $date->format("Y-m-d");
-                    	}
+//                     	if($shipDatePos !== false){
+//                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+//                     		$filtervalue = $date->format("Y-m-d");
+//                     	}
                         $where .= " " . $filterdatafield . " <= '" . $filtervalue ."'";
                         break;
                     case "STARTS_WITH_CASE_SENSITIVE":

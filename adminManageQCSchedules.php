@@ -35,12 +35,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">
-		                     	
 		                     		<div class="form-group row">
 			                       		<label class="col-lg-1 col-form-label">Search</label>
 			                        	<div class="col-lg-3">
-			                            	<select id="qc" name="qc" class="form-control">
-			                            		<option>Select Field</option>
+			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
+			                            		<option value=''>Select Field</option>
 			                            		<option value="shipdate">Ship Date</option>
 			                            		<optgroup label="Schedule Dates">
 				                            		<option value="scproductionstartdate">Scheduled Production Start</option>
@@ -61,30 +60,30 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            	</select>
 			                            </div>
 			                            <div class="col-lg-2">
-			                            	<select id="qc" name="qc" class="form-control">
-			                            		<option>in past</option>
-			                            		<option>for coming</option>
+			                            	<select id="conditionDD" name="conditionDD" class="form-control">
+			                            		<option value="past">In Past</option>
+			                            		<option value="coming">For Coming</option>
 			                            	</select>
 			                            </div>
 			                            <div class="col-lg-2">
-			                            	<select id="qc" name="qc" class="form-control">
-			                            		<option>1 day</option>
-			                            		<option>3 days</option>
-			                            		<option>5 days</option>
-			                            		<option>10 days</option>
-			                            		<option>15 days</option>
-			                            		<option>30 days</option>
-			                            		<option>45 days</option>
-			                            		<option>60 days</option>
-			                            		<option>90 days</option>
+			                            	<select id="valueDD" name="valueDD" class="form-control">
+			                            		<option value="1">1 day</option>
+			                            		<option value="3">3 days</option>
+			                            		<option value="5">5 days</option>
+			                            		<option value="10">10 days</option>
+			                            		<option value="15">15 days</option>
+			                            		<option value="30">30 days</option>
+			                            		<option value="45">45 days</option>
+			                            		<option value="60">60 days</option>
+			                            		<option value="90">90 days</option>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-2 i-checks">
-			                            	<input type="checkbox"> task completed</input>
+			                            <div class="col-lg-2">
+			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Task Completed
 			                            </div>
 			                        </div>
 		                     	
-		                     	<div id="itemGrid"></div>
+		                     	<div id="qcscheduleGrid"></div>
 		                     </div>
 	                    </div>	
 		            </div>
@@ -117,15 +116,109 @@ $(document).ready(function(){
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
-});
-
+    var applyFilter = function () {
+       var addedFilterFields = [];
+       var existingFilter = $('#qcscheduleGrid').jqxGrid('getfilterinformation')
+       var datafield = $("#fieldNameDD").val();
+       $("#qcscheduleGrid").jqxGrid('clearfilters');
+       if(datafield != ''){
+	 	   $("#qcscheduleGrid").jqxGrid('clear');
+	 	   var filtertype = 'stringfilter';
+	 	   var conditionDDVal = $("#conditionDD").val();
+	 	   filtertype = 'datefilter';
+	       var filterData = getFilterQueryData();
+	       $.each(filterData, function( key, value ) {
+	           var fieldName = key;
+	           var filtergroup = new $.jqx.filter();	 
+	           if(value != null && value != "" && value != "all"){
+	        	   $.each(value, function( k, v ) {
+	        		   var filter_or_operator = 0;
+		               var filtervalue = v;
+		               var filtercondition = 'less_than_or_equal';
+		               if(k == "isCompleted"){
+		            	   filtergroup = new $.jqx.filter();	 
+		            	   filtertype = 'stringfilter';
+			               if(v > 0){
+			            	   filtercondition = 'not_null';   
+			               }else{
+			            	   filtercondition = 'null';   
+			               }
+			               fieldName = fieldName.substring(2);
+			               fieldName = "ac" + fieldName;	 		
+		               }else{
+		               		if(k == "from"){
+		            	   		var filtercondition = 'greater_than_or_equal';    
+		               		}
+		               }
+		               var filter = filtergroup.createfilter(filtertype, filtervalue, filtercondition);
+		               filtergroup.addfilter(filter_or_operator, filter);
+		               
+		               $("#qcscheduleGrid").jqxGrid('addfilter', fieldName, filtergroup);
+		               // add the filters.
+		           });
+	        	  
+	           }
+	       });
+	        // apply the filters.
+	       $("#qcscheduleGrid").jqxGrid('applyfilters');
+       }
+    }
+    
+    // applies the filter.
+    $("#fieldNameDD").change(function () {
+ 	   applyFilter()
+    });
+    $("#conditionDD").change(function () {
+ 	   applyFilter()
+    });
+   
+    $("#valueDD").change(function () {
+ 	   applyFilter()
+    });
+    $("#isCompleted").change(function () {
+ 	   applyFilter()
+    });
+    $('.i-checks').on('ifChanged', function(event){
+    	 applyFilter()
+    });
+ });
+ 
+	function getFilterQueryData(){
+		var datafield = $("#fieldNameDD").val()
+		var conditionDD = $("#conditionDD").val();
+		var dayValue = $("#valueDD").val();
+		var isCompletedCheck =$("input[type='checkbox'][name='isCompleted']:checked").val()
+		var isCompleted = 0;
+		if(isCompletedCheck == "on"){
+			isCompleted = 1
+		}
+		var fromDate = new Date();
+		var toDate = new Date();
+		if(conditionDD == "past"){
+			fromDate = subtractDays(fromDate, dayValue);
+		}else{
+			toDate = addDays(toDate, dayValue);
+		}
+		var fromDateStr = dateToStr(fromDate);
+		var toDateStr = dateToStr(toDate);
+		var data = {from:fromDateStr,to:toDateStr}
+		isScheduleFeild = datafield.startsWith("sc")
+		if(isScheduleFeild){
+			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted}
+		}
+		var dataArr = {};
+		dataArr[datafield] = data;
+		return dataArr
+	}
+	
 function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
-        data = $('#itemGrid').jqxGrid('getrowdata', row);
+        data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
             	html +="<a href='javascript:showItemDetails("+ data['seq'] + ")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
             html += "</div>";
@@ -138,6 +231,18 @@ function loadGrid(){
       { text: 'PO', datafield: 'po',width:"10%"},
       { text: 'PO Type', datafield: 'potype',width:"14%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"15%"},
+      { text: 'scproductionstartdate', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'scgraphicsreceivedate', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'scfirstinspectiondate', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'scmiddleinspectiondate', datafield: 'scmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'scfinalinspectiondate', datafield: 'scfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'screadydate', datafield: 'screadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acproductionstartdate', datafield: 'acproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acgraphicsreceivedate', datafield: 'acgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acfirstinspectiondate', datafield: 'acfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acmiddleinspectiondate', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acfinalinspectiondate', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'acreadydate', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
@@ -156,6 +261,18 @@ function loadGrid(){
                     { name: 'potype', type: 'string' } ,
                     { name: 'shipdate', type: 'date' },
                     { name: 'createdon', type: 'date' }, 
+                    { name: 'scproductionstartdate', type: 'date' } ,
+                    { name: 'scgraphicsreceivedate', type: 'date' } ,
+                    { name: 'scfirstinspectiondate', type: 'date' } ,
+                    { name: 'scmiddleinspectiondate', type: 'date' } ,
+                    { name: 'scfinalinspectiondate', type: 'date' } ,
+                    { name: 'screadydate', type: 'date' } ,
+                    { name: 'acproductionstartdate', type: 'date' } ,
+                    { name: 'acgraphicsreceivedate', type: 'date' } ,
+                    { name: 'acfirstinspectiondate', type: 'date' } ,
+                    { name: 'acmiddleinspectiondate', type: 'date' } ,
+                    { name: 'acfinalinspectiondate', type: 'date' } ,
+                    { name: 'acreadydate', type: 'date' } ,
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/QCScheduleAction.php?call=getAllQCSchedules',
@@ -168,12 +285,12 @@ function loadGrid(){
         filter: function()
         {
             // update the grid and send a request to the server.
-            $("#itemGrid").jqxGrid('updatebounddata', 'filter');
+            $("#qcscheduleGrid").jqxGrid('updatebounddata', 'filter');
         },
         sort: function()
         {
             // update the grid and send a request to the server.
-            $("#itemGrid").jqxGrid('updatebounddata', 'sort');
+            $("#qcscheduleGrid").jqxGrid('updatebounddata', 'sort');
         },
         addrow: function (rowid, rowdata, position, commit) {
             commit(true);
@@ -188,14 +305,14 @@ function loadGrid(){
     
     var dataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
-    $("#itemGrid").jqxGrid(
+    $("#qcscheduleGrid").jqxGrid(
     {
     	width: '100%',
 		height: '90%',
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
-		showfilterrow: true,
+		showfilterrow: false,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -239,7 +356,7 @@ function loadGrid(){
                 location.href = ("adminCreateQCSchedule.php");
             });
             editButton.click(function (event){
-            	var selectedrowindex = $("#itemGrid").jqxGrid('selectedrowindexes');
+            	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
                 var value = -1;
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
@@ -248,13 +365,13 @@ function loadGrid(){
                     bootbox.alert("Please Select single row for edit.", function() {});
                     return;    
                 }
-                var row = $('#itemGrid').jqxGrid('getrowdata', indexes);
+                var row = $('#qcscheduleGrid').jqxGrid('getrowdata', indexes);
                 $("#id").val(row.seq);                        
                 $("#form2").submit();    
             });
             // delete row.
             deleteButton.click(function (event) {
-                gridId = "itemGrid";
+                gridId = "qcscheduleGrid";
                 deleteUrl = "Actions/QCScheduleAction.php?call=deleteQCSchedule";
                 deleteRows(gridId,deleteUrl);
             });
@@ -262,10 +379,10 @@ function loadGrid(){
                 location.href = ("adminImportQCSchedules.php");
             });
 //             exportButton.click(function (event) {
-//         	   filterQstr = getFilterString("itemGrid");
+//         	   filterQstr = getFilterString("qcscheduleGrid");
 //         	   exportItemsConfirm(filterQstr);
 //             });
-             $("#itemGrid").bind('rowselect', function (event) {
+             $("#qcscheduleGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       
                  if($.isArray(selectedRowIndex)){           
@@ -274,18 +391,18 @@ function loadGrid(){
                      } else{
                          isSelectAll = true;
                      }                                                                     
-                     $('#itemGrid').jqxGrid('clearselection');
+                     $('#qcscheduleGrid').jqxGrid('clearselection');
                      if(isSelectAll){
                          for (i = 0; i <= pageSize; i++) {
-                             var index = $('#itemGrid').jqxGrid('getrowboundindex', i);
-                             $('#itemGrid').jqxGrid('selectrow', index);
+                             var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
+                             $('#qcscheduleGrid').jqxGrid('selectrow', index);
                          }    
                      }
                  }                        
             });
             // reload grid data.
             reloadButton.click(function (event) {
-                $("#itemGrid").jqxGrid({ source: dataAdapter });
+                $("#qcscheduleGrid").jqxGrid({ source: dataAdapter });
             });
             downloadButton.click(function (event) {
             	location.href = ("files/itemSpecifications_template.xlsx");
@@ -313,9 +430,33 @@ function exportItemsConfirm(filterString){
 	    }
 	});
 }
+
 function exportItems(filterString){
 	$("#queryString").val(filterString);
 	$("#form1").submit();
 }
 
+function dateToStr(date){
+	var dd = date.getDate();
+	var mm = date.getMonth() + 1;
+	var yyyy = date.getFullYear();
+	if (dd < 10) {
+	  dd = '0' + dd;
+	} 
+	if (mm < 10) {
+	  mm = '0' + mm;
+	} 
+	var dateStr = mm + '-' +  dd + '-' + yyyy;
+	return dateStr;
+}
+function addDays(date, days){
+   days = parseInt(days);
+   date.setDate(date.getDate() + days);
+   return date;
+}
+function subtractDays(date, days) {
+	var sDate = date;
+	sDate.setDate(sDate.getDate() - days);
+	return sDate;
+}
 </script>
