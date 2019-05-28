@@ -43,9 +43,33 @@ class QCScheduleMgr{
 		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
 	}
 	
-	public function exportItems(){
-		$qcSchedules = self::$dataStore->findAll();
-		ExportUtil::exportItems($qcSchedules);
+	
+	public function exportQCSchedules($queryString){
+		$output = array();
+		parse_str($queryString, $output);
+		$_GET = array_merge($_GET,$output);
+		$qcSchedules = self::$dataStore->findAllArr(true);
+		$poSchedules = $this->_group_by($qcSchedules, "po");
+		$mainArr = array();
+		foreach ($poSchedules as $qcSchedules){
+			$itemNumbers = "";
+			foreach ($qcSchedules as $qcSchedule){
+				$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
+			}
+			$itemNumbers = substr($itemNumbers, 0, -2);
+			$qcSchedule["itemnumbers"] = $itemNumbers;
+			array_push($mainArr,$qcSchedule);
+		}
+		ExportUtil::exportQCSchedules($mainArr);
+	}
+	
+	
+	function _group_by($array, $key) {
+		$return = array();
+		foreach($array as $val) {
+			$return[$val[$key]][] = $val;
+		}
+		return $return;
 	}
 	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
@@ -226,7 +250,7 @@ class QCScheduleMgr{
 			
 			$firstInspectionDate = $this->convertStrToDate($shipDateStr);
 			$firstInspectionDate->modify('-35 day');
-			$qcSchedule->setSCFinalInspectionDate($firstInspectionDate);
+			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
 			
 			$productionStartDate = $this->convertStrToDate($shipDateStr);
 			$productionStartDate->modify('-45 day');
@@ -234,7 +258,7 @@ class QCScheduleMgr{
 			
 			$graphicReceiveDate = $this->convertStrToDate($shipDateStr);
 			$graphicReceiveDate->modify('-30 day');
-			$qcSchedule->setSCReadyDate($graphicReceiveDate);
+			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
 		}
 // 		if(!empty($readyDate)){
 // 			$readyDate = $this->validateDate($readyDate);

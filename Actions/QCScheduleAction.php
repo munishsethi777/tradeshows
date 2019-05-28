@@ -71,7 +71,7 @@ if($call == "getAllQCSchedules"){
 if($call == "export"){
 	try{
 		$queryString = $_GET["queryString"];
-		$response = $qcScheduleMgr->exportItemSpecifications($queryString);
+		$response = $qcScheduleMgr->exportQCSchedules($queryString);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

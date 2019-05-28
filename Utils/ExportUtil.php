@@ -221,7 +221,7 @@ class ExportUtil{
 				
 			$shipDate = $order["shipdt"];
 			$shipDateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $shipDate);
-			$shipDateStr = $dateObj->format("n/d/Y");
+			$shipDateStr = $shipDateObj->format("n/d/Y");
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $shipDateStr);
 				
@@ -257,6 +257,284 @@ class ExportUtil{
 		$objWriter->save('php://output');
 	}
 	
+	
+	public static function exportQCSchedules($qcSchedules){
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getProperties()->setCreator("Admin")
+		->setLastModifiedBy("Admin")
+		->setTitle("QCSchedules")
+		->setSubject("QCSchedules")
+		->setDescription("QCSchedules")
+		->setKeywords("office 2007 openxml php")
+		->setCategory("Report");
+		$alphas = range('A', 'Z');
+		$rowCount = 1;
+		$count = 1;
+		$i = 0;
+		
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Scheduled");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getAlignment()->applyFromArray(
+				array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
+				);
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("M1", "Actual");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("M1")->getAlignment()->applyFromArray(
+				array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
+				);
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("S1", "Review");
+		$count = 2;
+		$i = 0;
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Class Code");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO#");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO Type");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Item No");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Ship Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Ready Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Final \nInspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Middle \nInspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "First \nInspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Production \nStart Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Graphics Receive \nDate");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Ready Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Final Inspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Middle Inspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "First Inspection Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Production Start Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Graphics Receive Date");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Notes");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+		$count = 3;
+		$i = 0;
+		foreach($qcSchedules as $qcSchedule){
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["qc"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["classcode"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["po"]);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["potype"]);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$qcSchedule["itemnumbers"]);
+	
+			$shipDate = $qcSchedule["shipdate"];
+			if(!empty($shipDate)){
+				$shipDate = self::getDateStr($shipDate);
+			}else{
+				$shipDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $shipDate);
+			
+			$scReadyDate = $qcSchedule["screadydate"];
+			if(!empty($scReadyDate)){
+				$scReadyDate = self::getDateStr($scReadyDate);
+			}else{
+				$scReadyDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scReadyDate);
+			
+			$scFinalInspectionDate = $qcSchedule["scfinalinspectiondate"];
+			if(!empty($scFinalInspectionDate)){
+				$scFinalInspectionDate = self::getDateStr($scFinalInspectionDate);
+			}else{
+				$scFinalInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scFinalInspectionDate);
+			
+			
+			$scMiddleInspectionDate = $qcSchedule["scmiddleinspectiondate"];
+			if(!empty($scMiddleInspectionDate)){
+				$scMiddleInspectionDate = self::getDateStr($scMiddleInspectionDate);
+			}else{
+				$scMiddleInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scMiddleInspectionDate);
+			
+			$scFirstInspectionDate = $qcSchedule["scfirstinspectiondate"];
+			if(!empty($scFirstInspectionDate)){
+				$scFirstInspectionDate = self::getDateStr($scFirstInspectionDate);
+			}else{
+				$scFirstInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scFirstInspectionDate);
+
+			$scProductionStartDate = $qcSchedule["scproductionstartdate"];
+			if(!empty($scProductionStartDate)){
+				$scProductionStartDate = self::getDateStr($scProductionStartDate);
+			}else{
+				$scProductionStartDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scProductionStartDate);
+			
+			$scGraphicReceiveDate = $qcSchedule["scgraphicsreceivedate"];
+			if(!empty($scGraphicReceiveDate)){
+				$scGraphicReceiveDate = self::getDateStr($scGraphicReceiveDate);
+			}else{
+				$scGraphicReceiveDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $scGraphicReceiveDate);
+			
+			$acReadyDate = $qcSchedule["acreadydate"];
+			if(!empty($acReadyDate)){
+				$acReadyDate = self::getDateStr($acReadyDate);
+			}else{
+				$acReadyDate = "N/A";
+			}
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acReadyDate);
+			
+			$acFinalInspectionDate = $qcSchedule["acfinalinspectiondate"];
+			if(!empty($acFinalInspectionDate)){
+				$acFinalInspectionDate = self::getDateStr($acFinalInspectionDate);
+			}else{
+				$acFinalInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acFinalInspectionDate);
+			
+			$acMiddleInspectionDate = $qcSchedule["acmiddleinspectiondate"];
+			if(!empty($acFinalInspectionDate)){
+				$acMiddleInspectionDate = self::getDateStr($acMiddleInspectionDate);
+			}else{
+				$acMiddleInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acMiddleInspectionDate);
+			
+			$acFirstInspectionDate = $qcSchedule["acfirstinspectiondate"];
+			if(!empty($acFinalInspectionDate)){
+				$acFirstInspectionDate = self::getDateStr($acFirstInspectionDate);
+			}else{
+				$acFirstInspectionDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acFirstInspectionDate);
+			
+			$acProductionStartDate = $qcSchedule["acproductionstartdate"];
+			if(!empty($acProductionStartDate)){
+				$acProductionStartDate = self::getDateStr($acProductionStartDate);
+			}else{
+				$acProductionStartDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acProductionStartDate);
+			
+			$acGraphicReceiveDate = $qcSchedule["acgraphicsreceivedate"];
+			if(!empty($acGraphicReceiveDate)){
+				$acGraphicReceiveDate = self::getDateStr($acGraphicReceiveDate);
+			}else{
+				$acGraphicReceiveDate = "N/A";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acGraphicReceiveDate);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["notes"]);
+			$count++;
+			$i = 0;
+		}
+		$objPHPExcel->getActiveSheet()->setTitle("QCSchedules");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A1:L1')
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('FFFF99');
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A2:L2')
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('FFFF99');
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('M1:R1')
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('D3D3D3');
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('M2:R2')
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('D3D3D3');
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('S1:S2')
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('FF0000');
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('M1:R1');
+		
+		
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$objPHPExcel->setActiveSheetIndex(0);
+			
+			
+		// Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="QCSchedules.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+			
+		// If you're serving to IE over SSL, then the following may be needed
+		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		ob_end_clean();
+		$objWriter->save('php://output');
+	}
 	
 	
 	public static function exportItems($items){
@@ -847,5 +1125,14 @@ private static function createColumnsArray($end_column, $first_letters = '')
   }
 
   return $columns;
+}
+
+private static function getDateStr($date){
+	$format = 'Y-m-d';
+	if(!empty($date)){
+		$date = DateUtil::StringToDateByGivenFormat($format, $date);
+		$date = $date->format("n/j/y");
+	}
+	return $date;
 }
 }

@@ -91,7 +91,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	        </div>
 	     </div>
    </div>
-   <form id="form1" name="form1" method="GET" action="Actions/ItemSpecificationAction.php">
+   <form id="form1" name="form1" method="GET" action="Actions/QCScheduleAction.php">
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
@@ -331,7 +331,7 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
-           // var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
+            var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
@@ -339,15 +339,15 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
             container.append(importButton);
-            //container.append(exportButton);
+            container.append(exportButton);
             container.append(reloadButton);
-           // container.append(downloadButton);
+            container.append(downloadButton);
             container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
             importButton.jqxButton({  width: 65, height: 18 });
-            //exportButton.jqxButton({  width: 65, height: 18 });
+            exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
@@ -378,10 +378,10 @@ function loadGrid(){
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
             });
-//             exportButton.click(function (event) {
-//         	   filterQstr = getFilterString("qcscheduleGrid");
-//         	   exportItemsConfirm(filterQstr);
-//             });
+             exportButton.click(function (event) {
+         	   filterQstr = getFilterString("qcscheduleGrid");
+         	   exportItemsConfirm(filterQstr);
+             });
              $("#qcscheduleGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       
