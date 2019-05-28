@@ -1,6 +1,7 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 $success = 1;
 $message ="";
@@ -36,8 +37,23 @@ if($call == "saveQCSchedule"){
 
 if($call == "importQCSchedules"){
 	try{
+		$isUpdate = false;
+		$incorrectPassword = 0;
+		$updateIds = array();
+		if(isset($_POST["isupdate"]) && !empty($_POST["isupdate"])){
+			$password = $_POST["password"];
+			$configurationMgr = ConfigurationMgr::getInstance();
+			$qcpassword = $configurationMgr->getConfiguration(Configuration::$QC_IMPORT_UPDATE_PASSWORD);
+			if($password != $qcpassword){
+				$incorrectPassword = 1;
+				throw new Exception("Incorrect Password!");
+			}
+			$isUpdate = true;
+			$updateIds = $_POST["updateIds"];
+			$updateIds = explode(",",$updateIds);
+		}
 		if(isset($_FILES["file"])){
-			$response = $qcScheduleMgr->importQCSchedules($_FILES["file"]);
+			$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
 			echo json_encode($response);
 			return;
 		}
@@ -45,6 +61,7 @@ if($call == "importQCSchedules"){
 		$success = 0;
 		$message  = $e->getMessage();
 	}
+	$response["incorrectPassword"] = $incorrectPassword;
 }
 if($call == "getAllQCSchedules"){
 	$qcSchedulesJson = $qcScheduleMgr->getQCScheudlesForGrid();

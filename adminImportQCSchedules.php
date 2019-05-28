@@ -28,6 +28,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                  	<?include "progress.php"?>
                  	 <form id="importQCScheduleForm" method="post" action="Actions/QCScheduleAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="importQCSchedules"/>
+                     	<input type="hidden" id ="updateIds" name="updateIds"/>
+                     	<input type="hidden" id ="password" name="password"/>
+                     	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
                      	<div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
@@ -47,28 +50,101 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	         	</div>
 	    	</div>
        	<div class="row">
-       	 	
+       		 	
         </div>
      </div>   	
     </div>
     </div>
+       <div id="createNewModalForm" class="modal fade" data-backdrop="static"  aria-hidden="true">
+	        <div class="modal-dialog" >
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                	<h4 class="modal-title">Import QCSchedules</h4>
+	                </div>
+	                <div class="modal-body mainDiv">
+	                    <div class="row" >
+	                        <div class="col-sm-12">
+	                            <form role="form" class="form-horizontal">
+	                               <div id="message"></div>
+	                               <div class="form-group">
+	                                    <div class="col-sm-9">
+	                                        <input type="password" id="qcpassword" name="qcpassword"  class="form-control">
+	                                    </div>
+	                                </div>
+	                                <div class="modal-footer">
+	                                     <button class="btn btn-success ladda-button" onclick="yes(this)" data-style="expand-right" id="saveBtn" type="button">
+	                                        <span class="ladda-label">Yes</span>
+	                                    </button>
+	                                     <button type="button" id="noBtn" class="btn btn-danger" onclick="no(this)" data-dismiss="modal">No</button>
+	                                </div>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+        </div>
 </body>
 </html>
 <script type="text/javascript">
+var updateYesBtn;
+function yes(btn){
+	updateYesBtn = Ladda.create(btn);
+	updateYesBtn.start();
+	var password = $("#qcpassword").val();
+	if(password != ""){
+		$("#isupdate").val(1);
+		$("#password").val(password);
+		saveAction();
+		$("#noBtn").attr("disabled", true); 	
+	}else{
+		alert("Please enter password to continue!")
+	}
+}
+function no(){
+	 $("#isupdate").val(0);
+	 $("#updateIds").val(""); 	
+	 $('#createNewModalForm').modal('hide');
+}
 function saveAction(){
 	if($("#importQCScheduleForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#importQCScheduleForm').ajaxSubmit(function( data ){
+		   if(updateYesBtn != undefined){
+			   updateYesBtn.stop();
+			   $("#noBtn").removeAttr("disabled");
+		   }
 		   showHideProgress();
 		   var jsonData = $.parseJSON(data);
-		   alert(jsonData.message);
-		    if(jsonData.success == 1){
-			    window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
-		    }   
+		   $("#isupdate").val(0);
+		   $("#updateIds").val("");
+		   var jsonData = $.parseJSON(data);
+		   if(jsonData.itemalreadyexists > 0){
+			   $("#updateIds").val(jsonData.existingItemIds);
+			   var importedItemsCount = jsonData.savedItemCount;
+			   var message = jsonData.itemalreadyexists + " QC Schedules already exists in database! Do you want to update these items with new values?";
+			   message += "<br>If you want to update please enter the password :- <br>";
+			   if(importedItemsCount > 0){
+				   message = importedItemsCount + " QC Schedules imported successfully.<br>" + message;		
+			   }
+			   $("#message").html(message);
+			   $('#createNewModalForm').modal('show');
+		   }else{
+			   if(jsonData.incorrectPassword == 1){
+				   alert(jsonData.message);
+			   }else{
+				   $('#createNewModalForm').modal('hide');
+				   var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
+				   if(flag){
+					  window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
+				   }   
+			   }
+		   }
+		   $("#isupdate").val(0); 
 		});
 			
 	}else{
 		$("#importQCScheduleForm")[0].reportValidity();
 	}
 }
-</script>
+</script>'

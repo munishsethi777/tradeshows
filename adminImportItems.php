@@ -49,7 +49,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	         	</div>
 	    	</div>
        	<div class="row">
-       	 	
+       		 	
         </div>
      </div>   	
     </div>
@@ -72,7 +72,6 @@ function saveTaskCategory(){
 			   if(importedItemsCount > 0){
 				   message = importedItemsCount + " items imported successfully.<br>" + message;			   
 			   }
-			   
 			   bootbox.confirm({
 				    message: message,
 				    buttons: {

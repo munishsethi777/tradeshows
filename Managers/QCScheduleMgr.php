@@ -80,9 +80,10 @@ class QCScheduleMgr{
 				$qcschedule = $imoptedData["data"];
 				$itemIdsArr = $imoptedData["items"];
 				foreach ($itemIdsArr as $itemId){
-					$qcschedule->setItemNumbers($itemId);
-					$qcschedule->setUserSeq($userSeq);
-					array_push($qcScheudleArr, $qcschedule);
+					$qc = clone $qcschedule;
+					$qc->setItemNumbers($itemId);
+					$qc->setUserSeq($userSeq);
+					array_push($qcScheudleArr, $qc);
 				}
 			}
 		}else{
@@ -92,6 +93,7 @@ class QCScheduleMgr{
 		$response = array();
 		$response["message"] = $messages;
 		$response["success"] = $success;
+		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		if(empty($messages)){
 			$response = $this->saveArr($qcScheudleArr, $isUpdate,$updateItemNos);
 		}
@@ -109,12 +111,28 @@ class QCScheduleMgr{
 		$existingItemIds = array();
 		$success = 1;
 		foreach ($qcScheudleArr as $qc){
+			$itemNo = $qc->getItemNumbers();
+			$po =  $qc->getPo();
 			try {
-				$this->saveQCSchedule($conn, $qc);
-				$savedItemCount++;
+				if(!$isUpdate){
+					$this->saveQCSchedule($conn, $qc);
+					$savedItemCount++;
+				}else{
+					if(in_array($itemNo, $updateItemNos)){
+						$condition["itemnumbers"] = $itemNo;
+						$condition["po"] = $po;
+						$this->updateOject($conn, $qc, $condition);
+					}
+				}
 			 }
 			catch ( Exception $e) {
-				$messages .= $e->getMessage();
+				$trace = $e->getTrace();
+				if($trace[0]["args"][0][1] == "1062"){
+					$itemNoAlreadyExists++;
+					array_push($existingItemIds, $itemNo);
+				}else{
+					$messages .= $e->getMessage();
+				}
 				$hasError = true;
 				$success = 0;
 			}
@@ -125,7 +143,9 @@ class QCScheduleMgr{
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
+		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		$response["savedItemCount"] = $savedItemCount;
+		$response["existingItemIds"] = $existingItemIds;
 		return $response;
 	}
 	

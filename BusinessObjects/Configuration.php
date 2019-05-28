@@ -6,6 +6,8 @@ class Configuration{
 	public static $SMTP_PASSWORD = "smtppassword";
 	public static $SMTP_HOST = "smtphost";
 	
+	public static $QC_IMPORT_UPDATE_PASSWORD = "qcimportpassword";
+	
 	public static $tableName = "configurations";
 	public static $className = "configuration";
 	
