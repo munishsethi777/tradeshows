@@ -126,7 +126,7 @@ class MailUtil{
 			$date = $qcSchedule->getSCProductionStartDate();
 			
 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
-			$date = $qcSchedule->getACGraphicsReceiveDate();
+			$date = $qcSchedule->getSCGraphicsReceiveDate();
 		}
 		if(!empty($date)){
 			$date = DateUtil::StringToDateByGivenFormat('Y-m-d', $date);

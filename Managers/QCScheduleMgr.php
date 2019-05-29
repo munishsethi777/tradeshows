@@ -409,7 +409,7 @@ class QCScheduleMgr{
 		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
 			$qcSchedules = $this->getPendingShechededForProductionStartDate();
 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
-			$qcSchedules = $this->getPendingShechededForReadyDate();
+			$qcSchedules = $this->getPendingShechededForGraphicReceiveDate();
 		}
 		$poSchedules = $this->groupByPO($qcSchedules);
 		return $poSchedules;
