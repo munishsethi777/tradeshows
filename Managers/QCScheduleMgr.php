@@ -49,25 +49,29 @@ class QCScheduleMgr{
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
 		$qcSchedules = self::$dataStore->findAllArr(true);
+		$poSchedules = $this->groupByPO($qcSchedules);
+		ExportUtil::exportQCSchedules($mainArr);
+	}
+	
+	private function groupByPO($qcSchedules){
 		$poSchedules = $this->_group_by($qcSchedules, "po");
 		$mainArr = array();
 		foreach ($poSchedules as $qcSchedules){
 			$itemNumbers = "";
 			foreach ($qcSchedules as $qcSchedule){
-				$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
+				$itemNumbers .= $qcSchedule->getItemNumbers() . "\n";
 			}
 			//$itemNumbers = substr($itemNumbers, 0, -2);
-			$qcSchedule["itemnumbers"] = trim($itemNumbers);
+			$qcSchedule->setItemNumbers(trim($itemNumbers));
 			array_push($mainArr,$qcSchedule);
 		}
-		ExportUtil::exportQCSchedules($mainArr);
+		return $mainArr;
 	}
-	
 	
 	function _group_by($array, $key) {
 		$return = array();
 		foreach($array as $val) {
-			$return[$val[$key]][] = $val;
+			$return[$val->getPO()][] = $val;
 		}
 		return $return;
 	}
@@ -383,6 +387,61 @@ class QCScheduleMgr{
 		return self::$dataStore->deleteInList($ids);
 	}
 	
+	public function getPendindSchedules($notificationType){
+		$qcSchedules = array();
+		if($notificationType == NotificationType::SC_READY_DATE){
+			$qcSchedules = $this->getPendingShechededForReadyDate();
+		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE){
+			$qcSchedules = $this->getPendingShechededForFinalInspectionDate();
+		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
+			$qcSchedules = $this->getPendingShechededForFirstInspectionDate();
+		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
+			$qcSchedules = $this->getPendingShechededForMiddleInspectionDate();
+		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
+			$qcSchedules = $this->getPendingShechededForProductionStartDate();
+		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
+			$qcSchedules = $this->getPendingShechededForReadyDate();
+		}
+		$poSchedules = $this->groupByPO($qcSchedules);
+		return $poSchedules;
+	}
+	
+	public function getPendingShechededForReadyDate(){
+		$query = "select * from qcschedules where screadydate > CURDATE() and screadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
+	public function getPendingShechededForFinalInspectionDate(){
+		$query = "select * from qcschedules where scfinalinspectiondate > CURDATE() and scfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
+	public function getPendingShechededForMiddleInspectionDate(){
+		$query = "select * from qcschedules where scmiddleinspectiondate > CURDATE() and scmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
+	public function getPendingShechededForFirstInspectionDate(){
+		$query = "select * from qcschedules where scfirstinspectiondate > CURDATE() and scfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL ";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
+	public function getPendingShechededForProductionStartDate(){
+		$query = "select * from qcschedules where scproductionstartdate > CURDATE() and scproductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
+	public function getPendingShechededForGraphicReceiveDate(){
+		$query = "select * from qcschedules where scgraphicsreceivedate > CURDATE() and scgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL";
+		$qcschedules = self::$dataStore->executeObjectQuery($query);
+		return $qcschedules;
+	}
+	
 	private function convertStrToDate($date){
 		$format = 'm-d-y';
 		$date = DateUtil::StringToDateByGivenFormat($format, $date);
@@ -400,6 +459,8 @@ class QCScheduleMgr{
 		}
 		return $date;
 	}
+	
+	
 	
 	
 	

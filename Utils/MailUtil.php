@@ -1,10 +1,12 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/class.phpmailer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
 class MailUtil{
 	
 	public static function sendTaskAssignedNotification($showSeq){
@@ -57,6 +59,93 @@ class MailUtil{
 		}
 	}
 	
+	public static function sendPendingSchedulesNotification($notificationType){
+		$sessionUtil = SessionUtil::getInstance();
+		$userName = $sessionUtil->getUserLoggedInName();
+		$admins = AdminMgr::getInstance()->getAllAdmins();
+		$qcScheduleMgr = QCScheduleMgr::getInstance();
+		$qcSchedules = $qcScheduleMgr->getPendindSchedules($notificationType);
+		$fromDate = new DateTime();
+		$fromDate->modify("+1 days");
+		$toDate = new DateTime();
+		$toDate->modify("+7 days");
+		if(!empty($qcSchedules)){
+			$tableHtml = file_get_contents("../emailTemplate.php"); 
+			$tableRow = file_get_contents("../tableRow.php"); 
+			$notificatioTitle = "";
+			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
+			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
+			$phAnValues["FROM_DATE"] = $fromDate->format("n/j/y");
+			$phAnValues["TO_DATE"] = $toDate->format("n/j/y");
+			$rowTokens = array();
+			$row = "";
+			$srNo = 1;
+			foreach ($qcSchedules as $qcSchedule){
+				$row .= $tableRow;
+				$rowTokens["SR_NO"] =  $srNo;
+				$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+				$rowTokens["CLASS_CODE"] =  $qcSchedule->getClassCode();
+				$rowTokens["PO_NO"] =  $qcSchedule->getPO();
+				$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
+				$itemNumbers = $qcSchedule->getItemNumbers();
+				$itemNumbers = str_replace("\n", "<br>", $itemNumbers);
+				$rowTokens["ITEM_NUMBERS"] =  $itemNumbers;
+				$shippingDate = $qcSchedule->getShipDate();
+				$shippingDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $shippingDate);
+				$rowTokens["SHIP_DATE"] =  $shippingDate->format("n/j/y");
+				$notificationDate = self::getScheduleNotificationDate($qcSchedule, $notificationType);
+				$rowTokens["NOTIFICATION_DATE"] = $notificationDate;
+				$row = self::replacePlaceHolders($rowTokens, $row);
+				$srNo++;
+			}
+			$phAnValues["TABLE_ROWS"] = $row;
+			$tableHtml = self::replacePlaceHolders($phAnValues, $tableHtml);
+			foreach ($admins as $admin){
+				$adminName = $admin->getName();
+				$email = $admin->getEmail();
+				$toEmails = explode(",", $email);
+			    $html = "Hello $adminName, <br>";
+				$html .= $tableHtml;
+				MailUtil::sendSmtpMail($notificationType . " Due in next 7 days", $html, $toEmails, true);
+			}
+		}
+	}
+	
+	private static function getScheduleNotificationDate($qcSchedule,$notificationType){
+		$date = null;
+		if($notificationType == NotificationType::SC_READY_DATE){
+			$date = $qcSchedule->getSCReadyDate();
+		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE){
+			$date = $qcSchedule->getSCFinalInspectionDate();
+			
+		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
+			$date = $qcSchedule->getSCFirstInspectionDate();
+			
+		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
+			$date = $qcSchedule->getSCMiddleInspectionDate();
+			
+		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
+			$date = $qcSchedule->getSCProductionStartDate();
+			
+		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
+			$date = $qcSchedule->getACGraphicsReceiveDate();
+		}
+		if(!empty($date)){
+			$date = DateUtil::StringToDateByGivenFormat('Y-m-d', $date);
+			$date =  $date->format("n/j/y");
+		}else{
+			$date = "N/A";
+		}
+		return $date;
+	}
+	
+	private static function replacePlaceHolders($placeHolders,$body){
+		foreach ($placeHolders as $key=>$value){
+			$placeHolder = "{".$key."}";
+			$body = str_replace($placeHolder, $value, $body);
+		}
+		return $body;
+	}
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 			$mail = new PHPMailer();
 			if($isSmtp){
@@ -93,3 +182,5 @@ class MailUtil{
 			}
 		}	
 	}
+	
+	
