@@ -60,8 +60,6 @@ class MailUtil{
 	}
 	
 	public static function sendPendingSchedulesNotification($notificationType){
-		$sessionUtil = SessionUtil::getInstance();
-		$userName = $sessionUtil->getUserLoggedInName();
 		$admins = AdminMgr::getInstance()->getAllAdmins();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$qcSchedules = $qcScheduleMgr->getPendindSchedules($notificationType);
@@ -72,6 +70,7 @@ class MailUtil{
 		if(!empty($qcSchedules)){
 			$tableHtml = file_get_contents("../emailTemplate.php"); 
 			$tableRow = file_get_contents("../tableRow.php"); 
+			echo $tableRow;
 			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
 			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
