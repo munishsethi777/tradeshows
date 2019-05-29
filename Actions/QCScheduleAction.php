@@ -88,8 +88,9 @@ if($call == "getQCSchedule"){
 }
 if($call == "deleteQCSchedule"){
 	$ids = $_GET["ids"];
+	$pos = $_GET["po"];
 	try{
-		$flag = $qcScheduleMgr->deleteByIds($ids);
+		$flag = $qcScheduleMgr->deleteByIdsAndPo($ids,$pos);
 		$message = "QC Schedules Deleted successfully";
 	}catch(Exception $e){
 		$success = 0;

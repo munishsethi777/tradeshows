@@ -323,14 +323,16 @@ class QCScheduleMgr{
 	}
 	
 	public function getQCScheudlesForGrid(){
-		$qcSchedules = $this->findAllArr(true);
+		$query = "select * from qcschedules group by po";
+		$qcSchedules = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $qcSchedules;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
 		return $mainArr;
 	}
 	
 	public function getAllCount($isApplyFilter){
-		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
+		$query = "select count(*) from(select * from qcschedules group by po) as table1";
+		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
 		return $count;
 	}
 	
@@ -385,6 +387,13 @@ class QCScheduleMgr{
 	
 	public function deleteByIds($ids){
 		return self::$dataStore->deleteInList($ids);
+	}
+	
+	public function deleteByIdsAndPo($ids,$po){
+		$po = explode(",",$po);
+		$po = "'".implode("', '", $po) . "'";
+		$query = "delete from qcschedules where po in ($po)";
+		return self::$dataStore->executeQuery($query);
 	}
 	
 	public function getPendindSchedules($notificationType){

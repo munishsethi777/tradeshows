@@ -373,7 +373,7 @@ function loadGrid(){
             deleteButton.click(function (event) {
                 gridId = "qcscheduleGrid";
                 deleteUrl = "Actions/QCScheduleAction.php?call=deleteQCSchedule";
-                deleteRows(gridId,deleteUrl);
+                deleteQCSchedule(gridId,deleteUrl);
             });
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
@@ -458,5 +458,54 @@ function subtractDays(date, days) {
 	var sDate = date;
 	sDate.setDate(sDate.getDate() - days);
 	return sDate;
+}
+function deleteQCSchedule(gridId,deleteURL){
+    var selectedRowIndexes = $("#" + gridId).jqxGrid('selectedrowindexes');
+    if(selectedRowIndexes.length > 0){
+        bootbox.confirm("Are you sure you want to delete selected row(s)?", function(result) {
+            if(result){
+                var ids = [];
+                var po = [];
+                $.each(selectedRowIndexes, function(index , value){
+                    if(value != -1){
+                        var dataRow = $("#" + gridId).jqxGrid('getrowdata', value);
+                        if(dataRow != undefined){
+                            if(dataRow.id != undefined){
+                            	ids.push(dataRow.id);
+                             }else{
+                            	ids.push(dataRow.seq); 
+                            }
+                            po.push(dataRow.po);
+                        }
+                    }
+
+                });
+                $.get( deleteURL + "&ids=" + ids + "&po=" + po,function( data ){
+                    if(data != ""){
+                        var obj = $.parseJSON(data);
+                        var message = obj.message;
+                        if(obj.success == 1){
+
+                            toastr.success(message,'Success');
+                           //$.each(selectedRowIndexes, function(index , value){
+                              //  var id = $("#"  + gridId).jqxGrid('getrowid', value);
+                                var commit = $("#"  + gridId).jqxGrid('deleterow', ids);
+                                //$("#"+gridId).jqxGrid('clearselection');
+                                $("#"+gridId).jqxGrid('updatebounddata');
+                                $("#"+gridId).jqxGrid('clearselection');
+                            //});
+                        }else{
+                            toastr.error(message,'Failed');
+                        }
+                    }
+
+                });
+
+            }
+        });
+    }else{
+         bootbox.alert("No row selected.Please select row to delete!", function() {});
+    }
+
 }
 </script>
