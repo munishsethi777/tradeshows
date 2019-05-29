@@ -405,7 +405,7 @@ function loadGrid(){
                 $("#qcscheduleGrid").jqxGrid({ source: dataAdapter });
             });
             downloadButton.click(function (event) {
-            	location.href = ("files/itemSpecifications_template.xlsx");
+            	location.href = ("files/QCSchedules_template.xlsx");
             });
         }
     });
