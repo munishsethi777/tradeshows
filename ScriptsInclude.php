@@ -332,12 +332,13 @@ $(document).ready(function() {
                             $.each(selectedRowIndexes, function(index , value){
                                 if(value != -1){
                                     var dataRow = $("#" + gridId).jqxGrid('getrowdata', value);
-                                    if(dataRow.id != undefined){
-                                    	ids.push(dataRow.id);
-                                    }else{
-                                    	ids.push(dataRow.seq); 
+                                    if(dataRow != undefined){
+	                                    if(dataRow.id != undefined){
+	                                    	ids.push(dataRow.id);
+	                                    }else{
+	                                    	ids.push(dataRow.seq); 
+	                                    }
                                     }
-                                    
                                 }
 
                             });
