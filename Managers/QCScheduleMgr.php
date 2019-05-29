@@ -56,8 +56,8 @@ class QCScheduleMgr{
 			foreach ($qcSchedules as $qcSchedule){
 				$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
 			}
-			$itemNumbers = substr($itemNumbers, 0, -2);
-			$qcSchedule["itemnumbers"] = $itemNumbers;
+			//$itemNumbers = substr($itemNumbers, 0, -2);
+			$qcSchedule["itemnumbers"] = trim($itemNumbers);
 			array_push($mainArr,$qcSchedule);
 		}
 		ExportUtil::exportQCSchedules($mainArr);
