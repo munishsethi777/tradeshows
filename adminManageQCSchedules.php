@@ -122,7 +122,7 @@ $(document).ready(function(){
        var datafield = $("#fieldNameDD").val();
        $("#qcscheduleGrid").jqxGrid('clearfilters');
        if(datafield != ''){
-	 	   $("#qcscheduleGrid").jqxGrid('clear');
+	 	   //$("#qcscheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
 	 	   var conditionDDVal = $("#conditionDD").val();
 	 	   filtertype = 'datefilter';
