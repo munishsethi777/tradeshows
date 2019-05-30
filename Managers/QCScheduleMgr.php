@@ -79,7 +79,13 @@ class QCScheduleMgr{
 	}
 	
 	
-	
+	function _group_by($array, $key) {
+		$return = array();
+		foreach($array as $val) {
+			$return[$val->getPO()][] = $val;
+		}
+		return $return;
+	}
 	function group_by($array, $key) {
 		$return = array();
 		foreach($array as $val) {
