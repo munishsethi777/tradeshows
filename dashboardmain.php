@@ -19,13 +19,23 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	<div id="page-wrapper" class="gray-bg" style="margin:0px">
 		<div class="row border-bottom"></div>
         <div class="row m-t-xl">
-			<div class="col-lg-6 col-lg-offset-3">
+			<div class="col-lg-8 col-lg-offset-2">
 	        	<div class="ibox">
 					
 					
 					<div class="ibox-content m-t-sm m-b-sm">
-						<div class="row">	
-							<div class="col-lg-6">
+						<div class="row">
+							<div class="col-lg-4">
+		                        <div class="widget bg-danger text-center  p-h-xl">
+		                        	<div class="row">
+		                        		<a href="adminManageQCSchedules.php">
+		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-clock-o"></i></h1>
+		                                <span>Schedule Management</span></a>
+		                            </div>
+								</div>
+	                        </div>
+							
+							<div class="col-lg-4">
 		                        <div class="widget bg-warning text-center p-h-xl">
 		                        	<div class="row">
 		                        		<a href="adminManageItemSpecifications.php">
@@ -36,7 +46,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                        </div>
 	                        
 	                        
-	                        <div class="col-lg-6">
+	                        <div class="col-lg-4">
 		                        <div class="widget bg-info text-center  p-h-xl">
 		                        	<div class="row">
 		                        		<a href="adminShowList.php">

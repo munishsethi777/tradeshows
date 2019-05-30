@@ -18,6 +18,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     		margin-bottom:5px;
     	}
     </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>
    <div id="wrapper">
@@ -49,23 +52,38 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 				                            		<option value="scfinalinspectiondate">Scheduled Final Inspection</option>
 				                            		<option value="screadydate">Scheduled Ready</option>
 			                            		</optgroup>
+			                            		<optgroup label="Appointment Dates">
+				                            		<option value="approductionstartdate">Appointment Production Start</option>
+				                            		<option value="apgraphicsreceivedate">Appointment Graphics Receive</option>
+				                            		<option value="apfirstinspectiondate">Appointment First Inspection</option>
+				                            		<option value="apmiddleinspectiondate">Appointment Middle Inspection</option>
+				                            		<option value="apfinalinspectiondate">Appointment Final Inspection</option>
+				                            		<option value="apreadydate">Appointment Ready</option>
+			                            		</optgroup>
 			                            		<optgroup label="Actual Dates">
 				                            		<option value="acproductionstartdate">Actual Production Start</option>
 				                            		<option value="acgraphicsreceivedate">Actual Graphics Receive</option>
 				                            		<option value="acfirstinspectiondate">Actual First Inspection</option>
 				                            		<option value="acmiddleinspectiondate">Actual Middle Inspection</option>
 				                            		<option value="acfinalinspectiondate">Actual Final Inspection</option>
-				                            		<option value="acreadydate">Ready</option>
+				                            		<option value="acreadydate">Actual Ready</option>
 			                            		</optgroup>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-2">
+			                            <div class="col-lg-4">
+				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+											    <i class="fa fa-calendar"></i>&nbsp;
+											    <span></span> <i class="fa fa-caret-down"></i>
+											</div>
+			                            </div>
+			                            
+			                            <div class="col-lg-1" style="display:none">
 			                            	<select id="conditionDD" name="conditionDD" class="form-control">
 			                            		<option value="past">In Past</option>
 			                            		<option value="coming">For Coming</option>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-2">
+			                            <div class="col-lg-1" style="display:none">
 			                            	<select id="valueDD" name="valueDD" class="form-control">
 			                            		<option value="1">1 day</option>
 			                            		<option value="3">3 days</option>
@@ -78,7 +96,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            		<option value="90">90 days</option>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-2">
+			                            <div class="col-lg-2 text-muted taskCompleted" style="padding-top:5px;display:none">
 			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Task Completed
 			                            </div>
 			                        </div>
@@ -110,8 +128,39 @@ function showItemDetails(seq){
 		});
 	});
 }
+function initDateRanges(){
+	    var start = moment().subtract(29, 'days');
+	    var end = moment();
+
+	    function cb(start, end) {
+	        $('#daterange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+	    }
+
+	    $('#daterange').daterangepicker({
+	        startDate: start,
+	        endDate: end,
+	        alwaysShowCalendars: true,
+	        ranges: {
+	           'Today': [moment(), moment()],
+	           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	           'Tomorrow': [moment().add(1, 'days'), moment().add(1, 'days')],
+	           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+	           'Next 7 Days': [moment(),moment().add(6, 'days')],
+	           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+	           'Next 30 Days': [moment(),moment().add(29, 'days')],
+	           'This Month': [moment().startOf('month'), moment().endOf('month')],
+	           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+	           'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')],
+	        }
+	    }, cb);
+
+	    cb(start, end);
+
+
+}
 $(document).ready(function(){
-   	loadGrid()
+   	loadGrid();
+   	initDateRanges();
    	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -122,6 +171,7 @@ $(document).ready(function(){
        var datafield = $("#fieldNameDD").val();
        $("#qcscheduleGrid").jqxGrid('clearfilters');
        if(datafield != ''){
+    	   showFilterFieldColumn();
 	 	   $("#qcscheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
 	 	   var conditionDDVal = $("#conditionDD").val();
@@ -166,7 +216,13 @@ $(document).ready(function(){
     
     // applies the filter.
     $("#fieldNameDD").change(function () {
- 	   applyFilter()
+		var datafield = $("#fieldNameDD").val();
+    	if(datafield.substr(0,2) == "sc" || datafield.substr(0,2) == "ap"){
+        	$(".taskCompleted").show();
+    	}else{
+    		$(".taskCompleted").hide();
+    	}
+ 	   	applyFilter()
     });
     $("#conditionDD").change(function () {
  	   applyFilter()
@@ -181,10 +237,22 @@ $(document).ready(function(){
     $('.i-checks').on('ifChanged', function(event){
     	 applyFilter()
     });
+    $('#daterange').on('apply.daterangepicker', function(ev, picker){
+    	applyFilter();
+    });
  });
- 
+
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
+		
+		//$('#qcscheduleGrid').jqxGrid('showcolumn', datafield);
+		var textData = new Array();
+		var cols = $("#qcscheduleGrid").jqxGrid("columns");
+		for (var i = 0; i < cols.records.length; i++) {
+		    textData[i] = cols.records[i].text;
+		}
+		
+		
 		var conditionDD = $("#conditionDD").val();
 		var dayValue = $("#valueDD").val();
 		var isCompletedCheck =$("input[type='checkbox'][name='isCompleted']:checked").val()
@@ -201,6 +269,14 @@ $(document).ready(function(){
 		}
 		var fromDateStr = dateToStr(fromDate);
 		var toDateStr = dateToStr(toDate);
+
+		//new code of daterange picker
+		var drp = $('#daterange').data('daterangepicker');
+		fromDateStr = drp.startDate.format('MM-DD-YYYY');
+		toDateStr = drp.endDate.format('MM-DD-YYYY');
+		
+
+		
 		var data = {from:fromDateStr,to:toDateStr}
 		isScheduleFeild = datafield.startsWith("sc")
 		if(isScheduleFeild){
@@ -210,7 +286,20 @@ $(document).ready(function(){
 		dataArr[datafield] = data;
 		return dataArr
 	}
-	
+function showFilterFieldColumn(){
+	var cols = $("#qcscheduleGrid").jqxGrid("columns");
+	for (var i = 0; i < cols.records.length; i++) {
+		if(cols.records[i].datafield.substr(0,2) == "sc" 
+				|| cols.records[i].datafield.substr(0,2) == "ac"
+					|| cols.records[i].datafield.substr(0,2) == "ap"){
+	    //if(cols.records[i].hidden == true){
+	    	$('#qcscheduleGrid').jqxGrid('hidecolumn', cols.records[i].datafield);
+	    }
+	}
+	var datafield = $("#fieldNameDD").val()
+	$('#qcscheduleGrid').jqxGrid('showcolumn',datafield);
+
+}
 function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
@@ -226,23 +315,29 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'QC.', datafield: 'qc', width:"15%"},
+      { text: 'QC.', datafield: 'qc', width:"10%"},
       { text: 'Code', datafield: 'classcode',width:"8%"},
       { text: 'PO', datafield: 'po',width:"10%"},
-      { text: 'PO Type', datafield: 'potype',width:"14%"},
+      { text: 'PO Type', datafield: 'potype',width:"12%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"15%"},
-      { text: 'scproductionstartdate', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'scgraphicsreceivedate', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'scfirstinspectiondate', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'scmiddleinspectiondate', datafield: 'scmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'scfinalinspectiondate', datafield: 'scfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'screadydate', datafield: 'screadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acproductionstartdate', datafield: 'acproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acgraphicsreceivedate', datafield: 'acgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acfirstinspectiondate', datafield: 'acfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acmiddleinspectiondate', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acfinalinspectiondate', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'acreadydate', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Sc Frst Insp', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Sc Midl Insp', datafield: 'scmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Sc Finl Insp', datafield: 'scfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Sc Rdy', datafield: 'screadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Prod Str', datafield: 'approductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Grph Rcv', datafield: 'apgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Frst Insp', datafield: 'apfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Midl Insp', datafield: 'apmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Finl Insp', datafield: 'apfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Rdy', datafield: 'apreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Prod Satrt', datafield: 'acproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Grph Recvd', datafield: 'acgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Frst Insp', datafield: 'acfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Midl Insp', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Finl Insp', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Ac Ready', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
@@ -267,6 +362,12 @@ function loadGrid(){
                     { name: 'scmiddleinspectiondate', type: 'date' } ,
                     { name: 'scfinalinspectiondate', type: 'date' } ,
                     { name: 'screadydate', type: 'date' } ,
+                    { name: 'approductionstartdate', type: 'date' } ,
+                    { name: 'apgraphicsreceivedate', type: 'date' } ,
+                    { name: 'apfirstinspectiondate', type: 'date' } ,
+                    { name: 'apmiddleinspectiondate', type: 'date' } ,
+                    { name: 'apfinalinspectiondate', type: 'date' } ,
+                    { name: 'apreadydate', type: 'date' } ,
                     { name: 'acproductionstartdate', type: 'date' } ,
                     { name: 'acgraphicsreceivedate', type: 'date' } ,
                     { name: 'acfirstinspectiondate', type: 'date' } ,

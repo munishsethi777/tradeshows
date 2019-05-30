@@ -1,9 +1,11 @@
 <?php
 class QCSchedule{
 
-	private $seq, $qc, $classcode, $po, $potype, $itemnumbers, $shipdate, $screadydate, $scfinalinspectiondate, $scmiddleinspectiondate,
-	$scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, $acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, 
-	$acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, $notes, $userseq, $createdon, $lastmodifiedon;
+	private $seq, $qc, $classcode, $po, $potype, $itemnumbers, $shipdate, 
+	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
+	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
+	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
+	$notes,$status, $userseq, $createdon, $lastmodifiedon;
 	
 	public static $className = "QCSchedule";
 	public static $tableName = "qcschedules";
@@ -86,6 +88,44 @@ class QCSchedule{
 	public function getSCGraphicsReceiveDate(){
 		return $this->scgraphicsreceivedate;
 	}
+	
+	public function setAPReadyDate($val){
+		$this->apreadydate = $val;
+	}
+	public function getAPReadyDate(){
+		return $this->apreadydate;
+	}
+	public function setAPFinalInspectionDate($val){
+		$this->apfinalinspectiondate = $val;
+	}
+	public function getAPFinalInspectionDate(){
+		return $this->apfinalinspectiondate;
+	}
+	public function setAPMiddleInspectionDate($val){
+		$this->apmiddleinspectiondate = $val;
+	}
+	public function getAPMiddleInspectionDate(){
+		return $this->apmiddleinspectiondate;
+	}
+	public function setAPFirstInspectionDate($val){
+		$this->apfirstinspectiondate = $val;
+	}
+	public function getAPFirstInspectionDate(){
+		return $this->apfirstinspectiondate;
+	}
+	public function setAPProductionStartDate($val){
+		$this->approductionstartdate = $val;
+	}
+	public function getAPProductionStartDate(){
+		return $this->approductionstartdate;
+	}
+	public function setAPGraphicsReceiveDate($val){
+		$this->apgraphicsreceivedate = $val;
+	}
+	public function getAPGraphicsReceiveDate(){
+		return $this->apgraphicsreceivedate;
+	}
+	
 	public function setACReadyDate($val){
 		$this->acreadydate = $val;
 	}
@@ -127,6 +167,12 @@ class QCSchedule{
 	}
 	public function getNotes(){
 		return $this->notes;
+	}
+	public function setStatus($val){
+		$this->status = $val;
+	}
+	public function getStatus(){
+		return $this->status;
 	}
 	public function setUserSeq($val){
 		$this->userseq = $val;

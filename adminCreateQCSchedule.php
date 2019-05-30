@@ -4,9 +4,11 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
  $qcSchedule = new QCSchedule();
  $qcScheduleMgr = QCScheduleMgr::getInstance();
+ $readOnlyPO = "";
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
  	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
+ 	$readOnlyPO = "readonly";
  }
 ?>
 <!DOCTYPE html>
@@ -60,31 +62,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">QC</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
+	                            	<input type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Class Code</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required id="classcode" maxLength="250" value="<?php echo $qcSchedule->getClassCode()?>" name="classcode" class="form-control">
+	                            	<input type="text" required id="classcode" maxLength="250" value="<?php echo $qcSchedule->getClassCode()?>" name="classcode" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">PO Number</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  id="po" maxLength="250" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control">
+	                            	<input type="text" required  id="po" maxLength="250" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">PO Type</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control">
+	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">Item Numbers</label>
 	                        	<div class="col-lg-4">
-	                            	<textarea id="itemnumbers" required maxLength="250" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
+	                            	<textarea <?php echo $readOnlyPO?> id="itemnumbers" required maxLength="250" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Ship Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl">
+	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        
@@ -125,6 +127,41 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                  
 	                  <div class="bg-white p-xs outterDiv">
 	                        <div class="form-group row">
+                        		<h4 class="areaTitle">Appointment Information</h4><br>
+	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date"  id="apreadydate" maxLength="250" value="<?php echo $qcSchedule->getAPReadyDate()?>" name="apreadydate" class="form-control dateControl">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="apfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFinalInspectionDate()?>" name="apfinalinspectiondate" class="form-control dateControl">
+	                            </div>
+	                        </div>
+	                        <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="apmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPMiddleInspectionDate()?>" name="apmiddleinspectiondate" class="form-control dateControl">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFirstInspectionDate()?>" name="apfirstinspectiondate" class="form-control dateControl">
+	                            </div>
+	                        </div>
+	                        <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="approductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getAPProductionStartDate()?>" name="approductionstartdate" class="form-control dateControl">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl">
+	                            </div>
+	                       </div>
+	                  </div>
+	                  
+	                  
+	                  <div class="bg-muted p-xs outterDiv">
+	                        <div class="form-group row">
                         		<h4 class="areaTitle">Actual Information</h4><br>
 	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
 	                        	<div class="col-lg-4">
@@ -156,7 +193,18 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                            </div>
 	                       </div>
 	                  </div>
-                        
+                       <div class="bg-white p-xs outterDiv">
+                       		<div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label">Status</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" id="status" maxLength="250" value="<?php echo $qcSchedule->getStatus()?>" name="status" class="form-control">
+	                            </div>
+	                        	<label class="col-lg-2 col-form-label">Notes</label>
+	                        	<div class="col-lg-4">
+	                        		<textarea id="notes" required maxLength="250" name="notes" class="form-control"><?php echo $qcSchedule->getNotes()?></textarea>
+	                        	 </div>
+	                        </div>
+	                   </div> 
 	                    
                         <div class="bg-white p-xs">
 	                        <div class="form-group row">
@@ -195,6 +243,8 @@ $(document).ready(function(){
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y',
+	    scrollMonth : false,
+		scrollInput : false,
 	})
 });
 function setDates(shipDateStr){

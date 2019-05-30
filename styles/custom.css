@@ -160,3 +160,6 @@ ul.nav-second-level{
         float: left;
     }
 }
+.form-control, .single-line{
+	border: 1px solid #b3b4b5 !important;
+}
