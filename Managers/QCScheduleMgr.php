@@ -261,32 +261,32 @@ class QCScheduleMgr{
 			$readyDate = $this->convertStrToDate($shipDateStr);
 			$readyDate->modify('-14 day');
 			$qcSchedule->setSCReadyDate($readyDate);
-			$qcSchedule->setAPReadyDate($readyDate);
+			//$qcSchedule->setAPReadyDate($readyDate);
 			
 			$finalInspectionDate = $this->convertStrToDate($shipDateStr);
 			$finalInspectionDate->modify('-10 day');
 			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-			$qcSchedule->setAPFinalInspectionDate($finalInspectionDate);
+			//$qcSchedule->setAPFinalInspectionDate($finalInspectionDate);
 			
 			$middleInspectionDate = $this->convertStrToDate($shipDateStr);
 			$middleInspectionDate->modify('-15 day');
 			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-			$qcSchedule->setAPMiddleInspectionDate($middleInspectionDate);
+			//$qcSchedule->setAPMiddleInspectionDate($middleInspectionDate);
 			
 			$firstInspectionDate = $this->convertStrToDate($shipDateStr);
 			$firstInspectionDate->modify('-35 day');
 			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-			$qcSchedule->setAPFirstInspectionDate($firstInspectionDate);
+			//$qcSchedule->setAPFirstInspectionDate($firstInspectionDate);
 			
 			$productionStartDate = $this->convertStrToDate($shipDateStr);
 			$productionStartDate->modify('-45 day');
 			$qcSchedule->setSCProductionStartDate($productionStartDate);
-			$qcSchedule->setAPProductionStartDate($productionStartDate);
+			//$qcSchedule->setAPProductionStartDate($productionStartDate);
 				
 			$graphicReceiveDate = $this->convertStrToDate($shipDateStr);
 			$graphicReceiveDate->modify('-30 day');
 			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-			$qcSchedule->setAPGraphicsReceiveDate($graphicReceiveDate);
+			//$qcSchedule->setAPGraphicsReceiveDate($graphicReceiveDate);
 		}
 // 		if(!empty($readyDate)){
 // 			$readyDate = $this->validateDate($readyDate);
