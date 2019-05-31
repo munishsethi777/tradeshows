@@ -201,7 +201,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                            </div>
 	                        	<label class="col-lg-2 col-form-label">Notes</label>
 	                        	<div class="col-lg-4">
-	                        		<textarea id="notes" required maxLength="250" name="notes" class="form-control"><?php echo $qcSchedule->getNotes()?></textarea>
+	                        		<textarea id="notes" maxLength="250" name="notes" class="form-control"><?php echo $qcSchedule->getNotes()?></textarea>
 	                        	 </div>
 	                        </div>
 	                   </div> 
