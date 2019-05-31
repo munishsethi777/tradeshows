@@ -112,22 +112,22 @@ class MailUtil{
 	private static function getScheduleNotificationDate($qcSchedule,$notificationType){
 		$date = null;
 		if($notificationType == NotificationType::SC_READY_DATE){
-			$date = $qcSchedule->getAPReadyDate();
+			$date = $qcSchedule->getSCReadyDate();
 			
 		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE){
-			$date = $qcSchedule->getAPFinalInspectionDate();
+			$date = $qcSchedule->getSCFinalInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
-			$date = $qcSchedule->getAPFirstInspectionDate();
+			$date = $qcSchedule->getSCFirstInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
-			$date = $qcSchedule->getAPMiddleInspectionDate();
+			$date = $qcSchedule->getSCMiddleInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
-			$date = $qcSchedule->getAPProductionStartDate();
+			$date = $qcSchedule->getSCProductionStartDate();
 			
 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
-			$date = $qcSchedule->getAPGraphicsReceiveDate();
+			$date = $qcSchedule->getSCGraphicsReceiveDate();
 		}
 		if(!empty($date)){
 			$date = DateUtil::StringToDateByGivenFormat('Y-m-d', $date);
