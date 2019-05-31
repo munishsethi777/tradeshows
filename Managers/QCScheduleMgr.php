@@ -389,6 +389,26 @@ class QCScheduleMgr{
 		$scGraphicReceiveDate = $this->getDateStr($qcSchedule->getSCGraphicsReceiveDate());
 		$qcSchedule->setSCGraphicsReceiveDate($scGraphicReceiveDate);
 		
+		
+		$apReadyDate = $this->getDateStr($qcSchedule->getAPReadyDate());
+		$qcSchedule->setAPReadyDate($apReadyDate);
+		
+		$apFinalInspectionDate = $this->getDateStr($qcSchedule->getAPFinalInspectionDate());
+		$qcSchedule->setAPFinalInspectionDate($apFinalInspectionDate);
+		
+		$apMiddleInspectionDate = $this->getDateStr($qcSchedule->getAPMiddleInspectionDate());
+		$qcSchedule->setAPMiddleInspectionDate($apMiddleInspectionDate);
+		
+		$apFirstInspectionDate = $this->getDateStr($qcSchedule->getAPFirstInspectionDate());
+		$qcSchedule->setAPFirstInspectionDate($apFirstInspectionDate);
+		
+		$apProductionStartDate = $this->getDateStr($qcSchedule->getAPProductionStartDate());
+		$qcSchedule->setAPProductionStartDate($apProductionStartDate);
+		
+		$apGraphicsReceiveDate = $this->getDateStr($qcSchedule->getAPGraphicsReceiveDate());
+		$qcSchedule->setAPGraphicsReceiveDate($apGraphicsReceiveDate);
+		
+		
 		$acReadyDate = $this->getDateStr($qcSchedule->getACReadyDate());
 		$qcSchedule->setACReadyDate($acReadyDate);
 		
