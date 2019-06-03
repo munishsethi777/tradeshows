@@ -49,18 +49,17 @@ class QCScheduleMgr{
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
 		$qcSchedules = self::$dataStore->findAllArr(true);
-		$mainArr = array();
-		$poSchedules = $this->group_by($qcSchedules, "po");
-		foreach ($poSchedules as $qcSchedules){
-			$itemNumbers = "";
-			foreach ($qcSchedules as $qcSchedule){
-				$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
-			}
-			//$itemNumbers = substr($itemNumbers, 0, -2);
-			$qcSchedule["itemnumbers"] = trim($itemNumbers);
-			array_push($mainArr,$qcSchedule);
-		}
-		ExportUtil::exportQCSchedules($mainArr);
+		//$mainArr = array();
+		//$poSchedules = $this->group_by($qcSchedules, "po");
+		//foreach ($poSchedules as $qcSchedules){
+			//$itemNumbers = "";
+			//foreach ($qcSchedules as $qcSchedule){
+				//$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
+			//}
+			//$qcSchedule["itemnumbers"] = trim($itemNumbers);
+			//array_push($mainArr,$qcSchedule);
+		//}
+		ExportUtil::exportQCSchedules($qcSchedules);
 	}
 	
 	private function groupByPO($qcSchedules){
