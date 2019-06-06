@@ -21,9 +21,13 @@ if($call == "saveQCSchedule"){
 		$qcSchedule->createFromRequest($_REQUEST);
 		if(!isset($_REQUEST["apMiddleInspectionChk"])){
 			$qcSchedule->setApMiddleInspectionDateNaReason(null);
+		}else {
+			$qcSchedule->setAPMiddleInspectionDate(null);
 		}
 		if(!isset($_REQUEST["apFirstInspectionChk"])){
 			$qcSchedule->setApFirstInspectionDateNaReason(null);
+		}else{
+			$qcSchedule->setAPFirstInspectionDate(null);
 		}
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
