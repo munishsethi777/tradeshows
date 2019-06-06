@@ -177,6 +177,7 @@ $(document).ready(function(){
 	 	   var conditionDDVal = $("#conditionDD").val();
 	 	   filtertype = 'datefilter';
 	       var filterData = getFilterQueryData();
+	       var isCompleted = 0;
 	       $.each(filterData, function( key, value ) {
 	           var fieldName = key;
 	           var filtergroup = new $.jqx.filter();	 
@@ -189,16 +190,27 @@ $(document).ready(function(){
 		            	   filtergroup = new $.jqx.filter();	 
 		            	   filtertype = 'stringfilter';
 			               if(v > 0){
-			            	   filtercondition = 'not_null';   
+			            	   filtercondition = 'not_null';
+			            	   filter_or_operator = 1;
+			            	   isCompleted = 1;   
 			               }else{
 			            	   filtercondition = 'null';   
 			               }
 			               fieldName = fieldName.substring(2);
-			               fieldName = "ac" + fieldName;	 		
-		               }else{
-		               		if(k == "from"){
-		            	   		var filtercondition = 'greater_than_or_equal';    
-		               		}
+			               fieldName = "ac" + fieldName;	 	
+			              	
+		               }else if(k == "from"){
+		            	   	var filtercondition = 'greater_than_or_equal';    
+		               }else if(k == "naReason"){
+		            	    filtergroup = new $.jqx.filter();	 
+		            	    filtertype = 'stringfilter';
+		            	    fieldName = v;
+		            	   	if(isCompleted > 0){
+				            	filtercondition = 'not_null';
+				             }else{
+				                filtercondition = 'null';   
+				            }
+		            	   	filter_or_operator = 1;
 		               }
 		               var filter = filtergroup.createfilter(filtertype, filtervalue, filtercondition);
 		               filtergroup.addfilter(filter_or_operator, filter);
@@ -274,13 +286,21 @@ $(document).ready(function(){
 		var drp = $('#daterange').data('daterangepicker');
 		fromDateStr = drp.startDate.format('MM-DD-YYYY');
 		toDateStr = drp.endDate.format('MM-DD-YYYY');
-		
 
-		
 		var data = {from:fromDateStr,to:toDateStr}
 		isScheduleFeild = datafield.startsWith("sc")
-		if(isScheduleFeild){
+		isAPFeild = datafield.startsWith("ap")
+		if(isScheduleFeild || isAPFeild){
+			 var naReason = "";
+			 if(datafield.indexOf("middle") != -1){	 
+				 naReason = "apmiddleinspectiondatenareason";	 
+			 }else if(datafield.indexOf("first") != -1){
+				 naReason = "apfirstinspectiondatenareason";		 
+			 }
 			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted}
+			 if(naReason != ""){
+			 	data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason}
+			 }
 		}
 		var dataArr = {};
 		dataArr[datafield] = data;
@@ -331,6 +351,8 @@ function loadGrid(){
       { text: 'Apt Frst Insp', datafield: 'apfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Apt Midl Insp', datafield: 'apmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Apt Finl Insp', datafield: 'apfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Finl Insp', datafield: 'apmiddleinspectiondatenareason',filtertype: 'string',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Apt Finl Insp', datafield: 'apfirstinspectiondatenareason',filtertype: 'string',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Apt Rdy', datafield: 'apreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Prod Satrt', datafield: 'acproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Grph Recvd', datafield: 'acgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -367,6 +389,8 @@ function loadGrid(){
                     { name: 'apfirstinspectiondate', type: 'date' } ,
                     { name: 'apmiddleinspectiondate', type: 'date' } ,
                     { name: 'apfinalinspectiondate', type: 'date' } ,
+                    { name: 'apmiddleinspectiondatenareason', type: 'string' } ,
+                    { name: 'apfirstinspectiondatenareason', type: 'string' } ,
                     { name: 'apreadydate', type: 'date' } ,
                     { name: 'acproductionstartdate', type: 'date' } ,
                     { name: 'acgraphicsreceivedate', type: 'date' } ,
@@ -436,6 +460,7 @@ function loadGrid(){
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+            var weeklyReportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Mail Weekly Report</span></div>");
             
             container.append(addButton);
             container.append(editButton);
@@ -444,6 +469,7 @@ function loadGrid(){
             container.append(reloadButton);
             container.append(downloadButton);
             container.append(deleteButton);
+            container.append(weeklyReportButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
@@ -452,9 +478,13 @@ function loadGrid(){
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
+            weeklyReportButton.jqxButton({  width: 150, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("adminCreateQCSchedule.php");
+            });
+            weeklyReportButton.click(function (event) {
+            	window.open('http://satyainfopages.in/tradeshows/Crons/PendingQCScheduleCron.php');
             });
             editButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');

@@ -459,37 +459,37 @@ class QCScheduleMgr{
 	}
 	
 	public function getPendingShechededForReadyDate(){
-		$query = "select * from qcschedules where apreadydate > CURDATE() and apreadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcode ASC, apreadydate ASC";
+		$query = "select * from qcschedules where screadydate > CURDATE() and screadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcode ASC, apreadydate ASC";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}
 	
 	public function getPendingShechededForFinalInspectionDate(){
-		$query = "select * from qcschedules where apfinalinspectiondate > CURDATE() and apfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		$query = "select * from qcschedules where scfinalinspectiondate > CURDATE() and scfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}
 	
 	public function getPendingShechededForMiddleInspectionDate(){
-		$query = "select * from qcschedules where apmiddleinspectiondate > CURDATE() and apmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		$query = "select * from qcschedules where scmiddleinspectiondate > CURDATE() and scmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}
 	
 	public function getPendingShechededForFirstInspectionDate(){
-		$query = "select * from qcschedules where apfirstinspectiondate > CURDATE() and apfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		$query = "select * from qcschedules where scfirstinspectiondate > CURDATE() and scfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}
 	
 	public function getPendingShechededForProductionStartDate(){
-		$query = "select * from qcschedules where approductionstartdate > CURDATE() and approductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
+		$query = "select * from qcschedules where scproductionstartdate > CURDATE() and scproductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}
 	
 	public function getPendingShechededForGraphicReceiveDate(){
-		$query = "select * from qcschedules where apgraphicsreceivedate > CURDATE() and apgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		$query = "select * from qcschedules where scgraphicsreceivedate > CURDATE() and scgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		return $qcschedules;
 	}

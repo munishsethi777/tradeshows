@@ -123,7 +123,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                 }
                 else if ($tmpdatafield <> $filterdatafield)
                 {
-                    $where .= ")AND(";
+                    if($tmpfilteroperator == 0){
+                        $where .= ")AND(";
+                    }else{
+                    	$where .= " OR ";
+                    }
+                	
                 }
                 else if ($tmpdatafield == $filterdatafield)
                 {

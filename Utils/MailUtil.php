@@ -72,6 +72,8 @@ class MailUtil{
 			$tableRow = file_get_contents("../tableRow.php"); 
 			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
+			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
+			$phAnValues["AP_NOTIFICATION_DATE_TITLE"] = $apNotificationTitle;
 			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
 			$phAnValues["FROM_DATE"] = $fromDate->format("n/j/y");
 			$phAnValues["TO_DATE"] = $toDate->format("n/j/y");
@@ -91,8 +93,9 @@ class MailUtil{
 				$shippingDate = $qcSchedule->getShipDate();
 				$shippingDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $shippingDate);
 				$rowTokens["SHIP_DATE"] =  $shippingDate->format("n/j/y");
-				$notificationDate = self::getScheduleNotificationDate($qcSchedule, $notificationType);
-				$rowTokens["NOTIFICATION_DATE"] = $notificationDate;
+				$notificationDates = self::getScheduleNotificationDate($qcSchedule, $notificationType);
+				$rowTokens["NOTIFICATION_DATE"] = $notificationDates["scdate"];
+				$rowTokens["AP_NOTIFICATION_DATE"] = $notificationDates["apdate"];
 				$row = self::replacePlaceHolders($rowTokens, $row);
 				$srNo++;
 			}
@@ -110,32 +113,46 @@ class MailUtil{
 	}
 	
 	private static function getScheduleNotificationDate($qcSchedule,$notificationType){
-		$date = null;
+		$dates = array();
 		if($notificationType == NotificationType::SC_READY_DATE){
-			$date = $qcSchedule->getSCReadyDate();
+			$sc_date = $qcSchedule->getSCReadyDate();
+			$ap_date = $qcSchedule->getAPReadyDate();
 			
 		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE){
-			$date = $qcSchedule->getSCFinalInspectionDate();
+			$sc_date = $qcSchedule->getSCFinalInspectionDate();
+			$ap_date = $qcSchedule->getAPFinalInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
-			$date = $qcSchedule->getSCFirstInspectionDate();
+			$sc_date = $qcSchedule->getSCFirstInspectionDate();
+			$ap_date = $qcSchedule->getAPFirstInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
-			$date = $qcSchedule->getSCMiddleInspectionDate();
+			$sc_date = $qcSchedule->getSCMiddleInspectionDate();
+			$ap_date = $qcSchedule->getAPMiddleInspectionDate();
 			
 		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
-			$date = $qcSchedule->getSCProductionStartDate();
+			$sc_date = $qcSchedule->getSCProductionStartDate();
+			$ap_date = $qcSchedule->getAPProductionStartDate();
 			
 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
-			$date = $qcSchedule->getSCGraphicsReceiveDate();
+			$sc_date = $qcSchedule->getSCGraphicsReceiveDate();
+			$ap_date = $qcSchedule->getAPGraphicsReceiveDate();
 		}
-		if(!empty($date)){
-			$date = DateUtil::StringToDateByGivenFormat('Y-m-d', $date);
-			$date =  $date->format("n/j/y");
+		if(!empty($sc_date)){
+			$sc_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $sc_date);
+			$sc_date =  $sc_date->format("n/j/y");
 		}else{
-			$date = "N/A";
+			$sc_date = "N/A";
 		}
-		return $date;
+		if(!empty($ap_date)){
+			$ap_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $ap_date);
+			$ap_date =  $ap_date->format("n/j/y");
+		}else{
+			$ap_date = "N/A";
+		}
+		$dates["scdate"] = $sc_date;
+		$dates["apdate"] = $ap_date;
+		return $dates;
 	}
 	
 	private static function replacePlaceHolders($placeHolders,$body){
