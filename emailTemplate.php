@@ -10,7 +10,7 @@ Details of various schedules having "{NOTIFICATION_NAME}" due in next 7 days i.e
 		<th style="border:1px silver solid;width:10%;text-align:right">Item Number</th>
 		<th style="border:1px silver solid;width:10%;text-align:right">ShipDate</th>
 		<th style="border:1px silver solid;width:10%;text-align:right">{NOTIFICATION_DATE_TITLE}</th>
-		<th style="border:1px silver solid;width:10%;text-align:right">{AP_NOTIFICATION_DATE_TITLE}</th>
+		<th style="border:1px silver solid;width:10%;text-align:right">{AP_NOTIFICATIONDATE_TITLE}</th>
 	</tr>
 	{TABLE_ROWS}
 </table>

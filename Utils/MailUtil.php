@@ -73,7 +73,7 @@ class MailUtil{
 			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
 			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
-			$phAnValues["AP_NOTIFICATION_DATE_TITLE"] = $apNotificationTitle;
+			$phAnValues["AP_NOTIFICATIONDATE_TITLE"] = $apNotificationTitle;
 			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
 			$phAnValues["FROM_DATE"] = $fromDate->format("n/j/y");
 			$phAnValues["TO_DATE"] = $toDate->format("n/j/y");
@@ -95,7 +95,7 @@ class MailUtil{
 				$rowTokens["SHIP_DATE"] =  $shippingDate->format("n/j/y");
 				$notificationDates = self::getScheduleNotificationDate($qcSchedule, $notificationType);
 				$rowTokens["NOTIFICATION_DATE"] = $notificationDates["scdate"];
-				$rowTokens["AP_NOTIFICATION_DATE"] = $notificationDates["apdate"];
+				$rowTokens["AP_NOTIFICATIONDATE"] = $notificationDates["apdate"];
 				$row = self::replacePlaceHolders($rowTokens, $row);
 				$srNo++;
 			}
