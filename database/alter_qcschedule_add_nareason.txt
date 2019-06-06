@@ -1,0 +1,1 @@
+ALTER TABLE `qcschedules` ADD `apmiddleinspectiondatenareason` VARCHAR(20) NULL AFTER `lastmodifiedon`, ADD `apfirstinspectiondatenareason` VARCHAR(20) NULL AFTER `apmiddleinspectiondatenareason`;
