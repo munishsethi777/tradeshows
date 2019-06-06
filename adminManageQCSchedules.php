@@ -484,7 +484,7 @@ function loadGrid(){
                 location.href = ("adminCreateQCSchedule.php");
             });
             weeklyReportButton.click(function (event) {
-            	window.open('http://satyainfopages.in/tradeshows/Crons/PendingQCScheduleCron.php');
+            	window.open('http://alpinebi.com/Crons/PendingQCScheduleCron.php');
             });
             editButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');

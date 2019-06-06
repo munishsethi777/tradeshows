@@ -142,13 +142,13 @@ class MailUtil{
 			$sc_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $sc_date);
 			$sc_date =  $sc_date->format("n/j/y");
 		}else{
-			$sc_date = "N/A";
+			$sc_date = "n.a";
 		}
 		if(!empty($ap_date)){
 			$ap_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $ap_date);
 			$ap_date =  $ap_date->format("n/j/y");
 		}else{
-			$ap_date = "N/A";
+			$ap_date = "n.a";
 		}
 		$dates["scdate"] = $sc_date;
 		$dates["apdate"] = $ap_date;
