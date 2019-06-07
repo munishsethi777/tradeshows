@@ -16,6 +16,7 @@ $manageItemSpecification = "";
 $manageCustomers = "";
 $adminManageOrders = "";
 $manageQCSchedules = "";
+$manageGraphicLogs = "";
 //echo  $file;
 if($file == "dashboard.php"){
 	$isDashboard = "active";
@@ -41,6 +42,8 @@ if($file == "dashboard.php"){
 	$adminManageOrders = "active";
 }elseif($file=="adminManageQCSchedules.php" || $file== "adminCreateQCSchedule.php" || $file=="adminImportQCSchedules.php"){
 	$manageQCSchedules = "active";
+}elseif($file=="adminManageGraphicLogs.php" || $file== "adminCreateGraphicLog.php" || $file=="adminImportGraphicLogs.php"){
+	$manageGraphicLogs = "active";
 }
 
 ?>
@@ -79,6 +82,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $manageQCSchedules;?>">
                     <a href="adminManageQCSchedules.php"><i class="fa fa-cubes"></i> 
                     	<span class="nav-label">QC Schedules</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $manageGraphicLogs;?>">
+                    <a href="adminManageGraphicLogs.php"><i class="fa fa-cubes"></i> 
+                    	<span class="nav-label">Graphic Logs</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">

@@ -160,6 +160,11 @@ ul.nav-second-level{
         float: left;
     }
 }
-.form-control, .single-line{
+.form-control, .single-line, textarea{
 	border: 1px solid #b3b4b5 !important;
+}
+.bg-formLabel{
+	background-color:rgba(25, 173, 143, 0.16);
+	padding-left:7px !important;
+	padding-right:7px !important;
 }
