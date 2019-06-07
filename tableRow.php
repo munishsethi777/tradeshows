@@ -7,4 +7,5 @@
 	<td style="border:1px silver solid;width:10%;text-align:right">{ITEM_NUMBERS}</td>
 	<td style="border:1px silver solid;width:10%;text-align:right">{SHIP_DATE}</td>
 	<td style="border:1px silver solid;width:10%;text-align:right;color:red">{NOTIFICATION_DATE}</td>
+	<td style="border:1px silver solid;width:10%;text-align:right;color:green">{AP_NOTIFICATIONDATE}</td>
 </tr>

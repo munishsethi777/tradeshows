@@ -2,12 +2,21 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
  $qcSchedule = new QCSchedule();
  $qcScheduleMgr = QCScheduleMgr::getInstance();
  $readOnlyPO = "";
+ $middleInspectionChk = "";
+ $firstInspectionChk = "";
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
  	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
+ 	if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
+ 		$middleInspectionChk = "checked";
+ 	}
+ 	if(!empty($qcSchedule->getApFirstInspectionDateNaReason())){
+ 		$firstInspectionChk = "checked";
+ 	}
  	$readOnlyPO = "readonly";
  }
 ?>
@@ -107,11 +116,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCMiddleInspectionDate()?>" name="scmiddleinspectiondate" class="form-control">
+	                            	 
 	                            </div>
+	                           
 	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCFirstInspectionDate()?>" name="scfirstinspectiondate" class="form-control">
 	                            </div>
+	                            
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
@@ -139,22 +151,62 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text" placeholder="Select Date" id="apmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPMiddleInspectionDate()?>" name="apmiddleinspectiondate" class="form-control dateControl">
+
+	                        	<div class="col-lg-2">
+	                        		<div id="middleInspectionSelectDate">
+	                            		<input type="text" placeholder="Select Date" id="apmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPMiddleInspectionDate()?>" name="apmiddleinspectiondate" class="form-control dateControl">
+	                            	</div>
+	                            	<div style="display:none" id="middleNaDiv">
+<!-- 	                           			<select id="apmiddleinspectiondatenareason" name="apmiddleinspectiondatenareason" class="form-control"> -->
+<!-- 	                           				<option value="farDistance">Select Reason</option> -->
+<!-- 	                           				<option value="farDistance">Far Distance</option> -->
+<!-- 	                           				<option value="smallQuantities">Small Quantities</option> -->
+<!-- 	                           				<option value="producedInSubAssembly">Produced in Sub Assembly</option> -->
+<!-- 	                           			</select> -->
+										<?php 
+			                             	$select = DropDownUtils::getReasonTypes("apmiddleinspectiondatenareason", null, $qcSchedule->getApMiddleInspectionDateNaReason(),false,true);
+			                                echo $select;
+	                             		?>
+	                        		</div>
+	                            </div>
+	                             <label class="col-lg-1 col-form-label">NA</label>
+	                            <div class="col-lg-1 i-checks">
+	                            	<input type="checkbox" <?php echo $middleInspectionChk?> id="apMiddleInspectionChk" name="apMiddleInspectionChk" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text" placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFirstInspectionDate()?>" name="apfirstinspectiondate" class="form-control dateControl">
+	                          	<div class="col-lg-2">
+	                        		<div id="firstInspectionSelectDate">
+	                            		<input type="text" placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFirstInspectionDate()?>" name="apfirstinspectiondate" class="form-control dateControl">
+	                            	</div>
+	                            	<div style="display:none" id="firstNaDiv">
+<!-- 	                           			<select id="apfirstinspectiondatenareason" name="apfirstinspectiondatenareason" class="form-control"> -->
+<!-- 	                           				<option value="farDistance">Select Reason</option> -->
+<!-- 	                           				<option value="farDistance">Far Distance</option> -->
+<!-- 	                           				<option value="smallQuantities">Small Quantities</option> -->
+<!-- 	                           				<option value="producedInSubAssembly">Produced in Sub Assembly</option> -->
+<!-- 	                           			</select> -->
+										<?php 
+			                             	$select = DropDownUtils::getReasonTypes("apfirstinspectiondatenareason", null, $qcSchedule->getApFirstInspectionDateNaReason(),false,true);
+			                                echo $select;
+	                             		?>
+	                        		</div>
+	                            </div>
+	                              <label class="col-lg-1 col-form-label">NA</label>
+	                            <div class="col-lg-1 i-checks">
+	                            	<input type="checkbox" <?php echo $firstInspectionChk?> id="apFirstInspectionChk" name="apFirstInspectionChk" class="form-control">
+
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
 	                        	<div class="col-lg-4">
+
 	                            	<input type="text" placeholder="Select Date" id="approductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getAPProductionStartDate()?>" name="approductionstartdate" class="form-control dateControl">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl">
+
 	                            </div>
 	                       </div>
 	                  </div>
@@ -169,7 +221,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" placeholder="Select Date" id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl">
+	                            	<input type="text" placeholder="Select Date"  id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -239,13 +291,60 @@ $(document).ready(function(){
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
+	   	
 	});
+	var middleInspectionNa = "<?php echo $middleInspectionChk?>"
+		if(middleInspectionNa != ""){
+			showHideMiddleNaDiv(true);
+		}
+
+		var firstInspectionNa = "<?php echo $firstInspectionChk?>"
+		if(firstInspectionNa != ""){
+			showHideFirstNaDiv(true);
+		}
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y',
 	    scrollMonth : false,
 		scrollInput : false,
-	})
+	});
+	
+	$('#apMiddleInspectionChk').on('ifChanged', function(event){
+		var flag  = $("#apMiddleInspectionChk").is(':checked');
+		showHideMiddleNaDiv(flag)
+  	});
+
+  	function showHideMiddleNaDiv(flag){
+  		if(flag){
+			$("#middleInspectionSelectDate").hide();
+			$("#middleNaDiv").show();
+			$("#acmiddleinspectiondate").val("");
+			$("#acmiddleinspectiondate").attr("disabled","disabled");
+		}else{
+			$("#acmiddleinspectiondate").removeAttr("disabled");
+			$("#middleInspectionSelectDate").show();
+			$("#middleNaDiv").hide();
+		}
+  	}
+
+  	function showHideFirstNaDiv(flag){
+  		if(flag){
+			$("#firstInspectionSelectDate").hide();
+			$("#firstNaDiv").show();
+			$("#acfirstinspectiondate").val("");
+			$("#acfirstinspectiondate").attr("disabled","disabled");
+		}else{
+			$("#acfirstinspectiondate").removeAttr("disabled");
+			$("#firstInspectionSelectDate").show();
+			$("#firstNaDiv").hide();
+		}
+  	}
+
+	$('#apFirstInspectionChk').on('ifChanged', function(event){
+		var flag  = $("#apFirstInspectionChk").is(':checked');
+		showHideFirstNaDiv(flag);
+  	});
+  	
 });
 function setDates(shipDateStr){
 	if(shipDateStr == ""){

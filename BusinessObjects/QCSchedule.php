@@ -5,7 +5,7 @@ class QCSchedule{
 	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
-	$notes,$status, $userseq, $createdon, $lastmodifiedon;
+	$notes,$status, $userseq, $createdon, $lastmodifiedon,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason;
 	
 	public static $className = "QCSchedule";
 	public static $tableName = "qcschedules";
@@ -192,6 +192,21 @@ class QCSchedule{
 	public function getLastModifiedOn(){
 		return $this->lastmodifiedon;
 	}
+	
+	public function setApMiddleInspectionDateNaReason($middleInspectionNaReason_){
+		$this->apmiddleinspectiondatenareason = $middleInspectionNaReason_;
+	}
+	public function getApMiddleInspectionDateNaReason(){
+		return $this->apmiddleinspectiondatenareason;
+	}
+	
+	public function setApFirstInspectionDateNaReason($firstInspectionNaReason_){
+		$this->apfirstinspectiondatenareason = $firstInspectionNaReason_;
+	}
+	public function getApFirstInspectionDateNaReason(){
+		return $this->apfirstinspectiondatenareason;
+	}
+	
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);
@@ -207,7 +222,10 @@ class QCSchedule{
 				$datePos = strpos(strtolower ($attrName),'date');
 				$value = $array[$attrName];
 				if($datePos !== false && !empty($value)){
-					$value = DateUtil::StringToDateByGivenFormat("m-d-Y", $value);
+					$dateValue = DateUtil::StringToDateByGivenFormat("m-d-Y", $value);
+					if($dateValue){
+						$value = $dateValue;
+					}
 				}
 				if(!empty($value)){
 					$this->{$attrName} = $value;
