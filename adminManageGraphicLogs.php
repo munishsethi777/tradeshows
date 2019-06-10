@@ -362,7 +362,7 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
             //container.append(importButton);
-            //container.append(exportButton);
+            container.append(exportButton);
             container.append(reloadButton);
             //container.append(downloadButton);
             container.append(deleteButton);

@@ -48,8 +48,8 @@ class GraphicLogMgr{
 		$output = array();
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
-		$qcSchedules = self::$dataStore->findAllArr(true);
-		ExportUtil::exportQCSchedules($qcSchedules);
+		$graphicLogs = self::$dataStore->findAll(true);
+		ExportUtil::exportGraphicLogs($graphicLogs);
 	}
 	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){

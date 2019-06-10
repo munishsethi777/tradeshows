@@ -537,6 +537,276 @@ class ExportUtil{
 	}
 	
 	
+	public static function exportGraphicLogs($graphicLogs){
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getProperties()->setCreator("Admin")
+		->setLastModifiedBy("Admin")
+		->setTitle("Graphic Logs")
+		->setSubject("Graphic Logs")
+		->setDescription("Graphic Logs")
+		->setKeywords("office 2007 openxml php")
+		->setCategory("Report");
+		$alphas = range('A', 'Z');
+		$rowCount = 1;
+		$count = 1;
+		$i = 0;
+	
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "USA OFFICE ENTRY DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getAlignment()->applyFromArray(
+				array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
+				);
+	  	$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO #");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "ESTIMATED P/O \nSHIP DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CLASS CODE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SKU #");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Type Of Graphic");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Custom \nHangtag \nNeeded");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Custom \nWraptag \nNeeded");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Customer Name");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PRIVATE \nLABEL (Y/N)");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "USA NOTES TO GRAPHICS");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Estimated GRAPHICS DUE DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CHINA OFFICE ENTRY DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CONFIRMED P/O SHIP DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Ship Dates In Jeopardy");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "LENGTH");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "WIDTH");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "HEIGHT");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "NOTES FROM CHINA OFFICE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "FINAL GRAPHICS DUE DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "NOTES FROM GRAPHICS TO CHINA OFFICE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "APPROX. DATE GRAPHICS \nWILL BE SENT TO CHINA FOR PRINT");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "GRAPHIC STATUS");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "GRAPHIC ARTIST \nWORKING ON PROJECT");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "GRAPHIC ARTIST \nSTART DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DATE COMPLETION OF GRAPHICS");
+		//$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		//$colName = $alphas[$i++]. $count;
+		//$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DURATION (# OF DAYS)");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension("AA")->setAutoSize(true);
+		$count = 2;
+		$i = 0;
+		foreach($graphicLogs as $graphicLog){
+			//$graphicLog = new GraphicsLog();
+			$USAOfficeEntryDate = $graphicLog->getUSAOfficeEntryDate();
+			if(!empty($USAOfficeEntryDate)){
+				$USAOfficeEntryDate = self::getDateStr($USAOfficeEntryDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $USAOfficeEntryDate);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getPO());
+			
+			$estimatedShipDate =  $graphicLog->getEstimatedShipDate();
+			if(!empty($estimatedShipDate)){
+				$estimatedShipDate = self::getDateStr($estimatedShipDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $estimatedShipDate);
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getClassCode());
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getSKU());
+	
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getGraphicType());
+			
+			$customHangTagNeeded = "No";
+			if(!empty($graphicLog->getIsCustomHangTagNeeded())){
+				$customHangTagNeeded = "Yes";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customHangTagNeeded);
+			
+			
+			$customWrapTagNeeded = "No";
+			if(!empty($graphicLog->getIsCustomWrapTagNeeded())){
+				$customWrapTagNeeded = "Yes";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customWrapTagNeeded);
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getCustomerName());
+			
+			$privateLabel = "No";
+			if(!empty($graphicLog->getIsPrivateLabel())){
+				$privateLabel = "Yes";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$privateLabel);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getUSANotes());
+			
+			$estimatedGraphicDate = $graphicLog->getEstimatedGraphicsDate();
+			if(!empty($estimatedGraphicDate)){
+				$estimatedGraphicDate = self::getDateStr($estimatedGraphicDate);
+			}
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $estimatedGraphicDate);
+				
+			$chinaOfficeEntryDate = $graphicLog->getChinaOfficeEntryDate();
+			if(!empty($chinaOfficeEntryDate)){
+				$chinaOfficeEntryDate = self::getDateStr($chinaOfficeEntryDate);
+			}
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $chinaOfficeEntryDate);
+				
+			$confirmedPOShipDate = $graphicLog->getConfirmedPOShipDate();
+			if(!empty($confirmedPOShipDate)){
+				$confirmedPOShipDate = self::getDateStr($confirmedPOShipDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $confirmedPOShipDate);
+				
+				
+			$jeopardyDate = $graphicLog->getJeopardyDate();
+			if(!empty($jeopardyDate)){
+				$jeopardyDate = self::getDateStr($jeopardyDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $jeopardyDate);
+				
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicLength());
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicWidth());
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicHeight());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getChinaNotes());
+			
+			$finalGraphicsDueDate = $graphicLog->getFinalGraphicsDueDate();
+			if(!empty($finalGraphicsDueDate)){
+				$finalGraphicsDueDate = self::getDateStr($finalGraphicsDueDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $finalGraphicsDueDate);
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicsToChinaNotes());
+	
+			$approxGraphicsChinaSentDate = $graphicLog->getApproxGraphicsChinaSentDate();
+			if(!empty($approxGraphicsChinaSentDate)){
+				$approxGraphicsChinaSentDate = self::getDateStr($approxGraphicsChinaSentDate);
+			}
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $approxGraphicsChinaSentDate);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicStatus());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicArtist());
+				
+			$graphicArtistStartDate = $graphicLog->getGraphicArtistStartDate();
+			if(!empty($graphicArtistStartDate)){
+				$graphicArtistStartDate = self::getDateStr($graphicArtistStartDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicArtistStartDate);
+				
+			$graphicCompletionDate = $graphicLog->getGraphicCompletionDate();
+			if(!empty($graphicCompletionDate)){
+				$graphicCompletionDate = self::getDateStr($graphicCompletionDate);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicCompletionDate);
+			
+			//$colName = $alphas[$i++]. $count;
+			//$objPHPExcel->setActiveSheetIndex(0)->setCellValue("AA",$graphicLog->getDuration());
+			$count++;
+			$i = 0;
+		}
+		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
+		
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$objPHPExcel->setActiveSheetIndex(0);
+			
+			
+		// Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="GraphicLogs.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+			
+		// If you're serving to IE over SSL, then the following may be needed
+		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		ob_end_clean();
+		$objWriter->save('php://output');
+	}
+	
+	
 	public static function exportItems($items){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
