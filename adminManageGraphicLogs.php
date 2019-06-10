@@ -353,7 +353,7 @@ function loadGrid(){
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
-            //var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
+            var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             //var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
@@ -361,7 +361,7 @@ function loadGrid(){
             
             container.append(addButton);
             container.append(editButton);
-            //container.append(importButton);
+            container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
             //container.append(downloadButton);
@@ -369,7 +369,7 @@ function loadGrid(){
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
-            //importButton.jqxButton({  width: 65, height: 18 });
+            importButton.jqxButton({  width: 65, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             //downloadButton.jqxButton({  width: 140, height: 18 });
@@ -396,13 +396,13 @@ function loadGrid(){
                 deleteUrl = "Actions/GraphicLogAction.php?call=deleteGraphicLog";
                 deleteGraphicLog(gridId,deleteUrl);
             });
-            //importButton.click(function (event) {
-                //location.href = ("adminImportGraphicLogs.php");
-            //});
-             exportButton.click(function (event) {
+            importButton.click(function (event) {
+                location.href = ("adminImportGraphicLogs.php");
+            });
+            exportButton.click(function (event) {
          	   filterQstr = getFilterString("graphiclogGrid");
          	   exportItemsConfirm(filterQstr);
-             });
+            });
             reloadButton.click(function (event) {
                 $("#graphiclogGrid").jqxGrid({ source: dataAdapter });
             });

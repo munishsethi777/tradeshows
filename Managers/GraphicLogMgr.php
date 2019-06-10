@@ -108,9 +108,10 @@ class GraphicLogMgr{
 		$existingItemIds = array();
 		$notSaved = array();
 		$success = 1;
+		
 		foreach ($graphicLogArr as $index => $graphicLog){
-			//$itemNo = $qc->getItemNumbers();
-			//$po =  $qc->getPo();
+			$rowId = 0;
+			$rowId = $index + 5;
 			try {
 				if(!$isUpdate){
 					$this->saveGraphicLog($conn, $graphicLog);
@@ -124,21 +125,24 @@ class GraphicLogMgr{
 				}
 			 }
 			catch ( Exception $e) {
-				$rowId = $index + 4;
 				$trace = $e->getTrace();
-				//if($trace[0]["args"][0][1] == "1062"){
-					//$itemNoAlreadyExists++;
-					//array_push($existingItemIds, $itemNo);
-				//}elseif($trace[0]["args"][0][1] == "1048"){
-					//array_push($notSaved, $rowId);
-				//}else{
-					$messages .= "Row id: " . $rowId ." - ". $e->getMessage() ."<br>";
-				//}
+				if($trace[0]["args"][0][1] == "1062"){
+					$messages .= "Row id: " . $rowId ." has duplicate values<br>";
+				}else{
+					$errMsg = $e->getMessage();
+					$errMsg = str_replace( "at row 1", "", $errMsg);
+					$messages .= "Row id: " . $rowId ." - ". $errMsg ."<br>";
+				}
+				
 				$hasError = true;
 				$success = 0;
 			}
 		}
-		$conn->commit();
+		//if(empty($messages)){
+			$conn->commit();
+		//}else{
+			//$conn->rollBack();
+		//}
 		if(!$hasError){
 			$messages = "Graphic Logs Imported Successfully!";
 		}
@@ -216,7 +220,7 @@ class GraphicLogMgr{
 		}
 		
 		if(!empty($iscustomhangtagneeded)){
-			if($iscustomhangtagneeded == "yes"){
+			if(strtolower($iscustomhangtagneeded) == "yes"){
 				$graphicLog->setIsCustomHangTagNeeded(1);
 			}else{
 				$graphicLog->setIsCustomHangTagNeeded(0);
@@ -226,7 +230,7 @@ class GraphicLogMgr{
 		}
 		
 		if(!empty($iscustomwraptagneeded)){
-			if($iscustomwraptagneeded == "yes"){
+			if(strtolower($iscustomwraptagneeded) == "yes"){
 				$graphicLog->setIsCustomWrapTagNeeded(1);
 			}else{
 				$graphicLog->setIsCustomWrapTagNeeded(0);
@@ -240,7 +244,7 @@ class GraphicLogMgr{
 		}
 		
 		if(!empty($isprivatelabel)){
-			if($isprivatelabel == "yes"){
+			if(strtolower($isprivatelabel) == "yes"){
 				$graphicLog->setIsPrivateLabel(1);
 			}else{
 				$graphicLog->setIsPrivateLabel(0);
@@ -253,7 +257,7 @@ class GraphicLogMgr{
 			$graphicLog->setUSANotes($usanotes);
 		}
 		if(!empty($estimatedgraphicsdate)){
-			$estimatedshipdate = $this->convertStrToDate($estimatedshipdate);
+			$estimatedgraphicsdate = $this->convertStrToDate($estimatedgraphicsdate);
 			$graphicLog->setEstimatedGraphicsDate($estimatedgraphicsdate);
 		}
 		if(!empty($chinaofficeentrydate)){
@@ -298,7 +302,7 @@ class GraphicLogMgr{
 			$graphicLog->setGraphicArtist($graphicartist);
 		}
 		if(!empty($graphicartiststartdate)){
-			$approxgraphicschinasentdate = $this->convertStrToDate($approxgraphicschinasentdate);
+			$graphicartiststartdate = $this->convertStrToDate($graphicartiststartdate);
 			$graphicLog->setGraphicArtistStartDate($graphicartiststartdate);
 		}
 		if(!empty($graphiccompletiondate)){
@@ -311,6 +315,7 @@ class GraphicLogMgr{
 		
 		$graphicLog->setCreatedOn(DateUtil::getCurrentDate());
 		$graphicLog->setLastModifiedOn(DateUtil::getCurrentDate());
+		$graphicLog->setUserSeq(1);
 		//$importedData["items"] = $itemNoArr;
 		return $graphicLog;
 	}

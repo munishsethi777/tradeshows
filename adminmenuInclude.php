@@ -17,6 +17,7 @@ $manageCustomers = "";
 $adminManageOrders = "";
 $manageQCSchedules = "";
 $manageGraphicLogs = "";
+$isManageUsers = "";
 //echo  $file;
 if($file == "dashboard.php"){
 	$isDashboard = "active";
@@ -44,6 +45,8 @@ if($file == "dashboard.php"){
 	$manageQCSchedules = "active";
 }elseif($file=="adminManageGraphicLogs.php" || $file== "adminCreateGraphicLog.php" || $file=="adminImportGraphicLogs.php"){
 	$manageGraphicLogs = "active";
+}elseif($file=="adminManageUsers.php" || $file== "adminCreateUser.php"){
+	$isManageUsers = "active";
 }
 
 ?>
@@ -123,6 +126,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $isPublicRepository;?>">
                     <a href="adminPublicRepository.php"><i class="fa fa-globe"></i> 
                     	<span class="nav-label">Public Repository</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isManageUsers;?>">
+                    <a href="adminManageUsers.php"><i class="fa fa-key"></i> 
+                    	<span class="nav-label">Manage Users</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">

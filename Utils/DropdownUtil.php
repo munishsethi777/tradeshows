@@ -1,5 +1,6 @@
 <?php
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 
 class DropDownUtils {
 	
@@ -28,6 +29,12 @@ class DropDownUtils {
 		$enums = ReasonCodeType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
 	}
+	public static function getQCUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getQCUsersArrForDD();
+		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select QC");
+	}
+	
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any") {
 		$id = $selectName;

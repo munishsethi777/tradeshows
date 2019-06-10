@@ -3,7 +3,7 @@ class User{
 	public static $tableName = "users";
 	public static $className = "user";
 	
-	private $seq,$email,$password,$fullname,$mobile,$isenabled;
+	private $seq,$email,$password,$fullname,$mobile,$isenabled,$isqc,$qccode,$createdon,$lastmodifiedon;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -45,6 +45,46 @@ class User{
 	}
 	public function getIsEnabled(){
 		return $this->isenabled;
+	}
+	public function setIsQC($val){
+		$this->isqc = $val;
+	}
+	public function getIsQC(){
+		return $this->isqc;
+	}
+	public function setQCCode($val){
+		$this->qccode = $val;
+	}
+	public function getQCCode(){
+		return $this->qccode;
+	}
+	public function setCreatedOn($val){
+		$this->createdon = $val;
+	}
+	public function getCreatedOn(){
+		return $this->createdon;
+	}
+	public function setLastModifiedOn($val){
+		$this->lastmodifiedon = $val;
+	}
+	public function getLastModifiedOn(){
+		return $this->lastmodifiedon;
+	}
+	function createFromRequest($request){
+		if (is_array($request)){
+			$this->from_array($request);
+		}
+		return $this;
+	}
+	
+	public function from_array($array)
+	{
+		foreach(get_object_vars($this) as $attrName => $attrValue){
+			$flag = property_exists(self::$className, $attrName);
+			if($flag && array_key_exists($attrName, $array)){
+				$this->{$attrName} = $array[$attrName];
+			}
+		}
 	}
 	
 }

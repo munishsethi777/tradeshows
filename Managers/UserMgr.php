@@ -44,9 +44,15 @@ class UserMgr{
 		$adminArr["name"] = $user->getFullName();
 		return $adminArr;
 	}
-	
-	public function getAllUserArr(){
-		$users = self::$userDataStore->findAllArr();
+	public function getUsersForGrid(){
+		$users = $this->getAllUserArr(true);
+		$mainArr["Rows"] = $users;
+		$mainArr["TotalRows"] = self::$userDataStore->executeCountQuery(null,true);
+		return $mainArr;
+	}
+
+	public function getAllUserArr($isApplyFilter=false){
+		$users = self::$userDataStore->findAllArr($isApplyFilter);
 		return $users;
 	}
 	
@@ -62,4 +68,27 @@ class UserMgr{
 		$count = self::$userDataStore->executeCountQuery($params);
 		return $count > 0;
 	}
+	public function save($conn,$item){
+		self::$userDataStore->saveObject($item);
+	}
+	public function findBySeq($seq){
+		$user = self::$userDataStore->findBySeq($seq);
+		return $user;
+	}
+	public function deleteBySeqs($ids) {
+		$flag = self::$userDataStore->deleteInList ( $ids );
+		return $flag;
+	}
+	
+	public function getQCUsersArrForDD(){
+		$params["isenabled"] = 1;
+		$params["isqc"] = 1;
+		$users = self::$userDataStore->executeConditionQuery($params);
+		$arr = array();
+		foreach($users as $user){
+			$arr[$user->getSeq()] = $user->getQCCode();
+		}
+		return $arr;
+	}
+	
 }
