@@ -1,6 +1,6 @@
 <?php
 require_once ("MainDB.php");
-//require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
 //Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 class BeanDataStore {
@@ -99,7 +99,7 @@ class BeanDataStore {
 			}
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured in BeanDataStore:" . $e );
+			//$this->logger->error ( "Error occured in BeanDataStore:" . $e );
 			throw $e ;
 		}
 		return $id;
@@ -287,7 +287,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
