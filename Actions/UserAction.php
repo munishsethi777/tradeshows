@@ -1,12 +1,16 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
+
 $success = 1;
 $call = "";
 $response = new ArrayObject();
 $userMgr = UserMgr::getInstance();
+$departmentMgr = DepartmentMgr::getInstance();
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
 }else{
@@ -23,20 +27,32 @@ if($call == "saveUser"){
 		}else {
 			$user->setIsEnabled(0);
 		}
-		if(isset($_REQUEST["isqc"])){
-			$user->setIsQC(1);
-		}else {
-			$user->setIsQC(0);
-			$user->setQCCode(null);
-		}
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = "User updated successfully.";
+		}else{
+			$user->setCreatedOn(new DateTime());
 		}
 		$user->setSeq($seq);
+		$user->setLastModifiedOn(new DateTime());
 		$id = $userMgr->saveUser($user);
-		
+		$departmentMgr->deleteUseDepartments($id);
+		try{
+			foreach($_POST as $key => $value){
+				if(strpos($key, "dep") !== false){
+					$dseq = substr($key,3);
+					$userDept = new UserDepartment();
+					$userDept->setUserSeq($id);
+					$userDept->setDepartmentSeq($dseq);
+					$userDept->setLastModifiedOn(new DateTime());
+					$userDept->setCreatedOn(new DateTime());
+					$departmentMgr->saveUserDepartment($userDept);
+				}
+			}
+		}catch(Exception $e){
+			return $e->getMessage();
+		}
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

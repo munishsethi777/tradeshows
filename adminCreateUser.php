@@ -5,24 +5,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
+
+$departmentMgr = DepartmentMgr::getInstance();
+$departments = $departmentMgr->getAll();
 $user = new User();
 $userMgr = UserMgr::getInstance();
 
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
-$isQC = "";
+$showQCDiv = "none";
 $isEnabled = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
-	if($user->getIsQC() == 1){
-		$isQC = "checked";
+	if($user->getUserType() == "QC"){
+		$showQCDiv = "block";
 	}
 	if($user->getIsEnabled() == 1){
 		$isEnabled = "checked";
 	}
 }
+$userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,9 +78,6 @@ if(isset($_POST["id"])){
                      	<input type="hidden" id ="call" name="call"  value="saveUser"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $user->getSeq()?>"/>
                         <div class="p-xs outterDiv">
-<!--                         	<div class="form-group row"> -->
-<!-- 	                       		<label class="col-lg-3 col-form-label bg-primary">To be Filled by USA Office</label> -->
-<!-- 	                        </div> -->
                         	 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Email Id:</label>
 	                        	<div class="col-lg-4">
@@ -98,11 +102,14 @@ if(isset($_POST["id"])){
 	                        
 	                        <div class="form-group row i-checks" id="isQCDiv">
 	                       		
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Is Quality Controller :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">User Type :</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $isQC?> name="isqc" id="isqc"/>
+	                        		<select name="usertype" class="form-control userTypeDD">
+	                        			<option value="SUPERVISOR">Supervisor</option>
+	                        			<option value="QC">Quality Controller</option>
+	                        		</select>
 	                            </div>
-	                            <div class="qcDIV" style="display:none">
+	                       		<div class="qcDIV" style="display:<?php echo $showQCDiv?>">
 		                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
 		                        	<div class="col-lg-4">
 		                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
@@ -116,8 +123,25 @@ if(isset($_POST["id"])){
 	                        		<input type="checkbox" <?php echo $isEnabled?> name="isenabled"/>
 	                            </div>
 	                        </div>
-	                        
-	                  
+	                    	<div class="form-group row m-t-xl">
+	                       		<label class="col-lg-3 col-form-label bg-primary">Select Departments</label>
+	                        </div>
+	                    	<div class="form-group row i-checks">
+	                    		<?php foreach($departments as $department){
+	                    			$checked = "";
+	                    				foreach($userDepartments as $userDepartment){
+	                    					if($userDepartment->getDepartmentSeq() == $department->getSeq()){
+	                    						$checked = "checked";
+	                    					}
+	                    				}
+	                    				?>
+		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $department->getTitle();?></label>
+		                        	<div class="col-lg-2">
+		                        		<input type="checkbox" name="dep<?php echo $department->getSeq();?>" <?php echo $checked?>/>
+		                            </div>
+	                            <?php }?>
+	                        </div>    
+	                 	 
 	                    
                         <div class="bg-white p-xs">
 	                        <div class="form-group row">
@@ -149,17 +173,23 @@ if(isset($_POST["id"])){
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
 
-	$('#isQCDiv').on('ifChanged', function(event){
-		var bool  = $("#isqc").is(':checked');
-		$(".qcDIV").toggle(bool);
-		
-		//showHideReattempts(bool);
+	$('.userTypeDD').change(function(event){
+		if(this.value == "QC"){
+			$(".qcDIV").show();
+		}else{
+			$(".qcDIV").hide();
+		}
 	});
+	<?php if(!empty($user->getUserType())){?>	
+		$(".userTypeDD").val("<?php echo $user->getUserType()?>");
+	<?php }?>
 });
 
 function saveUser(){

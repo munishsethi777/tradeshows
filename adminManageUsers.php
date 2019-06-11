@@ -60,12 +60,12 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Email', datafield: 'email', width:"30%"},
-      { text: 'FullName', datafield: 'fullname',width:"20%"},
-      { text: 'QC', datafield: 'isqc',width:"5%",columntype:"checkbox"},
+      { text: 'Email', datafield: 'email', width:"28%"},
+      { text: 'FullName', datafield: 'fullname',width:"22%"},
+      { text: 'Type', datafield: 'usertype',width:"10%"},
       { text: 'QC Code', datafield: 'qccode',width:"10%"},
       { text: 'Enabled', datafield: 'isenabled',width:"8%",columntype:"checkbox"},
-      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"10%",filtertype: 'date',cellsformat: 'M-dd-yyyy'}
+      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"12%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
     ]
    
     var source =
@@ -74,11 +74,11 @@ function loadGrid(){
         id: 'id',
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
-        sortdirection: 'asc',
+        sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'email', type: 'string' }, 
                     { name: 'fullname', type: 'string' },
-                    { name: 'isqc', type: 'boolean' },
+                    { name: 'usertype', type: 'string' },
                     { name: 'isenabled', type: 'boolean' },
                     { name: 'qccode', type: 'string' },
                     { name: 'createdon', type: 'date' },

@@ -3,7 +3,7 @@ class User{
 	public static $tableName = "users";
 	public static $className = "user";
 	
-	private $seq,$email,$password,$fullname,$mobile,$isenabled,$isqc,$qccode,$createdon,$lastmodifiedon;
+	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$createdon,$lastmodifiedon;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -46,11 +46,11 @@ class User{
 	public function getIsEnabled(){
 		return $this->isenabled;
 	}
-	public function setIsQC($val){
-		$this->isqc = $val;
+	public function setUserType($val){
+		$this->usertype = $val;
 	}
-	public function getIsQC(){
-		return $this->isqc;
+	public function getUserType(){
+		return $this->usertype;
 	}
 	public function setQCCode($val){
 		$this->qccode = $val;

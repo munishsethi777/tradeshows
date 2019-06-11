@@ -92,6 +92,7 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Graphic Logs</span>  
                     </a>
                 </li>
+                <!-- 
                 <li class="<?php echo $manageCustomers;?>">
                    <a href="adminManageCustomers.php"><i class="fa fa-group"></i> 
                 	   	<span class="nav-label">Manage Customers</span>  
@@ -102,6 +103,7 @@ if($file == "dashboard.php"){
                 	   	<span class="nav-label">Manage Orders</span>  
                    </a>
                 </li>
+                
                 <li class="<?php echo $isTaskCategory;?>">
                     <a href="adminShowTaskCategory.php"><i class="fa fa-code-fork"></i> 
                     	<span class="nav-label ">Task Categories</span>  
@@ -122,12 +124,12 @@ if($file == "dashboard.php"){
                     <a href="adminShowTasks.php"><i class="fa fa-calendar"></i> 
                     	<span class="nav-label">TradeShows Tasks</span>  
                     </a>
-                </li>
+                </li> 
                 <li class="<?php echo $isPublicRepository;?>">
                     <a href="adminPublicRepository.php"><i class="fa fa-globe"></i> 
                     	<span class="nav-label">Public Repository</span>  
                     </a>
-                </li>
+                </li>-->
                 <li class="<?php echo $isManageUsers;?>">
                     <a href="adminManageUsers.php"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Manage Users</span>  
