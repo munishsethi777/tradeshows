@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class QCScheduleMgr{
@@ -204,7 +205,11 @@ class QCScheduleMgr{
 	}
 	
 	private function getImportedData($data){
+		$userMgr = UserMgr::getInstance();
+		$qcUsers = $userMgr->getQCUsersArrForDD();
+		$qcUsers = array_flip($qcUsers);
 		$qc = $data[0];
+		$qcUserSeq = $qcUsers[$qc];
 		$classCode = $data[1];
 		$po = $data[2];
 		$poType = $data[3];
@@ -238,6 +243,7 @@ class QCScheduleMgr{
 		
 		if(!empty($qc)){
 			$qcSchedule->setQC($qc);
+			$qcSchedule->setQCUser($qcUserSeq);
 		}
 		if(!empty($classCode)){
 			$qcSchedule->setClassCode($classCode);
