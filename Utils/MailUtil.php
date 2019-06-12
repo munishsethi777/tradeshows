@@ -349,7 +349,7 @@ class MailUtil{
 			}
 			//$mail->AddBCC("baljeetgaheer@gmail.com");
 			foreach($attachments as $name=>$attachment){
-				$name .= ".pdf";
+				$name .= ".xls";
 				$mail->addStringAttachment($attachment, $name);
 			}
 			if(!$mail->Send()) {

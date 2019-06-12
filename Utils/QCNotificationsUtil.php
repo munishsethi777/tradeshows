@@ -16,7 +16,10 @@ class QCNotificationsUtil{
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::UPCOMING_INSPECTION_SCHEDULE;
-			
+		$fromToDates = self::getWeeklyFromToDateArr();
+		$fromDate = $fromToDates["fromDate"];
+		$toDate = $fromToDates["toDate"];
+		$fileName = "UpcomingInspectionSchedule_".$fromDate."_to_".$toDate;
 		if($userType == UserType::SUPERVISOR){
 			$finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate();
 			$middleInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForMiddleInspectionDate();
@@ -25,13 +28,15 @@ class QCNotificationsUtil{
 			$pendingSchedules[NotificationType::SC_MIDDLE_INSPECTION_DATE] = $middleInspectionQcSchedules;
 			$pendingSchedules[NotificationType::SC_FIRST_INSPECTION_DATE] = $firstInspectionQcSchedules;
 			$html = self::getQCNotificationHtml($pendingSchedules,$subject);
+			$excelData = ExportUtil::exportQcWeeklyReport($pendingSchedules, $subject, true);
+			$attachments = array($fileName=>$excelData);
 			$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
 			if(!empty($toEmails)){
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}	
 			
 		}elseif($userType == UserType::QC){
@@ -45,6 +50,8 @@ class QCNotificationsUtil{
 				$pendingSchedules[NotificationType::SC_FIRST_INSPECTION_DATE] = $firstInspectionQcSchedules;
 				$html = "Hello " . $user->getFullName() .", <br>";
 				$html .= self::getQCNotificationHtml($pendingSchedules,$subject);
+				$excelData = ExportUtil::exportQcWeeklyReport($pendingSchedules, $subject, true);
+				$attachments = array($fileName=>$excelData);
 				$email = $user->getEmail();
 				$toEmails = explode(",", $email);
 				foreach ($supervisors as $user){
@@ -53,18 +60,30 @@ class QCNotificationsUtil{
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}
 		
 	}
 	
+	private static function getWeeklyFromToDateArr(){
+		$fromDate = new DateTime();
+		$fromDate->modify("+1 days");
+		$toDate = new DateTime();
+		$toDate->modify("+7 days");
+		$fromDateStr = $fromDate->format("n-j-y");
+		$toDateStr = $toDate->format("n-j-y");
+		return array("fromDate"=>$fromDateStr,"toDate"=>$toDateStr);
+	}
 	
 	public static function sendUpcomingInspectionAppointmentNotification($userType){
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::UPCOMING_INSPECTION_APPOITMENT;
-					
+		$fromToDates = self::getWeeklyFromToDateArr();
+		$fromDate = $fromToDates["fromDate"];
+		$toDate = $fromToDates["toDate"];
+		$fileName = "UpcomingInspectionAppointment_".$fromDate."_to_".$toDate;
 		if($userType == UserType::SUPERVISOR){
 			$finalInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForFinalInspectionDate();
 			$middleInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForMiddleInspectionDate();
@@ -73,13 +92,15 @@ class QCNotificationsUtil{
 			$pendingAppoitments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionQcAppoitment;
 			$pendingAppoitments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionQcAppoitment;
 			$html = self::getQCNotificationHtml($pendingAppoitments,$subject);
+			$excelData = ExportUtil::exportQcWeeklyReport($pendingAppoitments, $subject, true);
+			$attachments = array($fileName=>$excelData);
 			$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
 			if(!empty($toEmails)){
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
@@ -90,15 +111,16 @@ class QCNotificationsUtil{
 				$pendingAppoitments[NotificationType::AP_FINAL_INPECTION_DATE] = $finalInspectionQcAppoitment;
 				$pendingAppoitments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionQcAppoitment;
 				$pendingAppoitments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionQcAppoitment;
-				
 				$html = "Hello " . $user->getFullName() .", <br>";
 				$html .= self::getQCNotificationHtml($pendingAppoitments,$subject);
+				$excelData = ExportUtil::exportQcWeeklyReport($pendingAppoitments, $subject, true);
+				$attachments = array($fileName=>$excelData);
 				$email = $user->getEmail();
 				$toEmails = explode(",", $email);
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}
 		
@@ -109,6 +131,7 @@ class QCNotificationsUtil{
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::MISSING_INSPECTION_APPOINTMENT;	
+		$fileName = "MissingAppoitment";
 		if($userType == UserType::SUPERVISOR){
 			$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate();
 			$middleInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForMiddleInspectionDate();
@@ -117,13 +140,15 @@ class QCNotificationsUtil{
 			$missingAppointments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingAppoitment;
 			$missingAppointments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionMissingAppoitment;
 			$html = self::getQCNotificationHtml($missingAppointments,$subject);
+			$excelData = ExportUtil::exportQcWeeklyReport($missingAppointments, $subject, true);
+			$attachments = array($fileName=>$excelData);
 			$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
 			if(!empty($toEmails)){
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
@@ -134,15 +159,16 @@ class QCNotificationsUtil{
 				$missingAppointments[NotificationType::AP_FINAL_INPECTION_DATE] = $finalInspectionMissingAppoitment;
 				$missingAppointments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingAppoitment;
 				$missingAppointments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionMissingAppoitment;
-		
 				$html = "Hello " . $user->getFullName() .", <br>";
 				$html = self::getQCNotificationHtml($missingAppointments,$subject);
+				$excelData = ExportUtil::exportQcWeeklyReport($missingAppointments, $subject, true);
+				$attachments = array($fileName=>$excelData);
 				$email = $user->getEmail();
 				$toEmails = explode(",", $email);
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}
 	}
@@ -151,6 +177,7 @@ class QCNotificationsUtil{
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::INCOMPLETED_SCHEDULES;
+		$fileName = "IncompletedSchedules";
 		if($userType == UserType::SUPERVISOR){
 			$finalInspectionMissingDate = $qcScheduleMgr->getMissingActualFinalInspectionDate();
 			$middleInspectionMissingDate = $qcScheduleMgr->getMissingActualMiddleInspectionDate();
@@ -159,13 +186,15 @@ class QCNotificationsUtil{
 			$missingActualDates[NotificationType::AC_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingDate;
 			$missingActualDates[NotificationType::AC_FIRST_INSPECTION_DATE] = $firstInspectionMissingDate;
 			$html = self::getQCNotificationHtml($missingActualDates,$subject);
+			$excelData = ExportUtil::exportQcWeeklyReport($missingActualDates, $subject, true);
+			$attachments = array($fileName=>$excelData);
 			$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
 			if(!empty($toEmails)){
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 			
 		}elseif($userType == UserType::QC){
@@ -177,15 +206,16 @@ class QCNotificationsUtil{
 				$missingActualDates[NotificationType::AC_FINAL_INPECTION_DATE] = $finalInspectionMissingDate;
 				$missingActualDates[NotificationType::AC_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingDate;
 				$missingActualDates[NotificationType::AC_FIRST_INSPECTION_DATE] = $firstInspectionMissingDate;
-			
 				$html = "Hello " . $user->getFullName() .", <br>";
 				$html = self::getQCNotificationHtml($missingActualDates,$subject);
+				$excelData = ExportUtil::exportQcWeeklyReport($missingActualDates, $subject, true);
+				$attachments = array($fileName=>$excelData);
 				$email = $user->getEmail();
 				$toEmails = explode(",", $email);
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			}
 		}
 	}
@@ -212,12 +242,15 @@ class QCNotificationsUtil{
 		foreach ($pendingSchedules as $notificationType=>$qcSchedules){
 			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
-			$apNotificationTitle = str_replace("Scheduled", "Appointment", $apNotificationTitle);
+			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
 			if($notificationName != StringConstants::UPCOMING_INSPECTION_SCHEDULE ){
 				$notificationTitle = str_replace("Appointment", "Scheduled", $notificationType);
 				$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationTitle;
 			}
-			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
+			if($notificationName == StringConstants::INCOMPLETED_SCHEDULES ){
+				$phAnValues["NOTIFICATION_DATE_TITLE"] = "Scheduled " . $notificationTitle;
+				$apNotificationTitle = "Appointment " . $notificationTitle;
+			}
 			$phAnValues["AP_NOTIFICATIONDATE_TITLE"] = $apNotificationTitle;
 			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
 			$phAnValues["FROM_DATE"] = $fromDate->format("n/j/y");
@@ -263,7 +296,7 @@ class QCNotificationsUtil{
 		return $tableMailHtml;
 	}
 	
-	private static function getScheduleNotificationDate($qcSchedule,$notificationType){
+	public static function getScheduleNotificationDate($qcSchedule,$notificationType){
 		$dates = array();
 		if($notificationType == NotificationType::SC_READY_DATE || $notificationType == NotificationType::AP_READY_DATE){
 			$sc_date = $qcSchedule->getSCReadyDate();
