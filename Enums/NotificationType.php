@@ -14,4 +14,11 @@ class NotificationType extends BasicEnum{
 	const AP_FIRST_INSPECTION_DATE = "Appointment First Inspection Date";
 	const AP_PRODUCTION_START_DATE = "Appointment Production Start Date";
 	const AP_GRAPHIC_RECEIVE_DATE = "Appointment Graphics Receive Date";
+	
+	const AC_READY_DATE = "Actual Ready Date";
+	const AC_FINAL_INPECTION_DATE = "Actual Final Inspection Date";
+	const AC_MIDDLE_INSPECTION_DATE = "Actual Middle Inspection Date";
+	const AC_FIRST_INSPECTION_DATE = "Actual First Inspection Date";
+	const AC_PRODUCTION_START_DATE = "Actual Production Start Date";
+	const AC_GRAPHIC_RECEIVE_DATE = "Actual Graphics Receive Date";
 }

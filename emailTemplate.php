@@ -1,5 +1,3 @@
-Details of various schedules having "{NOTIFICATION_NAME}" due in next 7 days i.e from dates {FROM_DATE} to {TO_DATE}:
-
 <table width="100%" style="color:grey;font-family:arial;font-weight:normal;font-size:12px;border:1px silver solid" cellpadding="3px" cellspacing="0px">
 	<tr style="background-color: silver;color:white">
 		<th style="border:1px silver solid;width:5%;text-align:right">Sr.</th>
