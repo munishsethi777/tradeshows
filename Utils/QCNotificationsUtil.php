@@ -54,9 +54,6 @@ class QCNotificationsUtil{
 				$attachments = array($fileName=>$excelData);
 				$email = $user->getEmail();
 				$toEmails = explode(",", $email);
-				foreach ($supervisors as $user){
-					array_push($toEmails,$user->getEmail());
-				}
 				if(empty($toEmails)){
 					continue;
 				}
