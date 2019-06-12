@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `qcname` VARCHAR(50) NULL AFTER `isenabled`, ADD `isqc` TINYINT NULL AFTER `qccode`, ADD `createdon` DATETIME NULL AFTER `isqc`, ADD `lastmodifiedon` DATETIME NULL AFTER `createdon`;
