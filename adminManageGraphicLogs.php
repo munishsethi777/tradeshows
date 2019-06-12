@@ -8,7 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Manage Graphic Logs</title>
+    <title>Admin | Manage Users</title>
     <?include "ScriptsInclude.php"?>
     <style type="text/css">
     	.itemDetailsModalDiv .lblDesc{

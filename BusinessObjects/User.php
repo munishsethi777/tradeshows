@@ -3,7 +3,7 @@ class User{
 	public static $tableName = "users";
 	public static $className = "user";
 	
-	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$createdon,$lastmodifiedon;
+	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -57,6 +57,12 @@ class User{
 	}
 	public function getQCCode(){
 		return $this->qccode;
+	}
+	public function setIsSendNotifications($val){
+		$this->issendnotifications = $val;
+	}
+	public function getIsSendNotifications(){
+		return $this->issendnotifications;
 	}
 	public function setCreatedOn($val){
 		$this->createdon = $val;

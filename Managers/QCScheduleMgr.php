@@ -473,35 +473,50 @@ class QCScheduleMgr{
 		return $qcschedules;
 	}
 	
-	public function getPendingAppoitmentForFinalInspectionDate(){
+	public function getPendingAppoitmentForFinalInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apfinalinspectiondate > CURDATE() and apfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apfinalinspectiondate > CURDATE() and apfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingAppoitmentForMiddleInspectionDate(){
+	public function getPendingAppoitmentForMiddleInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apmiddleinspectiondate > CURDATE() and apmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apmiddleinspectiondate > CURDATE() and apmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingAppoitmentForFirstInspectionDate(){
+	public function getPendingAppoitmentForFirstInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apfirstinspectiondate > CURDATE() and apfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apfirstinspectiondate > CURDATE() and apfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingAppoitmentForProductionStartDate(){
+	public function getPendingAppoitmentForProductionStartDate($QCCode = null){
 		$query = "select * from qcschedules where approductionstartdate > CURDATE() and approductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where approductionstartdate > CURDATE() and approductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,approductionstartdate asc";
+		}
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingAppoitmentForGraphicReceiveDate(){
+	public function getPendingAppoitmentForGraphicReceiveDate($QCCode = null){
 		$query = "select * from qcschedules where apgraphicsreceivedate > CURDATE() and apgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apgraphicsreceivedate > CURDATE() and apgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
@@ -517,36 +532,51 @@ class QCScheduleMgr{
 		return $qcschedules;
 	}
 	
-	public function getMissingAppoitmentForFinalInspectionDate(){
+	public function getMissingAppoitmentForFinalInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apfinalinspectiondate is NULL and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingAppoitmentForMiddleInspectionDate(){
+	public function getMissingAppoitmentForMiddleInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingAppoitmentForFirstInspectionDate(){
+	public function getMissingAppoitmentForFirstInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingAppoitmentForProductionStartDate(){
+	public function getMissingAppoitmentForProductionStartDate($QCCode = null){
 		$query = "select * from qcschedules where approductionstartdate is NULL and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where approductionstartdate is NULL and acproductionstartdate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,approductionstartdate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingAppoitmentForGraphicReceiveDate(){
+	public function getMissingAppoitmentForGraphicReceiveDate($QCCode = null){
 		$query = "select * from qcschedules where apgraphicsreceivedate is NULL and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apgraphicsreceivedate is NULL and acgraphicsreceivedate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
@@ -562,36 +592,51 @@ class QCScheduleMgr{
 		return $qcschedules;
 	}
 	
-	public function getMissingActualFinalInspectionDate(){
+	public function getMissingActualFinalInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where apfinalinspectiondate is not NULL and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apfinalinspectiondate is not NULL and acfinalinspectiondate is NULL and qc = '$QCCode'  order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingActualMiddleInspectionDate(){
+	public function getMissingActualMiddleInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where (apmiddleinspectiondate is not NULL or acmiddleinspectiondate is not NULL)  and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where (apmiddleinspectiondate is not NULL or acmiddleinspectiondate is not NULL)  and apmiddleinspectiondatenareason is NULL and qc = '$QCCode'  order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingActualFirstInspectionDate(){
+	public function getMissingActualFirstInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where (apfirstinspectiondate is not NULL or apfirstinspectiondatenareason is NULL) and acfirstinspectiondate is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where (apfirstinspectiondate is not NULL or apfirstinspectiondatenareason is NULL) and acfirstinspectiondate is NULL and qc = '$QCCode'  order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingActualProductionStartDate(){
+	public function getMissingActualProductionStartDate($QCCode = null){
 		$query = "select * from qcschedules where approductionstartdate is not NULL and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where approductionstartdate is not NULL and acproductionstartdate is NULL and qc = '$QCCode'  order by QC ASC, classcode ASC,approductionstartdate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getMissingActualGraphicReceiveDate(){
+	public function getMissingActualGraphicReceiveDate($QCCode = null){
 		$query = "select * from qcschedules where apgraphicsreceivedate is not NULL and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where apgraphicsreceivedate is not NULL and acgraphicsreceivedate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
@@ -600,29 +645,38 @@ class QCScheduleMgr{
 	
 	
 	//------------Pending Schedules-----------
-	public function getPendingShechededForReadyDate(){
+	public function getPendingShechededForReadyDate(){//currently not in use
 		$query = "select * from qcschedules where screadydate > CURDATE() and screadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcode ASC, apreadydate ASC";
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingShechededForFinalInspectionDate(){
+	public function getPendingShechededForFinalInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where scfinalinspectiondate > CURDATE() and scfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where scfinalinspectiondate > CURDATE() and scfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL and qc = '$QCCode' order by QC ASC, classcode ASC,apfinalinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingShechededForMiddleInspectionDate(){
+	public function getPendingShechededForMiddleInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where scmiddleinspectiondate > CURDATE() and scmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where scmiddleinspectiondate > CURDATE() and scmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and qc = '$QCCode' and apmiddleinspectiondatenareason is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
 	}
 	
-	public function getPendingShechededForFirstInspectionDate(){
+	public function getPendingShechededForFirstInspectionDate($QCCode = null){
 		$query = "select * from qcschedules where scfirstinspectiondate > CURDATE() and scfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		if(!empty($QCCode)){
+			$query = "select * from qcschedules where scfirstinspectiondate > CURDATE() and scfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and qc = '$QCCode' and apfirstinspectiondatenareason is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
+		}
 		$qcschedules = self::$dataStore->executeObjectQuery($query);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;

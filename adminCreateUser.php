@@ -19,6 +19,7 @@ $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
 $showQCDiv = "none";
 $isEnabled = "";
+$isSendNotifications = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
@@ -27,6 +28,9 @@ if(isset($_POST["id"])){
 	}
 	if($user->getIsEnabled() == 1){
 		$isEnabled = "checked";
+	}
+	if($user->getIsSendNotifications() == 1){
+		$isSendNotifications = "checked";
 	}
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
@@ -121,6 +125,11 @@ $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" <?php echo $isEnabled?> name="isenabled"/>
+	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Send Notifications :</label>
+	                        	<div class="col-lg-4">
+	                        		<input type="checkbox" <?php echo $isSendNotifications?> name="issendnotifications"/>
 	                            </div>
 	                        </div>
 	                    	<div class="form-group row m-t-xl">

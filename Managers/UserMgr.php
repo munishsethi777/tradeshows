@@ -1,6 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 
 class UserMgr{
 	private static $userMgr;
@@ -82,13 +83,25 @@ class UserMgr{
 	
 	public function getQCUsersArrForDD(){
 		$params["isenabled"] = 1;
-		$params["isqc"] = 1;
+		$params["usertype"] = UserType::QC;
 		$users = self::$userDataStore->executeConditionQuery($params);
 		$arr = array();
 		foreach($users as $user){
 			$arr[$user->getSeq()] = $user->getQCCode();
 		}
 		return $arr;
+	}
+	public function getSupervisorsForQCReport(){
+		$sql = "SELECT * FROM users left join userdepartments 
+				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'SUPERVISOR' where userdepartments.departmentseq = 1";
+		$users = self::$userDataStore->executeObjectQuery($sql);
+		return $users;
+	}
+	public function getQCsForQCReport(){
+		$sql = "SELECT * FROM users left join userdepartments 
+				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'QC' where userdepartments.departmentseq = 1";
+		$users = self::$userDataStore->executeObjectQuery($sql);
+		return $users;
 	}
 	
 }

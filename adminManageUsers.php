@@ -60,11 +60,12 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Email', datafield: 'email', width:"28%"},
+      { text: 'Email', datafield: 'email', width:"26%"},
       { text: 'FullName', datafield: 'fullname',width:"22%"},
       { text: 'Type', datafield: 'usertype',width:"10%"},
       { text: 'QC Code', datafield: 'qccode',width:"10%"},
-      { text: 'Enabled', datafield: 'isenabled',width:"8%",columntype:"checkbox"},
+      { text: 'Enabled', datafield: 'isenabled',width:"7%",columntype:"checkbox"},
+      { text: 'Notifications', datafield: 'issendnotifications',width:"8%",columntype:"checkbox"},
       { text: 'Last Modified', datafield: 'lastmodifiedon',width:"12%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
     ]
    
@@ -80,6 +81,7 @@ function loadGrid(){
                     { name: 'fullname', type: 'string' },
                     { name: 'usertype', type: 'string' },
                     { name: 'isenabled', type: 'boolean' },
+                    { name: 'issendnotifications', type: 'boolean' },
                     { name: 'qccode', type: 'string' },
                     { name: 'createdon', type: 'date' },
                     { name: 'lastmodifiedon', type: 'date' },

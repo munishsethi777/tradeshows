@@ -27,6 +27,11 @@ if($call == "saveUser"){
 		}else {
 			$user->setIsEnabled(0);
 		}
+		if(isset($_REQUEST["issendnotifications"])){
+			$user->setIsSendNotifications(1);
+		}else {
+			$user->setIsSendNotifications(0);
+		}
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];

@@ -78,17 +78,17 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageItemSpecification;?>">
-                    <a href="adminManageItemSpecifications.php"><i class="fa fa-cubes"></i> 
+                    <a href="adminManageItemSpecifications.php"><i class="fa fa-database"></i> 
                     	<span class="nav-label">Manage Items Specs.</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageQCSchedules;?>">
-                    <a href="adminManageQCSchedules.php"><i class="fa fa-cubes"></i> 
+                    <a href="adminManageQCSchedules.php"><i class="fa fa-flag"></i> 
                     	<span class="nav-label">QC Schedules</span>  
                     </a>
                 </li>
                 <li class="<?php echo $manageGraphicLogs;?>">
-                    <a href="adminManageGraphicLogs.php"><i class="fa fa-cubes"></i> 
+                    <a href="adminManageGraphicLogs.php"><i class="fa fa-paint-brush"></i> 
                     	<span class="nav-label">Graphic Logs</span>  
                     </a>
                 </li>
@@ -131,7 +131,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>-->
                 <li class="<?php echo $isManageUsers;?>">
-                    <a href="adminManageUsers.php"><i class="fa fa-key"></i> 
+                    <a href="adminManageUsers.php"><i class="fa fa-group"></i> 
                     	<span class="nav-label">Manage Users</span>  
                     </a>
                 </li>
