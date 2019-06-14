@@ -151,7 +151,7 @@ class SessionUtil{
 		return false;
 	}
 	
-	public function isSessionSuperwiser(){
+	public function isSessionSupervisor(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&
 				$_SESSION[self::$ROLE] == UserType::SUPERVISOR){
 					return true;
