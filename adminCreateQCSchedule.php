@@ -71,6 +71,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label">QC</label>
 	                        	<div class="col-lg-4">
+	                        		<?php 
+		                             	$select = DropDownUtils::getQCUsers("qcuser", null,$qcSchedule->getQCUser(),false,true);
+		                                echo $select;
+                             		?>
 	                            	<input type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Class Code</label>
