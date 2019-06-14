@@ -35,7 +35,7 @@ if($call == "saveQCSchedule"){
 			$message = "QC Schedule updated successfully!";
 		}
 		$qcSchedule->setSeq($seq);
-		$qcSchedule->setUserSeq($sessionUtil->getAdminLoggedInSeq());
+		$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
 		$qcSchedule->setCreatedOn(new DateTime());
 		$qcSchedule->setLastModifiedOn(new DateTime());
 		$id = $qcScheduleMgr->save($qcSchedule);

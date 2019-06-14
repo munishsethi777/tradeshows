@@ -285,7 +285,7 @@ class ItemSpecificationMgr{
 		$updatedby = $data[64];
 		$troy = $data[65];
 		$sessionUtil = SessionUtil::getInstance();
-		$userSeq = $sessionUtil->getAdminLoggedInSeq();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
 		$createOn = new DateTime();
 		$lastModifiedOn = new DateTime();
 		

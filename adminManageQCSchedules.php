@@ -24,7 +24,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 </head>
 <body>
    <div id="wrapper">
-   		<?php include("adminmenuInclude.php")?>
+   		<?php
+   		include("adminmenuInclude.php");?>
    		 <div id="page-wrapper" class="gray-bg">
 	        <div class="row border-bottom">
 	        	<div class="row">
@@ -335,7 +336,7 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'QC.', datafield: 'qc', width:"10%"},
+      { text: 'QC.', datafield: 'qccode', width:"10%"},
       { text: 'Code', datafield: 'classcode',width:"8%"},
       { text: 'PO', datafield: 'po',width:"10%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
@@ -372,7 +373,7 @@ function loadGrid(){
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                    { name: 'qc', type: 'string' }, 
+                    { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },
                     { name: 'potype', type: 'string' } ,

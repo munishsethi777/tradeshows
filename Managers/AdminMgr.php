@@ -43,7 +43,7 @@ class AdminMgr{
 		//$adminSeq = $sessionUtil->getAdminLoggedInSeq();
 		//$attr["password"] = $password;
 		//$condition["seq"] = $adminSeq;
-		$sql = "update admins set password = '$password'";
+		$sql = "update users set password = '$password' where usertype='ADMIN'";
 		self::$adminDataStore->executeQuery($sql);
 	}
 	

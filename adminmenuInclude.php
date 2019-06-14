@@ -1,10 +1,17 @@
 <?php 
+require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/DepartmentType.php");
 $session = SessionUtil::getInstance();
-$userNameLoggedIn = $session->getAdminLoggedInName();
-
+$userLoggedInSeq = $session->getUserLoggedInSeq();
+$userNameLoggedIn = $session->getUserLoggedInName();
+$sessionUtil = SessionUtil::getInstance();
+$isSessionQC = $sessionUtil->isSessionQC();
+$isSessionAdmin = $sessionUtil->isSessionAdmin();
 $isDashboard="";
+$isUserDashboard="";
 $isTradeShows="";
 $isChangePassword="";
+$isUserChangePassword="";
 $isPublicRepository="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
@@ -47,6 +54,10 @@ if($file == "dashboard.php"){
 	$manageGraphicLogs = "active";
 }elseif($file=="adminManageUsers.php" || $file== "adminCreateUser.php"){
 	$isManageUsers = "active";
+}if($file == "userDashboard.php"){
+	$isUserDashboard = "active";
+}elseif($file == "userChangePassword.php"){
+	$isUserChangePassword = "active";
 }
 
 ?>
@@ -67,7 +78,8 @@ if($file == "dashboard.php"){
                     </div>
 					
                 </li>
-                 <li class="<?php echo $isDashboard;?>">
+                <?php if($isSessionAdmin){?>
+                <li class="<?php echo $isDashboard;?>">
                     <a href="dashboard.php"><i class="fa fa-tachometer"></i> 
                     	<span class="nav-label ">Dashboard</span>  
                     </a>
@@ -140,6 +152,42 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Change Password</span>  
                     </a>
                 </li>
+                <?php }else{
+                	$departmentMgr = DepartmentMgr::getInstance();
+                	$departments = $departmentMgr->getUserAssignedDepartments($userLoggedInSeq);
+                	?>
+                	<li class="<?php echo $isUserDashboard?>">
+	                    <a href="userDashboard.php"><i class="fa fa-tachometer"></i> 
+	                    	<span class="nav-label ">Dashboard</span>  
+	                    </a>
+	                </li>
+	                <?php if(in_array(DepartmentType::Item_Specs,$departments)){?>
+	                	<li class="<?php echo $manageItemSpecification;?>">
+		                    <a href="adminManageItemSpecifications.php"><i class="fa fa-database"></i> 
+		                    	<span class="nav-label">Manage Items Specs.</span>  
+		                    </a>
+		                </li>
+	                <?php }?>
+	                <?php if(in_array(DepartmentType::QC_Schedules,$departments)){?>
+		                <li class="<?php echo $manageQCSchedules;?>">
+		                    <a href="adminManageQCSchedules.php"><i class="fa fa-flag"></i> 
+		                    	<span class="nav-label">QC Schedules</span>  
+		                    </a>
+		                </li>
+	                <?php }?>
+	                <?php if(in_array(DepartmentType::Graphics_Logs,$departments)){?>
+		                <li class="<?php echo $manageGraphicLogs;?>">
+		                    <a href="adminManageGraphicLogs.php"><i class="fa fa-paint-brush"></i> 
+		                    	<span class="nav-label">Graphic Logs</span>  
+		                    </a>
+		                </li>
+	                <?php }?>
+	                <li class="<?php echo $isUserChangePassword?>">
+	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
+	                    	<span class="nav-label">Change Password</span>  
+	                    </a>
+	                </li>
+                <?php }?>
                 <li>
                     <a href="logout.php"><i class="fa fa-sign-out"></i> 
                     	<span class="nav-label">Logout</span>  

@@ -43,6 +43,7 @@ class UserMgr{
 		$adminArr["seq"] = $user->getSeq();
 		$adminArr["email"] = $user->getEmail();
 		$adminArr["name"] = $user->getFullName();
+		$adminArr["usertype"] = $user->getUserType();
 		return $adminArr;
 	}
 	public function getUsersForGrid(){

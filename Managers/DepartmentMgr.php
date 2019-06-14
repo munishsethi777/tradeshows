@@ -42,6 +42,16 @@ class DepartmentMgr{
 		$colValPair["userseq"] = $userSeq;
 		return self::$userDeptDataStore->executeConditionQuery($colValuePair);
 	}
+	
+	public function getUserAssignedDepartments($userSeq){
+		$query = "select departments.* from departments inner join userdepartments on departments.seq = userdepartments.departmentseq where userdepartments.userseq = $userSeq";
+		$departments = self::$dataStore->executeQuery($query,false,true);
+		$departmentsArr = array();
+		if($departments){
+			$departmentsArr = array_map(create_function('$o', 'return $o["title"];'), $departments);
+		}
+		return $departmentsArr;
+	}
 	public function saveUserDepartment($userDepartment){
 		self::$userDeptDataStore->save($userDepartment);
 	}

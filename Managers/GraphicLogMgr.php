@@ -66,13 +66,7 @@ class GraphicLogMgr{
 			$exstingsItemNos = array();
 			$graphicLogsArr = array();
 			$sessionUtil = SessionUtil::getInstance();
-			$isAdminSession = $sessionUtil->isSessionAdmin();
-			$userSeq = 0;
-			if($isAdminSession){
-				$userSeq = $sessionUtil->getAdminLoggedInSeq();
-			}else{
-				$userSeq = $sessionUtil->getUserLoggedInSeq();
-			}
+			$userSeq = $sessionUtil->getUserLoggedInSeq();
 			foreach ($sheetData as $key=>$data){
 				if($key == 0){
 					continue;

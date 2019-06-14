@@ -24,7 +24,7 @@ if($call == "saveItemSpecification"){
 			$message = "Item Specifications updated successfully.";
 		}
 		$itemSpecification->setSeq($seq);
-		$itemSpecification->setUserSeq($sessionUtil->getAdminLoggedInSeq());
+		$itemSpecification->setUserSeq($sessionUtil->getUserLoggedInSeq());
 		$itemSpecification->setCreatedOn(new DateTime());
 		$itemSpecification->setLastModifiedOn(new DateTime());
 		$id = $itemSpecificationMgr->saveFromForm($itemSpecification);

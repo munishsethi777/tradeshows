@@ -1,4 +1,5 @@
 <?php
+require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 class SessionUtil{
     private static $LOGIN_MODE = "loginMode";
     private static $ADMIN_SEQ = "adminSeq";
@@ -30,6 +31,7 @@ class SessionUtil{
         $arr[1] = $admin->getName();
         $arr[2] = $admin->getUserName();
         $arr[3] = $admin->getEmail();
+        $_SESSION[self::$ROLE] = "admin";
         $_SESSION[self::$ADMIN_LOGGED_IN] = $arr;
     }
     
@@ -38,6 +40,9 @@ class SessionUtil{
     	$arr[0] = $user->getSeq();
     	$arr[1] = $user->getFullName();
     	$arr[2] = $user->getEmail();
+    	$arr[3] = $user->getQCCode();
+    	$userType = $user->getUserType();
+    	$_SESSION[self::$ROLE] = $userType;
     	$_SESSION[self::$USER_LOGGED_IN] = $arr;
     }
 
@@ -77,10 +82,15 @@ class SessionUtil{
     }
     
     public function getAdminLoggedInSeq(){
-    	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
-    	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
-	 			$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
-	    		return $arr[0];
+//     	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
+//     	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+// 	 			$arr = $_SESSION[self::$ADMIN_LOGGED_IN];
+// 	    		return $arr[0];
+// 	    }
+	    if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+	    	//if($_SESSION[self::$ADMIN_LOGGED_IN] != null){
+	    	$arr = $_SESSION[self::$USER_LOGGED_IN];
+	    	return $arr[0];
 	    }
     }
     
@@ -101,6 +111,14 @@ class SessionUtil{
     }
     
     
+    public function getUserLoggedInQCCode(){
+    	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+    		//if($_SESSION[self::$USER_LOGGED_IN] != null){
+    		$arr = $_SESSION[self::$USER_LOGGED_IN];
+    		return $arr[3];
+    	}
+    }
+    
     public function getUserLoggedInSeq(){
     	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
     	//if($_SESSION[self::$USER_LOGGED_IN] != null){
@@ -111,9 +129,9 @@ class SessionUtil{
 
 
 	public function isSessionAdmin(){
-		if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
-		//if(	$_SESSION[self::$ADMIN_LOGGED_IN] != null){
-			return true;
+		if($_SESSION[self::$USER_LOGGED_IN] != null &&
+				$_SESSION[self::$ROLE] == UserType::ADMIN){
+					return true;
 		}
 		return false;
 	}
@@ -125,8 +143,25 @@ class SessionUtil{
 		return false;
 	}
 	
+	public function isSessionQC(){
+		if($_SESSION[self::$USER_LOGGED_IN] != null && 
+				$_SESSION[self::$ROLE] == UserType::QC){
+					return true;
+		}
+		return false;
+	}
+	
+	public function isSessionSuperwiser(){
+		if($_SESSION[self::$USER_LOGGED_IN] != null &&
+				$_SESSION[self::$ROLE] == UserType::SUPERVISOR){
+					return true;
+		}
+		return false;
+	}
+	
 	public function sessionCheck(){
-		$bool = self::isSessionAdmin();
+		//$bool = self::isSessionAdmin();
+		$bool = self::isSessionUser();
 		if($bool == false){
 			header("location: adminlogin.php");
 			die;
@@ -147,7 +182,7 @@ class SessionUtil{
 		$_SESSION = array();
 		session_destroy();
 		if($boolAdmin == true){
-			header("Location:adminlogin.php");
+			header("Location:userlogin.php");
 			die;
 		}else{
 			header("Location:userlogin.php");

@@ -3,11 +3,20 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  $qcSchedule = new QCSchedule();
  $qcScheduleMgr = QCScheduleMgr::getInstance();
  $readOnlyPO = "";
  $middleInspectionChk = "";
  $firstInspectionChk = "";
+ $qcUser = 0;
+ $qcUserReadonly = "";
+ $sessionUtil = SessionUtil::getInstance();
+ $isSessionQC = $sessionUtil->isSessionQC();
+ if($isSessionQC){
+ 	$qcUser = $sessionUtil->getUserLoggedInSeq();
+ 	$qcUserReadonly = "readonly";
+ }
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
  	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
@@ -18,6 +27,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
  		$firstInspectionChk = "checked";
  	}
  	$readOnlyPO = "readonly";
+ 	$qcUser = $qcSchedule->getQCUser();
+ 	
  }
 ?>
 <!DOCTYPE html>
@@ -72,8 +83,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 	                       		<label class="col-lg-2 col-form-label">QC</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-		                             	$select = DropDownUtils::getQCUsers("qcuser", null,$qcSchedule->getQCUser(),false,true);
-		                                echo $select;
+										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
+		                        		echo $select;
+	                        			if($isSessionQC){?>
+	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
+	                        			<?php }
                              		?>
 	                            	<input type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
@@ -291,7 +305,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 </body>
 </html>
 <script type="text/javascript">
+var qcReadonly = "<?php echo $qcUserReadonly?>";
 $(document).ready(function(){
+	if(qcReadonly != ""){
+		$("#qcuser").attr("disabled","disabled");
+	}else{
+		$("#qcuser").removeAttr("disabled");
+	}
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',

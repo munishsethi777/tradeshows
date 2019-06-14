@@ -7,7 +7,9 @@ $isUpcomingTasks="";
 $isChangePassword="";
 $isHistoricalTasks="";
 $isPublicRep="";
-
+$manageItemSpecification = "";
+$manageQCSchedules = "";
+$manageGraphicLogs = "";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
@@ -23,6 +25,12 @@ if($file == "userDashboard.php"){
 	$isPublicRep = "active";
 }elseif($file == "userChangePassword.php"){
 	$isChangePassword = "active";
+}elseif($file == "adminManageItemSpecifications.php"){
+	$manageItemSpecification = "active";
+}elseif($file == "adminManageQCSchedules.php"){
+	$manageQCSchedules = "active";
+}elseif($file == "adminManageGraphicLogs.php"){
+	$manageGraphicLogs = "active";
 }
 ?>
 
@@ -42,36 +50,51 @@ if($file == "userDashboard.php"){
                     </div>
 					
                 </li>
-                <li class="<?php echo $isDashboard;?>">
+                <li class="">
                     <a href="userDashboard.php"><i class="fa fa-tachometer"></i> 
                     	<span class="nav-label ">Dashboard</span>  
                     </a>
                 </li>
-                <li class="<?php echo $isUpcomingTasks;?>">
-                    <a href="userUpcomingShows.php"><i class="fa fa-life-ring"></i> 
-                    	<span class="nav-label ">Upcoming Tasks</span>  
-                    </a>
-                </li>
-                <li class="<?php echo $isHistoricalTasks;?>">
-                    <a href="userHistoricalShowTasks.php"><i class="fa fa-clock-o"></i> 
-                    	<span class="nav-label">Historical Tasks</span>  
-                    </a>
-                </li>
-                <li class="<?php echo $isPublicRep;?>">
-                    <a href="userPublicRepository.php"><i class="fa fa-clock-o"></i> 
-                    	<span class="nav-label">Public Repository</span>  
-                    </a>
-                </li>
-                <li class="<?php echo $isChangePassword;?>">
-                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
-                    	<span class="nav-label">Change Password</span>  
-                    </a>
-                </li>
-                <li>
-                    <a href="logout.php"><i class="fa fa-sign-out"></i> 
-                    	<span class="nav-label">Logout</span>  
-                    </a>
-                </li>
+<!--                 <li class=""> -->
+<!--                     <a href="userUpcomingShows.php"><i class="fa fa-life-ring"></i>  -->
+<!--                     	<span class="nav-label ">Upcoming Tasks</span>   -->
+<!--                     </a> -->
+<!--                 </li> -->
+<!--                 <li class=""> -->
+<!--                     <a href="userHistoricalShowTasks.php"><i class="fa fa-clock-o"></i>  -->
+<!--                     	<span class="nav-label">Historical Tasks</span>   -->
+<!--                     </a> -->
+<!--                 </li> -->
+<!--                 <li class=""> -->
+<!--                     <a href="userPublicRepository.php"><i class="fa fa-clock-o"></i>  -->
+<!--                     	<span class="nav-label">Public Repository</span>   -->
+<!--                     </a> -->
+<!--                 </li> -->
+					<li class="<?php echo $manageItemSpecification;?>">
+	                    <a href="adminManageItemSpecifications.php"><i class="fa fa-database"></i> 
+	                    	<span class="nav-label">Manage Items Specs.</span>  
+	                    </a>
+	                </li>
+	                <li class="<?php echo $manageQCSchedules;?>">
+	                    <a href="adminManageQCSchedules.php"><i class="fa fa-flag"></i> 
+	                    	<span class="nav-label">QC Schedules</span>  
+	                    </a>
+	                </li>
+	                <li class="<?php echo $manageGraphicLogs;?>">
+	                    <a href="adminManageGraphicLogs.php"><i class="fa fa-paint-brush"></i> 
+	                    	<span class="nav-label">Graphic Logs</span>  
+	                    </a>
+	                </li>
+	                <li class="<?php echo $isChangePassword?>">
+	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
+	                    	<span class="nav-label">Change Password</span>  
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="logout.php"><i class="fa fa-sign-out"></i> 
+	                    	<span class="nav-label">Logout</span>  
+	                    </a>
+	                </li>
             </ul>
 
         </div>

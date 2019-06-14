@@ -21,7 +21,7 @@ class ItemSpecificationVersionMgr{
 	
 	public function getItemSpecificationVersion($existingIS,$itemSpecification){
 		$sessionUtil = SessionUtil::getInstance();
-		$userSeq = $sessionUtil->getAdminLoggedInSeq();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
 		$itemSpecificationVersion = new ItemSpecificationVersion();
 		$itemSpecificationClass = new ReflectionClass ( ItemSpecification::$className );
 		$obectMethods = get_class_methods(current($itemSpecificationClass));

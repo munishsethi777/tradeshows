@@ -42,9 +42,9 @@ class QCNotificationsUtil{
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
-				$finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate($user->getQCCode());
-				$middleInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForMiddleInspectionDate($user->getQCCode());
-				$firstInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFirstInspectionDate($user->getQCCode());
+				$finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate($user->getSeq());
+				$middleInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForMiddleInspectionDate($user->getSeq());
+				$firstInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFirstInspectionDate($user->getSeq());
 				$pendingSchedules[NotificationType::SC_FINAL_INPECTION_DATE] = $finalInspectionQcSchedules;
 				$pendingSchedules[NotificationType::SC_MIDDLE_INSPECTION_DATE] = $middleInspectionQcSchedules;
 				$pendingSchedules[NotificationType::SC_FIRST_INSPECTION_DATE] = $firstInspectionQcSchedules;
@@ -102,9 +102,9 @@ class QCNotificationsUtil{
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
-				$finalInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForFinalInspectionDate($user->getQCCode());
-				$middleInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForMiddleInspectionDate($user->getQCCode());
-				$firstInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForFirstInspectionDate($user->getQCCode());
+				$finalInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForFinalInspectionDate($user->getSeq());
+				$middleInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForMiddleInspectionDate($user->getSeq());
+				$firstInspectionQcAppoitment = $qcScheduleMgr->getPendingAppoitmentForFirstInspectionDate($user->getSeq());
 				$pendingAppoitments[NotificationType::AP_FINAL_INPECTION_DATE] = $finalInspectionQcAppoitment;
 				$pendingAppoitments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionQcAppoitment;
 				$pendingAppoitments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionQcAppoitment;
@@ -150,9 +150,9 @@ class QCNotificationsUtil{
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
-				$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate($user->getQCCode());
-				$middleInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForMiddleInspectionDate($user->getQCCode());
-				$firstInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFirstInspectionDate($user->getQCCode());
+				$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate($user->getSeq());
+				$middleInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForMiddleInspectionDate($user->getSeq());
+				$firstInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFirstInspectionDate($user->getSeq());
 				$missingAppointments[NotificationType::AP_FINAL_INPECTION_DATE] = $finalInspectionMissingAppoitment;
 				$missingAppointments[NotificationType::AP_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingAppoitment;
 				$missingAppointments[NotificationType::AP_FIRST_INSPECTION_DATE] = $firstInspectionMissingAppoitment;
