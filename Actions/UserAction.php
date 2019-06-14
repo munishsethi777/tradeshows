@@ -39,6 +39,9 @@ if($call == "saveUser"){
 		}else{
 			$user->setCreatedOn(new DateTime());
 		}
+		if($user->getUserType() != UserType::QC){
+			$user->setQCCode(null);
+		}
 		$user->setSeq($seq);
 		$user->setLastModifiedOn(new DateTime());
 		$id = $userMgr->saveUser($user);
