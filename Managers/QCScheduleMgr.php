@@ -49,7 +49,15 @@ class QCScheduleMgr{
 		$output = array();
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
-		$qcSchedules = self::$dataStore->findAllArr(true);
+		$sessionUtil = SessionUtil::getInstance();
+		$isSessionQc = $sessionUtil->isSessionQC();
+		$qcSchedules = array();
+		$query = "select qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq";
+		if($isSessionQc){
+			$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+			$query .= " where users.seq = $loggedInUserSeq";
+		}
+		$qcSchedules = self::$dataStore->executeQuery($query,true);
 		//$mainArr = array();
 		//$poSchedules = $this->group_by($qcSchedules, "po");
 		//foreach ($poSchedules as $qcSchedules){
