@@ -1,5 +1,6 @@
 <?php
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 
 class DropDownUtils {
@@ -29,6 +30,17 @@ class DropDownUtils {
 		$enums = ReasonCodeType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
 	}
+	
+	public static function getGraphicTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = GraphicType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
+	}
+	
+	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = GraphicType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
+	}
+	
 	public static function getQCUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$userMgr = UserMgr::getInstance();
 		$users = $userMgr->getQCUsersArrForDD();
