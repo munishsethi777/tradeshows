@@ -197,9 +197,9 @@ class QCNotificationsUtil{
 		}elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
-				$finalInspectionMissingDate = $qcScheduleMgr->getMissingActualFinalInspectionDate($user->getQCCode());
-				$middleInspectionMissingDate = $qcScheduleMgr->getMissingActualMiddleInspectionDate($user->getQCCode());
-				$firstInspectionMissingDate = $qcScheduleMgr->getMissingActualFirstInspectionDate($user->getQCCode());
+				$finalInspectionMissingDate = $qcScheduleMgr->getMissingActualFinalInspectionDate($user->getSeq());
+				$middleInspectionMissingDate = $qcScheduleMgr->getMissingActualMiddleInspectionDate($user->getSeq());
+				$firstInspectionMissingDate = $qcScheduleMgr->getMissingActualFirstInspectionDate($user->getSeq());
 				$missingActualDates[NotificationType::AC_FINAL_INPECTION_DATE] = $finalInspectionMissingDate;
 				$missingActualDates[NotificationType::AC_MIDDLE_INSPECTION_DATE] = $middleInspectionMissingDate;
 				$missingActualDates[NotificationType::AC_FIRST_INSPECTION_DATE] = $firstInspectionMissingDate;
