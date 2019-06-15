@@ -3,6 +3,8 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -44,6 +46,17 @@ if($call == "saveGraphicLog"){
 		}else{
 			$graphicLog->setIsPrivateLabel(0);
 		}
+		if($graphicLog->getGraphicType() != "custom"){
+			$graphicLog->setGraphicLength(0);
+			$graphicLog->setGraphicWidth(0);
+			$graphicLog->setGraphicHeight(0);
+		}
+		if($graphicLog->getTagType() != "custom"){
+			$graphicLog->setTagLength(0);
+			$graphicLog->setTagWidth(0);
+			$graphicLog->setTagHeight(0);
+		}
+		
 		$id = $graphicLogMgr->save($graphicLog);
 	}catch(Exception $e){
 		$success = 0;

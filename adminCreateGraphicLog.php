@@ -2,6 +2,7 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -120,21 +121,59 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Type of Graphics :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" maxLength="250" value="<?php echo $graphicLog->getGraphicType()?>" name="graphictype" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<?php 
+			                           	$select = DropDownUtils::getGraphicTypes("graphictype", "showGraphicFields()", $graphicLog->getGraphicType(),false,true);
+			                            echo $select;
+	                             	?>
+	                             	<div id="graphicFields" style="display:none">
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Length</label>
+		                             		<input type="text" placeholder="Length"  value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Width</label>
+		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Height</label>
+		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getGraphicHeight()?>" name="graphicheight" id="graphicheight" class="form-control">
+		                             	</div>
+	                             	</div>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Cstm Hangtag Needed :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Type of Tags :</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $hasHangTag?> name="iscustomhangtagneeded"/>
+	                            	<?php 
+			                           	$select = DropDownUtils::getTagTypes("tagtype", "showTagFields()", $graphicLog->getTagType(),false,true);
+			                            echo $select;
+	                             	?>
+	                             	<div id="tagFields" style="display:none">
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Length</label>
+		                             		<input type="text" placeholder="Length" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Width</label>
+		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Height</label>
+		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control">
+		                             	</div>
+	                             	</div>
+	                            </div>
+<!-- 	                            <label class="col-lg-2 col-form-label bg-formLabel">Cstm Hangtag Needed :</label> -->
+<!-- 	                        	<div class="col-lg-4">
+	                        		<input type="checkbox" <?php //echo $hasHangTag?> name="iscustomhangtagneeded"/> -->
 	                            	<!-- <input type="text" required maxLength="250" value="<?php //echo $graphicLog->getIsCustomHangTagNeeded()?>" name="iscustomhangtagneeded" class="form-control" <?php echo $readOnlyPO?>>
-	                            	-->
-	                            </div>
+<!-- 	                            	--> 
+<!-- 	                            </div> -->
 	                        </div>
-	                        <div class="form-group row i-checks">
-	                       		<label class="col-lg-offset-6 col-lg-2 col-form-label bg-formLabel">Cstm Wraptag Needed :</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $hasWrapTag?> name="iscustomwraptagneeded"/>
-	                            </div>
-	                        </div>
+<!-- 	                        <div class="form-group row i-checks"> -->
+<!-- 	                       		<label class="col-lg-offset-6 col-lg-2 col-form-label bg-formLabel">Cstm Wraptag Needed :</label> -->
+<!-- 	                        	<div class="col-lg-4"> 
+	                        		<input type="checkbox" <?php //echo $hasWrapTag?> name="iscustomwraptagneeded"/>-->
+<!-- 	                            </div> -->
+<!-- 	                        </div> -->
 	                        <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name :</label>
 	                        	<div class="col-lg-4">
@@ -239,24 +278,6 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Dimensions of Graphics :</label>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel text-right">Length (in) :</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="number" step=".01" maxLength="250" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength" class="form-control" <?php echo $readOnlyPO?>>
-	                            </div>
-	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel text-right">Width (in) :</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="number" step=".01" maxLength="250" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" class="form-control" <?php echo $readOnlyPO?>>
-	                            </div>
-	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel text-right">Height (in) :</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="number" step=".01" maxLength="250" value="<?php echo $graphicLog->getGraphicHeight()?>" name="graphicheight" class="form-control" <?php echo $readOnlyPO?>>
-	                            </div>
-	                        </div>
-	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
 	                        	<div class="col-lg-10">
 	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
@@ -305,7 +326,37 @@ $(document).ready(function(){
 	    scrollMonth : false,
 		scrollInput : false
 	})
+	showTagFields();
+	showGraphicFields();
 });
+function showTagFields(){
+	value = $("#tagtype").val();
+	if(value == "custom"){
+		$("#tagFields").show();
+		$("#taglength").attr("required","required");
+		$("#tagwidth").attr("required","required");
+		$("#tagheight").attr("required","required");
+	}else{
+		$("#tagFields").hide();
+		$("#taglength").removeAttr("required");
+		$("#tagwidth").removeAttr("required");
+		$("#tagheight").removeAttr("required");
+	}
+}
+function showGraphicFields(){
+	value = $("#graphictype").val();
+	if(value == "custom"){
+		$("#graphicFields").show();
+		$("#graphiclength").attr("required","required");
+		$("#graphicwidth").attr("required","required");
+		$("#graphicheight").attr("required","required");
+	}else{
+		$("#graphicFields").hide();
+		$("#graphiclength").removeAttr("required");
+		$("#graphicwidth").removeAttr("required");
+		$("#graphicheight").removeAttr("required");
+	}
+}
 function setDates(estimatedshipdateStr){
 	if(estimatedshipdateStr == ""){
 		$("#estimatedgraphicsdate").val("");
