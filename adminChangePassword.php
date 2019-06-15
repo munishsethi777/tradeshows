@@ -30,7 +30,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                        
 	                    </div>
 	                     <div class="ibox-content">
-	                        <form id="changePasswordForm" action="Actions/AdminAction.php" class="m-t-lg">
+	                        <form id="changePasswordForm" action="Actions/UserAction.php" class="m-t-lg">
 	                        	<input type="hidden" id ="call" name="call"   value="changePassword"/>
 	                        		<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Current Password</label>

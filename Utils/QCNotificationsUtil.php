@@ -295,10 +295,11 @@ class QCNotificationsUtil{
 	
 	public static function getScheduleNotificationDate($qcSchedule,$notificationType){
 		$dates = array();
+		$sc_date = "";
+		$ap_date = "";
 		if($notificationType == NotificationType::SC_READY_DATE || $notificationType == NotificationType::AP_READY_DATE){
 			$sc_date = $qcSchedule->getSCReadyDate();
 			$ap_date = $qcSchedule->getAPReadyDate();
-				
 		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE ||
 				$notificationType == NotificationType::AP_FINAL_INPECTION_DATE ||
 				$notificationType == NotificationType::AC_FINAL_INPECTION_DATE) {
@@ -333,13 +334,13 @@ class QCNotificationsUtil{
 					$sc_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $sc_date);
 					$sc_date =  $sc_date->format("n/j/y");
 				}else{
-					$sc_date = "n.a";
+					$sc_date = "";
 				}
 				if(!empty($ap_date)){
 					$ap_date = DateUtil::StringToDateByGivenFormat('Y-m-d', $ap_date);
 					$ap_date =  $ap_date->format("n/j/y");
 				}else{
-					$ap_date = "n.a";
+					$ap_date = "";
 				}
 				$dates["scdate"] = $sc_date;
 				$dates["apdate"] = $ap_date;

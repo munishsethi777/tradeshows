@@ -47,10 +47,26 @@ class UserMgr{
 		return $adminArr;
 	}
 	public function getUsersForGrid(){
-		$users = $this->getAllUserArr(true);
+		$users = $this->getAllUsersForGrid();
 		$mainArr["Rows"] = $users;
-		$mainArr["TotalRows"] = self::$userDataStore->executeCountQuery(null,true);
+		$mainArr["TotalRows"] = $this->getAllCountForGrid();
 		return $mainArr;
+	}
+	
+	public function getAllCountForGrid(){
+		$seesionUtil = SessionUtil::getInstance();
+		$loggedInUserSeq = $seesionUtil->getUserLoggedInSeq();
+		$query = "select count(*) from users where seq != $loggedInUserSeq";
+		$count = self::$userDataStore->executeCountQueryWithSql($query,true);
+		return $count;
+	}
+	
+	public function getAllUsersForGrid(){
+		$seesionUtil = SessionUtil::getInstance();
+		$loggedInUserSeq = $seesionUtil->getUserLoggedInSeq();
+		$query = "select * from users where seq != $loggedInUserSeq";
+		$arr = self::$userDataStore->executeQuery($query,true);
+		return $arr;
 	}
 
 	public function getAllUserArr($isApplyFilter=false){
@@ -99,7 +115,7 @@ class UserMgr{
 		return $users;
 	}
 	public function getQCsForQCReport(){
-		$sql = "SELECT * FROM users left join userdepartments 
+		$sql = "SELECT users.* FROM users left join userdepartments 
 				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'QC' where userdepartments.departmentseq = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
