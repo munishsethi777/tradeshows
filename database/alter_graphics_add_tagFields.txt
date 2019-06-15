@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` ADD `tagtype` VARCHAR(50) NULL AFTER `lastmodifiedon`, ADD `taglength` DOUBLE NULL AFTER `tagtype`, ADD `tagwidth` DOUBLE NULL AFTER `taglength`, ADD `tagheight` DOUBLE NULL AFTER `tagwidth`;
