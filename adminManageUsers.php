@@ -8,7 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Manage Task Categories</title>
+    <title>Admin | Manage Users</title>
     <?include "ScriptsInclude.php"?>
 </head>
 <body>
