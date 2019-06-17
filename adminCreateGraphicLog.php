@@ -34,6 +34,7 @@ if(isset($_POST["id"])){
 <style type="text/css">
 .col-form-label{
 	font-weight:400 !important;
+	line-height: 1.2 !important;
 }
 .areaTitle{
 	margin:0px 0px 0px 15px !important;
@@ -90,7 +91,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input type="text"  maxLength="250" value="<?php echo $graphicLog->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Estd PO Shipdate :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Estimated PO Shipdate :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
                                 		<input type="text" maxLength="250" onchange="setDates(this.value)" value="<?php echo $graphicLog->getEstimatedShipDate()?>" name="estimatedshipdate" id="estimatedshipdate" class="form-control  dateControl" <?php echo $readOnlyPO?>>
@@ -103,7 +104,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input type="text" maxLength="250" value="<?php echo $graphicLog->getClassCode()?>" name="classcode" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Estd Graphics DueDate :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Estimated Graphics DueDate :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
                                 		<input type="text" maxLength="250" value="<?php echo $graphicLog->getEstimatedGraphicsDate()?>" name="estimatedgraphicsdate" id="estimatedgraphicsdate" class="form-control  dateControl" <?php echo $readOnlyPO?>>

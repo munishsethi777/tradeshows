@@ -54,7 +54,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 }
 .outterDiv{
 	border-bottom:1px silver dashed;
-	padding:20px 10px;
+	padding:20px 20px;
 }
 </style>
 </head>
@@ -80,7 +80,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
                         <div class="bg-white p-xs outterDiv">
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label">QC</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">QC</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
 										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
@@ -91,27 +91,27 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                              		?>
 	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Class Code</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" required id="classcode" maxLength="250" value="<?php echo $qcSchedule->getClassCode()?>" name="classcode" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label">PO Number</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">PO Number</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" required  id="po" maxLength="250" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">PO Type</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">PO Type</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label">Item Numbers</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Item Numbers</label>
 	                        	<div class="col-lg-4">
 	                            	<textarea <?php echo $readOnlyPO?> id="itemnumbers" required maxLength="250" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Ship Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Ship Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 	                            </div>
@@ -121,34 +121,34 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="bg-muted p-xs outterDiv">
 	                        <div class="form-group row">
                         		<h4 class="areaTitle">Scheduled Information</h4><br>
-	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
+	                         	<label class="col-lg-2 col-form-label bg-formLabel">Ready Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="screadydate" maxLength="250" value="<?php echo $qcSchedule->getSCReadyDate()?>" name="screadydate" class="form-control">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCFinalInspectionDate()?>" name="scfinalinspectiondate" class="form-control">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Middle Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCMiddleInspectionDate()?>" name="scmiddleinspectiondate" class="form-control">
 	                            	 
 	                            </div>
 	                           
-	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">First Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getSCFirstInspectionDate()?>" name="scfirstinspectiondate" class="form-control">
 	                            </div>
 	                            
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly id="scproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getSCProductionStartDate()?>" name="scproductionstartdate" class="form-control">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" readonly  id="scgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getSCGraphicsReceiveDate()?>" name="scgraphicsreceivedate" class="form-control">
 	                            </div>
@@ -158,17 +158,17 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                  <div class="bg-white p-xs outterDiv">
 	                        <div class="form-group row">
                         		<h4 class="areaTitle">Appointment Information</h4><br>
-	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
+	                         	<label class="col-lg-2 col-form-label bg-formLabel">Ready Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date"  id="apreadydate" maxLength="250" value="<?php echo $qcSchedule->getAPReadyDate()?>" name="apreadydate" class="form-control dateControl">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="apfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFinalInspectionDate()?>" name="apfinalinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Middle Inspection Date</label>
 
 	                        	<div class="col-lg-2">
 	                        		<div id="middleInspectionSelectDate">
@@ -191,7 +191,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                            <div class="col-lg-1 i-checks">
 	                            	<input type="checkbox" <?php echo $middleInspectionChk?> id="apMiddleInspectionChk" name="apMiddleInspectionChk" class="form-control">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">First Inspection Date</label>
 	                          	<div class="col-lg-2">
 	                        		<div id="firstInspectionSelectDate">
 	                            		<input type="text" placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFirstInspectionDate()?>" name="apfirstinspectiondate" class="form-control dateControl">
@@ -216,12 +216,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
 	                        	<div class="col-lg-4">
 
 	                            	<input type="text" placeholder="Select Date" id="approductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getAPProductionStartDate()?>" name="approductionstartdate" class="form-control dateControl">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl">
 
@@ -233,31 +233,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                  <div class="bg-muted p-xs outterDiv">
 	                        <div class="form-group row">
                         		<h4 class="areaTitle">Actual Information</h4><br>
-	                         	<label class="col-lg-2 col-form-label">Ready Date</label>
+	                         	<label class="col-lg-2 col-form-label bg-formLabel">Ready Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date"  id="acreadydate" maxLength="250" value="<?php echo $qcSchedule->getACReadyDate()?>" name="acreadydate" class="form-control dateControl">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Final Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date"  id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Middle Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Middle Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="acmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACMiddleInspectionDate()?>" name="acmiddleinspectiondate" class="form-control dateControl">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">First Inspection Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">First Inspection Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="acfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFirstInspectionDate()?>" name="acfirstinspectiondate" class="form-control dateControl">
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                            <label class="col-lg-2 col-form-label">Production Start Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="acproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getACProductionStartDate()?>" name="acproductionstartdate" class="form-control dateControl">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label">Graphics Receive Date</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="acgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getACGraphicsReceiveDate()?>" name="acgraphicsreceivedate" class="form-control dateControl">
 	                            </div>
@@ -265,11 +265,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                  </div>
                        <div class="bg-white p-xs outterDiv">
                        		<div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label">Status</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" id="status" maxLength="250" value="<?php echo $qcSchedule->getStatus()?>" name="status" class="form-control">
 	                            </div>
-	                        	<label class="col-lg-2 col-form-label">Notes</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Notes</label>
 	                        	<div class="col-lg-4">
 	                        		<textarea id="notes" maxLength="250" name="notes" class="form-control"><?php echo $qcSchedule->getNotes()?></textarea>
 	                        	 </div>

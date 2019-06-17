@@ -84,7 +84,7 @@ require_once('IConstants.inc');
         </div>
         <div class="col-md-6">
             <div class="ibox-content">
-
+		
                 <form class="form-horizontal" id="loginForm" method="POST" name="loginForm">
                   <div class="form-group">
                     <label for="inputEmail3" class="col-sm-3 control-label">Username</label>
@@ -118,6 +118,8 @@ require_once('IConstants.inc');
         <div>
         	<img src="images/logo.png" style="margin-bottom:20px;">
             <h3 style="line-height: 20px">Welcome to TradeShows Administrator Area</h3>
+            
+            <!-- 
             <p>Login. To see it in action.</p>
             <form class="form-horizontal" id="loginForm" method="POST" name="loginForm">
                   <div class="form-group">
@@ -133,8 +135,8 @@ require_once('IConstants.inc');
                         </button>
                     </div>
                 </form>
-            
-            <a class="btn btn-default btn-sm" href="index.php">Home</a>
+            -->
+            <a class="btn btn-default btn-sm" href="index.php">Login at Home</a>
             <p class="m-t"> <small>Login Credentials/Rights Reserved</small> </p>
         </div>
     </div>
