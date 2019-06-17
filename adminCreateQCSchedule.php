@@ -89,7 +89,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
 	                        			<?php }
                              		?>
-	                            	<input style="display: none" type="text" required  id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label">Class Code</label>
 	                        	<div class="col-lg-4">
