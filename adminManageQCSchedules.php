@@ -116,6 +116,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    </form>
    <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php">
     	<input type="hidden" id="id" name="id"/>
+    	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
+    	<input type="hidden" id="seqs" name="seqs"/>
    </form> 
 
 </body>
@@ -339,8 +341,9 @@ function loadGrid(){
       { text: 'QC.', datafield: 'qccode', width:"10%", filterable:false},
       { text: 'Code', datafield: 'classcode',width:"8%"},
       { text: 'PO', datafield: 'po',width:"10%"},
-      { text: 'PO Type', datafield: 'potype',width:"12%"},
-      { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"15%"},
+      { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
+      { text: 'PO Type', datafield: 'potype',width:"10%"},
+      { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%"},
       { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Frst Insp', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -398,6 +401,7 @@ function loadGrid(){
                     { name: 'acfirstinspectiondate', type: 'date' } ,
                     { name: 'acmiddleinspectiondate', type: 'date' } ,
                     { name: 'acfinalinspectiondate', type: 'date' } ,
+                    { name: 'itemnumbers', type: 'string' } ,
                     { name: 'acreadydate', type: 'date' } ,
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
@@ -493,12 +497,36 @@ function loadGrid(){
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
                 })
-                if(indexes.length != 1){
-                    bootbox.alert("Please Select single row for edit.", function() {});
-                    return;    
+                var lastPo = 0;
+                var isValid = true;
+                var itemIds = [];
+                var seqs = [];
+                $.each(indexes, function(index , value){
+                	 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', value);
+                	 var po = row.po;
+                	 if(lastPo != 0){
+                    	 if(po != lastPo){
+                    		 bootbox.alert("Please Select single row for edit.", function() {});
+                    		 isValid = false;
+                             return;  
+                    	 }
+                	 }
+                	 seqs.push(row.seq);
+                	 lastPo = po
+                	 itemIds.push(row.itemnumbers);
+                	     
+                });
+                if(!isValid){
+                    return;
                 }
+//                 if(indexes.length != 1){
+//                     bootbox.alert("Please Select single row for edit.", function() {});
+//                     return;    
+//                 }
                 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', indexes);
-                $("#id").val(row.seq);                        
+                $("#id").val(seqs[0]);  
+                $("#seqs").val(seqs);   
+                $("#itemnumbers").val(itemIds);                        
                 $("#form2").submit();    
             });
             // delete row.

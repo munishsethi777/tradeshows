@@ -17,9 +17,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  	$qcUser = $sessionUtil->getUserLoggedInSeq();
  	$qcUserReadonly = "readonly";
  }
+ $seqs = 0;
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
+ 	$seqs = $_POST["seqs"];
  	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
+ 	$qcSchedule->setItemNumbers($_POST["itemnumbers"]);
  	if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
  		$middleInspectionChk = "checked";
  	}
@@ -28,7 +31,6 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  	}
  	$readOnlyPO = "readonly";
  	$qcUser = $qcSchedule->getQCUser();
- 	
  }
 ?>
 <!DOCTYPE html>
@@ -76,6 +78,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                  	<?include "progress.php"?>
                  	 <form id="createQCScheduleForm" method="post" action="Actions/QCScheduleAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="saveQCSchedule"/>
+                     	<input type="hidden" id ="seqs" name="seqs"  value="<?php echo $seqs?>"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $qcSchedule->getSeq()?>"/>
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
                         <div class="bg-white p-xs outterDiv">

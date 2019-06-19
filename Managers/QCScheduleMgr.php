@@ -362,7 +362,7 @@ class QCScheduleMgr{
 		if($isSessionQC && !($isSessionSV)){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
-		$query .= "group by po";
+		//$query .= "group by po";
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $qcSchedules;
 		$mainArr["TotalRows"] = $this->getAllCount(true,$isSessionQC,$qcLoggedInSeq);
@@ -370,11 +370,10 @@ class QCScheduleMgr{
 	}
 	
 	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq){
-		$query = "select count(*) from(select * from qcschedules ";
+		$query = "select count(*) from qcschedules ";
 		if($isSessionQC){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
-		$query .= "group by po) as table1";
 		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
 		return $count;
 	}
