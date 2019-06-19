@@ -28,7 +28,7 @@ class QCScheduleMgr{
     }
     
     public function save($qcschedule){
-    	self::$dataStore->save($qcschedule);
+    	return self::$dataStore->save($qcschedule);
     }
     
     public function updateOject($conn,$item,$condition){
@@ -357,8 +357,9 @@ class QCScheduleMgr{
 		$query = "select qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq ";
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionQC = $sessionUtil->isSessionQC();
+		$isSessionSV = $sessionUtil->isSessionSupervisor();
 		$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
-		if($isSessionQC){
+		if($isSessionQC && !($isSessionSV)){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
 		$query .= "group by po";
