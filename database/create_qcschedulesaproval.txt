@@ -1,0 +1,1 @@
+CREATE TABLE `qcschedulesapproval` ( `seq` BIGINT NOT NULL AUTO_INCREMENT , `qcscheduleseq` BIGINT NOT NULL , `userseq` BIGINT NOT NULL , `appliedon` DATETIME NOT NULL , `respondedon` DATETIME NULL , `respondedbyuserseq` BIGINT NULL , `responsetype` VARCHAR(50) NULL , `responsecomments` VARCHAR(500) NULL , PRIMARY KEY (`seq`)) ENGINE = InnoDB;
