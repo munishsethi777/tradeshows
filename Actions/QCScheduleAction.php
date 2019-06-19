@@ -16,29 +16,39 @@ $qcScheduleMgr = QCScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveQCSchedule"){
 	try{
-		$message = "QC Schedule saved successfully!"; 
-		$qcSchedule = new QCSchedule();
-		$qcSchedule->createFromRequest($_REQUEST);
-		if(!isset($_REQUEST["apMiddleInspectionChk"])){
-			$qcSchedule->setApMiddleInspectionDateNaReason(null);
-		}else {
-			$qcSchedule->setAPMiddleInspectionDate(null);
+		$message = "QC Schedule saved successfully!";
+		$itemNumbers = $_REQUEST["itemnumbers"];
+		$itemNumbers = explode(",",$itemNumbers);
+		$seq = $_REQUEST["seq"];
+		$seqs = $_REQUEST["seqs"];
+		$seqs = explode(",",$seqs);
+		foreach ($itemNumbers as $key=>$itemNumber){
+			$qcSchedule = new QCSchedule();
+			$qcSchedule->createFromRequest($_REQUEST);
+			if(!empty($seq)){
+				$qcSchedule->setSeq($seqs[$key]);
+			}
+			$qcSchedule->setItemNumbers($itemNumber);
+			if(!isset($_REQUEST["apMiddleInspectionChk"])){
+				$qcSchedule->setApMiddleInspectionDateNaReason(null);
+			}else{
+				$qcSchedule->setAPMiddleInspectionDate(null);
+			}
+			if(!isset($_REQUEST["apFirstInspectionChk"])){
+				$qcSchedule->setApFirstInspectionDateNaReason(null);
+			}else{
+				$qcSchedule->setAPFirstInspectionDate(null);
+			}
+			if($seq > 0){
+				$message = "QC Schedule updated successfully!";
+			}
+			//$qcSchedule->setSeq($seq);
+			$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
+			$qcSchedule->setCreatedOn(new DateTime());
+			$qcSchedule->setLastModifiedOn(new DateTime());
+			$id = $qcScheduleMgr->save($qcSchedule);
 		}
-		if(!isset($_REQUEST["apFirstInspectionChk"])){
-			$qcSchedule->setApFirstInspectionDateNaReason(null);
-		}else{
-			$qcSchedule->setAPFirstInspectionDate(null);
-		}
-		$seq = 0;
-		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
-			$seq = $_REQUEST["seq"];
-			$message = "QC Schedule updated successfully!";
-		}
-		$qcSchedule->setSeq($seq);
-		$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
-		$qcSchedule->setCreatedOn(new DateTime());
-		$qcSchedule->setLastModifiedOn(new DateTime());
-		$id = $qcScheduleMgr->save($qcSchedule);
+		
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
