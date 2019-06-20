@@ -114,14 +114,18 @@ class UserMgr{
 		return $arr;
 	}
 	public function getSupervisorsForQCReport(){
-		$sql = "SELECT * FROM users left join userdepartments 
-				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'SUPERVISOR' where userdepartments.departmentseq = 1";
+		$sql = "SELECT * FROM users 
+inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
+inner join userroles on users.seq = userroles.userseq 
+where userdepartments.departmentseq = 1 and userroles.role = 'SUPERVISOR'";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
 	}
 	public function getQCsForQCReport(){
-		$sql = "SELECT users.* FROM users left join userdepartments 
-				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'QC' where userdepartments.departmentseq = 1";
+		$sql = "SELECT * FROM users 
+inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
+inner join userroles on users.seq = userroles.userseq 
+where userdepartments.departmentseq = 1 and userroles.role = 'QC'";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
 	}
