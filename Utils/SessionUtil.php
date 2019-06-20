@@ -165,7 +165,7 @@ class SessionUtil{
 		//$bool = self::isSessionAdmin();
 		$bool = self::isSessionUser();
 		if($bool == false){
-			header("location: adminlogin.php");
+			header("location: userlogin.php");
 			die;
 		}
 	}
