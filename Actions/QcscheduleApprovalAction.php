@@ -17,7 +17,8 @@ if($call == "updateApprovalStatus"){
 	try{
 		$approvalSeq = $_POST["approvalSeq"];
 		$approvalStatus = $_POST["approvalstatus"];
-		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq, $approvalStatus);
+		$comments = $_POST["comments"];
+		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq, $approvalStatus,$comments);
 		if($flag){
 			$message =  "QC Schedule status update successfully!";
 		}

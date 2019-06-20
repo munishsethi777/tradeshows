@@ -48,9 +48,13 @@ class QcscheduleApprovalMgr{
 	}
 	
 	
-	public function updateApprovalStatus($approvalSeq,$status){
+	public function updateApprovalStatus($approvalSeq,$status,$comments){
 		$condition["seq"] = $approvalSeq;
 		$attr["responsetype"] = $status;
+		$attr["respondedon"] = new DateTime();
+		$attr["responsecomments"] = $comments;
+		$sessionUtil = SessionUtil::getInstance();
+		$attr["respondedbyuserseq"] = $sessionUtil->getUserLoggedInSeq();
 		return self::$dataStore->updateByAttributesWithBindParams($attr,$condition);
 	}
 }

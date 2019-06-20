@@ -137,6 +137,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                        		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
                         	<div class="col-lg-6">
                             	<select id="approvalstatus" name="approvalstatus" class="form-control">
+                            		<option id="pending">Pending</option>	
                             		<option id="approved">Approved</option>	
                             		<option id="rejected">Rejected</option>	
                             	</select>	
@@ -380,10 +381,14 @@ function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var responseType = data["responsetype"];
-        var isQC = data["isQc"];
+        var responseComments = data["responsecomments"];
+        if(responseComments == null){
+        	responseComments = "";
+        }
+        var isSV = data["isSv"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
-            	if(!isQC && responseType != null){
-            		html +="<a href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
+            	if(!isSV && responseType != null){
+            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
             	}else{
                 	if(responseType != null){
             			html += responseType;
@@ -420,6 +425,7 @@ function loadGrid(){
       { text: 'Ac Midl Insp', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Finl Insp', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'isQC', datafield: 'isQc',width:"12%",hidden:true},
+      { text: 'responsecomments', datafield: 'responsecomments',width:"12%",hidden:true},
       { text: 'qcapprovalseq', datafield: 'qcapprovalseq',width:"12%",hidden:true},
       { text: 'Ac Ready', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"18%"},
@@ -463,6 +469,7 @@ function loadGrid(){
                     { name: 'acmiddleinspectiondate', type: 'date' } ,
                     { name: 'acfinalinspectiondate', type: 'date' } ,
                     { name: 'itemnumbers', type: 'string' } ,
+                    { name: 'responsecomments', type: 'string' } ,
                     { name: 'acreadydate', type: 'date' } ,
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          

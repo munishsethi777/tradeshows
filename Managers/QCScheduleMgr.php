@@ -355,7 +355,7 @@ class QCScheduleMgr{
 	}
 	
 	public function getQCScheudlesForGrid(){
-		$query = "select qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
+		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionQC = $sessionUtil->isSessionQC();
@@ -374,7 +374,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 				$approval = QCScheduleApprovalType::getValue($approval);
 			}
 			$qcSchedule["responsetype"] = $approval;
-			$qcSchedule["isQc"] = $isSessionQC;
+			$qcSchedule["isSv"] = $isSessionSV;
 			array_push($mainArr,$qcSchedule);
 		}
 		$mainArr["Rows"] = $mainArr;

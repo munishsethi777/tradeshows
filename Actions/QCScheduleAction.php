@@ -24,7 +24,8 @@ if($call == "saveQCSchedule"){
 				$acFinalInspectionDate = DateUtil::StringToDateByGivenFormat("m-d-Y", $acFinalInspectionDate);
 				$currentTime = new DateTime();
 				$currentTime->setTime(0,0);
-				if($acFinalInspectionDate >= $currentTime){
+				$acFinalInspectionDate->setTime(0,0);
+				if($acFinalInspectionDate > $currentTime){
 					throw new Exception("Actual final inspection date should be in past for submit approval");
 				}
 			}else{
