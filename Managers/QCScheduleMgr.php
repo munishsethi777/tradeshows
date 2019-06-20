@@ -366,6 +366,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
 		//$query .= "group by po";
+		//$query .= " order by qcschedulesapproval.seq desc";
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
 		$mainArr = array();
 		foreach ($qcSchedules as $qcSchedule){
