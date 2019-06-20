@@ -1,0 +1,1 @@
+CREATE TABLE userroles ( `seq` BIGINT NOT NULL , `userseq` BIGINT NOT NULL , `role` VARCHAR(25) NOT NULL , `createdon` DATETIME NOT NULL ) ENGINE = InnoDB

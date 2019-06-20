@@ -9,6 +9,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 
+require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+
+$userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
 $departments = $departmentMgr->getAll();
 $user = new User();
@@ -23,9 +26,9 @@ $isSendNotifications = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
-	if($user->getUserType() == "QC"){
-		$showQCDiv = "block";
-	}
+	//if($user->getUserType() == "QC"){
+		//$showQCDiv = "block";
+	//}
 	if($user->getIsEnabled() == 1){
 		$isEnabled = "checked";
 	}
@@ -34,6 +37,7 @@ if(isset($_POST["id"])){
 	}
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
+$userRoles = $userMgr->getUserRoles($user->getSeq());
 ?>
 <!DOCTYPE html>
 <html>
@@ -104,23 +108,6 @@ $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 	                            </div>
 	                       </div>
 	                        
-	                        <div class="form-group row i-checks" id="isQCDiv">
-	                       		
-	                            <label class="col-lg-2 col-form-label bg-formLabel">User Type :</label>
-	                        	<div class="col-lg-4">
-	                        		<select name="usertype" class="form-control userTypeDD">
-	                        			<option value="SUPERVISOR">Supervisor</option>
-	                        			<option value="QC">Quality Controller</option>
-	                        		</select>
-	                            </div>
-	                       		<div class="qcDIV" style="display:<?php echo $showQCDiv?>">
-		                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
-		                        	<div class="col-lg-4">
-		                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
-		                            </div>
-		                        </div>
-	                        </div>
-	                        
 	                        <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
 	                        	<div class="col-lg-4">
@@ -132,12 +119,41 @@ $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 	                        		<input type="checkbox" <?php echo $isSendNotifications?> name="issendnotifications"/>
 	                            </div>
 	                        </div>
+	                        <div class="form-group row m-t-xl">
+	                       		<label class="col-lg-3 col-form-label bg-primary">Select Roles</label>
+	                        </div>
+	                        <div class="form-group row i-checks">
+	                    		<?php foreach($userTypes as $userType){
+	                    				$roleChecked = "";
+	                    				foreach($userRoles as $userRole){
+	                    					if($userRole->getRole() == $userType){
+	                    						$roleChecked = "checked";
+	                    					}
+	                    				}
+	                    				if($userType =="ADMIN"){
+	                    					continue;
+	                    				}
+	                    		?>
+		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $userType;?></label>
+		                        	<div class="col-lg-4">
+		                        		<input type="checkbox" name="utype<?php echo $userType;?>" <?php echo $roleChecked?>/>
+		                            </div>
+	                            <?php }?>
+	                        </div>    
+	                        <div class="qcDIV form-group row" style="display:<?php echo "block"?>">
+	                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
+	                            </div>
+	                        </div>
+		                        
+		                        
 	                    	<div class="form-group row m-t-xl">
 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Departments</label>
 	                        </div>
 	                    	<div class="form-group row i-checks">
 	                    		<?php foreach($departments as $department){
-	                    			$checked = "";
+	                    				$checked = "";
 	                    				foreach($userDepartments as $userDepartment){
 	                    					if($userDepartment->getDepartmentSeq() == $department->getSeq()){
 	                    						$checked = "checked";

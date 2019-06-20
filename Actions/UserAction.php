@@ -39,14 +39,27 @@ if($call == "saveUser"){
 		}else{
 			$user->setCreatedOn(new DateTime());
 		}
-		if($user->getUserType() != UserType::QC){
-			$user->setQCCode(null);
-		}
+		//if($user->getUserType() != UserType::QC){
+			//$user->setQCCode(null);
+		//}
 		$user->setSeq($seq);
 		$user->setLastModifiedOn(new DateTime());
 		$id = $userMgr->saveUser($user);
 		$departmentMgr->deleteUseDepartments($id);
+		$userMgr->deleteUseRoles($id);
 		try{
+			foreach($_POST as $key => $value){
+				if(strpos($key, "utype") !== false){
+					$role = substr($key,5);
+					$userRole = new UserRole();
+					$userRole->setUserSeq($id);
+					$userRole->setRole($role);
+					$userRole->setCreatedOn(new DateTime());
+					$userMgr->saveUserRole($userRole);
+				}
+			}
+			
+			
 			foreach($_POST as $key => $value){
 				if(strpos($key, "dep") !== false){
 					$dseq = substr($key,3);
@@ -73,8 +86,9 @@ if($call == "loginUser"){
 	
 	$user = $userMgr->logInUser($username, $password);
 	if(!empty($user) && $user->getPassword() == $password){
+		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
 		$sessionUtil = SessionUtil::getInstance();
-		$sessionUtil->createUserSession($user);
+		$sessionUtil->createUserSession($user,$userRoles);
 		$response["user"] = $userMgr->toArray($user);
 		$message = "Login successfully";
 	}else{

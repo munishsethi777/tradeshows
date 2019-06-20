@@ -40,7 +40,7 @@ class DepartmentMgr{
 	public function getUserDepartments($userSeq){
 		$colValPair = array();
 		$colValPair["userseq"] = $userSeq;
-		return self::$userDeptDataStore->executeConditionQuery($colValuePair);
+		return self::$userDeptDataStore->executeConditionQuery($colValPair);
 	}
 	
 	public function getUserAssignedDepartments($userSeq){

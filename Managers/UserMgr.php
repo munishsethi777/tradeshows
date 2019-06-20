@@ -2,16 +2,19 @@
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserRole.php");
+
 
 class UserMgr{
 	private static $userMgr;
 	private static $userDataStore;
-	
+	private static $userRoleDataStore;
 	public static function getInstance()
 	{
 		if (!self::$userMgr){
 			self::$userMgr = new UserMgr();
 			self::$userDataStore = new BeanDataStore(User::$className,User::$tableName);
+			self::$userRoleDataStore = new BeanDataStore(UserRole::$className,UserRole::$tableName);
 		}
 		return self::$userMgr;
 	}
@@ -98,10 +101,12 @@ class UserMgr{
 		return $flag;
 	}
 	
-	public function getQCUsersArrForDD(){
-		$params["isenabled"] = 1;
-		$params["usertype"] = UserType::QC;
-		$users = self::$userDataStore->executeConditionQuery($params);
+	public function getQCUsersArrForDD(){//Deprecated
+		//$params["isenabled"] = 1;
+		//$params["usertype"] = UserType::QC;
+		//$users = self::$userDataStore->executeConditionQuery($params);
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'QC' and users.isenabled = 1";
+		$users = self::$userDataStore->executeObjectQuery($sql);
 		$arr = array();
 		foreach($users as $user){
 			$arr[$user->getSeq()] = $user->getQCCode();
@@ -119,6 +124,30 @@ class UserMgr{
 				on userdepartments.userseq = users.seq and users.issendnotifications = 1 and users.usertype like 'QC' where userdepartments.departmentseq = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
+	}
+	public function getUserRoles($userSeq){
+		$colValPair = array();
+		$colValPair["userseq"] = $userSeq;
+		return self::$userRoleDataStore->executeConditionQuery($colValPair);
+	}
+	public function getUserRolesArr($userSeq){
+		$userRoles = array();
+		$colValPair = array();
+		$colValPair["userseq"] = $userSeq;
+		$userRolesObjs =  self::$userRoleDataStore->executeConditionQuery($colValPair);
+		foreach ($userRolesObjs as $userRoleObj){
+			array_push($userRoles, $userRoleObj->getRole());
+		}
+		return $userRoles;
+	}
+	public function saveUserRole($userRole){
+		self::$userRoleDataStore->save($userRole);
+	}
+	public function deleteUseRoles($userSeq){
+		$colValPair = array();
+		$colValPair["userseq"] = $userSeq;
+		self::$userRoleDataStore->deleteByAttribute($colValPair);
+	
 	}
 	
 }

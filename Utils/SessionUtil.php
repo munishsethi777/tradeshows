@@ -13,6 +13,7 @@ class SessionUtil{
 
 	private static $USER_IMAGE = "userimage";
     private static $ROLE = "role";
+    private static $ROLES = "roles";
     
   
 	private static $sessionUtil;	
@@ -25,7 +26,7 @@ class SessionUtil{
 		return self::$sessionUtil;
 	}
 
-    public function createAdminSession(Admin $admin){
+    public function createAdminSession(Admin $admin){//Not used anymore
         $arr = new ArrayObject();
         $arr[0] = $admin->getSeq();
         $arr[1] = $admin->getName();
@@ -35,7 +36,7 @@ class SessionUtil{
         $_SESSION[self::$ADMIN_LOGGED_IN] = $arr;
     }
     
-    public function createUserSession(User $user){
+    public function createUserSession(User $user, $userRoles){
     	$arr = new ArrayObject();
     	$arr[0] = $user->getSeq();
     	$arr[1] = $user->getFullName();
@@ -43,6 +44,7 @@ class SessionUtil{
     	$arr[3] = $user->getQCCode();
     	$userType = $user->getUserType();
     	$_SESSION[self::$ROLE] = $userType;
+    	$_SESSION[self::$ROLES] = $userRoles;
     	$_SESSION[self::$USER_LOGGED_IN] = $arr;
     }
 
@@ -130,7 +132,7 @@ class SessionUtil{
 
 	public function isSessionAdmin(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&
-				$_SESSION[self::$ROLE] == UserType::ADMIN){
+				in_array(UserType::ADMIN, $_SESSION[self::$ROLES])){
 					return true;
 		}
 		return false;
@@ -145,7 +147,7 @@ class SessionUtil{
 	
 	public function isSessionQC(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null && 
-				$_SESSION[self::$ROLE] == UserType::QC){
+				in_array(UserType::QC, $_SESSION[self::$ROLES])){
 					return true;
 		}
 		return false;
@@ -153,7 +155,7 @@ class SessionUtil{
 	
 	public function isSessionSupervisor(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&
-				$_SESSION[self::$ROLE] == UserType::SUPERVISOR){
+				in_array(UserType::SUPERVISOR, $_SESSION[self::$ROLES])){
 					return true;
 		}
 		return false;
