@@ -1,6 +1,7 @@
 <?include("sessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
@@ -18,11 +19,19 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  	$qcUserReadonly = "readonly";
  }
  $seqs = 0;
+ $isSubmitApprovalDisabled = "";
+ $disabledSubmitComments = "";
+ $approvalChecked = "";
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
  	$seqs = $_POST["seqs"];
  	$qcSchedule = $qcScheduleMgr->findBySeq($seq);
  	$qcSchedule->setItemNumbers($_POST["itemnumbers"]);
+ 	$itemNumbersArr = explode(",",$_POST["itemnumbers"]);
+ 	if(count($itemNumbersArr) > 1){
+ 		$isSubmitApprovalDisabled = "disabled";
+ 		$disabledSubmitComments = "(Cannot submit approval for multiple items)";
+ 	}
  	if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
  		$middleInspectionChk = "checked";
  	}
@@ -31,6 +40,18 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  	}
  	$readOnlyPO = "readonly";
  	$qcUser = $qcSchedule->getQCUser();
+ 	$qcscheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
+ 	$approval = $qcscheduleApprovalMgr->getLastestQcScheduleApproval($seq);
+ 	$status = $approval->getResponseType();
+ 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
+ 		$isSubmitApprovalDisabled = "disabled";
+ 		$disabledSubmitComments = "(Pending Approval)";
+ 		if($status == QCScheduleApprovalType::approved){
+ 			$disabledSubmitComments = "(Approved)";
+ 		}
+ 		$approvalChecked = "checked";
+ 	}
+ 	
  }
 ?>
 <!DOCTYPE html>
@@ -118,6 +139,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                        	<div class="col-lg-4">
 	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 	                            </div>
+	                        </div>
+	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Submit for Approval</label>
+	                        	<div class="col-lg-4">
+	                        		<input type="checkbox" <?php echo $isSubmitApprovalDisabled?> <?php echo $approvalChecked?> id="isapproval" class="form-control i-checks" name="isapproval"/>
+	                        		<small><?php echo $disabledSubmitComments?></small>
+	                           </div>
 	                        </div>
 	                        
 	                    </div>
@@ -339,6 +367,15 @@ $(document).ready(function(){
 	$('#apMiddleInspectionChk').on('ifChanged', function(event){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
 		showHideMiddleNaDiv(flag)
+  	});
+
+	$('#isapproval').on('ifChanged', function(event){
+		var flag  = $("#isapproval").is(':checked');
+		if(flag){
+			$("#acfinalinspectiondate").attr("required","required");
+		}else{
+			$("#acfinalinspectiondate").removeAttr("required");
+		}
   	});
 
   	function showHideMiddleNaDiv(flag){

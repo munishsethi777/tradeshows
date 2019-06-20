@@ -355,4 +355,33 @@ class QCNotificationsUtil{
 		return $body;
 	}
 	
+	public static function sendQCApprovalNotification($qcSchedule){
+		$itemNo = $qcSchedule->getItemNumbers();
+		$po = $qcSchedule->getPO();
+		$date = new DateTime();
+		$dateStr = $date->format("n/j/Y h:i a");
+		$qcUser = $qcSchedule->getQCUser();
+		$userMgr = UserMgr::getInstance();
+		$qcuser = $userMgr->findBySeq($qcUser);
+		$qcName = $qcuser->getFullName();
+		$phAnValues = array();
+		$phAnValues["QC_NAME"] = $qcName;
+		$phAnValues["ITEM_ID"] = $itemNo;
+		$phAnValues["PO_NUMBER"] = $po;
+		$phAnValues["DATE_STR"] = $dateStr;
+		$phAnValues["WEB_PORTAL_LINK"] = StringConstants::WEB_PORTAL_LINK;
+		$content = file_get_contents("../QCApprovalEmailTemplate.php");
+		$html = self::replacePlaceHolders($phAnValues, $content);
+		$supervisors = $userMgr->getSupervisorsForQCReport();
+		$toEmails = array();
+		$phAnValues = array();
+		foreach ($supervisors as $user){
+			array_push($toEmails,$user->getEmail());
+		}
+		if(!empty($toEmails)){
+			$subject = "Approval Request on Alpinebi";
+			MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+		}	
+	}
+	
 }

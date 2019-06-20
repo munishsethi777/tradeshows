@@ -2,7 +2,9 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -16,6 +18,19 @@ $qcScheduleMgr = QCScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveQCSchedule"){
 	try{
+		if(isset($_POST["isapproval"])){
+			$acFinalInspectionDate = $_REQUEST["acfinalinspectiondate"];
+			if(!empty($acFinalInspectionDate)){
+				$acFinalInspectionDate = DateUtil::StringToDateByGivenFormat("m-d-Y", $acFinalInspectionDate);
+				$currentTime = new DateTime();
+				$currentTime->setTime(0,0);
+				if($acFinalInspectionDate >= $currentTime){
+					throw new Exception("Actual final inspection date should be in past for submit approval");
+				}
+			}else{
+				throw new Exception("Actual final inspection date is required for submit approval");
+			}
+		}
 		$message = "QC Schedule saved successfully!";
 		$itemNumbers = $_REQUEST["itemnumbers"];
 		$itemNumbers = explode(",",$itemNumbers);
@@ -27,6 +42,8 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->createFromRequest($_REQUEST);
 			if(!empty($seq)){
 				$qcSchedule->setSeq($seqs[$key]);
+			}else {
+				$qcSchedule->setSeq(0);
 			}
 			$qcSchedule->setItemNumbers($itemNumber);
 			if(!isset($_REQUEST["apMiddleInspectionChk"])){
@@ -47,6 +64,13 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->setCreatedOn(new DateTime());
 			$qcSchedule->setLastModifiedOn(new DateTime());
 			$id = $qcScheduleMgr->save($qcSchedule);
+			if($id > 0){
+				if(isset($_POST["isapproval"])){
+					$qcSchedule->setSeq($id);
+					$qcApprovalMgr = QcscheduleApprovalMgr::getInstance();
+					$qcApprovalMgr->saveApprovalFromQCSchedule($qcSchedule);
+				}
+			}
 		}
 		
 	}catch(Exception $e){

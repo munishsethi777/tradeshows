@@ -119,26 +119,55 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
     	<input type="hidden" id="seqs" name="seqs"/>
    </form> 
-
+    
+	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+    	<div class="modal-content animated fadeInRight">
+    	  <div class="modal-header">
+          	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Approve/Reject QC Schedule</h4>
+          </div>		
+          <div class="modal-body updateQCScheduleApprovalModalDiv mainDiv">
+            <div class="ibox">
+             <div class="ibox-content">
+             	 <form id="updateQCScheduleApprovalForm" method="post" action="Actions/QcscheduleApprovalAction.php" class="m-t-lg">
+                     	<input type="hidden" id ="call" name="call"  value="updateApprovalStatus"/>
+                     	<input type="hidden" id ="approvalSeq" name="approvalSeq"/>
+                     	 <div class="form-group row">
+                       		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
+                        	<div class="col-lg-6">
+                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
+                            		<option id="approved">Approved</option>	
+                            		<option id="rejected">Rejected</option>	
+                            	</select>	
+                            </div>
+                           </div>
+                            <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Comments</label>
+	                        	<div class="col-lg-10">
+	                            	<textarea required class="form-control" name="comments"></textarea>
+	                            </div>
+                        </div>
+                       		 <div class="modal-footer">
+                                     <button class="btn btn-primary" data-style="expand-right" id="updateApprovalStatusBtn" type="button">
+                                        <span class="ladda-label">Submit</span>
+                                    </button>
+                                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                </div>
+                 </form>
+             </div>
+           </div>
+         </div>
+        </div>
+     </div>
 </body>
 <script type="text/javascript">
-function showItemDetails(seq){
-	$.getJSON("Actions/ItemAction.php?call=getItemDetails&seq="+seq, function(data){
-		item = data.item;
-		$('#itemDetailsModal').modal('show');
-		$.each(item,function(key,val){
-			$(".item"+key).text(val);
-		});
-	});
-}
 function initDateRanges(){
 	    var start = moment().subtract(29, 'days');
 	    var end = moment();
-
 	    function cb(start, end) {
 	        $('#daterange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 	    }
-
 	    $('#daterange').daterangepicker({
 	        startDate: start,
 	        endDate: end,
@@ -158,10 +187,26 @@ function initDateRanges(){
 	    }, cb);
 
 	    cb(start, end);
-
-
 }
 $(document).ready(function(){
+	function updateApprovalStatus(){
+		if($("#updateQCScheduleApprovalForm")[0].checkValidity()) {
+			showHideProgress()
+			$('#updateQCScheduleApprovalForm').ajaxSubmit(function( data ){
+			   showHideProgress();
+			   var flag = showResponseToastr(data,"updateQCScheduleApprovalModal","updateQCScheduleApprovalForm","ibox");
+			   if(flag){
+				   $('#itemDetailsModal').modal('hide');
+				   window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},100);
+			   }
+		    })	
+		}else{
+			$("#createQCScheduleForm")[0].reportValidity();
+		}
+	}
+	$("#updateApprovalStatusBtn").click(function(e){
+		updateApprovalStatus()
+	});
    	loadGrid();
    	initDateRanges();
    	$('.i-checks').iCheck({
@@ -256,7 +301,6 @@ $(document).ready(function(){
     	applyFilter();
     });
  });
-
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
 		
@@ -327,22 +371,34 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+function showApprovalModel(approvalSeq){
+	$("#approvalSeq").val(approvalSeq);
+	$('#updateQCScheduleApprovalModal').modal('show');
+}
 
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:showItemDetails("+ data['seq'] + ")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
+        var responseType = data["responsetype"];
+        var isQC = data["isQc"];
+        var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
+            	if(!isQC && responseType != null){
+            		html +="<a href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
+            	}else{
+                	if(responseType != null){
+            			html += responseType;
+                	}
+            	}
             html += "</div>";
         return html;
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'QC.', datafield: 'qccode', width:"10%", filterable:false},
-      { text: 'Code', datafield: 'classcode',width:"8%"},
-      { text: 'PO', datafield: 'po',width:"10%"},
+      { text: 'Code', datafield: 'classcode',width:"12%"},
+      { text: 'PO', datafield: 'po',width:"12%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
-      { text: 'PO Type', datafield: 'potype',width:"10%"},
+      { text: 'PO Type', datafield: 'potype',width:"12%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%"},
       { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -363,15 +419,17 @@ function loadGrid(){
       { text: 'Ac Frst Insp', datafield: 'acfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Midl Insp', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Finl Insp', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'isQC', datafield: 'isQc',width:"12%",hidden:true},
+      { text: 'qcapprovalseq', datafield: 'qcapprovalseq',width:"12%",hidden:true},
       { text: 'Ac Ready', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
-      { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
-      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
+      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"18%"},
+      { text: 'Approval', datafield: 'responsetype',width:"7%",cellsrenderer:actions}
     ]
    
     var source =
     {
         datatype: "json",
-        id: 'id',
+        id: 'seq',
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
@@ -382,6 +440,9 @@ function loadGrid(){
                     { name: 'potype', type: 'string' } ,
                     { name: 'shipdate', type: 'date' },
                     { name: 'createdon', type: 'date' }, 
+                    { name: 'isQc', type: 'bool' } ,
+                    { name: 'responsetype', type: 'string' } ,
+                    { name: 'qcapprovalseq', type: 'integer' } ,
                     { name: 'scproductionstartdate', type: 'date' } ,
                     { name: 'scgraphicsreceivedate', type: 'date' } ,
                     { name: 'scfirstinspectiondate', type: 'date' } ,
@@ -667,5 +728,8 @@ function deleteQCSchedule(gridId,deleteURL){
          bootbox.alert("No row selected.Please select row to delete!", function() {});
     }
 
+    
+
 }
+
 </script>

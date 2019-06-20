@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleApprovalType.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class QCScheduleMgr{
@@ -354,23 +355,36 @@ class QCScheduleMgr{
 	}
 	
 	public function getQCScheudlesForGrid(){
-		$query = "select qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq ";
+		$query = "select qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionQC = $sessionUtil->isSessionQC();
 		$isSessionSV = $sessionUtil->isSessionSupervisor();
 		$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
 		if($isSessionQC && !($isSessionSV)){
+		//if($isSessionQC){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
 		//$query .= "group by po";
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $qcSchedules;
+		$mainArr = array();
+		foreach ($qcSchedules as $qcSchedule){
+			$approval = $qcSchedule["responsetype"];
+			if(!empty($approval)){
+				$approval = QCScheduleApprovalType::getValue($approval);
+			}
+			$qcSchedule["responsetype"] = $approval;
+			$qcSchedule["isQc"] = $isSessionQC;
+			array_push($mainArr,$qcSchedule);
+		}
+		$mainArr["Rows"] = $mainArr;
 		$mainArr["TotalRows"] = $this->getAllCount(true,$isSessionQC,$qcLoggedInSeq);
 		return $mainArr;
 	}
 	
 	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq){
-		$query = "select count(*) from qcschedules ";
+		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		if($isSessionQC){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
