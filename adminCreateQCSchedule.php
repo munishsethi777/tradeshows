@@ -42,14 +42,16 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
  	$qcUser = $qcSchedule->getQCUser();
  	$qcscheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
  	$approval = $qcscheduleApprovalMgr->getLastestQcScheduleApproval($seq);
- 	$status = $approval->getResponseType();
- 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
- 		$isSubmitApprovalDisabled = "disabled";
- 		$disabledSubmitComments = "(Pending Approval)";
- 		if($status == QCScheduleApprovalType::approved){
- 			$disabledSubmitComments = "(Approved)";
- 		}
- 		$approvalChecked = "checked";
+ 	if(!empty($approval)){
+	 	$status = $approval->getResponseType();
+	 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
+	 		$isSubmitApprovalDisabled = "disabled";
+	 		$disabledSubmitComments = "(Pending Approval)";
+	 		if($status == QCScheduleApprovalType::approved){
+	 			$disabledSubmitComments = "(Approved)";
+	 		}
+	 		$approvalChecked = "checked";
+	 	}
  	}
  	
  }
