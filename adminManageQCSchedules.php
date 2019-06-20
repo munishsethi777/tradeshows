@@ -387,7 +387,7 @@ function loadGrid(){
         }
         var isSV = data["isSv"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
-            	if(!isSV && responseType != null){
+            	if(isSV && responseType != null){
             		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
             	}else{
                 	if(responseType != null){
@@ -424,7 +424,7 @@ function loadGrid(){
       { text: 'Ac Frst Insp', datafield: 'acfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Midl Insp', datafield: 'acmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Ac Finl Insp', datafield: 'acfinalinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
-      { text: 'isQC', datafield: 'isQc',width:"12%",hidden:true},
+      { text: 'isSv', datafield: 'isSv',width:"12%",hidden:true},
       { text: 'responsecomments', datafield: 'responsecomments',width:"12%",hidden:true},
       { text: 'qcapprovalseq', datafield: 'qcapprovalseq',width:"12%",hidden:true},
       { text: 'Ac Ready', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -437,7 +437,7 @@ function loadGrid(){
         datatype: "json",
         id: 'seq',
         pagesize: 20,
-        sortcolumn: 'lastmodifiedon',
+        sortcolumn: 'qcschedulesapproval.seq,lastmodifiedon',
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'qccode', type: 'string' }, 
@@ -446,7 +446,7 @@ function loadGrid(){
                     { name: 'potype', type: 'string' } ,
                     { name: 'shipdate', type: 'date' },
                     { name: 'createdon', type: 'date' }, 
-                    { name: 'isQc', type: 'bool' } ,
+                    { name: 'isSv', type: 'bool' } ,
                     { name: 'responsetype', type: 'string' } ,
                     { name: 'qcapprovalseq', type: 'integer' } ,
                     { name: 'scproductionstartdate', type: 'date' } ,
