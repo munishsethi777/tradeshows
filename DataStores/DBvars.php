@@ -1,8 +1,8 @@
 <?php
 	 class DBvars{
-		public $database = "alpinetradeshows";
+		public $database = "alpinetradeshows_new";
 		public $username = "root";
-        public $password = "";
+        public $password = "root";
         public $hostname = "localhost";
 	}
  ?>
