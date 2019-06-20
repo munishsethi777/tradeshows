@@ -48,17 +48,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
     if (isset($_GET['sortdatafield']))
     {
         $sortfield = $_GET['sortdatafield'];
-        $sortorder = $_GET['sortorder'];            
+        $sortorder = $_GET['sortorder'];     
         if ($sortfield != NULL)
         {
-            if ($sortorder == "desc")
-            {
-                $query = $query . " ORDER BY" . " " . $sortfield . " DESC";
-            }
-            else if ($sortorder == "asc")
-            {
-                $query = $query . " ORDER BY" . " " . $sortfield . " ASC";
-            }            
+        	if ($sortorder == "desc")
+        	{
+        		$query = $query . " ORDER BY" . " ";
+        	}
+        	else if ($sortorder == "asc")
+        	{
+        		$query = $query . " ORDER BY" . " ";
+        	}
+        	$sortfield = explode(",",$sortfield);
+        	$srtStr = "";
+        	foreach($sortfield as $fields){
+	            if ($sortorder == "desc")
+	            {
+	                $srtStr .= $fields . " DESC ,";
+	            }
+	            else if ($sortorder == "asc")
+	            {
+	                $srtStr .= $fields  . " ASC,";
+	            }     
+        	}
+        	$srtStr = rtrim($srtStr,',');
+        	$query = $query . " " . $srtStr;
         }
     }  
     return $query;  
