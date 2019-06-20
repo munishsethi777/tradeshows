@@ -399,7 +399,7 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'QC.', datafield: 'qccode', width:"10%", filterable:false},
+      { text: 'QC.', datafield: 'qccode', width:"10%"},
       { text: 'Code', datafield: 'classcode',width:"12%"},
       { text: 'PO', datafield: 'po',width:"12%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
