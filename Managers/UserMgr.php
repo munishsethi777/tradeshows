@@ -67,7 +67,8 @@ class UserMgr{
 	public function getAllUsersForGrid(){
 		$seesionUtil = SessionUtil::getInstance();
 		$loggedInUserSeq = $seesionUtil->getUserLoggedInSeq();
-		$query = "select * from users where seq != $loggedInUserSeq";
+		$query = "SELECT GROUP_CONCAT(userroles.role) as roles, users.* FROM `users` inner join userroles on users.seq = userroles.userseq where users.seq != $loggedInUserSeq group by users.seq";
+		//$query = "select * from users where seq != $loggedInUserSeq";
 		$arr = self::$userDataStore->executeQuery($query,true);
 		return $arr;
 	}

@@ -136,14 +136,14 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 	                    		?>
 		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $userType;?></label>
 		                        	<div class="col-lg-4">
-		                        		<input type="checkbox" name="utype<?php echo $userType;?>" <?php echo $roleChecked?>/>
+		                        		<input type="checkbox" id="utype<?php echo $userType;?>" name="utype<?php echo $userType;?>" <?php echo $roleChecked?>/>
 		                            </div>
 	                            <?php }?>
 	                        </div>    
 	                        <div class="qcDIV form-group row" style="display:<?php echo "block"?>">
 	                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
+	                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" id="qccode" class="form-control">
 	                            </div>
 	                        </div>
 		                        
@@ -215,6 +215,14 @@ $(document).ready(function(){
 	<?php if(!empty($user->getUserType())){?>	
 		$(".userTypeDD").val("<?php echo $user->getUserType()?>");
 	<?php }?>
+	$('#utypeQC').on('ifChanged', function(event){
+		var flag  = $("#utypeQC").is(':checked');
+		if(flag){
+			$("#qccode").attr("required","required");
+		}else{
+			$("#qccode").removeAttr("required");
+		}
+  	});
 });
 
 function saveUser(){
