@@ -391,7 +391,7 @@ function loadGrid(){
             		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
             	}else{
                 	if(responseType != null){
-            			html += responseType;
+            			html += "<a title='"+responseComments+"' href='#' >" + responseType + "</a>";
                 	}
             	}
             html += "</div>";
