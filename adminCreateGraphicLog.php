@@ -102,7 +102,11 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Class Code : </label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" maxLength="250" value="<?php echo $graphicLog->getClassCode()?>" name="classcode" class="form-control" <?php echo $readOnlyPO?>>
+<!-- 	                            	<input type="text" maxLength="250" name="classcode" class="form-control"> -->
+	                            	<?php 
+				                           	$select = DropDownUtils::getClassCodes("classcode", "", $graphicLog->getClassCode(),false);
+				                            echo $select;
+	                             		?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Estimated Graphics DueDate :</label>
 	                        	<div class="col-lg-4">
@@ -164,7 +168,12 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="250" value="<?php echo $graphicLog->getCustomerName()?>" name="customername" class="form-control" <?php echo $readOnlyPO?>>
+<!-- 	                            	<input type="text" required  maxLength="250" name="customername" class="form-control"> -->
+	                            	<select class="customers form-control" id="customername" name="customername" <?php echo $readOnlyPO?>>
+	                            		<?php if(!empty($graphicLog->getCustomerName())){?>
+	                            				<option selected value="<?php echo $graphicLog->getCustomerName()?>"><?php echo $graphicLog->getCustomerName()?></option>
+	                            		<?php }?>
+									</select>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Private Label (Y/N) :</label>
 	                        	<div class="col-lg-4">
@@ -356,8 +365,31 @@ $(document).ready(function(){
 	showTagFields();
 	showGraphicFields();
 	showLabelFields();
+	loadCustomer();
 });
-
+function loadCustomer(){		
+    $(".customers").select2({
+    	tags: true,
+        ajax: {
+        url: "Actions/CustomerAction.php?call=searchCustomers",
+        dataType: 'json',            
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+      
+        processResults: function (data, page) {
+          return data;
+        },
+        cache: true
+      },
+      width: '100%',
+      minimumInputLength: 1
+    }); 
+}
 function showLabelFields(){
 	value = $("#labeltype").val();
 	if(value == "custom"){
@@ -389,7 +421,7 @@ function showTagFields(){
 }
 function showGraphicFields(){
 	value = $("#graphictype").val();
-	if(value != "a4" && value != ""){
+	if(value != "a4_label" && value != ""){
 		$("#graphicFields").show();
 		//$("#graphiclength").attr("required","required");
 		//$("#graphicwidth").attr("required","required");

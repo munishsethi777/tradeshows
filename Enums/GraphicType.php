@@ -1,8 +1,12 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class GraphicType extends BasicEnum{
-	const box = "Box";
-	const Tray = "Tray";
-	const a4 = "A4";
+	const color_box = "Color Box";
+	const color_label = "Color Label";
+	const floor_display = "Floor Display";
+	const metal_display = "Metal Display";
+	const tray_pack = "Tray Pack";
+	const window_box = "Window Box";
+	const a4_label = "A4 Label";
 	const custom = "Custom";
 }

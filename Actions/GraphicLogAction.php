@@ -48,7 +48,7 @@ if($call == "saveGraphicLog"){
 		}
 		$graphicType = $graphicLog->getGraphicType();
 		$graphicCount = count($graphicLog);
-		if($graphicCount == 1 && $graphicType[0] == "a4"){
+		if($graphicCount == 1 && $graphicType[0] == GraphicType::getName(GraphicType::a4_label)){
 			$graphicLog->setGraphicLength(null);
 			$graphicLog->setGraphicWidth(null);
 			$graphicLog->setGraphicHeight(null);

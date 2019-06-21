@@ -53,6 +53,19 @@ if($call == "getCustomerDetails"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "searchCustomers"){
+	$searchString = $_GET["q"];
+	$customers  = $customerMgr->searchCustomers($searchString);
+	$response['results'] = array();
+	foreach($customers as $customer){
+		$json = array();
+		$json['text'] = $customer['customername'];
+		$json['id'] = $customer['customername'];
+		array_push($response['results'],$json);
+	}
+	echo json_encode($response);
+	return;
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

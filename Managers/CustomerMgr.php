@@ -256,4 +256,13 @@ class CustomerMgr{
 		return $customer;
 	}
 	
+	public function searchCustomers($searchString){
+		$sql = "select * from customers";
+		if($searchString != null){
+			$sql .= " where customername like '%". $searchString ."%'";
+		}
+		$users =   self::$dataStore->executeQuery($sql);
+		return $users;
+	}
+	
 }
