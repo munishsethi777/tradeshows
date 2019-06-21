@@ -1,0 +1,2 @@
+ALTER TABLE `graphicslogs` ADD `labellength` DOUBLE NULL AFTER `tagheight`, ADD `labelwidth` DOUBLE NULL AFTER `labellength`, ADD `labelheight` DOUBLE NULL AFTER `labelwidth`;
+ALTER TABLE `graphicslogs` ADD `labeltype` VARCHAR(50) NULL;

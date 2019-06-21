@@ -2,6 +2,7 @@
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TagType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/LabelType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 
 class DropDownUtils {
@@ -34,6 +35,11 @@ class DropDownUtils {
 	
 	public static function getGraphicTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$enums = GraphicType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type",true);
+	}
+	
+	public static function getLabelTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = LabelType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
 	}
 	
@@ -54,7 +60,7 @@ class DropDownUtils {
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Designer");
 	}
 	
-	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any") {
+	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false) {
 		$id = $selectName;
 		if(strpos($selectName, "[]") !== false){
 			$id = str_replace("[]", "", $id);
@@ -63,7 +69,12 @@ class DropDownUtils {
 		if($isRequired){
 			$required = "required";
 		}
-		$str = "<select ".$required." class='form-control m-b' name='" . $selectName . "' id='" . $id . "' onchange='" . $onChangeMethod . "'>";
+		$multiple = "";
+		if($isMultiSelect){
+			$multiple = "multiple";
+			$selectedValue = explode(",",$selectedValue);
+		}
+		$str = "<select ".$required." class='form-control m-b' name='" . $selectName . "' id='" . $id . "' onchange='" . $onChangeMethod . "' $multiple>";
 		if($isAll){
 			$str .= "<option value=''>".$firstOption."</option>";
 		}
@@ -71,7 +82,12 @@ class DropDownUtils {
 			if( strpos( $key, "group_" ) !== false ) {
 				$str .= "<optgroup label='$value'>";
 			}else{
-				$select = $selectedValue == $key ? 'selected' : null;
+				if($isMultiSelect){
+					$select = in_array($key,$selectedValue) ? 'selected' : null;
+				}else{
+					$select = $selectedValue == $key ? 'selected' : null;
+				}
+				
 				$str .= "<option value='" . $key . "' " . $select . ">" . $value . "</option>";
 			}
 		}

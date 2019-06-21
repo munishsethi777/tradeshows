@@ -5,7 +5,7 @@ class GraphicsLog{
 	$iscustomwraptagneeded, $customername, $isprivatelabel, $usanotes, $estimatedgraphicsdate, $chinaofficeentrydate, 
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
-	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$graphictypelength,$graphictypewidth,$graphictypeheight;
+	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$labeltype,$labellength,$labelwidth,$labelheight;
 
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
@@ -226,26 +226,34 @@ class GraphicsLog{
 	}
 	
 	
-	public function setGraphicTypeLength($val){
-		$this->graphictypelength = $val;
+	public function setLabelLength($val){
+		$this->labellength = $val;
 	}
-	public function getGraphicTypeLength(){
-		return $this->graphictypelength;
-	}
-	
-	public function setGraphicTypeWidth($val){
-		$this->graphictypewidth = $val;
-	}
-	public function getGraphicTypeWidth(){
-		return $this->graphictypewidth;
+	public function getLabelLength(){
+		return $this->labellength;
 	}
 	
-	public function setGraphicTypeHeight($val){
-		$this->graphictypeheight = $val;
+	public function setLabelWidth($val){
+		$this->labelwidth = $val;
 	}
-	public function getGraphicTypeHeight(){
-		return $this->graphictypeheight;
+	public function getLabelWidth(){
+		return $this->labelwidth;
 	}
+	
+	public function setLabelHeight($val){
+		$this->labelheight = $val;
+	}
+	public function getLabelHeight(){
+		return $this->labelheight;
+	}
+	
+	public function setLabelType($val){
+		$this->labeltype = $val;
+	}
+	public function getLabelType(){
+		return $this->labeltype;
+	}
+	
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

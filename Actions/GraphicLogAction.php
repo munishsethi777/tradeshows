@@ -46,16 +46,23 @@ if($call == "saveGraphicLog"){
 		}else{
 			$graphicLog->setIsPrivateLabel(0);
 		}
-		if($graphicLog->getGraphicType() != "custom"){
-			$graphicLog->setGraphicLength(0);
-			$graphicLog->setGraphicWidth(0);
-			$graphicLog->setGraphicHeight(0);
+		$graphicType = $graphicLog->getGraphicType();
+		$graphicCount = count($graphicLog);
+		if($graphicCount == 1 && $graphicType[0] == "a4"){
+			$graphicLog->setGraphicLength(null);
+			$graphicLog->setGraphicWidth(null);
+			$graphicLog->setGraphicHeight(null);
 		}
 		if($graphicLog->getTagType() != "custom"){
-			$graphicLog->setTagLength(0);
-			$graphicLog->setTagWidth(0);
-			$graphicLog->setTagHeight(0);
+			$graphicLog->setTagLength(null);
+			$graphicLog->setTagWidth(null);
+			$graphicLog->setTagHeight(null);
 		}
+		
+		if(!empty($graphicType)){
+			$graphicType = implode(",",$graphicType);
+		}
+		$graphicLog->setGraphicType($graphicType);
 		
 		$id = $graphicLogMgr->save($graphicLog);
 	}catch(Exception $e){

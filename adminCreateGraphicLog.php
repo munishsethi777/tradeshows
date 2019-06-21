@@ -123,23 +123,9 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Type of Graphics :</label>
 	                        	<div class="col-lg-4">
 	                            	<?php 
-			                           	$select = DropDownUtils::getGraphicTypes("graphictype", "showGraphicFields()", $graphicLog->getGraphicType(),false,true);
+			                           	$select = DropDownUtils::getGraphicTypes("graphictype[]", "showGraphicFields()", $graphicLog->getGraphicType(),false,true);
 			                            echo $select;
 	                             	?>
-	                             	<div id="graphicFields" style="display:none">
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Length</label>
-		                             		<input type="text" placeholder="Length"  value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control">
-		                             	</div>
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Width</label>
-		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control">
-		                             	</div>
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Height</label>
-		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getGraphicHeight()?>" name="graphicheight" id="graphicheight" class="form-control">
-		                             	</div>
-	                             	</div>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Type of Tags :</label>
 	                        	<div class="col-lg-4">
@@ -182,7 +168,25 @@ if(isset($_POST["id"])){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Private Label (Y/N) :</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $hasPrivate?> name="isprivatelabel"/>
+<!-- 	                        		<input type="checkbox" name="isprivatelabel"/> -->
+										<?php 
+				                           	$select = DropDownUtils::getLabelTypes("labeltype", "showLabelFields()", $graphicLog->getLabelType(),false);
+				                            echo $select;
+	                             		?>
+	                             	<div id="labelFields" style="display:none">
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Length</label>
+		                             		<input type="text" placeholder="Length" value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Width</label>
+		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control">
+		                             	</div>
+		                             	<div class="col-sm-4">
+		                             		<label class="col-lg-2 col-form-label">Height</label>
+		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control">
+		                             	</div>
+	                             	</div>
 	                           </div>
 	                        </div>
 	                         <div class="form-group row">
@@ -282,24 +286,25 @@ if(isset($_POST["id"])){
 	                            	</div>
 	                            </div>
 	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Dimensions of Graphics :</label>
-	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
-	                        	<div class="col-lg-2">
-	                            	<input type="text" name="graphictypelength" class="form-control">
+	                        <div id="graphicFields" style="display:none">
+		                        <div class="form-group row">
+		                       		<label class="col-lg-2 col-form-label bg-formLabel">Dimensions of Graphics :</label>
 		                        </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
-	                        	<div class="col-lg-2">
-	                            	<input type="text" name="graphictypewidth" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
-	                        	<div class="col-lg-2">
-	                            	<input type="text" name="graphictypeheight" class="form-control">
-	                            </div>
+		                        <div class="form-group row">
+		                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
+		                        	<div class="col-lg-2">
+		                            	<input type="text" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control">
+			                        </div>
+		                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
+		                        	<div class="col-lg-2">
+		                            	<input type="text" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control">
+		                            </div>
+		                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
+		                        	<div class="col-lg-2">
+		                            	<input type="text" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control">
+		                            </div>
+		                        </div>
 	                        </div>
-	                        
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
 	                        	<div class="col-lg-10">
@@ -307,9 +312,7 @@ if(isset($_POST["id"])){
 	                            </div>
 	                        </div> 
 	                    </div>
-	                  
-	                    
-                        <div class="bg-white p-xs">
+	                    <div class="bg-white p-xs">
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label"></label>
 	                        	<div class="col-lg-2">
@@ -343,6 +346,7 @@ $(document).ready(function(){
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
+	$("#graphictype").chosen({width:"100%"});
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y',
@@ -351,7 +355,24 @@ $(document).ready(function(){
 	})
 	showTagFields();
 	showGraphicFields();
+	showLabelFields();
 });
+
+function showLabelFields(){
+	value = $("#labeltype").val();
+	if(value == "custom"){
+		$("#labelFields").show();
+		$("#labellength").attr("required","required");
+		$("#labelwidth").attr("required","required");
+		$("#labelheight").attr("required","required");
+	}else{
+		$("#labelFields").hide();
+		$("#labellength").removeAttr("required");
+		$("#labelwidth").removeAttr("required");
+		$("#labelheight").removeAttr("required");
+	}
+}
+
 function showTagFields(){
 	value = $("#tagtype").val();
 	if(value == "custom"){
@@ -370,14 +391,14 @@ function showGraphicFields(){
 	value = $("#graphictype").val();
 	if(value != "a4" && value != ""){
 		$("#graphicFields").show();
-		$("#graphiclength").attr("required","required");
-		$("#graphicwidth").attr("required","required");
-		$("#graphicheight").attr("required","required");
+		//$("#graphiclength").attr("required","required");
+		//$("#graphicwidth").attr("required","required");
+		//$("#graphicheight").attr("required","required");
 	}else{
 		$("#graphicFields").hide();
-		$("#graphiclength").removeAttr("required");
-		$("#graphicwidth").removeAttr("required");
-		$("#graphicheight").removeAttr("required");
+		//$("#graphiclength").removeAttr("required");
+		//$("#graphicwidth").removeAttr("required");
+		//$("#graphicheight").removeAttr("required");
 	}
 }
 function setDates(estimatedshipdateStr){
