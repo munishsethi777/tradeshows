@@ -13,7 +13,7 @@ try{
 	//QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
 	
 	//QC Notifications
-	//QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
+	QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
 	//QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
 	//QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
 	//QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);

@@ -215,6 +215,14 @@ $(document).ready(function(){
 	<?php if(!empty($user->getUserType())){?>	
 		$(".userTypeDD").val("<?php echo $user->getUserType()?>");
 	<?php }?>
+	$('#utypeQC').on('ifChanged', function(event){
+		var flag  = $("#utypeQC").is(':checked');
+		if(flag){
+			$("#qccode").attr("required","required");
+		}else{
+			$("#qccode").removeAttr("required");
+		}
+  	});
 });
 
 function saveUser(){
