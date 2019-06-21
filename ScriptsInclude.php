@@ -170,6 +170,8 @@
  <!-- TouchSpin -->
  <script src="scripts/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
  <link href="styles/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+ <script type="text/javascript" src="scripts/jquery.numeric.min.js"></script>
+ 
 <script>
 $(document).ready(function() {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });

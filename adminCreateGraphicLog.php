@@ -140,15 +140,15 @@ if(isset($_POST["id"])){
 	                             	<div id="tagFields" style="display:none">
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Length</label>
-		                             		<input type="text" placeholder="Length" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control">
+		                             		<input type="number" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Width</label>
-		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control">
+		                             		<input type="number"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Height</label>
-		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control">
+		                             		<input type="number"  value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control positive-integer">
 		                             	</div>
 	                             	</div>
 	                            </div>
@@ -165,7 +165,7 @@ if(isset($_POST["id"])){
 	                        		<input type="checkbox" <?php //echo $hasWrapTag?> name="iscustomwraptagneeded"/>-->
 <!-- 	                            </div> -->
 <!-- 	                        </div> -->
-	                        <div class="form-group row i-checks">
+	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name :</label>
 	                        	<div class="col-lg-4">
 <!-- 	                            	<input type="text" required  maxLength="250" name="customername" class="form-control"> -->
@@ -177,23 +177,26 @@ if(isset($_POST["id"])){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Private Label (Y/N) :</label>
 	                        	<div class="col-lg-4">
-<!-- 	                        		<input type="checkbox" name="isprivatelabel"/> -->
+	                        		<input type="checkbox" class="i-checks form-control" <?php echo $hasPrivate?> id="isprivatelabel" name="isprivatelabel"/>
+	                        		
+	                        		<div style="margin-top:5px;display:none" id="labelTypeDiv">
 										<?php 
 				                           	$select = DropDownUtils::getLabelTypes("labeltype", "showLabelFields()", $graphicLog->getLabelType(),false);
 				                            echo $select;
 	                             		?>
-	                             	<div id="labelFields" style="display:none">
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Length</label>
-		                             		<input type="text" placeholder="Length" value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="form-control">
-		                             	</div>
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Width</label>
-		                             		<input type="text"  placeholder="Width"  value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control">
-		                             	</div>
-		                             	<div class="col-sm-4">
-		                             		<label class="col-lg-2 col-form-label">Height</label>
-		                             		<input type="text"  placeholder="Height"  value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control">
+		                             	<div id="labelFields" style="display:none">
+			                             	<div class="col-sm-4">
+			                             		<label class="col-lg-2 col-form-label">Length</label>
+			                             		<input type="number"  value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="positive-integer form-control">
+			                             	</div>
+			                             	<div class="col-sm-4">
+			                             		<label class="col-lg-2 col-form-label">Width</label>
+			                             		<input type="number"    value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control positive-integer">
+			                             	</div>
+			                             	<div class="col-sm-4">
+			                             		<label class="col-lg-2 col-form-label">Height</label>
+			                             		<input type="number"   value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control positive-integer">
+			                             	</div>
 		                             	</div>
 	                             	</div>
 	                           </div>
@@ -226,7 +229,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" id="classcode" maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  dateControl" <?php echo $readOnlyPO?>>
+                                		<input type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  datepicker" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                           	</div>
@@ -236,7 +239,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input type="text"  id="qc" maxLength="250" value="<?php echo $graphicLog->getGraphicStatus()?>" name="graphicstatus" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Completion Date :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Submitted to China Date:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
                                 		<input type="text" id="classcode" maxLength="250" value="<?php echo $graphicLog->getGraphicCompletionDate()?>" name="graphiccompletiondate" class="form-control dateControl" <?php echo $readOnlyPO?>>
@@ -249,13 +252,13 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Appx Completion Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" id="approxgraphicschinasentdate" maxLength="250" value="<?php echo $graphicLog->getApproxGraphicsChinaSentDate()?>" name="approxgraphicschinasentdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                		<input type="text"  id="approxgraphicschinasentdate" maxLength="250" value="<?php echo $graphicLog->getApproxGraphicsChinaSentDate()?>" name="approxgraphicschinasentdate" class="form-control datepicker" <?php echo $readOnlyPO?>>
                                 		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Duration :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="number" id="classcode" maxLength="250" value="<?php echo $graphicLog->getDuration()?>" name="duration" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input type="number" id="duration" maxLength="250" value="<?php echo $graphicLog->getDuration()?>" name="duration" class="form-control positive-integer" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -302,15 +305,15 @@ if(isset($_POST["id"])){
 		                        <div class="form-group row">
 		                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="text" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control">
+		                            	<input type="number" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
 			                        </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="text" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control">
+		                            	<input type="number" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
 		                            </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="text" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control">
+		                            	<input type="number" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
 		                            </div>
 		                        </div>
 	                        </div>
@@ -360,13 +363,70 @@ $(document).ready(function(){
 	    timepicker:false,
 	    format:'m-d-Y',
 	    scrollMonth : false,
-		scrollInput : false
+		scrollInput : false,
+		onSelectDate:function(ct,$i){
+			setDuration();
+		}
+	})
+	$('.datepicker').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	    scrollMonth : false,
+		scrollInput : false,
+		onSelectDate:function(ct,$i){
+			setDuration();
+		}
 	})
 	showTagFields();
 	showGraphicFields();
 	showLabelFields();
 	loadCustomer();
+	showHideLabelType();
+	$('#isprivatelabel').on('ifChanged', function(event){
+		showHideLabelType();
+	});
+	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 });
+function setDuration(){
+	var startDateStr = $("#graphicartiststartdate").val();
+	var endDateStr = $("#approxgraphicschinasentdate").val();
+	if(startDateStr == "" || endDateStr == ""){
+		return;
+	}
+	var startDate = parseDate(startDateStr);
+	var endDate = parseDate(endDateStr);
+	if(startDate > endDate){
+		alert("Start Date should be less than Appx Completion Date");
+		$("#duration").val(0);	
+		return false;
+	}else{
+		var daysDiff = datediff(startDate,endDate);
+		$("#duration").val(daysDiff);	
+	}
+	
+
+	
+}
+function parseDate(str) {
+    var mdy = str.split('-');
+    return new Date(mdy[2], mdy[0]-1, mdy[1]);
+}
+
+function datediff(first, second) {
+    // Take the difference between the dates and divide by milliseconds per day.
+    // Round to nearest whole number to deal with DST.
+    return Math.round((second-first)/(1000*60*60*24));
+}
+
+function showHideLabelType(){
+	var flag  = $("#isprivatelabel").is(':checked');	
+	if(flag){
+		$("#labelTypeDiv").show();
+	}else{
+		$("#labelTypeDiv").hide();
+	}
+	showLabelFields();
+}
 function loadCustomer(){		
     $(".customers").select2({
     	tags: true,
@@ -392,7 +452,8 @@ function loadCustomer(){
 }
 function showLabelFields(){
 	value = $("#labeltype").val();
-	if(value == "custom"){
+	var isPrivate  = $("#isprivatelabel").is(':checked');
+	if(value == "custom" && isPrivate){
 		$("#labelFields").show();
 		$("#labellength").attr("required","required");
 		$("#labelwidth").attr("required","required");

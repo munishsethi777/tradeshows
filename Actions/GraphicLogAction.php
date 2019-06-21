@@ -1,4 +1,5 @@
 <?php
+
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
@@ -21,7 +22,13 @@ if($call == "saveGraphicLog"){
 		$message = "Graphic Log saved successfully!"; 
 		$graphicLog = new GraphicsLog();
 		$graphicLog->createFromRequest($_REQUEST);
-		
+		if(!empty($graphicLog->getApproxGraphicsChinaSentDate()) 
+				&& !empty($graphicLog->getGraphicArtistStartDate())){
+			
+			if($graphicLog->getApproxGraphicsChinaSentDate() < $graphicLog->getGraphicArtistStartDate()){
+				throw new Exception("Start Date should be less than Appx Completion Date");
+			}
+		}
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
@@ -45,10 +52,15 @@ if($call == "saveGraphicLog"){
 			$graphicLog->setIsPrivateLabel(1);
 		}else{
 			$graphicLog->setIsPrivateLabel(0);
+			$graphicLog->setLabelType(null);
+			$graphicLog->setLabelLength(null);
+			$graphicLog->setLabelWidth(null);
+			$graphicLog->setLabelHeight(null);
 		}
 		$graphicType = $graphicLog->getGraphicType();
 		$graphicCount = count($graphicLog);
-		if($graphicCount == 1 && $graphicType[0] == GraphicType::getName(GraphicType::a4_label)){
+		if($graphicCount == 1 && 
+				$graphicType[0] == GraphicType::getName(GraphicType::a4_label)){
 			$graphicLog->setGraphicLength(null);
 			$graphicLog->setGraphicWidth(null);
 			$graphicLog->setGraphicHeight(null);
@@ -63,6 +75,11 @@ if($call == "saveGraphicLog"){
 			$graphicType = implode(",",$graphicType);
 		}
 		$graphicLog->setGraphicType($graphicType);
+		if($graphicLog->getLabelType() != "custom"){
+			$graphicLog->setLabelLength(null);
+			$graphicLog->setLabelWidth(null);
+			$graphicLog->setLabelHeight(null);
+		}
 		
 		$id = $graphicLogMgr->save($graphicLog);
 	}catch(Exception $e){
