@@ -119,7 +119,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required id="classcode" maxLength="250" value="<?php echo $qcSchedule->getClassCode()?>" name="classcode" class="form-control" <?php echo $readOnlyPO?>>
+<!-- 	                            	<input type="text" required id="classcode" maxLength="250" name="classcode" class="form-control"> -->
+	                            	<?php 
+				                           	$select = DropDownUtils::getClassCodes("classcode", "", $qcSchedule->getClassCode(),false);
+				                            echo $select;
+	                             		?>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
