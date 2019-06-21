@@ -140,15 +140,15 @@ if(isset($_POST["id"])){
 	                             	<div id="tagFields" style="display:none">
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Length</label>
-		                             		<input type="number" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control positive-integer">
+		                             		<input type="number" step=".01" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Width</label>
-		                             		<input type="number"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control positive-integer">
+		                             		<input type="number" step=".01"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Height</label>
-		                             		<input type="number"  value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control positive-integer">
+		                             		<input type="number"  step=".01" value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control positive-integer">
 		                             	</div>
 	                             	</div>
 	                            </div>
@@ -187,15 +187,15 @@ if(isset($_POST["id"])){
 		                             	<div id="labelFields" style="display:none">
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Length</label>
-			                             		<input type="number"  value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="positive-integer form-control">
+			                             		<input type="number" step=".01"  value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="positive-integer form-control">
 			                             	</div>
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Width</label>
-			                             		<input type="number"    value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control positive-integer">
+			                             		<input type="number" step=".01"    value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control positive-integer">
 			                             	</div>
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Height</label>
-			                             		<input type="number"   value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control positive-integer">
+			                             		<input type="number" step=".01"   value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control positive-integer">
 			                             	</div>
 		                             	</div>
 	                             	</div>
@@ -258,7 +258,7 @@ if(isset($_POST["id"])){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Duration :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="number" id="duration" maxLength="250" value="<?php echo $graphicLog->getDuration()?>" name="duration" class="form-control positive-integer" <?php echo $readOnlyPO?>>
+	                            	<input type="number" step=".01" id="duration" maxLength="250" value="<?php echo $graphicLog->getDuration()?>" name="duration" class="form-control positive-integer" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                         <div class="form-group row">
@@ -330,15 +330,15 @@ if(isset($_POST["id"])){
 		                        <div class="form-group row">
 		                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="number" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
+		                            	<input type="number" step=".01" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
 			                        </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="number" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
+		                            	<input type="number" step=".01" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
 		                            </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
 		                        	<div class="col-lg-2">
-		                            	<input type="number" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
+		                            	<input type="number" step=".01" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
 		                            </div>
 		                        </div>
 	                        </div>
