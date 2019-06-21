@@ -261,6 +261,31 @@ if(isset($_POST["id"])){
 	                            	<input type="number" id="duration" maxLength="250" value="<?php echo $graphicLog->getDuration()?>" name="duration" class="form-control positive-integer" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
+	                         <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Draft Date :</label>
+	                        	<div class="col-lg-4">
+	                        		<div class="input-group date">
+                                		<input type="text"  id="draftdate" maxLength="250" value="<?php echo $graphicLog->getDraftDate()?>" name="draftdate" class="form-control datepicker" <?php echo $readOnlyPO?>>
+                                		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+	                            	</div>
+	                            </div>
+	                            	<label class="col-lg-2 col-form-label bg-formLabel">Buyer's Review Return Date :</label>
+		                        	<div class="col-lg-4">
+		                            	<div class="input-group date">
+	                                		<input type="text"  id="buyerreviewreturndate" maxLength="250" value="<?php echo $graphicLog->getBuyerReviewReturnDate()?>" name="buyerreviewreturndate" class="form-control datepicker" <?php echo $readOnlyPO?>>
+	                                		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            </div>
+	                         </div>
+	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Manager's Review Return Date:</label>
+	                       		<div class="col-lg-4">
+		                        	<div class="input-group date">
+	                                	<input type="text"  id="managerreviewreturndate" maxLength="250" value="<?php echo $graphicLog->getManagerReviewReturnDate()?>" name="managerreviewreturndate" class="form-control datepicker" <?php echo $readOnlyPO?>>
+	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            </div>
+	                            </div>
+	                        </div> 
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to China Office :</label>
 	                        	<div class="col-lg-10">

@@ -6,7 +6,7 @@ class GraphicsLog{
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
 	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$labeltype,$labellength,$labelwidth,$labelheight;
-
+	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate;
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
 
@@ -252,6 +252,27 @@ class GraphicsLog{
 	}
 	public function getLabelType(){
 		return $this->labeltype;
+	}
+	
+	public function setDraftDate($draftDate_){
+		$this->draftdate = $draftDate_;
+	}
+	public function getDraftDate(){
+		return $this->draftdate;
+	}
+	
+	public function setBuyerReviewReturnDate($buyerReviewReturnDate_){
+		$this->buyerreviewreturndate = $buyerReviewReturnDate_;
+	}
+	public function getBuyerReviewReturnDate(){
+		return $this->buyerreviewreturndate;
+	}
+	
+public function setManagerReviewReturnDate($managerReviewReturnDate_){
+		$this->managerreviewreturndate = $managerReviewReturnDate_;
+	}
+	public function getManagerReviewReturnDate(){
+		return $this->managerreviewreturndate;
 	}
 	
 	public function createFromRequest($request){

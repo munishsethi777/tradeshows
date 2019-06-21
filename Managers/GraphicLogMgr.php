@@ -346,6 +346,9 @@ class GraphicLogMgr{
 		$graphicLog->setApproxGraphicsChinaSentDate($this->getDateStr($graphicLog->getApproxGraphicsChinaSentDate()));
 		$graphicLog->setGraphicArtistStartDate($this->getDateStr($graphicLog->getGraphicArtistStartDate()));
 		$graphicLog->setGraphicCompletionDate($this->getDateStr($graphicLog->getGraphicCompletionDate()));
+		$graphicLog->setDraftDate($this->getDateStr($graphicLog->getDraftDate()));
+		$graphicLog->setBuyerReviewReturnDate($this->getDateStr($graphicLog->getBuyerReviewReturnDate()));
+		$graphicLog->setManagerReviewReturnDate($this->getDateStr($graphicLog->getManagerReviewReturnDate()));
 		return $graphicLog;
 	}
 	

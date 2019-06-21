@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` ADD `draftdate` DATE NULL AFTER `labeltype`, ADD `buyerreviewreturndate` DATE NULL AFTER `draftdate`, ADD `managerreviewreturndate` DATE NULL AFTER `buyerreviewreturndate`;
