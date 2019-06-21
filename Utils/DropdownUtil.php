@@ -3,8 +3,10 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TagType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/LabelType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
+
 
 class DropDownUtils {
 	
@@ -42,6 +44,11 @@ class DropDownUtils {
 	public static function getLabelTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$enums = LabelType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+	
+	public static function getGraphicStatusTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = GraphicStatusType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
 	}
 	
 	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {

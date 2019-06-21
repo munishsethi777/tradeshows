@@ -218,7 +218,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assigned Designer :</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-										$select = DropDownUtils::getGraphicDesigersUsers("qcuser", null,$graphicLog->getGraphicArtist(),false,true);
+										$select = DropDownUtils::getGraphicDesigersUsers("graphicartist", null,$graphicLog->getGraphicArtist(),false,true);
 		                        		echo $select;
 	                        			if($isSessionQC){?>
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $graphicLog->getGraphicArtist()?>" name="graphicartist">
@@ -237,7 +237,10 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Graphic Status :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="qc" maxLength="250" value="<?php echo $graphicLog->getGraphicStatus()?>" name="graphicstatus" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<?php 
+				                           	$select = DropDownUtils::getGraphicStatusTypes("graphicstatus", "", $graphicLog->getGraphicStatus(),false);
+				                            echo $select;
+	                             		?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Submitted to China Date:</label>
 	                        	<div class="col-lg-4">
