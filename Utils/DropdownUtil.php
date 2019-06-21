@@ -1,6 +1,7 @@
 <?php
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TagType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 
 class DropDownUtils {
@@ -37,7 +38,7 @@ class DropDownUtils {
 	}
 	
 	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
-		$enums = GraphicType::getAll();
+		$enums = TagType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
 	}
 	
@@ -47,6 +48,11 @@ class DropDownUtils {
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select QC");
 	}
 	
+	public static function getGraphicDesigersUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getGraphicDesignersArrForDD();
+		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Designer");
+	}
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any") {
 		$id = $selectName;

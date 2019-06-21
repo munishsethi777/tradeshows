@@ -123,26 +123,26 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Roles</label>
 	                        </div>
 	                        <div class="form-group row i-checks">
-	                    		<?php foreach($userTypes as $userType){
+	                    		<?php foreach($userTypes as $key => $userType){
 	                    				$roleChecked = "";
 	                    				foreach($userRoles as $userRole){
-	                    					if($userRole->getRole() == $userType){
+	                    					if($userRole->getRole() == $key){
 	                    						$roleChecked = "checked";
 	                    					}
 	                    				}
-	                    				if($userType =="ADMIN"){
+	                    				if($key =="ADMIN"){
 	                    					continue;
 	                    				}
 	                    		?>
 		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $userType;?></label>
-		                        	<div class="col-lg-4">
-		                        		<input type="checkbox" name="utype<?php echo $userType;?>" <?php echo $roleChecked?>/>
+		                        	<div class="col-lg-2">
+		                        		<input type="checkbox" name="utype<?php echo $key;?>" <?php echo $roleChecked?>/>
 		                            </div>
 	                            <?php }?>
 	                        </div>    
 	                        <div class="qcDIV form-group row" style="display:<?php echo "block"?>">
 	                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
-	                        	<div class="col-lg-4">
+	                        	<div class="col-lg-2">
 	                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
 	                            </div>
 	                        </div>

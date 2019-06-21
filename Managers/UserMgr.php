@@ -102,9 +102,6 @@ class UserMgr{
 	}
 	
 	public function getQCUsersArrForDD(){//Deprecated
-		//$params["isenabled"] = 1;
-		//$params["usertype"] = UserType::QC;
-		//$users = self::$userDataStore->executeConditionQuery($params);
 		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'QC' and users.isenabled = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		$arr = array();
@@ -113,6 +110,17 @@ class UserMgr{
 		}
 		return $arr;
 	}
+	
+	public function getGraphicDesignersArrForDD(){//Deprecated
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' and users.isenabled = 1";
+		$users = self::$userDataStore->executeObjectQuery($sql);
+		$arr = array();
+		foreach($users as $user){
+			$arr[$user->getSeq()] = $user->getFullName();
+		}
+		return $arr;
+	}
+	
 	public function getSupervisorsForQCReport(){
 		$sql = "SELECT * FROM users 
 inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 

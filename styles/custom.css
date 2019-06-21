@@ -165,6 +165,5 @@ ul.nav-second-level{
 }
 .bg-formLabel{
 	background-color:rgba(25, 173, 143, 0.16);
-	padding-left:7px !important;
-	padding-right:7px !important;
+	padding:9px 7px !important;
 }

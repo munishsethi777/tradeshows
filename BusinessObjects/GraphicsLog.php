@@ -5,7 +5,7 @@ class GraphicsLog{
 	$iscustomwraptagneeded, $customername, $isprivatelabel, $usanotes, $estimatedgraphicsdate, $chinaofficeentrydate, 
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
-	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight;
+	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$graphictypelength,$graphictypewidth,$graphictypeheight;
 
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
@@ -225,6 +225,27 @@ class GraphicsLog{
 		return $this->tagheight;
 	}
 	
+	
+	public function setGraphicTypeLength($val){
+		$this->graphictypelength = $val;
+	}
+	public function getGraphicTypeLength(){
+		return $this->graphictypelength;
+	}
+	
+	public function setGraphicTypeWidth($val){
+		$this->graphictypewidth = $val;
+	}
+	public function getGraphicTypeWidth(){
+		return $this->graphictypewidth;
+	}
+	
+	public function setGraphicTypeHeight($val){
+		$this->graphictypeheight = $val;
+	}
+	public function getGraphicTypeHeight(){
+		return $this->graphictypeheight;
+	}
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

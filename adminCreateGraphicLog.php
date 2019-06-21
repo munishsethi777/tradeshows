@@ -201,8 +201,15 @@ if(isset($_POST["id"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assigned Designer :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  id="qc" maxLength="250" value="<?php echo $graphicLog->getGraphicArtist()?>" name="graphicartist" class="form-control" <?php echo $readOnlyPO?>>
-	                            </div>
+	                        		<?php 
+										$select = DropDownUtils::getGraphicDesigersUsers("qcuser", null,$graphicLog->getGraphicArtist(),false,true);
+		                        		echo $select;
+	                        			if($isSessionQC){?>
+	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $graphicLog->getGraphicArtist()?>" name="graphicartist">
+	                        			<?php }
+                             		?>
+	                        	
+	                        	</div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
@@ -279,6 +286,21 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Dimensions of Graphics :</label>
 	                        </div>
 	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
+	                        	<div class="col-lg-2">
+	                            	<input type="text" name="graphictypelength" class="form-control">
+		                        </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
+	                        	<div class="col-lg-2">
+	                            	<input type="text" name="graphictypewidth" class="form-control">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
+	                        	<div class="col-lg-2">
+	                            	<input type="text" name="graphictypeheight" class="form-control">
+	                            </div>
+	                        </div>
+	                        
+	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
 	                        	<div class="col-lg-10">
 	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
@@ -346,7 +368,7 @@ function showTagFields(){
 }
 function showGraphicFields(){
 	value = $("#graphictype").val();
-	if(value == "custom"){
+	if(value != "a4" && value != ""){
 		$("#graphicFields").show();
 		$("#graphiclength").attr("required","required");
 		$("#graphicwidth").attr("required","required");
