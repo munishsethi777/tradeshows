@@ -48,7 +48,7 @@ class BeanDataStore {
 			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "setNAForLockedField" && $methodName != "from_array" && $methodName != "createFromRequest") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {

@@ -409,6 +409,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		}
 		$mainArr["fieldState"]  = $fieldStateArr;
 		$commonQc = new QCSchedule();
+		$commonQc->setNAForLockedField($fieldStateArr);
 		$commonQc->setQCUser($qcSchedule["qcuser"]);
 		$commonQc->setPO($qcSchedule["po"]);
 		$commonQc->setClassCode($qcSchedule["classcode"]);
@@ -435,6 +436,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		}
 		return $fieldStateArr;
 	}
+	
 	public function getBySeq($seq){
 		$qcSchedule = self::$dataStore->findBySeq($seq);
 		return $qcSchedule;

@@ -239,4 +239,17 @@ class QCSchedule{
 			}
 		}
 	}
+	
+	public function setNAForLockedField($array){
+		foreach(get_object_vars($this) as $attrName => $attrValue){
+			$flag = property_exists(self::$className, $attrName);
+			$isExists = array_key_exists($attrName, $array);
+			if($flag && $isExists){
+				$value = $array[$attrName];
+				if(!empty($value)){
+					$this->{$attrName} = "NA";
+				}
+			}
+		}
+	}
 }
