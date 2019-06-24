@@ -398,7 +398,47 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		return $itemArr;
 	}
 	
+	public function findBySeqs($seqs){
+		$query = "select * from qcschedules where seq in ($seqs)";
+		$qcSchedules = self::$dataStore->executeQuery($query,false,true);
+		$fieldStateArr = array();
+		foreach ($qcSchedules as $key=>$qcSchedule){
+			$schedules = $qcSchedules;
+			unset($schedules[$key]);
+			$fieldStateArr = $this->campare($qcSchedule, $schedules, $fieldStateArr);
+		}
+		$mainArr["fieldState"]  = $fieldStateArr;
+		$commonQc = new QCSchedule();
+		$commonQc->setQCUser($qcSchedule["qcuser"]);
+		$commonQc->setPO($qcSchedule["po"]);
+		$commonQc->setClassCode($qcSchedule["classcode"]);
+		$mainArr["qcschedule"] = $commonQc;
+		return $mainArr;
+	}
 	
+	private function campare($qcSchedule,$allSchedules,$fieldStateArr){
+		foreach ($allSchedules as $schedule){
+			$properties = array_keys($schedule);
+			foreach ($properties as $property){
+				//if($this->startsWith($property, "ac") || $this->startsWith($property, "ap")){
+					$val1 = $schedule[$property];
+					$val2 = $qcSchedule[$property];
+					if(empty($val1) && empty($val2)){
+						if(!isset($fieldStateArr[$property])){
+							$fieldStateArr[$property] = "";
+						}
+					}else{
+						$fieldStateArr[$property] = "disabled";
+					}
+				//}
+			}
+		}
+		return $fieldStateArr;
+	}
+	public function getBySeq($seq){
+		$qcSchedule = self::$dataStore->findBySeq($seq);
+		return $qcSchedule;
+	}
 	public function findBySeq($seq){
 		$qcSchedule = self::$dataStore->findBySeq($seq);
 		$shipDate = $this->getDateStr($qcSchedule->getShipDate());
@@ -733,7 +773,11 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		}
 		return $date;
 	}
-	
+	function startsWith ($string, $startString)
+	{
+		$len = strlen($startString);
+		return (substr($string, 0, $len) === $startString);
+	}
 	private function getDateStr($date){
 		$format = 'Y-m-d';
 		if(!empty($date)){

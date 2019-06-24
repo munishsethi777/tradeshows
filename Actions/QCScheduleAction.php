@@ -39,13 +39,14 @@ if($call == "saveQCSchedule"){
 		$seqs = $_REQUEST["seqs"];
 		$seqs = explode(",",$seqs);
 		foreach ($itemNumbers as $key=>$itemNumber){
+			$seq = 0;
 			$qcSchedule = new QCSchedule();
-			$qcSchedule->createFromRequest($_REQUEST);
-			if(!empty($seq)){
-				$qcSchedule->setSeq($seqs[$key]);
-			}else {
-				$qcSchedule->setSeq(0);
+			if(isset($seqs[$key])){
+				$seq  = $seqs[$key];
+				$qcSchedule = $qcScheduleMgr->getBySeq($seq);
 			}
+			$qcSchedule->createFromRequest($_REQUEST);
+			$qcSchedule->setSeq($seq);
 			$qcSchedule->setItemNumbers($itemNumber);
 			if(!isset($_REQUEST["apMiddleInspectionChk"])){
 				$qcSchedule->setApMiddleInspectionDateNaReason(null);
