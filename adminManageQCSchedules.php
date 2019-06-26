@@ -437,7 +437,7 @@ function loadGrid(){
         datatype: "json",
         id: 'seq',
         pagesize: 20,
-        sortcolumn: 'qcschedulesapproval.seq,lastmodifiedon',
+        sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'qccode', type: 'string' }, 

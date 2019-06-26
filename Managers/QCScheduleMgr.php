@@ -355,8 +355,11 @@ class QCScheduleMgr{
 	}
 	
 	public function getQCScheudlesForGrid(){
-		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
-left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
+//  		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
+//  left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
+		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules 
+left join users on qcschedules.qcuser = users.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval where qcschedulesapproval.qcscheduleseq = qcschedules.seq GROUP by qcschedulesapproval.qcscheduleseq)";
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionQC = $sessionUtil->isSessionQC();
 		$isSessionSV = $sessionUtil->isSessionSupervisor();
@@ -368,7 +371,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		//$query .= "group by po";
 		//$query .= " order by qcschedulesapproval.seq desc";
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
-		$mainArr = array();
+		$arr = array();
 		foreach ($qcSchedules as $qcSchedule){
 			$approval = $qcSchedule["responsetype"];
 			if(!empty($approval)){
@@ -376,16 +379,18 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			}
 			$qcSchedule["responsetype"] = $approval;
 			$qcSchedule["isSv"] = $isSessionSV;
-			array_push($mainArr,$qcSchedule);
+			array_push($arr,$qcSchedule);
 		}
-		$mainArr["Rows"] = $mainArr;
+		$mainArr["Rows"] = $arr;
 		$mainArr["TotalRows"] = $this->getAllCount(true,$isSessionQC,$qcLoggedInSeq);
 		return $mainArr;
 	}
 	
 	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq){
+// 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
+// left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
-left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval where qcschedulesapproval.qcscheduleseq = qcschedules.seq GROUP by qcschedulesapproval.qcscheduleseq) ";
 		if($isSessionQC){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
