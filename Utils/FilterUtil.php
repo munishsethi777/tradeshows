@@ -104,7 +104,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
   	return $order;
   }
   
-  public static function applyFilter($query,$isApplyLimit = true){
+  public static function applyFilter($query,$isApplyLimit = true, $isGroupBy = false){
     // filter data.
     if (isset($_GET['filterscount']))
     {
@@ -315,10 +315,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
             // build the query.
             $groupByPos = strpos(strtolower ($query),'group by');
             $groupBy = "";
-            if ($groupByPos !== false) {
-            	$q = substr($query, 0,$groupByPos). " ";
-            	$groupBy = substr($query,$groupByPos) ;
-            	$query = $q;
+            if(!$isGroupBy){
+	            if ($groupByPos !== false) {
+	            	$q = substr($query, 0,$groupByPos). " ";
+	            	$groupBy = substr($query,$groupByPos) ;
+	            	$query = $q;
+	            }
             }
             $query = $query . $where ." " . $groupBy;
         }

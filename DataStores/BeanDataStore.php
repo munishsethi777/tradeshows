@@ -765,7 +765,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 		return $query;
 	}
 	
-	public function executeCountQueryWithSql($query, $isApplyFilter = false) {
+	public function executeCountQueryWithSql($query, $isApplyFilter = false,$isGroupBy = false) {
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
@@ -773,7 +773,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 				$query = $this->appendManagerCriteria($query,true);
 			}
 			if ($isApplyFilter) {
-				$query = FilterUtil::applyFilter ( $query, false );
+				$query = FilterUtil::applyFilter ( $query, false,$isGroupBy );
 			}
 			$STH = $conn->prepare ( $query );
 			$STH->execute ();
