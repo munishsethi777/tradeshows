@@ -23,6 +23,7 @@ $manageItemSpecification = "";
 $manageCustomers = "";
 $adminManageOrders = "";
 $manageQCSchedules = "";
+$manageClassCodes = "";
 $manageGraphicLogs = "";
 $isManageUsers = "";
 //echo  $file;
@@ -58,6 +59,8 @@ if($file == "dashboard.php"){
 	$isUserDashboard = "active";
 }elseif($file == "userChangePassword.php"){
 	$isUserChangePassword = "active";
+}elseif($file == "createClassCode.php" || $file== "manageClassCodes.php"){
+	$manageClassCodes = "active";
 }
 
 ?>
@@ -99,7 +102,7 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">QC Schedules</span>  
                     </a>
                 </li>
-                <li class="<?php echo $manageQCSchedules;?>">
+                <li class="<?php echo $manageClassCodes;?>">
                     <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
                     	<span class="nav-label">Class Codes</span>  
                     </a>
@@ -172,7 +175,7 @@ if($file == "dashboard.php"){
 		                    	<span class="nav-label">Manage Items Specs.</span>  
 		                    </a>
 		                </li>
-		                 <li class="<?php echo $manageQCSchedules;?>">
+		                 <li class="<?php echo $manageClassCodes;?>">
 		                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
 		                    	<span class="nav-label">Class Codes</span>  
 		                    </a>
