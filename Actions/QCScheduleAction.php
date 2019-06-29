@@ -43,7 +43,9 @@ if($call == "saveQCSchedule"){
 			$qcSchedule = new QCSchedule();
 			if(isset($seqs[$key])){
 				$seq  = $seqs[$key];
-				$qcSchedule = $qcScheduleMgr->getBySeq($seq);
+				if(!empty($seq)){
+					$qcSchedule = $qcScheduleMgr->getBySeq($seq);
+				}
 			}
 			$qcSchedule->createFromRequest($_REQUEST);
 			$qcSchedule->setSeq($seq);
