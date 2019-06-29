@@ -1,0 +1,1 @@
+ALTER TABLE `qcschedules` ADD CONSTRAINT `delete_code` FOREIGN KEY (`classcodeseq`) REFERENCES `classcodes`(`seq`) ON DELETE RESTRICT ON UPDATE NO ACTION;

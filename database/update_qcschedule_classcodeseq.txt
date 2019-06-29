@@ -1,0 +1,2 @@
+update qcschedules inner join classcodes on qcschedules.classcode = classcodes.classcode
+set qcschedules.classcodeseq = classcodes.seq

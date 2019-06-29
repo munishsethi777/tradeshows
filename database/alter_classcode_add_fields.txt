@@ -1,0 +1,1 @@
+ALTER TABLE `classcodes` ADD `lastmodifiedon` DATETIME NULL AFTER `classcode`, ADD `createdon` DATETIME NULL AFTER `lastmodifiedon`, ADD `isenabled` TINYINT NULL AFTER `createdon`, ADD `userseq` INT NULL AFTER `isenabled`;

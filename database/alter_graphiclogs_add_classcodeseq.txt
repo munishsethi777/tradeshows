@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` ADD `classcodeseq` BIGINT NOT NULL
