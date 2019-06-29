@@ -122,13 +122,13 @@ if($isSessionQC){
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
 	                        			<?php }
                              		?>
-	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
 <!-- 	                            	<input type="text" required id="classcode" maxLength="250" name="classcode" class="form-control"> -->
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcode", "", $qcSchedule->getClassCode(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false);
 				                            echo $select;
 	                             		?>
 	                            </div>
@@ -140,7 +140,7 @@ if($isSessionQC){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">PO Type</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo $readOnlyPO?> <?php echo isset($fieldStateArr["potype"])?$fieldStateArr["potype"]:""?>>
+	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo isset($fieldStateArr["potype"])?$fieldStateArr["potype"]:""?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">

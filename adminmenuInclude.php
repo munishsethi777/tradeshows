@@ -99,6 +99,11 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">QC Schedules</span>  
                     </a>
                 </li>
+                <li class="<?php echo $manageQCSchedules;?>">
+                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
+                    	<span class="nav-label">Class Codes</span>  
+                    </a>
+                </li>
                 <li class="<?php echo $manageGraphicLogs;?>">
                     <a href="adminManageGraphicLogs.php"><i class="fa fa-paint-brush"></i> 
                     	<span class="nav-label">Graphic Logs</span>  
@@ -167,6 +172,11 @@ if($file == "dashboard.php"){
 		                    	<span class="nav-label">Manage Items Specs.</span>  
 		                    </a>
 		                </li>
+		                 <li class="<?php echo $manageQCSchedules;?>">
+		                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
+		                    	<span class="nav-label">Class Codes</span>  
+		                    </a>
+                		</li>
 	                <?php }?>
 	                <?php if(in_array(DepartmentType::QC_Schedules,$departments)){?>
 		                <li class="<?php echo $manageQCSchedules;?>">

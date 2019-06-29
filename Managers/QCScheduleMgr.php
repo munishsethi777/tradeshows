@@ -359,6 +359,7 @@ class QCScheduleMgr{
 //  left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules 
 left join users on qcschedules.qcuser = users.seq
+left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionQC = $sessionUtil->isSessionQC();
