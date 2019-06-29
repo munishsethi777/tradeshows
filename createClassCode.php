@@ -2,6 +2,7 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 $classCode = new ClassCode();
 $isEnabled = "checked";
 $classCodeMgr = ClassCodeMgr::getInstance();
