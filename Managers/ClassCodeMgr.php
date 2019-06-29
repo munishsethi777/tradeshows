@@ -29,7 +29,8 @@ class ClassCodeMgr{
 	}
 	
 	public function findAllForDropDown(){
-		$classCodes = $this->findAll();
+		$sql = "Select * from classcodes order by classcode ASC";
+		$classCodes = self::$dataStore->executeObjectQuery($sql);
 		$arr = array();
 		foreach ($classCodes as $classCode){
 			$code = $classCode->getClassCode();
