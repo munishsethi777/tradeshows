@@ -553,6 +553,7 @@ function callChinaEntryDate(chinaEntryDate){
 	$("#finalgraphicsduedate").val(finalgraphicsduedateStr);
 }
 function saveQCSchedule(){
+	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
 	if($("#createGraphicLogForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#createGraphicLogForm').ajaxSubmit(function( data ){
@@ -597,7 +598,5 @@ function subtractDays(date, days) {
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
 }
-function setClassCode(){
-	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
-}
+
 </script>

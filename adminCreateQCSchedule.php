@@ -470,6 +470,7 @@ function setDates(shipDateStr){
 	$("#scgraphicsreceivedate").val(graphicsDateStr);
 }
 function saveQCSchedule(){
+	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
 	if($("#createQCScheduleForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#createQCScheduleForm').ajaxSubmit(function( data ){
@@ -514,7 +515,5 @@ function subtractDays(date, days) {
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
 }
-function setClassCode(){
-	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
-}
+
 </script>
