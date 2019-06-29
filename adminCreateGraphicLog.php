@@ -104,7 +104,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
  	                            	<input type="hidden" maxLength="250" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "setClassCode()", $graphicLog->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $graphicLog->getClassCodeSeq(),false);
 				                            echo $select;
 	                             		?>
 	                            </div>

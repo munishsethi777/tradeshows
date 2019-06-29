@@ -128,7 +128,7 @@ if($isSessionQC){
 	                        	<div class="col-lg-4">
  	                            	<input type="hidden" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "setClassCode()", $qcSchedule->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false);
 				                            echo $select;
 	                             		?>
 	                            </div>
