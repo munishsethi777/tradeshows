@@ -126,9 +126,9 @@ if($isSessionQC){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
-<!-- 	                            	<input type="text" required id="classcode" maxLength="250" name="classcode" class="form-control"> -->
+ 	                            	<input type="hidden" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "setClassCode()", $qcSchedule->getClassCodeSeq(),false);
 				                            echo $select;
 	                             		?>
 	                            </div>
@@ -513,5 +513,8 @@ function subtractDays(date, days) {
 	 var sDate = date;
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
+}
+function setClassCode(){
+	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
 }
 </script>

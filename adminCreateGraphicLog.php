@@ -102,9 +102,9 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Class Code : </label>
 	                        	<div class="col-lg-4">
-<!-- 	                            	<input type="text" maxLength="250" name="classcode" class="form-control"> -->
+ 	                            	<input type="hidden" maxLength="250" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $graphicLog->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "setClassCode()", $graphicLog->getClassCodeSeq(),false);
 				                            echo $select;
 	                             		?>
 	                            </div>
@@ -596,5 +596,8 @@ function subtractDays(date, days) {
 	 var sDate = date;
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
+}
+function setClassCode(){
+	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
 }
 </script>
