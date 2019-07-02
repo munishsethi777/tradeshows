@@ -558,7 +558,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingAppoitmentForFinalInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql . "where apfinalinspectiondate > CURDATE() and apfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL";
+		$query = $this->find_qc_sql . "where apfinalinspectiondate >= CURDATE() and apfinalinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -569,7 +569,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingAppoitmentForMiddleInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql ."where apmiddleinspectiondate > CURDATE() and apmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql ."where apmiddleinspectiondate >= CURDATE() and apmiddleinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -580,7 +580,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingAppoitmentForFirstInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql . "where apfirstinspectiondate > CURDATE() and apfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where apfirstinspectiondate >= CURDATE() and apfirstinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -746,7 +746,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingShechededForFinalInspectionDate($qcUser = null){
-		$query = $this->find_qc_sql . "where scfinalinspectiondate > CURDATE() and scfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL";
+		$query = $this->find_qc_sql . "where scfinalinspectiondate >= CURDATE() and scfinalinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL";
 		if(!empty($qcUser)){
 			$query .= " and qcuser = $qcUser";
 		}
@@ -757,7 +757,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingShechededForMiddleInspectionDate($qcUser = null){
-		$query = $this->find_qc_sql . "where scmiddleinspectiondate > CURDATE() and scmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where scmiddleinspectiondate >= CURDATE() and scmiddleinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
 		if(!empty($qcUser)){
 			$query .= " and qcuser = $qcUser";
 		}
@@ -768,7 +768,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getPendingShechededForFirstInspectionDate($qcUser = null){
-		$query = $this->find_qc_sql . "where scfirstinspectiondate > CURDATE() and scfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where scfirstinspectiondate >= CURDATE() and scfirstinspectiondate < DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL";
 		if(!empty($qcUser)){
 			$query .= " and qcuser = $qcUser";
 		}
