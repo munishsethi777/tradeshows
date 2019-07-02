@@ -398,7 +398,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq,$isSessionSV){
 // 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
 // left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
-		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
+		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq) ";
 		if($isSessionQC && !($isSessionSV)){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
