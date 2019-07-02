@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
@@ -236,6 +237,7 @@ class QCNotificationsUtil{
 		$tableMailHtml = "";
 		$phAnValues = array();
 		$tableHtml = "";
+		$classCodeMgr = ClassCodeMgr::getInstance();
 		foreach ($pendingSchedules as $notificationType=>$qcSchedules){
 			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
@@ -270,7 +272,7 @@ class QCNotificationsUtil{
 					$row .= $tableRow;
 					$rowTokens["SR_NO"] =  $srNo;
 					$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
-					$rowTokens["CLASS_CODE"] =  $qcSchedule->getClassCode();
+					$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 					$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 					$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
 					$itemNumbers = $qcSchedule->getItemNumbers();

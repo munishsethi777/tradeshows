@@ -547,6 +547,7 @@ class ExportUtil{
 		->setKeywords("office 2007 openxml php")
 		->setCategory("Report");
 		$alphas = range('A', 'Z');
+		$alphas = ExportUtil::createColumnsArray("AA");
 		$rowCount = 1;
 		$count = 1;
 		$i = 0;
@@ -630,12 +631,13 @@ class ExportUtil{
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DATE COMPLETION OF GRAPHICS");
-		//$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
-		//$colName = $alphas[$i++]. $count;
-		//$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DURATION (# OF DAYS)");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DURATION (# OF DAYS)");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension("AA")->setAutoSize(true);
 		$count = 2;
 		$i = 0;
+		$classCodeMgr = ClassCodeMgr::getInstance();
 		foreach($graphicLogs as $graphicLog){
 			//$graphicLog = new GraphicsLog();
 			$USAOfficeEntryDate = $graphicLog->getUSAOfficeEntryDate();
@@ -654,9 +656,14 @@ class ExportUtil{
 			}
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $estimatedShipDate);
-	
+			
+			$classCodeObj = $classCodeMgr->findBySeq($graphicLog->getClassCodeSeq());
+			$classCode = "";
+			if(!empty($classCodeObj)){
+				$classCode = $classCodeObj->getClassCode();
+			}
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getClassCode());
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $classCode);
 				
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getSKU());
@@ -778,8 +785,8 @@ class ExportUtil{
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicCompletionDate);
 			
-			//$colName = $alphas[$i++]. $count;
-			//$objPHPExcel->setActiveSheetIndex(0)->setCellValue("AA",$graphicLog->getDuration());
+ 			$colName = $alphas[$i++]. $count;
+ 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getDuration());
 			$count++;
 			$i = 0;
 		}
@@ -1509,7 +1516,7 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getQC());
 					
 					$colName = $alphas[$i++]. $count;
-					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getClassCode());
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
 					
 					$colName = $alphas[$i++]. $count;
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$qcSchedule->getPO());

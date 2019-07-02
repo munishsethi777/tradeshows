@@ -1,7 +1,7 @@
 <?php
 class QCSchedule{
 
-	private $seq, $qc,$qcuser, $classcode, $po, $potype, $itemnumbers, $shipdate, 
+	private $seq, $qc,$qcuser,$po, $potype, $itemnumbers, $shipdate, 
 	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
@@ -27,12 +27,6 @@ class QCSchedule{
 	}
 	public function getQCUser(){
 		return $this->qcuser;
-	}
-	public function setClassCode($val){
-		$this->classcode = $val;
-	}
-	public function getClassCode(){
-		return $this->classcode;
 	}
 	public function setPO($val){
 		$this->po = $val;

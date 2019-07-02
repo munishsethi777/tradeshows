@@ -55,4 +55,13 @@ class ClassCodeMgr{
 		
 		return $mainArr;
 	}
+	
+	public function findByClassCode($classCode){
+		$colVal["classcode"] = $classCode;
+		$classCode = self::$dataStore->executeConditionQuery($colVal);
+		if(!empty($classCode)){
+			return $classCode[0];
+		}
+		return null;
+	}
 }

@@ -7,16 +7,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 
 try{
 	//Admin Notfications
-	QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
+	//QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
 	//QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::SUPERVISOR);
 	//QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
 	//QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
-	
-	//QC Notifications
-	QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
+		//QC Notifications
+	//QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
 	//QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
-	//QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
-	//QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
+    //QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
+	QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
 
 }catch(Exception $e){
 	echo $e->getMessage();

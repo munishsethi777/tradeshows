@@ -1,7 +1,7 @@
 <?php
 class GraphicsLog{
 
-	private $seq, $usaofficeentrydate, $po, $estimatedshipdate, $classcode, $sku, $graphictype, $iscustomhangtagneeded,
+	private $seq, $usaofficeentrydate, $po, $estimatedshipdate, $sku, $graphictype, $iscustomhangtagneeded,
 	$iscustomwraptagneeded, $customername, $isprivatelabel, $usanotes, $estimatedgraphicsdate, $chinaofficeentrydate, 
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
@@ -34,12 +34,7 @@ class GraphicsLog{
 	public function getEstimatedShipDate(){
 		return $this->estimatedshipdate;
 	}
-	public function setClassCode($val){
-		$this->classcode = $val;
-	}
-	public function getClassCode(){
-		return $this->classcode;
-	}
+	
 	public function setSKU($val){
 		$this->sku = $val;
 	}
