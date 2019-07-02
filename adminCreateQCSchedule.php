@@ -151,7 +151,7 @@ if($isSessionQC && !$isSessionSV){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Ship Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required placeholder="Select Date" id="itemno" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?> <?php echo isset($fieldStateArr["shipdate"])?$fieldStateArr["shipdate"]:""?>>
+	                            	<input type="text" required placeholder="Select Date" id="shipdate" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?> <?php echo isset($fieldStateArr["shipdate"])?$fieldStateArr["shipdate"]:""?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -377,6 +377,9 @@ $(document).ready(function(){
 	    scrollMonth : false,
 		scrollInput : false,
 	});
+	<?php if($readOnlyPO == "readonly"){?>
+		$("#shipdate").prop('disabled', true) ;
+	<?php }?>
 	
 	$('#apMiddleInspectionChk').on('ifChanged', function(event){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
