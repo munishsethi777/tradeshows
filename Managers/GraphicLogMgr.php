@@ -322,7 +322,7 @@ class GraphicLogMgr{
 	}
 	
 	public function getGraphicLogsForGrid(){
-		$query = "select classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq";
+		$query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
 		$rows = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $rows;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
@@ -330,7 +330,7 @@ class GraphicLogMgr{
 	}
 	
 	public function getAllCount($isApplyFilter){
-		$query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq";
+		$query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
 		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
 		return $count;
 	}

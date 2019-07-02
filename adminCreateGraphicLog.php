@@ -3,12 +3,14 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+$sessionUtil = SessionUtil::getInstance();
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
 $hasWrapTag = "";
 $hasHangTag = "";
 $hasPrivate = "";
+$enteredBySeq = $sessionUtil->getUserLoggedInSeq();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -22,6 +24,7 @@ if(isset($_POST["id"])){
  	if($graphicLog->getIsPrivateLabel() == 1){
  		$hasPrivate = "checked";
  	}
+ 	$enteredBySeq = $graphicLog->getUserSeq();
 }
 ?>
 <!DOCTYPE html>
@@ -342,6 +345,15 @@ if(isset($_POST["id"])){
 	                                	<input type="text"  id="managerreviewreturndate" maxLength="250" value="<?php echo $graphicLog->getManagerReviewReturnDate()?>" name="managerreviewreturndate" class="form-control datepicker" <?php echo $readOnlyPO?>>
 	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            </div>
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Entered By:</label>
+	                       		<div class="col-lg-4">
+		                        	<div class="input-group date">
+		                        		<?php 
+				                           	$select = DropDownUtils::getSupervisorsAndGraphicDesigners("userseq", "", $enteredBySeq,false);
+				                            echo $select;
+	                             		?>
+	                                </div>
 	                            </div>
 	                        </div> 
 	                        <div class="form-group row">

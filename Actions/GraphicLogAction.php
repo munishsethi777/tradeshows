@@ -35,7 +35,7 @@ if($call == "saveGraphicLog"){
 			$message = "Graphic Log updated successfully!";
 		}
 		$graphicLog->setSeq($seq);
-		$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
+		//$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
 		$graphicLog->setCreatedOn(new DateTime());
 		$graphicLog->setLastModifiedOn(new DateTime());
 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
