@@ -277,7 +277,7 @@ function loadGrid(){
       { text: 'PO', datafield: 'po',width:"8%"},
       { text: 'SKU', datafield: 'sku',width:"10%"},
       { text: 'Customer', datafield: 'customername',width:"15%"},
-      { text: 'Created On', datafield: 'createdon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
+      { text: 'Created By', datafield: 'fullname',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
    
@@ -295,7 +295,7 @@ function loadGrid(){
                     { name: 'po', type: 'string' },
                     { name: 'sku', type: 'string' } ,
                     { name: 'customername', type: 'string' },
-                    { name: 'createdon', type: 'date' }, 
+                    { name: 'fullname', type: 'fullname' }, 
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/GraphicLogAction.php?call=getAllGraphicLogs',

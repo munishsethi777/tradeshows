@@ -163,4 +163,16 @@ where userdepartments.departmentseq = 1 and userroles.role = 'QC'";
 	
 	}
 	
+	public function getSupervisorsAndGraphicDesignerForDD(){
+		$supervisor = UserType::SUPERVISOR;
+		$graphicDesigner = UserType::GRAPHIC_DESIGNER;
+		$query = "select users.* from users inner join userroles on users.seq = userroles.userseq where userroles.role = '$supervisor' or userroles.role = '$graphicDesigner'";
+		$users = self::$userDataStore->executeObjectQuery($query);
+		$arr = array();
+		foreach ($users as $user){
+			$arr[$user->getSeq()] = $user->getFullName();
+		}
+		return $arr;
+	}
+	
 }

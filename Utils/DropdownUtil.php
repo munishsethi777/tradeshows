@@ -6,7 +6,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/LabelType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
-
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 
 class DropDownUtils {
 	
@@ -73,6 +73,13 @@ class DropDownUtils {
 		$classCodes = $classCodeMgr->findAllForDropDown();
 		return self::getDropDown1 ($classCodes, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Code");
 	}
+	
+	public static function getSupervisorsAndGraphicDesigners($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getSupervisorsAndGraphicDesignerForDD();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false) {
 		$id = $selectName;
