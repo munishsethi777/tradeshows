@@ -408,10 +408,10 @@ $(document).ready(function(){
 	showGraphicFields();
 	showLabelFields();
 	loadCustomer();
-	showHideLabelType();
-	$('#isprivatelabel').on('ifChanged', function(event){
-		showHideLabelType();
-	});
+	//showHideLabelType();
+	//$('#isprivatelabel').on('ifChanged', function(event){
+		//showHideLabelType();
+	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 });
 function setDuration(){
