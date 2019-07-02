@@ -241,7 +241,7 @@ class QCSchedule{
 		}
 	}
 	
-	public function setNAForLockedField($array){
+	public function setNAForLockedField($array,$qcSchedule){
 		foreach(get_object_vars($this) as $attrName => $attrValue){
 			$flag = property_exists(self::$className, $attrName);
 			$isExists = array_key_exists($attrName, $array);
@@ -249,6 +249,16 @@ class QCSchedule{
 				$value = $array[$attrName];
 				if(!empty($value)){
 					$this->{$attrName} = "NA";
+				}else{
+					$value = $qcSchedule[$attrName];
+					$datePos = strpos(strtolower ($attrName),'date');
+					if($datePos !== false && !empty($value)){
+						$dateValue = DateUtil::StringToDateByGivenFormat("Y-m-d", $value);
+						if($dateValue){
+							$value = $dateValue->format("m-d-Y");
+						}
+					}
+					$this->{$attrName} = $value;
 				}
 			}
 		}

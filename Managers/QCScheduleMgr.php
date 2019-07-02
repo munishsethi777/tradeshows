@@ -411,7 +411,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		$itemArr = self::$dataStore->findAllArr($isApplyFilter);
 		return $itemArr;
 	}
-	
+	private $commonQcObj;
 	public function findBySeqs($seqs){
 		$query = "select * from qcschedules where seq in ($seqs)";
 		$qcSchedules = self::$dataStore->executeQuery($query,false,true);
@@ -420,10 +420,11 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			$schedules = $qcSchedules;
 			unset($schedules[$key]);
 			$fieldStateArr = $this->campare($qcSchedule, $schedules, $fieldStateArr);
+			$commonQcObj = $qcSchedule;
 		}
 		$mainArr["fieldState"]  = $fieldStateArr;
 		$commonQc = new QCSchedule();
-		$commonQc->setNAForLockedField($fieldStateArr);
+		$commonQc->setNAForLockedField($fieldStateArr,$commonQcObj);
 		$commonQc->setQCUser($qcSchedule["qcuser"]);
 		$commonQc->setPO($qcSchedule["po"]);
 		$commonQc->setClassCodeSeq($qcSchedule["classcodeseq"]);
@@ -431,14 +432,14 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		return $mainArr;
 	}
 	
-	private function campare($qcSchedule,$allSchedules,$fieldStateArr){
+	private function campare($qcSchedule,$allSchedules,$fieldStateArr,$qcArr){
 		foreach ($allSchedules as $schedule){
 			$properties = array_keys($schedule);
 			foreach ($properties as $property){
 				//if($this->startsWith($property, "ac") || $this->startsWith($property, "ap")){
 					$val1 = $schedule[$property];
 					$val2 = $qcSchedule[$property];
-					if(empty($val1) && empty($val2)){
+					if((empty($val1) && empty($val2)) || ($val1 == $val2)){
 						if(!isset($fieldStateArr[$property])){
 							$fieldStateArr[$property] = "";
 						}
