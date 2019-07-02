@@ -383,16 +383,16 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			array_push($arr,$qcSchedule);
 		}
 		$mainArr["Rows"] = $arr;
-		$mainArr["TotalRows"] = $this->getAllCount(true,$isSessionQC,$qcLoggedInSeq);
+		$mainArr["TotalRows"] = $this->getAllCount(true,$isSessionQC,$qcLoggedInSeq,$isSessionSV);
 		return $mainArr;
 	}
 	
-	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq){
+	public function getAllCount($isApplyFilter,$isSessionQC,$qcLoggedInSeq,$isSessionSV){
 // 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
 // left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq) ";
-		if($isSessionQC){
+		if($isSessionQC && !($isSessionSV)){
 			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
 		}
 		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter,true);

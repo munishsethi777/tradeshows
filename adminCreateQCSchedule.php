@@ -14,7 +14,8 @@ $qcUser = 0;
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance();
 $isSessionQC = $sessionUtil->isSessionQC();
-if($isSessionQC){
+$isSessionSV = $sessionUtil->isSessionSupervisor();
+if($isSessionQC && !$isSessionSV){
  	$qcUser = $sessionUtil->getUserLoggedInSeq();
 	$qcUserReadonly = "readonly";
 }
