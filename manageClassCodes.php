@@ -112,7 +112,7 @@ function loadGrid(){
     $("#classCodeGrid").jqxGrid(
     {
     	width: '100%',
-		height: '75%',
+		height: '600',
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,

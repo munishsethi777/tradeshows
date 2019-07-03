@@ -39,7 +39,7 @@ if($isSessionQC && !$isSessionSV){
  	$acFinalInspectionDate = $qcSchedule->getACFinalInspectionDate();
   	if($acFinalInspectionDate == "NA"){
   		$isSubmitApprovalDisabled = "disabled";
-  		$disabledSubmitComments = '(Selected Items has different "Final Inspect Dates". You can only Submit for Approval those items which has same or no "Final Inspection Dates")';
+  		$disabledSubmitComments = '(Selected Items has different "Final Inspection Dates". You can only Submit for Approval those items which has same or no "Final Inspection Dates")';
   	}
  	if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
  		$middleInspectionChk = "checked";
@@ -58,10 +58,13 @@ if($isSessionQC && !$isSessionSV){
 			 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
 			 		$isSubmitApprovalDisabled = "disabled";
 			 		$disabledSubmitComments = 'Some of the selected items are already submitted for approval. You can not submit these items for approval again.';
-			 		//$disabledSubmitComments = "(Pending Approval)";
-			 		//if($status == QCScheduleApprovalType::approved){
-			 			//$disabledSubmitComments = "(Approved)";
-			 		//}
+			 		
+			 		if(count($itemNumbersArr) == 1){
+			 			$disabledSubmitComments = "(Pending Approval)";
+			 			if($status == QCScheduleApprovalType::approved){
+			 				$disabledSubmitComments = "(Approved)";
+			 			}
+			 		}
 			 		$approvalChecked = "checked";
 			 		break;
 			 	}
@@ -163,7 +166,7 @@ if($isSessionQC && !$isSessionSV){
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Submit for Approval</label>
-	                        	<div class="col-lg-4">
+	                        	<div class="col-lg-10">
 	                        		<input type="checkbox" <?php echo $isSubmitApprovalDisabled?> <?php echo $approvalChecked?> id="isapproval" class="form-control i-checks" name="isapproval"/>
 	                        		<small><?php echo $disabledSubmitComments?></small>
 	                           </div>
