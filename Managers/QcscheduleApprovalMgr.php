@@ -38,13 +38,10 @@ class QcscheduleApprovalMgr{
 		return $count >0;
 	}
 	
-	public function getLastestQcScheduleApproval($qcscheduleSeq){
-		$query = "select * from qcschedulesapproval where qcscheduleseq = $qcscheduleSeq order by seq desc";
+	public function getLastestQcScheduleApproval($qcscheduleSeqs){
+		$query = "select * from qcschedulesapproval where qcscheduleseq in($qcscheduleSeqs) order by seq desc";
 		$approvals = self::$dataStore->executeObjectQuery($query);
-		if(!empty($approvals)){
-			return $approvals[0];		
-		}
-		return null;
+		return $approvals;
 	}
 	
 	
