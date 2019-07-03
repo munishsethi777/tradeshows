@@ -236,6 +236,8 @@ class QCSchedule{
 				}
 				if(!empty($value)){
 					$this->{$attrName} = $value;
+				}else{
+					$this->{$attrName} = null;
 				}
 			}
 		}

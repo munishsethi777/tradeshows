@@ -119,7 +119,7 @@ if($isSessionQC && !$isSessionSV){
 	                        		<?php 
 										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
 		                        		echo $select;
-	                        			if($isSessionQC){?>
+	                        			if($isSessionQC && !$isSessionSV){?>
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
 	                        			<?php }
                              		?>
