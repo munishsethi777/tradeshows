@@ -119,35 +119,77 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 	                        		<input type="checkbox" <?php echo $isSendNotifications?> name="issendnotifications"/>
 	                            </div>
 	                        </div>
-	                        <div class="form-group row m-t-xl">
-	                       		<label class="col-lg-3 col-form-label bg-primary">Select Roles</label>
-	                        </div>
-	                        <div class="form-group row i-checks">
-	                    		<?php foreach($userTypes as $key => $userType){
-	                    				$roleChecked = "";
-	                    				foreach($userRoles as $userRole){
-	                    					if($userRole->getRole() == $key){
-	                    						$roleChecked = "checked";
-	                    					}
-	                    				}
-	                    				if($key =="ADMIN"){
-	                    					continue;
-	                    				}
-	                    		?>
-		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $userType;?></label>
-		                        	<div class="col-lg-2">
-		                        		<input type="checkbox" name="utype<?php echo $key;?>" <?php echo $roleChecked?>/>
-		                            </div>
-	                            <?php }?>
-	                        </div>    
-	                        <div class="qcDIV form-group row" style="display:<?php echo "block"?>">
-	                            <label class="col-lg-2 col-form-label bg-formLabel">QC Code :</label>
-	                        	<div class="col-lg-2">
-	                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
+	                        
+	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">User Type:</label>
+	                        	<div class="col-lg-4">
+	                            	<select name="userType" class="form-control">
+	                            		<option>User</option>
+	                            		<option>Supervisor</option>
+	                            	</select>
 	                            </div>
+	                       </div>
+	                        
+<!-- 	                        <div class="form-group row m-t-xl"> -->
+<!-- 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Permissions</label> -->
+<!-- 	                        </div> -->
+	                        <div class="form-group row i-checks m-t-xl">
+	                        	<div class="col-lg-4">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            QC Schedules
+                                        </div>
+                                        <div class="panel-body">
+                                            <label class="col-lg-8 col-form-label bg-formLabel">Quality Controller</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" name="utype"/>
+				                            </div>
+				                            
+				                            <div class="qcDIV form-group col-lg-12 m-t-xs" style="display:<?php echo "block"?>">
+					                            <label class="col-lg-4 col-form-label bg-formLabel">QC Code :</label>
+					                        	<div class="col-lg-8">
+					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
+					                            </div>
+					                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-4">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Graphic Logs
+                                        </div>
+                                        <div class="panel-body">
+                                            <label class="col-lg-8 col-form-label bg-formLabel">USA Team</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" name="utype"/>
+				                            </div>
+				                            
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">China Team</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" name="utype"/>
+				                            </div>
+				                            
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Graphic Designer</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" name="utype"/>
+				                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+	                        
 	                        </div>
+	                        
+	                        
+	                        	
+	                        
+	                        
+	                        
+	                        
 		                        
 		                        
+	                    	<!-- 
 	                    	<div class="form-group row m-t-xl">
 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Departments</label>
 	                        </div>
@@ -165,7 +207,8 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 		                        		<input type="checkbox" name="dep<?php echo $department->getSeq();?>" <?php echo $checked?>/>
 		                            </div>
 	                            <?php }?>
-	                        </div>    
+	                        </div> 
+	                        -->    
 	                 	 
 	                    
                         <div class="bg-white p-xs">
