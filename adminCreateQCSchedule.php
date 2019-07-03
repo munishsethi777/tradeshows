@@ -36,10 +36,11 @@ if($isSessionQC && !$isSessionSV){
  	}
  	$qcSchedule->setItemNumbers($_POST["itemnumbers"]);
  	$itemNumbersArr = explode(",",$_POST["itemnumbers"]);
- 	if(count($itemNumbersArr) > 1){
- 		$isSubmitApprovalDisabled = "disabled";
- 		$disabledSubmitComments = "(Cannot submit approval for multiple items)";
- 	}
+ 	$acFinalInspectionDate = $qcSchedule->getACFinalInspectionDate();
+  	if($acFinalInspectionDate == "NA"){
+  		$isSubmitApprovalDisabled = "disabled";
+  		$disabledSubmitComments = '(Selected Items has different "Final Inspect Dates". You can only Submit for Approval those items which has same or no "Final Inspection Dates")';
+  	}
  	if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
  		$middleInspectionChk = "checked";
  	}
@@ -49,16 +50,22 @@ if($isSessionQC && !$isSessionSV){
  	$readOnlyPO = "readonly";
  	$qcUser = $qcSchedule->getQCUser();
  	$qcscheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
- 	$approval = $qcscheduleApprovalMgr->getLastestQcScheduleApproval($seq);
- 	if(!empty($approval)){
-	 	$status = $approval->getResponseType();
-	 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
-	 		$isSubmitApprovalDisabled = "disabled";
-	 		$disabledSubmitComments = "(Pending Approval)";
-	 		if($status == QCScheduleApprovalType::approved){
-	 			$disabledSubmitComments = "(Approved)";
-	 		}
-	 		$approvalChecked = "checked";
+ 	$approvals = $qcscheduleApprovalMgr->getLastestQcScheduleApproval($seqs);
+ 	if(!empty($approvals)){
+	 	foreach ($approvals as $approval){
+		 	if(!empty($approval)){
+			 	$status = $approval->getResponseType();
+			 	if($status == QCScheduleApprovalType::pending || $status == QCScheduleApprovalType::approved){
+			 		$isSubmitApprovalDisabled = "disabled";
+			 		$disabledSubmitComments = 'Some of the selected items are already submitted for approval. You can not submit these items for approval again.';
+			 		//$disabledSubmitComments = "(Pending Approval)";
+			 		//if($status == QCScheduleApprovalType::approved){
+			 			//$disabledSubmitComments = "(Approved)";
+			 		//}
+			 		$approvalChecked = "checked";
+			 		break;
+			 	}
+		 	}
 	 	}
  	}
  	
