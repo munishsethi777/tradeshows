@@ -11,8 +11,8 @@ class PermissionUtil{
 	public static function getInstance(){
 		if(empty(self::$permissionUtil)){
 			self::$permissionUtil = new PermissionUtil();
-			$sessionUtil = SessionUtil::getInstance();
-			self::$permissions = $sessionUtil->getUserLoggedInPermissions(); 
+			self::$sessionUtil = SessionUtil::getInstance();
+			self::$permissions = self::$sessionUtil->getUserLoggedInPermissions(); 
 		}
 		return self::$permissionUtil;
 	}
@@ -31,23 +31,23 @@ class PermissionUtil{
 	}
 	
 	public static function isAuthenticate($page){
-		$departments = $_SESSION[self::$DEPARTMENTS];
-		if($page == "adminManageQCSchedules.php" || 
-				$page == "adminCreateQCSchedule.php"){
-			$department = DepartmentType::QC_Schedules;
-			if(in_array($department, $departments)){
+			$departments = $_SESSION[self::$DEPARTMENTS];
+			if($page == "adminManageQCSchedules.php" || 
+					$page == "adminCreateQCSchedule.php"){
+				$department = DepartmentType::QC_Schedules;
+				if(in_array($department, $departments)){
+					return true;
+				}
+			}else if($page == "adminManageGraphicLogs.php" || 
+					$page == "adminCrateGraphicLog.php"){
+				$department = DepartmentType::Graphics_Logs;
+				if(in_array($department, $departments)){
+					return true;
+				}
+			}
+			else{
 				return true;
 			}
-		}else if($page == "adminManageGraphicLogs.php" || 
-				$page == "adminCrateGraphicLog.php"){
-			$department = DepartmentType::Graphics_Logs;
-			if(in_array($department, $departments)){
-				return true;
-			}
-		}
-		else{
-			return true;
-		}
 		return false;
 	}
 	
