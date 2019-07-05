@@ -103,7 +103,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageClassCodes;?>">
-                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
+                    <a href="manageClassCodes.php"><i class="fa fa-bookmark"></i> 
                     	<span class="nav-label">Class Codes</span>  
                     </a>
                 </li>

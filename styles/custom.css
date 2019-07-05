@@ -141,7 +141,7 @@ ul.nav-second-level{
 }
 
 @media (min-width: 768px) {
-.col-sm-15 {
+	.col-sm-15 {
         width: 20%;
         float: left;
     }
@@ -152,13 +152,21 @@ ul.nav-second-level{
         width: 20%;
         float: left;
     }
+    
 }
-
 @media (min-width: 1200px) {
     .col-lg-15 {
         width: 20%;
         float: left;
     }
+}
+@media (max-width: 1000px) {
+    .jqx-button span {
+		display: none;
+	}
+	.jqx-grid-statusbar .jqx-button{
+		width:45px !important;
+	}
 }
 .form-control, .single-line, textarea{
 	border: 1px solid #b3b4b5 !important;
@@ -167,3 +175,5 @@ ul.nav-second-level{
 	background-color:rgba(25, 173, 143, 0.16);
 	padding:9px 7px !important;
 }
+
+
