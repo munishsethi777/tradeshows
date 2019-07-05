@@ -168,11 +168,26 @@ ul.nav-second-level{
 		width:45px !important;
 	}
 }
-.form-control, .single-line, textarea{
+.form-control, .single-line, textarea, .input-group-addon{
 	border: 1px solid #b3b4b5 !important;
 }
 .bg-formLabel{
 	background-color:rgba(25, 173, 143, 0.16);
+	padding:9px 7px !important;
+}
+.bg-formLabelDark{
+	background-color:rgba(0, 0, 0, 0.6);
+	color:white;
+	padding:9px 7px !important;
+}
+.bg-formLabelMauve{
+	background-color:#A4C2F4;
+	color:black;
+	padding:9px 7px !important;
+}
+.bg-formLabelBrown{
+	background-color:rgba(131, 98, 0, 0.69);
+	color:white;
 	padding:9px 7px !important;
 }
 

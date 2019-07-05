@@ -112,6 +112,11 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Graphic Logs</span>  
                     </a>
                 </li>
+                <li class="<?php echo $manageContainerSchedules;?>">
+                    <a href="manageContainerSchedules.php"><i class="fa fa-paint-brush"></i> 
+                    	<span class="nav-label">Container Schedules</span>  
+                    </a>
+                </li>
                 <!-- 
                 <li class="<?php echo $manageCustomers;?>">
                    <a href="adminManageCustomers.php"><i class="fa fa-group"></i> 

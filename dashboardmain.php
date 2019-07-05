@@ -38,9 +38,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 							<div class="col-lg-4">
 		                        <div class="widget bg-warning text-center p-h-xl">
 		                        	<div class="row">
-		                        		<a href="adminManageItemSpecifications.php">
-		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-cubes"></i></h1>
-		                                <span>Master Sheet Management</span></a>
+		                        		<a href="adminManageGraphicLogs.php">
+		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-file-image-o"></i></h1>
+		                                <span>Graphic Logs</span></a>
 		                            </div>
 								</div>
 	                        </div>
@@ -50,8 +50,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        <div class="widget bg-info text-center  p-h-xl">
 		                        	<div class="row">
 		                        		<a href="adminShowList.php">
-		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-calendar"></i></h1>
-		                                <span>Show Management</span></a>
+		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-ship"></i></h1>
+		                                <span>Container Scheduling</span></a>
 		                            </div>
 								</div>
 	                        </div>

@@ -1,0 +1,60 @@
+CREATE TABLE `containerschedules` (
+  `seq` bigint(20) NOT NULL,
+  `awureference` varchar(25) DEFAULT NULL,
+  `truckername` varchar(25) DEFAULT NULL,
+  `trans` varchar(25) DEFAULT NULL,
+  `warehouse` varchar(25) DEFAULT NULL,
+  `container` varchar(25) DEFAULT NULL,
+  `etadatetime` datetime DEFAULT NULL,
+  `terminal` varchar(25) DEFAULT NULL,
+  `terminalappointmentdatetime` datetime DEFAULT NULL,
+  `etanotes` varchar(1000) DEFAULT NULL,
+  `etanotesdatetime` datetime DEFAULT NULL,
+  `lfdpickupdate` date DEFAULT NULL,
+  `scheduleddeliverydatetime` datetime DEFAULT NULL,
+  `confirmeddeliverydatetime` datetime DEFAULT NULL,
+  `emptylfddate` date DEFAULT NULL,
+  `deliverygate` varchar(25) DEFAULT NULL,
+  `emptyreturndate` date DEFAULT NULL,
+  `alpinenotificatinpickupdatetime` datetime DEFAULT NULL,
+  `emptynotes` varchar(1000) DEFAULT NULL,
+  `emptynotesdatetime` datetime DEFAULT NULL,
+  `notificationnotes` varchar(1000) DEFAULT NULL,
+  `notificationnotesdatetime` datetime DEFAULT NULL,
+  `containerdocspath` varchar(500) DEFAULT NULL,
+  `isidscomplete` tinyint(4) DEFAULT NULL,
+  `issamplesreceived` tinyint(4) DEFAULT NULL,
+  `msrfcreateddate` date DEFAULT NULL,
+  `samplesreceiveddate` date DEFAULT NULL,
+  `iscontainerreceivedinoms` tinyint(4) DEFAULT NULL,
+  `containerreceivedinomsdate` date DEFAULT NULL,
+  `issamplesreceivedinoms` tinyint(4) DEFAULT NULL,
+  `samplesreceivedinomsdate` date DEFAULT NULL,
+  `iscontainerreceivedinwms` tinyint(4) DEFAULT NULL,
+  `containerreceivedinwmsdate` date DEFAULT NULL,
+  `issamplesreceivedinwms` tinyint(4) DEFAULT NULL,
+  `samplesreceivedinwmsdate` date DEFAULT NULL,
+  `createdby` bigint(20) DEFAULT NULL,
+  `createdon` datetime DEFAULT NULL,
+  `lastmodifiedon` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `containerschedules`
+--
+ALTER TABLE `containerschedules`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `containerschedules`
+--
+ALTER TABLE `containerschedules`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
