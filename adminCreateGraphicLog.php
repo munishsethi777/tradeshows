@@ -3,6 +3,7 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $sessionUtil = SessionUtil::getInstance();
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
@@ -11,6 +12,10 @@ $hasWrapTag = "";
 $hasHangTag = "";
 $hasPrivate = "";
 $enteredBySeq = $sessionUtil->getUserLoggedInSeq();
+$permissionUtil = PermissionUtil::getInstance();
+$hasChinaPermission = $permissionUtil->hasChinaOfficePermission();
+$hasUsaPermission = $permissionUtil->hasUsaOfficePermission();
+$hasGraphicDesignerPermission = $permissionUtil->hasGraphicDesignerPermission();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -74,7 +79,7 @@ if(isset($_POST["id"])){
                  	 <form id="createGraphicLogForm" method="post" action="Actions/GraphicLogAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="saveGraphicLog"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $graphicLog->getSeq()?>"/>
-                        <div class="bg-white1 p-xs outterDiv">
+                        <div class="bg-white1 p-xs outterDiv" style="position:relative" id="usadiv">
                         	<div class="form-group row">
 	                       		<label class="col-lg-3 col-form-label bg-primary">To be Filled by USA Office</label>
 	                        </div>
@@ -212,7 +217,7 @@ if(isset($_POST["id"])){
 	                        </div>                        
 	                    </div>
 	                    
-	                     <div class="bg-white1 p-xs outterDiv">
+	                     <div class="bg-white1 p-xs outterDiv" style="position:relative" id="chinadiv">
                         	<div class="form-group row">
 	                       		<label class="col-lg-3 col-form-label bg-primary">To be filled by China Team </label>
 	                        </div>
@@ -241,6 +246,15 @@ if(isset($_POST["id"])){
 		                            	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Entered By:</label>
+	                       		<div class="col-lg-4">
+		                        	<div class="input-group date">
+		                        		<?php 
+				                           	$select = DropDownUtils::getChinaTeamUsers("userseq", "", $enteredBySeq,false);
+				                            echo $select;
+	                             		?>
+	                                </div>
+	                            </div>
 	                        </div>
 	                        <div id="graphicFields" style="display:none">
 		                        <div class="form-group row">
@@ -264,11 +278,11 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
+	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
 	                            </div>
 	                        </div> 
 	                    </div>
-	                     <div class="bg-white1 p-xs outterDiv">
+	                     <div class="bg-white1 p-xs outterDiv" style="position:relative" id="graphicdiv">
                         	<div class="form-group row">
 	                       		<label class="col-lg-3 col-form-label bg-primary">To be filled by Graphics (US) Team</label>
 	                        </div>
@@ -346,20 +360,11 @@ if(isset($_POST["id"])){
 	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            </div>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Entered By:</label>
-	                       		<div class="col-lg-4">
-		                        	<div class="input-group date">
-		                        		<?php 
-				                           	$select = DropDownUtils::getSupervisorsAndGraphicDesigners("userseq", "", $enteredBySeq,false);
-				                            echo $select;
-	                             		?>
-	                                </div>
-	                            </div>
 	                        </div> 
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to China Office :</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
+	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
 	                            </div>
 	                        </div> 
 	                    </div>
@@ -393,6 +398,19 @@ if(isset($_POST["id"])){
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	var haschina = "<?php echo $hasChinaPermission?>";
+	var hasusa = "<?php echo $hasUsaPermission?>";
+	var hasgraphic = "<?php echo $hasGraphicDesignerPermission?>";
+	
+	if(hasusa != "1"){
+		disabledDiv("usadiv")
+	}
+	if(haschina != "1"){
+		disabledDiv("chinadiv")
+	}
+	if(hasgraphic != "1"){
+		disabledDiv("graphicdiv")
+	}
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -406,7 +424,8 @@ $(document).ready(function(){
 		onSelectDate:function(ct,$i){
 			setDuration();
 		}
-	})
+	});
+	
 	$('.datepicker').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y',
@@ -426,6 +445,12 @@ $(document).ready(function(){
 	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 });
+
+function disabledDiv(divId){
+	var disableDivHtml = '<div style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div>';
+	$('#'+divId).fadeTo('slow',.6);
+	$('#'+divId).append(disableDivHtml);
+}
 function setDuration(){
 	var startDateStr = $("#graphicartiststartdate").val();
 	var endDateStr = $("#approxgraphicschinasentdate").val();

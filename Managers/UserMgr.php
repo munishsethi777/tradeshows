@@ -3,7 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserRole.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."Enums/Permissions.php");
 
 class UserMgr{
 	private static $userMgr;
@@ -67,7 +67,7 @@ class UserMgr{
 	public function getAllUsersForGrid(){
 		$seesionUtil = SessionUtil::getInstance();
 		$loggedInUserSeq = $seesionUtil->getUserLoggedInSeq();
-		$query = "SELECT GROUP_CONCAT(userroles.role) as roles, users.* FROM `users` inner join userroles on users.seq = userroles.userseq where users.seq != $loggedInUserSeq group by users.seq";
+		$query = "SELECT GROUP_CONCAT(userroles.role) as roles, users.* FROM `users` left join userroles on users.seq = userroles.userseq where users.seq != $loggedInUserSeq group by users.seq";
 		//$query = "select * from users where seq != $loggedInUserSeq";
 		$arr = self::$userDataStore->executeQuery($query,true);
 		return $arr;
@@ -125,19 +125,26 @@ class UserMgr{
 	public function getSupervisorsForQCReport(){
 		$sql = "SELECT * FROM users 
 inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
-inner join userroles on users.seq = userroles.userseq 
-where userdepartments.departmentseq = 1 and userroles.role = 'SUPERVISOR'";
+where userdepartments.departmentseq = 1 and users.usertype = 'SUPERVISOR'";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
 	}
 	public function getQCsForQCReport(){
 		$sql = "SELECT * FROM users 
 inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
-inner join userroles on users.seq = userroles.userseq 
-where userdepartments.departmentseq = 1 and userroles.role = 'QC'";
+where userdepartments.departmentseq = 1 and users.usertype = 'USER'";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
 	}
+	
+	public function getUsersForGraphicNotesUpdatedReport($roleName){
+		$sql = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq and 
+ users.issendnotifications = 1 inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 
+ and userroles.role != '$roleName' and userroles.role != 'qc' group by users.seq";
+		$users = self::$userDataStore->executeObjectQuery($sql);
+		return $users;
+	}
+	
 	public function getUserRoles($userSeq){
 		$colValPair = array();
 		$colValPair["userseq"] = $userSeq;
@@ -149,6 +156,17 @@ where userdepartments.departmentseq = 1 and userroles.role = 'QC'";
 		$colValPair["userseq"] = $userSeq;
 		$userRolesObjs =  self::$userRoleDataStore->executeConditionQuery($colValPair);
 		foreach ($userRolesObjs as $userRoleObj){
+			array_push($userRoles, $userRoleObj->getRole());
+		}
+		return $userRoles;
+	}
+	public function getUserRolesValuesArr($userSeq){
+		$userRoles = array();
+		$colValPair = array();
+		$colValPair["userseq"] = $userSeq;
+		$userRolesObjs =  self::$userRoleDataStore->executeConditionQuery($colValPair);
+		foreach ($userRolesObjs as $userRoleObj){
+			$roleValue = Permissions::getValue($userRoleObj->getRole());
 			array_push($userRoles, $userRoleObj->getRole());
 		}
 		return $userRoles;
@@ -166,7 +184,19 @@ where userdepartments.departmentseq = 1 and userroles.role = 'QC'";
 	public function getSupervisorsAndGraphicDesignerForDD(){
 		$supervisor = UserType::SUPERVISOR;
 		$graphicDesigner = UserType::GRAPHIC_DESIGNER;
-		$query = "select users.* from users inner join userroles on users.seq = userroles.userseq where userroles.role = '$supervisor' or userroles.role = '$graphicDesigner'";
+		$query = "select users.* from users where users.usertype = '$supervisor' or users.usertype = '$graphicDesigner'";
+		$users = self::$userDataStore->executeObjectQuery($query);
+		$arr = array();
+		foreach ($users as $user){
+			$arr[$user->getSeq()] = $user->getFullName();
+		}
+		return $arr;
+	}
+	
+	public function getChinaTeamUsersForDD(){
+		$china_permission = Permissions::getName(Permissions::china_team);
+		$query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq and 
+ users.issendnotifications = 1 inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 and userroles.role = '$china_permission'";
 		$users = self::$userDataStore->executeObjectQuery($query);
 		$arr = array();
 		foreach ($users as $user){

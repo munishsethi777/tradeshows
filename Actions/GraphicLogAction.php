@@ -1,11 +1,12 @@
 <?php
-
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
+
 $success = 1;
 $message ="";
 $call = "";
@@ -30,12 +31,22 @@ if($call == "saveGraphicLog"){
 			}
 		}
 		$seq = 0;
+		$existingGraphicLog = null;
+		$isUsaNotesUpdated = false;
+		$isChinaNotesUpdated = false;
+		$isGraphicNotesUpddates = false;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = "Graphic Log updated successfully!";
+			$existingGraphicLog = $graphicLogMgr->findBySeq($graphicLog->getSeq());
+			$isUsaNotesUpdated = $graphicLog->getUSANotes() != $existingGraphicLog->getUSANotes();
+			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
+			$isGraphicNotesUpddates = $graphicLog->getGraphicsToChinaNotes() != $existingGraphicLog->getGraphicsToChinaNotes();
 		}
 		$graphicLog->setSeq($seq);
-		//$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
+		if(empty($graphicLog->getUserSeq())){
+			$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
+		}
 		$graphicLog->setCreatedOn(new DateTime());
 		$graphicLog->setLastModifiedOn(new DateTime());
 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
@@ -80,8 +91,16 @@ if($call == "saveGraphicLog"){
 			$graphicLog->setLabelWidth(null);
 			$graphicLog->setLabelHeight(null);
 		}
-		
 		$id = $graphicLogMgr->save($graphicLog);
+		if($id > 0){
+			if($isUsaNotesUpdated){
+				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"USA");
+			}else if($isChinaNotesUpdated){
+				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"CHINA");
+			}else if($isGraphicNotesUpddates){
+				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"GRAPHIC");
+			}
+		}
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

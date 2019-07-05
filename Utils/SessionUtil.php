@@ -1,5 +1,6 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 class SessionUtil{
     private static $LOGIN_MODE = "loginMode";
     private static $ADMIN_SEQ = "adminSeq";
@@ -14,6 +15,7 @@ class SessionUtil{
 	private static $USER_IMAGE = "userimage";
     private static $ROLE = "role";
     private static $ROLES = "roles";
+    private static $DEPARTMENTS = "departments";
     
   
 	private static $sessionUtil;	
@@ -36,7 +38,7 @@ class SessionUtil{
         $_SESSION[self::$ADMIN_LOGGED_IN] = $arr;
     }
     
-    public function createUserSession(User $user, $userRoles){
+    public function createUserSession(User $user, $userRoles,$departments){
     	$arr = new ArrayObject();
     	$arr[0] = $user->getSeq();
     	$arr[1] = $user->getFullName();
@@ -45,6 +47,7 @@ class SessionUtil{
     	$userType = $user->getUserType();
     	$_SESSION[self::$ROLE] = $userType;
     	$_SESSION[self::$ROLES] = $userRoles;
+    	$_SESSION[self::$DEPARTMENTS] = $departments;
     	$_SESSION[self::$USER_LOGGED_IN] = $arr;
     }
 
@@ -138,13 +141,6 @@ class SessionUtil{
 		return false;
 	}
 	
-	public function isSessionUser(){
-		if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
-			return true;
-		}
-		return false;
-	}
-	
 	public function isSessionQC(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null && 
 				in_array(UserType::QC, $_SESSION[self::$ROLES])){
@@ -153,9 +149,31 @@ class SessionUtil{
 		return false;
 	}
 	
+	public function getUserLoggedInPermissions(){
+		if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+			return $_SESSION[self::$ROLES];
+		}
+		return array();
+	}
+	
+	public function isSessionGeneralUser(){
+		if($_SESSION[self::$USER_LOGGED_IN] != null && 
+				UserType::getName(UserType::USER) == $_SESSION[self::$ROLE]){
+					return true;
+		}
+		return false;
+	}
+	
+	public function isSessionUser(){
+		if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+			return true;
+		}
+		return false;
+	}
+	
 	public function isSessionSupervisor(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&
-				in_array(UserType::SUPERVISOR, $_SESSION[self::$ROLES])){
+				UserType::getName(UserType::SUPERVISOR) == $_SESSION[self::$ROLE]){
 					return true;
 		}
 		return false;
@@ -167,6 +185,12 @@ class SessionUtil{
 		if($bool == false){
 			header("location: userlogin.php");
 			die;
+		}else{
+			$page = basename ( $_SERVER ['PHP_SELF'] );
+			if(!PermissionUtil::isAuthenticate($page)){
+				header("location: logout.php");
+				die;
+			}
 		}
 	}
 	
