@@ -13,9 +13,9 @@ $firstInspectionChk = "";
 $qcUser = 0;
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance();
-$isSessionQC = $sessionUtil->isSessionQC();
+$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
 $isSessionSV = $sessionUtil->isSessionSupervisor();
-if($isSessionQC && !$isSessionSV){
+if($isSessionGeneralUser && !$isSessionSV){
  	$qcUser = $sessionUtil->getUserLoggedInSeq();
 	$qcUserReadonly = "readonly";
 }
@@ -129,7 +129,7 @@ if($isSessionQC && !$isSessionSV){
 	                        		<?php 
 										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
 		                        		echo $select;
-	                        			if($isSessionQC && !$isSessionSV){?>
+	                        			if($isSessionGeneralUser && !$isSessionSV){?>
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
 	                        			<?php }
                              		?>

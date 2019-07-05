@@ -5,4 +5,6 @@ class UserType extends BasicEnum{
 	const QC = "QC";
 	const SUPERVISOR = "SUPERVISOR";
 	const GRAPHIC_DESIGNER = "GRAPHIC DESIGNER";
+	const USER = "User";
+	
 }

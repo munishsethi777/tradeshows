@@ -2,33 +2,38 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
-
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
-
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
-
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
-
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
 $departments = $departmentMgr->getAll();
 $user = new User();
 $userMgr = UserMgr::getInstance();
-
+$userSelected = "";
+$supervisorSelected = "";
+$qcChecked = "";
+$chinaTeamChecked = "";
+$usaTeamChecked = "";
+$graphicDesignerChecked = "";
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
 $showQCDiv = "none";
 $isEnabled = "";
 $isSendNotifications = "";
+$qcDepartmentChecked = "";
+$graphicDepartmentChecked  = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
-	//if($user->getUserType() == "QC"){
-		//$showQCDiv = "block";
-	//}
+	if($user->getUserType() == "supervisor"){
+		$supervisorSelected = "selected";
+	}else{
+		$userSelected = "selected";
+	}
 	if($user->getIsEnabled() == 1){
 		$isEnabled = "checked";
 	}
@@ -37,7 +42,22 @@ if(isset($_POST["id"])){
 	}
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
-$userRoles = $userMgr->getUserRoles($user->getSeq());
+$departmentSeqArr = array_map(create_function('$o', 'return $o->getDepartmentSeq();'), $userDepartments);
+$userRoles = $userMgr->getUserRolesArr($user->getSeq());
+if(in_array("china_team",$userRoles)){
+	$chinaTeamChecked = "checked";
+}if(in_array("usa_team",$userRoles)){
+	$usaTeamChecked = "checked";
+}if(in_array("graphic_designer",$userRoles)){
+	$graphicDesignerChecked = "checked";
+}if(in_array("qc",$userRoles)){
+	$qcChecked = "checked";
+}
+if(in_array(1,$departmentSeqArr)){
+	$qcDepartmentChecked = "checked";
+}if(in_array(2,$departmentSeqArr)){
+	$graphicDepartmentChecked = "checked";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -123,9 +143,9 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">User Type:</label>
 	                        	<div class="col-lg-4">
-	                            	<select name="userType" class="form-control">
-	                            		<option>User</option>
-	                            		<option>Supervisor</option>
+	                        		<select name="usertype" class="form-control">
+	                            		<option <?php echo $userSelected?> value="USER">User</option>
+	                            		<option <?php echo $supervisorSelected?> value="SUPERVISOR">Supervisor</option>
 	                            	</select>
 	                            </div>
 	                       </div>
@@ -138,17 +158,20 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             QC Schedules
+                                             <div class="pull-right">
+                                            	<input type="checkbox" <?php echo $qcDepartmentChecked?> value="1" id="qcDepartment" name="departments[]"/>
+                                            </div>
                                         </div>
                                         <div class="panel-body">
                                             <label class="col-lg-8 col-form-label bg-formLabel">Quality Controller</label>
 				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" name="utype"/>
+				                        		<input type="checkbox" <?php echo $qcChecked?> value="qc" id="qcpermission" name="permissions[]"/>
 				                            </div>
 				                            
 				                            <div class="qcDIV form-group col-lg-12 m-t-xs" style="display:<?php echo "block"?>">
 					                            <label class="col-lg-4 col-form-label bg-formLabel">QC Code :</label>
 					                        	<div class="col-lg-8">
-					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" name="qccode" class="form-control">
+					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
 					                            </div>
 					                        </div>
                                         </div>
@@ -159,36 +182,30 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             Graphic Logs
+                                            <div class="pull-right">
+                                            	<input type="checkbox" <?php echo $graphicDepartmentChecked?> value="2" id="graphicDepartment" name="departments[]"/>
+                                            </div>
                                         </div>
                                         <div class="panel-body">
                                             <label class="col-lg-8 col-form-label bg-formLabel">USA Team</label>
 				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" name="utype"/>
+				                        		<input type="checkbox" <?php echo $usaTeamChecked?> value="usa_team" id="usaTeamPermission" name="permissions[]"/>
 				                            </div>
 				                            
 				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">China Team</label>
 				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" name="utype"/>
+				                        		<input type="checkbox" <?php echo $chinaTeamChecked?> value="china_team" id="chinaTeamPermission" name="permissions[]"/>
 				                            </div>
 				                            
 				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Graphic Designer</label>
 				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" name="utype"/>
+				                        		<input type="checkbox" <?php echo $graphicDesignerChecked?> value="graphic_designer" id="graphicDesignerPermission"  name="permissions[]"/>
 				                            </div>
                                         </div>
                                     </div>
                                 </div>
 	                        
 	                        </div>
-	                        
-	                        
-	                        	
-	                        
-	                        
-	                        
-	                        
-		                        
-		                        
 	                    	<!-- 
 	                    	<div class="form-group row m-t-xl">
 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Departments</label>
@@ -242,7 +259,6 @@ $userRoles = $userMgr->getUserRoles($user->getSeq());
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -258,15 +274,45 @@ $(document).ready(function(){
 	<?php if(!empty($user->getUserType())){?>	
 		$(".userTypeDD").val("<?php echo $user->getUserType()?>");
 	<?php }?>
-	$('#utypeQC').on('ifChanged', function(event){
-		var flag  = $("#utypeQC").is(':checked');
+	$('#qcpermission').on('ifChanged', function(event){
+		var flag  = $("#qcpermission").is(':checked');
 		if(flag){
 			$("#qccode").attr("required","required");
 		}else{
 			$("#qccode").removeAttr("required");
 		}
   	});
+	disabledQCPermissions();
+	disabledGraphicPermissions();
+	$('#qcDepartment').on('ifChanged', function(event){
+		disabledQCPermissions();
+  	});
+	$('#graphicDepartment').on('ifChanged', function(event){
+		disabledGraphicPermissions();
+  	});
 });
+function disabledGraphicPermissions(){
+	var flag  = $("#graphicDepartment").is(':checked');
+	if(!flag){
+		$("#chinaTeamPermission").attr("disabled","disabled");
+		$("#usaTeamPermission").attr("disabled","disabled");
+		$("#graphicDesignerPermission").attr("disabled","disabled");
+	}else{
+		$("#chinaTeamPermission").removeAttr("disabled");
+		$("#usaTeamPermission").removeAttr("disabled");
+		$("#graphicDesignerPermission").removeAttr("disabled");
+	}
+}
+function disabledQCPermissions(){
+	var flag  = $("#qcDepartment").is(':checked');
+	if(!flag){
+		$("#qcpermission").attr("disabled","disabled");
+		$("#qccode").attr("disabled","disabled");
+	}else{
+		$("#qccode").removeAttr("disabled");
+		$("#qcpermission").removeAttr("disabled");
+	}
+}
 
 function saveUser(){
 	if($("#createUserForm")[0].checkValidity()) {

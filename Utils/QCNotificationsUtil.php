@@ -357,6 +357,42 @@ class QCNotificationsUtil{
 		return $body;
 	}
 	
+	public static function sendGraphicLogNotesUpdatedNotification($graphicLog,$noteType){
+		$loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+		$phAnValues = array();
+		$phAnValues["NOTES_NAME"] = $noteType;
+		$phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+		$noteDetail = "";
+		$roleName = "";
+		if($noteType == "USA"){
+			$noteDetail = $graphicLog->getUSANotes();
+			$roleName  = Permissions::usa_team;
+		}else if($noteType == "CHINA"){
+			$roleName  = Permissions::china_team;
+			$noteDetail = $graphicLog->getChinaNotes();
+		}else if($noteType == "GRAPHIC"){
+			$noteDetail = $graphicLog->getGraphicsToChinaNotes();
+			$roleName  = Permissions::graphic_designer;
+		}
+		$roleName = Permissions::getName($roleName);
+		$phAnValues["NOTES_DETAIL"] = $noteDetail;
+		$content = file_get_contents("../GraphicLogsNotesUpdatedTemplate.php");
+		$html = self::replacePlaceHolders($phAnValues, $content);
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getUsersForGraphicNotesUpdatedReport($roleName);
+		$toEmails = array();
+		$phAnValues = array();
+		foreach ($users as $user){
+			$phAnValues["FULL_NAME"] = $user->getFullName();
+			$html = self::replacePlaceHolders($phAnValues, $html);
+			array_push($toEmails,$user->getEmail());
+		}
+		if(!empty($toEmails)){
+			$subject = $noteType . " Notes Updated For Graphic Logs on Alpinebi";
+			MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+		}	
+	}
+	
 	public static function sendQCApprovalNotification($qcSchedule){
 		$itemNo = $qcSchedule->getItemNumbers();
 		$po = $qcSchedule->getPO();

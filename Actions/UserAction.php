@@ -5,7 +5,6 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
-
 $success = 1;
 $call = "";
 $response = new ArrayObject();
@@ -22,6 +21,8 @@ if($call == "saveUser"){
 		$message = "User saved successfully.";
 		$user = new User();
 		$user->createFromRequest($_REQUEST);
+		$permissions = $_POST["permissions"];
+		$departments = $_POST["departments"];
 		if(isset($_REQUEST["isenabled"])){
 			$user->setIsEnabled(1);
 		}else {
@@ -44,32 +45,27 @@ if($call == "saveUser"){
 		//}
 		$user->setSeq($seq);
 		$user->setLastModifiedOn(new DateTime());
+		if(!in_array("qc",$permissions)){
+			$user->setQCCode(null);
+		}
 		$id = $userMgr->saveUser($user);
 		$departmentMgr->deleteUseDepartments($id);
 		$userMgr->deleteUseRoles($id);
 		try{
-			foreach($_POST as $key => $value){
-				if(strpos($key, "utype") !== false){
-					$role = substr($key,5);
-					$userRole = new UserRole();
-					$userRole->setUserSeq($id);
-					$userRole->setRole($role);
-					$userRole->setCreatedOn(new DateTime());
-					$userMgr->saveUserRole($userRole);
-				}
+			foreach($permissions as $key => $value){
+				$userRole = new UserRole();
+				$userRole->setUserSeq($id);
+				$userRole->setRole($value);
+				$userRole->setCreatedOn(new DateTime());
+				$userMgr->saveUserRole($userRole);
 			}
-			
-			
-			foreach($_POST as $key => $value){
-				if(strpos($key, "dep") !== false){
-					$dseq = substr($key,3);
-					$userDept = new UserDepartment();
-					$userDept->setUserSeq($id);
-					$userDept->setDepartmentSeq($dseq);
-					$userDept->setLastModifiedOn(new DateTime());
-					$userDept->setCreatedOn(new DateTime());
-					$departmentMgr->saveUserDepartment($userDept);
-				}
+			foreach($departments as $key => $value){
+				$userDept = new UserDepartment();
+				$userDept->setUserSeq($id);
+				$userDept->setDepartmentSeq($value);
+				$userDept->setLastModifiedOn(new DateTime());
+				$userDept->setCreatedOn(new DateTime());
+				$departmentMgr->saveUserDepartment($userDept);
 			}
 		}catch(Exception $e){
 			return $e->getMessage();
@@ -86,9 +82,11 @@ if($call == "loginUser"){
 	
 	$user = $userMgr->logInUser($username, $password);
 	if(!empty($user) && $user->getPassword() == $password){
-		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
+		$userRoles = $userMgr->getUserRolesValuesArr($user->getSeq());
+		$departmentMgr = DepartmentMgr::getInstance();
+		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
 		$sessionUtil = SessionUtil::getInstance();
-		$sessionUtil->createUserSession($user,$userRoles);
+		$sessionUtil->createUserSession($user,$userRoles,$departments);
 		$response["user"] = $userMgr->toArray($user);
 		$message = "Login successfully";
 	}else{

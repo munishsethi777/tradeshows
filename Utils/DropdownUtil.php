@@ -36,9 +36,9 @@ class DropDownUtils {
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
 	}
 	
-	public static function getGraphicTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	public static function getGraphicTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled) {
 		$enums = GraphicType::getAll();
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type",true);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type",true,$disabled);
 	}
 	
 	public static function getLabelTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -51,9 +51,9 @@ class DropDownUtils {
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
 	}
 	
-	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled) {
 		$enums = TagType::getAll();
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type",false,$disabled);
 	}
 	
 	public static function getQCUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -68,10 +68,10 @@ class DropDownUtils {
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Designer");
 	}
 	
-	public static function getClassCodes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	public static function getClassCodes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled) {
 		$classCodeMgr = ClassCodeMgr::getInstance();
 		$classCodes = $classCodeMgr->findAllForDropDown();
-		return self::getDropDown1 ($classCodes, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Code");
+		return self::getDropDown1 ($classCodes, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Code",false,$disabled);
 	}
 	
 	public static function getSupervisorsAndGraphicDesigners($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -79,9 +79,14 @@ class DropDownUtils {
 		$enums = $userMgr->getSupervisorsAndGraphicDesignerForDD();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
 	}
-
 	
-	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false) {
+	public static function getChinaTeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getChinaTeamUsersForDD();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+	
+	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false,$disabled = "") {
 		$id = $selectName;
 		if(strpos($selectName, "[]") !== false){
 			$id = str_replace("[]", "", $id);
@@ -109,7 +114,7 @@ class DropDownUtils {
 					$select = $selectedValue == $key ? 'selected' : null;
 				}
 				
-				$str .= "<option value='" . $key . "' " . $select . ">" . $value . "</option>";
+				$str .= "<option $disabled value='" . $key . "' " . $select . ">" . $value . "</option>";
 			}
 		}
 		$str .= "</select>";

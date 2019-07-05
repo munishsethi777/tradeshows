@@ -29,7 +29,7 @@ class GraphicLogMgr{
     }
     
     public function save($graphicLog){
-    	self::$dataStore->save($graphicLog);
+    	return self::$dataStore->save($graphicLog);
     }
     
     public function updateOject($conn,$item,$condition){
