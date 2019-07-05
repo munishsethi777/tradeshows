@@ -186,10 +186,13 @@ class SessionUtil{
 			header("location: userlogin.php");
 			die;
 		}else{
-			$page = basename ( $_SERVER ['PHP_SELF'] );
-			if(!PermissionUtil::isAuthenticate($page)){
-				header("location: logout.php");
-				die;
+			$boolAdmin = self::isSessionAdmin();
+			if(!$boolAdmin){
+				$page = basename ( $_SERVER ['PHP_SELF'] );
+				if(!PermissionUtil::isAuthenticate($page)){
+					header("location: logout.php");
+					die;
+				}
 			}
 		}
 	}
