@@ -62,7 +62,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <!-- 			                            </div> -->
 <!-- 			                        </div> -->
 		                     	
-		                     	<div id="graphiclogGrid"></div>
+		                     	<div id="containerScheduleGrid"></div>
 		                     </div>
 	                    </div>	
 		            </div>
@@ -74,7 +74,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
-   <form id="form2" name="form2" method="post" action="adminCreateGraphicLog.php">
+   <form id="form2" name="form2" method="post" action="createContainerSchedule.php">
     	<input type="hidden" id="id" name="id"/>
    </form> 
 
@@ -123,12 +123,12 @@ $(document).ready(function(){
 	});
     var applyFilter = function () {
        var addedFilterFields = [];
-       var existingFilter = $('#graphiclogGrid').jqxGrid('getfilterinformation')
+       var existingFilter = $('#containerScheduleGrid').jqxGrid('getfilterinformation')
        var datafield = $("#fieldNameDD").val();
-       $("#graphiclogGrid").jqxGrid('clearfilters');
+       $("#containerScheduleGrid").jqxGrid('clearfilters');
        if(datafield != ''){
     	   //showFilterFieldColumn();
-	 	   $("#graphiclogGrid").jqxGrid('clear');
+	 	   $("#containerScheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
 	 	   var conditionDDVal = $("#conditionDD").val();
 	 	   filtertype = 'datefilter';
@@ -159,14 +159,14 @@ $(document).ready(function(){
 		               var filter = filtergroup.createfilter(filtertype, filtervalue, filtercondition);
 		               filtergroup.addfilter(filter_or_operator, filter);
 		               
-		               $("#graphiclogGrid").jqxGrid('addfilter', fieldName, filtergroup);
+		               $("#containerScheduleGrid").jqxGrid('addfilter', fieldName, filtergroup);
 		               // add the filters.
 		           });
 	        	  
 	           }
 	       });
 	        // apply the filters.
-	       $("#graphiclogGrid").jqxGrid('applyfilters');
+	       $("#containerScheduleGrid").jqxGrid('applyfilters');
        }
     }
     
@@ -201,9 +201,9 @@ $(document).ready(function(){
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
 		
-		//$('#graphiclogGrid').jqxGrid('showcolumn', datafield);
+		//$('#containerScheduleGrid').jqxGrid('showcolumn', datafield);
 		var textData = new Array();
-		var cols = $("#graphiclogGrid").jqxGrid("columns");
+		var cols = $("#containerScheduleGrid").jqxGrid("columns");
 		for (var i = 0; i < cols.records.length; i++) {
 		    textData[i] = cols.records[i].text;
 		}
@@ -243,17 +243,17 @@ $(document).ready(function(){
 		return dataArr
 	}
 function showFilterFieldColumn(){
-	var cols = $("#graphiclogGrid").jqxGrid("columns");
+	var cols = $("#containerScheduleGrid").jqxGrid("columns");
 	for (var i = 0; i < cols.records.length; i++) {
 		if(cols.records[i].datafield.substr(0,2) == "sc" 
 				|| cols.records[i].datafield.substr(0,2) == "ac"
 					|| cols.records[i].datafield.substr(0,2) == "ap"){
 	    //if(cols.records[i].hidden == true){
-	    	$('#graphiclogGrid').jqxGrid('hidecolumn', cols.records[i].datafield);
+	    	$('#containerScheduleGrid').jqxGrid('hidecolumn', cols.records[i].datafield);
 	    }
 	}
 	var datafield = $("#fieldNameDD").val()
-	$('#graphiclogGrid').jqxGrid('showcolumn',datafield);
+	$('#containerScheduleGrid').jqxGrid('showcolumn',datafield);
 
 }
 function editShow(seq){
@@ -263,7 +263,7 @@ function editShow(seq){
 
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
-        data = $('#graphiclogGrid').jqxGrid('getrowdata', row);
+        data = $('#containerScheduleGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
             	html +="<a href='javascript:showItemDetails("+ data['seq'] + ")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
             html += "</div>";
@@ -271,13 +271,13 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'US Entry Date', datafield: 'usaofficeentrydate', width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Est Ship date', datafield: 'estimatedshipdate', width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Class', datafield: 'classcode', width:"10%"},
-      { text: 'PO', datafield: 'po',width:"8%"},
-      { text: 'SKU', datafield: 'sku',width:"10%"},
-      { text: 'Customer', datafield: 'customername',width:"15%"},
-      { text: 'Created By', datafield: 'fullname',width:"15%"},
+      { text: 'AWU Ref', datafield: 'awureference', width:"10%",cellsformat: 'M-dd-yyyy'},
+      { text: 'Trucker Name', datafield: 'truckername', width:"10%",cellsformat: 'M-dd-yyyy'},
+      { text: 'Trans', datafield: 'trans', width:"10%"},
+      { text: 'Warehouse', datafield: 'warehouse',width:"8%"},
+      { text: 'Container', datafield: 'container',width:"10%"},
+      { text: 'ETA', datafield: 'etadatetime',width:"15%",cellsformat: 'M-dd-yyyy'},
+      { text: 'Terminal', datafield: 'terminal',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
    
@@ -289,16 +289,16 @@ function loadGrid(){
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                    { name: 'usaofficeentrydate', type: 'date' }, 
-                    { name: 'estimatedshipdate', type: 'date' }, 
-                    { name: 'classcode', type: 'string' },
-                    { name: 'po', type: 'string' },
-                    { name: 'sku', type: 'string' } ,
-                    { name: 'customername', type: 'string' },
-                    { name: 'fullname', type: 'fullname' }, 
+                    { name: 'awureference', type: 'date' }, 
+                    { name: 'truckername', type: 'date' }, 
+                    { name: 'trans', type: 'string' },
+                    { name: 'warehouse', type: 'string' },
+                    { name: 'etadatetime', type: 'string' } ,
+                    { name: 'container', type: 'string' },
+                    { name: 'terminal', type: 'fullname' }, 
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
-        url: 'Actions/GraphicLogAction.php?call=getAllGraphicLogs',
+        url: 'Actions/ContainerScheduleAction.php?call=getAllContainerSchedules',
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -308,12 +308,12 @@ function loadGrid(){
         filter: function()
         {
             // update the grid and send a request to the server.
-            $("#graphiclogGrid").jqxGrid('updatebounddata', 'filter');
+            $("#containerScheduleGrid").jqxGrid('updatebounddata', 'filter');
         },
         sort: function()
         {
             // update the grid and send a request to the server.
-            $("#graphiclogGrid").jqxGrid('updatebounddata', 'sort');
+            $("#containerScheduleGrid").jqxGrid('updatebounddata', 'sort');
         },
         addrow: function (rowid, rowdata, position, commit) {
             commit(true);
@@ -328,7 +328,7 @@ function loadGrid(){
     
     var dataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
-    $("#graphiclogGrid").jqxGrid(
+    $("#containerScheduleGrid").jqxGrid(
     {
     	width: '100%',
 		height: '600',
@@ -378,7 +378,7 @@ function loadGrid(){
                 location.href = ("createContainerSchedule.php");
             });
             editButton.click(function (event){
-            	var selectedrowindex = $("#graphiclogGrid").jqxGrid('selectedrowindexes');
+            	var selectedrowindex = $("#containerScheduleGrid").jqxGrid('selectedrowindexes');
                 var value = -1;
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
@@ -387,12 +387,12 @@ function loadGrid(){
                     bootbox.alert("Please Select single row for edit.", function() {});
                     return;    
                 }
-                var row = $('#graphiclogGrid').jqxGrid('getrowdata', indexes);
+                var row = $('#containerScheduleGrid').jqxGrid('getrowdata', indexes);
                 $("#id").val(row.seq);                        
                 $("#form2").submit();    
             });
             deleteButton.click(function (event) {
-                gridId = "graphiclogGrid";
+                gridId = "containerScheduleGrid";
                 deleteUrl = "Actions/GraphicLogAction.php?call=deleteGraphicLog";
                 deleteGraphicLog(gridId,deleteUrl);
             });
@@ -400,11 +400,11 @@ function loadGrid(){
                 location.href = ("adminImportGraphicLogs.php");
             });
             exportButton.click(function (event) {
-         	   filterQstr = getFilterString("graphiclogGrid");
+         	   filterQstr = getFilterString("containerScheduleGrid");
          	   exportItemsConfirm(filterQstr);
             });
             reloadButton.click(function (event) {
-                $("#graphiclogGrid").jqxGrid({ source: dataAdapter });
+                $("#containerScheduleGrid").jqxGrid({ source: dataAdapter });
             });
             //downloadButton.click(function (event) {
             	//location.href = ("files/QCSchedules_template.xlsx");
