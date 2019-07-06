@@ -29,7 +29,7 @@ $graphicDepartmentChecked  = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
-	if($user->getUserType() == "supervisor"){
+	if($user->getUserType() == UserType::SUPERVISOR){
 		$supervisorSelected = "selected";
 	}else{
 		$userSelected = "selected";

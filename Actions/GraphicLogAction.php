@@ -104,9 +104,9 @@ if($call == "saveGraphicLog"){
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
-		if($e->getTrace()[0]['args'][0][0] ==  23000){
-			$message = "Duplicate values for the combination of shipdate, item number and customer is not allowed";
-		}
+		//if($e->getTrace()[0]['args'][0][0] ==  23000){
+			//$message = "Duplicate values for the combination of shipdate, item number and customer is not allowed";
+		//}
 	}
 }
 
