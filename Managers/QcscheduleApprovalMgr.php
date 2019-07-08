@@ -28,7 +28,7 @@ class QcscheduleApprovalMgr{
 		$qcScheduleApproval->setUserSeq($userSeq);
 		$qcScheduleApproval->setResponseType(QCScheduleApprovalType::pending);
 		self::$dataStore->save($qcScheduleApproval);
-		QCNotificationsUtil::sendQCApprovalNotification($qcSchedule);
+		//QCNotificationsUtil::sendQCApprovalNotification($qcSchedule);
 	}
 	
 	public function hasPendingApprovals($qcscheduleSeq){
