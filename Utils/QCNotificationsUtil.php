@@ -362,6 +362,8 @@ class QCNotificationsUtil{
 		$phAnValues = array();
 		$phAnValues["NOTES_NAME"] = $noteType;
 		$phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+		$phAnValues["ITEM_ID"] = $graphicLog->getSKU();
+		$phAnValues["PO_NUMBER"] = $graphicLog->getPO();
 		$noteDetail = "";
 		$roleName = "";
 		if($noteType == "USA"){
@@ -420,6 +422,54 @@ class QCNotificationsUtil{
 			$subject = "Approval Request on Alpinebi";
 			MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
 		}	
+	}
+	
+	
+	
+	public static function sendPendingQCApprovalNotification(){
+		$userMgr = UserMgr::getInstance();
+		$qcScheduleMgr = QCScheduleMgr::getInstance();
+		$pendingQcSchedules = $qcScheduleMgr->getPendingQcForApprovals();
+		$tableHtml = file_get_contents("../QCApprovalStatusEmailTemplate.php");
+		if(empty($pendingQcSchedules)){
+			$row = "<tr><td colspan='8'>No Rows Found<td></tr>";
+		}
+		$srNo = 1;
+		foreach ($pendingQcSchedules as $qcSchedule){
+			$tableRow = file_get_contents("../QCApprovalStatusTableRow.php");
+			$rowTokens = array();
+			$row .= $tableRow;
+			$rowTokens["SR_NO"] =  $srNo;
+			$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+			$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
+			$rowTokens["PO_NO"] =  $qcSchedule->getPO();
+			$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
+			$itemNumbers = $qcSchedule->getItemNumbers();
+			$itemNumbers = str_replace("\n", "<br>", $itemNumbers);
+			$rowTokens["ITEM_NUMBERS"] =  $itemNumbers;
+			$appliedOn = $qcSchedule->appliedon;
+			$appliedOnDate = DateUtil::StringToDateByGivenFormat('Y-m-d H:i:s', $appliedOn);
+			$rowTokens["APPLIED_ON"] =  $appliedOnDate->format("n/j/y");
+			$finalInspection = $qcSchedule->getACFinalInspectionDate();
+			$finalInspectionDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $finalInspection);
+			$rowTokens["FINAL_INSPECTION_DATE"] =  $finalInspectionDate->format("n/j/y");
+			$rowTokens["APPROVAL_STATUS"] = $qcSchedule->responsetype;
+			$row = self::replacePlaceHolders($rowTokens, $row);
+			$srNo++;
+		}   
+		$phAnValues["TABLE_ROWS"] = $row;
+		$tableMailHtml .= self::replacePlaceHolders($phAnValues, $tableHtml);
+		$excelData = ExportUtil::exportQcPendingForApprovals($pendingQcSchedules, StringConstants::PENDING_QC_APPROVALS, true);
+		$attachments = array("QCPendingApprovals"=>$excelData);
+		$supervisors = $userMgr->getSupervisorsForQCReport();
+		$toEmails = array();
+		foreach ($supervisors as $user){
+			array_push($toEmails,$user->getEmail());
+		}
+		if(!empty($toEmails)){
+			$subject = StringConstants::PENDING_QC_APPROVALS;
+			MailUtil::sendSmtpMail($subject, $tableMailHtml, $toEmails,true, $attachments);
+		}
 	}
 	
 }
