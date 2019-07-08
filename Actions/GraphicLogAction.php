@@ -23,6 +23,12 @@ if($call == "saveGraphicLog"){
 		$message = "Graphic Log saved successfully!"; 
 		$graphicLog = new GraphicsLog();
 		$graphicLog->createFromRequest($_REQUEST);
+		if(empty($graphicLog->getUSAOfficeEntryDate())){
+			throw new Exception("USA Office Date Entered can not be empty");
+		}
+		if(empty($graphicLog->getSKU())){
+			throw new Exception("Item Id can not be empty");
+		}
 		if(!empty($graphicLog->getApproxGraphicsChinaSentDate()) 
 				&& !empty($graphicLog->getGraphicArtistStartDate())){
 			
