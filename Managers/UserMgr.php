@@ -51,7 +51,21 @@ class UserMgr{
 	}
 	public function getUsersForGrid(){
 		$users = $this->getAllUsersForGrid();
-		$mainArr["Rows"] = $users;
+		$arr = array();
+		foreach ($users as $user){
+			$roles = $user["roles"];
+			$roleArr = array();
+			if(!empty($roles)){
+				$roles = explode(",",$roles);
+				foreach ($roles as $role){
+					$roleValue = Permissions::getValue($role);
+					array_push($roleArr,$roleValue);
+				}
+				$user["roles"] = implode(",",$roleArr);
+			}
+			array_push($arr,$user);
+		}
+		$mainArr["Rows"] = $arr;
 		$mainArr["TotalRows"] = $this->getAllCountForGrid();
 		return $mainArr;
 	}
@@ -167,7 +181,7 @@ where userdepartments.departmentseq = 1 and users.usertype = 'USER'";
 		$userRolesObjs =  self::$userRoleDataStore->executeConditionQuery($colValPair);
 		foreach ($userRolesObjs as $userRoleObj){
 			$roleValue = Permissions::getValue($userRoleObj->getRole());
-			array_push($userRoles, $userRoleObj->getRole());
+			array_push($userRoles, $roleValue);
 		}
 		return $userRoles;
 	}

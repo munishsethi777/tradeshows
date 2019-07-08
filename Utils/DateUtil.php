@@ -179,5 +179,13 @@ class DateUtil {
 	public static function getCurrentDate(){
 		return new DateTime();
 	}
+	
+	public static function convertDateToFormat($dateStr,$fromFormat,$toFormat){
+		if(!empty($dateStr)){
+			$date = DateUtil::StringToDateByGivenFormat($fromFormat, $dateStr);
+			$dateStr = $date->format($toFormat);
+		}
+		return $dateStr;
+	}
 }
 ?>

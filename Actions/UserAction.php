@@ -82,7 +82,7 @@ if($call == "loginUser"){
 	
 	$user = $userMgr->logInUser($username, $password);
 	if(!empty($user) && $user->getPassword() == $password){
-		$userRoles = $userMgr->getUserRolesValuesArr($user->getSeq());
+		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
 		$departmentMgr = DepartmentMgr::getInstance();
 		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
 		$sessionUtil = SessionUtil::getInstance();

@@ -5,7 +5,7 @@ $session = SessionUtil::getInstance();
 $userLoggedInSeq = $session->getUserLoggedInSeq();
 $userNameLoggedIn = $session->getUserLoggedInName();
 $sessionUtil = SessionUtil::getInstance();
-$isSessionQC = $sessionUtil->isSessionQC();
+$isSessionSupervisor = $sessionUtil->isSessionSupervisor();
 $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $isDashboard="";
 $isUserDashboard="";
@@ -183,12 +183,14 @@ if($file == "dashboard.php"){
 		                    	<span class="nav-label">Manage Items Specs.</span>  
 		                    </a>
 		                </li>
-		                 <li class="<?php echo $manageClassCodes;?>">
+		            <?php }?>
+		            <?php if($isSessionSupervisor){?>
+		              <li class="<?php echo $manageClassCodes;?>">
 		                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
 		                    	<span class="nav-label">Class Codes</span>  
 		                    </a>
                 		</li>
-	                <?php }?>
+                	<?php }?>
 	                <?php if(in_array(DepartmentType::QC_Schedules,$departments)){?>
 		                <li class="<?php echo $manageQCSchedules;?>">
 		                    <a href="adminManageQCSchedules.php"><i class="fa fa-flag"></i> 

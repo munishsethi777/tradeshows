@@ -791,6 +791,16 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	//--------------**********-------------
 	
+	
+	public function getPendingQcForApprovals(){
+		$query = "select classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
+		$qcschedules = self::$dataStore->executeObjectQuery($query,false,true);
+		$qcschedules = $this->groupByPO($qcschedules);
+		return $qcschedules;
+	}
+	
+	
+	
 	private function convertStrToDate($date){
 		$format = 'm-d-y';
 		$date = DateUtil::StringToDateByGivenFormat($format, $date);

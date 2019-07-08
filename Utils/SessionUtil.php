@@ -141,7 +141,7 @@ class SessionUtil{
 
 	public function isSessionAdmin(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&
-				in_array(UserType::ADMIN, $_SESSION[self::$ROLES])){
+				UserType::getName(UserType::ADMIN) == $_SESSION[self::$ROLE]){
 					return true;
 		}
 		return false;

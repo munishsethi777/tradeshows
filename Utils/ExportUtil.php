@@ -1584,6 +1584,143 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 		$objWriter->save('php://output');
 }
 
+public static function exportQcPendingForApprovals($qcSchedules,$notificationName,$isEmail){
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Admin")
+	->setLastModifiedBy("Admin")
+	->setTitle("PendingQcSchedulesForApprovals")
+	->setSubject("PendingQcSchedulesForApprovals")
+	->setDescription("PendingQcSchedulesForApprovals")
+	->setKeywords("office 2007 openxml php")
+	->setCategory("Report");
+	$alphas = range('A', 'Z');
+	$count = 1;
+	$i = 0;
+	
+		$colName = $alphas[$i++]. $count;
+		$firstRowColName = $colName;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sr.");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getAlignment()->applyFromArray(
+				array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,)
+				);
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Class");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,"PO");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO Type");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Item Number");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Final Inspection Date");
+
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Applied On");
+		
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Approval Status");
+		
+		$lastRowColName = $colName;
+		$objPHPExcel->getActiveSheet()->getStyle($firstRowColName.":" . $lastRowColName)->getFont()->setBold(true);
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle($firstRowColName.":" . $lastRowColName)
+		->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('D3D3D3');
+		$i = 0;
+		$count++;
+		$srNo = 1;
+		if(!empty($qcSchedules)){
+			foreach ($qcSchedules as $qcSchedule){
+				//$qcSchedule = new QCSchedule();
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $srNo);
+					
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getQC());
+					
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
+					
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$qcSchedule->getPO());
+					
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getPOType());
+					
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getItemNumbers());
+				
+				$finalInspectionDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $qcSchedule->getACFinalInspectionDate());
+				$colName = $alphas[$i++]. $count;
+				$finalInspectionDateStr = $finalInspectionDate->format("n/j/y");
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$finalInspectionDateStr);
+					
+				$appliedOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $qcSchedule->appliedon);
+				$colName = $alphas[$i++]. $count;
+				$appliedOnDateStr = $appliedOnDate->format("n/j/y");
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$appliedOnDateStr);
+		
+				$colName = $alphas[$i++]. $count;
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->responsetype);
+				$count++;
+				$i = 0;
+				$srNo++;
+			}
+		}else{
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "No Rows Found");
+			$objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":I" .$count);
+		}
+	$objPHPExcel->getActiveSheet()->setTitle("PendingQcSchedulesForApprovals");
+	// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+	$objPHPExcel->setActiveSheetIndex(0);
+	$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+	$objPHPExcel->getActiveSheet()->getStyle('H1:H'.$objPHPExcel->getActiveSheet()->getHighestRow())
+	->getAlignment()->setWrapText(true);
+	$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+	$objPHPExcel->getActiveSheet()->getStyle('I1:I'.$objPHPExcel->getActiveSheet()->getHighestRow())
+	->getAlignment()->setWrapText(true);
+
+	if($isEmail){
+		ob_start();
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+		$excelOutput = ob_get_contents();
+		ob_end_clean();
+		return $excelOutput;
+	}
+	// Redirect output to a client’s web browser (Excel5)
+	header('Content-Type: application/vnd.ms-excel');
+	header('Content-Disposition: attachment;filename="QC_Weekly.xls"');
+	header('Cache-Control: max-age=0');
+	// If you're serving to IE 9, then the following may be needed
+	header('Cache-Control: max-age=1');
+		
+	// If you're serving to IE over SSL, then the following may be needed
+	header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+	header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+	header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+	header ('Pragma: public'); // HTTP/1.0
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	ob_end_clean();
+	$objWriter->save('php://output');
+}
+
 public static function exportHtmlToExcel($html){
 	$filename = "DownloadReport";
 	$table    = $html;
