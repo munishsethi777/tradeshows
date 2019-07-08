@@ -74,7 +74,7 @@ if(isset($_POST["id"])){
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="createGraphicLogForm" method="post" action="Actions/ContainerScheduleAction.php" class="m-t-lg">
+                 	 <form id="createGraphicLogForm" method="post" action="Actions/ContainerScheduleAction.php">
                      	<input type="hidden" id ="call" name="call"  value="saveContainerSchedule"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $containerSchedule->getSeq()?>"/>
                         
@@ -124,7 +124,9 @@ if(isset($_POST["id"])){
                                 		<input type="text" value="<?php echo $containerSchedule->getEtaDateTime()?>" name="etadatetime" id="etadatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
+	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
 	                            </div>
+	                            
 	                        </div>
 	                         <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal:</label>
@@ -133,16 +135,6 @@ if(isset($_POST["id"])){
                                 			maxLength="250" value="<?php echo $containerSchedule->getTerminal()?>" 
                                 			name="terminal" class="form-control">
 	                            </div>
-	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal Appointment:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getTerminalAppointmentDateTime()?>" name="terminalappointmentdatetime" id="terminalappointmentdatetime" class="form-control dateTimeControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            </div>
-	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="etanotes" 
@@ -150,15 +142,49 @@ if(isset($_POST["id"])){
                                 			name="etanotes" class="form-control">
 	                            </div>
 	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">LFD Pickup:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getLFDPickupDate()?>" name="lfdpickupdate" id="lfdpickupdate" class="form-control  dateControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            </div>
-	                        </div>
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="form-group row">
+			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">Terminal Appointment:</label>
+			                        	<div class="col-lg-8">
+			                        		<div class="input-group date">
+		                                		<input type="text" value="<?php echo $containerSchedule->getTerminalAppointmentDateTime()?>" name="terminalappointmentdatetime" id="terminalappointmentdatetime" class="form-control dateTimeControl">
+			                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			                            	</div>
+			                            </div>
+			                        </div>
+			                        <div class="form-group row">
+			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">LFD Pickup:</label>
+			                        	<div class="col-lg-8">
+			                        		<div class="input-group date">
+		                                		<input type="text" value="<?php echo $containerSchedule->getLFDPickupDate()?>" name="lfdpickupdate" id="lfdpickupdate" class="form-control  dateControl">
+			                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			                            	</div>
+			                            </div>
+			                        </div>
+								</div>
+								<div class="col-lg-6">
+									<div class="row" style="height:100px; overflow:scroll">
+			                       		<ul class="list-group" style="margin:0px">
+	                                        <li class="list-group-item">
+	                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
+	                                        </li>
+	                                        <li class="list-group-item">
+	                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
+	                                        </li>
+	                                        <li class="list-group-item">
+	                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+	                                        </li>
+	                                        <li class="list-group-item">
+	                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+	                                        </li>
+	                                        
+	                                    </ul>
+			                       		
+			                       		
+			                        </div>
+								</div>
+							</div>
 					</div>
 	                <div class="bg-white1 p-xs outterDiv">
 	                     <div class="form-group row">
@@ -175,6 +201,7 @@ if(isset($_POST["id"])){
                                 		<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmedDeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
+	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
 	                            </div>
 	                     </div>
 	                     <div class="form-group row">
@@ -207,20 +234,71 @@ if(isset($_POST["id"])){
                                 		<input type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
+	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
 	                            </div>
 	                     </div>
-	                     <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Notes:</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text" value="<?php echo $containerSchedule->getEmptyNotes()?>" name="emptynotes" id="emptynotes" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Notes:</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text" id="notificationnotes" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getNotificationNotes()?>" 
-                                			name="notificationnotes" class="form-control">
-	                            </div>
-	                     </div>     
+	                     
+	                     <div class="row">
+	                     	<div class="col-lg-6 no-padding" style="padding-right:12px !important;">
+	                     		<div class="panel panel-dark">
+									<div class="panel-heading">Empty Return Notes</div>
+                                    <div class="panel-body">
+                                    	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
+                                			maxLength="250" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
+                                		
+											<div class="row">
+					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+			                                        <li class="list-group-item">
+			                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
+			                                        </li>
+			                                        <li class="list-group-item">
+			                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
+			                                        </li>
+			                                        <li class="list-group-item">
+			                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+			                                        </li>
+			                                        <li class="list-group-item">
+			                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+			                                        </li>
+			                                    </ul>
+					                       	</div>
+									</div>
+                                   </div>
+                            </div>
+	                     	
+	                     	
+	                     	<div class="col-lg-6 no-padding">
+	                     		<div class="panel panel-mauve">
+									<div class="panel-heading">Alpine Pickup Notes</div>
+                                    <div class="panel-body">
+                                    	<textarea style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
+                                			maxLength="250" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
+                                			
+                                		<div class="row">
+				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
+		                                        </li>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
+		                                        </li>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+		                                        </li>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
+		                                        </li>
+		                                    </ul>
+				                       	</div>	
+                                			
+                                			
+                                			
+                                    </div>
+                                </div>
+							</div>
+	                     
+	                     </div>
+	                     
 					</div>	
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="form-group row">

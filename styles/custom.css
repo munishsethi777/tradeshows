@@ -185,10 +185,33 @@ ul.nav-second-level{
 	color:black;
 	padding:9px 7px !important;
 }
+.bg-mauve{
+	background-color:#A4C2F4 !important;
+}
 .bg-formLabelBrown{
 	background-color:rgba(131, 98, 0, 0.69);
 	color:white;
 	padding:9px 7px !important;
 }
+.list-group-item{
+	font-size:12px;
+	padding:6px !important;
+}
+.panel-dark{
+	border-color:rgba(0, 0, 0, 0.6) !important;
+}
+.panel-dark > .panel-heading {
+	background-color:rgba(0, 0, 0, 0.6) !important;
+	border-color: rgba(0, 0, 0, 0.6) !important;
+	color:white;
+}
 
+.panel-mauve{
+	border-color:#A4C2F4 !important;
+}
+.panel-mauve > .panel-heading {
+	background-color:#A4C2F4 !important;
+	border-color: #A4C2F4 !important;
+	color:black;
+}
 

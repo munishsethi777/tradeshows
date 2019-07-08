@@ -1,0 +1,4 @@
+CREATE TABLE `alpine`.`containerschedulenotes` ( `seq` BIGINT NOT NULL AUTO_INCREMENT , `containerscheduleseq` BIGINT NOT NULL , `notes` VARCHAR(1000) NOT NULL , `notestype` VARCHAR(25) NOT NULL , `createdon` DATETIME NOT NULL , `createdby` BIGINT NOT NULL , PRIMARY KEY (`seq`)) ENGINE = InnoDB;
+
+CREATE TABLE `alpine`.`containerscheduledates` ( `seq` BIGINT NOT NULL AUTO_INCREMENT , `containerscheduleseq` BIGINT NOT NULL , `datetime` DATETIME NOT NULL , `datetimetype` VARCHAR(25) NOT NULL , `createdon` DATETIME NOT NULL , `createdby` BIGINT NOT NULL , PRIMARY KEY (`seq`)) ENGINE = InnoDB;
+	

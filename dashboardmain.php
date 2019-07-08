@@ -1,6 +1,9 @@
 <?include("sessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
+$permissionUtil = PermissionUtil::getInstance();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,6 +28,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 					
 					<div class="ibox-content m-t-sm m-b-sm">
 						<div class="row">
+							<?php if($permissionUtil->hasQCDepartment()){?>
 							<div class="col-lg-4">
 		                        <div class="widget bg-danger text-center  p-h-xl">
 		                        	<div class="row">
@@ -34,7 +38,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                            </div>
 								</div>
 	                        </div>
-							
+							<?php }?>
 							<div class="col-lg-4">
 		                        <div class="widget bg-warning text-center p-h-xl">
 		                        	<div class="row">

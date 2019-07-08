@@ -61,7 +61,13 @@ class SessionUtil{
     	}
     	return false;
     }
-
+    public function getUserDepartments(){
+    	if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+    		$arr = $_SESSION[self::$DEPARTMENTS];
+    		return $arr;
+    	}
+    }
+    
     public function getAdminLoggedInName(){
     	if( array_key_exists(self::$ADMIN_LOGGED_IN,$_SESSION)){
     	//if( $_SESSION[self::$ADMIN_LOGGED_IN] != null){

@@ -1,6 +1,6 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
-class DepartmentType extends BasicEnum{
+class CustomerNameType extends BasicEnum{
 	const ALPINE = "ALPINE";
 	const ACE = "ACE";
 	const AUBUCHON = "AUBUCHON";

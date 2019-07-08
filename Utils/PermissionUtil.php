@@ -13,6 +13,7 @@ class PermissionUtil{
 			self::$permissionUtil = new PermissionUtil();
 			self::$sessionUtil = SessionUtil::getInstance();
 			self::$permissions = self::$sessionUtil->getUserLoggedInPermissions(); 
+			self::$departments = self::$sessionUtil->getUserDepartments();
 		}
 		return self::$permissionUtil;
 	}
@@ -30,18 +31,25 @@ class PermissionUtil{
 		return in_array(Permissions::getName(Permissions::qc),self::$permissions);
 	}
 	
+	public function hasQCDepartment(){
+		return in_array(DepartmentType::QC_Schedules,self::$departments);
+	}
+	public function hasGraphicsDepartment(){
+		return in_array(DepartmentType::Graphics_Logs,self::$departments);
+	}
 	public static function isAuthenticate($page){
-			$departments = $_SESSION[self::$DEPARTMENTS];
+			self::$sessionUtil = SessionUtil::getInstance();
+			self::$departments = self::$sessionUtil->getUserDepartments();
 			if($page == "adminManageQCSchedules.php" || 
 					$page == "adminCreateQCSchedule.php"){
 				$department = DepartmentType::QC_Schedules;
-				if(in_array($department, $departments)){
+				if(in_array($department, self::$departments)){
 					return true;
 				}
 			}else if($page == "adminManageGraphicLogs.php" || 
 					$page == "adminCrateGraphicLog.php"){
 				$department = DepartmentType::Graphics_Logs;
-				if(in_array($department, $departments)){
+				if(in_array($department, self::$departments)){
 					return true;
 				}
 			}
