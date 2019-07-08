@@ -53,14 +53,18 @@ function editShow(seq){
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#usersGrid').jqxGrid('getrowdata', row);
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
-            html += "</div>";
-        return html;
+        if(data["usertype"] == "SUPERVISOR"){
+        	var html = "<div style='margin-top:5px;'>";
+	    	html += data["email"] + " <i class='fa fa-asterisk' title='Supervisor'></i>";
+	    	html += '</div>';
+	       	return html;
+	    }
+        
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Email', datafield: 'email', width:"26%"},
+      { text: 'Email', datafield: 'email', width:"26%", cellsrenderer:actions},
+      { text: 'User Type', datafield: 'usertype', width:"26%", hidden:true},
       { text: 'FullName', datafield: 'fullname',width:"18%"},
       { text: 'Roles', datafield: 'roles',width:"15%",filterable:false},
       { text: 'QC Code', datafield: 'qccode',width:"10%"},
@@ -78,6 +82,7 @@ function loadGrid(){
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                     { name: 'email', type: 'string' }, 
+                    { name: 'usertype', type: 'string' },
                     { name: 'fullname', type: 'string' },
                     { name: 'roles', type: 'string' },
                     { name: 'isenabled', type: 'boolean' },
