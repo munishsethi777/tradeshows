@@ -205,6 +205,13 @@ if($file == "dashboard.php"){
 		                    </a>
 		                </li>
 	                <?php }?>
+	                 <?php if(in_array(DepartmentType::Container_Schedules,$departments)){?> 
+		                <li class="<?php echo $manageContainerSchedules?>">
+	                    	<a href="manageContainerSchedules.php"><i class="fa fa-paint-brush"></i> 
+	                    		<span class="nav-label">Container Schedules</span>  
+	                   		</a>
+	                	</li>
+                	<?php }?>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  

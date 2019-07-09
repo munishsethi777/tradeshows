@@ -37,6 +37,9 @@ class PermissionUtil{
 	public function hasGraphicsDepartment(){
 		return in_array(DepartmentType::Graphics_Logs,self::$departments);
 	}
+	public function hasContainerScheduleDepartment(){
+		return in_array(DepartmentType::Container_Schedules,self::$departments);
+	}
 	public static function isAuthenticate($page){
 			self::$sessionUtil = SessionUtil::getInstance();
 			self::$departments = self::$sessionUtil->getUserDepartments();
@@ -55,7 +58,7 @@ class PermissionUtil{
 			}else if($page == "createContainerSchedule.php" || 
 					$page == "manageContainerSchedules.php"){
 				$department = DepartmentType::Container_Schedules;
-				if(in_array($department, $departments)){
+				if(in_array($department, self::$departments)){
 					return true;
 				}
 			}else{

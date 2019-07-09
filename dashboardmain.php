@@ -39,26 +39,28 @@ $permissionUtil = PermissionUtil::getInstance();
 								</div>
 	                        </div>
 							<?php }?>
-							<div class="col-lg-4">
-		                        <div class="widget bg-warning text-center p-h-xl">
-		                        	<div class="row">
-		                        		<a href="adminManageGraphicLogs.php">
-		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-file-image-o"></i></h1>
-		                                <span>Graphic Logs</span></a>
-		                            </div>
-								</div>
-	                        </div>
-	                        
-	                        
-	                        <div class="col-lg-4">
-		                        <div class="widget bg-info text-center  p-h-xl">
-		                        	<div class="row">
-		                        		<a href="adminShowList.php">
-		                        		<h1 class="m-t-xs font-bold"><i class="fa fa-ship"></i></h1>
-		                                <span>Container Scheduling</span></a>
-		                            </div>
-								</div>
-	                        </div>
+							<?php if($permissionUtil->hasGraphicsDepartment()){?>
+								<div class="col-lg-4">
+			                        <div class="widget bg-warning text-center p-h-xl">
+			                        	<div class="row">
+			                        		<a href="adminManageGraphicLogs.php">
+			                        		<h1 class="m-t-xs font-bold"><i class="fa fa-file-image-o"></i></h1>
+			                                <span>Graphic Logs</span></a>
+			                            </div>
+									</div>
+		                        </div>
+	                        <?php }?>
+	                        <?php if($permissionUtil->hasContainerScheduleDepartment()){?>
+		                        <div class="col-lg-4">
+			                        <div class="widget bg-info text-center  p-h-xl">
+			                        	<div class="row">
+			                        		<a href="manageContainerSchedules.php">
+			                        		<h1 class="m-t-xs font-bold"><i class="fa fa-ship"></i></h1>
+			                                <span>Container Scheduling</span></a>
+			                            </div>
+									</div>
+		                        </div>
+		                    <?php }?>
 	                    </div>
             		</div>
 	                

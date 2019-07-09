@@ -17,7 +17,6 @@ try{
 	//QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
     //QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
 	//QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
-
 }catch(Exception $e){
 	echo $e->getMessage();
 }
