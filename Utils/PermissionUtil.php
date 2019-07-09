@@ -52,8 +52,13 @@ class PermissionUtil{
 				if(in_array($department, self::$departments)){
 					return true;
 				}
-			}
-			else{
+			}else if($page == "createContainerSchedule.php" || 
+					$page == "manageContainerSchedules.php"){
+				$department = DepartmentType::Container_Schedules;
+				if(in_array($department, $departments)){
+					return true;
+				}
+			}else{
 				return true;
 			}
 		return false;
