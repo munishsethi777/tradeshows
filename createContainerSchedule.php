@@ -119,14 +119,14 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">AWU Ref:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" required  id="awureference" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getAWUReference()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
                                 			name="awureference" class="form-control">
 	                            </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Trucker Name:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="truckername" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getTruckerName()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getTruckerName()?>" 
                                 			name="truckername" class="form-control">
 	                            </div>
 	                        </div>
@@ -134,14 +134,14 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Trans:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="trans" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getTrans()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getTrans()?>" 
                                 			name="trans" class="form-control">
 	                            </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Warehouse:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="warehouse" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getWarehouse()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getWarehouse()?>" 
                                 			name="warehouse" class="form-control">
 	                            </div>
 	                        </div>
@@ -149,7 +149,7 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="container" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getContainer()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getContainer()?>" 
                                 			name="container" class="form-control">
 	                            </div>
 	                            
@@ -169,13 +169,13 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="terminal" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getTerminal()?>" 
+                                			maxLength="25" value="<?php echo $containerSchedule->getTerminal()?>" 
                                 			name="terminal" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="etanotes" 
-                                			maxLength="250" value="" 
+                                			maxLength="1000" value="" 
                                 			name="etanotes" class="form-control">
 	                            </div>
 	                        </div>
@@ -246,7 +246,7 @@ if(isset($_REQUEST["id"])){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Delivery Gate:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
+	                        		<input type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
 	                            	
 	                            </div>
 	                     </div>     
@@ -279,7 +279,7 @@ if(isset($_REQUEST["id"])){
 									<div class="panel-heading">Empty Return Notes</div>
                                     <div class="panel-body">
                                     	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
-                                			maxLength="250" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
+                                			maxLength="1000" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
                                 		
 											<div class="row">
 					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
@@ -300,7 +300,7 @@ if(isset($_REQUEST["id"])){
 									<div class="panel-heading">Alpine Pickup Notes</div>
                                     <div class="panel-body">
                                     	<textarea style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
-                                			maxLength="250" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
+                                			maxLength="1000" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
                                 			
                                 		<div class="row">
 				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
@@ -328,7 +328,7 @@ if(isset($_REQUEST["id"])){
 						<div class="form-group row">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Container Docs Path:</label>
 	                        <div class="col-lg-10">
-								<input type="text" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control">
+								<input type="text" maxLength="500" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control">
 	                       	</div>
                      	</div>
                      	<div class="form-group row i-checks">

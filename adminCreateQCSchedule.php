@@ -147,17 +147,17 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">PO Number</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  id="po" maxLength="250" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input type="text" required  id="po" maxLength="50" value="<?php echo $qcSchedule->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">PO Type</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  required id="potype" maxLength="250" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo isset($fieldStateArr["potype"])?$fieldStateArr["potype"]:""?>>
+	                            	<input type="text"  required id="potype" maxLength="50" value="<?php echo $qcSchedule->getPOType()?>" name="potype" class="form-control" <?php echo isset($fieldStateArr["potype"])?$fieldStateArr["potype"]:""?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Item Numbers</label>
 	                        	<div class="col-lg-4">
-	                            	<textarea <?php echo $readOnlyPO?> id="itemnumbers" required maxLength="250" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
+	                            	<textarea <?php echo $readOnlyPO?> id="itemnumbers" required maxLength="200" name="itemnumbers" class="form-control"><?php echo $qcSchedule->getItemNumbers()?></textarea>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Ship Date</label>
 	                        	<div class="col-lg-4">
@@ -322,11 +322,11 @@ if($isSessionGeneralUser && !$isSessionSV){
                        		<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" id="status" maxLength="250" value="<?php echo $qcSchedule->getStatus()?>" name="status" class="form-control" <?php echo isset($fieldStateArr["status"])?$fieldStateArr["status"]:""?>>
+	                            	<input type="text" id="status" maxLength="100" value="<?php echo $qcSchedule->getStatus()?>" name="status" class="form-control" <?php echo isset($fieldStateArr["status"])?$fieldStateArr["status"]:""?>>
 	                            </div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Notes</label>
 	                        	<div class="col-lg-4">
-	                        		<textarea id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="250" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
+	                        		<textarea id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="200" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
 	                        	 </div>
 	                        </div>
 	                   </div> 

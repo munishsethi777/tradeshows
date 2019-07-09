@@ -97,7 +97,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">PO :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="<?php echo $graphicLog->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input type="text"  maxLength="25" value="<?php echo $graphicLog->getPO()?>" name="po" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Estimated PO Shipdate :</label>
 	                        	<div class="col-lg-4">
@@ -128,7 +128,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Item Number :</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" maxLength="250" value="<?php echo $graphicLog->getSKU()?>" name="sku" class="form-control" <?php echo $readOnlyPO?>>
+	                            	<input type="text" maxLength="25" value="<?php echo $graphicLog->getSKU()?>" name="sku" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row i-checks">
@@ -212,7 +212,7 @@ if(isset($_POST["id"])){
 	                         <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">USA Notes to Graphics :</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="usanotes" ><?php echo $graphicLog->getUSANotes()?></textarea>
+	                            	<textarea class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="usanotes" ><?php echo $graphicLog->getUSANotes()?></textarea>
 	                            </div>
 	                        </div>                        
 	                    </div>
@@ -278,7 +278,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
+	                            	<textarea class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
 	                            </div>
 	                        </div> 
 	                    </div>
@@ -364,7 +364,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to China Office :</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea class="col-lg-12 col-form-label" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
+	                            	<textarea class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
 	                            </div>
 	                        </div> 
 	                    </div>

@@ -62,7 +62,7 @@ if($file == "dashboard.php"){
 	$isUserChangePassword = "active";
 }elseif($file == "createClassCode.php" || $file== "manageClassCodes.php"){
 	$manageClassCodes = "active";
-}elseif($file == "createContainerSchedules.php" || $file== "manageContainerSchedules.php"){
+}elseif($file == "createContainerSchedule.php" || $file== "manageContainerSchedules.php"){
 	$manageContainerSchedules = "active";
 }
 
