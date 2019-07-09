@@ -3,7 +3,8 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $permissionUtil = PermissionUtil::getInstance();
-
+$sessionUtil = SessionUtil::getInstance();
+$isSessionAdmin = $sessionUtil->isSessionAdmin();
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +29,7 @@ $permissionUtil = PermissionUtil::getInstance();
 					
 					<div class="ibox-content m-t-sm m-b-sm">
 						<div class="row">
-							<?php if($permissionUtil->hasQCDepartment()){?>
+							<?php if($isSessionAdmin || $permissionUtil->hasQCDepartment()){?>
 							<div class="col-lg-4">
 		                        <div class="widget bg-danger text-center  p-h-xl">
 		                        	<div class="row">
@@ -39,7 +40,7 @@ $permissionUtil = PermissionUtil::getInstance();
 								</div>
 	                        </div>
 							<?php }?>
-							<?php if($permissionUtil->hasGraphicsDepartment()){?>
+							<?php if($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()){?>
 								<div class="col-lg-4">
 			                        <div class="widget bg-warning text-center p-h-xl">
 			                        	<div class="row">
@@ -50,7 +51,7 @@ $permissionUtil = PermissionUtil::getInstance();
 									</div>
 		                        </div>
 	                        <?php }?>
-	                        <?php if($permissionUtil->hasContainerScheduleDepartment()){?>
+	                        <?php if($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment()){?>
 		                        <div class="col-lg-4">
 			                        <div class="widget bg-info text-center  p-h-xl">
 			                        	<div class="row">
