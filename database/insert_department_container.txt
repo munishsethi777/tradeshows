@@ -1,0 +1,1 @@
+INSERT INTO `departments` (`seq`, `title`, `isenabled`, `createdon`, `lastmodifiedon`) VALUES (NULL, 'Container Schedules', '1', '2019-06-05 00:00:00', '2019-06-05 00:00:00');
