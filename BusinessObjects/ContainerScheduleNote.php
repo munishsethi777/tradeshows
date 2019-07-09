@@ -8,7 +8,7 @@ class ContainerScheduleNote {
 	private $notes;
 	private $notestype;
 	private $createdon;
-	private $createdb;
+	private $createdby;
 	
 	function setSeq($seq) {
 		$this->seq = $seq;
@@ -40,11 +40,11 @@ class ContainerScheduleNote {
 	function getCreatedon() {
 		return $this->createdon;
 	}
-	function setCreatedb($createdb) {
-		$this->createdb = $createdb;
+	function setCreatedby($createdby) {
+		$this->createdby = $createdby;
 	}
-	function getCreatedb() {
-		return $this->createdb;
+	function getCreatedby() {
+		return $this->createdby;
 	}
 	public function createFromRequest($request) {
 		if (is_array ( $request )) {

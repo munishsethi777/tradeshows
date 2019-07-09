@@ -1,6 +1,8 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 $success = 1;
@@ -19,13 +21,40 @@ if($call == "saveContainerSchedule"){
 		$message = "Container Schedule saved successfully!";
 		$containerSchedule = new ContainerSchedule();
 		$containerSchedule->createFromRequest($_REQUEST);
-		
+		$existingContainerSchedule = new ContainerSchedule();
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = "Container Schedule updated successfully!";
+			$existingContainerSchedule = $containerScheduleMgr->findBySeq($seq);
+		}
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
+		$containerSchedule->setCreatedby($userSeq);
+		$containerSchedule->setCreatedon(new DateTime());
+		$containerSchedule->setLastModifiedon(new DateTime());
+		
+		if(empty($containerSchedule->getIsContainerReceivedinOMS())){
+			$containerSchedule->setContainerReceivedinOMSDate(null);
+		}
+		if(empty($containerSchedule->getIsContainerReceivedinWMS())){
+			$containerSchedule->setContainerReceivedinWMSDate(null);
+		}
+		if(empty($containerSchedule->getIssamplesReceivedinOMS())){
+			$containerSchedule->setSamplesReceivedinOMSDate(null);
+		}
+		if(empty($containerSchedule->getIssamplesReceivedinOMS())){
+			$containerSchedule->setSamplesReceivedinWMSDate(null);
 		}
 		$id = $containerScheduleMgr->save($containerSchedule);
+		
+		if($id > 0){
+			$containerSchedule->setSeq($id);
+			$containerScheduleDateMgr = ContainerScheduleDatesMgr::getInstance();
+			$containerScheduleDateMgr->saveFromContainerSchedule($containerSchedule, $existingContainerSchedule);
+			
+			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
+			$containerScheduleNoteMgr->saveFromContainerSchedule($containerSchedule, $existingContainerSchedule);
+		}
 		
 // 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
 // 			$graphicLog->setIsCustomHangTagNeeded(1);
@@ -105,9 +134,8 @@ if($call == "importGraphicLogs"){
 	}
 	$response["incorrectPassword"] = $incorrectPassword;
 }
-if($call == "getAllGraphicLogs"){
-	
-	$qcSchedulesJson = $graphicLogMgr->getGraphicLogsForGrid();
+if($call == "getAllContainerSchedules"){
+	$qcSchedulesJson = $containerScheduleMgr->getContainerSchedulesForGrid();
 	echo json_encode($qcSchedulesJson);
 	return;
 }

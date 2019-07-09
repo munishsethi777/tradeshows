@@ -15,9 +15,14 @@ $userMgr = UserMgr::getInstance();
 $userSelected = "";
 $supervisorSelected = "";
 $qcChecked = "";
+$classCodeChecked = "";
 $chinaTeamChecked = "";
 $usaTeamChecked = "";
 $graphicDesignerChecked = "";
+$containerInformationChecked = "";
+$containerDeliveryChecked = "";
+$containerOfficeChecked = "";
+$qcChecked = "";
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -25,6 +30,7 @@ $showQCDiv = "none";
 $isEnabled = "";
 $isSendNotifications = "";
 $qcDepartmentChecked = "";
+$containerDepartmentChecked = "";
 $graphicDepartmentChecked  = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
@@ -43,20 +49,30 @@ if(isset($_POST["id"])){
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 $departmentSeqArr = array_map(create_function('$o', 'return $o->getDepartmentSeq();'), $userDepartments);
-$userRoles = $userMgr->getUserRolesArr($user->getSeq());
-if(in_array("china_team",$userRoles)){
+$userRoles = $userMgr->getUserRolesValuesArr($user->getSeq());
+if(in_array(Permissions::china_team,$userRoles)){
 	$chinaTeamChecked = "checked";
-}if(in_array("usa_team",$userRoles)){
+}if(in_array(Permissions::usa_team,$userRoles)){
 	$usaTeamChecked = "checked";
-}if(in_array("graphic_designer",$userRoles)){
+}if(in_array(Permissions::graphic_designer,$userRoles)){
 	$graphicDesignerChecked = "checked";
-}if(in_array("qc",$userRoles)){
+}if(in_array(Permissions::qc,$userRoles)){
 	$qcChecked = "checked";
+}if(in_array(Permissions::container_information,$userRoles)){
+	$containerInformationChecked = "checked";
+}if(in_array(Permissions::container_delivery_information,$userRoles)){
+	$containerDeliveryChecked = "checked";
+}if(in_array(Permissions::container_office_information,$userRoles)){
+	$containerOfficeChecked = "checked";
+}if(in_array(Permissions::class_code,$userRoles)){
+	$classCodeChecked = "checked";
 }
 if(in_array(1,$departmentSeqArr)){
 	$qcDepartmentChecked = "checked";
 }if(in_array(2,$departmentSeqArr)){
 	$graphicDepartmentChecked = "checked";
+}if(in_array(4,$departmentSeqArr)){
+	$containerDepartmentChecked = "checked";
 }
 ?>
 <!DOCTYPE html>
@@ -174,6 +190,10 @@ if(in_array(1,$departmentSeqArr)){
 					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
 					                            </div>
 					                        </div>
+					                        <label class="col-lg-8 col-form-label bg-formLabel">Class Code</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" <?php echo $classCodeChecked?> value="class_code" id="classcodepermission" name="permissions[]"/>
+				                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -193,18 +213,41 @@ if(in_array(1,$departmentSeqArr)){
 				                            </div>
 				                            
 				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">China Team</label>
-				                        	<div class="col-lg-4">
+				                        	<div class="col-lg-4 m-t-xs">
 				                        		<input type="checkbox" <?php echo $chinaTeamChecked?> value="china_team" id="chinaTeamPermission" name="permissions[]"/>
 				                            </div>
 				                            
 				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Graphic Designer</label>
-				                        	<div class="col-lg-4">
+				                        	<div class="col-lg-4 m-t-xs">
 				                        		<input type="checkbox" <?php echo $graphicDesignerChecked?> value="graphic_designer" id="graphicDesignerPermission"  name="permissions[]"/>
 				                            </div>
                                         </div>
                                     </div>
                                 </div>
-	                        
+	                        	<div class="col-lg-4">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Container Schedule
+                                             <div class="pull-right">
+                                            	<input type="checkbox" <?php echo $containerDepartmentChecked?> value="4" id="containerDepartment" name="departments[]"/>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <label class="col-lg-8 col-form-label bg-formLabel">Container Information  </label>
+				                        	<div class="col-lg-4 ">
+				                        		<input type="checkbox" <?php echo $containerInformationChecked?> value="container_information" id="containerpermission" name="permissions[]"/>
+				                            </div>
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Delivery Information  </label>
+				                        	<div class="col-lg-4 m-t-xs">
+				                        		<input type="checkbox" <?php echo $containerDeliveryChecked?> value="container_delivery_information" id="containerdevilerypermission" name="permissions[]"/>
+				                            </div>
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Office Information  </label>
+				                        	<div class="col-lg-4 m-t-xs">
+				                        		<input type="checkbox" <?php echo $containerOfficeCheckedChecked?> value="container_office_information" id="containerofficepermission" name="permissions[]"/>
+				                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 	                        </div>
 	                    	<!-- 
 	                    	<div class="form-group row m-t-xl">
@@ -284,11 +327,15 @@ $(document).ready(function(){
   	});
 	disabledQCPermissions();
 	disabledGraphicPermissions();
+	disabledContainerPermissions();
 	$('#qcDepartment').on('ifChanged', function(event){
 		disabledQCPermissions();
   	});
 	$('#graphicDepartment').on('ifChanged', function(event){
 		disabledGraphicPermissions();
+  	});
+	$('#containerDepartment').on('ifChanged', function(event){
+		disabledContainerPermissions();
   	});
 });
 function disabledGraphicPermissions(){
@@ -308,9 +355,23 @@ function disabledQCPermissions(){
 	if(!flag){
 		$("#qcpermission").attr("disabled","disabled");
 		$("#qccode").attr("disabled","disabled");
+		$("#classcodepermission").attr("disabled","disabled");
 	}else{
 		$("#qccode").removeAttr("disabled");
 		$("#qcpermission").removeAttr("disabled");
+		$("#classcodepermission").removeAttr("disabled");
+	}
+}
+function disabledContainerPermissions(){
+	var flag  = $("#containerDepartment").is(':checked');
+	if(!flag){
+		$("#containerpermission").attr("disabled","disabled");
+		$("#containerdevilerypermission").attr("disabled","disabled");
+		$("#containerofficepermission").attr("disabled","disabled");
+	}else{
+		$("#containerpermission").removeAttr("disabled");
+		$("#containerdevilerypermission").removeAttr("disabled");
+		$("#containerofficepermission").removeAttr("disabled");
 	}
 }
 
