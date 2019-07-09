@@ -1,33 +1,67 @@
 <?include("sessionCheck.php");
 require_once('IConstants.inc');
-require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
-$graphicLog = new GraphicsLog(); 
-$containerScheduleMgr = GraphicLogMgr::getInstance();
-$readOnlyPO = "";
-$hasWrapTag = "";
-$hasHangTag = "";
-$hasPrivate = "";
-$enteredBySeq = $sessionUtil->getUserLoggedInSeq();
-if(isset($_POST["id"])){
-	$seq = $_POST["id"];
- 	$containerSchedule = $containerScheduleMgr->findBySeq($seq);
- 	//$readOnlyPO = "readonly";
- 	if($containerSchedule->getIsCustomWrapTagNeeded() == 1){
- 		$hasWrapTag = "checked";
+$containerScheduleMgr = ContainerScheduleMgr::getInstance();
+$idCompletedChecked = "";
+$sampleReceivedChecked = "";
+$receivedOmsChecked = "";
+$sampleReceivedOmsChecked = "";
+$containerReceivedWmsChecked = "";
+$sampleReceivedWmsChecked = "";
+$etaDatesArr = array();
+$confirmDeliveryDatesArr = array();
+$pickUpdatesArr = array();
+$etaNotesArr = array();
+$emptyNotesArr = array();
+$notificationNotesArr = array();
+if(isset($_REQUEST["id"])){
+	$seq = $_REQUEST["id"];
+ 	$containerSchedule = $containerScheduleMgr->findBySeqForEdit($seq);
+ 	if(!empty($containerSchedule->getIsIdsComplete())){
+ 		$idCompletedChecked = "checked";
  	}
- 	if($containerSchedule->getIsCustomHangTagNeeded() == 1){
- 		$hasHangTag = "checked";
+ 	if(!empty($containerSchedule->getIsSamplesReceived())){
+ 		$sampleReceivedChecked = "checked";
  	}
- 	if($containerSchedule->getIsPrivateLabel() == 1){
- 		$hasPrivate = "checked";
+ 	if(!empty($containerSchedule->getIsContainerReceivedinOMS())){
+ 		$receivedOmsChecked = "checked";
  	}
- 	$enteredBySeq = $containerSchedule->getUserSeq();
+ 	if(!empty($containerSchedule->getIssamplesReceivedinOMS())){
+ 		$sampleReceivedOmsChecked = "checked";
+ 	}
+ 	if(!empty($containerSchedule->getIsContainerReceivedinWMS())){
+ 		$containerReceivedWmsChecked = "checked";
+ 	}
+ 	if(!empty($containerSchedule->getIssamplesReceivedinWMS())){
+ 		$sampleReceivedWmsChecked = "checked";
+ 	}
+ 	$containerScheduleDatesMgr = ContainerScheduleDatesMgr::getInstance();
+ 	$containerScheduleDatesArr = $containerScheduleDatesMgr->findByContainerScheduleSeq($seq);
+ 	if(isset($containerScheduleDatesArr[ContainerScheduleDateType::eta])){
+ 		$etaDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::eta];
+ 		array_shift($etaDatesArr);
+ 	}if(isset($containerScheduleDatesArr[ContainerScheduleDateType::confirmed_delivery])){
+ 		$confirmDeliveryDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::confirmed_delivery];
+ 		array_shift($confirmDeliveryDatesArr);
+ 	}if(isset($containerScheduleDatesArr[ContainerScheduleDateType::notification_pickup])){
+ 		$pickUpdatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::notification_pickup];
+ 		array_shift($pickUpdatesArr);
+ 	}
+ 	
+ 	$containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
+ 	$containerScheduleNotesArr = $containerScheduleNotesMgr->findByContainerScheduleSeq($seq);
+ 	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::eta])){
+ 		$etaNotesArr = $containerScheduleNotesArr[ContainerScheduleNoteType::eta];
+ 	}if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::empty_return])){
+ 		$emptyNotesArr = $containerScheduleNotesArr[ContainerScheduleNoteType::empty_return];
+ 	}if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notification_pickup])){
+ 		$notificationNotesArr = $containerScheduleNotesArr[ContainerScheduleNoteType::notification_pickup];
+ 	}
 }
 ?>
 <!DOCTYPE html>
@@ -77,6 +111,7 @@ if(isset($_POST["id"])){
                  	 <form id="createGraphicLogForm" method="post" action="Actions/ContainerScheduleAction.php">
                      	<input type="hidden" id ="call" name="call"  value="saveContainerSchedule"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $containerSchedule->getSeq()?>"/>
+                        <input type="hidden" id ="id" name="id"  value="<?php echo $containerSchedule->getSeq()?>"/>
                         
                         <div class="bg-white1 p-xs outterDiv">
                         	<div class="overlay"></div>
@@ -124,7 +159,9 @@ if(isset($_POST["id"])){
                                 		<input type="text" value="<?php echo $containerSchedule->getEtaDateTime()?>" name="etadatetime" id="etadatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
-	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
+	                            	<?php if(count($etaDatesArr) > 0){?>
+	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $etaDatesArr[0]?></span>
+	                            	<?php }?>
 	                            </div>
 	                            
 	                        </div>
@@ -138,7 +175,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="etanotes" 
-                                			maxLength="250" value="<?php echo $containerSchedule->getETANotes()?>" 
+                                			maxLength="250" value="" 
                                 			name="etanotes" class="form-control">
 	                            </div>
 	                        </div>
@@ -166,19 +203,12 @@ if(isset($_POST["id"])){
 								<div class="col-lg-6">
 									<div class="row" style="height:100px; overflow:scroll">
 			                       		<ul class="list-group" style="margin:0px">
-	                                        <li class="list-group-item">
-	                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
-	                                        </li>
-	                                        <li class="list-group-item">
-	                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
-	                                        </li>
-	                                        <li class="list-group-item">
-	                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-	                                        </li>
-	                                        <li class="list-group-item">
-	                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-	                                        </li>
-	                                        
+			                       			<?php foreach ($etaNotesArr as $etaNote){
+			                       			?>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
+		                                        </li>
+		                                    <?php }?>
 	                                    </ul>
 			                       		
 			                       		
@@ -198,10 +228,12 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmedDeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
+                                		<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmeddeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
-	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
+	                            	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
+	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $confirmDeliveryDatesArr[0]?></span>
+	                            	<?php }?>
 	                            </div>
 	                     </div>
 	                     <div class="form-group row">
@@ -234,7 +266,10 @@ if(isset($_POST["id"])){
                                 		<input type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
-	                            	<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : 07/07/2019 10:00 AM</span>
+	                            	<?php if(count($pickUpdatesArr) > 0){?>
+	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $pickUpdatesArr[0]?></span>
+	                            	<?php }
+	                            	?>
 	                            </div>
 	                     </div>
 	                     
@@ -248,18 +283,11 @@ if(isset($_POST["id"])){
                                 		
 											<div class="row">
 					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+						                       		<?php foreach ($emptyNotesArr as $etaNote){?>
 			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
+			                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
 			                                        </li>
-			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
-			                                        </li>
-			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-			                                        </li>
-			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-			                                        </li>
+			                                    <?php }?>
 			                                    </ul>
 					                       	</div>
 									</div>
@@ -276,18 +304,11 @@ if(isset($_POST["id"])){
                                 			
                                 		<div class="row">
 				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
-		                                        <li class="list-group-item">
-		                                            <i class="fa fa-clock-o"></i> 07/06/2019 : 12.38 AM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Yes, pls ask the trucker to deliver ASAP. Ask him to contact after emptying the container.
-		                                        </li>
-		                                        <li class="list-group-item">
-		                                            <i class="fa fa-clock-o"></i> 07/05/2019 : 10.05 AM <a class="text-info" href="#">Robert@alpine4u.xom</a> Hello Jignesh can I deliver this
-		                                        </li>
-		                                        <li class="list-group-item">
-		                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-		                                        </li>
-		                                        <li class="list-group-item">
-		                                            <i class="fa fa-clock-o"></i> 07/02/2019 : 11.38 PM <a class="text-info" href="#">Jvyas@alpine4u.xom</a> Hello Robert can I deliver this
-		                                        </li>
+				                       			<?php foreach ($notificationNotesArr as $etaNote){?>
+			                                        <li class="list-group-item">
+			                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
+			                                        </li>
+			                                    <?php }?>
 		                                    </ul>
 				                       	</div>	
                                 			
@@ -307,18 +328,18 @@ if(isset($_POST["id"])){
 						<div class="form-group row">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Container Docs Path:</label>
 	                        <div class="col-lg-10">
-								<input type="text" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control  dateControl">
+								<input type="text" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control">
 	                       	</div>
                      	</div>
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">IDs Complete:</label>
 	                        <div class="col-lg-4">
-								<input type="checkbox" <?php //echo $hasHangTag?> name="isidscomplete"/>	
+								<input type="checkbox" <?php echo $idCompletedChecked?> name="isidscomplete"/>	
 							</div>
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Samples:</label>
 	                        <div class="col-lg-4">
-								<input type="checkbox" <?php //echo $hasHangTag?> name="issamplesreceived"/>	
+								<input type="checkbox" <?php echo $sampleReceivedChecked?> name="issamplesreceived"/>	
 							</div>
                      	</div>
                         <div class="form-group row">
@@ -344,10 +365,10 @@ if(isset($_POST["id"])){
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in OMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php //echo $hasHangTag?> name="iscontainerreceivedinoms"/>
+	                        	<input type="checkbox" <?php echo $receivedOmsChecked?> name="iscontainerreceivedinoms" id="iscontainerreceivedinoms"/>
 							</div>
-							<div class="col-lg-3">
-								<div class="input-group date">
+							<div class="col-lg-3" >
+								<div class="input-group date" id="containerReceivedInOms">
                                 	<input type="text" value="<?php echo $containerSchedule->getContainerReceivedinOMSDate()?>" name="containerreceivedinomsdate" id="containerreceivedinomsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
@@ -355,10 +376,10 @@ if(isset($_POST["id"])){
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in OMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php //echo $hasHangTag?> name="issamplesreceivedinoms"/>
+	                        	<input type="checkbox" <?php echo $sampleReceivedOmsChecked?> name="issamplesreceivedinoms" id="issamplesreceivedinoms"/>
 							</div>
-							<div class="col-lg-3">
-								<div class="input-group date">
+							<div class="col-lg-3" >
+								<div class="input-group date" id="sampleReceivedInOms">
                                 	<input type="text" value="<?php echo $containerSchedule->getSamplesReceivedinOMSDate()?>" name="samplesreceivedinomsdate" id="samplesreceivedinomsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
@@ -367,10 +388,10 @@ if(isset($_POST["id"])){
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in WMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php //echo $hasHangTag?> name="iscontainerreceivedinwms"/>
+	                        	<input type="checkbox" <?php echo $containerReceivedWmsChecked?> name="iscontainerreceivedinwms" id="iscontainerreceivedinwms"/>
 							</div>
 							<div class="col-lg-3">
-								<div class="input-group date">
+								<div class="input-group date" id="containerReceivedInWms">
                                 	<input type="text" value="<?php echo $containerSchedule->getContainerReceivedinWMSDate()?>" name="containerreceivedinwmsdate" id="containerreceivedinwmsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
@@ -378,10 +399,10 @@ if(isset($_POST["id"])){
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in WMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php //echo $hasHangTag?> name="$issamplesreceivedinwms"/>
+	                        	<input type="checkbox" <?php echo $sampleReceivedWmsChecked?> name="issamplesreceivedinwms" id="issamplesreceivedinwms"/>
 							</div>
 							<div class="col-lg-3">
-								<div class="input-group date">
+								<div class="input-group date" id="sampleReceivedInWms">
                                 	<input type="text" value="<?php echo $containerSchedule->getSamplesReceivedinWMSDate()?>" name="samplesreceivedinwmsdate" id="samplesreceivedinwmsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
@@ -394,12 +415,17 @@ if(isset($_POST["id"])){
                     <div class="bg-white p-xs">
                         <div class="form-group row">
                         	<div class="col-lg-2">
-	                        	<button class="btn btn-primary" onclick="saveQCSchedule()" type="button" style="width:85%">
+	                        	<button class="btn btn-primary" onclick="saveQCSchedule(false)" type="button" style="width:85%">
                                 	Save
 	                          	</button>
 	                        </div>
 	                        <div class="col-lg-2">
-	                          	<a class="btn btn-default" href="adminManageGraphicLogs.php" type="button" style="width:85%">
+	                        	<button class="btn btn-primary" onclick="saveQCSchedule(true)" type="button" style="width:100%">
+                                	Save & Continue
+	                          	</button>
+	                        </div>
+	                        <div class="col-lg-2">
+	                          	<a class="btn btn-default" href="manageContainerSchedules.php" type="button" style="width:85%">
                                 	Cancel
 	                          	</a>
 	                        </div>
@@ -443,6 +469,22 @@ $(document).ready(function(){
 			//setDuration();
 		}
 	})
+	showHideContainerReceiveDate();
+	showHideSampleReceiveDate();
+	showHideContainerReceiveWmsDate();
+	showHideSampleReceiveWmsDate();
+	$('#iscontainerreceivedinoms').on('ifChanged', function(event){
+		showHideContainerReceiveDate();
+  	});
+	$('#issamplesreceivedinoms').on('ifChanged', function(event){
+		showHideSampleReceiveDate();
+  	});
+	$('#iscontainerreceivedinwms').on('ifChanged', function(event){
+		showHideContainerReceiveWmsDate();
+  	});
+	$('#issamplesreceivedinwms').on('ifChanged', function(event){
+		showHideSampleReceiveWmsDate();
+  	});
 	//showTagFields();
 	//showGraphicFields();
 	//showLabelFields();
@@ -453,6 +495,42 @@ $(document).ready(function(){
 	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 });
+
+function showHideContainerReceiveDate(){
+	var flag  = $("#iscontainerreceivedinoms").is(':checked');
+	if(flag){
+		$("#containerReceivedInOms").show();	
+	}else{
+		$("#containerReceivedInOms").hide();	
+	}
+}
+
+function showHideSampleReceiveDate(){
+	var flag  = $("#issamplesreceivedinoms").is(':checked');
+	if(flag){
+		$("#sampleReceivedInOms").show();	
+	}else{
+		$("#sampleReceivedInOms").hide();	
+	}
+}
+function showHideContainerReceiveWmsDate(){
+	var flag  = $("#iscontainerreceivedinwms").is(':checked');
+	if(flag){
+		$("#containerReceivedInWms").show();	
+	}else{
+		$("#containerReceivedInWms").hide();	
+	}
+}
+
+function showHideSampleReceiveWmsDate(){
+	var flag  = $("#issamplesreceivedinwms").is(':checked');
+	if(flag){
+		$("#sampleReceivedInWms").show();	
+	}else{
+		$("#sampleReceivedInWms").hide();	
+	}
+}
+
 function setDuration(){
 	var startDateStr = $("#graphicartiststartdate").val();
 	var endDateStr = $("#approxgraphicschinasentdate").val();
@@ -591,7 +669,7 @@ function callChinaEntryDate(chinaEntryDate){
 	finalgraphicsduedateStr = dateToStr(finalgraphicsduedate);
 	$("#finalgraphicsduedate").val(finalgraphicsduedateStr);
 }
-function saveQCSchedule(){
+function saveQCSchedule(isContniue){
 	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
 	if($("#createGraphicLogForm")[0].checkValidity()) {
 		showHideProgress()
@@ -599,7 +677,13 @@ function saveQCSchedule(){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminManageGraphicLogs.php"},100);
+			   if(isContniue){
+				   var seq = $("#seq").val();
+				   location.href = "createContainerSchedule.php?id="+seq;
+			   }else{
+				   window.setTimeout(function(){window.location.href = "manageContainerSchedules.php"},100);
+			   }	   
+			   
 		   }
 	    })	
 	}else{
