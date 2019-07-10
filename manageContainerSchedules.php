@@ -271,8 +271,8 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'AWU Ref', datafield: 'awureference', width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Trucker Name', datafield: 'truckername', width:"10%",cellsformat: 'M-dd-yyyy'},
+      { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
+      { text: 'Trucker Name', datafield: 'truckername', width:"10%"},
       { text: 'Trans', datafield: 'trans', width:"10%"},
       { text: 'Warehouse', datafield: 'warehouse',width:"8%"},
       { text: 'Container', datafield: 'container',width:"10%"},
@@ -289,8 +289,8 @@ function loadGrid(){
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                    { name: 'awureference', type: 'date' }, 
-                    { name: 'truckername', type: 'date' }, 
+                    { name: 'awureference', type: 'string' }, 
+                    { name: 'truckername', type: 'string' }, 
                     { name: 'trans', type: 'string' },
                     { name: 'warehouse', type: 'string' },
                     { name: 'etadatetime', type: 'string' } ,
