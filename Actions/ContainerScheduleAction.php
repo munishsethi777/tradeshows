@@ -157,12 +157,11 @@ if($call == "getGraphicLog"){
 		$message  = $e->getMessage();
 	}
 }
-if($call == "deleteGraphicLog"){
+if($call == "deleteContainerSchedule"){
 	$ids = $_GET["ids"];
-	//$pos = $_GET["po"];
 	try{
-		$flag = $graphicLogMgr->deleteByIds($ids);
-		$message = "Graphic Log Deleted successfully";
+		$flag = $containerScheduleMgr->deleteByIds($ids);
+		$message = "Container Schedule(s) Deleted successfully";
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

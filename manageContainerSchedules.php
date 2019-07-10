@@ -356,7 +356,7 @@ function loadGrid(){
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload' alt='Reload' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-            //var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
+            var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var deleteButton = $("<div title='Delete' alt='Delete' style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             
             container.append(addButton);
@@ -365,7 +365,7 @@ function loadGrid(){
            // container.append(exportButton);
             container.append(reloadButton);
             //container.append(downloadButton);
-           // container.append(deleteButton);
+            container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
@@ -373,7 +373,7 @@ function loadGrid(){
            // exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             //downloadButton.jqxButton({  width: 140, height: 18 });
-           // deleteButton.jqxButton({  width: 65, height: 18 });
+            deleteButton.jqxButton({  width: 65, height: 18 });
             addButton.click(function (event) {
                 location.href = ("createContainerSchedule.php");
             });
@@ -393,7 +393,7 @@ function loadGrid(){
             });
             deleteButton.click(function (event) {
                 gridId = "containerScheduleGrid";
-                deleteUrl = "Actions/GraphicLogAction.php?call=deleteGraphicLog";
+                deleteUrl = "Actions/ContainerScheduleAction.php?call=deleteContainerSchedule";
                 deleteGraphicLog(gridId,deleteUrl);
             });
             importButton.click(function (event) {
