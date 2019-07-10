@@ -224,7 +224,7 @@ if(isset($_REQUEST["id"])){
 					</div>
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="row">
-							<div class="col-lg-6" style="position:relative">
+							<div class="col-lg-6 darkdiv" style="position:relative">
 								<div class="form-group row">
 		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
 			                        <div class="col-lg-8">
@@ -243,11 +243,8 @@ if(isset($_REQUEST["id"])){
 		                            	</div>
 		                            </div>
 		                        </div>
-		                        <div style="background-color:red;position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;
-		                        		opacity:0.4;filter: alpha(opacity = 50)"></div>
-	
-							</div>
-							<div class="col-lg-6">
+		                    </div>
+							<div class="col-lg-6 deliverydiv" style="position:relative">
 								<div class="form-group row">
 									<label class="col-lg-4 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
 			                        <div class="col-lg-8">
@@ -273,7 +270,7 @@ if(isset($_REQUEST["id"])){
 					
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="row">
-							<div class="col-lg-6" style="position:relative">
+							<div class="col-lg-6 darkdiv" style="position:relative">
 								 <div class="form-group row">
 								 	<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Return Date:</label>
 		                        	<div class="col-lg-8">
@@ -302,12 +299,9 @@ if(isset($_REQUEST["id"])){
 											</div>
 		                               </div>
 		                           </div>
-		                           
-		                           <div style="background-color:red;position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;
-		                        		opacity:0.4;filter: alpha(opacity = 50)"></div>
 		                     </div>
 		                     
-		                     <div class="col-lg-6" style="position:relative">
+		                     <div class="col-lg-6 deliverydiv" style="position:relative">
 								 <div class="form-group row">
 								 	<label class="col-lg-4 col-form-label bg-formLabelMauve">Alpine Notif. Pickup Date:</label>
 		                        	<div class="col-lg-8">

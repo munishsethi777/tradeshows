@@ -243,7 +243,7 @@ if(in_array(1,$departmentSeqArr)){
 				                            </div>
 				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Office Information  </label>
 				                        	<div class="col-lg-4 m-t-xs">
-				                        		<input type="checkbox" <?php echo $containerOfficeCheckedChecked?> value="container_office_information" id="containerofficepermission" name="permissions[]"/>
+				                        		<input type="checkbox" <?php echo $containerOfficeChecked?> value="container_office_information" id="containerofficepermission" name="permissions[]"/>
 				                            </div>
                                         </div>
                                     </div>
