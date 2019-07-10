@@ -31,6 +31,18 @@ class PermissionUtil{
 		return in_array(Permissions::getName(Permissions::qc),self::$permissions);
 	}
 	
+	public function hasContainerScheduleInformationPermission(){
+		return in_array(Permissions::getName(Permissions::container_information),self::$permissions);
+	}
+	
+	public function hasContainerDeliveryInformationPermission(){
+		return in_array(Permissions::getName(Permissions::container_delivery_information),self::$permissions);
+	}
+	
+	public function hasContainerOfficeInformationPermission(){
+		return in_array(Permissions::getName(Permissions::container_office_information),self::$permissions);
+	}
+	
 	public function hasQCDepartment(){
 		return in_array(DepartmentType::QC_Schedules,self::$departments);
 	}
