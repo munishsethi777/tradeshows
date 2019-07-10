@@ -592,14 +592,16 @@ function callChinaEntryDate(chinaEntryDate){
 		if($("#estimatedshipdate").val() != ""){
 			setDates($("#estimatedshipdate").val());
 			return;
+		}else{
+			$("#finalgraphicsduedate").val("");
 		}
+	}else{
+		var chinaEntryDate = getDate(chinaEntryDate);
+		finalgraphicsduedateDays = 20;
+		var finalgraphicsduedate = addDays(chinaEntryDate,finalgraphicsduedateDays);
+		finalgraphicsduedateStr = dateToStr(finalgraphicsduedate);
+		$("#finalgraphicsduedate").val(finalgraphicsduedateStr);
 	}
-	
-	var chinaEntryDate = getDate(chinaEntryDate);
-	finalgraphicsduedateDays = 20;
-	var finalgraphicsduedate = addDays(chinaEntryDate,finalgraphicsduedateDays);
-	finalgraphicsduedateStr = dateToStr(finalgraphicsduedate);
-	$("#finalgraphicsduedate").val(finalgraphicsduedateStr);
 }
 function saveQCSchedule(){
 	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
