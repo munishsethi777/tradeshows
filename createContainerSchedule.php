@@ -222,112 +222,130 @@ if(isset($_REQUEST["id"])){
 								</div>
 							</div>
 					</div>
-	                <div class="bg-white1 p-xs outterDiv">
-	                     <div class="form-group row">
-	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
-		                        	<div class="col-lg-4">
-		                        		<div class="input-group date">
-	                                		<input type="text" value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
-		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-		                            	</div>
-		                            </div>
-	                          
-	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmeddeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
-	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $confirmDeliveryDatesArr[0]?></span>
-	                            	<?php }?>
-	                            </div>
-	                     </div>
-	                     <div class="form-group row">
-	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Empty LFD:</label>
-		                        	<div class="col-lg-4">
-		                        		<div class="input-group date">
-	                                		<input type="text" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
-		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-		                            	</div>
-		                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Delivery Gate:</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
-	                            	
-	                            </div>
-	                     </div>     
-					</div>
 					<div class="bg-white1 p-xs outterDiv">
-	                     <div class="form-group row">
-	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Empty Return Date:</label>
-		                        	<div class="col-lg-4">
+						<div class="row">
+							<div class="col-lg-6" style="position:relative">
+								<div class="form-group row">
+		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
+			                        <div class="col-lg-8">
+			                        	<div class="input-group date">
+		                               		<input type="text" value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
+			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			                           	</div>
+			                        </div>
+			                    </div>
+			                    <div class="form-group row">
+				                    <label class="col-lg-4 col-form-label bg-formLabelDark">Empty LFD:</label>
+			                        <div class="col-lg-8">
+			                        	<div class="input-group date">
+		                               		<input type="text" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            </div>
+		                        </div>
+		                        <div style="background-color:red;position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;
+		                        		opacity:0.4;filter: alpha(opacity = 50)"></div>
+	
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group row">
+									<label class="col-lg-4 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
+			                        <div class="col-lg-8">
+			                        	<div class="input-group date">
+		                                	<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmeddeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
+		                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $confirmDeliveryDatesArr[0]?></span>
+		                            	<?php }?>
+		                            </div>
+	                            </div>
+	                            <div class="form-group row">
+	                            	<label class="col-lg-4 col-form-label bg-formLabelMauve">Delivery Gate:</label>
+	                        		<div class="col-lg-8">
+	                        			<input type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
+									</div>
+	                            </div>
+							</div>	
+						 </div>
+					</div>
+					
+					
+					<div class="bg-white1 p-xs outterDiv">
+						<div class="row">
+							<div class="col-lg-6" style="position:relative">
+								 <div class="form-group row">
+								 	<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Return Date:</label>
+		                        	<div class="col-lg-8">
 		                        		<div class="input-group date">
 	                                		<input type="text" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
 		                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Alpine Notification Pickup Date:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            	<?php if(count($pickUpdatesArr) > 0){?>
-	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $pickUpdatesArr[0]?></span>
-	                            	<?php }
-	                            	?>
-	                            </div>
-	                     </div>
-	                     
-	                     <div class="row">
-	                     	<div class="col-lg-6 no-padding" style="padding-right:12px !important;">
-	                     		<div class="panel panel-dark">
-									<div class="panel-heading">Empty Return Notes</div>
-                                    <div class="panel-body">
-                                    	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
-                                			maxLength="1000" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
-                                		
-											<div class="row">
-					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
-						                       		<?php foreach ($emptyNotesArr as $etaNote){?>
-			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
-			                                        </li>
-			                                    <?php }?>
-			                                    </ul>
-					                       	</div>
-									</div>
-                                   </div>
-                            </div>
-	                     	
-	                     	
-	                     	<div class="col-lg-6 no-padding">
-	                     		<div class="panel panel-mauve">
+		                          </div>
+		                          <div class="row no-padding" style="padding-right:12px !important;">
+			                          <div class="panel panel-dark">
+											<div class="panel-heading">Empty Return Notes</div>
+		                                    <div class="panel-body">
+		                                    	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
+		                                			maxLength="1000" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
+		                                		
+													<div class="row">
+							                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+								                       		<?php foreach ($emptyNotesArr as $etaNote){?>
+					                                        <li class="list-group-item">
+					                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
+					                                        </li>
+					                                    <?php }?>
+					                                    </ul>
+							                       	</div>
+											</div>
+		                               </div>
+		                           </div>
+		                           
+		                           <div style="background-color:red;position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;
+		                        		opacity:0.4;filter: alpha(opacity = 50)"></div>
+		                     </div>
+		                     
+		                     <div class="col-lg-6" style="position:relative">
+								 <div class="form-group row">
+								 	<label class="col-lg-4 col-form-label bg-formLabelMauve">Alpine Notif. Pickup Date:</label>
+		                        	<div class="col-lg-8">
+		                        		<div class="input-group date">
+	                                		<input type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            	<?php if(count($pickUpdatesArr) > 0){?>
+		                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $pickUpdatesArr[0]?></span>
+		                            	<?php }
+		                            	?>
+		                            </div>
+		                          </div>
+		                        <div class="row no-padding" style="padding-right:12px !important;">
+			                    	<div class="panel panel-mauve">
 									<div class="panel-heading">Alpine Pickup Notes</div>
                                     <div class="panel-body">
-                                    	<textarea style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
-                                			maxLength="1000" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
-                                			
-                                		<div class="row">
-				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
-				                       			<?php foreach ($notificationNotesArr as $etaNote){?>
-			                                        <li class="list-group-item">
-			                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
-			                                        </li>
-			                                    <?php }?>
-		                                    </ul>
-				                       	</div>	
-                                			
-                                			
-                                			
-                                    </div>
+	                                    	<textarea style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
+	                                			maxLength="1000" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
+	                                			
+	                                		<div class="row">
+					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+					                       			<?php foreach ($notificationNotesArr as $etaNote){?>
+				                                        <li class="list-group-item">
+				                                            <i class="fa fa-clock-o"></i> <?php echo $etaNote->getCreatedOn()?> <a class="text-info" href="#"><?php echo $etaNote->email ?></a> <?php echo $etaNote->getNotes()?>.
+				                                        </li>
+				                                    <?php }?>
+			                                    </ul>
+					                       	</div>	
+	                                    </div>
+	                                </div>      
                                 </div>
-							</div>
-	                     
-	                     </div>
-	                     
-					</div>	
+		                     </div>
+		                     
+		                     
+		                 </div>
+					</div>   
+					
 					<div class="bg-white1 p-xs outterDiv officediv" style="position: relative">
 						<div class="form-group row">
 	                    		<label class="col-lg-12 col-form-label bg-formLabelBrown text-center">- :  FOR OFFICE USE ONLY : -</label>
