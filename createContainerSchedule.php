@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php"
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
@@ -19,6 +20,10 @@ $pickUpdatesArr = array();
 $etaNotesArr = array();
 $emptyNotesArr = array();
 $notificationNotesArr = array();
+$permissionUtil = PermissionUtil::getInstance();
+$hasContainerScheduleInformationPermission = $permissionUtil->hasContainerScheduleInformationPermission();
+$hasContainerDeliveryPermission = $permissionUtil->hasContainerDeliveryInformationPermission();
+$hasContainerOfficeInformationPermission = $permissionUtil->hasContainerOfficeInformationPermission();
 if(isset($_REQUEST["id"])){
 	$seq = $_REQUEST["id"];
  	$containerSchedule = $containerScheduleMgr->findBySeqForEdit($seq);
@@ -62,6 +67,7 @@ if(isset($_REQUEST["id"])){
  	}if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notification_pickup])){
  		$notificationNotesArr = $containerScheduleNotesArr[ContainerScheduleNoteType::notification_pickup];
  	}
+ 	
 }
 ?>
 <!DOCTYPE html>
@@ -113,7 +119,7 @@ if(isset($_REQUEST["id"])){
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $containerSchedule->getSeq()?>"/>
                         <input type="hidden" id ="id" name="id"  value="<?php echo $containerSchedule->getSeq()?>"/>
                         
-                        <div class="bg-white1 p-xs outterDiv">
+                        <div class="bg-white1 p-xs outterDiv darkdiv" style="position:relative">
                         	<div class="overlay"></div>
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">AWU Ref:</label>
@@ -218,13 +224,14 @@ if(isset($_REQUEST["id"])){
 					</div>
 	                <div class="bg-white1 p-xs outterDiv">
 	                     <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            </div>
+	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
+		                        	<div class="col-lg-4">
+		                        		<div class="input-group date">
+	                                		<input type="text" value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            </div>
+	                          
 	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
@@ -237,13 +244,13 @@ if(isset($_REQUEST["id"])){
 	                            </div>
 	                     </div>
 	                     <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Empty LFD:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            </div>
+	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Empty LFD:</label>
+		                        	<div class="col-lg-4">
+		                        		<div class="input-group date">
+	                                		<input type="text" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Delivery Gate:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
@@ -253,13 +260,13 @@ if(isset($_REQUEST["id"])){
 					</div>
 					<div class="bg-white1 p-xs outterDiv">
 	                     <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Empty Return Date:</label>
-	                        	<div class="col-lg-4">
-	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
-	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-	                            	</div>
-	                            </div>
+	                     			<label class="col-lg-2 col-form-label bg-formLabelDark">Empty Return Date:</label>
+		                        	<div class="col-lg-4">
+		                        		<div class="input-group date">
+	                                		<input type="text" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
+		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            	</div>
+		                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Alpine Notification Pickup Date:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
@@ -321,7 +328,7 @@ if(isset($_REQUEST["id"])){
 	                     </div>
 	                     
 					</div>	
-					<div class="bg-white1 p-xs outterDiv">
+					<div class="bg-white1 p-xs outterDiv officediv" style="position: relative">
 						<div class="form-group row">
 	                    		<label class="col-lg-12 col-form-label bg-formLabelBrown text-center">- :  FOR OFFICE USE ONLY : -</label>
 	                    </div>
@@ -446,6 +453,19 @@ if(isset($_REQUEST["id"])){
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	var hasContainerInformation = "<?php echo $hasContainerScheduleInformationPermission?>";
+	var hasDeliveryInformation = "<?php echo $hasContainerDeliveryPermission?>";
+	var hasOfficeInformation = "<?php echo $hasContainerOfficeInformationPermission?>";
+	
+	if(hasContainerInformation != "1"){
+		disabledDiv("darkdiv")
+	}
+	if(hasDeliveryInformation != "1"){
+		disabledDiv("deliverydiv")
+	}
+	if(hasOfficeInformation != "1"){
+		disabledDiv("officediv")
+	}
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-brown',
 	   	radioClass: 'iradio_square-brown',
@@ -495,7 +515,11 @@ $(document).ready(function(){
 	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 });
-
+function disabledDiv(divClass){
+	var disableDivHtml = '<div style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div>';
+	$('.'+divClass).fadeTo('slow',.6);
+	$('.'+divClass).append(disableDivHtml);
+}
 function showHideContainerReceiveDate(){
 	var flag  = $("#iscontainerreceivedinoms").is(':checked');
 	if(flag){
