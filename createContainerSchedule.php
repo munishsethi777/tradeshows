@@ -14,6 +14,9 @@ $receivedOmsChecked = "";
 $sampleReceivedOmsChecked = "";
 $containerReceivedWmsChecked = "";
 $sampleReceivedWmsChecked = "";
+$informationTabIndex = "";
+$deliveryTabIndex = "";
+$officeTabIndex = "";
 $etaDatesArr = array();
 $confirmDeliveryDatesArr = array();
 $pickUpdatesArr = array();
@@ -24,6 +27,15 @@ $permissionUtil = PermissionUtil::getInstance();
 $hasContainerScheduleInformationPermission = $permissionUtil->hasContainerScheduleInformationPermission();
 $hasContainerDeliveryPermission = $permissionUtil->hasContainerDeliveryInformationPermission();
 $hasContainerOfficeInformationPermission = $permissionUtil->hasContainerOfficeInformationPermission();
+if(!$hasContainerScheduleInformationPermission){
+	$informationTabIndex = -1;
+}
+if(!$hasContainerDeliveryPermission){
+	$deliveryTabIndex = -1;
+}
+if(!$officeTabIndex){
+	$officeTabIndex = -1;
+}
 if(isset($_REQUEST["id"])){
 	$seq = $_REQUEST["id"];
  	$containerSchedule = $containerScheduleMgr->findBySeqForEdit($seq);
@@ -124,7 +136,7 @@ if(isset($_REQUEST["id"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">AWU Ref:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" required  id="awureference" 
+	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" required  id="awureference" 
                                 			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
                                 			name="awureference" class="form-control">
 	                            </div>
@@ -132,7 +144,7 @@ if(isset($_REQUEST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Trucker Name:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="truckername" 
-                                			maxLength="25" value="<?php echo $containerSchedule->getTruckerName()?>" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTruckerName()?>" 
                                 			name="truckername" class="form-control">
 	                            </div>
 	                        </div>
@@ -140,14 +152,14 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Trans:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="trans" 
-                                			maxLength="25" value="<?php echo $containerSchedule->getTrans()?>" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTrans()?>" 
                                 			name="trans" class="form-control">
 	                            </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Warehouse:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="warehouse" 
-                                			maxLength="25" value="<?php echo $containerSchedule->getWarehouse()?>" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getWarehouse()?>" 
                                 			name="warehouse" class="form-control">
 	                            </div>
 	                        </div>
@@ -155,14 +167,14 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="container" 
-                                			maxLength="25" value="<?php echo $containerSchedule->getContainer()?>" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getContainer()?>" 
                                 			name="container" class="form-control">
 	                            </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" value="<?php echo $containerSchedule->getEtaDateTime()?>" name="etadatetime" id="etadatetime" class="form-control  dateTimeControl">
+                                		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEtaDateTime()?>" name="etadatetime" id="etadatetime" class="form-control  dateTimeControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            	<?php if(count($etaDatesArr) > 0){?>
@@ -175,12 +187,12 @@ if(isset($_REQUEST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="terminal" 
-                                			maxLength="25" value="<?php echo $containerSchedule->getTerminal()?>" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTerminal()?>" 
                                 			name="terminal" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" id="etanotes" 
+	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" tabindex="<?php echo $informationTabIndex?>" id="etanotes" 
                                 			maxLength="1000" value="" 
                                 			name="etanotes" class="form-control">
 	                            </div>
@@ -191,7 +203,7 @@ if(isset($_REQUEST["id"])){
 			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">Terminal Appointment:</label>
 			                        	<div class="col-lg-8">
 			                        		<div class="input-group date">
-		                                		<input type="text" value="<?php echo $containerSchedule->getTerminalAppointmentDateTime()?>" name="terminalappointmentdatetime" id="terminalappointmentdatetime" class="form-control dateTimeControl">
+		                                		<input tabindex="<?php echo $informationTabIndex?>" type="text" value="<?php echo $containerSchedule->getTerminalAppointmentDateTime()?>" name="terminalappointmentdatetime" id="terminalappointmentdatetime" class="form-control dateTimeControl">
 			                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                            	</div>
 			                            </div>
@@ -200,7 +212,7 @@ if(isset($_REQUEST["id"])){
 			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">LFD Pickup:</label>
 			                        	<div class="col-lg-8">
 			                        		<div class="input-group date">
-		                                		<input type="text" value="<?php echo $containerSchedule->getLFDPickupDate()?>" name="lfdpickupdate" id="lfdpickupdate" class="form-control  dateControl">
+		                                		<input tabindex="<?php echo $informationTabIndex?>" type="text" value="<?php echo $containerSchedule->getLFDPickupDate()?>" name="lfdpickupdate" id="lfdpickupdate" class="form-control  dateControl">
 			                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                            	</div>
 			                            </div>
@@ -229,7 +241,7 @@ if(isset($_REQUEST["id"])){
 		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
-		                               		<input type="text" value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
+		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
 			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                           	</div>
 			                        </div>
@@ -238,7 +250,7 @@ if(isset($_REQUEST["id"])){
 				                    <label class="col-lg-4 col-form-label bg-formLabelDark">Empty LFD:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
-		                               		<input type="text" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
+		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
 		                            </div>
@@ -249,7 +261,7 @@ if(isset($_REQUEST["id"])){
 									<label class="col-lg-4 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
-		                                	<input type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmeddeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
+		                                	<input tabindex="<?php echo $deliveryTabIndex?>" type="text" value="<?php echo $containerSchedule->getConfirmedDeliveryDateTime()?>" name="confirmeddeliverydatetime" id="confirmeddeliverydatetime" class="form-control  dateTimeControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
 		                            	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
@@ -260,7 +272,7 @@ if(isset($_REQUEST["id"])){
 	                            <div class="form-group row">
 	                            	<label class="col-lg-4 col-form-label bg-formLabelMauve">Delivery Gate:</label>
 	                        		<div class="col-lg-8">
-	                        			<input type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
+	                        			<input tabindex="<?php echo $deliveryTabIndex?>" type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
 									</div>
 	                            </div>
 							</div>	
@@ -275,7 +287,7 @@ if(isset($_REQUEST["id"])){
 								 	<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Return Date:</label>
 		                        	<div class="col-lg-8">
 		                        		<div class="input-group date">
-	                                		<input type="text" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
+	                                		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
 		                            </div>
@@ -285,7 +297,7 @@ if(isset($_REQUEST["id"])){
 											<div class="panel-heading">Empty Return Notes</div>
 		                                    <div class="panel-body">
 		                                    	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
-		                                			maxLength="1000" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
+		                                			maxLength="1000" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
 		                                		
 													<div class="row">
 							                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
@@ -306,7 +318,7 @@ if(isset($_REQUEST["id"])){
 								 	<label class="col-lg-4 col-form-label bg-formLabelMauve">Alpine Notif. Pickup Date:</label>
 		                        	<div class="col-lg-8">
 		                        		<div class="input-group date">
-	                                		<input type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
+	                                		<input tabindex="<?php echo $deliveryTabIndex?>" type="text" value="<?php echo $containerSchedule->getAlpineNotificatinPickupDateTime()?>" name="alpinenotificatinpickupdatetime" id="alpinenotificatinpickupdatetime" class="form-control  dateTimeControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
 		                            	<?php if(count($pickUpdatesArr) > 0){?>
@@ -319,7 +331,7 @@ if(isset($_REQUEST["id"])){
 			                    	<div class="panel panel-mauve">
 									<div class="panel-heading">Alpine Pickup Notes</div>
                                     <div class="panel-body">
-	                                    	<textarea style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
+	                                    	<textarea tabindex="<?php echo $deliveryTabIndex?>" style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
 	                                			maxLength="1000" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
 	                                			
 	                                		<div class="row">
@@ -347,32 +359,32 @@ if(isset($_REQUEST["id"])){
 						<div class="form-group row">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Container Docs Path:</label>
 	                        <div class="col-lg-10">
-								<input type="text" maxLength="500" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control">
+								<input tabindex="<?php echo $officeTabIndex?>" type="text" maxLength="500" value="<?php echo $containerSchedule->getContainerdocsPath()?>" name="containerdocspath" id="containerdocspath" class="form-control">
 	                       	</div>
                      	</div>
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">IDs Complete:</label>
 	                        <div class="col-lg-4">
-								<input type="checkbox" <?php echo $idCompletedChecked?> name="isidscomplete"/>	
+								<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $idCompletedChecked?> name="isidscomplete"/>	
 							</div>
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Samples:</label>
 	                        <div class="col-lg-4">
-								<input type="checkbox" <?php echo $sampleReceivedChecked?> name="issamplesreceived"/>	
+								<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $sampleReceivedChecked?> name="issamplesreceived"/>	
 							</div>
                      	</div>
                         <div class="form-group row">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">MSRF Created:</label>
 	                        <div class="col-lg-4">
 								<div class="input-group date">
-                                	<input type="text" value="<?php echo $containerSchedule->getMsrfCreatedDate()?>" name="msrfcreateddate" id="msrfcreateddate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getMsrfCreatedDate()?>" name="msrfcreateddate" id="msrfcreateddate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 	                       	</div>
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received:</label>
 	                        <div class="col-lg-4">
 								<div class="input-group date">
-                                	<input type="text" value="<?php echo $containerSchedule->getSamplesReceivedDate()?>" name="samplesreceiveddate" id="samplesreceiveddate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getSamplesReceivedDate()?>" name="samplesreceiveddate" id="samplesreceiveddate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 	                       	</div>
@@ -384,22 +396,22 @@ if(isset($_REQUEST["id"])){
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in OMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php echo $receivedOmsChecked?> name="iscontainerreceivedinoms" id="iscontainerreceivedinoms"/>
+	                        	<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $receivedOmsChecked?> name="iscontainerreceivedinoms" id="iscontainerreceivedinoms"/>
 							</div>
 							<div class="col-lg-3" >
 								<div class="input-group date" id="containerReceivedInOms">
-                                	<input type="text" value="<?php echo $containerSchedule->getContainerReceivedinOMSDate()?>" name="containerreceivedinomsdate" id="containerreceivedinomsdate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getContainerReceivedinOMSDate()?>" name="containerreceivedinomsdate" id="containerreceivedinomsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 							</div>
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in OMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php echo $sampleReceivedOmsChecked?> name="issamplesreceivedinoms" id="issamplesreceivedinoms"/>
+	                        	<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $sampleReceivedOmsChecked?> name="issamplesreceivedinoms" id="issamplesreceivedinoms"/>
 							</div>
 							<div class="col-lg-3" >
 								<div class="input-group date" id="sampleReceivedInOms">
-                                	<input type="text" value="<?php echo $containerSchedule->getSamplesReceivedinOMSDate()?>" name="samplesreceivedinomsdate" id="samplesreceivedinomsdate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getSamplesReceivedinOMSDate()?>" name="samplesreceivedinomsdate" id="samplesreceivedinomsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 							</div>
@@ -407,22 +419,22 @@ if(isset($_REQUEST["id"])){
                      	<div class="form-group row i-checks">
 	                    	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in WMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php echo $containerReceivedWmsChecked?> name="iscontainerreceivedinwms" id="iscontainerreceivedinwms"/>
+	                        	<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $containerReceivedWmsChecked?> name="iscontainerreceivedinwms" id="iscontainerreceivedinwms"/>
 							</div>
 							<div class="col-lg-3">
 								<div class="input-group date" id="containerReceivedInWms">
-                                	<input type="text" value="<?php echo $containerSchedule->getContainerReceivedinWMSDate()?>" name="containerreceivedinwmsdate" id="containerreceivedinwmsdate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getContainerReceivedinWMSDate()?>" name="containerreceivedinwmsdate" id="containerreceivedinwmsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 							</div>
 	                       	
 	                       	<label class="col-lg-2 col-form-label bg-formLabelBrown">Received in WMS:</label>
 	                        <div class="col-sm-1 m-t-xs">
-	                        	<input type="checkbox" <?php echo $sampleReceivedWmsChecked?> name="issamplesreceivedinwms" id="issamplesreceivedinwms"/>
+	                        	<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $sampleReceivedWmsChecked?> name="issamplesreceivedinwms" id="issamplesreceivedinwms"/>
 							</div>
 							<div class="col-lg-3">
 								<div class="input-group date" id="sampleReceivedInWms">
-                                	<input type="text" value="<?php echo $containerSchedule->getSamplesReceivedinWMSDate()?>" name="samplesreceivedinwmsdate" id="samplesreceivedinwmsdate" class="form-control  dateControl">
+                                	<input tabindex="<?php echo $officeTabIndex?>" type="text" value="<?php echo $containerSchedule->getSamplesReceivedinWMSDate()?>" name="samplesreceivedinwmsdate" id="samplesreceivedinwmsdate" class="form-control  dateControl">
                             		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             	</div>
 							</div>
