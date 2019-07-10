@@ -33,7 +33,7 @@ if(!$hasContainerScheduleInformationPermission){
 if(!$hasContainerDeliveryPermission){
 	$deliveryTabIndex = -1;
 }
-if(!$officeTabIndex){
+if(!$hasContainerOfficeInformationPermission){
 	$officeTabIndex = -1;
 }
 if(isset($_REQUEST["id"])){
