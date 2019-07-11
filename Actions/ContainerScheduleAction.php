@@ -142,7 +142,7 @@ if($call == "getAllContainerSchedules"){
 if($call == "export"){
 	try{
 		$queryString = $_GET["queryString"];
-		$response = $graphicLogMgr->exportGraphicLog($queryString);
+		$response = $containerScheduleMgr->exportContainerSchedules($queryString);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

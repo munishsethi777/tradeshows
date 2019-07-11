@@ -1584,6 +1584,360 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 		$objWriter->save('php://output');
 }
 
+public static function exportContainerSchedules($containerSchedules){
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Admin")
+	->setLastModifiedBy("Admin")
+	->setTitle("ContainerSchedules")
+	->setSubject("ContainerSchedules")
+	->setDescription("ContainerSchedules")
+	->setKeywords("office 2007 openxml php")
+	->setCategory("Report");
+	$alphas = range('A', 'Z');
+	$alphas = ExportUtil::createColumnsArray("AE");
+	$count = 1;
+	$i = 0;
+	$colName = $alphas[$i++]. $count;
+	$firstRowColName = $colName;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "AWU Ref");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Trucker Name");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,"Trans");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Warehouse");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Container");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "ETA");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Terminal");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "ETA Notes");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Terminal Appointment");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "LFD Pickup");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Scheduled Delivery");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty LFD");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty Return Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty Return Notes");
+	
+	//Blue Fields
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Confirmed Delivery");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Delivery Gate");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Alpine Notif. Pickup Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Alpine Pickup Notes");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	//Yellow Fields
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Container Docs Path");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "IDs Complete");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Is Samples Received");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sample Received Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "MSRF Created");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Is Container Received in OMS");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Container Received in OMS Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Is Sample Received in OMS");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sample Received in OMS Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Is Container Received in WMS");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Container Received in WMS Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Is Sample Received in WMS");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Sample Received in WMS Date");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$fromformatWithTime = "Y-m-d H:i:s";
+	$toFormatWithTime= "n/j/y h:i a";
+		
+	$fromformat = "Y-m-d";
+	$toFormat = "n/j/y";
+		
+	
+	$lastRowColName = $colName;
+	$objPHPExcel->getActiveSheet()->getStyle($firstRowColName.":" . $lastRowColName)->getFont()->setBold(true);
+	$styleArray = array(
+			'font'  => array(
+					'bold'  => true,
+					'color' => array('rgb' => 'FFFFFFFF'),
+			));
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")->applyFromArray($styleArray);
+	
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")
+	->getFill()
+	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+	->getStartColor()
+	->setRGB('000000');
+	
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("O1:R1")
+	->getFill()
+	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+	->getStartColor()
+	->setRGB('87cefa');
+	
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("S1:AE1")
+	->getFill()
+	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+	->getStartColor()
+	->setRGB('daa520');
+	$i = 0;
+	$count++;
+	$srNo = 1;
+	if(!empty($containerSchedules)){
+		foreach ($containerSchedules as $containerSchedule){
+			//$containerSchedule = new ContainerSchedule();
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getAWUReference());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getTruckerName());
+			
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getTrans());
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getWarehouse());
+				
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getContainer());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getEtaDateTime());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getTerminal());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getETANotes());
+			
+			$terminalAppointmentDate = DateUtil::convertDateToFormat($containerSchedule->getTerminalAppointmentDateTime(),$fromformatWithTime,$toFormatWithTime);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$terminalAppointmentDate);
+			
+			$pickUpDate = DateUtil::convertDateToFormat($containerSchedule->getLFDPickupDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$pickUpDate);
+			
+			$scheduleDeliveryDate = DateUtil::convertDateToFormat($containerSchedule->getScheduledDeliveryDateTime(),$fromformatWithTime,$toFormatWithTime);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$scheduleDeliveryDate);
+			
+			$emptyLFDDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyLfdDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyLFDDate);
+			
+			$emptyReturnDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyReturnDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyReturnDate);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getEmptyNotes());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getConfirmedDeliveryDateTime());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getDeliveryGate());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getAlpineNotificatinPickupDateTime());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getNotificationNotes());
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getContainerdocsPath());
+			
+			$colName = $alphas[$i++]. $count;
+			$idCompleted = "No";
+			if(!empty($containerSchedule->getIsIdsComplete())){
+				$idCompleted = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$idCompleted);
+			
+			$colName = $alphas[$i++]. $count;
+			$sampleteReceived = "No";
+			if(!empty($containerSchedule->getIsSamplesReceived())){
+				$sampleteReceived = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleteReceived);
+			
+			$sampleteReceivedDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleteReceivedDate);
+			
+			$smsrfCreatedDate = DateUtil::convertDateToFormat($containerSchedule->getMsrfCreatedDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$smsrfCreatedDate);
+			
+			$colName = $alphas[$i++]. $count;
+			$containerReceivedInOms = "No";
+			if(!empty($containerSchedule->getIsContainerReceivedinOMS())){
+				$containerReceivedInOms = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedInOms);
+			
+			$containerReceivedOmsDate = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinOMSDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedOmsDate);
+			
+			$colName = $alphas[$i++]. $count;
+			$sampleReceivedInOms = "No";
+			if(!empty($containerSchedule->getIssamplesReceivedinOMS())){
+				$sampleReceivedInOms = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedInOms);
+				
+			$sampleReceivedOmsDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinOMSDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedOmsDate);
+			
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$containerReceivedInWms = "No";
+			if(!empty($containerSchedule->getIsContainerReceivedinWMS())){
+				$containerReceivedInWms = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedInWms);
+				
+			$containerReceivedWmsDate = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinWMSDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedWmsDate);
+				
+			$colName = $alphas[$i++]. $count;
+			$sampleReceivedInWms = "No";
+			if(!empty($containerSchedule->getIssamplesReceivedinWMS())){
+				$sampleReceivedInWms = "Yes";
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedInWms);
+			
+			$sampleReceivedWmsDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinWMSDate(),$fromformat,$toFormat);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedWmsDate);
+			
+			$count++;
+			$i = 0;
+			$srNo++;
+		}
+	}else{
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "No Rows Found");
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":I" .$count);
+	}
+	$objPHPExcel->getActiveSheet()->setTitle("ContainerSchedules");
+	// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+	$objPHPExcel->setActiveSheetIndex(0);
+	$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+	$objPHPExcel->getActiveSheet()->getStyle('H1:H'.$objPHPExcel->getActiveSheet()->getHighestRow())
+	->getAlignment()->setWrapText(true);
+	$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+	$objPHPExcel->getActiveSheet()->getStyle('I1:I'.$objPHPExcel->getActiveSheet()->getHighestRow())
+	->getAlignment()->setWrapText(true);
+
+	if($isEmail){
+		ob_start();
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+		$excelOutput = ob_get_contents();
+		ob_end_clean();
+		return $excelOutput;
+	}
+	// Redirect output to a client’s web browser (Excel5)
+	header('Content-Type: application/vnd.ms-excel');
+	header('Content-Disposition: attachment;filename="ContainerSchedules.xls"');
+	header('Cache-Control: max-age=0');
+	// If you're serving to IE 9, then the following may be needed
+	header('Cache-Control: max-age=1');
+
+	// If you're serving to IE over SSL, then the following may be needed
+	header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+	header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+	header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+	header ('Pragma: public'); // HTTP/1.0
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	ob_end_clean();
+	$objWriter->save('php://output');
+}
+
+
 public static function exportQcPendingForApprovals($qcSchedules,$notificationName,$isEmail){
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Admin")

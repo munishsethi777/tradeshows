@@ -70,7 +70,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 	        </div>
 	     </div>
    </div>
-   <form id="form1" name="form1" method="GET" action="Actions/GraphicLogAction.php">
+   <form id="form1" name="form1" method="GET" action="Actions/ContainerScheduleAction.php">
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
@@ -361,8 +361,8 @@ function loadGrid(){
             
             container.append(addButton);
             container.append(editButton);
-           // container.append(importButton);
-           // container.append(exportButton);
+            //container.append(importButton);
+            container.append(exportButton);
             container.append(reloadButton);
             //container.append(downloadButton);
             container.append(deleteButton);
@@ -370,7 +370,7 @@ function loadGrid(){
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
            // importButton.jqxButton({  width: 65, height: 18 });
-           // exportButton.jqxButton({  width: 65, height: 18 });
+            exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             //downloadButton.jqxButton({  width: 140, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
