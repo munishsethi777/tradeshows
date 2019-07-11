@@ -21,6 +21,10 @@ if($call == "saveContainerSchedule"){
 		$message = "Container Schedule saved successfully!";
 		$containerSchedule = new ContainerSchedule();
 		$containerSchedule->createFromRequest($_REQUEST);
+		if(empty($containerSchedule->getAWUReference())){
+			throw new Exception("AWU Reference can not be empty");
+		}
+		
 		$existingContainerSchedule = new ContainerSchedule();
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){

@@ -136,7 +136,7 @@ if(isset($_REQUEST["id"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">AWU Ref:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" required  id="awureference" 
+	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" id="awureference" 
                                 			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
                                 			name="awureference" class="form-control">
 	                            </div>
