@@ -103,7 +103,7 @@ ul#side-menu.nav{
 	background: #e5e5e5 !important;	
 }
 div#wrapper{
-	background-color:whitesmoke;
+	background-color:whitesmoke !important;
 }
 ul.nav-second-level{
 	background-color:whitesmoke !important;
@@ -215,3 +215,9 @@ ul.nav-second-level{
 	color:black;
 }
 
+.nav-header{
+	background-color:rgba(26, 178, 147, 0.3) !important;
+}
+body{
+	background-color:white !important;
+}
