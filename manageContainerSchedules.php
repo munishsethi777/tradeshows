@@ -43,21 +43,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                        	<div class="col-lg-3">
 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
 			                            		<option value=''>Select Field</option>
+			                            		<option value="alpinenotificatinpickupdatetime">Alpine Notif. Pickup Date</option>
+			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
+			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
+			                            		<option value="containerreceivedinomsdate">Container Received in OMS Date</option>
+			                            		<option value="containerreceivedinwmsdate">Container Received in WMS Date</option>
 			                            		<option value="etadatetime">ETA Date</option>
-			                            		<option value="terminalappointmentdatetime">Terminal Appointment</option>
-			                            		<option value="lfdpickupdate">LFD Pickup</option>
-			                            		<option value="scheduleddeliverydatetime">Scheduled Delivery</option>
 			                            		<option value="emptylfddate">Empty LFD</option>
 			                            		<option value="emptyreturndate">Empty Return Date</option>
-			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
-			                            		<option value="alpinenotificatinpickupdatetime">Alpine Notif. Pickup Date</option>
+			                            		<option value="lfdpickupdate">LFD Pickup</option>
 			                            		<option value="msrfcreateddate">MSRF Created</option>
+			                            		<option value="scheduleddeliverydatetime">Scheduled Delivery</option>
 			                            		<option value="samplesreceiveddate">Sample Received Date</option>
-			                            		<option value="containerreceivedinomsdate">Container Received in OMS Date</option>
 			                            		<option value="samplesreceivedinomsdate">Samples Received in OMS Date</option>
-			                            		<option value="containerreceivedinwmsdate">Container Received in WMS Date</option>
 			                            		<option value="samplesreceivedinwmsdate">Samples Received In WMS Date</option>
-			                            	</select>
+			                            		<option value="terminalappointmentdatetime">Terminal Appointment</option>
+			                            		</select>
 			                            </div>
 			                            <div class="col-lg-4">
 				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
