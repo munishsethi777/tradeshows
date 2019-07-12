@@ -103,7 +103,7 @@ ul#side-menu.nav{
 	background: #e5e5e5 !important;	
 }
 div#wrapper{
-	background-color:whitesmoke;
+	background-color:whitesmoke !important;
 }
 ul.nav-second-level{
 	background-color:whitesmoke !important;
@@ -145,6 +145,9 @@ ul.nav-second-level{
         width: 20%;
         float: left;
     }
+    #page-wrapper {
+		margin: 0 0 0 235px !important;
+	}
 }
 
 @media (min-width: 992px) {
@@ -214,4 +217,9 @@ ul.nav-second-level{
 	border-color: #A4C2F4 !important;
 	color:black;
 }
-
+.nav-header{
+	background-color:rgba(26, 178, 147, 0.3) !important;
+}
+body{
+	background-color:white !important;
+}
