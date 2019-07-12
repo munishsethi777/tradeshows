@@ -424,7 +424,10 @@ function loadGrid(){
          	   exportItemsConfirm(filterQstr);
             });
             reloadButton.click(function (event) {
-                $("#graphiclogGrid").jqxGrid({ source: dataAdapter });
+            	$("#graphiclogGrid").jqxGrid("clearfilters");
+            	$('#fieldNameDD').prop('selectedIndex',0);
+            	initDateRanges();
+            	//$("#graphiclogGrid").jqxGrid({ source: dataAdapter });
             });
             //downloadButton.click(function (event) {
             	//location.href = ("files/QCSchedules_template.xlsx");

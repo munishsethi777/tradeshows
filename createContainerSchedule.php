@@ -129,8 +129,6 @@ if(isset($_REQUEST["id"])){
                  	 <form id="createGraphicLogForm" method="post" action="Actions/ContainerScheduleAction.php">
                      	<input type="hidden" id ="call" name="call"  value="saveContainerSchedule"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $containerSchedule->getSeq()?>"/>
-                        <input type="hidden" id ="id" name="id"  value="<?php echo $containerSchedule->getSeq()?>"/>
-                        
                         <div class="bg-white1 p-xs outterDiv darkdiv" style="position:relative">
                         	<div class="overlay"></div>
                         	<div class="form-group row">
@@ -473,6 +471,9 @@ if(isset($_REQUEST["id"])){
      </div>   	
     </div>
     </div>
+    <form id="form1" name="form1" method="post" action="createContainerSchedule.php">
+    	<input type="hidden" id="id" name="id"/>
+   </form> 
 </body>
 </html>
 <script type="text/javascript">
@@ -729,7 +730,8 @@ function saveQCSchedule(isContniue){
 				   var jsonObj = $.parseJSON(data);
 				   var seq = jsonObj.seq;
 				   $("#seq").val(seq);
-				   location.href = "createContainerSchedule.php?id="+seq;
+				   $("#id").val(seq);
+				   $("#form1").submit();
 			   }else{
 				   window.setTimeout(function(){window.location.href = "manageContainerSchedules.php"},100);
 			   }	   

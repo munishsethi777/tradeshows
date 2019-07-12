@@ -631,7 +631,9 @@ function loadGrid(){
 //             });
             // reload grid data.
             reloadButton.click(function (event) {
-                $("#qcscheduleGrid").jqxGrid({ source: dataAdapter });
+                $("#qcscheduleGrid").jqxGrid("clearfilters");
+            	$('#fieldNameDD').prop('selectedIndex',0);
+            	initDateRanges();
             });
             downloadButton.click(function (event) {
             	location.href = ("files/QCSchedules_template.xlsx");
