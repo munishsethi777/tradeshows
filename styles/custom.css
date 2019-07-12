@@ -145,6 +145,9 @@ ul.nav-second-level{
         width: 20%;
         float: left;
     }
+    #page-wrapper {
+		margin: 0 0 0 235px !important;
+	}
 }
 
 @media (min-width: 992px) {
@@ -214,7 +217,6 @@ ul.nav-second-level{
 	border-color: #A4C2F4 !important;
 	color:black;
 }
-
 .nav-header{
 	background-color:rgba(26, 178, 147, 0.3) !important;
 }
