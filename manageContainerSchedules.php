@@ -38,29 +38,34 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 								 </nav>
 		                     </div>
 		                     <div class="ibox-content">
-<!-- 		                     		<div class="form-group row"> -->
-<!-- 			                       		<label class="col-lg-1 col-form-label">Search</label> -->
-<!-- 			                        	<div class="col-lg-3"> -->
-<!-- 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control"> -->
-<!-- 			                            		<option value=''>Select Field</option> -->
-<!-- 			                            		<option value="usaofficeentrydate">US Entry Date</option> -->
-<!-- 			                            		<option value="estimatedshipdate">Estimated Ship Date</option> -->
-<!-- 			                            		<option value="estimatedgraphicsdate">Estimated Graphics Date</option> -->
-<!-- 			                            		<option value="chinaofficeentrydate">China Entry Date</option> -->
-<!-- 			                            		<option value="confirmedposhipdate">PO Ship Date</option> -->
-<!-- 			                            		<option value="finalgraphicsduedate">Final Graphics Due Date</option> -->
-<!-- 			                            		<option value="approxgraphicschinasentdate">Approx Graphics China Sent Date</option> -->
-<!-- 			                            		<option value="graphicartiststartdate">Artist Start Date</option> -->
-<!-- 			                            		<option value="graphiccompletiondate">Artist Completion Date</option> -->
-<!-- 			                            	</select> -->
-<!-- 			                            </div> -->
-<!-- 			                            <div class="col-lg-4"> -->
-<!-- 				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">-->
-<!-- 											    <i class="fa fa-calendar"></i>&nbsp; -->
-<!-- 											    <span></span> <i class="fa fa-caret-down"></i> -->
-<!-- 											</div> -->
-<!-- 			                            </div> -->
-<!-- 			                        </div> -->
+		                     		<div class="form-group row">
+			                       		<label class="col-lg-1 col-form-label">Search</label>
+			                        	<div class="col-lg-3">
+			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
+			                            		<option value=''>Select Field</option>
+			                            		<option value="etadatetime">ETA Date</option>
+			                            		<option value="terminalappointmentdatetime">Terminal Appointment</option>
+			                            		<option value="lfdpickupdate">LFD Pickup</option>
+			                            		<option value="scheduleddeliverydatetime">Scheduled Delivery</option>
+			                            		<option value="emptylfddate">Empty LFD</option>
+			                            		<option value="emptyreturndate">Empty Return Date</option>
+			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
+			                            		<option value="alpinenotificatinpickupdatetime">Alpine Notif. Pickup Date</option>
+			                            		<option value="msrfcreateddate">MSRF Created</option>
+			                            		<option value="samplesreceiveddate">Sample Received Date</option>
+			                            		<option value="containerreceivedinomsdate">Container Received in OMS Date</option>
+			                            		<option value="samplesreceivedinomsdate">Samples Received in OMS Date</option>
+			                            		<option value="containerreceivedinwmsdate">Container Received in WMS Date</option>
+			                            		<option value="samplesreceivedinwmsdate">Samples Received In WMS Date</option>
+			                            	</select>
+			                            </div>
+			                            <div class="col-lg-4">
+				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+											    <i class="fa fa-calendar"></i>&nbsp;
+											    <span></span> <i class="fa fa-caret-down"></i>
+											</div>
+			                            </div>
+			                        </div>
 		                     	
 		                     	<div id="containerScheduleGrid"></div>
 		                     </div>
@@ -96,7 +101,7 @@ function initDateRanges(){//building date search module
 	        $('#daterange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 	    }
 	    $('#daterange').daterangepicker({
-	        startDate: start,
+	    	startDate: start,
 	        endDate: end,
 	        alwaysShowCalendars: true,
 	        ranges: {
@@ -229,7 +234,9 @@ $(document).ready(function(){
 		//new code of daterange picker
 		var drp = $('#daterange').data('daterangepicker');
 		fromDateStr = drp.startDate.format('MM-DD-YYYY');
+		fromDateStr += " 00:00:00";
 		toDateStr = drp.endDate.format('MM-DD-YYYY');
+		toDateStr += " 23:59:00";
 		
 
 		
@@ -271,12 +278,27 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
+      { text: 'terminalappointmentdatetime', datafield: 'terminalappointmentdatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
+      { text: 'lfdpickupdate', datafield: 'lfdpickupdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
+      { text: 'scheduleddeliverydatetime', datafield: 'scheduleddeliverydatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
+      { text: 'emptylfddate', datafield: 'emptylfddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
+      { text: 'emptyreturndate', datafield: 'emptyreturndate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
+
+      { text: 'confirmeddeliverydatetime', datafield: 'confirmeddeliverydatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'alpinenotificatinpickupdatetime', datafield: 'alpinenotificatinpickupdatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'samplesreceivedinomsdate', datafield: 'samplesreceivedinomsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
+      { text: 'containerreceivedinomsdate', datafield: 'containerreceivedinomsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'msrfcreateddate', datafield: 'msrfcreateddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'samplesreceiveddate', datafield: 'samplesreceiveddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'containerreceivedinwmsdate', datafield: 'containerreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      { text: 'samplesreceivedinwmsdate', datafield: 'samplesreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
+      
       { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
       { text: 'Trucker Name', datafield: 'truckername', width:"10%"},
       { text: 'Trans', datafield: 'trans', width:"10%"},
       { text: 'Warehouse', datafield: 'warehouse',width:"8%"},
       { text: 'Container', datafield: 'container',width:"10%"},
-      { text: 'ETA', datafield: 'etadatetime',width:"15%",cellsformat: 'M-dd-yyyy'},
+      { text: 'ETA', datafield: 'etadatetime',width:"15%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
     ]
@@ -293,7 +315,20 @@ function loadGrid(){
                     { name: 'truckername', type: 'string' }, 
                     { name: 'trans', type: 'string' },
                     { name: 'warehouse', type: 'string' },
-                    { name: 'etadatetime', type: 'string' } ,
+                    { name: 'etadatetime', type: 'date' } ,
+                    { name: 'terminalappointmentdatetime', type: 'date' } ,
+                    { name: 'lfdpickupdate', type: 'date' } ,
+                    { name: 'scheduleddeliverydatetime', type: 'date' } ,
+                    { name: 'emptylfddate', type: 'date' },
+                    { name: 'emptyreturndate', type: 'date' },
+                    { name: 'confirmeddeliverydatetime', type: 'date' },
+                    { name: 'alpinenotificatinpickupdatetime', type: 'date' },
+                    { name: 'samplesreceivedinomsdate', type: 'date' },
+                    { name: 'containerreceivedinomsdate', type: 'date' },
+                    { name: 'msrfcreateddate', type: 'date' },
+                    { name: 'samplesreceiveddate', type: 'date' },
+                    { name: 'containerreceivedinwmsdate', type: 'date' },
+                    { name: 'samplesreceivedinwmsdate', type: 'date' },
                     { name: 'container', type: 'string' },
                     { name: 'terminal', type: 'fullname' }, 
                     { name: 'lastmodifiedon', type: 'date' } 

@@ -228,27 +228,34 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
                     	//$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
+                    	$dateObj = true;
                     	if($startDatePos !== false || $endDatePos !== false || $date !== false){
-                    		 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		 if(!$date){
-                    		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    		 $dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 if(!$dateObj){
+                    		 	$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
                     		 }
-                    		 if(!$date){
-                    		 	$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		 if(!$dateObj){
+                    		 	$dateObj = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
                     		 }
-                    		 
-                    		 $filtervalue = $date->format("Y-m-d");  
+                    		 if($dateObj){
+                    		 	$filtervalue = $dateObj->format("Y-m-d");
+                    		 }
                     	}
-                    	if($createdOnPos !== false || $lastModifiedPos !== false){
-                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		if(!$date){
-                    			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    	if($createdOnPos !== false || $lastModifiedPos !== false || !$dateObj){
+                    		$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
                     		}
-                    		if(!$date){
-                    			$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i:s",$filtervalue);
                     		}
-                    		$date->setTime(0,0);
-                    		$filtervalue = $date->format("Y-m-d H:i:s");
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		}
+                    		if($dateObj){
+                    			$dateObj->setTime(0,0);
+                    			$filtervalue = $dateObj->format("Y-m-d H:i:s");
+                    		}
                     	}
 //                     	if($shipDatePos !== false){
 //                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
@@ -263,26 +270,34 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     	$createdOnPos = strpos(strtolower ($filterdatafield),'createdon');
                     	$lastModifiedPos = strpos(strtolower ($filterdatafield),'lastmodifiedon');
                     	$shipDatePos = strpos(strtolower ($filterdatafield),'shipdate');
+                    	$dateObj = true;
                     	if($startDatePos !== false || $endDatePos !== false || $date !== false){
-               				 $date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		 if(!$date){
-                    		 	$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+               				 $dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		 if(!$dateObj){
+                    		 	$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
                     		 }
-                    		 if(!$date){
-                    		 	$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		 if(!$dateObj){
+                    		 	$dateObj = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
                     		 }
-                    		 $filtervalue = $date->format("Y-m-d");  
+                    		 if($dateObj){
+                    		 	$filtervalue = $dateObj->format("Y-m-d");
+                    		 }
                     	}
-                    	if($createdOnPos !== false || $lastModifiedPos !== false){
-                    		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
-                    		if(!$date){
-                    			$date = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
+                    	if($createdOnPos !== false || $lastModifiedPos !== false || !$dateObj){
+                    		$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i A",$filtervalue);
                     		}
-                    		if(!$date){
-                    			$date = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("m-d-Y H:i:s",$filtervalue);
                     		}
-                    		$date->setTime(23,59);
-                    		$filtervalue = $date->format("Y-m-d H:i:s");
+                    		if(!$dateObj){
+                    			$dateObj = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		}
+                    		if($dateObj){
+                    			$dateObj->setTime(23,59);
+                    			$filtervalue = $dateObj->format("Y-m-d H:i:s");
+                    		}
                     	}
 //                     	if($shipDatePos !== false){
 //                     		$date = DateUtil::StringToDateByGivenFormat("m-d-Y", $filtervalue);
