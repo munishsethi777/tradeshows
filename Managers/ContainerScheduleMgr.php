@@ -67,7 +67,7 @@ class ContainerScheduleMgr{
 			$notificationNotes = "";
 			if(isset($notes[ContainerScheduleNoteType::eta])){
 				$etaNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::eta]);
-				$containerSchedule->setETANotes($etanotes);
+				$containerSchedule->setETANotes($etaNotes);
 			}
 			if(isset($notes[ContainerScheduleNoteType::empty_return])){
 				$emptyReturnNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::empty_return]);

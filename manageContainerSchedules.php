@@ -45,7 +45,6 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            		<option value=''>Select Field</option>
 			                            		<option value="alpinenotificatinpickupdatetime">Alpine Notif. Pickup Date</option>
 			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
-			                            		<option value="confirmeddeliverydatetime">Confirmed Delivery</option>
 			                            		<option value="containerreceivedinomsdate">Container Received in OMS Date</option>
 			                            		<option value="containerreceivedinwmsdate">Container Received in WMS Date</option>
 			                            		<option value="etadatetime">ETA Date</option>
@@ -440,7 +439,10 @@ function loadGrid(){
          	   exportItemsConfirm(filterQstr);
             });
             reloadButton.click(function (event) {
-                $("#containerScheduleGrid").jqxGrid({ source: dataAdapter });
+            	$("#containerScheduleGrid").jqxGrid("clearfilters");
+            	$('#fieldNameDD').prop('selectedIndex',0);
+            	initDateRanges();
+               // $("#containerScheduleGrid").jqxGrid({ source: dataAdapter });
             });
             //downloadButton.click(function (event) {
             	//location.href = ("files/QCSchedules_template.xlsx");
