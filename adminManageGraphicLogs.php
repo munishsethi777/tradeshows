@@ -43,15 +43,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                        	<div class="col-lg-3">
 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
 			                            		<option value=''>Select Field</option>
-			                            		<option value="usaofficeentrydate">US Entry Date</option>
-			                            		<option value="estimatedshipdate">Estimated Ship Date</option>
-			                            		<option value="estimatedgraphicsdate">Estimated Graphics Date</option>
-			                            		<option value="chinaofficeentrydate">China Entry Date</option>
-			                            		<option value="confirmedposhipdate">PO Ship Date</option>
-			                            		<option value="finalgraphicsduedate">Final Graphics Due Date</option>
 			                            		<option value="approxgraphicschinasentdate">Approx Graphics China Sent Date</option>
 			                            		<option value="graphicartiststartdate">Artist Start Date</option>
 			                            		<option value="graphiccompletiondate">Artist Completion Date</option>
+			                            		<option value="chinaofficeentrydate">China Entry Date</option>
+			                            		<option value="estimatedshipdate">Estimated Ship Date</option>
+			                            		<option value="estimatedgraphicsdate">Estimated Graphics Date</option>
+			                            		<option value="finalgraphicsduedate">Final Graphics Due Date</option>
+			                            		<option value="confirmedposhipdate">PO Ship Date</option>
+			                            		<option value="usaofficeentrydate">US Entry Date</option>
 			                            	</select>
 			                            </div>
 			                            <div class="col-lg-4">

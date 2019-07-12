@@ -59,7 +59,7 @@ if($call == "saveContainerSchedule"){
 			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
 			$containerScheduleNoteMgr->saveFromContainerSchedule($containerSchedule, $existingContainerSchedule);
 		}
-		
+		$response["seq"] = $id;
 // 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
 // 			$graphicLog->setIsCustomHangTagNeeded(1);
 // 		}else{

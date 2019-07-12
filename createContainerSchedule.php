@@ -726,7 +726,9 @@ function saveQCSchedule(isContniue){
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
 			   if(isContniue){
-				   var seq = $("#seq").val();
+				   var jsonObj = $.parseJSON(data);
+				   var seq = jsonObj.seq;
+				   $("#seq").val(seq);
 				   location.href = "createContainerSchedule.php?id="+seq;
 			   }else{
 				   window.setTimeout(function(){window.location.href = "manageContainerSchedules.php"},100);
