@@ -116,7 +116,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageContainerSchedules?>">
-                    <a href="manageContainerSchedules.php"><i class="fa fa-paint-brush"></i> 
+                    <a href="manageContainerSchedules.php"><i class="fa fa-ship"></i> 
                     	<span class="nav-label">Container Schedules</span>  
                     </a>
                 </li>
@@ -207,7 +207,7 @@ if($file == "dashboard.php"){
 	                <?php }?>
 	                 <?php if(in_array(DepartmentType::Container_Schedules,$departments)){?> 
 		                <li class="<?php echo $manageContainerSchedules?>">
-	                    	<a href="manageContainerSchedules.php"><i class="fa fa-paint-brush"></i> 
+	                    	<a href="manageContainerSchedules.php"><i class="fa fa-ship"></i> 
 	                    		<span class="nav-label">Container Schedules</span>  
 	                   		</a>
 	                	</li>

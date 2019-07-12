@@ -242,6 +242,9 @@ if(isset($_REQUEST["id"])){
 		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
 			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                           	</div>
+			                           	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
+		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
+		                            	<?php }?>
 			                        </div>
 			                    </div>
 			                    <div class="form-group row">
@@ -288,6 +291,9 @@ if(isset($_REQUEST["id"])){
 	                                		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyReturnDate()?>" name="emptyreturndate" id="emptyreturndate" class="form-control  dateControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
+		                            	<?php if(count($pickUpdatesArr) > 0){ ?>
+		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
+		                            	<?php }?>
 		                            </div>
 		                          </div>
 		                          <div class="row no-padding" style="padding-right:12px !important;">
