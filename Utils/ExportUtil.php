@@ -1,6 +1,8 @@
 <?php
 class ExportUtil{
-	public static function exportCustomers($customers){
+	private static $VERTICAL = "vertical";
+	private static $HORIZONTAL = "horizontal";
+public static function exportCustomers($customers){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
 		->setLastModifiedBy("Admin")
@@ -1652,6 +1654,7 @@ public static function exportContainerSchedules($containerSchedules){
 	
 	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty Return Notes");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	//Blue Fields
 	$colName = $alphas[$i++]. $count;
@@ -1759,71 +1762,97 @@ public static function exportContainerSchedules($containerSchedules){
 	$i = 0;
 	$count++;
 	$srNo = 1;
+	$top_vertical = PHPExcel_Style_Alignment::VERTICAL_TOP;
+	$sheet = $objPHPExcel->setActiveSheetIndex(0);
+	$sheet->getRowDimension('1')->setRowHeight(32);
+	$sheet->getStyle("A1:AE1")->getAlignment()->applyFromArray(
+			array("vertical" => PHPExcel_Style_Alignment::VERTICAL_CENTER)
+			);;
 	if(!empty($containerSchedules)){
 		foreach ($containerSchedules as $containerSchedule){
 			//$containerSchedule = new ContainerSchedule();
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getAWUReference());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getTruckerName());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 				
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getTrans());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 				
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getWarehouse());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 				
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getContainer());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getEtaDateTime());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getTerminal());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getETANotes());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$terminalAppointmentDate = DateUtil::convertDateToFormat($containerSchedule->getTerminalAppointmentDateTime(),$fromformatWithTime,$toFormatWithTime);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$terminalAppointmentDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$pickUpDate = DateUtil::convertDateToFormat($containerSchedule->getLFDPickupDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$pickUpDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$scheduleDeliveryDate = DateUtil::convertDateToFormat($containerSchedule->getScheduledDeliveryDateTime(),$fromformatWithTime,$toFormatWithTime);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$scheduleDeliveryDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$emptyLFDDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyLfdDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyLFDDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$emptyReturnDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyReturnDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyReturnDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getEmptyNotes());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getConfirmedDeliveryDateTime());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getDeliveryGate());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getAlpineNotificatinPickupDateTime());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getNotificationNotes());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getContainerdocsPath());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$idCompleted = "No";
@@ -1831,6 +1860,7 @@ public static function exportContainerSchedules($containerSchedules){
 				$idCompleted = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$idCompleted);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$sampleteReceived = "No";
@@ -1838,14 +1868,17 @@ public static function exportContainerSchedules($containerSchedules){
 				$sampleteReceived = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleteReceived);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$sampleteReceivedDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleteReceivedDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$smsrfCreatedDate = DateUtil::convertDateToFormat($containerSchedule->getMsrfCreatedDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$smsrfCreatedDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$containerReceivedInOms = "No";
@@ -1853,10 +1886,12 @@ public static function exportContainerSchedules($containerSchedules){
 				$containerReceivedInOms = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedInOms);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$containerReceivedOmsDate = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinOMSDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedOmsDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;
 			$sampleReceivedInOms = "No";
@@ -1864,11 +1899,12 @@ public static function exportContainerSchedules($containerSchedules){
 				$sampleReceivedInOms = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedInOms);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 				
 			$sampleReceivedOmsDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinOMSDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedOmsDate);
-			
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			
 			$colName = $alphas[$i++]. $count;
@@ -1877,10 +1913,12 @@ public static function exportContainerSchedules($containerSchedules){
 				$containerReceivedInWms = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedInWms);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 				
 			$containerReceivedWmsDate = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinWMSDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerReceivedWmsDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 				
 			$colName = $alphas[$i++]. $count;
 			$sampleReceivedInWms = "No";
@@ -1888,10 +1926,12 @@ public static function exportContainerSchedules($containerSchedules){
 				$sampleReceivedInWms = "Yes";
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedInWms);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$sampleReceivedWmsDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinWMSDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$sampleReceivedWmsDate);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$count++;
 			$i = 0;
@@ -1937,6 +1977,11 @@ public static function exportContainerSchedules($containerSchedules){
 	$objWriter->save('php://output');
 }
 
+private static function setCellAligment($type,$aligmentDirection,$sheet,$colName){
+	$sheet->getStyle($colName)->getAlignment()->applyFromArray(
+			array($type => $aligmentDirection,)
+			);
+}
 
 public static function exportQcPendingForApprovals($qcSchedules,$notificationName,$isEmail){
 	$objPHPExcel = new PHPExcel();
