@@ -53,22 +53,12 @@ class QCScheduleMgr{
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
 		$qcSchedules = array();
-		$query = "select classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
+		$query = "select classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq ";
 		if($isSessionGeneralUser){
 			$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 			$query .= " where users.seq = $loggedInUserSeq";
 		}
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
-		//$mainArr = array();
-		//$poSchedules = $this->group_by($qcSchedules, "po");
-		//foreach ($poSchedules as $qcSchedules){
-			//$itemNumbers = "";
-			//foreach ($qcSchedules as $qcSchedule){
-				//$itemNumbers .= $qcSchedule["itemnumbers"] . "\n";
-			//}
-			//$qcSchedule["itemnumbers"] = trim($itemNumbers);
-			//array_push($mainArr,$qcSchedule);
-		//}
 		ExportUtil::exportQCSchedules($qcSchedules);
 	}
 	
