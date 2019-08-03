@@ -19,6 +19,7 @@ if($isSessionGeneralUser && !$isSessionSV){
  	$qcUser = $sessionUtil->getUserLoggedInSeq();
 	$qcUserReadonly = "readonly";
 }
+ $seq = 0;
  $seqs = 0;
  $isSubmitApprovalDisabled = "";
  $disabledSubmitComments = "";
@@ -139,7 +140,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                        	<div class="col-lg-4">
  	                            	<input type="hidden" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false,true,false);
 				                            echo $select;
 	                             		?>
 	                            </div>
