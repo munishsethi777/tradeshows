@@ -145,16 +145,19 @@ ul.nav-second-level{
         width: 20%;
         float: left;
     }
-    #page-wrapper {
-		margin: 0 0 0 235px !important;
-	}
+   
 }
 
 @media (min-width: 992px) {
     .col-md-15 {
         width: 20%;
         float: left;
+        
     }
+     #page-wrapper {
+		margin: 0 0 0 235px !important;
+	}
+    
     
 }
 @media (min-width: 1200px) {
