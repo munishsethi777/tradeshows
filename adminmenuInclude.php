@@ -27,6 +27,7 @@ $manageClassCodes = "";
 $manageGraphicLogs = "";
 $isManageUsers = "";
 $manageContainerSchedules = "";
+$manageEmailLogs = "";
 //echo  $file;
 if($file == "dashboard.php"){
 	$isDashboard = "active";
@@ -64,7 +65,10 @@ if($file == "dashboard.php"){
 	$manageClassCodes = "active";
 }elseif($file == "createContainerSchedule.php" || $file== "manageContainerSchedules.php"){
 	$manageContainerSchedules = "active";
+}elseif($file == "manageEmailLogs.php"){
+    $manageEmailLogs ="active";
 }
+
 
 ?>
 
@@ -120,6 +124,12 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Container Schedules</span>  
                     </a>
                 </li>
+                <li class="<?php echo $manageEmailLogs?>">
+                    <a href="manageEmailLogs.php"><i class="fa fa-envelope"></i> 
+                    	<span class="nav-label">Email Logs</span>  
+                    </a>
+                </li>
+                
                 <!-- 
                 <li class="<?php echo $manageCustomers;?>">
                    <a href="adminManageCustomers.php"><i class="fa fa-group"></i> 
@@ -191,6 +201,14 @@ if($file == "dashboard.php"){
 		                    </a>
                 		</li>
                 	<?php }?>
+                	 <?php if($isSessionSupervisor){?>
+		              <li class="<?php echo $manageEmailLogs;?>">
+		                    <a href="manageEmailLogs.php"><i class="fa fa-envelope"></i> 
+		                    	<span class="nav-label">Email Logs</span>  
+		                    </a>
+                		</li>
+                	<?php }?>
+                	
 	                <?php if(in_array(DepartmentType::QC_Schedules,$departments)){?>
 		                <li class="<?php echo $manageQCSchedules;?>">
 		                    <a href="adminManageQCSchedules.php"><i class="fa fa-flag"></i> 
