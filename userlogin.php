@@ -67,14 +67,19 @@ require_once('IConstants.inc');
                     if(data.success == 0){
                         toastr.error("Invaid username or Password",'Login Failed');
                     }else{
-                        var user = data.user;
-                        if(user["usertype"] != "QC"){
-                        	 window.location = "dashboardmain.php";
-                        }else{
-                        	 window.location = "userDashboard.php";
-                        }
-                       
-                    }
+                            var redirect = data.url;
+                            if(redirect != ""){
+                            	 window.location = redirect;
+                            }else{  
+                                	 var user = data.user;
+                                     if(user["usertype"] != "QC"){
+                                     	 window.location = "dashboardmain.php";
+                                     }else{
+                                     	 window.location = "userDashboard.php";
+                                     }
+                                }
+                          }
+                    
                 });
             }
             </script>
