@@ -7,6 +7,9 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Utils/TimeZone.php");
+
+
 
 class DropDownUtils {
 	
@@ -85,6 +88,13 @@ class DropDownUtils {
 		$enums = $userMgr->getChinaTeamUsersForDD();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
 	}
+	
+	public static function getTimezone($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) { 
+	    $enums = TimeZone::$timezone;
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+	
+	
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false,$disabled = "") {
 		$id = $selectName;
