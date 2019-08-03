@@ -137,14 +137,14 @@ class UserMgr{
 	}
 	
 	public function getSupervisorsForQCReport(){
-		$sql = "SELECT * FROM users 
+		$sql = "SELECT users.* FROM users 
 inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
 where userdepartments.departmentseq = 1 and users.usertype = 'SUPERVISOR'";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		return $users;
 	}
 	public function getQCsForQCReport(){
-		$sql = "SELECT * FROM users 
+		$sql = "SELECT users.* FROM users 
 inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1 
 where userdepartments.departmentseq = 1 and users.usertype = 'USER'";
 		$users = self::$userDataStore->executeObjectQuery($sql);

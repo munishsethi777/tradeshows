@@ -1586,7 +1586,173 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 		$objWriter->save('php://output');
 }
 
-public static function exportContainerSchedules($containerSchedules){
+public static function exportEmailLogs($emailLogs){
+    $objPHPExcel = new PHPExcel();
+    $objPHPExcel->getProperties()->setCreator("Admin")
+    ->setLastModifiedBy("Admin")
+    ->setTitle("EmailLogs")
+    ->setSubject("EmailLogs")
+    ->setDescription("EmailLogs")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Report");
+    $alphas = range('A', 'Z');
+    $alphas = ExportUtil::createColumnsArray("AE");
+    $count = 1;
+    $i = 0;
+    $colName = $alphas[$i++]. $count;
+    $firstRowColName = $colName;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "FullName");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "LogType");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,"Emailid");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SendOn");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SentOn");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Failure Message");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $colName = $alphas[$i++]. $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Attempts");
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+    
+    $fromformatWithTime = "Y-m-d H:i:s";
+    $toFormatWithTime= "n/j/y h:i a";
+    
+    $fromformat = "Y-m-d";
+    $toFormat = "n/j/y";
+    
+    
+    $lastRowColName = $colName;
+    $objPHPExcel->getActiveSheet()->getStyle($firstRowColName.":" . $lastRowColName)->getFont()->setBold(true);
+    $styleArray = array(
+        'font'  => array(
+            'bold'  => true,
+            'color' => array('rgb' => 'FFFFFFFF'),
+        ));
+    $objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")->applyFromArray($styleArray);
+    
+    $objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")
+    ->getFill()
+    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+    ->getStartColor()
+    ->setRGB('000000');
+    
+    $objPHPExcel->setActiveSheetIndex(0)->getStyle("O1:R1")
+    ->getFill()
+    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+    ->getStartColor()
+    ->setRGB('87cefa');
+    
+    $objPHPExcel->setActiveSheetIndex(0)->getStyle("S1:AE1")
+    ->getFill()
+    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+    ->getStartColor()
+    ->setRGB('daa520');
+    $i = 0;
+    $count++;
+    $srNo = 1;
+    $top_vertical = PHPExcel_Style_Alignment::VERTICAL_TOP;
+    $sheet = $objPHPExcel->setActiveSheetIndex(0);
+    $sheet->getRowDimension('1')->setRowHeight(32);
+    $sheet->getStyle("A1:AE1")->getAlignment()->applyFromArray(
+        array("vertical" => PHPExcel_Style_Alignment::VERTICAL_CENTER)
+        );;
+        
+        if(!empty($emailLogs)){
+            foreach ($emailLogs as $emailLog){
+                //$containerSchedule = new ContainerSchedule();
+                
+                
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['fullname']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+                
+                
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['logtype']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+                
+                
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['emailid']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+                
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['sendon']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+                
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['senton']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+              
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['failuremsg']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+             
+                $colName = $alphas[$i++]. $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emailLog['attempts']);
+                self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+                
+                
+        $count++;
+        $i = 0;
+        $srNo++;
+      }
+    }else{
+            $colName = $alphas[$i++]. $count;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "No Rows Found");
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":I" .$count);
+        }
+        $objPHPExcel->getActiveSheet()->setTitle("Email Logs");
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getStyle('H1:H'.$objPHPExcel->getActiveSheet()->getHighestRow())
+        ->getAlignment()->setWrapText(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getStyle('I1:I'.$objPHPExcel->getActiveSheet()->getHighestRow())
+        ->getAlignment()->setWrapText(true);
+        
+        if($isEmail){
+            ob_start();
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+            $excelOutput = ob_get_contents();
+            ob_end_clean();
+            return $excelOutput;
+        }
+        // Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="EmailLogs.xls"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+        
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        ob_end_clean();
+        $objWriter->save('php://output');
+        
+}
+
+ public static function exportContainerSchedules($containerSchedules){
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Admin")
 	->setLastModifiedBy("Admin")

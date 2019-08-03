@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $sessionUtil = SessionUtil::getInstance();
+$isSessionQc = $sessionUtil->isSessionQC();
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -124,7 +125,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
  	                            	<input  type="hidden" maxLength="250" name="classcode" id="classcode">
 	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $graphicLog->getClassCodeSeq(),false);
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq","", $graphicLog->getClassCodeSeq(),false,false,false);
 				                            echo $select;
 	                             		?>
 	                            </div>
@@ -147,14 +148,14 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Type of Graphics :</label>
 	                        	<div class="col-lg-4">
 	                            	<?php 
-			                           	$select = DropDownUtils::getGraphicTypes("graphictype[]", "showGraphicFields()", $graphicLog->getGraphicType(),false,true);
+			                           	$select = DropDownUtils::getGraphicTypes("graphictype[]", "showGraphicFields()", $graphicLog->getGraphicType(),false,true,false);
 			                            echo $select;
 	                             	?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Type of Tags :</label>
 	                        	<div class="col-lg-4">
 	                            	<?php 
-			                           	$select = DropDownUtils::getTagTypes("tagtype", "showTagFields()", $graphicLog->getTagType(),false,true);
+			                           	$select = DropDownUtils::getTagTypes("tagtype", "showTagFields()", $graphicLog->getTagType(),false,true,false);
 			                            echo $select;
 	                             	?>
 	                             	<div id="tagFields" style="display:none">
@@ -302,9 +303,9 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assigned Designer :</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-										$select = DropDownUtils::getGraphicDesigersUsers("graphicartist", null,$graphicLog->getGraphicArtist(),false,true);
+										$select = DropDownUtils::getGraphicDesigersUsers("graphicartist", null,$graphicLog->getGraphicArtist(),false,true,false);
 		                        		echo $select;
-	                        			if($isSessionQC){?>
+		                        		if($isSessionQc){?>
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $graphicLog->getGraphicArtist()?>" name="graphicartist">
 	                        			<?php }
                              		?>

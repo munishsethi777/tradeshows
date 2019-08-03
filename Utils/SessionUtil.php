@@ -11,7 +11,8 @@ class SessionUtil{
     private static $USER_SEQ = "userSeq";
     private static $USER_USERNAME = "userUserName";
     private static $USER_LOGGED_IN = "userLoggedIn";
-
+    private static $URL_PREV_PAGE = "";
+    
 	private static $USER_IMAGE = "userimage";
     private static $ROLE = "role";
     private static $ROLES = "roles";
@@ -49,6 +50,8 @@ class SessionUtil{
     	$_SESSION[self::$ROLES] = $userRoles;
     	$_SESSION[self::$DEPARTMENTS] = $departments;
     	$_SESSION[self::$USER_LOGGED_IN] = $arr;
+    	//$_SESSION[self::$URL_PREV_PAGE] = $_SERVER['REQUEST_URI'];
+    	
     }
 
     public function refreshAdminSession(){
@@ -189,7 +192,9 @@ class SessionUtil{
 		//$bool = self::isSessionAdmin();
 		$bool = self::isSessionUser();
 		if($bool == false){
-			header("location: userlogin.php");
+            $_SESSION['url'] = $_SERVER['REQUEST_URI'];
+            $page= header("location: userlogin.php");  
+		     
 			die;
 		}else{
 			$boolAdmin = self::isSessionAdmin();
