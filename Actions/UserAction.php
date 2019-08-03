@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
 $success = 1;
 $call = "";
+$redirect = "";
 $response = new ArrayObject();
 $userMgr = UserMgr::getInstance();
 $departmentMgr = DepartmentMgr::getInstance();
@@ -89,6 +90,14 @@ if($call == "loginUser"){
 		$sessionUtil->createUserSession($user,$userRoles,$departments);
 		$response["user"] = $userMgr->toArray($user);
 		$message = "Login successfully";
+		if(!empty($_SESSION['url'])){
+		  $redirect = $_SESSION['url'];
+		   }
+		/*if($_SESSION['url'])
+		{
+		    header("location:". $_SESSION['url']);
+		}*/
+		
 	}else{
 		$success = 0;
 		$message = "Incorrect Username or Password";
@@ -131,5 +140,6 @@ if($call == "deleteUser"){
 }
 $response["success"] = $success;
 $response["message"] = $message;
+$response["url"] = $redirect;
 echo json_encode($response);
 return;
