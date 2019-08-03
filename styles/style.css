@@ -3651,9 +3651,10 @@ video {
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;
-    margin: 0 0 0 240px;
     min-height: 2002px;
+    margin: 0 0 0 240px;
   }
+  
 }
 .title-action {
   text-align: right;
@@ -8565,4 +8566,10 @@ body.md-skin {
 }
 .float-right {
 float: right!important;
+}
+.clsLogout{
+	color:blueviolet;
+	font-weight: 600;
+    float:right;
+    font-family:arial;	
 }
