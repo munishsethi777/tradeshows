@@ -3,7 +3,7 @@ class User{
 	public static $tableName = "users";
 	public static $className = "user";
 	
-	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon;
+	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon,$timezone;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -75,6 +75,12 @@ class User{
 	}
 	public function getLastModifiedOn(){
 		return $this->lastmodifiedon;
+	}
+	public function setTimezone($val){
+	    $this->timezone = $val;
+	}
+	public function getTimezone(){
+	    return $this->timezone;
 	}
 	function createFromRequest($request){
 		if (is_array($request)){
