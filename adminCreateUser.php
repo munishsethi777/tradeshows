@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
 $departments = $departmentMgr->getAll();
@@ -46,6 +47,8 @@ if(isset($_POST["id"])){
 	if($user->getIsSendNotifications() == 1){
 		$isSendNotifications = "checked";
 	}
+	
+	$user->getTimezone();
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 $departmentSeqArr = array_map(create_function('$o', 'return $o->getDepartmentSeq();'), $userDepartments);
@@ -74,7 +77,19 @@ if(in_array(1,$departmentSeqArr)){
 }if(in_array(4,$departmentSeqArr)){
 	$containerDepartmentChecked = "checked";
 }
+
+/*echo $optiondata = array('<script type="text/javascript">
+                     $(document).ready(function(){ 
+	                 $("#timezone option").each(function(){
+                      data = $(this).val();             
+	                   });
+                     });
+                    </script>');
+
+//$string_version = implode(',', $optiondata);
+//echo $string_version;*/
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -163,6 +178,16 @@ if(in_array(1,$departmentSeqArr)){
 	                            		<option <?php echo $userSelected?> value="USER">User</option>
 	                            		<option <?php echo $supervisorSelected?> value="SUPERVISOR">Supervisor</option>
 	                            	</select>
+	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Time Zone:</label>
+	                        	<div class="col-lg-4">
+	                        		<?php  
+	                        		
+	                        		$select = DropDownUtils::getTimezone("timezone","",$user->getTimezone(),true);
+	                        		echo $select;
+                                    //include('timezoneselect.php');
+                                     ?>
 	                            </div>
 	                       </div>
 	                        
@@ -337,6 +362,11 @@ $(document).ready(function(){
 	$('#containerDepartment').on('ifChanged', function(event){
 		disabledContainerPermissions();
   	});
+
+  	<?php if(!empty($user->getTimezone())){?>	
+		$("#timezone").val("<?php echo $user->getTimezone();?>");
+  	<?php }?>
+  
 });
 function disabledGraphicPermissions(){
 	var flag  = $("#graphicDepartment").is(':checked');
