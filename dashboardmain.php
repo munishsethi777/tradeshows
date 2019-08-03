@@ -1,4 +1,5 @@
 <?include("sessionCheck.php");
+include("StringConstants.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
@@ -20,7 +21,7 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 </head>
 <body>
 <div id="wrapper">
-	<div id="page-wrapper" class="gray-bg" style="margin:0px">
+	<div id="page-wrapper" class="gray-bg" style="margin:0px !important">
 		<div class="row border-bottom"></div>
         <div class="row m-t-xl">
 			<div class="col-lg-8 col-lg-offset-2">
@@ -61,7 +62,12 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 			                            </div>
 									</div>
 		                        </div>
-		                    <?php }?>
+		                    <?php } ?>
+		                    <?php if(empty( ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment())))
+		                     {
+		                         echo "<center> <b>". StringConstants::PERMISSION_AllOW . "</b> </center>";
+		                         echo '<a href="logout.php" class="clsLogout">Logout</a>';
+		                     }?>
 	                    </div>
             		</div>
 	                
