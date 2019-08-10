@@ -67,6 +67,12 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
 			$qcSchedule->setCreatedOn(new DateTime());
 			$qcSchedule->setLastModifiedOn(new DateTime());
+			if($qcSchedule->getAcFirstInspectionNotes() == "<p><br></p>"){
+			    $qcSchedule->setAcFirstInspectionNotes(NULL);
+			}
+			if($qcSchedule->getAcMiddleInspectionNotes() == "<p><br></p>"){
+			    $qcSchedule->setAcMiddleInspectionNotes(NULL);
+			}
 			$id = $qcScheduleMgr->save($qcSchedule);
 			if($id > 0){
 				if(isset($_POST["isapproval"])){
