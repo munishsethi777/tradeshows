@@ -1,0 +1,1 @@
+ALTER TABLE `qcschedules` ADD `acmiddleinspectionnotes` VARCHAR(2500) NULL AFTER `classcodeseq`, ADD `acfirstinspectionnotes` VARCHAR(2500) NULL AFTER `acmiddleinspectionnotes`;
