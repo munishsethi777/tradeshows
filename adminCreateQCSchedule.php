@@ -309,6 +309,24 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Middle Inspection Notes</label>
+	                        	<div class="col-lg-4">
+	                            	
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">First Inspection Notes</label>
+	                        	<div class="col-lg-4">
+	                        		
+	                            </div>
+	                       </div>
+	                        <div class="form-group row">
+	                          <div class="col-lg-6">
+	                         		<textarea id="acmiddleinspectionnotes" maxLength="2500" name="acmiddleinspectionnotes" class="form-control editor" <?php echo isset($fieldStateArr["acmiddleinspectionnotes"])?$fieldStateArr["acmiddleinspectionnotes"]:""?> ><?php echo $qcSchedule->getAcMiddleInspectionNotes()?></textarea>
+	                            </div>
+	                            <div class="col-lg-6">
+	                                <textarea id="acfirstinspectionnotes" maxLength="2500" name="acfirstinspectionnotes" class="form-control editor" <?php echo isset($fieldStateArr["acfirstinspectionnotes"])?$fieldStateArr["acfirstinspectionnotes"]:""?> ><?php echo $qcSchedule->getAcFirstInspectionNotes()?></textarea>
+	                            </div>
+	                       </div>
+	                        <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="acproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getACProductionStartDate()?>" name="acproductionstartdate" class="form-control dateControl" <?php echo isset($fieldStateArr["acproductionstartdate"])?$fieldStateArr["acproductionstartdate"]:""?>>
@@ -436,6 +454,28 @@ $(document).ready(function(){
 		var flag  = $("#apFirstInspectionChk").is(':checked');
 		showHideFirstNaDiv(flag);
   	});
+	$('.editor').summernote({
+		height: 120,
+		minHeight: null,             // set minimum height of editor
+		maxHeight: null,
+		toolbar: [
+		    // [groupName, [list of button]]
+		    ['style', ['bold', 'italic', 'underline', 'clear']],
+		    ['fontsize', ['fontsize']],
+		    ['color', ['color']],
+		    ['para', ['ul', 'ol', 'paragraph']],
+		    ['height', ['height']]
+		  ]
+	});
+	var acFirstInspectionNotesDisable = '<?php echo isset($fieldStateArr["acfirstinspectionnotes"])?$fieldStateArr["acfirstinspectionnotes"]:""?>';
+	var acMiddleInspectionNotesDisable = '<?php echo isset($fieldStateArr["acmiddleinspectionnotes"])?$fieldStateArr["acmiddleinspectionnotes"]:""?>';
+	if(acFirstInspectionNotesDisable != ""){
+		$('#acfirstinspectionnotes').summernote(acFirstInspectionNotesDisable.slice(0, -1));
+	}
+	if(acMiddleInspectionNotesDisable != ""){
+		$('#acmiddleinspectionnotes').summernote(acMiddleInspectionNotesDisable.slice(0, -1));
+	}
+  
   	
 });
 function setDates(shipDateStr){
