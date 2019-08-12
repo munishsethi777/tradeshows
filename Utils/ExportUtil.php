@@ -2305,12 +2305,16 @@ public static function exportQcPlannerReport($data, $isEmail)
     $i = 0;
     $colName = $alphas[$i ++] . $count;
     $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
+    $objPHPExcel->getActiveSheet()
+    ->getStyle($colName)
+    ->getFont()
+    ->setBold(true);
     $c = 0;
     $grandTotal = 0;
     if(! empty($qcSchedules)) {
         foreach ($qcSchedules as $key => $qcScheduleArr) {
             $rowTotal = 0;
-            $i = 0;
+            $i = 1;
             foreach ($dates as $date){
                 $al = $alphas[$i];
                 if ($count == 1) {
