@@ -847,23 +847,16 @@ where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  
 	        $arr = $this->group_by_qc_plan($qcScheduleArr, "plandate");
 	        $dataArr[$key] = $arr;
 	    }
+	    sort($this->commonDates,1);
 	    $mainDataArr = array();
 	    $mainDataArr["data"] = $dataArr;
 	    $mainDataArr["dates"] = $this->commonDates;
-	    usort($this->commonDates, "cmp");
 	    ExportUtil::exportQcPlannerReport($mainDataArr,false);
 	    return $dataArr;
 	}
 	
-	function cmp($a, $b)
-	{
-	    $a = DateUtil::StringToDateByGivenFormat("Y-m-d", $a);
-	    $b = DateUtil::StringToDateByGivenFormat("Y-m-d", $b);
-	    
-	    if ($a == $b) {
-	        return 0;
-	    }
-	    return ($a < $b) ? -1 : 1;
+	function date_sort($a, $b) {
+	    return strtotime($a) - strtotime($b);
 	}
 	
 	
@@ -871,12 +864,13 @@ where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  
 	    $return = array();
 	    foreach($array as $val){
 	        $count = 1;
-	        if(array_key_exists($val[$key], $return)){
-	            $count += $return[$val[$key]];
+	        $timeStamp = strtotime($val[$key]);
+	        if(array_key_exists($timeStamp, $return)){
+	            $count += $return[$timeStamp];
 	        }
-	        $return[$val[$key]] = $count;
-	        if(!in_array($val[$key],$this->commonDates)){
-	            array_push($this->commonDates,$val[$key]);
+	        $return[$timeStamp] = $count;
+	        if(!in_array($timeStamp,$this->commonDates)){
+	            array_push($this->commonDates,$timeStamp);
 	        }
 	    }
 	    return $return;

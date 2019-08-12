@@ -2319,7 +2319,7 @@ public static function exportQcPlannerReport($data, $isEmail)
                 $al = $alphas[$i];
                 if ($count == 1) {
                     $colName = $alphas[$i] . $count;
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $date);
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, date("Y-m-d",$date));
                     $objPHPExcel->getActiveSheet()
                     ->getStyle($colName)
                     ->getFont()
