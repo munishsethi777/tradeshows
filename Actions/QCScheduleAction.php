@@ -131,6 +131,14 @@ if($call == "export"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "exportPlanner"){
+    try{
+        $response = $qcScheduleMgr->exportQCPlannerReport();
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
 if($call == "getQCSchedule"){
 	try{
 		$qcSchedule = $qcScheduleMgr->findBySeq($_GET["seq"]);

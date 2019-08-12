@@ -119,6 +119,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
     	<input type="hidden" id="seqs" name="seqs"/>
    </form> 
+    <form id="form3" name="form3" method="post" action="Actions/QCScheduleAction.php">
+    	<input type="hidden" id="call" name="call" value="exportPlanner" />
+   </form> 
     
 	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -278,8 +281,10 @@ $(document).ready(function(){
     // applies the filter.
     $("#fieldNameDD").change(function () {
 		var datafield = $("#fieldNameDD").val();
+		$('#isCompleted').removeAttr('checked');
+    	$('#isCompleted').iCheck('uncheck')
     	if(datafield.substr(0,2) == "sc" || datafield.substr(0,2) == "ap"){
-        	$(".taskCompleted").show();
+    		$(".taskCompleted").show();
     	}else{
     		$(".taskCompleted").hide();
     	}
@@ -534,6 +539,7 @@ function loadGrid(){
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Mail Weekly Report</span></div>");
+            var exportPlannerButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
             
             container.append(addButton);
             container.append(editButton);
@@ -544,6 +550,7 @@ function loadGrid(){
             container.append(downloadButton);
             
             container.append(weeklyReportButton);
+            container.append(exportPlannerButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
@@ -553,6 +560,7 @@ function loadGrid(){
             downloadButton.jqxButton({  width: 140, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
             weeklyReportButton.jqxButton({  width: 150, height: 18 });
+            exportPlannerButton.jqxButton({  width: 120, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("adminCreateQCSchedule.php");
@@ -611,6 +619,9 @@ function loadGrid(){
          	   filterQstr = getFilterString("qcscheduleGrid");
          	   exportItemsConfirm(filterQstr);
              });
+             exportPlannerButton.click(function (event) {
+            	 exportPlanner();
+             });
 //              $("#qcscheduleGrid").bind('rowselect', function (event) {
 //                  var selectedRowIndex = event.args.rowindex;
 //                   var pageSize = event.args.owner.rows.records.length - 1;                       
@@ -634,6 +645,8 @@ function loadGrid(){
                 $("#qcscheduleGrid").jqxGrid("clearfilters");
             	$('#fieldNameDD').prop('selectedIndex',0);
             	initDateRanges();
+            	$('#isCompleted').removeAttr('checked');
+            	$(".taskCompleted").hide()
             });
             downloadButton.click(function (event) {
             	location.href = ("files/QCSchedules_template.xlsx");
@@ -665,6 +678,9 @@ function exportItemsConfirm(filterString){
 function exportItems(filterString){
 	$("#queryString").val(filterString);
 	$("#form1").submit();
+}
+function exportPlanner(){
+	$("#form3").submit();
 }
 
 function dateToStr(date){

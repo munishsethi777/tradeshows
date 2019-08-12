@@ -813,9 +813,60 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		return $date;
 	}
 	
+	private function getQcPendingAcFirstInpection(){
+	    $query = "select count(qcschedules.seq) as count, COALESCE(qcschedules.apfirstinspectiondate, qcschedules.scfirstinspectiondate) as plandate,qcschedules.scfirstinspectiondate as scdate, qcschedules.potype, qcschedules.apfirstinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
+where acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL group by plandate,classcodeseq
+ORDER BY plandate  Desc";
+	    $qcSchedulesFirstInspections =  self::$dataStore->executeQuery($query,false,true);
+	    return $qcSchedulesFirstInspections;
+	}
+	
+	private function getQcPendingAcMiddleInpection(){
+	    $query = "select COALESCE(qcschedules.apmiddleinspectiondate, qcschedules.scmiddleinspectiondate) as plandate,count(qcschedules.seq) as count,qcschedules.scmiddleinspectiondate scdate , qcschedules.potype, qcschedules.apmiddleinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
+where qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
+	    $qcSchedulesMiddleInspections =  self::$dataStore->executeQuery($query,false,true);
+	    return $qcSchedulesMiddleInspections;
+	}
 	
 	
+	private function getQcPendingAcFinalInpection(){
+	    $query = "select COALESCE(qcschedules.apfinalinspectiondate, qcschedules.scfinalinspectiondate) as plandate,count(qcschedules.seq) as count,qcschedules.scfinalinspectiondate scdate, qcschedules.potype, qcschedules.apfinalinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
+where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
+	    $qcSchedulesFinalInspections =  self::$dataStore->executeQuery($query,false,true);
+	    return $qcSchedulesFinalInspections;
+	}
+	private $commonDates = array();
+	public function exportQCPlannerReport(){
+	    $qcSchedulesFirstInspections =  $this->getQcPendingAcFirstInpection();
+	    $qcSchedulesMiddleInspections =  $this->getQcPendingAcMiddleInpection();
+	    $qcSchedulesFinalInspections =  $this->getQcPendingAcFinalInpection();
+	    $qcSchedulesForPlanReport = array_merge($qcSchedulesFirstInspections,$qcSchedulesMiddleInspections,$qcSchedulesFinalInspections);
+	    $qcSchedulesForPlanReport = $this->group_by($qcSchedulesForPlanReport, "qccode");
+	    $dataArr = array();
+	    foreach ($qcSchedulesForPlanReport as $key=>$qcScheduleArr){
+	        $arr = $this->group_by_qc_plan($qcScheduleArr, "plandate");
+	        $dataArr[$key] = $arr;
+	    }
+	    $mainDataArr = array();
+	    $mainDataArr["data"] = $dataArr;
+	    $mainDataArr["dates"] = $this->commonDates;
+	    ExportUtil::exportQcPlannerReport($mainDataArr,false);
+	    return $dataArr;
+	}
 	
+	function group_by_qc_plan($array, $key) {
+	    $return = array();
+	    foreach($array as $val){
+	        $count = $val["count"];
+	        if(array_key_exists($val[$key], $return)){
+	            $count += $return[$val[$key]];
+	        }
+	        $return[$val[$key]] = $count;
+	        if(!in_array($val[$key],$this->commonDates)){
+	            array_push($this->commonDates,$val[$key]);
+	        }
+	    }
+	    return $return;
+	}
 	
-	 
 }
