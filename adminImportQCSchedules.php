@@ -120,7 +120,8 @@ function saveAction(){
 		   $("#updateIds").val("");
 		   var jsonData = $.parseJSON(data);
 		   if(jsonData.itemalreadyexists > 0){
-			   $("#updateIds").val(jsonData.existingItemIds);
+			   var jsonString = JSON.stringify(jsonData.existingItemIds)
+			   $("#updateIds").val(jsonString);
 			   var importedItemsCount = jsonData.savedItemCount;
 			   var message = jsonData.itemalreadyexists + " QC Schedules already exists in database! Do you want to update these items with new values?";
 			   message += "<br>If you want to update please enter the password :- <br>";

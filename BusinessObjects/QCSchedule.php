@@ -5,7 +5,8 @@ class QCSchedule{
 	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
-	$notes,$status, $userseq, $createdon, $lastmodifiedon,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,$classcodeseq;
+	$notes,$status, $userseq, $createdon, $lastmodifiedon,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,$classcodeseq,
+	$acmiddleinspectionnotes,$acfirstinspectionnotes;
 	
 	public static $className = "QCSchedule";
 	public static $tableName = "qcschedules";
@@ -214,12 +215,30 @@ class QCSchedule{
 		return $this->apfirstinspectiondatenareason;
 	}
 	
+	public function setAcMiddleInspectionNotes($middleInspectionNotes_){
+	    $this->acmiddleinspectionnotes = $middleInspectionNotes_;
+	}
+	
+	public function getAcMiddleInspectionNotes(){
+	    return $this->acmiddleinspectionnotes;
+	}
+	
+	public function setAcFirstInspectionNotes($firstInspectionNotes_){
+	    $this->acfirstinspectionnotes = $firstInspectionNotes_;
+	}
+	public function getAcFirstInspectionNotes(){
+	    return $this->acfirstinspectionnotes;
+	}
+	
+	
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);
 		}
 		return $this;
 	}
+	
+
 	
 	public function from_array($array){
 		foreach(get_object_vars($this) as $attrName => $attrValue){

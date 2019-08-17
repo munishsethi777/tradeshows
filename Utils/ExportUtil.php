@@ -2285,6 +2285,202 @@ public static function exportQcPendingForApprovals($qcSchedules,$notificationNam
 	ob_end_clean();
 	$objWriter->save('php://output');
 }
+private static $default_style = array(
+   'borders' => array(
+        'allborders' => array(
+            'style' => PHPExcel_Style_Border::BORDER_THIN,
+            'color' => array('rgb' => 'AAAAAA')
+        )
+    )
+);
+public static function exportQcPlannerReport($data, $isEmail)
+{
+    $qcSchedules = $data["data"];
+    $dates = $data["dates"];
+    $objPHPExcel = new PHPExcel();
+    $objPHPExcel->getProperties()
+    ->setCreator("Admin")
+    ->setLastModifiedBy("Admin")
+    ->setTitle("QCPlan")
+    ->setSubject("QCPlan")
+    ->setDescription("QCPlan")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Report");
+    $alphas = $alphas = ExportUtil::createColumnsArray("ZZ");
+    ;
+    $count = 1;
+    $i = 0;
+    $colName = $alphas[$i ++] . $count;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
+    $objPHPExcel->getActiveSheet()
+    ->getStyle($colName)
+    ->getFont()
+    ->setBold(true);
+    $c = 0;
+    $grandTotal = 0;
+    if(! empty($qcSchedules)) {
+        foreach ($qcSchedules as $key => $qcScheduleArr) {
+            $rowTotal = 0;
+            $i = 1;
+            foreach ($dates as $date){
+                $al = $alphas[$i];
+                if ($count == 1) {
+                    $colName = $alphas[$i] . $count;
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, date("m/d/Y",$date));
+                    $objPHPExcel->getActiveSheet()
+                    ->getStyle($colName)
+                    ->getFont()
+                    ->setBold(true);
+                    $objPHPExcel->setActiveSheetIndex(0)
+                    ->getColumnDimension($al)
+                    ->setAutoSize(true);
+                }
+                $value = "";
+                $c = $count + 1;
+                $countCol = $alphas[$i++] . $c;
+                if (array_key_exists($date, $qcScheduleArr)) {
+                    $value = $qcScheduleArr[$date];
+                    $rowTotal += $value;
+                }else{
+                    $objPHPExcel->getActiveSheet(0)
+                    ->getStyle($countCol)->applyFromArray(ExportUtil::$default_style);
+                    $objPHPExcel->setActiveSheetIndex(0)
+                    ->getStyle($countCol)
+                    ->getFill()
+                    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB('FFFF99');
+                }
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($countCol, $value);
+                
+            }
+            if ($count == 1) {
+                $colName = $alphas[$i] . $count;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Grand total");
+                $objPHPExcel->getActiveSheet()
+                ->getStyle($colName)
+                ->getFont()
+                ->setBold(true);
+                $objPHPExcel->setActiveSheetIndex(0)
+                ->getColumnDimension($alphas[$i])
+                ->setAutoSize(true);
+            }
+            
+            $countCol = $alphas[$i] . $c;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($countCol, $rowTotal);
+            $grandTotal += $rowTotal;
+            //$i = 0;
+            //$count ++;
+            $colName = $alphas[0] . $c;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $key);
+            $count ++;
+            //$i = 1;
+        }
+        $count++;
+        $colName = $alphas[$i] . $count;
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $grandTotal);
+        $i = 0;
+        $objPHPExcel->setActiveSheetIndex(0)
+        ->getColumnDimension($alphas[$i])
+        ->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()
+        ->getStyle($colName)
+        ->getFont()
+        ->setBold(true);
+                    $colName = $alphas[$i++] . $count;
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Grand Total");
+                    $objPHPExcel->getActiveSheet()
+                    ->getStyle($colName)
+                    ->getFont()
+                    ->setBold(true);
+                    ExportUtil::setSumOfColumns($alphas,$objPHPExcel->setActiveSheetIndex(0));
+        
+    } else {
+        $colName = $alphas[$i ++] . $count;
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "No Rows Found");
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":I" . $count);
+    }
+    $objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(32);
+    $firstRow = 'A1:'.$objPHPExcel->getActiveSheet()->getHighestColumn().'1';
+    $highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+    $lastRow = 'A'.$highestRow.':' .$objPHPExcel->getActiveSheet()->getHighestColumn().$highestRow;
+    $objPHPExcel->getActiveSheet()->getStyle($firstRow)->getFill()
+    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+    ->getStartColor()
+    ->setRGB('CCE5FF');
+    $objPHPExcel->getActiveSheet()->getStyle($lastRow)->getFill()
+    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+    ->getStartColor()
+    ->setRGB('D3D3D3');
+    $objPHPExcel->getActiveSheet()
+    ->getStyle($lastRow)
+    ->getFont()
+    ->setBold(true);
+    $objPHPExcel->getActiveSheet()->getStyle($firstRow)->applyFromArray(ExportUtil::$default_style);
+    $objPHPExcel->getActiveSheet();
+    
+    $objPHPExcel->getActiveSheet()->setTitle("QCPlan");
+    // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+    $objPHPExcel->setActiveSheetIndex(0);
+    $objPHPExcel->getActiveSheet()
+    ->getColumnDimension('H')
+    ->setWidth(20);
+    $objPHPExcel->getActiveSheet()
+    ->getStyle('H1:H' . $objPHPExcel->getActiveSheet()
+        ->getHighestRow())
+        ->getAlignment()
+        ->setWrapText(true);
+        $objPHPExcel->getActiveSheet()
+        ->getColumnDimension('I')
+        ->setWidth(20);
+        $objPHPExcel->getActiveSheet()
+        ->getStyle('I1:I' . $objPHPExcel->getActiveSheet()
+            ->getHighestRow())
+            ->getAlignment()
+            ->setWrapText(true);
+            
+            if ($isEmail) {
+                ob_start();
+                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+                $objWriter->save('php://output');
+                $excelOutput = ob_get_contents();
+                ob_end_clean();
+                return $excelOutput;
+            }
+            // Redirect output to a client’s web browser (Excel5)
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="QC_PLAN.xls"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+            
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            ob_end_clean();
+            $objWriter->save('php://output');
+}
+
+
+private static function setSumOfColumns($alphas,$sheet){
+    $highestRow = $sheet->getHighestRow();
+    $highestColumn = $sheet->getHighestColumn();
+    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+        for ($col = 1; $col < $highestColumnIndex-1; ++ $col) {
+            $val = [];
+            for ($row = 2; $row <= $highestRow; ++ $row) {
+                $cell = $sheet->getCellByColumnAndRow($col, $row);
+                $val[] = $cell->getValue();
+            }
+        $colTotal = array_sum($val);
+        $r = $row - 1;    
+        $colName = $alphas[$col].$r;
+        $sheet->setCellValue($colName, $colTotal);
+    }
+}
 
 public static function exportHtmlToExcel($html){
 	$filename = "DownloadReport";

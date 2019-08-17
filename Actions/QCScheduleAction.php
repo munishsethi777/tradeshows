@@ -67,6 +67,12 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
 			$qcSchedule->setCreatedOn(new DateTime());
 			$qcSchedule->setLastModifiedOn(new DateTime());
+			if($qcSchedule->getAcFirstInspectionNotes() == "<p><br></p>"){
+			    $qcSchedule->setAcFirstInspectionNotes(NULL);
+			}
+			if($qcSchedule->getAcMiddleInspectionNotes() == "<p><br></p>"){
+			    $qcSchedule->setAcMiddleInspectionNotes(NULL);
+			}
 			$id = $qcScheduleMgr->save($qcSchedule);
 			if($id > 0){
 				if(isset($_POST["isapproval"])){
@@ -98,7 +104,7 @@ if($call == "importQCSchedules"){
 			}
 			$isUpdate = true;
 			$updateIds = $_POST["updateIds"];
-			$updateIds = explode(",",$updateIds);
+			$updateIds = json_decode($updateIds,true);
 		}
 		if(isset($_FILES["file"])){
 			$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
@@ -124,6 +130,14 @@ if($call == "export"){
 		$success = 0;
 		$message  = $e->getMessage();
 	}
+}
+if($call == "exportPlanner"){
+    try{
+        $response = $qcScheduleMgr->exportQCPlannerReport();
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
 }
 if($call == "getQCSchedule"){
 	try{
