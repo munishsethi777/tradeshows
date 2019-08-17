@@ -532,12 +532,12 @@ function loadGrid(){
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
-            var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+          // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Mail Weekly Report</span></div>");
             
             container.append(addButton);
             container.append(editButton);
-            container.append(deleteButton);
+           // container.append(deleteButton);
             container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
@@ -551,7 +551,7 @@ function loadGrid(){
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
-            deleteButton.jqxButton({  width: 65, height: 18 });
+          //  deleteButton.jqxButton({  width: 65, height: 18 });
             weeklyReportButton.jqxButton({  width: 150, height: 18 });
             // create new row.
             addButton.click(function (event) {
@@ -599,11 +599,11 @@ function loadGrid(){
                 $("#form2").submit();    
             });
             // delete row.
-            deleteButton.click(function (event) {
+          /*  deleteButton.click(function (event) {
                 gridId = "qcscheduleGrid";
                 deleteUrl = "Actions/QCScheduleAction.php?call=deleteQCSchedule";
                 deleteQCSchedule(gridId,deleteUrl);
-            });
+            }); */
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
             });
@@ -690,7 +690,7 @@ function subtractDays(date, days) {
 	sDate.setDate(sDate.getDate() - days);
 	return sDate;
 }
-function deleteQCSchedule(gridId,deleteURL){
+/*function deleteQCSchedule(gridId,deleteURL){
     var selectedRowIndexes = $("#" + gridId).jqxGrid('selectedrowindexes');
     if(selectedRowIndexes.length > 0){
         bootbox.confirm("Are you sure you want to delete selected row(s)?", function(result) {
@@ -740,6 +740,6 @@ function deleteQCSchedule(gridId,deleteURL){
 
     
 
-}
+}*/
 
 </script>
