@@ -533,7 +533,7 @@ function loadGrid(){
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div title='Edit' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
-           // var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
+            var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
@@ -544,7 +544,7 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
            // container.append(deleteButton);
-           // container.append(importButton);
+            container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
@@ -554,7 +554,7 @@ function loadGrid(){
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
-           // importButton.jqxButton({  width: 65, height: 18 });
+            importButton.jqxButton({  width: 65, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
@@ -612,9 +612,9 @@ function loadGrid(){
                 deleteUrl = "Actions/QCScheduleAction.php?call=deleteQCSchedule";
                 deleteQCSchedule(gridId,deleteUrl);
             }); */
-//             importButton.click(function (event) {
-//                 location.href = ("adminImportQCSchedules.php");
-//             });
+            importButton.click(function (event) {
+                location.href = ("adminImportQCSchedules.php");
+            });
              exportButton.click(function (event) {
          	   filterQstr = getFilterString("qcscheduleGrid");
          	   exportItemsConfirm(filterQstr);

@@ -107,7 +107,8 @@ if($call == "importQCSchedules"){
 			$updateIds = json_decode($updateIds,true);
 		}
 		if(isset($_FILES["file"])){
-			$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
+			//$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
+			$response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updateIds);
 			echo json_encode($response);
 			return;
 		}

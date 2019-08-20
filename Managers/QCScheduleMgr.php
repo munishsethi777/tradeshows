@@ -9,6 +9,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleApprovalType.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
+require_once $ConstantsArray['dbServerUrl'] . 'Utils/QCScheduleImportUtil.php';
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
 	private static $dataStore;
@@ -38,6 +39,11 @@ class QCScheduleMgr{
     
     public function updateOject($conn,$item,$condition){
     	self::$dataStore->updateObject($item, $condition, $conn);
+    }
+	
+    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos){
+        $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
+        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos);
     }
 	
 	public function importQCSchedules($file,$isUpdate,$updateItemNos){
@@ -167,7 +173,6 @@ class QCScheduleMgr{
 // 				}
 			}
 			$rowAndItemNo[$row] = $itemNoArr;
-			
 		}
 		$response = array();
 		$response["message"] = $messages;
@@ -206,8 +211,16 @@ class QCScheduleMgr{
 	}
 	
 	
-	
-	private function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
+	private function in_array_r($needle, $haystack, $strict = false) {
+	    foreach ($haystack as $item) {
+	        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict))) {
+	            return true;
+	        }
+	    }
+	    
+	    return false;
+	}
+	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -223,14 +236,20 @@ class QCScheduleMgr{
 			    continue;
 			}
 			$po =  $qc->getPo();
+			$shipDate = $qc->getShipdate();
+			$qc->setStatus(null);
 			try {
 				if(!$isUpdate){
 					$this->saveQCSchedule($conn, $qc);
 					$savedItemCount++;
 				}else{
-					if(in_array($itemNo, $updateItemNos)){
+				    if($this->in_array_r($itemNo, $updateItemNos)){
 						$condition["itemnumbers"] = $itemNo;
 						$condition["po"] = $po;
+						if ($shipDate instanceof DateTime) {
+						    $shipDate = $shipDate->format ( 'Y-m-d' );
+						}
+						$condition["shipdate"] = $shipDate;
 						$this->updateOject($conn, $qc, $condition);
 					}
 				}
@@ -239,8 +258,11 @@ class QCScheduleMgr{
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
 					$itemNoAlreadyExists++;
-					$rowNo = $this->getRowNumberByItemId($rowAndItemNo,$itemNo);
-					$existingItemIds[$rowNo] = $itemNo;
+					$rowNo = $this->getRowNumberByItemId($rowAndItemNo,$itemNo,$po);
+					if(!array_key_exists($rowNo, $existingItemIds)){
+					    $existingItemIds[$rowNo] = array();
+					}
+					array_push($existingItemIds[$rowNo],$itemNo);
 				}else{
 					$messages .= $e->getMessage();
 				}
@@ -260,10 +282,11 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
-	private function getRowNumberByItemId($array,$itemNo){
+	private function getRowNumberByItemId($array,$itemNo,$po){
 	    $rowNumber = 0;
 	    foreach($array as $key => $value) {
-	        if(in_array($itemNo, $value)) {
+	        $i = $itemNo.$po;
+	        if(in_array($i, $value)) {
 	            $rowNumber =  $key;
 	        }
 	    }
@@ -298,7 +321,7 @@ class QCScheduleMgr{
 		$shipDateStr = $data[5];
 		
 		$readyDate = $data[6];
-		$readyDate = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($readyDate));
+		
 		$finalInspectionDate = $data[7];
 		$middleInspectionDate = $data[8];
 		$firstInspectionDate = $data[9];
