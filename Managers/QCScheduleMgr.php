@@ -836,7 +836,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	//--------------**********-------------
 	
-	private $find_qc_sql = "select classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
+	private $find_qc_sql = "select qccode,classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq ";
 	//------------Pending Schedules-----------
 	public function getPendingShechededForReadyDate(){//currently not in use
 		$query = $this->find_qc_sql . "where screadydate > CURDATE() and screadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcodes.classcode ASC, screadydate ASC";
