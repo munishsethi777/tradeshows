@@ -1515,7 +1515,7 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $srNo);
 					
 					$colName = $alphas[$i++]. $count;
-					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getQC());
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->qccode);
 					
 					$colName = $alphas[$i++]. $count;
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
