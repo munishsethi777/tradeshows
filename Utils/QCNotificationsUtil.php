@@ -459,16 +459,18 @@ class QCNotificationsUtil{
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$pendingQcSchedules = $qcScheduleMgr->getPendingQcForApprovals();
 		$tableHtml = file_get_contents("../QCApprovalStatusEmailTemplate.php");
+		$row = "";
 		if(empty($pendingQcSchedules)){
 			$row = "<tr><td colspan='8'>No Rows Found<td></tr>";
 		}
 		$srNo = 1;
+		$tableMailHtml = "";
 		foreach ($pendingQcSchedules as $qcSchedule){
 			$tableRow = file_get_contents("../QCApprovalStatusTableRow.php");
 			$rowTokens = array();
 			$row .= $tableRow;
 			$rowTokens["SR_NO"] =  $srNo;
-			$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+			$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
 			$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 			$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 			$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
@@ -479,8 +481,11 @@ class QCNotificationsUtil{
 			$appliedOnDate = DateUtil::StringToDateByGivenFormat('Y-m-d H:i:s', $appliedOn);
 			$rowTokens["APPLIED_ON"] =  $appliedOnDate->format("n/j/y");
 			$finalInspection = $qcSchedule->getACFinalInspectionDate();
-			$finalInspectionDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $finalInspection);
-			$rowTokens["FINAL_INSPECTION_DATE"] =  $finalInspectionDate->format("n/j/y");
+			if(!empty($finalInspection)){
+    			$finalInspectionDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $finalInspection);
+    			$finalInspection = $finalInspectionDate->format("n/j/y");
+			}
+			$rowTokens["FINAL_INSPECTION_DATE"] =  $finalInspection;
 			$rowTokens["APPROVAL_STATUS"] = $qcSchedule->responsetype;
 			$row = self::replacePlaceHolders($rowTokens, $row);
 			$srNo++;
