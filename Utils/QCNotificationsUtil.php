@@ -1,5 +1,5 @@
 <?php
-require_once('../IConstants.inc');
+require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/EmailLogMgr.php");
@@ -39,7 +39,7 @@ class QCNotificationsUtil{
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
-			if(!empty($toEmails)){
+		if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			    $Emaillog = EmailLogMgr::getInstance();
 				if($bool){
@@ -50,8 +50,7 @@ class QCNotificationsUtil{
 				}
 				
 			}	
-			
-		}elseif($userType == UserType::QC){
+		 }elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
 				$finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate($user->getSeq());
@@ -301,7 +300,7 @@ class QCNotificationsUtil{
 				foreach ($qcSchedules as $qcSchedule){
 					$row .= $tableRow;
 					$rowTokens["SR_NO"] =  $srNo;
-					$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+					$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
 					$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 					$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 					$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
@@ -500,6 +499,31 @@ class QCNotificationsUtil{
 			$subject = StringConstants::PENDING_QC_APPROVALS;
 			MailUtil::sendSmtpMail($subject, $tableMailHtml, $toEmails,true, $attachments);
 		}
+	}
+	
+	
+	public static function sendQCPlannerNotification($dataArr,$isSendEmail){
+	    $attachment = ExportUtil::exportQcPlannerReport($dataArr, $isSendEmail);
+	    $attachments = array(StringConstants::QC_PLANNER=>$attachment);
+	    if($isSendEmail){
+    	    $userMgr = UserMgr::getInstance();
+    	    $users = $userMgr->getUsersForSendQcPlannerReport();
+    	    $admin = $userMgr->getAdminForSendReport();
+    	    $toEmails = array();
+    	    if(!empty($users)){
+        	    foreach ($users as $user){
+        	        array_push($toEmails,$user->getEmail());
+        	    }
+    	    }
+    	    if(!empty($admin)){
+    	        //array_push($toEmails,$admin->getEmail());
+    	    }
+    	    $html = "<p>Qc Plannner file attached with this mail.";
+    	    if(!empty($toEmails)){
+    	        $subject = StringConstants::QC_PLANNER;
+    	        MailUtil::sendSmtpMail($subject, $html, $toEmails,true, $attachments);
+    	    }
+	    }
 	}
 	
 }

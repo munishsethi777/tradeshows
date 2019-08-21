@@ -4,16 +4,21 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QCSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleApprovalType.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
+require_once $ConstantsArray['dbServerUrl'] . 'Utils/QCScheduleImportUtil.php';
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
 	private static $dataStore;
 	private $dataTypeErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 19;
+	private static $ACTUAL_FIELDS_NAMES = array("qc","classcode","po#","potype","itemno","shipdate","readydate","finalinspectiondate","middleinspectiondate","firstinspectiondate","productionstartdate","graphicsreceivedate","readydate","finalinspectiondate","middleinspectiondate","firstinspectiondate","productionstartdate","graphicsreceivedate","notes","finalstatus");
+	private static $FIELDS_NAMES = array("Qc","Class Code","PO#","PO Type","Item No","Ship Date","Ready Date","Final Inspection Date","Middle Inspection Date","First Inspection Date","Production Start Date","Graphics Receive Date","Ready Date","Final Inspection Date","Middle Inspection Date","First Inspection Date","Production Start Date","Graphics Receive Date","Notes","Final Status");
+	
 	public static function getInstance()
 	{
 		if (!self::$qcScheduleMgr)
@@ -36,13 +41,22 @@ class QCScheduleMgr{
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
+    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos){
+        $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
+        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos);
+    }
+	
 	public function importQCSchedules($file,$isUpdate,$updateItemNos){
 		$inputFileName = $file['tmp_name'];
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 		$sheet = $objPHPExcel->getActiveSheet();
 		$maxCell = $sheet->getHighestRowAndColumn();
 		$sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row']);
-		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
+		try{
+		    return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
+		}catch (Exception $e){
+		    throw $e;
+		}
 	}
 	
 	
@@ -94,52 +108,119 @@ class QCScheduleMgr{
 	}
 	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
-		$message = "";
 		$this->fieldNames = $sheetData[0];
 		$itemNoAlreadyExists = 0;
 		$success = 1;
 		$messages = "";
-		if(self::$FIELD_COUNT == count($this->fieldNames)){
-			$mainJson = array();
-			$json = array();
-			$mainJson["success"] = 1;
-			$mainJson["messages"] = "";
-			$exstingsItemNos = array();
-			$qcScheudleArr = array();
-			$sessionUtil = SessionUtil::getInstance();
-			$userSeq = $sessionUtil->getUserLoggedInSeq();
-			foreach ($sheetData as $key=>$data){
-				if($key == 0){
-					continue;
-				}
-				if(!array_filter($data)) {
-					continue;
-				}
-				$imoptedData = $this->getImportedData($data);
-				$qcschedule = $imoptedData["data"];
-				$itemIdsArr = $imoptedData["items"];
-				foreach ($itemIdsArr as $itemId){
-					$qc = clone $qcschedule;
-					$qc->setItemNumbers($itemId);
-					$qc->setUserSeq($userSeq);
-					array_push($qcScheudleArr, $qc);
-				}
+		$this->validateFields();
+		$mainJson["success"] = 1;
+		$mainJson["messages"] = "";
+		$exstingsItemNos = array();
+		$qcScheudleArr = array();
+		$sessionUtil = SessionUtil::getInstance();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
+		//$poItemArr = array();
+		foreach ($sheetData as $key=>$data){
+		    if($key == 0){
+				continue;
 			}
-		}else{
-			$messages .= "Please import the correct file";
-			$success = 0;
+			$row = $key + 2;
+			if(!array_filter($data)) {
+				continue;
+			}
+			if($isUpdate){
+			    if(!isset($updateItemNos[$row])){
+			        continue;
+			    }
+			}
+			$imoptedData = array();
+			try{
+			    $imoptedData = $this->getImportedData($data);
+			}catch(Exception $e){
+			     $messages .= $e->getMessage() . "<br>"; 
+			     $success = 0;
+			}
+			if(empty($imoptedData)){
+			    continue;
+			}
+			$qcschedule = $imoptedData["data"];
+			$itemIdsArr = $imoptedData["items"];
+			$itemNoArr = array();
+			foreach ($itemIdsArr as $itemId){
+			    if(empty($itemId)){
+			        continue;
+			    }
+			   $qc = clone $qcschedule;
+				$qc->setItemNumbers($itemId);
+				$qc->setUserSeq($userSeq);
+				array_push($qcScheudleArr, $qc);
+				array_push($itemNoArr,$itemId);
+				//Check dulplicate po and item number in file
+// 				$po = $qcschedule->getPo();
+// 				$items = array();
+// 				if(isset($poItemArr[$po])){
+// 				    $items = $poItemArr[$po];
+// 				    if(in_array($itemId, $items)){
+// 				        $success = 0;
+// 				        $messages .= "Duplicate PO - '$po' and Itemid '$itemId' in file <br>";
+// 				    }else{
+// 				        array_push($items,$itemId);
+// 				        $poItemArr[$po]= $items;
+// 				    }
+// 				}else{
+// 				    array_push($items,$itemId);
+// 				    $poItemArr[$po]= $items;
+// 				}
+			}
+			$rowAndItemNo[$row] = $itemNoArr;
 		}
 		$response = array();
 		$response["message"] = $messages;
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		if(empty($messages)){
-			$response = $this->saveArr($qcScheudleArr, $isUpdate,$updateItemNos);
+		    $response = $this->saveArr($qcScheudleArr, $isUpdate,$rowAndItemNo,$updateItemNos);
 		}
 		return $response;
 	}
 	
-	private function saveArr($qcScheudleArr,$isUpdate,$updateItemNos){
+	private function validateFields(){
+	   ////if(self::$FIELD_COUNT == count($this->fieldNames)){
+        $fieldArr = $this->fieldNames;
+        foreach (self::$FIELDS_NAMES as $key=>$field){
+            $actualFieldName = self::$ACTUAL_FIELDS_NAMES[$key];
+            $fileField = trim($fieldArr[$key]);
+            $actualfileField = strtolower(str_replace(array("\n", "\r"), ' ', $fileField));
+            $actualfileField = str_replace(' ', '', $actualfileField);
+            $colNo = $key + 1;
+            if(!in_array($actualfileField, self::$ACTUAL_FIELDS_NAMES)){
+                throw new Exception("Unknown filed Name '$fileField' in column no " . $colNo);
+            }
+            if(strtolower($actualFieldName) !=  $actualfileField){
+                throw new Exception("'$field' Field does not exists in column no " . $colNo);
+            }
+            unset($fieldArr[$key]);
+        }
+        if(!empty($fieldArr)){
+            $messages = "";
+            foreach ($fieldArr as $key=>$field){
+                $messages .= "Unknown filed Name '$field' in column no " . $key . "<br>";
+            }
+            throw new Exception($messages);
+        }
+	}
+	
+	
+	private function in_array_r($needle, $haystack, $strict = false) {
+	    foreach ($haystack as $item) {
+	        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict))) {
+	            return true;
+	        }
+	    }
+	    
+	    return false;
+	}
+	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -149,17 +230,26 @@ class QCScheduleMgr{
 		$savedItemCount = 0;
 		$existingItemIds = array();
 		$success = 1;
-		foreach ($qcScheudleArr as $qc){
+		foreach ($qcScheudleArr as $key=>$qc){
 			$itemNo = $qc->getItemNumbers();
+			if(strtolower($qc->getStatus()) != "pending"){
+			    continue;
+			}
 			$po =  $qc->getPo();
+			$shipDate = $qc->getShipdate();
+			$qc->setStatus(null);
 			try {
 				if(!$isUpdate){
 					$this->saveQCSchedule($conn, $qc);
 					$savedItemCount++;
 				}else{
-					if(in_array($itemNo, $updateItemNos)){
+				    if($this->in_array_r($itemNo, $updateItemNos)){
 						$condition["itemnumbers"] = $itemNo;
 						$condition["po"] = $po;
+						if ($shipDate instanceof DateTime) {
+						    $shipDate = $shipDate->format ( 'Y-m-d' );
+						}
+						$condition["shipdate"] = $shipDate;
 						$this->updateOject($conn, $qc, $condition);
 					}
 				}
@@ -168,7 +258,11 @@ class QCScheduleMgr{
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
 					$itemNoAlreadyExists++;
-					array_push($existingItemIds, $itemNo);
+					$rowNo = $this->getRowNumberByItemId($rowAndItemNo,$itemNo,$po);
+					if(!array_key_exists($rowNo, $existingItemIds)){
+					    $existingItemIds[$rowNo] = array();
+					}
+					array_push($existingItemIds[$rowNo],$itemNo);
 				}else{
 					$messages .= $e->getMessage();
 				}
@@ -188,6 +282,17 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
+	private function getRowNumberByItemId($array,$itemNo,$po){
+	    $rowNumber = 0;
+	    foreach($array as $key => $value) {
+	        $i = $itemNo.$po;
+	        if(in_array($i, $value)) {
+	            $rowNumber =  $key;
+	        }
+	    }
+	    return $rowNumber;
+	}
+	
 	private function validateNumeric($val,$fieldName){
 		$message = "";
 		$val = str_replace(",", "", $val);
@@ -198,7 +303,8 @@ class QCScheduleMgr{
 	}
 	
 	private function getImportedData($data){
-		$userMgr = UserMgr::getInstance();
+	    $finalStatus = $data[19];
+	 	$userMgr = UserMgr::getInstance();
 		$qcUsers = $userMgr->getQCUsersArrForDD();
 		$qcUsers = array_flip($qcUsers);
 		$classCodeMgr = ClassCodeMgr::getInstance();
@@ -215,6 +321,7 @@ class QCScheduleMgr{
 		$shipDateStr = $data[5];
 		
 		$readyDate = $data[6];
+		
 		$finalInspectionDate = $data[7];
 		$middleInspectionDate = $data[8];
 		$firstInspectionDate = $data[9];
@@ -245,6 +352,8 @@ class QCScheduleMgr{
 			$classCodeSeq = 0;
 			if(!empty($classCodeObj)){
 				$classCodeSeq = $classCodeObj->getSeq();
+			}else{
+			    throw new Exception("'$classCode' class code not found in database!");
 			}
 			$qcSchedule->setClassCodeSeq($classCodeSeq);
 		}
@@ -344,6 +453,9 @@ class QCScheduleMgr{
 // 		}
 		if(!empty($note)){
 			$qcSchedule->setNotes($note);
+		}
+		if(!empty($finalStatus)){
+		    $qcSchedule->setStatus($finalStatus);
 		}
 		$qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
 		$qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
@@ -724,7 +836,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	//--------------**********-------------
 	
-	private $find_qc_sql = "select classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
+	private $find_qc_sql = "select qccode,classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq ";
 	//------------Pending Schedules-----------
 	public function getPendingShechededForReadyDate(){//currently not in use
 		$query = $this->find_qc_sql . "where screadydate > CURDATE() and screadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcodes.classcode ASC, screadydate ASC";
@@ -836,7 +948,7 @@ where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  
 	    return $qcSchedulesFinalInspections;
 	}
 	private $commonDates = array();
-	public function exportQCPlannerReport(){
+	public function exportQCPlannerReport($isSendEmail = false){
 	    $qcSchedulesFirstInspections =  $this->getQcPendingAcFirstInpection();
 	    $qcSchedulesMiddleInspections =  $this->getQcPendingAcMiddleInpection();
 	    $qcSchedulesFinalInspections =  $this->getQcPendingAcFinalInpection();
@@ -847,23 +959,16 @@ where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  
 	        $arr = $this->group_by_qc_plan($qcScheduleArr, "plandate");
 	        $dataArr[$key] = $arr;
 	    }
+	    sort($this->commonDates,1);
 	    $mainDataArr = array();
 	    $mainDataArr["data"] = $dataArr;
 	    $mainDataArr["dates"] = $this->commonDates;
-	    usort($this->commonDates, "cmp");
-	    ExportUtil::exportQcPlannerReport($mainDataArr,false);
+	    QCNotificationsUtil::sendQCPlannerNotification($mainDataArr, $isSendEmail);
 	    return $dataArr;
 	}
 	
-	function cmp($a, $b)
-	{
-	    $a = DateUtil::StringToDateByGivenFormat("Y-m-d", $a);
-	    $b = DateUtil::StringToDateByGivenFormat("Y-m-d", $b);
-	    
-	    if ($a == $b) {
-	        return 0;
-	    }
-	    return ($a < $b) ? -1 : 1;
+	function date_sort($a, $b) {
+	    return strtotime($a) - strtotime($b);
 	}
 	
 	
@@ -871,12 +976,13 @@ where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  
 	    $return = array();
 	    foreach($array as $val){
 	        $count = 1;
-	        if(array_key_exists($val[$key], $return)){
-	            $count += $return[$val[$key]];
+	        $timeStamp = strtotime($val[$key]);
+	        if(array_key_exists($timeStamp, $return)){
+	            $count += $return[$timeStamp];
 	        }
-	        $return[$val[$key]] = $count;
-	        if(!in_array($val[$key],$this->commonDates)){
-	            array_push($this->commonDates,$val[$key]);
+	        $return[$timeStamp] = $count;
+	        if(!in_array($timeStamp,$this->commonDates)){
+	            array_push($this->commonDates,$timeStamp);
 	        }
 	    }
 	    return $return;

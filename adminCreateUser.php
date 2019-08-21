@@ -47,8 +47,6 @@ if(isset($_POST["id"])){
 	if($user->getIsSendNotifications() == 1){
 		$isSendNotifications = "checked";
 	}
-	
-	$user->getTimezone();
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 $departmentSeqArr = array_map(create_function('$o', 'return $o->getDepartmentSeq();'), $userDepartments);
@@ -184,7 +182,7 @@ if(in_array(1,$departmentSeqArr)){
 	                        	<div class="col-lg-4">
 	                        		<?php  
 	                        		
-	                        		$select = DropDownUtils::getTimezone("timezone","",$user->getTimezone(),true);
+	                        		$select = DropDownUtils::getTimezone("usertimezone","",$user->getUserTimezone(),true);
 	                        		echo $select;
                                     //include('timezoneselect.php');
                                      ?>
@@ -362,11 +360,6 @@ $(document).ready(function(){
 	$('#containerDepartment').on('ifChanged', function(event){
 		disabledContainerPermissions();
   	});
-
-  	<?php if(!empty($user->getTimezone())){?>	
-		$("#timezone").val("<?php echo $user->getTimezone();?>");
-  	<?php }?>
-  
 });
 function disabledGraphicPermissions(){
 	var flag  = $("#graphicDepartment").is(':checked');
