@@ -69,7 +69,15 @@ class QCNotificationsUtil{
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				if(!empty($toEmails)){
+				   $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				   $Emaillog = EmailLogMgr::getInstance();
+				   if($bool){
+				           $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_SCHEDULE,$email,null,$user->getSeq());
+				       
+				   }
+				}
+				
 			}
 		}
 		
@@ -135,7 +143,15 @@ class QCNotificationsUtil{
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				if(!empty($toEmails)){
+				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				    $Emaillog = EmailLogMgr::getInstance();
+				    if($bool){
+				        $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_APPOINTMENT,$email,null,$user->getSeq());
+				        
+				    }
+				}
+				
 			}
 		}
 		
@@ -190,7 +206,15 @@ class QCNotificationsUtil{
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				if(!empty($toEmails)){
+				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				    $Emaillog = EmailLogMgr::getInstance();
+				    if($bool){
+				        $Emaillog->saveEmailLog(EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION,$email,null,$user->getSeq());
+				        
+				    }
+				}
+				
 			}
 		}
 	}
@@ -243,7 +267,15 @@ class QCNotificationsUtil{
 				if(empty($toEmails)){
 					continue;
 				}
-				MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				if(!empty($toEmails)){
+				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+				    $Emaillog = EmailLogMgr::getInstance();
+				    if($bool){
+				        $Emaillog->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION,$email,null,$user->getSeq());
+				        
+				    }
+				}
+				
 			}
 		}
 	}

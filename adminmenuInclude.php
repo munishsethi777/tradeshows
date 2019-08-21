@@ -28,6 +28,7 @@ $manageGraphicLogs = "";
 $isManageUsers = "";
 $manageContainerSchedules = "";
 $manageEmailLogs = "";
+$manageTeams ="";
 //echo  $file;
 if($file == "dashboard.php"){
 	$isDashboard = "active";
@@ -67,7 +68,10 @@ if($file == "dashboard.php"){
 	$manageContainerSchedules = "active";
 }elseif($file == "manageEmailLogs.php"){
     $manageEmailLogs ="active";
+}elseif($file == "manageTeams.php"){
+    $manageTeams = "active";
 }
+
 
 
 ?>
@@ -171,6 +175,11 @@ if($file == "dashboard.php"){
                 <li class="<?php echo $isManageUsers;?>">
                     <a href="adminManageUsers.php"><i class="fa fa-group"></i> 
                     	<span class="nav-label">Manage Users</span>  
+                    </a>
+                </li>
+                 <li class="<?php echo $manageTeams;?>">
+                    <a href="manageTeams.php"><i class="fa fa-group"></i> 
+                    	<span class="nav-label">Manage Teams</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">

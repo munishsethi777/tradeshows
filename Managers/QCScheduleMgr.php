@@ -451,10 +451,16 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		$sessionUtil = SessionUtil::getInstance();
 		$isSessionSV = $sessionUtil->isSessionSupervisor();
 		$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
+		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isGeneralUser = $sessionUtil->isSessionGeneralUser();
-		if($isGeneralUser && !($isSessionSV)){
-			$query .= " where qcschedules.qcuser=$qcLoggedInSeq ";
-		}
+        if($isGeneralUser && !($isSessionSV)){
+            if(count($myTeamMembersArr) == 0){
+                $query .= " where qcschedules.qcuser = $qcLoggedInSeq ";
+            }else{
+                $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+                $query .= " where qcschedules.qcuser in($myTeamMembersCommaSeparated)";
+            }
+        }	
 		$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
 		$arr = array();
 		foreach ($qcSchedules as $qcSchedule){

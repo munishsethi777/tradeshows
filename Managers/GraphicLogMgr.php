@@ -322,7 +322,15 @@ class GraphicLogMgr{
 	}
 	
 	public function getGraphicLogsForGrid(){
-		$query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	    $sessionUtil = SessionUtil::getInstance();
+	    $isSessionSV = $sessionUtil->isSessionSupervisor();
+	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+	  if(count($myTeamMembersArr) == 0){
+	        $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	    }else{
+	        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+	        $query = " select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq where users.seq in($myTeamMembersCommaSeparated)";
+	    }
 		$rows = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $rows;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
@@ -330,9 +338,17 @@ class GraphicLogMgr{
 	}
 	
 	public function getAllCount($isApplyFilter){
-		$query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-		$count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
-		return $count;
+	    $sessionUtil = SessionUtil::getInstance();
+	    $isSessionSV = $sessionUtil->isSessionSupervisor();
+	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+	    if(count($myTeamMembersArr) == 0){
+		     $query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq"; 
+	    }else{
+	        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+	        $query ="select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq where users.seq in($myTeamMembersCommaSeparated)";
+       }
+       $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
+       return $count;
 	}
 	
 	public function findAllArr($isApplyFilter = false){

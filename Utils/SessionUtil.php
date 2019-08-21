@@ -17,7 +17,7 @@ class SessionUtil{
     private static $ROLE = "role";
     private static $ROLES = "roles";
     private static $DEPARTMENTS = "departments";
-    
+    private static $TEAM_USERS_SEQS ="teamuserseqs";
   
 	private static $sessionUtil;	
 	public static function getInstance(){
@@ -52,6 +52,10 @@ class SessionUtil{
     	$_SESSION[self::$USER_LOGGED_IN] = $arr;
     	//$_SESSION[self::$URL_PREV_PAGE] = $_SERVER['REQUEST_URI'];
     	
+    }
+    
+    public function setMyTeamMembers($teamusers){
+        $_SESSION[self::$TEAM_USERS_SEQS] =  $teamusers;
     }
 
     public function refreshAdminSession(){
@@ -140,7 +144,11 @@ class SessionUtil{
     		return $arr[0];
     	}
     }
-
+    public function getMyTeamMembers(){
+        if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){  
+           return  $_SESSION[self::$TEAM_USERS_SEQS];
+        }
+    }
 
 	public function isSessionAdmin(){
 		if($_SESSION[self::$USER_LOGGED_IN] != null &&

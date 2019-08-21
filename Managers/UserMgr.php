@@ -32,6 +32,11 @@ class UserMgr{
 		$admins = self::$userDataStore->findAll();
 		return $admins;
 	}
+	public function getAllUsersByType($usertype){ 
+	    $conditionVal["usertype"] = $usertype;
+	    $user = self::$userDataStore->executeConditionQuery($conditionVal);
+	    return $user;
+	}
 	
 	public function ChangePassword($password){
 		$sessionUtil = SessionUtil::getInstance();
@@ -217,6 +222,18 @@ where userdepartments.departmentseq = 1 and users.usertype = 'USER'";
 			$arr[$user->getSeq()] = $user->getFullName();
 		}
 		return $arr;
+	}
+	
+	public function getSupervisors(){
+	    $colValPair = array();
+	    $colValPair['usertype'] = UserType::SUPERVISOR;
+	    $colValPair['isenabled'] = 1;
+	    $users = self::$userDataStore->executeConditionQuery($colValPair);
+	    $arr = array();
+	    foreach ($users as $user){
+	        $arr[$user->getSeq()] = $user->getFullName();
+	    }
+	    return $arr;
 	}
 	
 }

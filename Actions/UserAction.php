@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/TeamMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
@@ -86,8 +87,11 @@ if($call == "loginUser"){
 		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
 		$departmentMgr = DepartmentMgr::getInstance();
 		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
+		$teamsMgr = TeamMgr::getInstance();
+		$teamusers = $teamsMgr->getUserTeam($user->getSeq());
 		$sessionUtil = SessionUtil::getInstance();
 		$sessionUtil->createUserSession($user,$userRoles,$departments);
+		$sessionUtil->setMyTeamMembers($teamusers);
 		$response["user"] = $userMgr->toArray($user);
 		$message = "Login successfully";
 		if(!empty($_SESSION['url'])){

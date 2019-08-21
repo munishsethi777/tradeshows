@@ -93,6 +93,12 @@ class DropDownUtils {
 	    $enums = TimeZone::$timezone;
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
 	}
+	public static function getSupervisors($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $userMgr = UserMgr::getInstance();
+	    $enums = $userMgr->getSupervisors();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+	
 	
 	
 	
