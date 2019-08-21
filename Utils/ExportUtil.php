@@ -2216,7 +2216,7 @@ public static function exportQcPendingForApprovals($qcSchedules,$notificationNam
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $srNo);
 					
 				$colName = $alphas[$i++]. $count;
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getQC());
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->qccode);
 					
 				$colName = $alphas[$i++]. $count;
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
@@ -2229,15 +2229,19 @@ public static function exportQcPendingForApprovals($qcSchedules,$notificationNam
 					
 				$colName = $alphas[$i++]. $count;
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->getItemNumbers());
-				
-				$finalInspectionDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $qcSchedule->getACFinalInspectionDate());
+				$finalInspectionDateStr = $qcSchedule->getACFinalInspectionDate();
+				if(!empty($finalInspectionDateStr)){
+				    $finalInspectionDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $qcSchedule->getACFinalInspectionDate());
+				    $finalInspectionDateStr = $finalInspectionDate->format("n/j/y");
+				}
 				$colName = $alphas[$i++]. $count;
-				$finalInspectionDateStr = $finalInspectionDate->format("n/j/y");
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$finalInspectionDateStr);
-					
-				$appliedOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $qcSchedule->appliedon);
+				$appliedOnDateStr = $qcSchedule->appliedon;
+				if(!empty($appliedOnDateStr)){
+    				$appliedOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $qcSchedule->appliedon);
+    				$appliedOnDateStr = $appliedOnDate->format("n/j/y");
+				}
 				$colName = $alphas[$i++]. $count;
-				$appliedOnDateStr = $appliedOnDate->format("n/j/y");
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$appliedOnDateStr);
 		
 				$colName = $alphas[$i++]. $count;
