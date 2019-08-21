@@ -227,6 +227,9 @@ class BeanDataStore {
 			}
 			foreach ( $condiationPair as $key => $value ) {
 				$query_array [] = $key . ' = ?';
+				if ($value instanceof DateTime) {
+				    $value = $value->format ( 'Y-m-d H:i:s' );
+				}
 				array_push($paramValueArr, $value);
 			}
 			$columnString = implode ( " , ", $attr_arr );

@@ -1,5 +1,4 @@
 <?php
-require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/EmailLogMgr.php");
@@ -39,7 +38,7 @@ class QCNotificationsUtil{
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
 			}
-			if(!empty($toEmails)){
+		if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
 			    $Emaillog = EmailLogMgr::getInstance();
 				if($bool){
@@ -50,8 +49,7 @@ class QCNotificationsUtil{
 				}
 				
 			}	
-			
-		}elseif($userType == UserType::QC){
+		 }elseif($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
 				$finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate($user->getSeq());
@@ -333,7 +331,7 @@ class QCNotificationsUtil{
 				foreach ($qcSchedules as $qcSchedule){
 					$row .= $tableRow;
 					$rowTokens["SR_NO"] =  $srNo;
-					$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+					$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
 					$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 					$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 					$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
@@ -493,16 +491,18 @@ class QCNotificationsUtil{
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$pendingQcSchedules = $qcScheduleMgr->getPendingQcForApprovals();
 		$tableHtml = file_get_contents("../QCApprovalStatusEmailTemplate.php");
+		$row = "";
 		if(empty($pendingQcSchedules)){
 			$row = "<tr><td colspan='8'>No Rows Found<td></tr>";
 		}
 		$srNo = 1;
+		$tableMailHtml = "";
 		foreach ($pendingQcSchedules as $qcSchedule){
 			$tableRow = file_get_contents("../QCApprovalStatusTableRow.php");
 			$rowTokens = array();
 			$row .= $tableRow;
 			$rowTokens["SR_NO"] =  $srNo;
-			$rowTokens["QC_CODE"] =  $qcSchedule->getQC();
+			$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
 			$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 			$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 			$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
@@ -513,8 +513,11 @@ class QCNotificationsUtil{
 			$appliedOnDate = DateUtil::StringToDateByGivenFormat('Y-m-d H:i:s', $appliedOn);
 			$rowTokens["APPLIED_ON"] =  $appliedOnDate->format("n/j/y");
 			$finalInspection = $qcSchedule->getACFinalInspectionDate();
-			$finalInspectionDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $finalInspection);
-			$rowTokens["FINAL_INSPECTION_DATE"] =  $finalInspectionDate->format("n/j/y");
+			if(!empty($finalInspection)){
+    			$finalInspectionDate = DateUtil::StringToDateByGivenFormat('Y-m-d', $finalInspection);
+    			$finalInspection = $finalInspectionDate->format("n/j/y");
+			}
+			$rowTokens["FINAL_INSPECTION_DATE"] =  $finalInspection;
 			$rowTokens["APPROVAL_STATUS"] = $qcSchedule->responsetype;
 			$row = self::replacePlaceHolders($rowTokens, $row);
 			$srNo++;
@@ -532,6 +535,31 @@ class QCNotificationsUtil{
 			$subject = StringConstants::PENDING_QC_APPROVALS;
 			MailUtil::sendSmtpMail($subject, $tableMailHtml, $toEmails,true, $attachments);
 		}
+	}
+	
+	
+	public static function sendQCPlannerNotification($dataArr,$isSendEmail){
+	    $attachment = ExportUtil::exportQcPlannerReport($dataArr, $isSendEmail);
+	    $attachments = array(StringConstants::QC_PLANNER=>$attachment);
+	    if($isSendEmail){
+    	    $userMgr = UserMgr::getInstance();
+    	    $users = $userMgr->getUsersForSendQcPlannerReport();
+    	    $admin = $userMgr->getAdminForSendReport();
+    	    $toEmails = array();
+    	    if(!empty($users)){
+        	    foreach ($users as $user){
+        	        array_push($toEmails,$user->getEmail());
+        	    }
+    	    }
+    	    if(!empty($admin)){
+    	        //array_push($toEmails,$admin->getEmail());
+    	    }
+    	    $html = "<p>Qc Plannner file attached with this mail.";
+    	    if(!empty($toEmails)){
+    	        $subject = StringConstants::QC_PLANNER;
+    	        MailUtil::sendSmtpMail($subject, $html, $toEmails,true, $attachments);
+    	    }
+	    }
 	}
 	
 }

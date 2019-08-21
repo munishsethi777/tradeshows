@@ -345,7 +345,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Notes</label>
 	                        	<div class="col-lg-4">
-	                        		<textarea id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="200" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
+	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
 	                        	 </div>
 	                        </div>
 	                   </div> 
@@ -414,70 +414,72 @@ $(document).ready(function(){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
 		showHideMiddleNaDiv(flag)
   	});
-
+	requiredAcFinalInspection();
 	$('#isapproval').on('ifChanged', function(event){
-		var flag  = $("#isapproval").is(':checked');
-		if(flag){
-			$("#acfinalinspectiondate").attr("required","required");
-		}else{
-			$("#acfinalinspectiondate").removeAttr("required");
-		}
+		requiredAcFinalInspection();
   	});
-
-  	function showHideMiddleNaDiv(flag){
-  		if(flag){
-			$("#middleInspectionSelectDate").hide();
-			$("#middleNaDiv").show();
-			$("#acmiddleinspectiondate").val("");
-			$("#acmiddleinspectiondate").attr("disabled","disabled");
-		}else{
-			$("#acmiddleinspectiondate").removeAttr("disabled");
-			$("#middleInspectionSelectDate").show();
-			$("#middleNaDiv").hide();
-		}
-  	}
-
-  	function showHideFirstNaDiv(flag){
-  		if(flag){
-			$("#firstInspectionSelectDate").hide();
-			$("#firstNaDiv").show();
-			$("#acfirstinspectiondate").val("");
-			$("#acfirstinspectiondate").attr("disabled","disabled");
-		}else{
-			$("#acfirstinspectiondate").removeAttr("disabled");
-			$("#firstInspectionSelectDate").show();
-			$("#firstNaDiv").hide();
-		}
-  	}
-
-	$('#apFirstInspectionChk').on('ifChanged', function(event){
-		var flag  = $("#apFirstInspectionChk").is(':checked');
-		showHideFirstNaDiv(flag);
-  	});
-	$('.editor').summernote({
-		height: 120,
-		minHeight: null,             // set minimum height of editor
-		maxHeight: null,
-		toolbar: [
-		    // [groupName, [list of button]]
-		    ['style', ['bold', 'italic', 'underline', 'clear']],
-		    ['fontsize', ['fontsize']],
-		    ['color', ['color']],
-		    ['para', ['ul', 'ol', 'paragraph']],
-		    ['height', ['height']]
-		  ]
-	});
-	var acFirstInspectionNotesDisable = '<?php echo isset($fieldStateArr["acfirstinspectionnotes"])?$fieldStateArr["acfirstinspectionnotes"]:""?>';
-	var acMiddleInspectionNotesDisable = '<?php echo isset($fieldStateArr["acmiddleinspectionnotes"])?$fieldStateArr["acmiddleinspectionnotes"]:""?>';
-	if(acFirstInspectionNotesDisable != ""){
-		$('#acfirstinspectionnotes').summernote(acFirstInspectionNotesDisable.slice(0, -1));
-	}
-	if(acMiddleInspectionNotesDisable != ""){
-		$('#acmiddleinspectionnotes').summernote(acMiddleInspectionNotesDisable.slice(0, -1));
-	}
-  
   	
 });
+
+function requiredAcFinalInspection(){
+	var flag  = $("#isapproval").is(':checked');
+	if(flag){
+		$("#acfinalinspectiondate").attr("required","required");
+	}else{
+		$("#acfinalinspectiondate").removeAttr("required");
+	}
+}
+	function showHideMiddleNaDiv(flag){
+		if(flag){
+		$("#middleInspectionSelectDate").hide();
+		$("#middleNaDiv").show();
+		$("#acmiddleinspectiondate").val("");
+		$("#acmiddleinspectiondate").attr("disabled","disabled");
+	}else{
+		$("#acmiddleinspectiondate").removeAttr("disabled");
+		$("#middleInspectionSelectDate").show();
+		$("#middleNaDiv").hide();
+	}
+	}
+
+	function showHideFirstNaDiv(flag){
+		if(flag){
+		$("#firstInspectionSelectDate").hide();
+		$("#firstNaDiv").show();
+		$("#acfirstinspectiondate").val("");
+		$("#acfirstinspectiondate").attr("disabled","disabled");
+	}else{
+		$("#acfirstinspectiondate").removeAttr("disabled");
+		$("#firstInspectionSelectDate").show();
+		$("#firstNaDiv").hide();
+	}
+	}
+
+$('#apFirstInspectionChk').on('ifChanged', function(event){
+	var flag  = $("#apFirstInspectionChk").is(':checked');
+	showHideFirstNaDiv(flag);
+	});
+$('.editor').summernote({
+	height: 120,
+	minHeight: null,             // set minimum height of editor
+	maxHeight: null,
+	toolbar: [
+	    // [groupName, [list of button]]
+	    ['style', ['bold', 'italic', 'underline', 'clear']],
+	    ['fontsize', ['fontsize']],
+	    ['color', ['color']],
+	    ['para', ['ul', 'ol', 'paragraph']],
+	    ['height', ['height']]
+	  ]
+});
+var acFirstInspectionNotesDisable = '<?php echo isset($fieldStateArr["acfirstinspectionnotes"])?$fieldStateArr["acfirstinspectionnotes"]:""?>';
+var acMiddleInspectionNotesDisable = '<?php echo isset($fieldStateArr["acmiddleinspectionnotes"])?$fieldStateArr["acmiddleinspectionnotes"]:""?>';
+if(acFirstInspectionNotesDisable != ""){
+	$('#acfirstinspectionnotes').summernote(acFirstInspectionNotesDisable.slice(0, -1));
+}
+if(acMiddleInspectionNotesDisable != ""){
+	$('#acmiddleinspectionnotes').summernote(acMiddleInspectionNotesDisable.slice(0, -1));
+}
 function setDates(shipDateStr){
 	if(shipDateStr == ""){
 		$("#screadydate").val("");

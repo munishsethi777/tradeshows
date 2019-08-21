@@ -156,6 +156,24 @@ where userdepartments.departmentseq = 1 and users.usertype = 'USER'";
 		return $users;
 	}
 	
+	public function getUsersForSendQcPlannerReport(){
+	    $sql = "SELECT users.* FROM users
+inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1
+where userdepartments.departmentseq = 1 and (users.usertype = 'SUPERVISOR' or users.usertype = 'USER')";
+	    $users = self::$userDataStore->executeObjectQuery($sql);
+	    return $users;
+	}
+	
+	public function getAdminForSendReport(){
+	    $colval = array();
+	    $colval["usertype"] = 'ADMIN';
+	    $admin =  self::$userDataStore->executeConditionQuery($colval);
+	    if(!empty($admin)){
+	        return $admin[0];
+	    }
+	    return null;
+	}
+	
 	public function getUsersForGraphicNotesUpdatedReport($roleName){
 		$sql = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq and 
  users.issendnotifications = 1 inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 
