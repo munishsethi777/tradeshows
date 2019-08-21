@@ -895,7 +895,8 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	
 	public function getPendingQcForApprovals(){
-		$query = "select classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
+		//$query = "select classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
+		$query = "select qccode,classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
 		$qcschedules = self::$dataStore->executeObjectQuery($query,false,true);
 		$qcschedules = $this->groupByPO($qcschedules);
 		return $qcschedules;
