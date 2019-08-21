@@ -85,10 +85,10 @@ require_once('IConstants.inc');
             </script>
     </head>
 <body class="gray-bg">
-<div class="middle-box text-center loginscreen animated fadeInDown">
+<div class="middle-box text-center loginscreen animated fadeInDown" style="width:325px">
         <div>
         	<img src="images/logo.png" style="margin-bottom:20px;">
-            <h3 style="line-height: 20px">Welcome to TradeShows Users Area</h3>
+            <h3 style="line-height: 20px">Welcome to Business Intelligence Portal</h3>
             <p>Login. To see it in action.</p>
             <form class="form-horizontal" id="loginForm" method="POST" name="loginForm">
                   <div class="form-group">
