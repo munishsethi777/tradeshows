@@ -4,6 +4,9 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TagType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/LabelType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/WareHouseType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TruckerType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -97,6 +100,22 @@ class DropDownUtils {
 	    $userMgr = UserMgr::getInstance();
 	    $enums = $userMgr->getSupervisors();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+	}
+	
+	
+	public static function getWareHouseTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = WareHouseType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	}
+	
+	public static function getTruckerTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = TruckerType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	}
+	
+	public static function getTerminalTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = TerminalType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	
 	
