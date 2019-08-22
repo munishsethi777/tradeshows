@@ -789,7 +789,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getMissingActualFinalInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL";
+		$query = $this->find_qc_sql . "where scfinalinspectiondate <= CURDATE() and acfinalinspectiondate is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -800,7 +800,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getMissingActualMiddleInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql . "where  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where scmiddleinspectiondate <= CURDATE() and  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -811,7 +811,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getMissingActualFirstInspectionDate($QCUser = null){
-		$query = $this->find_qc_sql . "where apfirstinspectiondatenareason is NULL and acfirstinspectiondate is NULL";
+		$query = $this->find_qc_sql . "where scfirstinspectiondate  <= CURDATE() and apfirstinspectiondatenareason is NULL and acfirstinspectiondate is NULL";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -934,7 +934,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	private function getQcPendingAcFirstInpection(){
 	    $query = "select COALESCE(qcschedules.apfirstinspectiondate, qcschedules.scfirstinspectiondate) as plandate,qcschedules.scfirstinspectiondate as scdate, qcschedules.potype, qcschedules.apfirstinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL group by plandate,classcodeseq
+where acfinalinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL group by plandate,classcodeseq
 ORDER BY plandate  Desc";
 	    $qcSchedulesFirstInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesFirstInspections;
@@ -942,7 +942,7 @@ ORDER BY plandate  Desc";
 	
 	private function getQcPendingAcMiddleInpection(){
 	    $query = "select COALESCE(qcschedules.apmiddleinspectiondate, qcschedules.scmiddleinspectiondate) as plandate,qcschedules.scmiddleinspectiondate scdate , qcschedules.potype, qcschedules.apmiddleinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
+where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
 	    $qcSchedulesMiddleInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesMiddleInspections;
 	}
