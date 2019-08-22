@@ -1752,7 +1752,7 @@ public static function exportEmailLogs($emailLogs){
         
 }
 
- public static function exportContainerSchedules($containerSchedules){
+ public static function exportContainerSchedules($containerSchedules,$isEmail = false){
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Admin")
 	->setLastModifiedBy("Admin")
@@ -2139,7 +2139,7 @@ public static function exportEmailLogs($emailLogs){
 	header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 	header ('Pragma: public'); // HTTP/1.0
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-	ob_end_clean();
+	if (ob_get_contents()) ob_end_clean();
 	$objWriter->save('php://output');
 }
 
