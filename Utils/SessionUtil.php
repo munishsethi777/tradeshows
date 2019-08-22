@@ -145,7 +145,8 @@ class SessionUtil{
     	}
     }
     public function getMyTeamMembers(){
-        if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){  
+        if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION) && 
+                array_key_exists(self::$TEAM_USERS_SEQS,$_SESSION)){  
            return  $_SESSION[self::$TEAM_USERS_SEQS];
         }
     }

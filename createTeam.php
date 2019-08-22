@@ -17,13 +17,14 @@ $userMgr = UserMgr::getInstance();
  $users = $userMgr->getAllUsersByType($usertype);
 $teamMgr = TeamMgr::getInstance();
 $id="";
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Create User</title>
+<title>Admin | Create User Team</title>
 <?include "ScriptsInclude.php";
 
     if (isset($_POST ["id"])){
