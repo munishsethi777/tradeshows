@@ -46,6 +46,12 @@ class UserMgr{
 		self::$userDataStore->updateByAttributesWithBindParams($attr,$condition);
 	}
 	
+	public function resetPassword($password,$username){
+	    $attr = array("password" => $password);
+	    $condition = array("email" => $username);
+	    return self::$userDataStore->updateByAttributesWithBindParams($attr,$condition);
+	}
+	
 	public function toArray($user){
 		$adminArr = array();
 		$adminArr["seq"] = $user->getSeq();
@@ -116,6 +122,16 @@ class UserMgr{
 		$user = self::$userDataStore->findBySeq($seq);
 		return $user;
 	}
+	
+	public function FindByUserName($userName){
+	    $condition = array("email" => $userName);
+	    $user = self::$userDataStore->executeConditionQuery($condition);
+	    if(!empty($user)){
+	        return $user[0];
+	    }
+	    return null;
+	}
+	
 	public function deleteBySeqs($ids) {
 		$flag = self::$userDataStore->deleteInList ( $ids );
 		return $flag;
