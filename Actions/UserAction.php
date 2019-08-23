@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TeamMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ForgotPasswordUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
 $success = 1;
@@ -141,6 +142,54 @@ if($call == "deleteUser"){
 		$message = $e->getMessage();
 		//$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
 	}
+}
+if($call == "forgotPassword"){
+    try{
+        $username = $_POST['username'];
+        if(!empty($username)){
+            $user = $userMgr->FindByUserName($username);
+            if(!empty($user)){
+                $isSent = ForgotPasswordUtil::sendForgotPasswordEmail($user);
+                if(!$isSent){
+                    throw new Exception("Server Error!");
+                }
+            }else{
+                throw new Exception("User does not exists with this user name");
+            }
+        }
+        $message = "your password emailed to your email account";
+    }catch (Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
+if($call == "resetPassword"){
+    try{
+        $id = $_POST['id'];
+        $password = $_POST["newPassword"];
+        $confirmPassword = $_POST["confirmPassword"];
+        if($password != $confirmPassword){
+            throw new Exception("New password and Confirm password should match!");
+        }
+        if(!empty($id)){
+            $userName = SecurityUtil::Decode($id);
+            $user = $userMgr->FindByUserName($userName);
+            if(!empty($user)){
+                $flag = $userMgr->resetPassword($password,$userName);
+                if(!$flag){
+                    throw new Exception("Error - Reset password Failed.");
+                }
+            }else{
+                throw new Exception("Error - Invalid reset password url!");
+            }
+        }else{
+            throw new Exception("Error - Invalid reset password url!");
+        }
+        $message = "Your password changed successfully!";
+    }catch (Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
 }
 $response["success"] = $success;
 $response["message"] = $message;
