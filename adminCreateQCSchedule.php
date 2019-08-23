@@ -353,8 +353,15 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Notes</label>
 	                        	<div class="col-lg-4">
-	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
-	                        	 </div>
+	                            </div>
+	                        </div>
+	                        
+	                        <div class="form-group row">
+	                        	<div class="col-lg-6">
+	                         	 </div>
+	                        	<div class="col-lg-6">
+	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control editor" ><?php echo $qcSchedule->getNotes()?></textarea>
+	                        	 </div>	
 	                        </div>
 	                        <div class="form-group row">
 	                       		

@@ -78,6 +78,9 @@ if($call == "saveQCSchedule"){
 			if($qcSchedule->getAcMiddleInspectionNotes() == "<p><br></p>"){
 			    $qcSchedule->setAcMiddleInspectionNotes(NULL);
 			}
+			if($qcSchedule->getNotes() == "<p><br></p>"){
+			    $qcSchedule->setNotes(NULL);
+			}
 			$id = $qcScheduleMgr->save($qcSchedule);
 			if($id > 0){
 				if(isset($_POST["isapproval"])){
