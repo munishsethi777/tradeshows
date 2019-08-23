@@ -323,13 +323,17 @@ class GraphicLogMgr{
 	
 	public function getGraphicLogsForGrid(){
 	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
 	    $isSessionSV = $sessionUtil->isSessionSupervisor();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-	  if(count($myTeamMembersArr) == 0){
-	        $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-	    }else{
-	        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-	        $query = " select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq where users.seq in($myTeamMembersCommaSeparated)";
+	    $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	    if($isSessionSV == false){
+		    if(count($myTeamMembersArr) == 0){
+		        $query .= " where users.seq = $loggedinUserSeq";
+		    }else{
+		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+		        $query .= " where users.seq in($myTeamMembersCommaSeparated)";
+		    }
 	    }
 		$rows = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $rows;
@@ -339,14 +343,18 @@ class GraphicLogMgr{
 	
 	public function getAllCount($isApplyFilter){
 	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
 	    $isSessionSV = $sessionUtil->isSessionSupervisor();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-	    if(count($myTeamMembersArr) == 0){
-		     $query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq"; 
-	    }else{
-	        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-	        $query ="select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq where users.seq in($myTeamMembersCommaSeparated)";
-       }
+	    $query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	    if($isSessionSV == false){ 
+	        if(count($myTeamMembersArr) == 0){
+			    $query .= " where users.seq = $loggedinUserSeq"; 
+		    }else{
+		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+		        $query .=" where users.seq in($myTeamMembersCommaSeparated)";
+	       	}
+	    }
        $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
        return $count;
 	}

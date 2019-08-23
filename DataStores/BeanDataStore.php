@@ -434,9 +434,11 @@ class BeanDataStore {
 	public function executeConditionQuery($colValuePair, $isApplyFilter = false) {
 		try {
 			$query_array = array ();
+			$paramValueArr = array ();
 			foreach ( $colValuePair as $key => $value ) {
 				if ($value != null || $value==0) {
-					$query_array [] = $this->tableName.".".$key . ' = ' . "'" . $value . "'";
+					$query_array [] = $this->tableName.".".$key . ' = ?' ;
+					array_push ( $paramValueArr, $value );
 				}
 			}
 			$query = "SELECT ".$this->tableName.".* FROM " . $this->tableName;
@@ -453,7 +455,7 @@ class BeanDataStore {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$STH = $conn->prepare ( $query );
-			$STH->execute ();
+			$STH->execute ($paramValueArr);
 			$this->throwException ( $STH->errorInfo () );
 			$objList = $STH->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 			return $objList;
@@ -462,6 +464,8 @@ class BeanDataStore {
 			throw $e ;
 		}
 	}
+	
+	
 	public function executeInListQuery($colValues, $isApplyFilter = false) {
 		try {
 			$colName = $colValues;
@@ -553,7 +557,6 @@ class BeanDataStore {
 			if ($condiationPair != null) {
 				$query .= " WHERE " . implode ( " AND ", $query_array );
 			}
-			
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$STH = $conn->prepare ( $query );

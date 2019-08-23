@@ -7,6 +7,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once $ConstantsArray['dbServerUrl'] .'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] .'Managers/ClassCodeMgr.php';
 require_once $ConstantsArray['dbServerUrl'] .'Managers/ContainerScheduleDatesMgr.php';
+require_once($ConstantsArray['dbServerUrl'] ."Enums/TruckerType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/WareHouseType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/TerminalType.php");
 class ContainerScheduleMgr{
 	private static $containerScheduleMgr;
 	private static $dataStore;
@@ -27,7 +30,26 @@ class ContainerScheduleMgr{
     
 	public function getContainerSchedulesForGrid(){
 		$containerSchedules = $this->findAllArr(true);
-		$mainArr["Rows"] = $containerSchedules;
+		$mainArr = array();
+		foreach ($containerSchedules as $containerSchedule){
+		    $wareHouse = $containerSchedule["warehouse"];
+		    $terminal = $containerSchedule["terminal"];
+		    $trucker = $containerSchedule["truckername"];
+		    if(!empty($wareHouse)){
+		        $wareHouse = WareHouseType::getValue($wareHouse);
+		    }
+		    if(!empty($terminal)){
+		        $terminal = TerminalType::getValue($terminal);
+		    }
+		    if(!empty($trucker)){
+		        $trucker = TruckerType::getValue($trucker);
+		    }
+		    $containerSchedule["warehouse"] = $wareHouse;
+		    $containerSchedule["terminal"] = $terminal;
+		    $containerSchedule["truckername"] = $trucker;
+		    array_push($mainArr,$containerSchedule);
+		}
+		$mainArr["Rows"] = $mainArr;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
 		return $mainArr;
 	}
@@ -38,8 +60,8 @@ class ContainerScheduleMgr{
 	}
 	
 	public function findAllArr($isApplyFilter = false){
-		$itemArr = self::$dataStore->findAllArr($isApplyFilter);
-		return $itemArr;
+		$containerSchedules = self::$dataStore->findAllArr($isApplyFilter);
+		return $containerSchedules;
 	}
 		
 	public function deleteByIds($ids){
@@ -89,6 +111,21 @@ class ContainerScheduleMgr{
 				$notificationNoteDates = $this->getDates($dates[ContainerScheduleNoteType::notification_pickup]);
 				$containerSchedule->setAlpineNotificatinPickupDateTime($notificationNoteDates);
 			}
+			$wareHouse = $containerSchedule->getWareHouse();
+			$terminal = $containerSchedule->getTerminal();
+			$trucker = $containerSchedule->getTruckerName();
+			if(!empty($wareHouse)){
+			    $wareHouse = WareHouseType::getValue($wareHouse);
+			}
+			if(!empty($terminal)){
+			    $terminal = TerminalType::getValue($terminal);
+			}
+			if(!empty($trucker)){
+			    $trucker = TruckerType::getValue($trucker);
+			}
+			$containerSchedule->setWareHouse($wareHouse);
+			$containerSchedule->setTerminal($terminal);
+			$containerSchedule->setTruckerName($trucker);
 			array_push($containerSchedulesArr,$containerSchedule);
 		}
 		ExportUtil::exportContainerSchedules($containerSchedulesArr);

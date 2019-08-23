@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropDownUtil.php");
 $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
@@ -137,13 +138,14 @@ if(isset($_REQUEST["id"])){
 	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" id="awureference" 
                                 			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
                                 			name="awureference" class="form-control">
-	                            </div>
+                                </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Trucker Name:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" id="truckername" 
-                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTruckerName()?>" 
-                                			name="truckername" class="form-control">
+                                	<?php 
+                                	    $select = DropDownUtils::getTruckerTypes("truckername", "", $containerSchedule->getTruckerName(),false);
+			                            echo $select;
+	                             	?>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -156,9 +158,10 @@ if(isset($_REQUEST["id"])){
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Warehouse:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" id="warehouse" 
-                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getWarehouse()?>" 
-                                			name="warehouse" class="form-control">
+                                	<?php 
+                                	    $select = DropDownUtils::getWareHouseTypes("warehouse", "", $containerSchedule->getWarehouse(),false);
+			                            echo $select;
+	                             	?>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -184,9 +187,10 @@ if(isset($_REQUEST["id"])){
 	                         <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" id="terminal" 
-                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTerminal()?>" 
-                                			name="terminal" class="form-control">
+	                        		<?php 
+                                	    $select = DropDownUtils::getTerminalTypes("terminal", "", $containerSchedule->getTerminal(),false);
+			                            echo $select;
+	                             	?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
