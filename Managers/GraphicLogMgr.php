@@ -324,10 +324,10 @@ class GraphicLogMgr{
 	public function getGraphicLogsForGrid(){
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-	    $isSessionSV = $sessionUtil->isSessionSupervisor();
+	    $isSessionQc= $sessionUtil->isSessionQC();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 	    $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-	    if($isSessionSV == false){
+	    if($isSessionQc){
 		    if(count($myTeamMembersArr) == 0){
 		        $query .= " where users.seq = $loggedinUserSeq";
 		    }else{
@@ -344,10 +344,10 @@ class GraphicLogMgr{
 	public function getAllCount($isApplyFilter){
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-	    $isSessionSV = $sessionUtil->isSessionSupervisor();
+	    $isSessionQc= $sessionUtil->isSessionQC();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 	    $query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-	    if($isSessionSV == false){ 
+	    if($isSessionQc){ 
 	        if(count($myTeamMembersArr) == 0){
 			    $query .= " where users.seq = $loggedinUserSeq"; 
 		    }else{
