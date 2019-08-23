@@ -80,7 +80,7 @@ $isUser = $sessionUtil->isSessionGeneralUser()
 											</div>
 			                            </div>
 			                            
-			                            <div class="col-lg-2">
+			                            <div class="col-lg-2" style="display:none">
 			                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
 			                            		<option value="all">All</option>
 			                            		<option value="approved">Approved</option>
