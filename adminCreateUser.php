@@ -24,6 +24,8 @@ $containerInformationChecked = "";
 $containerDeliveryChecked = "";
 $containerOfficeChecked = "";
 $qcChecked = "";
+$weeklyMailButtonChecked = "";
+$qcPlannerButtonChecked = "";
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -67,6 +69,10 @@ if(in_array(Permissions::china_team,$userRoles)){
 	$containerOfficeChecked = "checked";
 }if(in_array(Permissions::class_code,$userRoles)){
 	$classCodeChecked = "checked";
+}if(in_array(Permissions::weekly_mail_button,$userRoles)){
+    $weeklyMailButtonChecked = "checked";
+}if(in_array(Permissions::qc_planner_button,$userRoles)){
+    $qcPlannerButtonChecked  = "checked";
 }
 if(in_array(1,$departmentSeqArr)){
 	$qcDepartmentChecked = "checked";
@@ -217,6 +223,17 @@ if(in_array(1,$departmentSeqArr)){
 				                        	<div class="col-lg-4">
 				                        		<input type="checkbox" <?php echo $classCodeChecked?> value="class_code" id="classcodepermission" name="permissions[]"/>
 				                            </div>
+				                            
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Weekly Mail Button</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" <?php echo $weeklyMailButtonChecked?> value="weekly_mail_button" id="weeklymailbuttonpermission" name="permissions[]"/>
+				                            </div>
+				                            
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Qc Planner Button</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" <?php echo $qcPlannerButtonChecked?> value="qc_planner_button" id="qcplannerbuttonpermission" name="permissions[]"/>
+				                            </div>
+				                            
                                         </div>
                                     </div>
                                 </div>

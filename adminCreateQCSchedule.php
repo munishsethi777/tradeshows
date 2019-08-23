@@ -24,6 +24,8 @@ if($isSessionGeneralUser && !$isSessionSV){
  $isSubmitApprovalDisabled = "";
  $disabledSubmitComments = "";
  $approvalChecked = "";
+ $isCompleted = "";
+ $readOnlyComplete = "readonly";
  $fieldStateArr = array();
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
@@ -47,7 +49,7 @@ if($isSessionGeneralUser && !$isSessionSV){
  	}
  	if(!empty($qcSchedule->getApFirstInspectionDateNaReason())){
  		$firstInspectionChk = "checked";
- 	}
+ 	}	
  	$readOnlyPO = "readonly";
  	$qcUser = $qcSchedule->getQCUser();
  	$qcscheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
@@ -72,7 +74,12 @@ if($isSessionGeneralUser && !$isSessionSV){
 		 	}
 	 	}
  	}
- 	
+    if($qcSchedule->getIsCompleted() == 1){
+        $isCompleted = "checked";
+    }else{
+        $isCompleted = "";
+    }
+   
  }
 ?>
 <!DOCTYPE html>
@@ -295,7 +302,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" placeholder="Select Date"  id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl" <?php echo isset($fieldStateArr["acfinalinspectiondate"])?$fieldStateArr["acfinalinspectiondate"]:""?>>
+	                            	<input type="text" placeholder="Select Date"  onchange="handleIsCompletedCheckbox()" id="acfinalinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getACFinalInspectionDate()?>" name="acfinalinspectiondate" class="form-control dateControl" <?php echo isset($fieldStateArr["acfinalinspectiondate"])?$fieldStateArr["acfinalinspectiondate"]:""?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -337,18 +344,35 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                       </div>
 	                  </div>
-                       <div class="bg-white p-xs outterDiv">
+                        <div class="bg-white p-xs outterDiv">
                        		<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" id="status" maxLength="100" value="<?php echo $qcSchedule->getStatus()?>" name="status" class="form-control" <?php echo isset($fieldStateArr["status"])?$fieldStateArr["status"]:""?>>
+	                           
 	                            </div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Final Inspection Notes</label>
 	                        	<div class="col-lg-4">
-	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control" ><?php echo $qcSchedule->getNotes()?></textarea>
-	                        	 </div>
+	                            </div>
 	                        </div>
-	                   </div> 
+	                        
+	                        <div class="form-group row">
+	                        	<div class="col-lg-6">
+	                         	 </div>
+	                        	<div class="col-lg-6">
+	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control editor" ><?php echo $qcSchedule->getNotes()?></textarea>
+	                        	 </div>	
+	                        </div>
+	                        <div class="form-group row">
+	                       		
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Completed</label>
+	                        	<div class="col-lg-10 completed">
+	                        		<input type="checkbox" <?php echo $isCompleted; ?>  id="iscompleted" class="form-control i-checks" name="iscompleted" />
+	                           </div>
+	                       		
+	                       	</div>
+	                    </div> 
+	                   
 	                    
                         <div class="bg-white p-xs">
 	                        <div class="form-group row">
@@ -410,6 +434,12 @@ $(document).ready(function(){
 		$("#shipdate").prop('disabled', true) ;
 	<?php }?>
 	
+	<?php if($readOnlyComplete == "readonly"){?>
+		 $("#iscompleted").prop("disabled", true);
+	<?php }?>
+	
+	handleIsCompletedCheckbox();
+	
 	$('#apMiddleInspectionChk').on('ifChanged', function(event){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
 		showHideMiddleNaDiv(flag)
@@ -418,7 +448,6 @@ $(document).ready(function(){
 	$('#isapproval').on('ifChanged', function(event){
 		requiredAcFinalInspection();
   	});
-  	
 });
 
 function requiredAcFinalInspection(){
@@ -571,6 +600,17 @@ function subtractDays(date, days) {
 	 var sDate = date;
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
+}
+function handleIsCompletedCheckbox(){
+	finalinspectiondate = $("#acfinalinspectiondate").val();
+    if(finalinspectiondate != null && finalinspectiondate != ''){   
+	   $("#iscompleted").removeAttr("disabled");   
+    }else{
+       $("#iscompleted").attr("disabled", 'disabled');   
+       $('#iscompleted').iCheck('uncheck');
+	   $("#iscompleted").removeAttr('checked');
+	}
+   	
 }
 
 </script>
