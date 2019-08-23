@@ -60,6 +60,11 @@ if($call == "saveQCSchedule"){
 			}else{
 				$qcSchedule->setAPFirstInspectionDate(null);
 			}
+			if(isset($_REQUEST["iscompleted"])){
+			    $qcSchedule->setIsCompleted(1);    
+			}else{
+			    $qcSchedule->setIsCompleted(0);  
+			}
 			if($seq > 0){
 				$message = "QC Schedule updated successfully!";
 			}
