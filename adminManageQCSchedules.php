@@ -3,7 +3,8 @@ include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 $sessionUtil = SessionUtil::getInstance();
-$isSuperVisor = $sessionUtil->isSessionSupervisor();
+$isUser = $sessionUtil->isSessionGeneralUser()
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -552,7 +553,7 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
-            <?php if($isSuperVisor){?>
+            <?php if(!$isUser){?>
 	            container.append(weeklyReportButton);
 	            container.append(exportPlannerButton);
             <?php }?>
@@ -564,7 +565,7 @@ function loadGrid(){
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
           	//deleteButton.jqxButton({  width: 65, height: 18 });
-          	<?php if($isSuperVisor){?>
+          	<?php if(!$isUser){?>
 	            weeklyReportButton.jqxButton({  width: 150, height: 18 });
 	            exportPlannerButton.jqxButton({  width: 120, height: 18 });
             <?php }?>
