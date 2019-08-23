@@ -157,7 +157,7 @@ if($call == "forgotPassword"){
                 throw new Exception("User does not exists with this user name");
             }
         }
-        $message = "your password emailed to your email account";
+        $message = "Forgot password request submitted successfully. Pls check your email for further details.";
     }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();

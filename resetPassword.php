@@ -5,16 +5,12 @@ $id = $_REQUEST["id"];
 <head>
 <title>Administrator | Change Password</title>
 <?include "ScriptsInclude.php"?>
-<body class='default'>
-    <div id="wrapper">
-        <div class="adminSingup animated fadeInRight" >
-            <div class="bb-alert alert alert-info" style="display:none;">
-                <span>The examples populate this alert with dummy content</span>
-            </div>
+<body class="gray-bg">
+        <div class="middle-box loginscreen animated fadeInDown" style="width:425px">
             <div class="ibox-content mainDiv"> 
                 <div class="row">                 
-                     <div class="col-sm-6">                                                           
-                        <div class="col-sm-6"><h3 class="m-t-none m-b">Reset Password</h3> 
+                     <div class="col-sm-12">                                                           
+                        <div class="col-sm-12"><h3 class="m-t-none m-b text-center">Reset Password</h3> 
                             <form role="form" method="post" id="changePasswordForm" action = "Actions/UserAction.php">
                                 <input type="hidden" id ="call" name="call" value="resetPassword"/>
                                 <input type="hidden" id ="id" name="id" value="<?php echo $id?>"/>
@@ -24,7 +20,7 @@ $id = $_REQUEST["id"];
                                 <div class="form-group"><label>Confirm Password</label>
                                     <input type="password" maxlength="50" required id="confirmPassword" name="confirmPassword" class="form-control">
                                 </div>
-                                 <div id="loginDiv" style="display: none"><label><a href="http://www.alpinebi.com">Click here</a> for login with new password.</label></div>
+                                 <div id="loginDiv" style="display: none"><label><a href="http://www.alpinebi.com">Click here</a> to login with new password.</label></div>
                                 <div>
                                      <button class="btn btn-primary ladda-button" data-style="expand-right" id="saveBtn" type="button">
                                         <span class="ladda-label">Reset Password</span>
@@ -36,7 +32,6 @@ $id = $_REQUEST["id"];
                 </div>
             </div>
         </div> 
-    </div>               
 </body>
 </html>
 <script type="text/javascript">
@@ -53,7 +48,10 @@ function changePassword(e,btn){
         $('#changePasswordForm').ajaxSubmit(function( data ){
             l.stop();
             showResponseToastr(data,null,"changePasswordForm","mainDiv");
-            $("#loginDiv").show();
+			data = $.parseJSON(data);
+			if(data.success == 1){
+            	$("#loginDiv").show();
+			}
         })
 	}else{
 		$("#changePasswordForm")[0].reportValidity();

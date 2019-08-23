@@ -2,13 +2,12 @@
 <head>
 <title>User | Forgot Password</title>
 <?include "ScriptsInclude.php"?>
-<body class='default'>
-    <div id="wrapper">
-        <div class="adminSingup animated fadeInRight">
+<body class="gray-bg">
+        <div class="middle-box loginscreen animated fadeInDown" style="width:425px">
             <div class="ibox-content mainDiv"> 
                 <div class="row">                 
                      <div class="col-sm-12">                                                           
-                        <div class="col-sm-6"><h3 class="m-t-none m-b">Forgot Password</h3> 
+                        <div class="col-sm-12"><h3 class="m-t-none m-b">Forgot Password</h3> 
                             <form role="form" method="post" id="forgotPasswordForm" action = "Actions/UserAction.php">
                                 <input type="hidden" id ="call" name="call" value="forgotPassword"/>
                                 <div class="form-group"><label>Enter User Name</label> 
@@ -16,8 +15,11 @@
                                 </div>
                                 <div>
                                      <button class="btn btn-primary ladda-button" data-style="expand-right" id="retreiveBtn" type="button">
-                                        <span class="ladda-label">Retreive</span>
+                                        <span class="ladda-label">Retrieve</span>
                                     </button>
+                                    <p class="text-mute m-t-sm">
+                                    	Enter your valid username and click retrieve button. We will email you further details on your registered email id to reset your password. 
+                                    </p>
                                </div>  
                                
                             </form>
@@ -25,8 +27,7 @@
                      </div>
                 </div>
             </div>
-        </div> 
-    </div>               
+        </div>        
 </body>
 </html>
 <script src="scripts/FormValidators/forgotPasswordValidations.js"></script> 
