@@ -61,7 +61,7 @@ function loadGrid(){
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Title', datafield: 'title', width:"35%"},
       { text: 'Description', datafield: 'description' , width:"35%"},
-      { text: 'IsEnable', datafield: 'isenable',columntype: 'checkbox', width:"8%"},
+      { text: 'Enabled', datafield: 'isenable',columntype: 'checkbox', width:"8%"},
       { text: 'Lastmodifiedon', datafield:'lastmodifiedon', filtertype: 'date', cellsformat: 'M-dd-yyyy H:mm'}   
        
     ]

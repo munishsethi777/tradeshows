@@ -63,7 +63,7 @@ class TeamMgr{
         return self::$teamDataStore->deleteInList($ids);
     }
     public function getUserTeam($userSeq){
-        $query = "select t1.* from teamusers t1 inner join teamusers t2 on  t2.teamseq = t1.teamseq and t2.userseq  = $userSeq";
+        $query = "select t1.* from teamusers t1 inner join teamusers t2 on  t2.teamseq = t1.teamseq and t2.userseq  = $userSeq inner join teams on t1.teamseq = teams.seq where teams.isenable = 1";
         $teams = self::$teamUserDataStore->executeQuery($query,false,true);
         $teamUsersArr = array();
 		if($teams){
