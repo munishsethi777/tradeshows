@@ -40,8 +40,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                     </div>
 		                     <div class="ibox-content">
 		                     		<div class="form-group row">
-			                       		<label class="col-lg-1 col-form-label">Search</label>
-			                        	<div class="col-lg-3">
+			                       		<div class="col-lg-3">
 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
 			                            		<option value=''>Select Field</option>
 			                            		<option value="shipdate">Ship Date</option>
@@ -71,17 +70,19 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            		</optgroup>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-4">
-				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+			                            <div class="col-lg-3">
+				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 5px; border: 1px solid #ccc; width: 100%">
 											    <i class="fa fa-calendar"></i>&nbsp;
 											    <span></span> <i class="fa fa-caret-down"></i>
 											</div>
 			                            </div>
 			                            
-			                            <div class="col-lg-1" style="display:none">
-			                            	<select id="conditionDD" name="conditionDD" class="form-control">
-			                            		<option value="past">In Past</option>
-			                            		<option value="coming">For Coming</option>
+			                            <div class="col-lg-2">
+			                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
+			                            		<option value="all">All</option>
+			                            		<option value="approved">Approved</option>
+			                            		<option value="pending">Pending</option>
+			                            		<option value="open">Open</option>
 			                            	</select>
 			                            </div>
 			                            <div class="col-lg-1" style="display:none">
@@ -97,8 +98,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 			                            		<option value="90">90 days</option>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-2 text-muted taskCompleted" style="padding-top:5px;display:none">
-			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Task Completed
+			                            <div class="col-lg-2 text-muted taskCompleted" style="padding:5px;display:none">
+			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Completed
 			                            </div>
 			                        </div>
 		                     	
@@ -139,7 +140,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                      	 <div class="form-group row">
                        		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
                         	<div class="col-lg-6">
-                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
+                            	<select id="approvalStatusDD" name="approvalStatusDD" class="form-control">
                             		<option id="pending">Pending</option>	
                             		<option id="approved">Approved</option>	
                             		<option id="rejected">Rejected</option>	
@@ -276,6 +277,7 @@ $(document).ready(function(){
 	        // apply the filters.
 	       $("#qcscheduleGrid").jqxGrid('applyfilters');
        }
+       $("#approvalStatusDD").chosen({rtl: true}); 
     }
     
     // applies the filter.
