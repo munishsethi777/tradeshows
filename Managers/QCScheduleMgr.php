@@ -65,8 +65,6 @@ class QCScheduleMgr{
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
 		$sessionUtil = SessionUtil::getInstance();
-		
-		
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
