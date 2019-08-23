@@ -72,7 +72,7 @@ class QCScheduleMgr{
 		
 		if($isSessionGeneralUser){
 			if(count($myTeamMembersArr) == 0){
-				$query .= " where users.seq = $qcLoggedInSeq ";
+				$query .= " where users.seq = $loggedInUserSeq ";
 			}else{
 				$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
 				$query .= " where users.seq in($myTeamMembersCommaSeparated)";
