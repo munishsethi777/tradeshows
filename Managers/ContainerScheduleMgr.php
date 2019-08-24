@@ -29,6 +29,8 @@ class ContainerScheduleMgr{
     }
     
 	public function getContainerSchedulesForGrid(){
+	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$containerSchedules = $this->findAllArr(true);
 		$mainArr = array();
 		foreach ($containerSchedules as $containerSchedule){
@@ -47,6 +49,9 @@ class ContainerScheduleMgr{
 		    $containerSchedule["warehouse"] = $wareHouse;
 		    $containerSchedule["terminal"] = $terminal;
 		    $containerSchedule["truckername"] = $trucker;
+		    $lastModifiedOn = $containerSchedule["lastmodifiedon"];
+		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+		    $containerSchedule["lastmodifiedon"] = $lastModifiedOn;
 		    array_push($mainArr,$containerSchedule);
 		}
 		$mainArr["Rows"] = $mainArr;

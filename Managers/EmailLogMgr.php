@@ -3,6 +3,8 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/EmailLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once $ConstantsArray['dbServerUrl'] .'PHPExcel/IOFactory.php';
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+
 
 class EmailLogMgr{
     
@@ -39,10 +41,21 @@ class EmailLogMgr{
     }*/
     
     public function getEmailLogsForGrid(){
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         $query = "SELECT users.fullname,emaillogs.* from users INNER JOIN emaillogs ON users.seq = emaillogs.userseq";
         $emailLogs = self::$dataStore->executeQuery($query,true);
-        $mainArr["Rows"] = $emailLogs;
-        
+        $arr = array();
+        foreach($emailLogs as $emailLog){
+            $sendOn  = $emailLog["sendon"];
+            $sendOn = DateUtil::convertDateToFormatWithTimeZone($sendOn, "Y-m-d H:i:s", "Y-m-d H:i:s", $loggedInUserTimeZone);
+            $sentOn = $emailLog["senton"];
+            $sentOn = DateUtil::convertDateToFormatWithTimeZone($sentOn, "Y-m-d H:i:s", "Y-m-d H:i:s", $loggedInUserTimeZone);
+            $emailLog["sendon"] = $sendOn;
+            $emailLog["senton"] = $sentOn;
+            array_push($arr,$emailLog);
+        }
+        $mainArr["Rows"] = $arr;
         $query = "select count(*) from users INNER JOIN emaillogs on users.seq = emaillogs.userseq";
         $count = self::$dataStore->executeCountQueryWithSql($query,true);
         $mainArr["TotalRows"] = $count;

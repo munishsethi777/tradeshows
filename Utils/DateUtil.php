@@ -4,7 +4,11 @@ class DateUtil {
 		return DateTime::createFromFormat ( 'm/d/Y h:i A', $dateStr );
 	}
 	public static function StringToDateByGivenFormat($format, $dateStr) {
-		return DateTime::createFromFormat ( $format, $dateStr );
+	    return DateTime::createFromFormat ( $format, $dateStr);
+	}
+	
+	public static function StringToDateByGivenFormatWithTimezone($format, $dateStr,$timeZone) {
+	    return DateTime::createFromFormat ( $format, $dateStr,$timeZone );
 	}
 	
 	public static function facebook_style_date_time($timestamp){
@@ -181,11 +185,22 @@ class DateUtil {
 	}
 	
 	public static function convertDateToFormat($dateStr,$fromFormat,$toFormat){
-		if(!empty($dateStr)){
-			$date = DateUtil::StringToDateByGivenFormat($fromFormat, $dateStr);
+	  	if(!empty($dateStr)){
+		    $date = DateUtil::StringToDateByGivenFormat($fromFormat, $dateStr);
 			$dateStr = $date->format($toFormat);
 		}
 		return $dateStr;
+	}
+	
+	public static function convertDateToFormatWithTimeZone($dateStr,$fromFormat,$toFormat,$timeZone){
+	    if(!empty($dateStr)){
+	        $defaultTimeZone = new DateTimeZone(date_default_timezone_get());
+	        $usertimeZone = new DateTimeZone($timeZone);
+	        $date = DateUtil::StringToDateByGivenFormatWithTimezone($fromFormat, $dateStr,$defaultTimeZone);
+	        $date->setTimezone($usertimeZone);
+	        $dateStr = $date->format($toFormat);
+	    }
+	    return $dateStr;
 	}
 }
 ?>
