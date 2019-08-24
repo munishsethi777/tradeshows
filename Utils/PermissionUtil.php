@@ -43,6 +43,15 @@ class PermissionUtil{
 		return in_array(Permissions::getName(Permissions::container_office_information),self::$permissions);
 	}
 	
+	public function hasWeeklyMailButtonPermission(){
+	    return in_array(Permissions::getName(Permissions::weekly_mail_button),self::$permissions);
+	}
+	
+	public function hasQCPlannerButtonPermission(){
+	    return in_array(Permissions::getName(Permissions::qc_planner_button),self::$permissions);
+	}
+	
+	
 	public function hasQCDepartment(){
 		return in_array(DepartmentType::QC_Schedules,self::$departments);
 	}

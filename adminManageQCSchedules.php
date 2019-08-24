@@ -2,9 +2,12 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $sessionUtil = SessionUtil::getInstance();
-$isUser = $sessionUtil->isSessionGeneralUser()
-
+$isSessionAdmin = $sessionUtil->isSessionAdmin();
+$permissionUtil = PermissionUtil::getInstance();
+$hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
+$hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
 ?>
 <!DOCTYPE html>
 <html>
@@ -553,8 +556,10 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
-            <?php if(!$isUser){?>
-	            container.append(weeklyReportButton);
+            <?php if($hasWeeklyReportButtonPermission){?>
+            	container.append(weeklyReportButton);
+            <?php }?>
+            <?php if($hasQcPlannerButtonPermission){?>
 	            container.append(exportPlannerButton);
             <?php }?>
             statusbar.append(container);
@@ -565,10 +570,12 @@ function loadGrid(){
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
           	//deleteButton.jqxButton({  width: 65, height: 18 });
-          	<?php if(!$isUser){?>
+             <?php if($hasWeeklyReportButtonPermission){?>
 	            weeklyReportButton.jqxButton({  width: 150, height: 18 });
+	          <?php }?>
+	          <?php if($hasQcPlannerButtonPermission){?> 
 	            exportPlannerButton.jqxButton({  width: 120, height: 18 });
-            <?php }?>
+	          <?php }?>
             // create new row.
             addButton.click(function (event) {
                 location.href = ("adminCreateQCSchedule.php");
