@@ -46,6 +46,7 @@ class SessionUtil{
     	$arr[2] = $user->getEmail();
     	$arr[3] = $user->getQCCode();
     	$userType = $user->getUserType();
+    	$arr[4] = $user->getUserTimeZone();
     	$_SESSION[self::$ROLE] = $userType;
     	$_SESSION[self::$ROLES] = $userRoles;
     	$_SESSION[self::$DEPARTMENTS] = $departments;
@@ -135,6 +136,14 @@ class SessionUtil{
     		$arr = $_SESSION[self::$USER_LOGGED_IN];
     		return $arr[3];
     	}
+    }
+    
+    public function getUserLoggedInTimeZone(){
+        if( array_key_exists(self::$USER_LOGGED_IN,$_SESSION)){
+            //if($_SESSION[self::$USER_LOGGED_IN] != null){
+            $arr = $_SESSION[self::$USER_LOGGED_IN];
+            return $arr[4];
+        }
     }
     
     public function getUserLoggedInSeq(){
