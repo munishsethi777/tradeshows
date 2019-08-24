@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ForgotPasswordUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserDepartment.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $call = "";
 $redirect = "";
@@ -151,13 +152,13 @@ if($call == "forgotPassword"){
             if(!empty($user)){
                 $isSent = ForgotPasswordUtil::sendForgotPasswordEmail($user);
                 if(!$isSent){
-                    throw new Exception("Server Error!");
+                    throw new Exception(StringConstants::SERVER_ERROR);
                 }
             }else{
-                throw new Exception("User does not exists with this user name");
+                throw new Exception(StringConstants::USER_DOES_NOT_EXITS_WITH_THIS_USER_NAME);
             }
         }
-        $message = "Forgot password request submitted successfully. Pls check your email for further details.";
+        $message = StringConstants::FORGET_MESSAGE_SUCCESS;
     }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();
@@ -165,11 +166,11 @@ if($call == "forgotPassword"){
 }
 if($call == "resetPassword"){
     try{
-        $id = $_POST['id'];
+        $id = $_POST['id'];    
         $password = $_POST["newPassword"];
         $confirmPassword = $_POST["confirmPassword"];
         if($password != $confirmPassword){
-            throw new Exception("New password and Confirm password should match!");
+            throw new Exception(StringConstants::NEW_PASSWORD_CONFIRM_PASSWORD_MATCH);
         }
         if(!empty($id)){
             $userName = SecurityUtil::Decode($id);
@@ -177,15 +178,15 @@ if($call == "resetPassword"){
             if(!empty($user)){
                 $flag = $userMgr->resetPassword($password,$userName);
                 if(!$flag){
-                    throw new Exception("Error - Reset password Failed.");
+                    throw new Exception(StringConstants::ERROR_RESET_PASSWORD_FAILED);
                 }
             }else{
-                throw new Exception("Error - Invalid reset password url!");
+                throw new Exception(StringConstants::ERROR_INVALID_RESET_PASSWORD_URL);
             }
         }else{
-            throw new Exception("Error - Invalid reset password url!");
+            throw new Exception(StringConstants::ERROR_INVALID_RESET_PASSWORD_URL);
         }
-        $message = "Your password changed successfully!";
+        $message = StringConstants::PASSWORD_CHANGEED_SUCCESSFULLY;
     }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();
