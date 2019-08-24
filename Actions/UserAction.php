@@ -177,7 +177,6 @@ if($call == "resetPassword"){
             $user = $userMgr->FindByUserName($userName);
             if(!empty($user)){
                 $flag = $userMgr->resetPassword($password,$userName);
-                $flag ="";
                 if(!$flag){
                     throw new Exception(StringConstants::ERROR_RESET_PASSWORD_FAILED);
                 }
