@@ -226,3 +226,27 @@ ul.nav-second-level{
 body{
 	background-color:white !important;
 }
+
+
+.ripple {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  transform: scale(0);
+  position: absolute;
+  opacity: 1;
+}
+.rippleEffect {
+    animation: rippleDrop .6s linear;
+}
+.navbar-default li{
+	overflow:hidden;
+}
+
+@keyframes rippleDrop {
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
