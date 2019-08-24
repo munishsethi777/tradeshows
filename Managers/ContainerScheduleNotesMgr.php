@@ -73,9 +73,11 @@ class ContainerScheduleNotesMgr{
     
     function groupByNoteType($array) {
     	$return = array();
+    	$sessionUtil = SessionUtil::getInstance();
+    	$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
     	foreach($array as $val) {
     		$createdOn = $val->getCreatedOn();
-    		$dateVal = DateUtil::convertDateToFormat($createdOn, "Y-m-d H:i:s","m/d/Y : h.i a");
+    		$dateVal = DateUtil::convertDateToFormatWithTimeZone($createdOn, "Y-m-d H:i:s","m/d/Y : h.i a",$loggedInUserTimeZone);
     		$val->setCreatedOn($dateVal);
     		$return[$val->getNotesType()][] = $val;
     	}
