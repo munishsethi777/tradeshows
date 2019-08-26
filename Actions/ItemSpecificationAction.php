@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -15,13 +16,13 @@ $itemSpecificationMgr = ItemSpecificationMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveItemSpecification"){
 	try{
-		$message = "Item Specifications saved successfully."; 
+	    $message = StringConstants::ITEM_SPECIFICATION_SAVED_SUCCESSFULLY;
 		$itemSpecification = new ItemSpecification();
 		$itemSpecification->createFromRequest($_REQUEST);
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
-			$message = "Item Specifications updated successfully.";
+			$message = StringConstants::ITEM_SPECIFICATION_UPDATE_SUCCESSFULLY;
 		}
 		$itemSpecification->setSeq($seq);
 		$itemSpecification->setUserSeq($sessionUtil->getUserLoggedInSeq());
@@ -73,7 +74,7 @@ if($call == "deleteItemSpecification"){
 	$ids = $_GET["ids"];
 	try{
 		$flag = $itemSpecificationMgr->deleteItemSpecificationWithVersions($ids);
-		$message = "Item Specifications Deleted successfully";
+		$message = StringConstants::ITEM_SPECIFICATION_DELETE_SUCCESSFULLY;
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

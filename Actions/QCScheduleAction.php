@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -26,13 +27,13 @@ if($call == "saveQCSchedule"){
 				$currentTime->setTime(0,0);
 				$acFinalInspectionDate->setTime(0,0);
 				if($acFinalInspectionDate > $currentTime){
-					throw new Exception("Actual final inspection date should be in past for submit approval");
+				    throw new Exception(StringConstants::ACTUAL_FINAL_INSPECTION_DATE_PAST_SUBMIT_APPROVAL);
 				}
 			}else{
-				throw new Exception("Actual final inspection date is required for submit approval");
+			    throw new Exception(StringConstants::ACTUAL_FINAL_INSPECTION_DATE_REQUIRED_SUBMIT_APPROVAL);
 			}
 		}
-		$message = "QC Schedule saved successfully!";
+		$message = StringConstants::QC_SCHEDULE_SAVED_SUCCESSFULLY;
 		$itemNumbers = $_REQUEST["itemnumbers"];
 		$itemNumbers = explode(",",$itemNumbers);
 		$seq = $_REQUEST["seq"];
@@ -66,7 +67,7 @@ if($call == "saveQCSchedule"){
 			    $qcSchedule->setIsCompleted(0);  
 			}
 			if($seq > 0){
-				$message = "QC Schedule updated successfully!";
+			    $message = StringConstants::QC_SCHEDULE_UPDATE_SUCCESSFULLY;
 			}
 			//$qcSchedule->setSeq($seq);
 			$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
@@ -108,7 +109,7 @@ if($call == "importQCSchedules"){
 			$qcpassword = $configurationMgr->getConfiguration(Configuration::$QC_IMPORT_UPDATE_PASSWORD);
 			if($password != $qcpassword){
 				$incorrectPassword = 1;
-				throw new Exception("Incorrect Password!");
+				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
 			$updateIds = $_POST["updateIds"];
@@ -162,7 +163,7 @@ if($call == "deleteQCSchedule"){
 	$pos = $_GET["po"];
 	try{
 		$flag = $qcScheduleMgr->deleteByIdsAndPo($ids,$pos);
-		$message = "QC Schedules Deleted successfully";
+		$message = StringConstants::QC_SCHEDULE_DELETE_SUCCESSFULLY;
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

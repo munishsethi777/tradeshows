@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -18,18 +19,18 @@ $containerScheduleMgr = ContainerScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveContainerSchedule"){
 	try{
-		$message = "Container Schedule saved successfully!";
+	    $message = StringConstants::CONTAINER_SCHEDULE_SAVED_SUCCESSFULLY;
 		$containerSchedule = new ContainerSchedule();
 		$containerSchedule->createFromRequest($_REQUEST);
 		if(empty($containerSchedule->getAWUReference())){
-			throw new Exception("AWU Reference can not be empty");
+		    throw new Exception(StringConstants::AWU_REFERENCE_NOT_EMPTY);
 		}
 		
 		$existingContainerSchedule = new ContainerSchedule();
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
-			$message = "Container Schedule updated successfully!";
+			$message =  StringConstants::CONTAINER_SCHEDULE_UPDATE_SUCCESSFULLY;
 			$existingContainerSchedule = $containerScheduleMgr->findBySeq($seq);
 		}
 		$userSeq = $sessionUtil->getUserLoggedInSeq();
@@ -121,7 +122,7 @@ if($call == "importGraphicLogs"){
 			$qcpassword = $configurationMgr->getConfiguration(Configuration::$QC_IMPORT_UPDATE_PASSWORD);
 			if($password != $qcpassword){
 				$incorrectPassword = 1;
-				throw new Exception("Incorrect Password!");
+				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
 			$updateIds = $_POST["updateIds"];
@@ -165,7 +166,7 @@ if($call == "deleteContainerSchedule"){
 	$ids = $_GET["ids"];
 	try{
 		$flag = $containerScheduleMgr->deleteByIds($ids);
-		$message = "Container Schedule(s) Deleted successfully";
+		$message = StringConstants::CONTAINER_SCHEDULE_DELETE_SUCCESSFULLY ; 
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

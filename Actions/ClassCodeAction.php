@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -15,11 +16,11 @@ $classCodeMgr = ClassCodeMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveClassCode"){
 	try{
-		$message = "Class Code saved successfully.";
+	    $message = StringConstants::CLASS_CODE_SAVED_SUCCESSFULLY;  
 		$classCode = new ClassCode();
 		$classCode->createFromRequest($_REQUEST);
 		if(!empty($classCode->getSeq())){
-			$message = "Class Code updated successfully.";
+		    $message = StringConstants::CLASS_CODE_UPDATE_SUCCESSFULLY; 
 		}
 		$classCode->setUserSeq($sessionUtil->getUserLoggedInSeq());
 		if(isset($_REQUEST["isenabled"])){
@@ -34,7 +35,7 @@ if($call == "saveClassCode"){
 		$success = 0;
 		$message  = $e->getMessage();
 		if(strpos($message,"Duplicate entry") !== false){
-			$message = "Class code already exists !";
+		    $message = StringConstants::CLASS_CODE_ALREADY_EXISTS; 
 		}
 		
 	}
@@ -45,15 +46,15 @@ if($call == "getClassCodes"){
 	return;
 }
 if($call == "deleteClassCode"){
-	$ids = $_GET["ids"];
+	    $ids = $_GET["ids"];
 	try{
 		$flag = $classCodeMgr->deleteBySeqs($ids);
-		$message = "Class Codes Deleted successfully";
+		$message = StringConstants::CLASS_CODE_DELETED_SUCCESSFULLY; 
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();
 		if(strpos($message,"delete_code") !== false){
-			$message = "Class code cannot be deleted because it is already in use !";
+		    $message = StringConstants::CLASS_CODE_CANNOT_DELETED;
 		}
 	}
 }

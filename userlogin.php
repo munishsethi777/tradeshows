@@ -65,7 +65,7 @@ require_once('IConstants.inc');
                 $.getJSON( "Actions/UserAction.php?call=loginUser", $formData,function( data ){
                     l.stop();
                     if(data.success == 0){
-                        toastr.error("Invaid username or Password",'Login Failed');
+                    	toastr.error(data.message);
                     }else{
                             var redirect = data.url;
                             if(redirect != ""){
