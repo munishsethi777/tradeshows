@@ -22,7 +22,7 @@ if(isset($_GET["call"])){
 }
 if($call == "saveUser"){
 	try{
-		$message = "User saved successfully.";
+	    $message = StringConstants::USER_SAVED_SUCCESSFULLY;
 		$user = new User();
 		$user->createFromRequest($_REQUEST);
 		$permissions = $_POST["permissions"];
@@ -40,7 +40,7 @@ if($call == "saveUser"){
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
-			$message = "User updated successfully.";
+			$message = StringConstants::USER_UPDATE_SUCCCESSFULLY;
 		}else{
 			$user->setCreatedOn(new DateTime());
 		}
@@ -95,10 +95,10 @@ if($call == "loginUser"){
 		$sessionUtil->createUserSession($user,$userRoles,$departments);
 		$sessionUtil->setMyTeamMembers($teamusers);
 		$response["user"] = $userMgr->toArray($user);
-		$message = "Login successfully";
+		$message = StringConstants::LOGIN_SUCCESSFULLY;
 		if(!empty($_SESSION['url'])){
 		  $redirect = $_SESSION['url'];
-		   }
+		 }
 		/*if($_SESSION['url'])
 		{
 		    header("location:". $_SESSION['url']);
@@ -106,7 +106,7 @@ if($call == "loginUser"){
 		
 	}else{
 		$success = 0;
-		$message = "Incorrect Username or Password";
+		$message = StringConstants::INCORRECT_USERNAME_PASSWORD;
 	}
 }
 if($call == "changePassword"){
@@ -117,9 +117,9 @@ if($call == "changePassword"){
 		$isPasswordExists = $userMgr->isPasswordExist($earlierPassword);
 		if($isPasswordExists){
 			$userMgr->ChangePassword($password);
-			$message = "Password Updated Successfully";
+			$message = StringConstants::PASSWORD_UPDATE_SUCCESSFULLY;
 		}else{
-			$message = "Incorrect Current Password!";
+		    $message = StringConstants::INCORRECT_CURRENT_PASSWORD;
 			$success = 0;
 		}
 
@@ -137,7 +137,7 @@ if($call == "deleteUser"){
 	$ids = $_GET["ids"];
 	try{
 		$flag = $userMgr->deleteBySeqs($ids);
-		$message = "Users Deleted successfully";
+		$message = StringConstants::USER_DELETE_SUCCESSFULLY;
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();
@@ -148,7 +148,7 @@ if($call == "forgotPassword"){
     try{
         $username = $_POST['username'];
         if(!empty($username)){
-            $user = $userMgr->FindByUserName($username);
+           $user = $userMgr->FindByUserName($username);
             if(!empty($user)){
                 $isSent = ForgotPasswordUtil::sendForgotPasswordEmail($user);
                 if(!$isSent){
@@ -166,7 +166,7 @@ if($call == "forgotPassword"){
 }
 if($call == "resetPassword"){
     try{
-        $id = $_POST['id'];    
+        $id = $_POST['id'];  
         $password = $_POST["newPassword"];
         $confirmPassword = $_POST["confirmPassword"];
         if($password != $confirmPassword){

@@ -3,6 +3,7 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Team.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TeamMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $response = new ArrayObject();
 $call = "";
 $success = 1;
@@ -18,8 +19,9 @@ $sessionUtil = SessionUtil::getInstance();
 $team = new Team();
 if($call == "saveTeam"){
     try{
-        $message = "Team saved successfully.";
+        $message = StringConstants::TEAM_SAVED_SUCCESSFULLY;
         $team->from_array($_REQUEST);  
+        $seq = $_REQUEST['seq'];
         $team->setCreatedby($sessionUtil->getUserLoggedInSeq());
         $team->setCreatedon(new DateTime());
         $team->setLastmodifiedon(new DateTime());
@@ -29,8 +31,10 @@ if($call == "saveTeam"){
         }else {
             $team->setIsEnable(0);
         }
+        if($seq > 0){
+            $message = StringConstants::TEAM_UPDATE_SUCCESSFULLY;
+        }
         $teamMgr->saveTeam($team,$userseqs);
-        
        }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();
@@ -47,15 +51,11 @@ if($call == "deleteTeams"){
     $ids = $_GET["ids"];
     try{
         $flag = $teamMgr->deleteBySeqs($ids);
-        $message = "Teams Deleted successfully";
+        $message = StringConstants::TEAMS_DELETE_SUCCESSFULLY;
     }catch(Exception $e){
         $success = 0;
         $message = $e->getMessage();
-        if(strpos($message,"delete_team") !== false){
-            $message = "Teams cannot be deleted because it is already in use !";
-        }
-    }
-    
+    }   
 }
 
 $response["success"] = $success;

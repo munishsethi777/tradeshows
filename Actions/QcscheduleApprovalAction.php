@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -20,7 +21,7 @@ if($call == "updateApprovalStatus"){
 		$comments = $_POST["comments"];
 		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq, $approvalStatus,$comments);
 		if($flag){
-			$message =  "QC Schedule status update successfully!";
+			$message = StringConstants::QC_SCHEDULE_STATUS_UPDATE; 
 		}
 	}catch(Exception $e){
 		$success = 0;

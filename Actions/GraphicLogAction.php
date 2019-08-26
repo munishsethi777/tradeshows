@@ -6,7 +6,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -20,20 +20,20 @@ $graphicLogMgr = GraphicLogMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveGraphicLog"){
 	try{
-		$message = "Graphic Log saved successfully!"; 
+	    $message = StringConstants::GRAPHIC_LOG_SAVED_SUCCESSFULLY;
 		$graphicLog = new GraphicsLog();
 		$graphicLog->createFromRequest($_REQUEST);
 		if(empty($graphicLog->getUSAOfficeEntryDate())){
-			throw new Exception("USA Office Date Entered can not be empty");
+		    throw new Exception(StringConstants::USA_DATE_NOT_EMPTY);
 		}
 		if(empty($graphicLog->getSKU())){
-			throw new Exception("Item Id can not be empty");
+		    throw new Exception(StringConstants::ITEM_ID_NOT_EMPTY);
 		}
 		if(!empty($graphicLog->getApproxGraphicsChinaSentDate()) 
 				&& !empty($graphicLog->getGraphicArtistStartDate())){
 			
 			if($graphicLog->getApproxGraphicsChinaSentDate() < $graphicLog->getGraphicArtistStartDate()){
-				throw new Exception("Start Date should be less than Appx Completion Date");
+			    throw new Exception(StringConstants::START_DATE_LESS_APPX_DATE);
 			}
 		}
 		$seq = 0;
@@ -43,7 +43,7 @@ if($call == "saveGraphicLog"){
 		$isGraphicNotesUpddates = false;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
-			$message = "Graphic Log updated successfully!";
+			$message = StringConstants::GRAPHIC_LOG_UPDATED_SUCCESSFULLY;
 			$existingGraphicLog = $graphicLogMgr->findBySeq($graphicLog->getSeq());
 			$isUsaNotesUpdated = $graphicLog->getUSANotes() != $existingGraphicLog->getUSANotes();
 			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
@@ -127,7 +127,7 @@ if($call == "importGraphicLogs"){
 			$qcpassword = $configurationMgr->getConfiguration(Configuration::$QC_IMPORT_UPDATE_PASSWORD);
 			if($password != $qcpassword){
 				$incorrectPassword = 1;
-				throw new Exception("Incorrect Password!");
+				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
 			$updateIds = $_POST["updateIds"];
@@ -173,7 +173,7 @@ if($call == "deleteGraphicLog"){
 	//$pos = $_GET["po"];
 	try{
 		$flag = $graphicLogMgr->deleteByIds($ids);
-		$message = "Graphic Log Deleted successfully";
+		$message = StringConstants::GRAPHIC_LOG_DELETE_SUCCESSFULLY;
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();
