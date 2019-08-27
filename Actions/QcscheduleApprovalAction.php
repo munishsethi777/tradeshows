@@ -17,9 +17,9 @@ $sessionUtil = SessionUtil::getInstance();
 if($call == "updateApprovalStatus"){
 	try{
 		$approvalSeq = $_POST["approvalSeq"];
-		$approvalStatus = $_POST["approvalstatus"];
+		$approvalStatusDD = $_POST["approvalStatusDD"];
 		$comments = $_POST["comments"];
-		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq, $approvalStatus,$comments);
+		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq,$approvalStatusDD,$comments);
 		if($flag){
 			$message = StringConstants::QC_SCHEDULE_STATUS_UPDATE; 
 		}
