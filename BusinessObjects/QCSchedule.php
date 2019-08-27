@@ -1,7 +1,7 @@
 <?php
 class QCSchedule{
 
-	private $seq, $qc,$qcuser,$po, $potype, $itemnumbers, $shipdate, 
+	private $seq, $qc,$qcuser,$po, $potype, $itemnumbers, $shipdate, $latestshipdate,
 	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
@@ -52,6 +52,12 @@ class QCSchedule{
 	}
 	public function getShipDate(){
 		return $this->shipdate;
+	}
+	public function setLatestShipDate($val){
+		$this->latestshipdate = $val;
+	}
+	public function getLatestShipDate(){
+		return $this->latestshipdate;
 	}
 	public function setSCReadyDate($val){
 		$this->screadydate = $val;

@@ -174,10 +174,15 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Submit for Approval</label>
-	                        	<div class="col-lg-10">
+	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" <?php echo $isSubmitApprovalDisabled?> <?php echo $approvalChecked?> id="isapproval" class="form-control i-checks" name="isapproval"/>
 	                        		<small><?php echo $disabledSubmitComments?></small>
 	                           </div>
+	                           
+	                           <label class="col-lg-2 col-form-label bg-formLabel">Latest Ship Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required placeholder="Select Date" id="latestshipdate" maxLength="250" value="<?php echo $qcSchedule->getLatestShipDate()?>" name="latestshipdate" class="form-control dateControl" <?php echo isset($fieldStateArr["latestshipdate"])?$fieldStateArr["latestshipdate"]:""?>>
+	                            </div>
 	                        </div>
 	                        
 	                    </div>
@@ -363,7 +368,8 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                        		<textarea style="height:100px" id="notes" <?php echo isset($fieldStateArr["notes"])?$fieldStateArr["notes"]:""?> maxLength="500" name="notes" class="form-control editor" ><?php echo $qcSchedule->getNotes()?></textarea>
 	                        	 </div>	
 	                        </div>
-	                        <div class="form-group row">
+	                       
+	                        <div class="form-group row" style="display:none">
 	                       		
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Completed</label>
 	                        	<div class="col-lg-10 completed">
