@@ -26,6 +26,7 @@ $containerOfficeChecked = "";
 $qcChecked = "";
 $weeklyMailButtonChecked = "";
 $qcPlannerButtonChecked = "";
+$qcApprovedRejectNotification = "";
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -73,6 +74,8 @@ if(in_array(Permissions::china_team,$userRoles)){
     $weeklyMailButtonChecked = "checked";
 }if(in_array(Permissions::qc_planner_button,$userRoles)){
     $qcPlannerButtonChecked  = "checked";
+}if(in_array(Permissions::approved_reject_notification,$userRoles)){
+    $qcApprovedRejectNotification  = "checked";
 }
 if(in_array(1,$departmentSeqArr)){
 	$qcDepartmentChecked = "checked";
@@ -204,10 +207,10 @@ if(in_array(1,$departmentSeqArr)){
                                         <div class="panel-heading">
                                             QC Schedules
                                              <div class="pull-right">
-                                            	<input type="checkbox" <?php echo $qcDepartmentChecked?> value="1" id="qcDepartment" name="departments[]"/>
+                                            	<input type="checkbox" class="i-checks" <?php echo $qcDepartmentChecked?> value="1" id="qcDepartment" name="departments[]"/>
                                             </div>
                                         </div>
-                                        <div class="panel-body">
+                                        <div id="qcPermissionsDiv" class="panel-body i-checks">
                                             <label class="col-lg-8 col-form-label bg-formLabel">Quality Controller</label>
 				                        	<div class="col-lg-4">
 				                        		<input type="checkbox" <?php echo $qcChecked?> value="qc" id="qcpermission" name="permissions[]"/>
@@ -234,6 +237,11 @@ if(in_array(1,$departmentSeqArr)){
 				                        		<input type="checkbox" <?php echo $qcPlannerButtonChecked?> value="qc_planner_button" id="qcplannerbuttonpermission" name="permissions[]"/>
 				                            </div>
 				                            
+				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Approved/Reject Notification</label>
+				                        	<div class="col-lg-4">
+				                        		<input type="checkbox" <?php echo $qcApprovedRejectNotification?> value="approved_reject_notification" id="qcapprovalrejectpermission" name="permissions[]"/>
+				                            </div>
+				                            
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +254,7 @@ if(in_array(1,$departmentSeqArr)){
                                             	<input type="checkbox" <?php echo $graphicDepartmentChecked?> value="2" id="graphicDepartment" name="departments[]"/>
                                             </div>
                                         </div>
-                                        <div class="panel-body">
+                                        <div id="graphicPermissionsDiv" class="panel-body i-checks">
                                             <label class="col-lg-8 col-form-label bg-formLabel">USA Team</label>
 				                        	<div class="col-lg-4">
 				                        		<input type="checkbox" <?php echo $usaTeamChecked?> value="usa_team" id="usaTeamPermission" name="permissions[]"/>
@@ -272,7 +280,7 @@ if(in_array(1,$departmentSeqArr)){
                                             	<input type="checkbox" <?php echo $containerDepartmentChecked?> value="4" id="containerDepartment" name="departments[]"/>
                                             </div>
                                         </div>
-                                        <div class="panel-body">
+                                        <div id='containerPermissionsDiv' class="panel-body i-checks">
                                             <label class="col-lg-8 col-form-label bg-formLabel">Container Information  </label>
 				                        	<div class="col-lg-4 ">
 				                        		<input type="checkbox" <?php echo $containerInformationChecked?> value="container_information" id="containerpermission" name="permissions[]"/>
@@ -381,6 +389,7 @@ $(document).ready(function(){
 function disabledGraphicPermissions(){
 	var flag  = $("#graphicDepartment").is(':checked');
 	if(!flag){
+		$('#graphicPermissionsDiv').iCheck('uncheck')
 		$("#chinaTeamPermission").attr("disabled","disabled");
 		$("#usaTeamPermission").attr("disabled","disabled");
 		$("#graphicDesignerPermission").attr("disabled","disabled");
@@ -393,18 +402,28 @@ function disabledGraphicPermissions(){
 function disabledQCPermissions(){
 	var flag  = $("#qcDepartment").is(':checked');
 	if(!flag){
+		$('#qcPermissionsDiv').iCheck('uncheck')
 		$("#qcpermission").attr("disabled","disabled");
 		$("#qccode").attr("disabled","disabled");
 		$("#classcodepermission").attr("disabled","disabled");
+		$("#weeklymailbuttonpermission").attr("disabled","disabled");
+		$("#qcplannerbuttonpermission").attr("disabled","disabled");
+		$("#qcapprovalrejectpermission").attr("disabled","disabled");
+		
+		
 	}else{
 		$("#qccode").removeAttr("disabled");
 		$("#qcpermission").removeAttr("disabled");
 		$("#classcodepermission").removeAttr("disabled");
+		$("#weeklymailbuttonpermission").removeAttr("disabled");
+		$("#qcplannerbuttonpermission").removeAttr("disabled");
+		$("#qcapprovalrejectpermission").removeAttr("disabled");
 	}
 }
 function disabledContainerPermissions(){
 	var flag  = $("#containerDepartment").is(':checked');
 	if(!flag){
+		$('#containerPermissionsDiv').iCheck('uncheck')
 		$("#containerpermission").attr("disabled","disabled");
 		$("#containerdevilerypermission").attr("disabled","disabled");
 		$("#containerofficepermission").attr("disabled","disabled");

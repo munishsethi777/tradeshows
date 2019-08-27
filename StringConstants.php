@@ -5,6 +5,9 @@ class StringConstants{
 	const MISSING_INSPECTION_APPOINTMENT = "ALPINE BI | Missing Inspection Appointments";
 	const PENDING_QC_APPROVALS = "ALPINE BI | Pending QC Approvals";
 	const INCOMPLETED_SCHEDULES = "ALPINE BI | Incompleted Schedules";
+	const QC_PLANNER = "ALPINE BI | QC Planner";
+	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
+	
 	
 	
 	// USER ACTION STRING CONSTANT

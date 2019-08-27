@@ -484,6 +484,35 @@ class QCNotificationsUtil{
 		}	
 	}
 	
+	public static function sendQCApprovedRejectNotification($approvalSeq,$comments,$superVisorName){
+	    $qcScheduleMgr = QCScheduleMgr::getInstance();
+	    $qcSchedule = $qcScheduleMgr->findByApprovalSeq($approvalSeq);
+	    $itemNo = $qcSchedule["itemnumbers"];
+	    $po = $qcSchedule["po"];
+	    $qcEmail = $qcSchedule["email"];
+	    $phAnValues = array();
+	    $phAnValues["ITEM_NUMBER"] = $itemNo;
+	    $phAnValues["PO_NUMBER"] = $po;
+	    $phAnValues["APPROVED_REJECT_STATUS"] = $qcSchedule["responsetype"];
+	    $phAnValues["SUPERVISOR_NAME"] = $superVisorName;
+	    $phAnValues["RESPONSE_COMMENTS"] = $comments;
+	    $content = file_get_contents("../QCApprovedRjectEmailTemplate.php");
+	    $html = self::replacePlaceHolders($phAnValues, $content);
+	    $userMgr = UserMgr::getInstance();
+	    $rolName = Permissions::getName(Permissions::approved_reject_notification);
+	    $users = $userMgr->getUserssByRoleAndDepartment($rolName, 1);
+	    $toEmails = array();
+	    $phAnValues = array();
+	    foreach ($users as $user){
+	        array_push($toEmails,$user->getEmail());
+	    }
+	    array_push($toEmails,$qcEmail);
+	    if(!empty($toEmails)){
+	        $subject = StringConstants::APPROVAL_RESPONSE_NOTIFICATION;
+	        MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+	    }
+	}
+	
 	
 	
 	public static function sendPendingQCApprovalNotification(){

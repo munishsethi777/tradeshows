@@ -1,6 +1,7 @@
 <div>
 	<p>Hi,<br>
-	<p>QC {SUPERVISOR_NAME} has submitted a request for your approval on Item {ITEM_ID} in PO. {PO_NUMBER} on dated {DATE_STR}.Please Login into webportal <a href='{WEB_PORTAL_LINK}'>{WEB_PORTAL_LINK}</a> to approve or reject the submission.</p>
+		Approval request for PO: {PO_NUMBER} Item: {ITEM_NUMBER} has been {APPROVED_REJECT_STATUS} by {SUPERVISOR_NAME}</p>
 	<br>
+	Comments : {RESPONSE_COMMENTS}
 	<p>Regards,<br>Alpinebi
 </div>

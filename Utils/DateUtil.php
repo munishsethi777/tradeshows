@@ -181,7 +181,21 @@ class DateUtil {
 	}
 	
 	public static function getCurrentDate(){
-		return new DateTime();
+	   return new DateTime();
+	}
+	/**
+	 * Returns converted date string in Y-m-d date format
+	 * @param int $addDays [optional] days add in date.
+	 * @param DateTime $date [optional] DateTime object.By Default Current Date.
+	 */
+	public static function getDateInDBFormat($addDays = null,$date = null){
+	    if(empty($date)){
+	        $date = new DateTime();
+	    }
+	    if(!empty($addDays)){
+	        $date = $date->modify("+" . $addDays . " days");
+	    }
+	    return $date->format("Y-m-d");
 	}
 	
 	public static function convertDateToFormat($dateStr,$fromFormat,$toFormat){
@@ -206,5 +220,6 @@ class DateUtil {
 	    }
 	    return $dateStr;
 	}
+
 }
 ?>
