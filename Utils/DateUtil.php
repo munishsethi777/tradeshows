@@ -195,9 +195,13 @@ class DateUtil {
 	public static function convertDateToFormatWithTimeZone($dateStr,$fromFormat,$toFormat,$timeZone){
 	    if(!empty($dateStr)){
 	        $defaultTimeZone = new DateTimeZone(date_default_timezone_get());
-	        $usertimeZone = new DateTimeZone($timeZone);
-	        $date = DateUtil::StringToDateByGivenFormatWithTimezone($fromFormat, $dateStr,$defaultTimeZone);
-	        $date->setTimezone($usertimeZone);
+	        if(!empty($timeZone)){
+	        	$usertimeZone = new DateTimeZone($timeZone);
+	        	$date = DateUtil::StringToDateByGivenFormatWithTimezone($fromFormat, $dateStr,$defaultTimeZone);
+	        	$date->setTimezone($usertimeZone);
+	        }else{
+	        	$date = DateUtil::StringToDateByGivenFormat($fromFormat, $dateStr);
+	        }
 	        $dateStr = $date->format($toFormat);
 	    }
 	    return $dateStr;

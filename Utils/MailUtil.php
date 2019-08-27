@@ -340,7 +340,7 @@ class MailUtil{
 				$mail->Password   = $smtpPassword;          // GMAIL password
 			}
 			$mail->IsHTML(true);
-			$mail->SetFrom('noreply@satyainfopages.in', 'Alpine');
+			$mail->SetFrom($smtpUsername, 'Alpine');
 			$mail->Subject = $subject;
 			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 			$mail->MsgHTML($body);

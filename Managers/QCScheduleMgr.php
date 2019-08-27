@@ -582,6 +582,10 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		$shipDate = $this->getDateStr($qcSchedule->getShipDate());
 		$qcSchedule->setShipDate($shipDate);
 		
+		$latestShipDate = $this->getDateStr($qcSchedule->getLatestShipDate());
+		$qcSchedule->setLatestShipDate($latestShipDate);
+		
+		
 		$scReadyDate = $this->getDateStr($qcSchedule->getSCReadyDate());
 		$qcSchedule->setSCReadyDate($scReadyDate);
 		
