@@ -147,17 +147,17 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
                      	<input type="hidden" id ="approvalSeq" name="approvalSeq"/>
                      	<div class="form-group row">
                              <label class="col-lg-2 col-form-label bg-formLabel">QC:</label> 
-                             <label class="col-lg-4" id="modalQcLabel"></label>
+                             <label class="col-lg-4 col-form-label" id="modalQcLabel"></label>
                            
                               <label class="col-lg-2 col-form-label bg-formLabel">Code:</label>
-                              <label class="col-lg-4" id="modalCodeLabel"></label>                           
+                              <label class="col-lg-4 col-form-label" id="modalCodeLabel"></label>                           
                         </div>
                         <div class="form-group row">                              
                               <label class="col-lg-2 col-form-label bg-formLabel">PO </label> 
-                              <label class="col-lg-4 " id="modalPoLabel"></label>                          
+                              <label class="col-lg-4 col-form-label" id="modalPoLabel"></label>                          
                               
                               <label class="col-lg-2 col-form-label bg-formLabel">ITEM NO </label> 
-                              <label class="col-lg-4" id="modalItemnumberLabel"></label>                            
+                              <label class="col-lg-4 col-form-label" id="modalItemnumberLabel"></label>                            
                         </div> 
                      	 <div class="form-group row">
                        		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
