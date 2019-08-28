@@ -10,6 +10,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleApprovalType.php")
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Utils/QCScheduleImportUtil.php';
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
 	private static $dataStore;
@@ -281,7 +283,7 @@ class QCScheduleMgr{
 		}
 		$conn->commit();
 		if(!$hasError){
-			$messages = "Qc Schedules Imported Successfully!";
+		    $messages = StringConstants::QC_SCHEDULES_IMPORTED_SUCCESSFULLY; 
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;

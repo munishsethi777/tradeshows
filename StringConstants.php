@@ -39,7 +39,7 @@ class StringConstants{
 	const AWU_REFERENCE_NOT_EMPTY = "AWU Reference can not be empty";
 	const INCORRECT_PASSWORD  = "Incorrect Password!";
 	
-	//GRAPHIC LOG ACTION STRING 
+	//GRAPHIC LOG ACTION STRING CONSTANT
 	const GRAPHIC_LOG_SAVED_SUCCESSFULLY   = "Graphic Log saved successfully!";
 	const GRAPHIC_LOG_UPDATED_SUCCESSFULLY = "Graphic Log updated successfully!";
 	const GRAPHIC_LOG_DELETE_SUCCESSFULLY  = "Graphic Log Deleted successfully";
@@ -59,12 +59,36 @@ class StringConstants{
 	const ACTUAL_FINAL_INSPECTION_DATE_PAST_SUBMIT_APPROVAL     = "Actual final inspection date should be in past for submit approval";
 	const ACTUAL_FINAL_INSPECTION_DATE_REQUIRED_SUBMIT_APPROVAL = "Actual final inspection date is required for submit approval";
  
-	//QC SCHEDULE APPROVAL ACTION STRING 
+	//QC SCHEDULE APPROVAL ACTION STRING CONSTANT
 	const QC_SCHEDULE_STATUS_UPDATE = "QC Schedule status update successfully!";
 	
 	//TEAM ACTION STRING
 	const TEAM_SAVED_SUCCESSFULLY    = "Team saved successfully.";
 	const TEAMS_DELETE_SUCCESSFULLY  = "Teams Deleted successfully";
 	const TEAM_UPDATE_SUCCESSFULLY   = "Team update successfully";
+	
+	//CUSTOMER MANAGER STRING CONSTANT
+	const IMPORT_CORRECT_FILE = "Please import the correct file";
+	const CUSTOMER_IMPORTED_SUCCESSFULLY = "Customers Imported Successfully!";
+		
+	//GRAPHICLOG MANAGER STRING CONSTANT
+	const GRAPHIC_LOGS_IMPORTED_SUCCESSFULLY = "Graphic Logs Imported Successfully!";
+	
+	//ITEM MANAGER STRING CONSTANT
+	const ITEMS_IMPORTED_SUCCESSFULLY = "Items Imported Successfully!";
+	
+	//QC SCHEDULE MANAGER STRING CONSTANT
+	const QC_SCHEDULES_IMPORTED_SUCCESSFULLY  = "Qc Schedules Imported Successfully!";
+	
+	//SHOW TASK FILE MANAGER STRING CONSTANT
+	const TRADESHOWS_DOCUMENTS = "/tradeshows/documents/";
+	
+	//TRADESHOW ORDER MANAGER STRING CONSTANT
+	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
+	
+	
+	
+	
+	
 	
 }

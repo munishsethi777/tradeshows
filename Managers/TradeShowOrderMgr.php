@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TradeShowOrderDetail.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TradeShowOrderDetailMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 
 
 class TradeShowOrderMgr{
@@ -76,7 +77,7 @@ class TradeShowOrderMgr{
 				$count++;
 			}
 		}else{
-			$messages .= "Please import the correct file";
+		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
 			$success = 0;
 		}
 		$response = array();
@@ -236,7 +237,7 @@ inner join items on tradeshoworderdetails.itemseq = items.seq";
 			}
 		}
 		if(!$hasError){
-			$messages = "Tradeshow orders Imported Successfully!";
+		    $messages = StringConstants::TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY;
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;

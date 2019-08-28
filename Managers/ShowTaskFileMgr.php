@@ -4,7 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/FileUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 class ShowTaskFileMgr{
 	private static $showTaskFileMgr;
 	private static $showTaskFileDataStore;
@@ -68,7 +68,7 @@ class ShowTaskFileMgr{
 			$showTaskFile->setUserSeq($userSeq);
 			$id = $this->saveShowTaskFile($showTaskFile);
 			$filename = $id .".". $fileType;
-			$uploaddir = $_SERVER["DOCUMENT_ROOT"] . "/tradeshows/documents/";
+			$uploaddir = $_SERVER["DOCUMENT_ROOT"] . StringConstants::TRADESHOWS_DOCUMENTS;
 			FileUtil::uploadFile($tempNames[$key],$uploaddir,$filename);
 		}
 	}
@@ -90,7 +90,7 @@ class ShowTaskFileMgr{
 			$fileSeqs = explode(",", $fileSeqs);
 			foreach ($selectedFiles as $file){
 				$fileName = $file["seq"] . "." . $file["fileextension"];
-				$path = $_SERVER["DOCUMENT_ROOT"] . "/tradeshows/documents/" . $fileName;
+				$path = $_SERVER["DOCUMENT_ROOT"] . StringConstants::TRADESHOWS_DOCUMENTS . $fileName;
 				FileUtil::deletefile($path);
 			}
 		}

@@ -3,7 +3,9 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
+
 class CustomerMgr{
 	
 	private static  $customerMgr;
@@ -66,7 +68,7 @@ class CustomerMgr{
 				}
 			}
 		}else{
-			$messages .= "Please import the correct file";
+		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
 			$success = 0;
 		}
 		$response = array();
@@ -116,7 +118,7 @@ class CustomerMgr{
 		}
 		$conn->commit();
 		if(!$hasError){
-			$messages = "Customers Imported Successfully!";
+		    $messages = StringConstants::CUSTOMER_IMPORTED_SUCCESSFULLY;
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
