@@ -85,7 +85,7 @@ class QCNotificationsUtil{
 		$fromDate = new DateTime();
 		$fromDate->modify("+1 days");
 		$toDate = new DateTime();
-		$toDate->modify("+7 days");
+		$toDate->modify("+14 days");
 		$fromDateStr = $fromDate->format("n-j-y");
 		$toDateStr = $toDate->format("n-j-y");
 		return array("fromDate"=>$fromDateStr,"toDate"=>$toDateStr);
@@ -186,7 +186,7 @@ class QCNotificationsUtil{
 				}
 			       
 		  }
-		}elseif($userType == UserType::QC){
+		}else if($userType == UserType::QC){
 			$qcUsers = $userMgr->getQCsForQCReport();
 			foreach($qcUsers as $user){
 				$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate($user->getSeq());
@@ -293,7 +293,7 @@ class QCNotificationsUtil{
 		$fromDate = new DateTime();
 		$fromDate->modify("+1 days");
 		$toDate = new DateTime();
-		$toDate->modify("+7 days");
+		$toDate->modify("+14 days");
 		$tableMailHtml = "";
 		$phAnValues = array();
 		$tableHtml = "";
@@ -314,7 +314,7 @@ class QCNotificationsUtil{
 			$phAnValues["NOTIFICATION_NAME"] = $notificationType;
 			$phAnValues["FROM_DATE"] = $fromDate->format("n/j/y");
 			$phAnValues["TO_DATE"] = $toDate->format("n/j/y");
-			$tableHtml = "<h3>{NOTIFICATION_NAME} due in next 7 days ({FROM_DATE} to {TO_DATE})</h3>";
+			$tableHtml = "<h3>{NOTIFICATION_NAME} due in next 14 days ({FROM_DATE} to {TO_DATE})</h3>";
 			if($notificationName == StringConstants::MISSING_INSPECTION_APPOINTMENT){
 				$tableHtml = "<h3>Missing $notificationType</h3>";
 			}else if($notificationName == StringConstants::INCOMPLETED_SCHEDULES){
@@ -490,6 +490,7 @@ class QCNotificationsUtil{
 	    $itemNo = $qcSchedule["itemnumbers"];
 	    $po = $qcSchedule["po"];
 	    $qcEmail = $qcSchedule["email"];
+	    $isSendNotification = $qcSchedule["issendnotifications"];
 	    $phAnValues = array();
 	    $phAnValues["ITEM_NUMBER"] = $itemNo;
 	    $phAnValues["PO_NUMBER"] = $po;
@@ -506,11 +507,14 @@ class QCNotificationsUtil{
 	    foreach ($users as $user){
 	        array_push($toEmails,$user->getEmail());
 	    }
-	    array_push($toEmails,$qcEmail);
+	    if(!empty($isSendNotification)){
+	        array_push($toEmails,$qcEmail);
+	    }
 	    if(!empty($toEmails)){
 	        $subject = StringConstants::APPROVAL_RESPONSE_NOTIFICATION;
 	        MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
 	    }
+	    $qcScheduleMgr->updateLastModifiedOn($qcSchedule["seq"]);
 	}
 	
 	
