@@ -1,4 +1,4 @@
-<?include("sessionCheck.php");
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
