@@ -15,6 +15,8 @@ $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
 $isSessionSV = $sessionUtil->isSessionSupervisor();
+$isSessionAdmin = $sessionUtil->isSessionAdmin();
+$readOnlyShipDate = ""; 
 if($isSessionGeneralUser && !$isSessionSV){
  	$qcUser = $sessionUtil->getUserLoggedInSeq();
 	$qcUserReadonly = "readonly";
@@ -51,6 +53,9 @@ if($isSessionGeneralUser && !$isSessionSV){
  		$firstInspectionChk = "checked";
  	}	
  	$readOnlyPO = "readonly";
+ 	if(!$isSessionAdmin){
+ 	    $readOnlyShipDate = "readonly";
+ 	}
  	$qcUser = $qcSchedule->getQCUser();
  	$qcscheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
  	$approvals = $qcscheduleApprovalMgr->getLastestQcScheduleApproval($seqs);
@@ -169,7 +174,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Ship Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required placeholder="Select Date" id="shipdate" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control dateControl" <?php echo $readOnlyPO?> <?php echo isset($fieldStateArr["shipdate"])?$fieldStateArr["shipdate"]:""?>>
+	                            	<input type="text" required placeholder="Select Date" id="shipdate" onchange="setDates(this.value)" maxLength="250" value="<?php echo $qcSchedule->getShipDate()?>" name="shipdate" class="form-control shipDateControl" <?php echo $readOnlyShipDate?> <?php echo isset($fieldStateArr["shipdate"])?$fieldStateArr["shipdate"]:""?>>
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -434,9 +439,16 @@ $(document).ready(function(){
 	    timepicker:false,
 	    format:'m-d-Y',
 	    scrollMonth : false,
-		scrollInput : false,
+		scrollInput : false
 	});
-	<?php if($readOnlyPO == "readonly"){?>
+	$('.shipDateControl').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	    scrollMonth : false,
+		scrollInput : false,
+		minDate: 0
+	});
+	<?php if($readOnlyShipDate == "readonly"){?>
 		$("#shipdate").prop('disabled', true) ;
 	<?php }?>
 	
