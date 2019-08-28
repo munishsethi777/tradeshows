@@ -181,7 +181,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                           
 	                           <label class="col-lg-2 col-form-label bg-formLabel">Latest Ship Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required placeholder="Select Date" id="latestshipdate" maxLength="250" value="<?php echo $qcSchedule->getLatestShipDate()?>" name="latestshipdate" class="form-control dateControl" <?php echo isset($fieldStateArr["latestshipdate"])?$fieldStateArr["latestshipdate"]:""?>>
+	                            	<input type="text" placeholder="Select Date" id="latestshipdate" maxLength="250" value="<?php echo $qcSchedule->getLatestShipDate()?>" name="latestshipdate" class="form-control dateControl" <?php echo isset($fieldStateArr["latestshipdate"])?$fieldStateArr["latestshipdate"]:""?>>
 	                            </div>
 	                        </div>
 	                        

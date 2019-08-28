@@ -25,8 +25,15 @@ if($call == "saveUser"){
 	    $message = StringConstants::USER_SAVED_SUCCESSFULLY;
 		$user = new User();
 		$user->createFromRequest($_REQUEST);
-		$permissions = $_POST["permissions"];
-		$departments = $_POST["departments"];
+		$permissions = array(); 
+		if(isset($_POST["permissions"]) && !empty($_POST["permissions"])){
+		    $permissions = $_POST["permissions"];
+		}
+		
+		$departments = array();
+		if(isset($_POST["departments"]) && !empty($_POST["departments"])){
+		    $departments = $_POST["departments"];
+		}
 		if(isset($_REQUEST["isenabled"])){
 			$user->setIsEnabled(1);
 		}else {

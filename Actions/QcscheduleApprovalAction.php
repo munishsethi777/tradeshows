@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
@@ -21,7 +22,9 @@ if($call == "updateApprovalStatus"){
 		$comments = $_POST["comments"];
 		$flag = $qcScheduleApprovalMgr->updateApprovalStatus($approvalSeq,$approvalStatusDD,$comments);
 		if($flag){
-			$message = StringConstants::QC_SCHEDULE_STATUS_UPDATE; 
+			$message = StringConstants::QC_SCHEDULE_STATUS_UPDATE;
+			$loggedInUserName = $sessionUtil->getUserLoggedInName();
+			QCNotificationsUtil::sendQCApprovedRejectNotification($approvalSeq,$comments,$loggedInUserName);
 		}
 	}catch(Exception $e){
 		$success = 0;

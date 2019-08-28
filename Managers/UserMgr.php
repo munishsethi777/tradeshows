@@ -180,6 +180,15 @@ where userdepartments.departmentseq = 1 and (users.usertype = 'SUPERVISOR' or us
 	    return $users;
 	}
 	
+	public function getUserssByRoleAndDepartment($roleName,$departmentSeq){
+	    $sql = "SELECT users.* FROM users
+inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1
+inner join userroles on users.seq = userroles.userseq
+where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPERVISOR' or users.usertype = 'USER') and userroles.role = '$roleName'";
+	    $users = self::$userDataStore->executeObjectQuery($sql);
+	    return $users;
+	}
+	
 	public function getAdminForSendReport(){
 	    $colval = array();
 	    $colval["usertype"] = 'ADMIN';
