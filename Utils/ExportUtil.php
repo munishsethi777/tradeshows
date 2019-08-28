@@ -1435,7 +1435,7 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 		$fromDateStr = $fromDate->format("n/j/y");
 		$toDateStr = $toDate->format("n/j/y");
 		foreach($pendingSchedules as $notificationType=>$qcSchedules){
-			$colval = "$notificationType due in next 7 days ($fromDateStr to $toDateStr)";
+			$colval = "$notificationType due in next 14 days ($fromDateStr to $toDateStr)";
 			if($notificationName == StringConstants::MISSING_INSPECTION_APPOINTMENT){
 				$colval = "Missing $notificationType";
 			}else if($notificationName == StringConstants::INCOMPLETED_SCHEDULES){
