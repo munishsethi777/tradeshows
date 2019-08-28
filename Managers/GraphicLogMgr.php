@@ -6,7 +6,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
-
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 
 class GraphicLogMgr{
 	private static $graphicLogMgr;
@@ -80,7 +80,7 @@ class GraphicLogMgr{
 				array_push($graphicLogsArr, $graphicLoc);
 			}
 		}else{
-			$messages .= "Please import the correct file";
+		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
 			$success = 0;
 		}
 		$response = array();
@@ -140,7 +140,7 @@ class GraphicLogMgr{
 			//$conn->rollBack();
 		//}
 		if(!$hasError){
-			$messages = "Graphic Logs Imported Successfully!";
+		    $messages = StringConstants::GRAPHIC_LOGS_IMPORTED_SUCCESSFULLY;
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;

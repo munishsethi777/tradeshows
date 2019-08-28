@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TaskCategory.php")
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Item.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 class ItemMgr{
 	private static  $ItemMgr;
 	private static $dataStore;
@@ -71,7 +72,7 @@ class ItemMgr{
 				}
 			}
 		}else{
-			$messages .= "Please import the correct file";
+		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
 			$success = 0;
 		}
 		$response = array();
@@ -121,7 +122,7 @@ class ItemMgr{
 		}
 		$conn->commit();
 		if(!$hasError){
-			$messages = "Items Imported Successfully!";
+		    $messages = StringConstants::ITEMS_IMPORTED_SUCCESSFULLY;
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
