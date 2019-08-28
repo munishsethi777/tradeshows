@@ -368,7 +368,7 @@ class BeanDataStore {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
-		$this->logger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag);
+		$this->dataStoreLogger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag);
 		return $flag;
 	}
 	
