@@ -967,7 +967,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	
 	public function findByApprovalSeq($qcApprovalSeq){
-	    $query = "select qcschedules.*,users.email,qcschedulesapproval.responsetype from qcschedules 
+	    $query = "select users.issendnotifications,qcschedules.*,users.email,qcschedulesapproval.responsetype from qcschedules 
 inner join users on qcschedules.qcuser = users.seq
 inner join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq
 where qcschedulesapproval.seq = $qcApprovalSeq";
@@ -976,6 +976,12 @@ where qcschedulesapproval.seq = $qcApprovalSeq";
 	        return $qcschedule[0];
 	    }
 	    return null;
+	}
+	
+	public function updateLastModifiedOn($seq){
+	    $colVal = array("lastmodifiedon"=>new DateTime());
+	    $condition = array("seq" => $seq);
+	    self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
 	}
 	
 	

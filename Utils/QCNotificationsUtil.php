@@ -490,6 +490,7 @@ class QCNotificationsUtil{
 	    $itemNo = $qcSchedule["itemnumbers"];
 	    $po = $qcSchedule["po"];
 	    $qcEmail = $qcSchedule["email"];
+	    $isSendNotification = $qcSchedule["issendnotifications"];
 	    $phAnValues = array();
 	    $phAnValues["ITEM_NUMBER"] = $itemNo;
 	    $phAnValues["PO_NUMBER"] = $po;
@@ -506,11 +507,14 @@ class QCNotificationsUtil{
 	    foreach ($users as $user){
 	        array_push($toEmails,$user->getEmail());
 	    }
-	    array_push($toEmails,$qcEmail);
+	    if(!empty($isSendNotification)){
+	        array_push($toEmails,$qcEmail);
+	    }
 	    if(!empty($toEmails)){
 	        $subject = StringConstants::APPROVAL_RESPONSE_NOTIFICATION;
 	        MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
 	    }
+	    $qcScheduleMgr->updateLastModifiedOn($qcSchedule["seq"]);
 	}
 	
 	
