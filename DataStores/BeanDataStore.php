@@ -362,12 +362,13 @@ class BeanDataStore {
 			$STH = $conn->prepare ( "delete from " . $this->tableName . " where seq in(" . $ids . ")" );
 			$flag = $STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
-			return $flag;
+			$flag = true;
 		} catch ( Exception $e ) {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 		$this->logger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag);
+		return $flag;
 	}
 	
 	public function deleteByAttribute($colValuePair = null) {
