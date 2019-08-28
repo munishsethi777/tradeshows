@@ -7,13 +7,20 @@
 
   <appender name="myFileAppender" class="LoggerAppenderFile">
     <layout class="LoggerLayoutTTCC" />
-    <param name="file" value="/Applications/XAMPP/xamppfiles/htdocs/tradeshows/logs/log.log" />
+    <param name="file" value="/Applications/MAMP/htdocs/tradeshows/logs/log.log" />
+    <param name="maxFileSize" value="5MB" />
+  </appender>
+    <appender name="dataStoreFileAppender" class="LoggerAppenderFile">
+    <layout class="LoggerLayoutTTCC" />
+    <param name="file" value="/Applications/MAMP/htdocs/tradeshows/logs/BeanDataStorelog.log" />
     <param name="maxFileSize" value="5MB" />
   </appender>
   <logger name="logger">
     <appender_ref ref="myFileAppender" />
   </logger>
-
+  <logger name="dataStoreLogger">
+    <appender_ref ref="dataStoreFileAppender" />
+  </logger>
   <root>
     <level value="DEBUG" />
     <appender_ref ref="myConsoleAppender" />
