@@ -40,10 +40,10 @@ class QCNotificationsUtil{
 			}
 		if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-			    $Emaillog = EmailLogMgr::getInstance();
+			    $EmaillogMgr = EmailLogMgr::getInstance();
 				if($bool){
 				    foreach ($supervisors as $user){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_SCHEDULE,$user->getEmail(),null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_SCHEDULE,$user->getEmail(),null,$user->getSeq());
 				    }
 				    
 				}
@@ -69,9 +69,9 @@ class QCNotificationsUtil{
 				}
 				if(!empty($toEmails)){
 				   $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-				   $Emaillog = EmailLogMgr::getInstance();
+				   $EmaillogMgr = EmailLogMgr::getInstance();
 				   if($bool){
-				           $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_SCHEDULE,$email,null,$user->getSeq());
+				           $EmaillogMgr->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_SCHEDULE,$email,null,$user->getSeq());
 				       
 				   }
 				}
@@ -116,10 +116,10 @@ class QCNotificationsUtil{
 			}
 			if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-			    $Emaillog = EmailLogMgr::getInstance();
+			    $EmaillogMgr = EmailLogMgr::getInstance();
 			    if($bool){
 			        foreach ($supervisors as $user){
-			            $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_APPOINTMENT ,$user->getEmail(),null,$user->getSeq());
+			            $EmaillogMgr->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_APPOINTMENT ,$user->getEmail(),null,$user->getSeq());
 			        }
 			    }
 			  }
@@ -143,9 +143,9 @@ class QCNotificationsUtil{
 				}
 				if(!empty($toEmails)){
 				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-				    $Emaillog = EmailLogMgr::getInstance();
+				    $EmaillogMgr = EmailLogMgr::getInstance();
 				    if($bool){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_APPOINTMENT,$email,null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_UPCOMING_INSPECTION_APPOINTMENT,$email,null,$user->getSeq());
 				        
 				    }
 				}
@@ -178,10 +178,10 @@ class QCNotificationsUtil{
 			}
 			if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-				$Emaillog = EmailLogMgr::getInstance();
+				$EmaillogMgr = EmailLogMgr::getInstance();
 				if($bool){
 				    foreach ($supervisors as $user){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
 				    }
 				}
 			       
@@ -206,9 +206,9 @@ class QCNotificationsUtil{
 				}
 				if(!empty($toEmails)){
 				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-				    $Emaillog = EmailLogMgr::getInstance();
+				    $EmaillogMgr = EmailLogMgr::getInstance();
 				    if($bool){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION,$email,null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION,$email,null,$user->getSeq());
 				        
 				    }
 				}
@@ -239,10 +239,10 @@ class QCNotificationsUtil{
 			}
 			if(!empty($toEmails)){
 				$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-			    $Emaillog = EmailLogMgr::getInstance();
+			    $EmaillogMgr = EmailLogMgr::getInstance();
 				if($bool){
 				   foreach ($supervisors as $user){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
 				        }
 				    }
 			}
@@ -267,9 +267,9 @@ class QCNotificationsUtil{
 				}
 				if(!empty($toEmails)){
 				    $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
-				    $Emaillog = EmailLogMgr::getInstance();
+				    $EmaillogMgr = EmailLogMgr::getInstance();
 				    if($bool){
-				        $Emaillog->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION,$email,null,$user->getSeq());
+				        $EmaillogMgr->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION,$email,null,$user->getSeq());
 				        
 				    }
 				}
@@ -557,16 +557,21 @@ class QCNotificationsUtil{
 		$attachments = array("QCPendingApprovals"=>$excelData);
 		$supervisors = $userMgr->getSupervisorsForQCReport();
 		$toEmails = array();
+		$EmaillogMgr = EmailLogMgr::getInstance();
+		$subject = StringConstants::PENDING_QC_APPROVALS;
 		foreach ($supervisors as $user){
 			array_push($toEmails,$user->getEmail());
 		}
-		if(!empty($toEmails)){
-			$subject = StringConstants::PENDING_QC_APPROVALS;
-			MailUtil::sendSmtpMail($subject, $tableMailHtml, $toEmails,true, $attachments);
+		if(!empty($toEmails)){			   
+		   $bool =  MailUtil::sendSmtpMail($subject, $tableMailHtml, $toEmails,true, $attachments);		    	
+    	   if($bool){
+    		   foreach ($supervisors as $user){
+    		     $EmaillogMgr->saveEmailLog(EmailLogType::PENDING_QC_APPROVAL , $user->getEmail(), null, $user->getSeq());
+    		   }
+    	   }
 		}
 	}
-	
-	
+		
 	public static function sendQCPlannerNotification($dataArr,$isSendEmail){
 	    $attachment = ExportUtil::exportQcPlannerReport($dataArr, $isSendEmail);
 	    $attachments = array(StringConstants::QC_PLANNER=>$attachment);
@@ -584,11 +589,16 @@ class QCNotificationsUtil{
     	        //array_push($toEmails,$admin->getEmail());
     	    }
     	    $html = "<p>Qc Plannner file attached with this mail.";
+    	    $EmaillogMgr = EmailLogMgr::getInstance();    	   
     	    if(!empty($toEmails)){
-    	        $subject = StringConstants::QC_PLANNER;
-    	        MailUtil::sendSmtpMail($subject, $html, $toEmails,true, $attachments);
-    	    }
+    	     $subject = StringConstants::QC_PLANNER;
+    	     $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails,true, $attachments);
+    	     if($bool){
+    	        foreach ($users as $user){
+    	            $EmaillogMgr->saveEmailLog(EmailLogType::QC_SCHEDULE_FOR_PLAN_REPORT ,$user->getEmail(), null,$user->getSeq());
+    	        }   	         
+    	     }
+    	   }    	      	    
 	    }
-	}
-	
+	}	
 }
