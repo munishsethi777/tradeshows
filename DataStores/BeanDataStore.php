@@ -544,7 +544,7 @@ class BeanDataStore {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
-		$logMsg .= "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq;
+		$logMsg = "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq;
 		$this->logger->info($logMsg);
 		return $flag;
 	}
