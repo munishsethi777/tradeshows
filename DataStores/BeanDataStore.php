@@ -169,7 +169,7 @@ class BeanDataStore {
 				
 			}
 			$this->throwException ( $STH->errorInfo () );
-			return $id;
+			
 		} catch ( Exception $e ) {
 		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
 		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq;
@@ -178,7 +178,7 @@ class BeanDataStore {
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
 		$this->logger->info($logMsg);
-		return null;
+		return $id;
 	}
 	
 	
@@ -245,7 +245,6 @@ class BeanDataStore {
 			$STH = $conn->prepare ( $SQL );
 			$STH->execute ($paramValueArr);
 			$this->throwException ( $STH->errorInfo () );
-			return $id;
 		} catch ( Exception $e ) {
 		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
 		    $logMsg .= json_encode($columnValueArry);
@@ -254,7 +253,7 @@ class BeanDataStore {
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
 		$this->logger->info($logMsg);
-		return null;
+		return $id;
 	}
 	
 	function findAllArr($isApplyFilter = false) {
