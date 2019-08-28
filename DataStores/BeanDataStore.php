@@ -2,22 +2,20 @@
 require_once ("MainDB.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
-//Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
+Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 class BeanDataStore {
 	private $className;
 	private $tableName;
-	private $companySeq;
-	private $logger ;
-	private $isManager;
 	private $loggedInAdminSeq;
+	private $loggedInUserSeq;
+	private $sessionUtil;
+	private $logger;
 	public function __construct($className_, $tableName) {
 		$this->className = $className_;
 		$this->tableName = $tableName;
-		//$sessionUtil = SessionUtil::getInstance ();
-		//$this->companySeq = $sessionUtil->getAdminLoggedInCompanySeq ();
-		//$this->loggedInAdminSeq = $sessionUtil->getAdminLoggedInSeq();
-		//$this->logger = Logger::getLogger ( "logger" );
-		//$this->isManager = $sessionUtil->getLoggedInRole() == "manager";
+		$this->sessionUtil = SessionUtil::getInstance ();
+		$this->loggedInUserSeq = $this->sessionUtil->getUserLoggedInSeq();
+		$this->logger = Logger::getLogger ( "logger" );
 	}
 	private function key_implode($array) {
 		$fields = array ();
@@ -39,13 +37,7 @@ class BeanDataStore {
 			$count = 0;
 			$class = new ReflectionClass ( $this->className );
 			$methods = $class->getMethods ( ReflectionMethod::IS_PUBLIC );
-			$id;
-			if($this->className == "ChatroomChat"){
-				$id = $object->getPost_Id();
-			}else{
-				$id = $object->getSeq ();
-			}
-			
+			$id = $object->getSeq ();
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
 				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "setNAForLockedField" && $methodName != "from_array" && $methodName != "createFromRequest") {
@@ -82,13 +74,14 @@ class BeanDataStore {
 			$SQL = "";
 			$db_New = MainDB::getInstance ();
 			$conn = $db_New->getConnection ();
-			
+			$logMsg = "New " . $this->className . " object saved ";
 			if ($id > 0) { // update query
 				$columnString = implode ( '=?,', array_keys ( $columnValueArry ) );
 				$columnString .= "=?";
 				$SQL = "Update " . strtolower ( $this->tableName ) . " set " . $columnString . " where seq = " . $id;
 				$STH = $conn->prepare ( $SQL );
 				$STH->execute ( array_values ( $columnValueArry ) );
+				$logMsg = "Update " . $this->className . " object ";
 			} else { // Insert Query
 				$columnString = implode ( ',', array_keys ( $columnValueArry ) );
 				$valueString = implode ( ',', array_fill ( 0, count ( $columnValueArry ), '?' ) );
@@ -99,9 +92,13 @@ class BeanDataStore {
 			}
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured in BeanDataStore:" . $e );
+		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
+		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq;
+		    $this->logger->error($logMsg);
 			throw $e ;
 		}
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$this->logger->info($logMsg);
 		return $id;
 	}
 	
@@ -153,12 +150,15 @@ class BeanDataStore {
 			unset ( $columnValueArry [0] );
 			unset ( $columns [0] );
 			$SQL = "";
+			$logMsg = "New " . $this->className . " object saved ";
 			$db_New = MainDB::getInstance ();
 			if ($id > 0) { // update query
-				$columnString = $this->key_implode ( $columnValueArry );
-				$SQL = "Update " . strtolower ( $this->tableName ) . " set " . $columnString . " where seq = " . $id;
-				$STH = $conn->prepare ( $SQL );
-				$STH->execute ();
+			    $columnString = implode ( '=?,', array_keys ( $columnValueArry ) );
+			    $columnString .= "=?";
+			    $SQL = "Update " . strtolower ( $this->tableName ) . " set " . $columnString . " where seq = " . $id;
+			    $STH = $conn->prepare ( $SQL );
+			    $STH->execute ( array_values ( $columnValueArry ) );
+			    $logMsg = "Update " . $this->className . " object ";
 			} else { // Insert Query
 				$columnString = implode ( ',', array_keys ( $columnValueArry ) );
 				$valueString = implode ( ',', array_fill ( 0, count ( $columnValueArry ), '?' ) );
@@ -166,14 +166,18 @@ class BeanDataStore {
 				$STH = $conn->prepare ( $SQL );
 				$STH->execute ( array_values ( $columnValueArry ) );
 				$id = $conn->lastInsertId ();
+				
 			}
 			$this->throwException ( $STH->errorInfo () );
 			return $id;
 		} catch ( Exception $e ) {
-			//$conn->rollback();
-			//$this->logger->error ( "Error occured :" . $e );
+		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
+		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq;
+		    $this->logger->error($logMsg);
 			throw $e;
 		}
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$this->logger->info($logMsg);
 		return null;
 	}
 	
@@ -217,6 +221,7 @@ class BeanDataStore {
 			unset ( $columnValueArry [0] );
 			unset ( $columns [0] );
 			$SQL = "";
+			$logMsg = $this->className . " object Updated ";
 			$db_New = MainDB::getInstance ();
 			$paramValueArr = array();
 			
@@ -242,40 +247,16 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $id;
 		} catch ( Exception $e ) {
-			//$conn->rollback();
-			//$this->logger->error ( "Error occured :" . $e );
+		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
+		    $logMsg .= json_encode($columnValueArry);
+		    $this->logger->error($logMsg . ". logged in user - " . $this->loggedInUserSeq);
 			throw $e;
 		}
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$this->logger->info($logMsg);
 		return null;
 	}
 	
-	function checkAdminPackageLimit(){
-		if($this->className == "User" || $this->className == "Company"){
-			$adminSeq = $this->loggedInAdminSeq;
-			if(!empty($adminSeq)){
-				$sql = "select * from adminpackages where adminseq = $adminSeq";
-				$result = $this->executeQuery($sql);
-				if(!empty($result)){
-					$adminPackge = $result[0];
-					$totalLearners = $adminPackge["totallearners"];
-					$totalCompanies = $adminPackge["totalcompanies"];
-					if($this->className == "User"){
-						$sql = "select count(*) from users where adminseq = $adminSeq";
-						$userCount = $this->executeCountQueryWithSql($sql);
-						if($userCount >= $totalLearners){
-							throw new Exception ( StringConstants::USER_LIMIT_MESSAGE );
-						}
-					}else if($this->className == "Company"){
-						$sql = "select count(*) from admincompanies where adminseq = $adminSeq";
-						$companiesCount = $this->executeCountQueryWithSql($sql);
-						if($companiesCount >= $totalCompanies){
-							throw new Exception ( StringConstants::COMPANY_LIMIT_MESSAGE );
-						}
-					}
-				}
-			}
-		}
-	}
 	function findAllArr($isApplyFilter = false) {
 		try {
 			$db = MainDB::getInstance ();
@@ -290,7 +271,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
@@ -309,20 +290,16 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
 	function findAllByCompany($isApplyFilter = false) {
 		try {
 			$sql = "select ". $this->tableName.".* from " . $this->tableName . " where companyseq =" . $this->companySeq;
-			if($this->isManager){
-				$sql = $this->appendManagerCriteria($sql);
-			}
 			if ($isApplyFilter) {
 				$sql = FilterUtil::applyFilter ( $sql );
 			}
-			
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$STH = $conn->prepare ( $sql );
@@ -331,7 +308,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -345,7 +322,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $obj;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -359,7 +336,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $obj;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
@@ -371,23 +348,28 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
+	
 	public function deleteInList($ids) {
+	    $flag = false;
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
+			$query = "delete from " . $this->tableName . " where seq in(" . $ids . ")" ;
 			$STH = $conn->prepare ( "delete from " . $this->tableName . " where seq in(" . $ids . ")" );
 			$flag = $STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 			return $flag;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
+		$this->logger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag);
 	}
+	
 	public function deleteByAttribute($colValuePair = null) {
 		try {
 			foreach ( $colValuePair as $key => $value ) {
@@ -403,7 +385,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
@@ -415,7 +397,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -427,7 +409,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -446,9 +428,6 @@ class BeanDataStore {
 			if (count ( $query_array ) > 0) {
 				$query .= " WHERE " . implode ( " AND ", $query_array );
 			}
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query);
-			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query );
 			}
@@ -460,7 +439,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -473,9 +452,6 @@ class BeanDataStore {
 				$colName = key ( $colValues );
 			}
 			$query = "SELECT ".$this->tableName.".* FROM " . $this->tableName . " where ".$this->tableName.".$colName in($colValues[$colName])";
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query);
-			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query );
 			}
@@ -487,7 +463,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -509,7 +485,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ();
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
@@ -535,13 +511,14 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return true;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
 	public function updateByAttributesWithBindParams($colValuePair, $condiationPair = null) {
 		try {
 			$paramValueArr = array ();
+			$flag = false;
 			foreach ( $colValuePair as $key => $value ) {
 				if ($value instanceof DateTime) {
 					$value = $value->format ( 'Y-m-d H:i:s' );
@@ -562,11 +539,14 @@ class BeanDataStore {
 			$STH = $conn->prepare ( $query );
 			$STH->execute ( $paramValueArr );
 			$this->throwException ( $STH->errorInfo () );
-			return true;
+			$flag =  true;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
+		$logMsg .= "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq;
+		$this->logger->info($logMsg);
+		return $flag;
 	}
 	public function executeCountQuery($colValuePair = null, $isApplyFilter = false) {
 		try {
@@ -576,9 +556,6 @@ class BeanDataStore {
 					$query_array [] = $this->tableName .".".$key . ' = ' . "'" . $value . "'";
 				}
 				$query .= " WHERE " . implode ( " AND ", $query_array );
-			}
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query,true);
 			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query, false );
@@ -592,192 +569,17 @@ class BeanDataStore {
 			$count = intval ( $result [0] );
 			return $count;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
 	
-	public function appendManagerCriteria($query,$isCountQuery = false){
-		$managerCriteria = AdminMgr::getInstance()->getManagerCriteriaDetail($this->loggedInAdminSeq);
-		$managerCriteria = json_decode($managerCriteria,true);
-		$criteriaType = $managerCriteria["criteriatype"];
-		$criteriaValue = $managerCriteria["criteriavalue"];
-		$wherePos = strpos(strtolower ($query),'where');
-		
-		$queryWithouCondition = $query;
-		$queryWhere = " WHERE ";
-		$sortBy = "";
-		$sortPos = strpos(strtolower ($query),'order by');
-		if ($sortPos !== false) {
-			$sortBy = substr($query, $sortPos);
-		}else{
-			$sortPos = strlen($query);
-		}
-		if ($wherePos !== false) {
-			$queryWithouCondition = substr($query, 0,$wherePos);
-			$queryWhere = substr($query, $wherePos);
-			if(strpos(strtolower ($query),'order by') !== false){
-				$queryWhere = str_replace($sortBy, "", $queryWhere);
-			}
- 			//$queryWhere .= " AND ";
-		}
-		if($criteriaType == ManagerCriteriaType::LEARNING_PLAN){
-			if($this->tableName == "users" || $this->tableName == "userlogs"){
-				$queryWithouCondition .= " left join learningplanusers lpu on users.seq = lpu.userseq and lpu.learningplanseq in ($criteriaValue)";
-				$queryWithouCondition .= " left join userlearningprofiles ulp on users.seq = ulp.userseq";
-				$queryWithouCondition .= " left join learningplanprofiles lpp on ulp.tagseq = lpp.learningprofileseq ";
-				$queryWhere .= " AND (lpp.learningplanseq in ($criteriaValue) or lpu.learningplanseq in ($criteriaValue) or users.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery && $this->tableName != "userlogs"){
-					$query .= " group by users.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-				
-			}
-			else if($this->tableName == "learningprofiles"){
-				$queryWithouCondition .= " left join learningplanprofiles lpp on learningprofiles.seq = lpp.learningprofileseq ";
-				$queryWhere .= " AND (lpp.learningplanseq in ($criteriaValue) or learningprofiles.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery){
-					$query .= " group by learningprofiles.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			
-			}else if($this->tableName == "learningplans"){
-				$queryWhere .= " AND (learningplans.seq in ($criteriaValue) or learningplans.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery){
-					$query .= " group by learningplans.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			
-			}else if($this->tableName == "modules"){
-				$queryWithouCondition .= " left join companymodules m_cm on modules.seq = m_cm.moduleseq 
-				left join learningplanmodules m_lpm on modules.seq = m_lpm.courseseq ";
-				$queryWhere .= " AND (m_lpm.learningplanseq in ($criteriaValue) or m_cm.adminseq = $this->loggedInAdminSeq )";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery){
-					$query .= " group by modules.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "classroomtrainings"){
-				$queryWithouCondition .= " left join learningplantrainings on learningplantrainings.trainingseq = classroomtrainings.seq";
-				$queryWhere .= " AND (learningplantrainings.learningplanseq in ($criteriaValue) or  classroomtrainings.adminseq = $this->loggedInAdminSeq )";
-				$query = $queryWithouCondition ." ". $queryWhere . " " . $sortBy;
-				if(!$isCountQuery){
-					$query .= " group by classroomtrainings.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			
-			}else if($this->tableName == "badges"){
-				$queryWithouCondition .= " left join badgetypedetails badgetypedetails1 on badgetypedetails1.badgeseq = badges.seq";
-				$queryWhere .= " AND badgetype like 'learningplan' and badgetypedetails1.badgetypeseq in ($criteriaValue) or  badges.adminseq = $this->loggedInAdminSeq";
-				$query = $queryWithouCondition ." ". $queryWhere ;
-				if(!$isCountQuery){
-					$query .= " group by badges.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			
-			}else if($this->tableName == "questions"){
-				$queryWithouCondition .= " left join modulequestions on modulequestions.questionseq = questions.seq 
-										left join learningplanmodules on learningplanmodules.courseseq = modulequestions.moduleseq";
-				$queryWhere .= " AND (learningplanmodules.learningplanseq in ($criteriaValue) or  questions.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition ." ". $queryWhere;
-				if(!$isCountQuery){
-					$query .= " group by questions.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}
-		}
-		if($criteriaType == ManagerCriteriaType::LEARNING_PROFILE){
-			if($this->tableName == "users" || $this->tableName == "userlogs"){
-				$queryWithouCondition .= " left join userlearningprofiles ulp on users.seq = ulp.userseq";
-				$queryWhere .= " AND (ulp.tagseq in ($criteriaValue) or users.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery && $this->tableName != "userlogs"){
-					$query .= " group by users.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "learningprofiles"){
-				$queryWhere .= " AND (learningprofiles.seq in ($criteriaValue) or learningprofiles.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere;
-				if(!$isCountQuery && $this->tableName != "userlogs"){
-					$query .= " group by learningprofiles.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "learningplans"){
-				$queryWithouCondition .= " left join learningplanprofiles m_lpp on learningplans.seq = m_lpp.learningplanseq";
-				$queryWhere .= " AND (m_lpp.learningprofileseq in ($criteriaValue) or learningplans.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere;
-				if(!$isCountQuery && $this->tableName != "userlogs"){
-					$query .= " group by learningplans.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "modules"){
-				$queryWithouCondition .= " left join companymodules m_cm on modules.seq = m_cm.moduleseq 
-						left join learningplanmodules m_lpm on modules.seq = m_lpm.courseseq 
-left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningplanseq ";
-				$queryWhere .= " AND (m_lpp.learningprofileseq in ($criteriaValue) or m_cm.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition . " " . $queryWhere ;
-				if(!$isCountQuery){
-					$query .= " group by modules.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "classroomtrainings"){
-				$queryWithouCondition .= " left join learningplantrainings on learningplantrainings.trainingseq = classroomtrainings.seq ";
-				$queryWithouCondition .= " left join learningplanprofiles m_lpp on learningplantrainings.learningplanseq = m_lpp.learningplanseq  ";
-				$queryWhere .= " AND (m_lpp.learningprofileseq in ($criteriaValue) or classroomtrainings.adminseq = $this->loggedInAdminSeq)";
-				$query = $queryWithouCondition ." ". $queryWhere;
-				if(!$isCountQuery){
-					$query .= " group by classroomtrainings.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "badges"){
-				$queryWithouCondition .= " left join badgetypedetails badgetypedetails1 on badgetypedetails1.badgeseq = badges.seq";
-				$queryWithouCondition .= " left join learningplanprofiles m_lpp on badgetypedetails1.badgetypeseq = m_lpp.learningplanseq  ";
-				$queryWhere .= " AND ((badgetype like 'learningplan' and m_lpp.learningprofileseq in ($criteriaValue)) or ( badges.adminseq = $this->loggedInAdminSeq))";
-				$query = $queryWithouCondition ." ". $queryWhere;
-				if(!$isCountQuery){
-					$query .= " group by badges.seq " . $sortBy;
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}else if($this->tableName == "questions"){
-				$queryWithouCondition .= " left join modulequestions on modulequestions.questionseq = questions.seq 
-										left join learningplanmodules on learningplanmodules.courseseq = modulequestions.moduleseq
-						left join learningplanprofiles on learningplanprofiles.learningplanseq = learningplanmodules.learningplanseq";
-				$queryWhere .= " AND (learningplanprofiles.learningprofileseq in ($criteriaValue) or questions.adminseq = $this->loggedInAdminSeq) ";
-				$query = $queryWithouCondition ." ". $queryWhere;
-				if(!$isCountQuery){
-					$query .= " group by questions.seq";
-				}else{
-					$query .= " " . $sortBy;
-				}
-			}
-				
-		}
-		return $query;
-	}
+	
 	
 	public function executeCountQueryWithSql($query, $isApplyFilter = false,$isGroupBy = false) {
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query,true);
-			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query, false,$isGroupBy );
 			}
@@ -788,7 +590,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$count = intval ( $result [0] );
 			return $count;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -796,9 +598,6 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query);
-			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query,true,$isGroupBy );
 			}
@@ -813,17 +612,14 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			}
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
-	public function insertWithQuery($query) {
+	public function insertWithQuery($query,$isApplyFilter=false) {
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
-			if($this->isManager){
-				$query = $this->appendManagerCriteria($query);
-			}
 			if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query );
 			}
@@ -833,7 +629,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$id = $conn->lastInsertId();
 			return $id;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -843,17 +639,14 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$sth = $conn->prepare ( $query );
-            if($this->isManager){
-               $query = $this->appendManagerCriteria($query);
-            }
-			if ($isApplyFilter) {
+            if ($isApplyFilter) {
 				$query = FilterUtil::applyFilter ( $query );
 			}
 			$sth->execute ();
 			$this->throwException ( $sth->errorInfo () );
 			$objList = $sth->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 		return $objList;
@@ -861,6 +654,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 	public function executeAttributeQuery($attributes, $colValuePair, $isApplyFilter = false) {
 		try {
 			$paramValueArr = array();
+			$query_array = array();
 			foreach ( $colValuePair as $key => $value ) {
 				if ($value != '') {
 					$query_array [] = $key . ' = ' . "?";
@@ -880,7 +674,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$objList = $sth->fetchAll ();
 			return $objList;
 		} catch ( Exception $e ) {
-			//$this->logger->error ( "Error occured :" . $e );
+			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
