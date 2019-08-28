@@ -10,12 +10,14 @@ class BeanDataStore {
 	private $loggedInUserSeq;
 	private $sessionUtil;
 	private $logger;
+	private $dataStoreLogger;
 	public function __construct($className_, $tableName) {
 		$this->className = $className_;
 		$this->tableName = $tableName;
 		$this->sessionUtil = SessionUtil::getInstance ();
 		$this->loggedInUserSeq = $this->sessionUtil->getUserLoggedInSeq();
 		$this->logger = Logger::getLogger ( "logger" );
+		$this->dataStoreLogger = Logger::getLogger ( "dataStoreLogger" );
 	}
 	private function key_implode($array) {
 		$fields = array ();
@@ -98,7 +100,7 @@ class BeanDataStore {
 			throw $e ;
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
-		$this->logger->info($logMsg);
+		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
 	
@@ -177,7 +179,7 @@ class BeanDataStore {
 			throw $e;
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
-		$this->logger->info($logMsg);
+		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
 	
@@ -252,7 +254,7 @@ class BeanDataStore {
 			throw $e;
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
-		$this->logger->info($logMsg);
+		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
 	
@@ -545,7 +547,7 @@ class BeanDataStore {
 			throw $e ;
 		}
 		$logMsg = "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq;
-		$this->logger->info($logMsg);
+		$this->dataStoreLogger->info($logMsg);
 		return $flag;
 	}
 	public function executeCountQuery($colValuePair = null, $isApplyFilter = false) {
