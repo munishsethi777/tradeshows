@@ -1,4 +1,4 @@
-<?include("sessionCheck.php");
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ItemSpecification.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ItemSpecificationMgr.php");

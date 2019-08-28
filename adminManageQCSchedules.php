@@ -3,6 +3,8 @@ include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QcscheduleApproval.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
 $sessionUtil = SessionUtil::getInstance();
 $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $permissionUtil = PermissionUtil::getInstance();
@@ -143,6 +145,20 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
              	 <form id="updateQCScheduleApprovalForm" method="post" action="Actions/QcscheduleApprovalAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="updateApprovalStatus"/>
                      	<input type="hidden" id ="approvalSeq" name="approvalSeq"/>
+                     	<div class="form-group row">
+                             <label class="col-lg-2 col-form-label bg-formLabel">QC:</label> 
+                             <label class="col-lg-4" id="modalQcLabel"></label>
+                           
+                              <label class="col-lg-2 col-form-label bg-formLabel">Code:</label>
+                              <label class="col-lg-4" id="modalCodeLabel"></label>                           
+                        </div>
+                        <div class="form-group row">                              
+                              <label class="col-lg-2 col-form-label bg-formLabel">PO </label> 
+                              <label class="col-lg-4 " id="modalPoLabel"></label>                          
+                              
+                              <label class="col-lg-2 col-form-label bg-formLabel">ITEM NO </label> 
+                              <label class="col-lg-4" id="modalItemnumberLabel"></label>                            
+                        </div> 
                      	 <div class="form-group row">
                        		<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
                         	<div class="col-lg-6">
@@ -156,7 +172,7 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
                             <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Comments</label>
 	                        	<div class="col-lg-10">
-	                            	<textarea required class="form-control" name="comments"></textarea>
+	                            	<textarea class="form-control" name="comments" id="comment" ></textarea>
 	                            </div>
                         </div>
                        		 <div class="modal-footer">
@@ -164,7 +180,7 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
                                         <span class="ladda-label">Submit</span>
                                     </button>
                                      <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                                </div>
+                             </div>
                  </form>
              </div>
            </div>
@@ -212,7 +228,7 @@ $(document).ready(function(){
 			   }
 		    })	
 		}else{
-			$("#createQCScheduleForm")[0].reportValidity();
+			 $("#createQCScheduleForm")[0].reportValidity();
 		}
 	}
 	$("#updateApprovalStatusBtn").click(function(e){
@@ -385,27 +401,40 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-function showApprovalModel(approvalSeq){
+function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,qc,code,po,itemno){
+	$('#comment').val(responsecomment);
+	$('#approvalStatusDD').val(responsetype);
+    $("#modalQcLabel").text(qc);
+    $("#modalCodeLabel").text(code);
+    $("#modalPoLabel").text(po);
+    $("#modalItemnumberLabel").text(itemno);
 	$("#approvalSeq").val(approvalSeq);
-	$('#updateQCScheduleApprovalModal').modal('show');
+	$("#updateQCScheduleApprovalModal").modal('show');
+	if(isDisabled == 1){	
+    	$('#comment').attr("disabled",true);
+    	$('#approvalStatusDD').attr("disabled",true);
+    	$('#updateApprovalStatusBtn').attr("disabled",true);	
+	}	
 }
-
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var responseType = data["responsetype"];
         var responseComments = data["responsecomments"];
+        var qc = data["qccode"];
+        var code = data["classcode"];
+        var po = data["po"];
+        var itemno = data["itemnumbers"];
         if(responseComments == null){
         	responseComments = "";
         }
         var isSV = data["isSv"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
             	if(isSV && responseType != null){
-            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ")' >"+responseType+"</a>";
+            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",0, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" )'>"+responseType+"</a>";
             	}else{
                 	if(responseType != null){
-            			html += "<a title='"+responseComments+"' href='#' >" + responseType + "</a>";
-                	}
+                		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",1, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" )'>"+responseType+"</a>";                	}
             	}
             html += "</div>";
         return html;
@@ -452,7 +481,7 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
-        datafields: [{ name: 'seq', type: 'integer' }, 
+        datafields: [{name: 'seq', type: 'integer' }, 
                     { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },
