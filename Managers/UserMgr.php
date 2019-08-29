@@ -32,6 +32,14 @@ class UserMgr{
 		$admins = self::$userDataStore->findAll();
 		return $admins;
 	}
+	public function getAllSupervisorsAndUsers(){
+	    $supervisor = UserType::SUPERVISOR;
+	    $user = UserType::USER;
+	    $query = "select * from users where usertype = '$supervisor' or usertype = '$user'";
+	    $users = self::$userDataStore->executeObjectQuery($query);
+	    return $users;
+	}
+	
 	public function getAllUsersByType($usertype){ 
 	    $conditionVal["usertype"] = $usertype;
 	    $user = self::$userDataStore->executeConditionQuery($conditionVal);
