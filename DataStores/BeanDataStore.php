@@ -11,11 +11,13 @@ class BeanDataStore {
 	private $sessionUtil;
 	private $logger;
 	private $dataStoreLogger;
+	private $loggedInUserName;
 	public function __construct($className_, $tableName) {
 		$this->className = $className_;
 		$this->tableName = $tableName;
 		$this->sessionUtil = SessionUtil::getInstance ();
 		$this->loggedInUserSeq = $this->sessionUtil->getUserLoggedInSeq();
+		$this->loggedInUserName = $this->sessionUtil->getUserLoggedInUserName();
 		$this->logger = Logger::getLogger ( "logger" );
 		$this->dataStoreLogger = Logger::getLogger ( "dataStoreLogger" );
 	}
@@ -95,11 +97,11 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
 		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
-		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq;
+		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")" ;
 		    $this->logger->error($logMsg);
 			throw $e ;
 		}
-		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
@@ -174,11 +176,11 @@ class BeanDataStore {
 			
 		} catch ( Exception $e ) {
 		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
-		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq;
+		    $logMsg .= json_encode($columnValueArry) . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		    $this->logger->error($logMsg);
 			throw $e;
 		}
-		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
@@ -250,10 +252,10 @@ class BeanDataStore {
 		} catch ( Exception $e ) {
 		    $this->logger->error ( "Error occured in BeanDataStore:" . $e );
 		    $logMsg .= json_encode($columnValueArry);
-		    $this->logger->error($logMsg . ". logged in user - " . $this->loggedInUserSeq);
+		    $this->logger->error($logMsg . ". logged in user - " . $this->loggedInUserSeq) . " (".$this->loggedInUserName.")";
 			throw $e;
 		}
-		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq;
+		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		$this->dataStoreLogger->info($logMsg);
 		return $id;
 	}
@@ -368,7 +370,7 @@ class BeanDataStore {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
-		$this->dataStoreLogger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag);
+		$this->dataStoreLogger->info("Deleted " . $this->className . " object successfully : " . $query . ". Deleted Flag: " . $flag . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")");
 		return $flag;
 	}
 	
@@ -546,7 +548,7 @@ class BeanDataStore {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
-		$logMsg = "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq;
+		$logMsg = "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		$this->dataStoreLogger->info($logMsg);
 		return $flag;
 	}

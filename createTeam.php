@@ -13,8 +13,8 @@ $supervisors ="";
 $user = new User();
 $team = new Team();
 $userMgr = UserMgr::getInstance();
- $usertype = UserType::USER;
- $users = $userMgr->getAllUsersByType($usertype);
+$usertype = UserType::USER;
+$users = $userMgr->getAllSupervisorsAndUsers();
 $teamMgr = TeamMgr::getInstance();
 $id="";
 
