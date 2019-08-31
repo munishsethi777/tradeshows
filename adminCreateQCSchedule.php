@@ -453,7 +453,7 @@ $(document).ready(function(){
 	<?php }?>
 	
 	<?php if($readOnlyComplete == "readonly"){?>
-		 $("#iscompleted").prop("disabled", true);
+		 //$("#iscompleted").prop("disabled", true);
 	<?php }?>
 	
 	handleIsCompletedCheckbox();
@@ -622,11 +622,11 @@ function subtractDays(date, days) {
 function handleIsCompletedCheckbox(){
 	finalinspectiondate = $("#acfinalinspectiondate").val();
     if(finalinspectiondate != null && finalinspectiondate != ''){   
-	   $("#iscompleted").removeAttr("disabled");   
+	   //$("#iscompleted").removeAttr("disabled");   
     }else{
-       $("#iscompleted").attr("disabled", 'disabled');   
-       $('#iscompleted').iCheck('uncheck');
-	   $("#iscompleted").removeAttr('checked');
+       //$("#iscompleted").attr("disabled", 'disabled');   
+       //$('#iscompleted').iCheck('uncheck');
+	   //$("#iscompleted").removeAttr('checked');
 	}
    	
 }
