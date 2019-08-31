@@ -253,6 +253,9 @@ $(document).ready(function(){
 		               var filtervalue = v;
 		               var filtercondition = 'less_than_or_equal';
 		               if(k == "completedStatus"){
+			               if(value.completedStatus == "all"){
+				               return;
+			               }
 		            	   filtergroup = new $.jqx.filter();	 
 		            	   filtertype = 'stringfilter';
 			               filtercondition = 'EQUAL';
@@ -368,9 +371,11 @@ $(document).ready(function(){
 			 }else if(datafield.indexOf("first") != -1){
 				 naReason = "apfirstinspectiondatenareason";		 
 			 }
-			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,completedStatus:completedD}
+			 data = {from:fromDateStr,to:toDateStr,completedStatus:completedDD}
+			 //data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,completedStatus:completedDD}
 			 if(naReason != ""){
-			 	data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason,completedStatus:completedD}
+			 	//data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason,completedStatus:completedDD}
+			 	data = {from:fromDateStr,to:toDateStr,naReason:naReason,completedStatus:completedDD}
 			 }
 		}
 		if(completedDD != "all"){
