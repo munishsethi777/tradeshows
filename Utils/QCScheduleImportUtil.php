@@ -60,7 +60,7 @@ class QCScheduleImportUtil
         return self::$qcImportUtil;
     }
 
-    public function importQCSchedules($file, $isUpdate, $updateItemNos)
+    public function importQCSchedules($file, $isUpdate, $updateItemNos,$isCompleted)
     {
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
@@ -68,12 +68,59 @@ class QCScheduleImportUtil
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try {
-            return $this->validateAndSaveFile($sheetData, $isUpdate, $updateItemNos);
+            if(empty($isCompleted)){
+                return $this->validateAndSaveFile($sheetData, $isUpdate, $updateItemNos);
+            }else{
+                return $this->marksAsCompleted($sheetData);
+            }
         } catch (Exception $e) {
             throw $e;
         }
     }
 
+    
+    public function marksAsCompleted($sheetData){
+        $this->fieldNames = $sheetData[0];
+        $this->validateFields();
+        $qcScheduleMgr = QCScheduleMgr::getInstance();
+        $updatedCount = 0;
+        $itemNoAlreadyExists = 0;
+        $success = 1;
+        $messages = "QCSchedules mark as completed sucessfully";
+        foreach ($sheetData as $key=>$data) {
+            if ($key == 0) {
+                continue;
+            }
+            $status = $data[19];
+            $status = trim($status);
+            if(!empty($status && strtolower($status) == "completed")){
+                $po = $data[2];
+                $itemNo = $data[4];
+                $itemNoArr = array();
+                if (! empty($itemNo)) {
+                    $itemNoArr = $this->getItemNoArr($itemNo);
+                }
+                $shipDateStr = $data[5];
+                if (! empty($shipDateStr)) {
+                    $shipDate = $this->convertStrToDate($shipDateStr);
+                }
+            }
+            foreach ($itemNoArr as $itemNo){
+                $flag = $qcScheduleMgr->markAsCompleted($po, $itemNo, $shipDate);
+                if($flag){
+                    $updatedCount++;
+                }
+            }
+            
+        }
+        $response = array();
+        $response["message"] = $updatedCount . " " . $messages;
+        $response["success"] = $success;
+        $response["itemalreadyexists"] = $itemNoAlreadyExists;
+        return $response;
+    }
+    
+    
     public function validateAndSaveFile($sheetData, $isUpdate, $updateItemNos)
     {
         $this->fieldNames = $sheetData[0];
@@ -239,6 +286,7 @@ class QCScheduleImportUtil
         if (! empty($itemNo)) {
             $qcSchedule->setItemNumbers($itemNo);
         }
+  
         if (! empty($shipDateStr)) {
             $shipDate = $this->convertStrToDate($shipDateStr);
             $qcSchedule->setShipDate($shipDate);

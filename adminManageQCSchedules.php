@@ -128,8 +128,9 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
     	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
     	<input type="hidden" id="seqs" name="seqs"/>
    </form> 
-    <form id="form3" name="form3" method="post" action="Actions/QCScheduleAction.php">
+   <form id="form3" name="form3" method="post" action="Actions/QCScheduleAction.php">
     	<input type="hidden" id="call" name="call" value="exportPlanner" />
+    	<input type="hidden" id="isCompleted" name="isCompleted" value="1" />
    </form> 
     
 	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -571,6 +572,7 @@ function loadGrid(){
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div title='Edit' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
+            var importCompletedButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import Completed</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
@@ -585,6 +587,8 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
+            container.append(importCompletedButton);
+            
             <?php if($hasWeeklyReportButtonPermission){?>
             	container.append(weeklyReportButton);
             <?php }?>
@@ -595,6 +599,7 @@ function loadGrid(){
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
             importButton.jqxButton({  width: 65, height: 18 });
+            importCompletedButton.jqxButton({  width: 130, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
@@ -658,6 +663,9 @@ function loadGrid(){
             }); */
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
+            });
+            importCompletedButton.click(function (event) {
+            	importCompeleted();
             });
              exportButton.click(function (event) {
          	   filterQstr = getFilterString("qcscheduleGrid");
@@ -724,7 +732,14 @@ function exportItems(filterString){
 	$("#form1").submit();
 }
 function exportPlanner(){
+	$("#form3").attr("action", "Actions/QCScheduleAction.php");
+	$("#form3 #call").val("exportPlanner");
 	$("#form3").submit();
+}
+function importCompeleted(){
+	$("#form3").attr("action", "adminImportQCSchedules.php");
+	$("#form3 #call").val("");
+	$("#form3").submit();	
 }
 
 function dateToStr(date){

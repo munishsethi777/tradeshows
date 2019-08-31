@@ -48,9 +48,9 @@ class QCScheduleMgr{
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
-    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos){
+    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos,$isCompeted){
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos);
+        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
     }
 	
 	public function importQCSchedules($file,$isUpdate,$updateItemNos){
@@ -236,6 +236,34 @@ class QCScheduleMgr{
 	    
 	    return false;
 	}
+	
+	public function markAsCompleted($po,$itemId,$shipDate){
+	    if ($shipDate instanceof DateTime) {
+	        $shipDate = $shipDate->format ( 'Y-m-d' );
+	    }
+	    $conditions = array("po"=>$po,"itemnumbers"=>$itemId,"shipdate"=>$shipDate);
+	    $colVal = array("iscompleted" => 1);
+	    $flag = self::$dataStore->updateByAttributesWithBindParams($colVal,$conditions);
+	    $qcSchedule = self::$dataStore->executeConditionQuery($conditions);
+	    if($flag && !empty($qcSchedule)){
+	        $qcSchedule = $qcSchedule[0];
+	        if(!empty($qcSchedule->getIsCompleted())){
+	            $this->saveApproval($qcSchedule);
+	        }
+	    }
+	    return $flag;
+	}
+	
+	
+	
+	public function saveApproval($qcSchedule){
+	   $qcScheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
+	   $isExists = $qcScheduleApprovalMgr->isApprovalExistsForQCSchedule($qcSchedule->getSeq());
+	   if(!$isExists){
+	       $qcScheduleApprovalMgr->saveApprovalFromQCSchedule($qcSchedule,QCScheduleApprovalType::approved);
+	   }
+	}
+	
 	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
@@ -560,7 +588,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		return $mainArr;
 	}
 	
-	private function campare($qcSchedule,$allSchedules,$fieldStateArr,$qcArr){
+	private function campare($qcSchedule,$allSchedules,$fieldStateArr){
 		foreach ($allSchedules as $schedule){
 			$properties = array_keys($schedule);
 			foreach ($properties as $property){

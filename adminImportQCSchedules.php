@@ -1,6 +1,10 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+$isCompleted = 0;
+if(isset($_REQUEST["isCompleted"])){
+    $isCompleted  = $_REQUEST["isCompleted"];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,6 +35,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                      	<input type="hidden" id ="updateIds" name="updateIds"/>
                      	<input type="hidden" id ="password" name="password"/>
                      	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
+                     	<input type="hidden" id ="iscompleted" name="iscompleted"  value="<?php echo $isCompleted?>"/>
                      	<div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
