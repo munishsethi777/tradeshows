@@ -243,7 +243,10 @@ class QCScheduleMgr{
 	    }
 	    $conditions = array("po"=>$po,"itemnumbers"=>$itemId);
 	    $qcSchedules = self::$dataStore->executeConditionQuery($conditions);
-	    if(empty($qcSchedules) || count($qcSchedules) > 1){
+	    if(empty($qcSchedules)){
+	        return false;
+	    }
+	    if(count($qcSchedules) > 1){
 	        return false;
 	    }
 	    $qcSchedule = $qcSchedules[0];
@@ -251,9 +254,7 @@ class QCScheduleMgr{
 	    $conditions = array("seq"=>$qcSchedule->getSeq());
 	    $flag = self::$dataStore->updateByAttributesWithBindParams($colVal,$conditions);
 	    if($flag){
-	        if(!empty($qcSchedule->getIsCompleted())){
-	            $this->saveApproval($qcSchedule);
-	        }
+	        $this->saveApproval($qcSchedule);
 	    }
 	    return $flag;
 	}
