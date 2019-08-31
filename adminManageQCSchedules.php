@@ -78,13 +78,19 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
 			                            		</optgroup>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-3">
-				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 5px; border: 1px solid #ccc; width: 100%">
+			                            <div class="col-lg-4">
+				                            <div id="daterange" style="display:none;background: #fff; cursor: pointer; padding: 5px 5px; border: 1px solid #ccc; width: 100%">
 											    <i class="fa fa-calendar"></i>&nbsp;
 											    <span></span> <i class="fa fa-caret-down"></i>
 											</div>
 			                            </div>
-			                            
+			                            <div class="col-lg-2 pull-right">
+			                            	<select id="iscompletedDD" name="iscompletedDD" class="form-control">
+			                            		<option value="all">All</option>
+			                            		<option value="1">Completed</option>
+			                            		<option value="0">Incompleted</option>
+			                            	</select>
+			                            </div>
 			                            <div class="col-lg-2" style="display:none">
 			                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
 			                            		<option value="all">All</option>
@@ -92,22 +98,6 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
 			                            		<option value="pending">Pending</option>
 			                            		<option value="open">Open</option>
 			                            	</select>
-			                            </div>
-			                            <div class="col-lg-1" style="display:none">
-			                            	<select id="valueDD" name="valueDD" class="form-control">
-			                            		<option value="1">1 day</option>
-			                            		<option value="3">3 days</option>
-			                            		<option value="5">5 days</option>
-			                            		<option value="10">10 days</option>
-			                            		<option value="15">15 days</option>
-			                            		<option value="30">30 days</option>
-			                            		<option value="45">45 days</option>
-			                            		<option value="60">60 days</option>
-			                            		<option value="90">90 days</option>
-			                            	</select>
-			                            </div>
-			                            <div class="col-lg-2 text-muted taskCompleted" style="padding:5px;display:none">
-			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Completed
 			                            </div>
 			                        </div>
 		                     	
@@ -246,7 +236,7 @@ $(document).ready(function(){
        var existingFilter = $('#qcscheduleGrid').jqxGrid('getfilterinformation')
        var datafield = $("#fieldNameDD").val();
        $("#qcscheduleGrid").jqxGrid('clearfilters');
-       if(datafield != ''){
+       //if(datafield != ''){
     	   showFilterFieldColumn();
 	 	   $("#qcscheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
@@ -262,19 +252,12 @@ $(document).ready(function(){
 	        		   var filter_or_operator = 0;
 		               var filtervalue = v;
 		               var filtercondition = 'less_than_or_equal';
-		               if(k == "isCompleted"){
+		               if(k == "completedStatus"){
 		            	   filtergroup = new $.jqx.filter();	 
 		            	   filtertype = 'stringfilter';
-			               if(v > 0){
-			            	   filtercondition = 'not_null';
-			            	   filter_or_operator = 1;
-			            	   isCompleted = 1;   
-			               }else{
-			            	   filtercondition = 'null';   
-			               }
-			               fieldName = fieldName.substring(2);
-			               fieldName = "ac" + fieldName;	 	
-			              	
+			               filtercondition = 'EQUAL';
+			               filter_or_operator = 0;
+			               fieldName = "iscompleted";
 		               }else if(k == "from"){
 		            	   	var filtercondition = 'greater_than_or_equal';    
 		               }else if(k == "naReason"){
@@ -299,26 +282,34 @@ $(document).ready(function(){
 	       });
 	        // apply the filters.
 	       $("#qcscheduleGrid").jqxGrid('applyfilters');
-       }
+       //}
        $("#approvalStatusDD").chosen({rtl: true}); 
     }
     
     // applies the filter.
     $("#fieldNameDD").change(function () {
 		var datafield = $("#fieldNameDD").val();
+		if(datafield == ""){
+			$("#daterange").hide();
+		}else{
+			$("#daterange").show();
+		}
 		$('#isCompleted').removeAttr('checked');
     	$('#isCompleted').iCheck('uncheck')
     	if(datafield.substr(0,2) == "sc" || datafield.substr(0,2) == "ap"){
     		$(".taskCompleted").show();
     	}else{
-    		$(".taskCompleted").hide();
+    		//$(".taskCompleted").hide();
+    		$(".taskCompleted").show();
     	}
  	   	applyFilter()
     });
     $("#conditionDD").change(function () {
  	   applyFilter()
     });
-   
+    $("#iscompletedDD").change(function () {
+  	   applyFilter()
+     });
     $("#valueDD").change(function () {
  	   applyFilter()
     });
@@ -344,6 +335,7 @@ $(document).ready(function(){
 		
 		
 		var conditionDD = $("#conditionDD").val();
+		var completedDD = $("#iscompletedDD").val();
 		var dayValue = $("#valueDD").val();
 		var isCompletedCheck =$("input[type='checkbox'][name='isCompleted']:checked").val()
 		var isCompleted = 0;
@@ -365,9 +357,10 @@ $(document).ready(function(){
 		fromDateStr = drp.startDate.format('MM-DD-YYYY');
 		toDateStr = drp.endDate.format('MM-DD-YYYY');
 
-		var data = {from:fromDateStr,to:toDateStr}
+		var data = {from:fromDateStr,to:toDateStr};
 		isScheduleFeild = datafield.startsWith("sc")
 		isAPFeild = datafield.startsWith("ap")
+		var dataArr = {};
 		if(isScheduleFeild || isAPFeild){
 			 var naReason = "";
 			 if(datafield.indexOf("middle") != -1){	 
@@ -375,12 +368,14 @@ $(document).ready(function(){
 			 }else if(datafield.indexOf("first") != -1){
 				 naReason = "apfirstinspectiondatenareason";		 
 			 }
-			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted}
+			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,completedStatus:completedD}
 			 if(naReason != ""){
-			 	data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason}
+			 	data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason,completedStatus:completedD}
 			 }
 		}
-		var dataArr = {};
+		if(completedDD != "all"){
+			dataArr['completedStatus'] = {completedStatus:completedDD};
+		}
 		dataArr[datafield] = data;
 		return dataArr
 	}
@@ -440,10 +435,21 @@ function loadGrid(){
             html += "</div>";
         return html;
     }
+	var renderCompletedColumn = function (row, columnfield, value, defaulthtml, columnproperties) {
+        data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
+        var isCompleted = data["iscompleted"];
+        if(isCompleted){
+        	return '<div title="Completed" alt="Completed" style="text-align:left;color:#19aa8d;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        }else{
+        	return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:grey;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        }	
+        
+    }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
+      { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
       { text: 'QC.', datafield: 'qccode', width:"10%"},
-      { text: 'Code', datafield: 'classcode',width:"12%"},
+      { text: 'Code', datafield: 'classcode',width:"10%"},
       { text: 'PO', datafield: 'po',width:"12%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
@@ -482,7 +488,8 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
-        datafields: [{name: 'seq', type: 'integer' }, 
+        datafields: [{name: 'seq', type: 'integer' },
+                    { name: 'iscompleted', type: 'boolean' }, 
                     { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },

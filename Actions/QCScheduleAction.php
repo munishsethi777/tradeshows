@@ -39,7 +39,7 @@ if($call == "saveQCSchedule"){
 		$seq = $_REQUEST["seq"];
 		$seqs = $_REQUEST["seqs"];
 		$seqs = explode(",",$seqs);
-		foreach ($itemNumbers as $key=>$itemNumber){
+		foreach (array_filter($itemNumbers) as $key=>$itemNumber){
 			$seq = 0;
 			$qcSchedule = new QCSchedule();
 			if(isset($seqs[$key])){
