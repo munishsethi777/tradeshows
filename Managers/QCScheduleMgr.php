@@ -1048,7 +1048,7 @@ where qcschedulesapproval.seq = $qcApprovalSeq";
 	
 	private function getQcPendingAcFirstInpection(){
 	    $query = "select COALESCE(qcschedules.apfirstinspectiondate, qcschedules.scfirstinspectiondate) as plandate,qcschedules.scfirstinspectiondate as scdate, qcschedules.potype, qcschedules.apfirstinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where acfinalinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL and iscompleted != 1 group by plandate,classcodeseq
+where acfinalinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL and (iscompleted != 1 or iscompleted is null) group by plandate,classcodeseq
 ORDER BY plandate  Desc";
 	    $qcSchedulesFirstInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesFirstInspections;
@@ -1056,7 +1056,7 @@ ORDER BY plandate  Desc";
 	
 	private function getQcPendingAcMiddleInpection(){
 	    $query = "select COALESCE(qcschedules.apmiddleinspectiondate, qcschedules.scmiddleinspectiondate) as plandate,qcschedules.scmiddleinspectiondate scdate , qcschedules.potype, qcschedules.apmiddleinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL and iscompleted != 1  group by plandate,classcodeseq  ORDER BY plandate  DESC";
+where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL and (iscompleted != 1 or iscompleted is null)  group by plandate,classcodeseq  ORDER BY plandate  DESC";
 	    $qcSchedulesMiddleInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesMiddleInspections;
 	}
@@ -1064,7 +1064,7 @@ where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NU
 	
 	private function getQcPendingAcFinalInpection(){
 	    $query = "select COALESCE(qcschedules.apfinalinspectiondate, qcschedules.scfinalinspectiondate) as plandate,qcschedules.scfinalinspectiondate scdate, qcschedules.potype, qcschedules.apfinalinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where qcschedules.acfinalinspectiondate is NULL and iscompleted != 1  group by plandate,classcodeseq  ORDER BY plandate  DESC";
+where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompleted is null)  group by plandate,classcodeseq  ORDER BY plandate  DESC";
 	    $qcSchedulesFinalInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesFinalInspections;
 	}
