@@ -283,7 +283,7 @@ $(document).ready(function(){
 	        // apply the filters.
 	       $("#qcscheduleGrid").jqxGrid('applyfilters');
        //}
-       $("#approvalStatusDD").chosen({rtl: true}); 
+       //$("#approvalStatusDD").chosen({rtl: true}); 
     }
     
     // applies the filter.
