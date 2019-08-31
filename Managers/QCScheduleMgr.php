@@ -241,12 +241,16 @@ class QCScheduleMgr{
 	    if ($shipDate instanceof DateTime) {
 	        $shipDate = $shipDate->format ( 'Y-m-d' );
 	    }
-	    $conditions = array("po"=>$po,"itemnumbers"=>$itemId,"shipdate"=>$shipDate);
+	    $conditions = array("po"=>$po,"itemnumbers"=>$itemId);
+	    $qcSchedules = self::$dataStore->executeConditionQuery($conditions);
+	    if(empty($qcSchedules) || count($qcSchedules) > 1){
+	        return false;
+	    }
+	    $qcSchedule = $qcSchedules[0];
 	    $colVal = array("iscompleted" => 1);
+	    $conditions = array("seq"=>$qcSchedule->getSeq());
 	    $flag = self::$dataStore->updateByAttributesWithBindParams($colVal,$conditions);
-	    $qcSchedule = self::$dataStore->executeConditionQuery($conditions);
-	    if($flag && !empty($qcSchedule)){
-	        $qcSchedule = $qcSchedule[0];
+	    if($flag){
 	        if(!empty($qcSchedule->getIsCompleted())){
 	            $this->saveApproval($qcSchedule);
 	        }
@@ -258,10 +262,10 @@ class QCScheduleMgr{
 	
 	public function saveApproval($qcSchedule){
 	   $qcScheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
-	   $isExists = $qcScheduleApprovalMgr->isApprovalExistsForQCSchedule($qcSchedule->getSeq());
-	   if(!$isExists){
+	  // $isExists = $qcScheduleApprovalMgr->isApprovalExistsForQCSchedule($qcSchedule->getSeq());
+	  // if(!$isExists){
 	       $qcScheduleApprovalMgr->saveApprovalFromQCSchedule($qcSchedule,QCScheduleApprovalType::approved);
-	   }
+	   //}
 	}
 	
 	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
@@ -501,6 +505,7 @@ class QCScheduleMgr{
 		if(!empty($finalStatus)){
 		    $qcSchedule->setStatus($finalStatus);
 		}
+		$qcSchedule->setIsCompleted(0);
 		$qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
 		$qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
 		$importedData["items"] = $itemNoArr;

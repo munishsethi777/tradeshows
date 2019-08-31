@@ -87,6 +87,7 @@ class QCScheduleImportUtil
         $itemNoAlreadyExists = 0;
         $success = 1;
         $messages = "QCSchedules mark as completed sucessfully";
+        $totalCount = 0;
         foreach ($sheetData as $key=>$data) {
             if ($key == 0) {
                 continue;
@@ -104,14 +105,14 @@ class QCScheduleImportUtil
                 if (! empty($shipDateStr)) {
                     $shipDate = $this->convertStrToDate($shipDateStr);
                 }
-            }
-            foreach ($itemNoArr as $itemNo){
-                $flag = $qcScheduleMgr->markAsCompleted($po, $itemNo, $shipDate);
-                if($flag){
-                    $updatedCount++;
+                foreach ($itemNoArr as $itemNo){
+                    $flag = $qcScheduleMgr->markAsCompleted($po, $itemNo, $shipDate);
+                    if($flag){
+                        $updatedCount++;
+                    }
+                    $totalCount++;
                 }
             }
-            
         }
         $response = array();
         $response["message"] = $updatedCount . " " . $messages;
