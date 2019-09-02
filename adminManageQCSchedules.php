@@ -595,12 +595,13 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
            // container.append(deleteButton);
-            container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
-            container.append(importCompletedButton);
-            
+            <?php if($sessionUtil->isSessionAdmin()){?>
+	            container.append(importButton);
+	            container.append(importCompletedButton);
+            <?php }?>
             <?php if($hasWeeklyReportButtonPermission){?>
             	container.append(weeklyReportButton);
             <?php }?>
@@ -610,8 +611,10 @@ function loadGrid(){
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
-            importButton.jqxButton({  width: 65, height: 18 });
-            importCompletedButton.jqxButton({  width: 130, height: 18 });
+           	<?php if($sessionUtil->isSessionAdmin()){?>
+	            importButton.jqxButton({  width: 65, height: 18 });
+	            importCompletedButton.jqxButton({  width: 130, height: 18 });
+			<?php }?>
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
