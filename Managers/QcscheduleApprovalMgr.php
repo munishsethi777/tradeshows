@@ -26,9 +26,12 @@ class QcscheduleApprovalMgr{
 		$qcScheduleApproval->setQcscheduleSeq($qcSchedule->getSeq());
 		$userSeq = SessionUtil::getInstance()->getUserLoggedInSeq();
 		$qcScheduleApproval->setUserSeq($userSeq);
+		$approvalComments = "Approved";
 		if(empty($responseType)){
 		    $responseType = QCScheduleApprovalType::pending;
+		    $approvalComments = "";
 		}
+		$qcScheduleApproval->setResponseComments($approvalComments);
 		$qcScheduleApproval->setResponseType($responseType);
 		self::$dataStore->save($qcScheduleApproval);
 	}
