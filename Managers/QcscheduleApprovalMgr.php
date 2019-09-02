@@ -20,15 +20,20 @@ class QcscheduleApprovalMgr{
 		return self::$qcScheduleApprovalMgr;
 	}
 	
-	public function saveApprovalFromQCSchedule($qcSchedule){
+	public function saveApprovalFromQCSchedule($qcSchedule,$responseType = null){
 		$qcScheduleApproval = new QcscheduleApproval();
 		$qcScheduleApproval->setAppliedOn(new DateTime());
 		$qcScheduleApproval->setQcscheduleSeq($qcSchedule->getSeq());
 		$userSeq = SessionUtil::getInstance()->getUserLoggedInSeq();
 		$qcScheduleApproval->setUserSeq($userSeq);
-		$qcScheduleApproval->setResponseType(QCScheduleApprovalType::pending);
+		$approvalComments = "Approved";
+		if(empty($responseType)){
+		    $responseType = QCScheduleApprovalType::pending;
+		    $approvalComments = "";
+		}
+		$qcScheduleApproval->setResponseComments($approvalComments);
+		$qcScheduleApproval->setResponseType($responseType);
 		self::$dataStore->save($qcScheduleApproval);
-		//QCNotificationsUtil::sendQCApprovalNotification($qcSchedule);
 	}
 	
 	public function hasPendingApprovals($qcscheduleSeq){
@@ -36,6 +41,13 @@ class QcscheduleApprovalMgr{
 		$condition["qcscheduleseq"] = $qcscheduleSeq;
 		$count = self::$dataStore->executeCountQuery($condition);
 		return $count >0;
+	}
+	
+	public function isApprovalExistsForQCSchedule($qcscheduleSeq){
+	    $condition["qcscheduleseq"] = $qcscheduleSeq;
+	    $count = self::$dataStore->executeCountQuery($condition);
+	    return $count >0;
+	    
 	}
 	
 	public function getLastestQcScheduleApproval($qcscheduleSeqs){

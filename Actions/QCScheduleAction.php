@@ -115,9 +115,10 @@ if($call == "importQCSchedules"){
 			$updateIds = $_POST["updateIds"];
 			$updateIds = json_decode($updateIds,true);
 		}
+		$isCompleted = $_POST["iscompleted"];
 		if(isset($_FILES["file"])){
 			//$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
-			$response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updateIds);
+		    $response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updateIds,$isCompleted);
 			echo json_encode($response);
 			return;
 		}

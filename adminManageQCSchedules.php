@@ -5,11 +5,23 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QcscheduleApproval.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QcscheduleApproval.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
+
 $sessionUtil = SessionUtil::getInstance();
 $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $permissionUtil = PermissionUtil::getInstance();
 $hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
 $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
+$hasImportButtonPermission =  $isSessionAdmin;
+//$qcscheduleseq = "";
+
+/*$QcscheduleApprovals = "";
+$QcQcscheduleApprovalMgr= QcscheduleApprovalMgr::getInstance();
+$QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,13 +90,19 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
 			                            		</optgroup>
 			                            	</select>
 			                            </div>
-			                            <div class="col-lg-3">
-				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 5px; border: 1px solid #ccc; width: 100%">
+			                            <div class="col-lg-4">
+				                            <div id="daterange" style="display:none;background: #fff; cursor: pointer; padding: 5px 5px; border: 1px solid #ccc; width: 100%">
 											    <i class="fa fa-calendar"></i>&nbsp;
 											    <span></span> <i class="fa fa-caret-down"></i>
 											</div>
 			                            </div>
-			                            
+			                            <div class="col-lg-2 pull-right">
+			                            	<select id="iscompletedDD" name="iscompletedDD" class="form-control">
+			                            		<option value="all">All</option>
+			                            		<option value="1">Completed</option>
+			                            		<option value="0">Incompleted</option>
+			                            	</select>
+			                            </div>
 			                            <div class="col-lg-2" style="display:none">
 			                            	<select id="approvalstatus" name="approvalstatus" class="form-control">
 			                            		<option value="all">All</option>
@@ -92,22 +110,6 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
 			                            		<option value="pending">Pending</option>
 			                            		<option value="open">Open</option>
 			                            	</select>
-			                            </div>
-			                            <div class="col-lg-1" style="display:none">
-			                            	<select id="valueDD" name="valueDD" class="form-control">
-			                            		<option value="1">1 day</option>
-			                            		<option value="3">3 days</option>
-			                            		<option value="5">5 days</option>
-			                            		<option value="10">10 days</option>
-			                            		<option value="15">15 days</option>
-			                            		<option value="30">30 days</option>
-			                            		<option value="45">45 days</option>
-			                            		<option value="60">60 days</option>
-			                            		<option value="90">90 days</option>
-			                            	</select>
-			                            </div>
-			                            <div class="col-lg-2 text-muted taskCompleted" style="padding:5px;display:none">
-			                            	<input class="i-checks" id="isCompleted" name="isCompleted" type="checkbox"> Completed
 			                            </div>
 			                        </div>
 		                     	
@@ -123,13 +125,14 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
-   <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php">
+   <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php" target='_blank'>
     	<input type="hidden" id="id" name="id"/>
     	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
     	<input type="hidden" id="seqs" name="seqs"/>
    </form> 
-    <form id="form3" name="form3" method="post" action="Actions/QCScheduleAction.php">
+   <form id="form3" name="form3" method="post" action="Actions/QCScheduleAction.php">
     	<input type="hidden" id="call" name="call" value="exportPlanner" />
+    	<input type="hidden" id="isCompleted" name="isCompleted" value="1" />
    </form> 
     
 	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -174,7 +177,8 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
 	                        	<div class="col-lg-10">
 	                            	<textarea class="form-control" name="comments" id="comment" ></textarea>
 	                            </div>
-                        </div>
+                        	</div>                     	
+                        	<div id="earlierApprovals"></div>                 	
                        		 <div class="modal-footer">
                                      <button class="btn btn-primary" data-style="expand-right" id="updateApprovalStatusBtn" type="button">
                                         <span class="ladda-label">Submit</span>
@@ -245,7 +249,7 @@ $(document).ready(function(){
        var existingFilter = $('#qcscheduleGrid').jqxGrid('getfilterinformation')
        var datafield = $("#fieldNameDD").val();
        $("#qcscheduleGrid").jqxGrid('clearfilters');
-       if(datafield != ''){
+       //if(datafield != ''){
     	   showFilterFieldColumn();
 	 	   $("#qcscheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
@@ -261,19 +265,15 @@ $(document).ready(function(){
 	        		   var filter_or_operator = 0;
 		               var filtervalue = v;
 		               var filtercondition = 'less_than_or_equal';
-		               if(k == "isCompleted"){
+		               if(k == "completedStatus"){
+			               if(value.completedStatus == "all"){
+				               return;
+			               }
 		            	   filtergroup = new $.jqx.filter();	 
 		            	   filtertype = 'stringfilter';
-			               if(v > 0){
-			            	   filtercondition = 'not_null';
-			            	   filter_or_operator = 1;
-			            	   isCompleted = 1;   
-			               }else{
-			            	   filtercondition = 'null';   
-			               }
-			               fieldName = fieldName.substring(2);
-			               fieldName = "ac" + fieldName;	 	
-			              	
+			               filtercondition = 'EQUAL';
+			               filter_or_operator = 0;
+			               fieldName = "iscompleted";
 		               }else if(k == "from"){
 		            	   	var filtercondition = 'greater_than_or_equal';    
 		               }else if(k == "naReason"){
@@ -298,26 +298,34 @@ $(document).ready(function(){
 	       });
 	        // apply the filters.
 	       $("#qcscheduleGrid").jqxGrid('applyfilters');
-       }
-       $("#approvalStatusDD").chosen({rtl: true}); 
+       //}
+       //$("#approvalStatusDD").chosen({rtl: true}); 
     }
     
     // applies the filter.
     $("#fieldNameDD").change(function () {
 		var datafield = $("#fieldNameDD").val();
+		if(datafield == ""){
+			$("#daterange").hide();
+		}else{
+			$("#daterange").show();
+		}
 		$('#isCompleted').removeAttr('checked');
     	$('#isCompleted').iCheck('uncheck')
     	if(datafield.substr(0,2) == "sc" || datafield.substr(0,2) == "ap"){
     		$(".taskCompleted").show();
     	}else{
-    		$(".taskCompleted").hide();
+    		//$(".taskCompleted").hide();
+    		$(".taskCompleted").show();
     	}
  	   	applyFilter()
     });
     $("#conditionDD").change(function () {
  	   applyFilter()
     });
-   
+    $("#iscompletedDD").change(function () {
+  	   applyFilter()
+     });
     $("#valueDD").change(function () {
  	   applyFilter()
     });
@@ -343,6 +351,7 @@ $(document).ready(function(){
 		
 		
 		var conditionDD = $("#conditionDD").val();
+		var completedDD = $("#iscompletedDD").val();
 		var dayValue = $("#valueDD").val();
 		var isCompletedCheck =$("input[type='checkbox'][name='isCompleted']:checked").val()
 		var isCompleted = 0;
@@ -364,9 +373,10 @@ $(document).ready(function(){
 		fromDateStr = drp.startDate.format('MM-DD-YYYY');
 		toDateStr = drp.endDate.format('MM-DD-YYYY');
 
-		var data = {from:fromDateStr,to:toDateStr}
+		var data = {from:fromDateStr,to:toDateStr};
 		isScheduleFeild = datafield.startsWith("sc")
 		isAPFeild = datafield.startsWith("ap")
+		var dataArr = {};
 		if(isScheduleFeild || isAPFeild){
 			 var naReason = "";
 			 if(datafield.indexOf("middle") != -1){	 
@@ -374,12 +384,16 @@ $(document).ready(function(){
 			 }else if(datafield.indexOf("first") != -1){
 				 naReason = "apfirstinspectiondatenareason";		 
 			 }
-			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted}
+			 data = {from:fromDateStr,to:toDateStr,completedStatus:completedDD}
+			 //data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,completedStatus:completedDD}
 			 if(naReason != ""){
-			 	data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason}
+			 	//data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted,naReason:naReason,completedStatus:completedDD}
+			 	data = {from:fromDateStr,to:toDateStr,naReason:naReason,completedStatus:completedDD}
 			 }
 		}
-		var dataArr = {};
+		if(completedDD != "all"){
+			dataArr['completedStatus'] = {completedStatus:completedDD};
+		}
 		dataArr[datafield] = data;
 		return dataArr
 	}
@@ -401,20 +415,40 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,qc,code,po,itemno){
+function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,qc,code,po,itemno,qcscheduleseq){
 	$('#comment').val(responsecomment);
 	$('#approvalStatusDD').val(responsetype);
     $("#modalQcLabel").text(qc);
     $("#modalCodeLabel").text(code);
     $("#modalPoLabel").text(po);
-    $("#modalItemnumberLabel").text(itemno);
+    $("#modalItemnumberLabel").text(itemno);   
+       
+   /* $("#tabResponsecomment").html(responsecomment);
+    $("#tabResponsetype").html(responsetype); */
+    
+    
 	$("#approvalSeq").val(approvalSeq);
 	$("#updateQCScheduleApprovalModal").modal('show');
 	if(isDisabled == 1){	
     	$('#comment').attr("disabled",true);
     	$('#approvalStatusDD').attr("disabled",true);
     	$('#updateApprovalStatusBtn').attr("disabled",true);	
-	}	
+	}
+	 $.get("Actions/QcscheduleApprovalAction.php?call=getQCSchedules" + "&qcscheduleseq=" + qcscheduleseq ,function(data){
+			arr = $.parseJSON(data);
+			html ="";
+			if(arr.length != 0){
+    		    var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>UserName</th><th>QC</th><th>Respon Type</th><th>Applied On</th><th>Respond On</th><th>Response Comments</th></tr>';
+    		    var tablerows = "";
+    			$.each(arr, function(key,value){    				
+    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  value["qccode"] +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + value["respondedon"] +"</td><td>"+ value["responsecomments"] +"</td></tr>";
+        		});
+      			html += tablerows;   			  			
+			}
+			$("#earlierApprovals").html(html);
+     });
+
+			 
 }
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
@@ -425,24 +459,37 @@ function loadGrid(){
         var code = data["classcode"];
         var po = data["po"];
         var itemno = data["itemnumbers"];
+        var qcscheduleseq = data["seq"];
+                 
         if(responseComments == null){
         	responseComments = "";
         }
         var isSV = data["isSv"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
             	if(isSV && responseType != null){
-            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",0, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" )'>"+responseType+"</a>";
+            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",0, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" ,\"" +qcscheduleseq+ "\"  )'>"+responseType+"</a>";
             	}else{
                 	if(responseType != null){
-                		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",1, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" )'>"+responseType+"</a>";                	}
+                		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",1, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" ,\"" +qcscheduleseq+ "\" )'>"+responseType+"</a>";                	}
             	}
             html += "</div>";
         return html;
     }
+	var renderCompletedColumn = function (row, columnfield, value, defaulthtml, columnproperties) {
+        data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
+        var isCompleted = data["iscompleted"];
+        if(isCompleted){
+        	return '<div title="Completed" alt="Completed" style="text-align:left;color:#19aa8d;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        }else{
+        	return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:grey;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        }	
+        
+    }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
+      { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
       { text: 'QC.', datafield: 'qccode', width:"10%"},
-      { text: 'Code', datafield: 'classcode',width:"12%"},
+      { text: 'Code', datafield: 'classcode',width:"10%"},
       { text: 'PO', datafield: 'po',width:"12%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
@@ -481,7 +528,8 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
-        datafields: [{name: 'seq', type: 'integer' }, 
+        datafields: [{name: 'seq', type: 'integer' },
+                    { name: 'iscompleted', type: 'boolean' }, 
                     { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },
@@ -571,6 +619,7 @@ function loadGrid(){
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div title='Edit' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
+            var importCompletedButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import Completed</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
@@ -581,10 +630,14 @@ function loadGrid(){
             container.append(addButton);
             container.append(editButton);
            // container.append(deleteButton);
-            container.append(importButton);
+
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
+            <?php if($sessionUtil->isSessionAdmin()){?>
+	            container.append(importButton);
+	            container.append(importCompletedButton);
+            <?php }?>
             <?php if($hasWeeklyReportButtonPermission){?>
             	container.append(weeklyReportButton);
             <?php }?>
@@ -594,7 +647,11 @@ function loadGrid(){
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
-            importButton.jqxButton({  width: 65, height: 18 });
+
+           	<?php if($sessionUtil->isSessionAdmin()){?>
+	            importButton.jqxButton({  width: 65, height: 18 });
+	            importCompletedButton.jqxButton({  width: 130, height: 18 });
+			<?php }?>
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
@@ -658,6 +715,9 @@ function loadGrid(){
             }); */
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
+            });
+            importCompletedButton.click(function (event) {
+            	importCompeleted();
             });
              exportButton.click(function (event) {
          	   filterQstr = getFilterString("qcscheduleGrid");
@@ -724,7 +784,14 @@ function exportItems(filterString){
 	$("#form1").submit();
 }
 function exportPlanner(){
+	$("#form3").attr("action", "Actions/QCScheduleAction.php");
+	$("#form3 #call").val("exportPlanner");
 	$("#form3").submit();
+}
+function importCompeleted(){
+	$("#form3").attr("action", "adminImportQCSchedules.php");
+	$("#form3 #call").val("");
+	$("#form3").submit();	
 }
 
 function dateToStr(date){

@@ -48,9 +48,9 @@ class QCScheduleMgr{
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
-    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos){
+    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos,$isCompeted){
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos);
+        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
     }
 	
 	public function importQCSchedules($file,$isUpdate,$updateItemNos){
@@ -236,6 +236,39 @@ class QCScheduleMgr{
 	    
 	    return false;
 	}
+	
+	public function markAsCompleted($po,$itemId,$shipDate){
+	    if ($shipDate instanceof DateTime) {
+	        $shipDate = $shipDate->format ( 'Y-m-d' );
+	    }
+	    $conditions = array("po"=>$po,"itemnumbers"=>$itemId);
+	    $qcSchedules = self::$dataStore->executeConditionQuery($conditions);
+	    if(empty($qcSchedules)){
+	        return false;
+	    }
+	    if(count($qcSchedules) > 1){
+	        return false;
+	    }
+	    $qcSchedule = $qcSchedules[0];
+	    $colVal = array("iscompleted" => 1);
+	    $conditions = array("seq"=>$qcSchedule->getSeq());
+	    $flag = self::$dataStore->updateByAttributesWithBindParams($colVal,$conditions);
+	    if($flag){
+	        $this->saveApproval($qcSchedule);
+	    }
+	    return $flag;
+	}
+	
+	
+	
+	public function saveApproval($qcSchedule){
+	   $qcScheduleApprovalMgr = QcscheduleApprovalMgr::getInstance();
+	  // $isExists = $qcScheduleApprovalMgr->isApprovalExistsForQCSchedule($qcSchedule->getSeq());
+	  // if(!$isExists){
+	       $qcScheduleApprovalMgr->saveApprovalFromQCSchedule($qcSchedule,QCScheduleApprovalType::approved);
+	   //}
+	}
+	
 	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
@@ -473,6 +506,7 @@ class QCScheduleMgr{
 		if(!empty($finalStatus)){
 		    $qcSchedule->setStatus($finalStatus);
 		}
+		$qcSchedule->setIsCompleted(0);
 		$qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
 		$qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
 		$importedData["items"] = $itemNoArr;
@@ -560,7 +594,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		return $mainArr;
 	}
 	
-	private function campare($qcSchedule,$allSchedules,$fieldStateArr,$qcArr){
+	private function campare($qcSchedule,$allSchedules,$fieldStateArr){
 		foreach ($allSchedules as $schedule){
 			$properties = array_keys($schedule);
 			foreach ($properties as $property){
@@ -1014,7 +1048,7 @@ where qcschedulesapproval.seq = $qcApprovalSeq";
 	
 	private function getQcPendingAcFirstInpection(){
 	    $query = "select COALESCE(qcschedules.apfirstinspectiondate, qcschedules.scfirstinspectiondate) as plandate,qcschedules.scfirstinspectiondate as scdate, qcschedules.potype, qcschedules.apfirstinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where acfinalinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL group by plandate,classcodeseq
+where acfinalinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL and (iscompleted != 1 or iscompleted is null) group by plandate,classcodeseq
 ORDER BY plandate  Desc";
 	    $qcSchedulesFirstInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesFirstInspections;
@@ -1022,7 +1056,7 @@ ORDER BY plandate  Desc";
 	
 	private function getQcPendingAcMiddleInpection(){
 	    $query = "select COALESCE(qcschedules.apmiddleinspectiondate, qcschedules.scmiddleinspectiondate) as plandate,qcschedules.scmiddleinspectiondate scdate , qcschedules.potype, qcschedules.apmiddleinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
+where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NULL and qcschedules.apmiddleinspectiondatenareason is NULL and (iscompleted != 1 or iscompleted is null)  group by plandate,classcodeseq  ORDER BY plandate  DESC";
 	    $qcSchedulesMiddleInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesMiddleInspections;
 	}
@@ -1030,7 +1064,7 @@ where acfinalinspectiondate is NULL and qcschedules.acmiddleinspectiondate is NU
 	
 	private function getQcPendingAcFinalInpection(){
 	    $query = "select COALESCE(qcschedules.apfinalinspectiondate, qcschedules.scfinalinspectiondate) as plandate,qcschedules.scfinalinspectiondate scdate, qcschedules.potype, qcschedules.apfinalinspectiondate as apdate, qcschedules.classcodeseq, users.qccode from qcschedules inner join users on qcschedules.qcuser = users.seq
-where qcschedules.acfinalinspectiondate is NULL group by plandate,classcodeseq  ORDER BY plandate  DESC";
+where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompleted is null)  group by plandate,classcodeseq  ORDER BY plandate  DESC";
 	    $qcSchedulesFinalInspections =  self::$dataStore->executeQuery($query,false,true);
 	    return $qcSchedulesFinalInspections;
 	}
