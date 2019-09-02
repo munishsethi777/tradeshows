@@ -113,7 +113,7 @@ $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermissio
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
-   <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php">
+   <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php" target='_blank'>
     	<input type="hidden" id="id" name="id"/>
     	<input type="hidden" id="itemnumbers" name="itemnumbers"/>
     	<input type="hidden" id="seqs" name="seqs"/>
