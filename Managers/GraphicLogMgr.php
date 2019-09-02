@@ -323,6 +323,7 @@ class GraphicLogMgr{
 	
 	public function getGraphicLogsForGrid(){
 	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
 	    $isSessionQc= $sessionUtil->isSessionQC();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
@@ -336,7 +337,14 @@ class GraphicLogMgr{
 		    }
 	    }
 		$rows = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $rows;
+		$arr = array();
+		foreach($rows as $row){		    
+    	    $lastModifiedOn = $row["lastmodifiedon"];
+    	    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+    	    $row["lastmodifiedon"] = $lastModifiedOn;
+    	    array_push($arr,$row);		    
+		}
+		$mainArr["Rows"] = $arr;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
 		return $mainArr;
 	}

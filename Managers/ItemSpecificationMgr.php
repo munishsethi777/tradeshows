@@ -504,6 +504,8 @@ class ItemSpecificationMgr{
 		$query = "SELECT count(itemspecificationverions.itemno) as versions ,itemspecifications.* FROM `itemspecifications` 
 left join itemspecificationverions on itemspecifications.itemno = itemspecificationverions.itemno
 group by itemspecificationverions.itemno";
+		$sessionUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$itemSpecifications = self::$dataStore->executeQuery($query,$isApplyFilter);
 		$mainArr = array();
 		foreach ($itemSpecifications as $itemSpecification){
@@ -515,7 +517,10 @@ group by itemspecificationverions.itemno";
 			$arr["itemspecifications.countryoforigin"] = $itemSpecification["countryoforigin"];
 			$arr["itemspecifications.oms"] = $itemSpecification["oms"];
 			$arr["itemspecifications.createdon"] = $itemSpecification["createdon"];
-			$arr["itemspecifications.lastmodifiedon"] = $itemSpecification["lastmodifiedon"];
+			$lastModifiedOn = $itemSpecification["lastmodifiedon"];
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+			$itemSpecification["lastmodifiedon"] = $lastModifiedOn;
+			$arr["itemspecifications.lastmodifiedon"] = $itemSpecification["lastmodifiedon"];			
 			array_push($mainArr, $arr);
 		}
 		return $mainArr;

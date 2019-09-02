@@ -517,11 +517,12 @@ class QCScheduleMgr{
 	public function getQCScheudlesForGrid(){
 //  		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
 //  left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
-		$query = "select  classcode,qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules 
+		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules 
 left join users on qcschedules.qcuser = users.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		$sessionUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$isSessionSV = $sessionUtil->isSessionSupervisor();
 		$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
@@ -543,6 +544,9 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			}
 			$qcSchedule["responsetype"] = $approval;
 			$qcSchedule["isSv"] = $isSessionSV;
+			$lastModifiedOn = $qcSchedule["lastmodifiedon"];
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+			$qcSchedule["lastmodifiedon"] = $lastModifiedOn;
 			array_push($arr,$qcSchedule);
 		}
 		$mainArr["Rows"] = $arr;

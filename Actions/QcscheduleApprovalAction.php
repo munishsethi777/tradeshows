@@ -31,6 +31,12 @@ if($call == "updateApprovalStatus"){
 		$message  = $e->getMessage();
 	}
 }
+if($call = "getQCSchedulesApproval"){
+    $qcscheduleSeqs = $_GET['qcscheduleseq'];
+    $qcSchedulesJson = $qcScheduleApprovalMgr->getQcScheduleApproval($qcscheduleSeqs);
+    echo json_encode($qcSchedulesJson);
+    return;     
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

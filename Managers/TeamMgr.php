@@ -2,6 +2,9 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Team.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/TeamUser.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+
 class TeamMgr{
     
     private static $TeamMgr;
@@ -34,10 +37,19 @@ class TeamMgr{
         self::$teamUserDataStore->deleteByAttribute($col);
     }
     public function getTeamsForGrid(){
-       $teams  = self::$teamDataStore->findAllArr(true);     
-        $query = "select count(*) from teams";
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+        $teams  = self::$teamDataStore->findAllArr(true);  
+        $arr = array();
+        foreach($teams as $team){
+            $lastModifiedOn = $team["lastmodifiedon"];
+            $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+            $team["lastmodifiedon"] = $lastModifiedOn;
+            array_push($arr,$team);       
+        }     
+        $query  = "select count(*) from teams";
         $count  = self::$teamDataStore->executeCountQueryWithSql($query,true);
-        $mainArr["Rows"] = $teams;
+        $mainArr["Rows"] = $arr;
         $mainArr["TotalRows"] = $count;
         return $mainArr;
         //return $teams;

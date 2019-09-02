@@ -1,6 +1,8 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/UserRole.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/Permissions.php");
@@ -70,6 +72,8 @@ class UserMgr{
 	}
 	public function getUsersForGrid(){
 		$users = $this->getAllUsersForGrid();
+		$seesionUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $seesionUtil->getUserLoggedInTimeZone();
 		$arr = array();
 		foreach ($users as $user){
 			$roles = $user["roles"];
@@ -82,6 +86,10 @@ class UserMgr{
 				}
 				$user["roles"] = implode(",",$roleArr);
 			}
+			$lastModifiedOn = $user["lastmodifiedon"];
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+			$user["lastmodifiedon"] = $lastModifiedOn;
+			
 			array_push($arr,$user);
 		}
 		$mainArr["Rows"] = $arr;
@@ -101,7 +109,7 @@ class UserMgr{
 		$seesionUtil = SessionUtil::getInstance();
 		$loggedInUserSeq = $seesionUtil->getUserLoggedInSeq();
 		$query = "SELECT GROUP_CONCAT(userroles.role) as roles, users.* FROM `users` left join userroles on users.seq = userroles.userseq where users.seq != $loggedInUserSeq group by users.seq";
-		//$query = "select * from users where seq != $loggedInUserSeq";
+		//$query = "select * from users where seq != $loggedInUserSeq";		
 		$arr = self::$userDataStore->executeQuery($query,true);
 		return $arr;
 	}

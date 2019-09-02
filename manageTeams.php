@@ -136,7 +136,7 @@ function loadGrid(){
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
-            var deleteButton =  $("<div style='float: left; margin-left: 5px;'><i class='fa fa-delete'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+            var deleteButton =  $("<div style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);

@@ -56,6 +56,12 @@ class QcscheduleApprovalMgr{
 		return $approvals;
 	}
 	
+	public function getQcScheduleApproval($qcscheduleSeqs){
+	    $query = "SELECT users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval left join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
+	    $approvals =  self::$dataStore->executeQuery($query);
+	    unset($approvals[0]);
+	    return  $approvals;
+	}
 	
 	public function updateApprovalStatus($approvalSeq,$status,$comments){
 		$condition["seq"] = $approvalSeq;

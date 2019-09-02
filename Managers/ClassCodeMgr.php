@@ -1,6 +1,9 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+
 
 class ClassCodeMgr{
 	private static  $classCodeMgr;
@@ -46,8 +49,17 @@ class ClassCodeMgr{
 	
 	public function getClassCodesForGrid(){
 		$query = "select users.fullname,classcodes.* from classcodes left join users on classcodes.userseq = users.seq";
+		$sessionUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$classCodes = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $classCodes;
+		$arr = array();
+		foreach($classCodes as $classcode){
+		    $lastModifiedOn = $classcode["lastmodifiedon"];
+		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+		    $classcode["lastmodifiedon"] = $lastModifiedOn;
+		    array_push($arr,$classcode);	    
+		}
+		$mainArr["Rows"] = $arr;
 		
 		$query = "select count(*) from classcodes left join users on classcodes.userseq = users.seq";
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
