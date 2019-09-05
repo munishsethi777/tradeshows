@@ -804,7 +804,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingAppoitmentForFinalInspectionDate($QCUser= null){
 	    $currentDateWith10daysInterval = self::$currentDateWith10daysInterval;
-	  	$query = $this->find_qc_sql . "where scfinalinspectiondate <= '$currentDateWith10daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL";
+	  	$query = $this->find_qc_sql . "where scfinalinspectiondate <= '$currentDateWith10daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .=  " and qcuser = $QCUser";
 		}
@@ -817,7 +817,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingAppoitmentForMiddleInspectionDate($QCUser = null){
 	    $currentDateWith10daysInterval = self::$currentDateWith10daysInterval;
-		$query = $this->find_qc_sql . "where scmiddleinspectiondate <= '$currentDateWith10daysInterval' and apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where scmiddleinspectiondate <= '$currentDateWith10daysInterval' and apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL  and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -830,7 +830,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingAppoitmentForFirstInspectionDate($QCUser = null){
 	    $currentDateWith10daysInterval = self::$currentDateWith10daysInterval;
-		$query = $this->find_qc_sql . "where scfirstinspectiondate <= '$currentDateWith10daysInterval' and apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where scfirstinspectiondate <= '$currentDateWith10daysInterval' and apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL  and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
