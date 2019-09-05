@@ -875,7 +875,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingActualFinalInspectionDate($QCUser = null){
 	    $currentDate = self::$currentDate;
-		$query = $this->find_qc_sql . "where scfinalinspectiondate <= '$currentDate' and acfinalinspectiondate is NULL";
+	    $query = $this->find_qc_sql . "where scfinalinspectiondate <= '$currentDate' and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -887,7 +887,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingActualMiddleInspectionDate($QCUser = null){
 	    $currentDate = self::$currentDate;
-		$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scmiddleinspectiondate <= '$currentDate' and  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL";
+		$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scmiddleinspectiondate <= '$currentDate' and  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
@@ -899,7 +899,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	
 	public function getMissingActualFirstInspectionDate($QCUser = null){
 	    $currentDate = self::$currentDate;
-		$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scfirstinspectiondate  <= '$currentDate' and apfirstinspectiondatenareason is NULL and acfirstinspectiondate is NULL";
+		$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scfirstinspectiondate  <= '$currentDate' and apfirstinspectiondatenareason is NULL and acfirstinspectiondate is NULL and iscompleted = 0";
 		if(!empty($QCUser)){
 			$query .= " and qcuser = $QCUser";
 		}
