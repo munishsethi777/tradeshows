@@ -40,6 +40,7 @@ class ContainerSchedule {
 	private $createdby;
 	private $createdon;
 	private $lastmodifiedon;
+	private $emptyscheduledpickupdate;
 	public function setSeq($seq) {
 		$this->seq = $seq;
 	}
@@ -274,6 +275,15 @@ class ContainerSchedule {
 		}
 		return $this;
 	}
+	
+	public function setEmptyScheduledPickUpDate($schedulePickUpDate_){
+	    $this->emptyscheduledpickupdate = $schedulePickUpDate_;
+	}
+	
+	public function getEmptyScheduledPickUpDate(){
+	    return $this->emptyscheduledpickupdate;
+	}
+	
 	public function from_array($array) {
 		foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
 			$flag = property_exists ( self::$className, $attrName );

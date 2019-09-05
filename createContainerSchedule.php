@@ -240,15 +240,12 @@ if(isset($_REQUEST["id"])){
 						<div class="row">
 							<div class="col-lg-6 darkdiv" style="position:relative">
 								<div class="form-group row">
-		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Scheduled Delivery:</label>
+		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Scheduled Pickup Date:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
-		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
+		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getEmptyScheduledPickUpDate()?>" name="emptyscheduledpickupdate" id="emptyscheduledpickupdate" class="form-control  dateControl">
 			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 			                           	</div>
-			                           	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
-		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
-		                            	<?php }?>
 			                        </div>
 			                    </div>
 			                    <div class="form-group row">
@@ -258,10 +255,23 @@ if(isset($_REQUEST["id"])){
 		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyLfdDate()?>" name="emptylfddate" id="emptylfddate" class="form-control  dateControl">
 		                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            	</div>
+		                            	<?php if(count($confirmDeliveryDatesArr) > 0){ ?>
+		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
+		                            	<?php }?>
 		                            </div>
 		                        </div>
 		                    </div>
 							<div class="col-lg-6 deliverydiv" style="position:relative">
+								<div class="form-group row">
+		                     		<label class="col-lg-4 col-form-label  bg-formLabelMauve">Scheduled Delivery:</label>
+			                        <div class="col-lg-8">
+			                        	<div class="input-group date">
+		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
+			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			                           	</div>
+			                           
+			                        </div>
+			                    </div>
 								<div class="form-group row">
 									<label class="col-lg-4 col-form-label bg-formLabelMauve">Confirmed Delivery:</label>
 			                        <div class="col-lg-8">
