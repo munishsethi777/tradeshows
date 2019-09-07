@@ -150,7 +150,7 @@ class QCScheduleImportUtil
             try {
                 $imoptedData = $this->getImportedData($data);
             } catch (Exception $e) {
-                $messages .= $e->getMessage() . "<br>";
+                $messages .= "Error on row no $row - " . $e->getMessage() . "<br>";
                 $success = 0;
             }
             if (empty($imoptedData)) {
@@ -291,7 +291,9 @@ class QCScheduleImportUtil
         if (! empty($shipDateStr)) {
             $shipDate = $this->convertStrToDate($shipDateStr);
             $qcSchedule->setShipDate($shipDate);
-
+            if(!$shipDate){
+                throw new Exception("Invalid Ship date");
+            }
             $readyDate = $this->convertStrToDate($shipDateStr);
             $readyDate->modify('-14 day');
             $qcSchedule->setSCReadyDate($readyDate);
