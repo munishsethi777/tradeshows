@@ -130,7 +130,7 @@ if($call == "importQCSchedules"){
 }
 if($call == "getAllQCSchedules"){
 	$qcSchedulesJson = $qcScheduleMgr->getQCScheudlesForGrid();
-	echo json_encode($qcSchedulesJson);
+	echo json_encode(utf8ize($qcSchedulesJson));
 	return;
 }
 if($call == "export"){
@@ -169,6 +169,16 @@ if($call == "deleteQCSchedule"){
 		$success = 0;
 		$message = $e->getMessage();
 	}
+}
+function utf8ize($d) {
+    if (is_array($d)) {
+        foreach ($d as $k => $v) {
+            $d[$k] = utf8ize($v);
+        }
+    } else if (is_string ($d)) {
+        return utf8_encode($d);
+    }
+    return $d;
 }
 $response["success"] = $success;
 $response["message"] = $message;
