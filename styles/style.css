@@ -8573,7 +8573,3 @@ float: right!important;
     float:right;
     font-family:arial;	
 }
-
-.select2-container--default .select2-selection--multiple{
-	border: 1px solid #b3b3b4 !important;
-}

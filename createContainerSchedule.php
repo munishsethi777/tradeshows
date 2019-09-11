@@ -5,7 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/DropDownUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
