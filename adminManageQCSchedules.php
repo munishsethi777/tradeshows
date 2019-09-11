@@ -438,10 +438,14 @@ function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,q
 			arr = $.parseJSON(data);
 			html ="";
 			if(arr.length != 0){
-    		    var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>UserName</th><th>QC</th><th>Respon Type</th><th>Applied On</th><th>Respond On</th><th>Response Comments</th></tr>';
+				var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>UserName</th><th>QC</th><th>Respon Type</th><th>Applied On</th><th>Respond On</th><th>Response Comments</th></tr>';
     		    var tablerows = "";
-    			$.each(arr, function(key,value){    				
-    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  value["qccode"] +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + value["respondedon"] +"</td><td>"+ value["responsecomments"] +"</td></tr>";
+    			$.each(arr, function(key,value){
+					qcCode = value["qccode"];
+    				if(value["qccode"] == null){
+    					qcCode = "n.a";
+    				}    				
+    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + value["respondedon"] +"</td><td>"+ value["responsecomments"] +"</td></tr>";
         		});
       			html += tablerows;   			  			
 			}
@@ -479,9 +483,9 @@ function loadGrid(){
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var isCompleted = data["iscompleted"];
         if(isCompleted){
-        	return '<div title="Completed" alt="Completed" style="text-align:left;color:#19aa8d;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        	return '<div title="Completed" alt="Completed" style="text-align:left;color:#19aa8d;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-check"></i></div>';
         }else{
-        	return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:grey;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-thumbs-o-up"></i></div>';
+        	return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:red;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-square-o"></i></div>';
         }	
         
     }
