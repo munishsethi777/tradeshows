@@ -323,7 +323,6 @@ class MailUtil{
 // 		return $body;
 // 	}
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
-			//$toEmails = array(0=>"baljeetgaheer@gmail.com");
 			$mail = new PHPMailer();
 			if($isSmtp){
 				$configurationMgr = ConfigurationMgr::getInstance();
