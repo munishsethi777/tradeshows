@@ -315,13 +315,13 @@ class MailUtil{
 // 		return $dates;
 // 	}
 	
-// 	private static function replacePlaceHolders($placeHolders,$body){
-// 		foreach ($placeHolders as $key=>$value){
-// 			$placeHolder = "{".$key."}";
-// 			$body = str_replace($placeHolder, $value, $body);
-// 		}
-// 		return $body;
-// 	}
+	public static function replacePlaceHolders($placeHolders,$body){
+	    foreach ($placeHolders as $key=>$value){
+	        $placeHolder = "{".$key."}";
+	        $body = str_replace($placeHolder, $value, $body);
+	    }
+	    return $body;
+	}
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 			$mail = new PHPMailer();
 			if($isSmtp){
