@@ -112,9 +112,9 @@ class StringConstants{
 	//TRADESHOW ORDER MANAGER STRING CONSTANT
 	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
 	
-	
-	
-	
+	//MAIL UTIL STRING CONSTANT
+	const IS_DEVELOPER_MODE = "1";
+	const DEVELOPER_EMAIL_IDS  = "dhimankartik798@gmail.com,munishsethi777@gmail.com";
 	
 	
 }
