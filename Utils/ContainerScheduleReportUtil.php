@@ -9,12 +9,10 @@ class ContainerScheduleReportUtil
     private static $CS_DEP_SEQ = 4;
     private static function getHtml($subject,$detail){
         $content = file_get_contents("../CSReportEmailTemplate.php");
-        $emailContainer = file_get_contents("../emailTemplateContainer.php");
         $phAnValues = array();
         $phAnValues["DETAIL"] = $detail;
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
-        $containerPlaceHolders = array("EMAIL_CONTENT"=>$content);
-        $html = MailUtil::replacePlaceHolders($containerPlaceHolders, $emailContainer);
+        $html = MailUtil::appendToEmailTemplateContainer($content);
         return $html;
     }
     
