@@ -12,5 +12,6 @@ class EmailLogType extends BasicEnum{
     const SV_INCOMPLETED_SCHEDULES_NOTIFICATION = "SvIncompletedSchedulesNotification";
     const QC_SCHEDULE_FOR_PLAN_REPORT           = "QcScheduleForPlanReport";
     const PENDING_QC_APPROVAL                   = "PendingQcApproval";
+    const CONTAINER_SCHEDULE_DATE_CHANGE_NOTIFICATION =  "ContainerScheduleDateChangeNotification";
      
 }
