@@ -1,4 +1,4 @@
-ad<html>
+<html>
 <head>
 <link rel="stylesheet" type="text/css"
 	href="1https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
