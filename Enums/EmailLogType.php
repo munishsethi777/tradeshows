@@ -23,4 +23,6 @@ class EmailLogType extends BasicEnum{
     const CONTAINER_SCHEDULE_MISSING_RECEIVED_DATE_OMS = "ContainerScheduleMissingReceivedDatesInOMSReport";
     const CONTAINER_SCHEDULE_ETA_REPORT = "ContainerScheduleETAReport";
     const CONTAINER_SCHEDULE_PENDING_SCHEDULE_DELIVERY_DATE = "ContainerSchedulePendingSchedleDeliveryDate";
+    const GRAPHIC_LOG_NOTES_UPDATED = "GraphicLogNotesUpdated";
+    const QC_APPROVED_REJECT_NOTIFICATION = "QCApprovedRejectNotification";
 }
