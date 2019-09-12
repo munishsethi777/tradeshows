@@ -25,7 +25,7 @@ class ContainerScheduleDataStore extends BeanDataStore
     public function getETADatesPendingInNextSevenDays(){
         $currentDate = DateUtil::getDateInDBFormat();
         $currentDateWithInterval = DateUtil::getDateInDBFormat(7);
-        $ETA_DATE_NEXT_SEVEN_DAYS_QUERY = self::$select . " where etadatetime > '$currentDate' and etadatetime <= '$currentDateWithInterval'";
+        $ETA_DATE_NEXT_SEVEN_DAYS_QUERY = self::$select . " where etadatetime >= '$currentDate' and etadatetime < '$currentDateWithInterval'";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($ETA_DATE_NEXT_SEVEN_DAYS_QUERY);
         return $containerSchedules;
     }
@@ -34,7 +34,7 @@ class ContainerScheduleDataStore extends BeanDataStore
     public function getEmptyReturnDatePastEmptyLFD(){
         $currentDate = DateUtil::getDateInDBFormat();
         $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true);
-        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate < emptylfddate";
+        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate < '$currentDate' and emptyreturndate < emptylfddate";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
     }

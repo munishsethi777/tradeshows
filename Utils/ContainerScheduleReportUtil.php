@@ -28,10 +28,10 @@ class ContainerScheduleReportUtil
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
         $reportName = StringConstants::ETA_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
-        $dateWithInterval = DateUtil::getDateWithInterval(7);
-        $currentDateStr = $currentDate->format(self::$N_J_Y);
-        $dateWithIntervalStr = $dateWithInterval->format(self::$N_J_Y);
-        $fileName = $reportName . "_" . $currentDateStr . "_to_" . $dateWithIntervalStr;
+        $dateWithInterval = DateUtil::getDateWithInterval(6);
+        $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
+        $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
+        $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y) . "_to_" . $dateWithInterval->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For this week for dates $currentDateStr to $dateWithIntervalStr";
@@ -61,7 +61,7 @@ class ContainerScheduleReportUtil
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
         $reportName = StringConstants::EMPTY_RETURN_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
-        $dateWithInterval = DateUtil::getDateWithInterval(7,null,true);
+        $dateWithInterval = DateUtil::getDateWithInterval(6,null,true);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
