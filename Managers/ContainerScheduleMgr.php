@@ -1,5 +1,5 @@
 <?php
-require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once $ConstantsArray['dbServerUrl'] .'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] .'Managers/ClassCodeMgr.php';
 require_once $ConstantsArray['dbServerUrl'] .'Managers/ContainerScheduleDatesMgr.php';
+require_once $ConstantsArray['dbServerUrl'] .'Managers/ContainerScheduleNotesMgr.php';
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TruckerType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/WareHouseType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TerminalType.php");
@@ -18,7 +19,7 @@ class ContainerScheduleMgr{
 		if (!self::$containerScheduleMgr)
 		{
 			self::$containerScheduleMgr = new ContainerScheduleMgr();
-			self::$dataStore = new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
+			self::$dataStore = ContainerScheduleDataStore::getInstance();//new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
 		}
 		return self::$containerScheduleMgr;
 	}
@@ -83,57 +84,63 @@ class ContainerScheduleMgr{
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
 		$containerSchedules = self::$dataStore->findAll(true);
-		$containerSchedulesNoteMgr = ContainerScheduleNotesMgr::getInstance();
-		$containerScheduleDateMgr = ContainerScheduleDatesMgr::getInstance();
-		$containerSchedulesArr = array();
-		foreach ($containerSchedules as $containerSchedule){
-			$notes  = $containerSchedulesNoteMgr->findByContainerScheduleSeq($containerSchedule->getSeq());
-			$dates = $containerScheduleDateMgr->findByContainerScheduleSeq($containerSchedule->getSeq());
-			$etaNotes = "";
-			$emptyReturnNotes = "";
-			$notificationNotes = "";
-			if(isset($notes[ContainerScheduleNoteType::eta])){
-				$etaNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::eta]);
-				$containerSchedule->setETANotes($etaNotes);
-			}
-			if(isset($notes[ContainerScheduleNoteType::empty_return])){
-				$emptyReturnNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::empty_return]);
-				$containerSchedule->setEmptyNotes($emptyReturnNotes);
-			}
-			if(isset($notes[ContainerScheduleNoteType::notification_pickup])){
-				$notificationNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::notification_pickup]);
-				$containerSchedule->setNotificationNotes($notificationNotes);
-			}
-			if(isset($dates[ContainerScheduleDateType::eta])){
-				$etaDates = $this->getDates($dates[ContainerScheduleDateType::eta]);
-				$containerSchedule->setEtaDateTime($etaDates);
-			}
-			if(isset($dates[ContainerScheduleDateType::confirmed_delivery])){
-				$confirmDeliveryDates = $this->getDates($dates[ContainerScheduleDateType::confirmed_delivery]);
-				$containerSchedule->setConfirmedDeliveryDateTime($confirmDeliveryDates);
-			}
-			if(isset($dates[ContainerScheduleNoteType::notification_pickup])){
-				$notificationNoteDates = $this->getDates($dates[ContainerScheduleNoteType::notification_pickup]);
-				$containerSchedule->setAlpineNotificatinPickupDateTime($notificationNoteDates);
-			}
-			$wareHouse = $containerSchedule->getWareHouse();
-			$terminal = $containerSchedule->getTerminal();
-			$trucker = $containerSchedule->getTruckerName();
-			if(!empty($wareHouse)){
-			    $wareHouse = WareHouseType::getValue($wareHouse);
-			}
-			if(!empty($terminal)){
-			    $terminal = TerminalType::getValue($terminal);
-			}
-			if(!empty($trucker)){
-			    $trucker = TruckerType::getValue($trucker);
-			}
-			$containerSchedule->setWareHouse($wareHouse);
-			$containerSchedule->setTerminal($terminal);
-			$containerSchedule->setTruckerName($trucker);
-			array_push($containerSchedulesArr,$containerSchedule);
-		}
+		$containerSchedulesArr = $this->setNotesAndDates($containerSchedules);
 		ExportUtil::exportContainerSchedules($containerSchedulesArr);
+	}
+	
+	
+	public function setNotesAndDates($containerSchedules){
+	    $containerSchedulesNoteMgr = ContainerScheduleNotesMgr::getInstance();
+	    $containerScheduleDateMgr = ContainerScheduleDatesMgr::getInstance();
+	    $containerSchedulesArr = array();
+	    foreach ($containerSchedules as $containerSchedule){
+	        $notes  = $containerSchedulesNoteMgr->findByContainerScheduleSeq($containerSchedule->getSeq());
+	        $dates = $containerScheduleDateMgr->findByContainerScheduleSeq($containerSchedule->getSeq());
+	        $etaNotes = "";
+	        $emptyReturnNotes = "";
+	        $notificationNotes = "";
+	        if(isset($notes[ContainerScheduleNoteType::eta])){
+	            $etaNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::eta]);
+	            $containerSchedule->setETANotes($etaNotes);
+	        }
+	        if(isset($notes[ContainerScheduleNoteType::empty_return])){
+	            $emptyReturnNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::empty_return]);
+	            $containerSchedule->setEmptyNotes($emptyReturnNotes);
+	        }
+	        if(isset($notes[ContainerScheduleNoteType::notification_pickup])){
+	            $notificationNotes = $this->getFormattedNotes($notes[ContainerScheduleNoteType::notification_pickup]);
+	            $containerSchedule->setNotificationNotes($notificationNotes);
+	        }
+	        if(isset($dates[ContainerScheduleDateType::eta])){
+	            $etaDates = $this->getDates($dates[ContainerScheduleDateType::eta]);
+	            $containerSchedule->setEtaDateTime($etaDates);
+	        }
+	        if(isset($dates[ContainerScheduleDateType::confirmed_delivery])){
+	            $confirmDeliveryDates = $this->getDates($dates[ContainerScheduleDateType::confirmed_delivery]);
+	            $containerSchedule->setConfirmedDeliveryDateTime($confirmDeliveryDates);
+	        }
+	        if(isset($dates[ContainerScheduleNoteType::notification_pickup])){
+	            $notificationNoteDates = $this->getDates($dates[ContainerScheduleNoteType::notification_pickup]);
+	            $containerSchedule->setAlpineNotificatinPickupDateTime($notificationNoteDates);
+	        }
+	        $wareHouse = $containerSchedule->getWareHouse();
+	        $terminal = $containerSchedule->getTerminal();
+	        $trucker = $containerSchedule->getTruckerName();
+	        if(!empty($wareHouse)){
+	            $wareHouse = WareHouseType::getValue($wareHouse);
+	        }
+	        if(!empty($terminal)){
+	            $terminal = TerminalType::getValue($terminal);
+	        }
+	        if(!empty($trucker)){
+	            $trucker = TruckerType::getValue($trucker);
+	        }
+	        $containerSchedule->setWareHouse($wareHouse);
+	        $containerSchedule->setTerminal($terminal);
+	        $containerSchedule->setTruckerName($trucker);
+	        array_push($containerSchedulesArr,$containerSchedule);
+	    }
+	    return $containerSchedulesArr;
 	}
 	
 	private function getDates($datesArr){
@@ -229,4 +236,6 @@ class ContainerScheduleMgr{
 				DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat));
 		return $containerSchedule;
 	}
+	
+	
 }

@@ -1,5 +1,8 @@
 <?php
 class DateUtil {
+    public static $DB_FORMAT_WITH_TIME = "Y-m-d H:i:s";
+    public static $APP_FORMAT_WITH_TIME = "m-d-Y h:i a";
+    public static $US_FORMAT = "n/j/y";
 	public static function StringToDate($dateStr) {
 		return DateTime::createFromFormat ( 'm/d/Y h:i A', $dateStr );
 	}
@@ -196,6 +199,36 @@ class DateUtil {
 	        $date = $date->modify("+" . $addDays . " days");
 	    }
 	    return $date->format("Y-m-d");
+	}
+	
+	public static function getDateInDBFormatWithInterval($addDays = null,$date = null,$isSubtract = false){
+	    if(empty($date)){
+	        $date = new DateTime();
+	    }
+	    if(!empty($addDays)){
+	        if($isSubtract){
+	            $date = $date->modify("-" . $addDays . " days");
+	        }else{
+	            $date = $date->modify("+" . $addDays . " days");
+	        }
+	       
+	    }
+	    return $date->format("Y-m-d");
+	}
+	
+	public static function getDateWithInterval($addDays = null,$date = null,$isSubtract = false){
+	    if(empty($date)){
+	        $date = new DateTime();
+	    }
+	    if(!empty($addDays)){
+	        if($isSubtract){
+	            $date = $date->modify("-" . $addDays . " days");
+	        }else{
+	            $date = $date->modify("+" . $addDays . " days");
+	        }
+	        
+	    }
+	    return $date;
 	}
 	
 	public static function convertDateToFormat($dateStr,$fromFormat,$toFormat){

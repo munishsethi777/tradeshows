@@ -273,7 +273,6 @@ public static function exportCustomers($customers){
 		$rowCount = 1;
 		$count = 1;
 		$i = 0;
-		
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Scheduled");
 		$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getAlignment()->applyFromArray(
@@ -481,9 +480,10 @@ public static function exportCustomers($customers){
 			}
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $acGraphicReceiveDate);
-	
+			
+			$notes = strip_tags($qcSchedule["notes"]);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["notes"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $notes);
 			$count++;
 			$i = 0;
 		}
@@ -1762,7 +1762,7 @@ public static function exportEmailLogs($emailLogs){
 	->setKeywords("office 2007 openxml php")
 	->setCategory("Report");
 	$alphas = range('A', 'Z');
-	$alphas = ExportUtil::createColumnsArray("AE");
+	$alphas = ExportUtil::createColumnsArray("AF");
 	$count = 1;
 	$i = 0;
 	$colName = $alphas[$i++]. $count;
@@ -1807,7 +1807,7 @@ public static function exportEmailLogs($emailLogs){
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	$colName = $alphas[$i++]. $count;
-	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Scheduled Delivery");
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty Scheduled Pickup Date");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	$colName = $alphas[$i++]. $count;
@@ -1823,6 +1823,10 @@ public static function exportEmailLogs($emailLogs){
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	//Blue Fields
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Scheduled Delivery");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
 	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Confirmed Delivery");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
@@ -1914,13 +1918,13 @@ public static function exportEmailLogs($emailLogs){
 	->getStartColor()
 	->setRGB('000000');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("O1:R1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("O1:S1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
 	->setRGB('87cefa');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("S1:AE1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("T1:AF1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
@@ -1981,7 +1985,7 @@ public static function exportEmailLogs($emailLogs){
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$pickUpDate);
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
-			$scheduleDeliveryDate = DateUtil::convertDateToFormat($containerSchedule->getScheduledDeliveryDateTime(),$fromformatWithTime,$toFormatWithTime);
+			$scheduleDeliveryDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyScheduledPickUpDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$scheduleDeliveryDate);
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
@@ -1998,6 +2002,10 @@ public static function exportEmailLogs($emailLogs){
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getEmptyNotes());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getScheduledDeliveryDateTime());
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;

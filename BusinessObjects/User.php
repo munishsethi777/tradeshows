@@ -89,14 +89,23 @@ class User{
 		return $this;
 	}
 	
-	public function from_array($array)
-	{
-		foreach(get_object_vars($this) as $attrName => $attrValue){
-			$flag = property_exists(self::$className, $attrName);
-			if($flag && array_key_exists($attrName, $array)){
-				$this->{$attrName} = $array[$attrName];
-			}
-		}
+	public function from_array($array){
+	    foreach(get_object_vars($this) as $attrName => $attrValue){
+	        $flag = property_exists(self::$className, $attrName);
+	        $isExists = array_key_exists($attrName, $array);
+	        if($flag && $isExists){
+	            $datePos = strpos(strtolower ($attrName),'date');
+	            $value = $array[$attrName];
+	            if($datePos !== false && !empty($value)){
+	                $value = DateUtil::StringToDateByGivenFormat("m-d-Y", $value);
+	            }
+	            if(!empty($value)){
+	                $this->{$attrName} = $value;
+	            }else{
+	                $this->{$attrName} = NULL;
+	            }
+	        }
+	    }
 	}
 	
 }

@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ContainerScheduleReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
@@ -59,6 +60,8 @@ if($call == "saveContainerSchedule"){
 			
 			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
 			$containerScheduleNoteMgr->saveFromContainerSchedule($containerSchedule, $existingContainerSchedule);
+			$loggedInUserName = $sessionUtil->getUserLoggedInName();
+			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 		}
 		$response["seq"] = $id;
 // 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){

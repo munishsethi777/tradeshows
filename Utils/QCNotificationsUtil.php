@@ -297,9 +297,7 @@ class QCNotificationsUtil{
 		$tableMailHtml = "";
 		$phAnValues = array();
 		$tableHtml = "";
-		$classCodeMgr = ClassCodeMgr::getInstance();
 		foreach ($pendingSchedules as $notificationType=>$qcSchedules){
-			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
 			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
 			if($notificationName != StringConstants::UPCOMING_INSPECTION_SCHEDULE ){
@@ -352,7 +350,10 @@ class QCNotificationsUtil{
 			$tableMailHtml .= self::replacePlaceHolders($phAnValues, $tableHtml);
 			$tableMailHtml .= "<br>";
 		}
-		return $tableMailHtml;
+		$emailContainer = file_get_contents("../emailTemplateContainer.php");
+		$containerPlaceHolders = array("EMAIL_CONTENT"=>$tableMailHtml);
+		$html = MailUtil::replacePlaceHolders($containerPlaceHolders, $emailContainer);
+		return $html;
 	}
 	
 	public static function getScheduleNotificationDate($qcSchedule,$notificationType){
