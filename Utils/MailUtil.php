@@ -314,6 +314,13 @@ class MailUtil{
 // 		$dates["apdate"] = $ap_date;
 // 		return $dates;
 // 	}
+
+	public static function appendToEmailTemplateContainer($content){
+	    $emailContainer = file_get_contents("../emailTemplateContainer.php");
+	    $containerPlaceHolders = array("EMAIL_CONTENT"=>$content);
+	    $html = MailUtil::replacePlaceHolders($containerPlaceHolders, $emailContainer);
+	    return $html;
+	}
 	
 	public static function replacePlaceHolders($placeHolders,$body){
 	    foreach ($placeHolders as $key=>$value){
