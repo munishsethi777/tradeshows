@@ -1,14 +1,14 @@
 <?php
-require_once($ConstantsArray['dbServerUrl'] ."Managers/ShowTaskMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/class.phpmailer.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
-require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
-require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
-require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/ShowTaskMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/QCScheduleMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/AdminMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/ConfigurationMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Utils/class.phpmailer.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Enums/NotificationType.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Enums/UserType.php");
+require_once ($ConstantsArray['dbServerUrl'] . "StringConstants.php");
 
 class MailUtil{
 	
@@ -314,49 +314,66 @@ class MailUtil{
 // 		$dates["apdate"] = $ap_date;
 // 		return $dates;
 // 	}
-	
-// 	private static function replacePlaceHolders($placeHolders,$body){
-// 		foreach ($placeHolders as $key=>$value){
-// 			$placeHolder = "{".$key."}";
-// 			$body = str_replace($placeHolder, $value, $body);
-// 		}
-// 		return $body;
-// 	}
-	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
-			$mail = new PHPMailer();
-			if($isSmtp){
-				$configurationMgr = ConfigurationMgr::getInstance();
-				$smtpUsername = $configurationMgr->getConfiguration(Configuration::$SMTP_USERNAME);
-				$smtpPassword = $configurationMgr->getConfiguration(Configuration::$SMTP_PASSWORD);
-				$smtpHost = $configurationMgr->getConfiguration(Configuration::$SMTP_HOST);
-				$mail->IsSMTP(); // telling the class to use SMTP
-				//$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
-				$mail->SMTPAuth   = true;                  // enable SMTP authentication
-				$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-				$mail->Host       = $smtpHost;      // sets GMAIL as the SMTP server
-				$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-				$mail->Username   = $smtpUsername;  // GMAIL username
-				$mail->Password   = $smtpPassword;          // GMAIL password
-			}
-			$mail->IsHTML(true);
-			$mail->SetFrom($smtpUsername, 'Alpine');
-			$mail->Subject = $subject;
-			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
-			$mail->MsgHTML($body);
-			foreach ($toEmails as $toEmail){
-				$mail->AddAddress($toEmail);
-			}
-			//$mail->AddBCC("baljeetgaheer@gmail.com");
-			foreach($attachments as $name=>$attachment){
-				$name .= ".xls";
-				$mail->addStringAttachment($attachment, $name);
-			}
-			if(!$mail->Send()) {
-				return false;
-			} else {
-				return true;
-			}
-		}	
+
+	public static function appendToEmailTemplateContainer($content){
+	    $emailContainer = file_get_contents("../emailTemplateContainer.php");
+	    $containerPlaceHolders = array("EMAIL_CONTENT"=>$content);
+	    $html = MailUtil::replacePlaceHolders($containerPlaceHolders, $emailContainer);
+	    return $html;
 	}
+	
+	public static function replacePlaceHolders($placeHolders,$body){
+	    foreach ($placeHolders as $key=>$value){
+	        $placeHolder = "{".$key."}";
+	        $body = str_replace($placeHolder, $value, $body);
+	    }
+	    return $body;
+	}
+	public static function sendSmtpMail($subject, $body, $toEmails, $isSmtp, $attachments = array())
+    {     
+        $isDeveloperMode   = StringConstants::IS_DEVELOPER_MODE;
+        $developerEmailIds = StringConstants::DEVELOPER_EMAIL_IDS;        
+        if(!empty($isDeveloperMode)){
+            if(!empty($developerEmailIds)){
+                $toEmails = explode(",", $developerEmailIds);
+            }else{
+                return false;
+            }
+        }
+        $mail = new PHPMailer();
+        if ($isSmtp) {
+            $configurationMgr = ConfigurationMgr::getInstance();
+            $smtpUsername = $configurationMgr->getConfiguration(Configuration::$SMTP_USERNAME);
+            $smtpPassword = $configurationMgr->getConfiguration(Configuration::$SMTP_PASSWORD);
+            $smtpHost = $configurationMgr->getConfiguration(Configuration::$SMTP_HOST);
+            $mail->IsSMTP(); // telling the class to use SMTP
+                             // $mail->SMTPDebug = 1; // enables SMTP debug information (for testing)
+            $mail->SMTPAuth = true; // enable SMTP authentication
+            $mail->SMTPSecure = "ssl"; // sets the prefix to the servier
+            $mail->Host = $smtpHost; // sets GMAIL as the SMTP server
+            $mail->Port = 465; // set the SMTP port for the GMAIL server
+            $mail->Username = $smtpUsername; // GMAIL username
+            $mail->Password = $smtpPassword; // GMAIL password
+        }
+        $mail->IsHTML(true);
+        $mail->SetFrom($smtpUsername, 'Alpine');
+        $mail->Subject = $subject;
+        $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+        $mail->MsgHTML($body);
+        foreach ($toEmails as $toEmail) {
+            $mail->AddAddress($toEmail);
+        }
+        // $mail->AddBCC("baljeetgaheer@gmail.com");
+        foreach ($attachments as $name => $attachment) {
+            $name .= ".xls";
+            $mail->addStringAttachment($attachment, $name);
+        }
+        if (! $mail->Send()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+   }
 	
 	

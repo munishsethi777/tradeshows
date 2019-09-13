@@ -297,9 +297,7 @@ class QCNotificationsUtil{
 		$tableMailHtml = "";
 		$phAnValues = array();
 		$tableHtml = "";
-		$classCodeMgr = ClassCodeMgr::getInstance();
 		foreach ($pendingSchedules as $notificationType=>$qcSchedules){
-			$notificatioTitle = "";
 			$phAnValues["NOTIFICATION_DATE_TITLE"] = $notificationType;
 			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
 			if($notificationName != StringConstants::UPCOMING_INSPECTION_SCHEDULE ){
@@ -352,7 +350,8 @@ class QCNotificationsUtil{
 			$tableMailHtml .= self::replacePlaceHolders($phAnValues, $tableHtml);
 			$tableMailHtml .= "<br>";
 		}
-		return $tableMailHtml;
+		$html = MailUtil::appendToEmailTemplateContainer($tableMailHtml);
+		return $html;
 	}
 	
 	public static function getScheduleNotificationDate($qcSchedule,$notificationType){
@@ -439,7 +438,8 @@ class QCNotificationsUtil{
 		$roleName = Permissions::getName($roleName);
 		$phAnValues["NOTES_DETAIL"] = $noteDetail;
 		$content = file_get_contents("../GraphicLogsNotesUpdatedTemplate.php");
-		$html = self::replacePlaceHolders($phAnValues, $content);
+		$content = self::replacePlaceHolders($phAnValues, $content);
+		$html = MailUtil::appendToEmailTemplateContainer($content);
 		$userMgr = UserMgr::getInstance();
 		$users = $userMgr->getUsersForGraphicNotesUpdatedReport($roleName);
 		$toEmails = array();
@@ -451,10 +451,16 @@ class QCNotificationsUtil{
 		}
 		if(!empty($toEmails)){
 			$subject = $noteType . " Notes Updated For Graphic Logs on Alpinebi";
-			MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+			$flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+			if($flag){
+			    $emaillogMgr = EmailLogMgr::getInstance();
+			    foreach ($users as $user){
+			        $emaillogMgr->saveEmailLog(EmailLogType::GRAPHIC_LOG_NOTES_UPDATED ,$user->getEmail(), null,$user->getSeq());
+			    }
+			}
 		}	
 	}
-	
+	//NOT IN USE
 	public static function sendQCApprovalNotification($qcSchedule){
 		$itemNo = $qcSchedule->getItemNumbers();
 		$po = $qcSchedule->getPO();
@@ -498,7 +504,8 @@ class QCNotificationsUtil{
 	    $phAnValues["SUPERVISOR_NAME"] = $superVisorName;
 	    $phAnValues["RESPONSE_COMMENTS"] = $comments;
 	    $content = file_get_contents("../QCApprovedRjectEmailTemplate.php");
-	    $html = self::replacePlaceHolders($phAnValues, $content);
+	    $content = self::replacePlaceHolders($phAnValues, $content);
+	    $html = MailUtil::appendToEmailTemplateContainer($content);
 	    $userMgr = UserMgr::getInstance();
 	    $rolName = Permissions::getName(Permissions::approved_reject_notification);
 	    $users = $userMgr->getUserssByRoleAndDepartment($rolName, 1);
@@ -512,7 +519,14 @@ class QCNotificationsUtil{
 	    }
 	    if(!empty($toEmails)){
 	        $subject = StringConstants::APPROVAL_RESPONSE_NOTIFICATION;
-	        MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+	        $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+	        if($flag){
+	            $emaillogMgr = EmailLogMgr::getInstance();
+	            foreach ($users as $user){
+	                $emaillogMgr->saveEmailLog(EmailLogType::QC_APPROVED_REJECT_NOTIFICATION ,$user->getEmail(), null,$user->getSeq());
+	            }
+	        }
+	        
 	    }
 	    $qcScheduleMgr->updateLastModifiedOn($qcSchedule["seq"]);
 	}
@@ -555,8 +569,11 @@ class QCNotificationsUtil{
 			$row = self::replacePlaceHolders($rowTokens, $row);
 			$srNo++;
 		}   
+		$phAnValues = array();
 		$phAnValues["TABLE_ROWS"] = $row;
-		$tableMailHtml .= self::replacePlaceHolders($phAnValues, $tableHtml);
+		$content = self::replacePlaceHolders($phAnValues, $tableHtml);
+		$tableMailHtml = MailUtil::appendToEmailTemplateContainer($content);
+		
 		$excelData = ExportUtil::exportQcPendingForApprovals($pendingQcSchedules, StringConstants::PENDING_QC_APPROVALS, true);
 		$attachments = array("QCPendingApprovals"=>$excelData);
 		$supervisors = $userMgr->getSupervisorsForQCReport();
@@ -593,6 +610,7 @@ class QCNotificationsUtil{
     	        //array_push($toEmails,$admin->getEmail());
     	    }
     	    $html = "<p>Qc Plannner file attached with this mail.";
+    	    $html = MailUtil::appendToEmailTemplateContainer($html);
     	    $EmaillogMgr = EmailLogMgr::getInstance();    	   
     	    if(!empty($toEmails)){
     	     $subject = StringConstants::QC_PLANNER;

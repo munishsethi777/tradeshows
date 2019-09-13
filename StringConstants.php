@@ -7,7 +7,30 @@ class StringConstants{
 	const INCOMPLETED_SCHEDULES = "ALPINE BI | Incompleted Schedules";
 	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
+	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "ALPINE BI | Container Schedule Dates Change Notification";
 	
+	//Containder Schedule Report
+	const ETA_REPORT = "ALPINE BI Containers | ETA Report";
+	const ETA_REPORT_NAME = "ETA Report";
+	const EMPTY_RETURN = "ALPINE BI Containers | Empty Return Date past Empty LFD Report";
+	const EMPTY_RETURN_REPORT_NAME = "Empty Return Date past Empty LFD Report";
+	const DAILY_SCHEDULE_REPORT = "ALPINE BI Containers | Daily Schedule Report";
+	const DAILY_SCHEDULE_REPORT_NAME = "Daily Schedule Report";
+	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE = "ALPINE BI Containers | Missing Alpine Notification Pickup dates Report";
+	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE_REPORT_NAME = "Missing Alpine Notification Pickup dates Report";
+	
+	const MISSING_IDS = "ALPINE BI Containers | Missing IDs Report";
+	const MISSING_IDS_REPORT_NAME = "Missing IDs Report";
+	const MISSING_TERMINAL_APPT_DATE = "ALPINE BI Containers | Missing Terminal Appointment Dates Report";
+	const MISSING_TERMINAL_APPT_DATE_REPORT_NAME = "Missing Terminal Appointment Dates Report";
+	const MISSING_SCHEDULE_DELIVERY_DATE = "ALPINE BI Containers | Missing Scheduled Delivery Dates Report";
+	const MISSING_SCHEDULE_DELIVERY_DATE_REPORT_NAME = "Missing Scheduled Delivery Dates Report";
+	const MISSING_CONFIRM_DELIVERY_DATE = "ALPINE BI Containers | Missing Confirmed Delivery Dates Report";
+	const MISSING_CONFIRM_DELIVERY_DATE_REPORT_NAME = "Missing Confirmed Delivery Dates Report";
+	const EMPTY_WMS_DATES = "ALPINE BI Containers | Missing Received Dates in WMS Report";
+	const EMPTY_WMS_DATES_REPORT_NAME = "Missing Received Dates in WMS Report";
+	const EMPTY_OMS_DATES = "ALPINE BI Containers | Missing Received Dates in OMS Report";
+	const EMPTY_OMS_DATES_REPORT_NAME = "Missing Received Dates in OMS Report";
 	
 	
 	// USER ACTION STRING CONSTANT
@@ -89,9 +112,9 @@ class StringConstants{
 	//TRADESHOW ORDER MANAGER STRING CONSTANT
 	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
 	
-	
-	
-	
+	//MAIL UTIL STRING CONSTANT
+	const IS_DEVELOPER_MODE = "1";
+	const DEVELOPER_EMAIL_IDS  = "dhimankartik798@gmail.com,munishsethi777@gmail.com";
 	
 	
 }
