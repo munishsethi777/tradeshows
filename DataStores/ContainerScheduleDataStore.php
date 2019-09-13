@@ -97,7 +97,7 @@ class ContainerScheduleDataStore extends BeanDataStore
 //     }
     //Empty WMS dates
     public function getMissingReceivedDatesInWMS(){
-        $query = self::$select . " where confirmeddeliverydatetime is not NULL and (msrfcreateddate is NULL or (issamplesreceived = 1 and samplesreceiveddate is NULL))";
+        $query = self::$select . " where confirmeddeliverydatetime is not NULL and (containerreceivedinwmsdate is NULL or (issamplesreceived = 1 and samplesreceivedinwmsdate is NULL))";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
     }
