@@ -58,9 +58,8 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //Missing IDs Report - Daily
     public function getMissingIDReport(){
-        $currentDate = DateUtil::getDateInDBFormat();
         $dateIntervalWith2Days = DateUtil::getDateInDBFormatWithInterval(2,null,true);
-        $query = self::$select . " where etadatetime >= '$dateIntervalWith2Days' and etadatetime < '$currentDate'  and isidscomplete != 1";
+        $query = self::$select . " where etadatetime < '$dateIntervalWith2Days' and isidscomplete != 1";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
     }
