@@ -60,8 +60,8 @@ class ContainerScheduleReportUtil
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
         $reportName = StringConstants::EMPTY_RETURN_REPORT_NAME;
-        $currentDate = DateUtil::getDateWithInterval();
-        $dateWithInterval = DateUtil::getDateWithInterval(6,null,true);
+        $currentDate = DateUtil::getDateWithInterval(1,null,true);
+        $dateWithInterval = DateUtil::getDateWithInterval(7,null,true);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
