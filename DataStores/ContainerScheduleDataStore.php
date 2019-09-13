@@ -32,9 +32,9 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //Empty Return Date past the “Empty LFD” -- Weekly
     public function getEmptyReturnDatePastEmptyLFD(){
-        $currentDate = DateUtil::getDateInDBFormat();
+        $currentDate = DateUtil::getDateInDBFormatWithInterval(1,null,true);
         $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true);
-        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate < '$currentDate' and emptyreturndate < emptylfddate";
+        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate < emptylfddate";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
     }
