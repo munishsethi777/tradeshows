@@ -1,5 +1,5 @@
 <?php
-require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
+//require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
@@ -19,7 +19,8 @@ class ContainerScheduleMgr{
 		if (!self::$containerScheduleMgr)
 		{
 			self::$containerScheduleMgr = new ContainerScheduleMgr();
-			self::$dataStore = ContainerScheduleDataStore::getInstance();//new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
+			//self::$dataStore = ContainerScheduleDataStore::getInstance();//new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
+			self::$dataStore = new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
 		}
 		return self::$containerScheduleMgr;
 	}
