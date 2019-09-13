@@ -178,7 +178,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 	                            	<textarea class="form-control" name="comments" id="comment" ></textarea>
 	                            </div>
                         	</div>                     	
-                        	<div id="earlierApprovals" style="margin-top:10px;display:none"></div>                 	
+                        	<div id="earlierApprovals" style="margin-top:10px"></div>                 	
                        		 <div class="modal-footer">
                                      <button class="btn btn-primary" data-style="expand-right" id="updateApprovalStatusBtn" type="button">
                                         <span class="ladda-label">Submit</span>
