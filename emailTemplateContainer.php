@@ -19,7 +19,7 @@
 				 {EMAIL_CONTENT}
 			</div>
 			<p style="background: #676a6c; margin: 0px -15px 0px -15px; color: #FFF; padding:10px;font-size:12px"	align="center">
-				This is an automated email and can not be replied. For any further assistance, mail to munishsethi@satyainfopages.com</br>
+				This is an automated email and can not be replied.</br>
 				You may login at http://www.alpinebi.com to access Alpine Business Intelligence online application<br>
 				© 2019 Alpine Corporation.
 			</p>
