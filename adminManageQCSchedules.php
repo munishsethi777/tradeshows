@@ -144,7 +144,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
           </div>		
           <div class="modal-body updateQCScheduleApprovalModalDiv mainDiv">
             <div class="ibox">
-             <div class="ibox-content">
+<!--              <div class="ibox-content"> -->
              	 <form id="updateQCScheduleApprovalForm" method="post" action="Actions/QcscheduleApprovalAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="updateApprovalStatus"/>
                      	<input type="hidden" id ="approvalSeq" name="approvalSeq"/>
@@ -178,15 +178,15 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 	                            	<textarea class="form-control" name="comments" id="comment" ></textarea>
 	                            </div>
                         	</div>                     	
-                        	<div id="earlierApprovals"></div>                 	
+                        	<div id="earlierApprovals" style="margin-top:10px;display:none"></div>                 	
                        		 <div class="modal-footer">
                                      <button class="btn btn-primary" data-style="expand-right" id="updateApprovalStatusBtn" type="button">
                                         <span class="ladda-label">Submit</span>
                                     </button>
                                      <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                              </div>
-                 </form>
-             </div>
+                 	</form>
+<!--              </div> -->
            </div>
          </div>
         </div>
@@ -438,7 +438,7 @@ function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,q
 			arr = $.parseJSON(data);
 			html ="";
 			if(arr.length != 0){
-				var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>UserName</th><th>QC</th><th>Respon Type</th><th>Applied On</th><th>Respond On</th><th>Response Comments</th></tr>';
+				var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>Applied by</th><th>QC</th><th>Response</th><th>Applied On</th><th>Responded On</th><th>Comments</th></tr>';
     		    var tablerows = "";
     			$.each(arr, function(key,value){
 					qcCode = value["qccode"];
