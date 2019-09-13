@@ -268,7 +268,8 @@ class ContainerScheduleReportUtil
             $phAnValues = array();
             $phAnValues["DETAIL"] = $html;
             $content = file_get_contents("../CSChangedAlpinePickupDateEmailTemplate.php");
-            $body = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $body = MailUtil::appendToEmailTemplateContainer($content);
             $toEmails = array("baljeetgaheer@gmail.com");
             $subject = StringConstants::CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION;
             $roleName = Permissions::getName(Permissions::container_information); //WareHouse (Blue)
