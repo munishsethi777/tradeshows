@@ -84,7 +84,8 @@ class StringConstants{
 	const QC_SCHEDULE_DELETE_SUCCESSFULLY = "QC Schedules Deleted successfully";
 	const ACTUAL_FINAL_INSPECTION_DATE_PAST_SUBMIT_APPROVAL     = "Actual final inspection date should be in past for submit approval";
 	const ACTUAL_FINAL_INSPECTION_DATE_REQUIRED_SUBMIT_APPROVAL = "Actual final inspection date is required for submit approval";
- 
+	const SHIP_DATE_IS_IN_PAST     = "Ship date should not be in past !";
+	
 	//QC SCHEDULE APPROVAL ACTION STRING CONSTANT
 	const QC_SCHEDULE_STATUS_UPDATE = "QC Schedule status update successfully!";
 	
@@ -113,8 +114,8 @@ class StringConstants{
 	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
 	
 	//MAIL UTIL STRING CONSTANT
-	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "dhimankartik798@gmail.com,munishsethi777@gmail.com";
+	const IS_DEVELOPER_MODE = "0";
+	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
 	
 	
 }
