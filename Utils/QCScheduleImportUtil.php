@@ -294,6 +294,12 @@ class QCScheduleImportUtil
             if(!$shipDate){
                 throw new Exception("Invalid Ship date");
             }
+            $currentTime = new DateTime();
+            $currentTime->setTime(0,0);
+            $shipDate->setTime(0,0);
+            if($shipDate < $currentTime){
+                throw new Exception(StringConstants::SHIP_DATE_IS_IN_PAST);
+            }
             $readyDate = $this->convertStrToDate($shipDateStr);
             $readyDate->modify('-14 day');
             $qcSchedule->setSCReadyDate($readyDate);
