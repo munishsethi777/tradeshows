@@ -57,10 +57,21 @@ class QcscheduleApprovalMgr{
 	}
 	
 	public function getQcScheduleApproval($qcscheduleSeqs){
-	    $query = "SELECT users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval left join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
+	    $query = "SELECT qcschedules.itemnumbers,qcschedules.po,users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
 	    $approvals =  self::$dataStore->executeQuery($query);
-	    unset($approvals[0]);
-	    return  $approvals;
+	    $mainArr = array();
+	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+	    foreach ($approvals as $approval){
+	        $appliedOn = $approval["appliedon"];
+	        $respondedOn = $approval["respondedon"];
+	        $appliedOn = DateUtil::convertDateToFormatWithTimeZone($appliedOn, "Y-m-d H:i:s", "n/j/y h:i a",$loggedInUserTimeZone);
+	        $respondedOn = DateUtil::convertDateToFormatWithTimeZone($respondedOn, "Y-m-d H:i:s", "n/j/y h:i a",$loggedInUserTimeZone);
+	        $approval["appliedon"] = $appliedOn;
+	        $approval["respondedon"] = $respondedOn;
+	        array_push($mainArr,$approval);
+	    }
+	    return  $mainArr;
 	}
 	
 	public function updateApprovalStatus($approvalSeq,$status,$comments){

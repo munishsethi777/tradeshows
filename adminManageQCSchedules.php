@@ -13,7 +13,6 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $permissionUtil = PermissionUtil::getInstance();
 $hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
 $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
-$hasImportButtonPermission =  $isSessionAdmin;
 //$qcscheduleseq = "";
 
 /*$QcscheduleApprovals = "";
@@ -415,41 +414,41 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-function showApprovalModel(approvalSeq,isDisabled,responsecomment,responsetype,qc,code,po,itemno,qcscheduleseq){
-	$('#comment').val(responsecomment);
-	$('#approvalStatusDD').val(responsetype);
-    $("#modalQcLabel").text(qc);
-    $("#modalCodeLabel").text(code);
-    $("#modalPoLabel").text(po);
-    $("#modalItemnumberLabel").text(itemno);   
-       
-   /* $("#tabResponsecomment").html(responsecomment);
-    $("#tabResponsetype").html(responsetype); */
-    
-    
-	$("#approvalSeq").val(approvalSeq);
-	$("#updateQCScheduleApprovalModal").modal('show');
+function showApprovalModel(qcscheduleSeq,isDisabled){
 	if(isDisabled == 1){	
     	$('#comment').attr("disabled",true);
     	$('#approvalStatusDD').attr("disabled",true);
     	$('#updateApprovalStatusBtn').attr("disabled",true);	
 	}
-	 $.get("Actions/QcscheduleApprovalAction.php?call=getQCSchedules" + "&qcscheduleseq=" + qcscheduleseq ,function(data){
+	 $.get("Actions/QcscheduleApprovalAction.php?call=getQCSchedules" + "&qcscheduleseq=" + qcscheduleSeq ,function(data){
 			arr = $.parseJSON(data);
-			html ="";
-			if(arr.length != 0){
-				var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>Applied by</th><th>QC</th><th>Response</th><th>Applied On</th><th>Responded On</th><th>Comments</th></tr>';
-    		    var tablerows = "";
+			var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>Applied by</th><th>QC</th><th>Response</th><th>Applied On</th><th>Responded On</th><th>Comments</th></tr>';
+		    var tablerows = "";
+		    if(arr.length > 0){
+    		    var approvalInfo = arr[0];
+       		 	$('#comment').val(approvalInfo.responsecomments);
+       		 	$('#approvalStatusDD').val(approvalInfo.responsetype);
+       		    $("#modalQcLabel").text(approvalInfo.qccode);
+       		    $("#modalCodeLabel").text(approvalInfo.qccode);
+       		    $("#modalPoLabel").text(approvalInfo.po);
+       		    $("#modalItemnumberLabel").text(approvalInfo.itemnumbers);   
+       		 	$("#approvalSeq").val(approvalInfo.seq);
+       		    arr.shift()
+       		    var flag = false;
     			$.each(arr, function(key,value){
-					qcCode = value["qccode"];
+    				flag = true;
+    				qcCode = value["qccode"];
     				if(value["qccode"] == null){
     					qcCode = "n.a";
     				}    				
     				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + value["respondedon"] +"</td><td>"+ value["responsecomments"] +"</td></tr>";
         		});
-      			html += tablerows;   			  			
-			}
-			$("#earlierApprovals").html(html);
+        		if(flag){
+      				html += tablerows;   			  			
+    				$("#earlierApprovals").html(html);
+        		}
+    			$("#updateQCScheduleApprovalModal").modal('show');
+		    }
      });
 
 			 
@@ -470,13 +469,14 @@ function loadGrid(){
         }
         var isSV = data["isSv"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
-            	if(isSV && responseType != null){
-            		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",0, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" ,\"" +qcscheduleseq+ "\"  )'>"+responseType+"</a>";
-            	}else{
-                	if(responseType != null){
-                		html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['qcapprovalseq'] + ",1, \"" +responseComments+ "\" , \"" +responseType+ "\" , \"" +qc+ "\"  , \"" +code+ "\"  , \"" +po+ "\"  , \"" +itemno+ "\" ,\"" +qcscheduleseq+ "\" )'>"+responseType+"</a>";                	}
-            	}
-            html += "</div>";
+        var isDisable = 1;
+    	if(isSV){
+    		isDisable = 0;
+    	}
+        if(responseType != null){
+        	html +="<a title='"+responseComments+"' href='javascript:showApprovalModel("+ data['seq'] + "," + isDisable + ")'>"+responseType+"</a>";                	
+        }
+    	html += "</div>";
         return html;
     }
 	var renderCompletedColumn = function (row, columnfield, value, defaulthtml, columnproperties) {
