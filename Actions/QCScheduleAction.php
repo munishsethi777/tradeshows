@@ -19,12 +19,13 @@ $qcScheduleMgr = QCScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveQCSchedule"){
 	try{
+	    $seq = $_REQUEST["seq"];
+	    $currentTime = new DateTime();
+	    $currentTime->setTime(0,0);
 		if(isset($_POST["isapproval"])){
 			$acFinalInspectionDate = $_REQUEST["acfinalinspectiondate"];
 			if(!empty($acFinalInspectionDate)){
 				$acFinalInspectionDate = DateUtil::StringToDateByGivenFormat("m-d-Y", $acFinalInspectionDate);
-				$currentTime = new DateTime();
-				$currentTime->setTime(0,0);
 				$acFinalInspectionDate->setTime(0,0);
 				if($acFinalInspectionDate > $currentTime){
 				    throw new Exception(StringConstants::ACTUAL_FINAL_INSPECTION_DATE_PAST_SUBMIT_APPROVAL);
@@ -32,6 +33,13 @@ if($call == "saveQCSchedule"){
 			}else{
 			    throw new Exception(StringConstants::ACTUAL_FINAL_INSPECTION_DATE_REQUIRED_SUBMIT_APPROVAL);
 			}
+		}
+		if(isset($_REQUEST["shipdate"]) && empty($seq)){
+    		$shipDate = $_REQUEST["shipdate"];
+    		$shipDate = DateUtil::StringToDateByGivenFormat("m-d-Y", $shipDate);
+    		if($shipDate < $currentTime){
+    		    throw new Exception(StringConstants::SHIP_DATE_IS_IN_PAST);
+    		}
 		}
 		$message = StringConstants::QC_SCHEDULE_SAVED_SUCCESSFULLY;
 		$itemNumbers = $_REQUEST["itemnumbers"];
