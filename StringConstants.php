@@ -5,7 +5,6 @@ class StringConstants{
 	const MISSING_INSPECTION_APPOINTMENT = "ALPINE BI | Missing Inspection Appointments";
 	const PENDING_QC_APPROVALS = "ALPINE BI | Pending QC Approvals";
 	const INCOMPLETED_SCHEDULES = "ALPINE BI | Incompleted Schedules";
-	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
 	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "ALPINE BI | Container Schedule Dates Change Notification";
 	
@@ -34,7 +33,8 @@ class StringConstants{
 	
 	
 	// USER ACTION STRING CONSTANT
-	const WEB_PORTAL_LINK = "localhost";
+	const WEB_PORTAL_LINK = "http://www.alpinebi.com";
+	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const PERMISSION_AllOW = "No Permission is Allow";
 	const SERVER_ERROR = "Server Error!";
 	const USER_DOES_NOT_EXITS_WITH_THIS_USER_NAME = "User does not exists with this user name";
@@ -114,8 +114,8 @@ class StringConstants{
 	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
 	
 	//MAIL UTIL STRING CONSTANT
-	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
+	const IS_DEVELOPER_MODE = "0";
+	const DEVELOPER_EMAIL_IDS  = "dhimankartik798@gmail.com,munishsethi777@gmail.com";
 	
 	
 }
