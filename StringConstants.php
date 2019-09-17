@@ -114,7 +114,7 @@ class StringConstants{
 	const TRADESHOW_ORDERS_IMPORTED_SUCCESSFULLY = "Tradeshow orders Imported Successfully!";
 	
 	//MAIL UTIL STRING CONSTANT
-	const IS_DEVELOPER_MODE = "0";
+	const IS_DEVELOPER_MODE = "1";
 	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
 	
 	
