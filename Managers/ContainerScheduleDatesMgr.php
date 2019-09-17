@@ -45,7 +45,7 @@ class ContainerScheduleDatesMgr{
     	$etaDateTime = $containerSchedule->getEtaDateTime();
     	$existingEtaDateTimeStr = $existingContainerSchedle->getEtaDateTime();
     	$existingEtaDateTime = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $existingEtaDateTimeStr);
-    	if($etaDateTime !=  $existingEtaDateTime){
+    	if($etaDateTime !=null && $etaDateTime !=  $existingEtaDateTime){
     		$containerScheduleDate = $this->getContainerScheduleDateObj(
     				$containerSchedule, ContainerScheduleDateType::eta);
     		$this->save($containerScheduleDate);	
@@ -53,7 +53,7 @@ class ContainerScheduleDatesMgr{
     	$confirmDeliveryDate = $containerSchedule->getConfirmedDeliveryDateTime();
     	$existingDeliveryDateStr = $existingContainerSchedle->getConfirmedDeliveryDateTime();
     	$existingDeliveryDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $existingDeliveryDateStr);
-    	if($confirmDeliveryDate !=  $existingDeliveryDate){
+    	if($confirmDeliveryDate != null && $confirmDeliveryDate !=  $existingDeliveryDate){
     		$containerScheduleDate = $this->getContainerScheduleDateObj(
     				$containerSchedule, ContainerScheduleDateType::confirmed_delivery);
     		$this->save($containerScheduleDate);
@@ -61,7 +61,7 @@ class ContainerScheduleDatesMgr{
     	$pickupDateTime = $containerSchedule->getAlpineNotificatinPickupDateTime();
     	$existingPickupDateTimeStr = $existingContainerSchedle->getAlpineNotificatinPickupDateTime();
     	$existingPickupDateTime = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $existingPickupDateTimeStr);
-    	if($pickupDateTime !=  $existingPickupDateTime){
+    	if($pickupDateTime!= null && $pickupDateTime !=  $existingPickupDateTime){
     		$containerScheduleDate = $this->getContainerScheduleDateObj(
     				$containerSchedule, ContainerScheduleDateType::notification_pickup);
     		$this->save($containerScheduleDate);
