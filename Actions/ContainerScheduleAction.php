@@ -48,7 +48,7 @@ if($call == "saveContainerSchedule"){
 		if(empty($containerSchedule->getIssamplesReceivedinOMS())){
 			$containerSchedule->setSamplesReceivedinOMSDate(null);
 		}
-		if(empty($containerSchedule->getIssamplesReceivedinOMS())){
+		if(empty($containerSchedule->getIssamplesReceivedinWMS())){
 			$containerSchedule->setSamplesReceivedinWMSDate(null);
 		}
 		$id = $containerScheduleMgr->save($containerSchedule);
