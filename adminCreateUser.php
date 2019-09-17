@@ -105,6 +105,9 @@ if(in_array(1,$departmentSeqArr)){
 <title>Admin | Create User</title>
 <?include "ScriptsInclude.php"?>
 <style type="text/css">
+.panel-body{
+	padding:15px !important;
+}
 .col-form-label{
 	font-weight:400 !important;
 }
@@ -281,15 +284,15 @@ if(in_array(1,$departmentSeqArr)){
                                             </div>
                                         </div>
                                         <div id='containerPermissionsDiv' class="panel-body i-checks">
-                                            <label class="col-lg-8 col-form-label bg-formLabel">Container Information  </label>
+                                            <label class="col-lg-8 col-form-label bg-formLabelDark">Container Information  </label>
 				                        	<div class="col-lg-4 ">
 				                        		<input type="checkbox" <?php echo $containerInformationChecked?> value="container_information" id="containerpermission" name="permissions[]"/>
 				                            </div>
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Delivery Information  </label>
+				                            <label class="col-lg-8 col-form-label bg-formLabelMauve m-t-xs">Delivery Information  </label>
 				                        	<div class="col-lg-4 m-t-xs">
 				                        		<input type="checkbox" <?php echo $containerDeliveryChecked?> value="container_delivery_information" id="containerdevilerypermission" name="permissions[]"/>
 				                            </div>
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Office Information  </label>
+				                            <label class="col-lg-8 col-form-label bg-formLabelBrown m-t-xs">Office Information  </label>
 				                        	<div class="col-lg-4 m-t-xs">
 				                        		<input type="checkbox" <?php echo $containerOfficeChecked?> value="container_office_information" id="containerofficepermission" name="permissions[]"/>
 				                            </div>
