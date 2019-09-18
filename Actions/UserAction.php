@@ -102,6 +102,7 @@ if($call == "loginUser"){
 		$sessionUtil->createUserSession($user,$userRoles,$departments);
 		$sessionUtil->setMyTeamMembers($teamusers);
 		$response["user"] = $userMgr->toArray($user);
+		$userMgr->updateLastLoggedInDate($user->getSeq());
 		$message = StringConstants::LOGIN_SUCCESSFULLY;
 		if(!empty($_SESSION['url'])){
 		  $redirect = $_SESSION['url'];
