@@ -89,6 +89,9 @@ class UserMgr{
 			$lastModifiedOn = $user["lastmodifiedon"];
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
 			$user["lastmodifiedon"] = $lastModifiedOn;
+			$lastLoggedInDate =  $user["lastloggedindate"];
+			$lastLoggedInDate = DateUtil::convertDateToFormatWithTimeZone($lastLoggedInDate, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+			$user["lastloggedindate"] = $lastLoggedInDate;
 			
 			array_push($arr,$user);
 		}
@@ -295,4 +298,9 @@ where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPE
 	    return $arr;
 	}
 	
+	public function updateLastLoggedInDate($seq){
+	    $colVal = array("lastloggedindate"=>new DateTime());
+	    $condition = array("seq" => $seq);
+	    self::$userDataStore->updateByAttributesWithBindParams($colVal,$condition);
+	}
 }
