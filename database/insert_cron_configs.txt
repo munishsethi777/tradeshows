@@ -1,0 +1,8 @@
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronPendingQCApprovalLastExecution','');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'pendingQCScheduleCron', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronSendQcPlannerReport', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'backups', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningWeeklyReport', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndWeeklyReport', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningDailyReport', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndDailyReport', '');
