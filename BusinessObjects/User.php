@@ -4,6 +4,7 @@ class User{
 	public static $className = "user";
 	
 	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon,$usertimezone;
+	private $lastloggedindate;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -82,6 +83,14 @@ class User{
 	public function getUserTimeZone(){
 	    return $this->usertimezone;
 	}
+	
+	public function setLastLoggedInDate($date_){
+	    $this->lastloggedindate = $date_;
+	}
+	public function getLastLoggedInDate(){
+	    return $this->lastloggedindate;
+	}
+	
 	function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);
