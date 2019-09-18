@@ -63,14 +63,15 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Email', datafield: 'email', width:"22%", cellsrenderer:actions},
+      { text: 'Email', datafield: 'email', width:"19%", cellsrenderer:actions},
       { text: 'User Type', datafield: 'usertype', width:"0%", hidden:true},
-      { text: 'FullName', datafield: 'fullname',width:"15%"},
-      { text: 'Roles', datafield: 'roles',width:"22%",filterable:false},
-      { text: 'QC Code', datafield: 'qccode',width:"10%"},
+      { text: 'FullName', datafield: 'fullname',width:"12%"},
+      { text: 'Roles', datafield: 'roles',width:"20%",filterable:false},
+      { text: 'QC Code', datafield: 'qccode',width:"7%"},
       { text: 'Enabled', datafield: 'isenabled',width:"7%",columntype:"checkbox"},
       { text: 'Notifications', datafield: 'issendnotifications',width:"8%",columntype:"checkbox"},
-      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"12%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
+      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"12%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'},
+      { text: 'Last LoggedIn', datafield: 'lastloggedindate',width:"12%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
     ]
    
     var source =
@@ -90,6 +91,7 @@ function loadGrid(){
                     { name: 'qccode', type: 'string' },
                     { name: 'createdon', type: 'date' },
                     { name: 'lastmodifiedon', type: 'date' },
+                    { name: 'lastloggedindate', type: 'date' },
                     { name: 'action', type: 'string' } 
                     ],                          
         url: 'Actions/UserAction.php?call=getAllUsers',
