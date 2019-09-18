@@ -17,7 +17,7 @@ $logger = Logger::getLogger ( "logger" );
 $configurationMgr = ConfigurationMgr::getInstance();
 $cronConfigs = $configurationMgr->getCronConfigs();
 try{
-    if($hours == 15){
+    if($hours == 10){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE);
         if($lastExeDay != $day){
             //QCNotificationsUtil::sendPendingQCApprovalNotification();
