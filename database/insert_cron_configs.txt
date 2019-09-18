@@ -1,8 +1,8 @@
 INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronPendingQCApprovalLastExecution','');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'pendingQCScheduleCron', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronSendQcPlannerReport', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'backups', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningWeeklyReport', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndWeeklyReport', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningDailyReport', '');
-INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndDailyReport', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'pendingQCScheduleCronLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronSendQcPlannerReportLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'backupsLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningWeeklyReportLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndWeeklyReportLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronBeginningDailyReportLastExecution', '');
+INSERT INTO `configurations` (`seq`, `configkey`, `configvalue`) VALUES (NULL, 'cronEndDailyReportLastExecution', '');
