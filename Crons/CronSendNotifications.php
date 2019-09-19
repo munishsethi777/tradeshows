@@ -20,7 +20,7 @@ try{
     if($hours == 10){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE);
         if($lastExeDay != $day){
-            //QCNotificationsUtil::sendPendingQCApprovalNotification();
+            QCNotificationsUtil::sendPendingQCApprovalNotification();
             $configurationMgr->saveConfiguration(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE,$currentDate);
             $logger->info("sendPendingQCApprovalNotification sent Successfully");
         }
@@ -56,7 +56,8 @@ try{
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
         $lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
         $flag = false;
-        if($hours == 12){
+        if(52
+            == 12){
             if($lastExeDay != $day && $lastExeHours != 12){
                 $flag= true;
             }
