@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php"
 class ContainerScheduleReportUtil
 {   
     private static $CS_DEP_SEQ = 4;
+    private static $timeZone = "America/Los_Angeles";
     private static function getHtml($subject,$detail){
         $content = file_get_contents("../CSReportEmailTemplate.php");
         $phAnValues = array();
@@ -27,8 +28,8 @@ class ContainerScheduleReportUtil
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
         $reportName = StringConstants::ETA_REPORT_NAME;
-        $currentDate = DateUtil::getDateWithInterval();
-        $dateWithInterval = DateUtil::getDateWithInterval(6);
+        $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
+        $dateWithInterval = DateUtil::getDateWithInterval(6,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y) . "_to_" . $dateWithInterval->format(self::$N_J_Y);
@@ -60,8 +61,8 @@ class ContainerScheduleReportUtil
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
         $reportName = StringConstants::EMPTY_RETURN_REPORT_NAME;
-        $currentDate = DateUtil::getDateWithInterval(1,null,true);
-        $dateWithInterval = DateUtil::getDateWithInterval(7,null,true);
+        $currentDate = DateUtil::getDateWithInterval(1,null,true,self::$timeZone);
+        $dateWithInterval = DateUtil::getDateWithInterval(7,null,true,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
@@ -198,7 +199,7 @@ class ContainerScheduleReportUtil
     }
     
     private static function sendDailyMail($subject,$reportName,$receiverPermission,$excelData,$emailLogType){
-        $currentDate = DateUtil::getDateWithInterval();
+        $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);

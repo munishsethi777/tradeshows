@@ -191,9 +191,12 @@ class DateUtil {
 	 * @param int $addDays [optional] days add in date.
 	 * @param DateTime $date [optional] DateTime object.By Default Current Date.
 	 */
-	public static function getDateInDBFormat($addDays = null,$date = null){
+	public static function getDateInDBFormat($addDays = null,$date = null,$timeZone = null){
 	    if(empty($date)){
-	        $date = new DateTime();
+	        if(!empty($timeZone)){
+	            $timeZone = new DateTimeZone($timeZone);
+	        }
+	        $date = new DateTime(null,$timeZone);
 	    }
 	    if(!empty($addDays)){
 	        $date = $date->modify("+" . $addDays . " days");
@@ -201,9 +204,12 @@ class DateUtil {
 	    return $date->format("Y-m-d");
 	}
 	
-	public static function getDateInDBFormatWithInterval($addDays = null,$date = null,$isSubtract = false){
+	public static function getDateInDBFormatWithInterval($addDays = null,$date = null,$isSubtract = false,$timeZone = null){
 	    if(empty($date)){
-	        $date = new DateTime();
+	        if(!empty($timeZone)){
+	            $timeZone = new DateTimeZone($timeZone);
+	        }
+	        $date = new DateTime(null,$timeZone);
 	    }
 	    if(!empty($addDays)){
 	        if($isSubtract){
@@ -216,9 +222,12 @@ class DateUtil {
 	    return $date->format("Y-m-d");
 	}
 	
-	public static function getDateWithInterval($addDays = null,$date = null,$isSubtract = false){
+	public static function getDateWithInterval($addDays = null,$date = null,$isSubtract = false,$timeZone = null){
 	    if(empty($date)){
-	        $date = new DateTime();
+	        if(!empty($timeZone)){
+	            $timeZone = new DateTimeZone($timeZone);
+	        }
+	        $date = new DateTime(null,$timeZone);
 	    }
 	    if(!empty($addDays)){
 	        if($isSubtract){

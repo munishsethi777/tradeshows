@@ -8,12 +8,13 @@ class ContainerScheduleDataStore extends BeanDataStore
     private static $containerScheduleDataStore;
     private static $currentDateInDBFormat;
     private static $select = "select * from containerschedules";
-
+    private static $timeZone = "America/Los_Angeles";
+    private static $timeZoneObj;
     public static function getInstance()
     {
         if (! self::$containerScheduleDataStore) {
             self::$containerScheduleDataStore = new ContainerScheduleDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
-            self::$currentDateInDBFormat = DateUtil::getDateInDBFormat();
+            self::$currentDateInDBFormat = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
             return self::$containerScheduleDataStore;
         }
         return self::$containerScheduleDataStore;
@@ -23,8 +24,8 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //ETA Report -- Weekly
     public function getETADatesPendingInNextSevenDays(){
-        $currentDate = DateUtil::getDateInDBFormat();
-        $currentDateWithInterval = DateUtil::getDateInDBFormat(7);
+        $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+        $currentDateWithInterval = DateUtil::getDateInDBFormat(6,null,self::$timeZone);
         $ETA_DATE_NEXT_SEVEN_DAYS_QUERY = self::$select . " where etadatetime >= '$currentDate' and etadatetime < '$currentDateWithInterval'";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($ETA_DATE_NEXT_SEVEN_DAYS_QUERY);
         return $containerSchedules;
@@ -32,8 +33,8 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //Empty Return Date past the “Empty LFD” -- Weekly
     public function getEmptyReturnDatePastEmptyLFD(){
-        $currentDate = DateUtil::getDateInDBFormatWithInterval(1,null,true);
-        $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true);
+        $currentDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
+        $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true,self::$timeZone);
         $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate < emptylfddate";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
@@ -41,7 +42,7 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //Daily Schedule Report - Daily 
     public function getPendingScheduleDeliveryDateForToday(){
-        $currentDate = DateUtil::getDateInDBFormat();
+        $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
         $query = self::$select . " where Date_format(scheduleddeliverydatetime, '%Y-%m-%d') = '$currentDate'";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
@@ -58,7 +59,7 @@ class ContainerScheduleDataStore extends BeanDataStore
     
     //Missing IDs Report - Daily
     public function getMissingIDReport(){
-        $dateIntervalWith2Days = DateUtil::getDateInDBFormatWithInterval(2,null,true);
+        $dateIntervalWith2Days = DateUtil::getDateInDBFormatWithInterval(2,null,true,self::$timeZone);
         $query = self::$select . " where etadatetime < '$dateIntervalWith2Days' and (isidscomplete is null or isidscomplete = 0)";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
