@@ -1,10 +1,12 @@
 <?php
 class StringConstants{
 	const UPCOMING_INSPECTION_SCHEDULE = "ALPINE BI | Upcoming Inspection Schedules";
+	const UPCOMING_INSPECTIONS = "ALPINE BI | Upcoming Inspections";
 	const UPCOMING_INSPECTION_APPOITMENT = "ALPINE BI | Upcoming Inspection Appointments";
 	const MISSING_INSPECTION_APPOINTMENT = "ALPINE BI | Missing Inspection Appointments";
 	const PENDING_QC_APPROVALS = "ALPINE BI | Pending QC Approvals";
-	const INCOMPLETED_SCHEDULES = "ALPINE BI | Incompleted Schedules";
+	const INCOMPLETED_SCHEDULES = "ALPINE BI | Late Inspection Report";
+	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
 	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "ALPINE BI | Container Schedule Dates Change Notification";
 	
@@ -115,7 +117,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "0";
-	const DEVELOPER_EMAIL_IDS  = "dhimankartik798@gmail.com,munishsethi777@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com,munishsethi777@gmail.com";
 	
 	
 }
