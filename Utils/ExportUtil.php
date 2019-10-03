@@ -1435,11 +1435,15 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 		$fromDateStr = $fromDate->format("n/j/y");
 		$toDateStr = $toDate->format("n/j/y");
 		foreach($pendingSchedules as $notificationType=>$qcSchedules){
-			$colval = "$notificationType due in next 14 days ($fromDateStr to $toDateStr)";
+		    $notificationTypeTitle = $notificationType;
+		    if($notificationName == StringConstants::UPCOMING_INSPECTIONS){
+		        $notificationTypeTitle = str_replace("Scheduled", "", $notificationTypeTitle);
+		    }
+			$colval = "$notificationTypeTitle due in next 14 days ($fromDateStr to $toDateStr)";
 			if($notificationName == StringConstants::MISSING_INSPECTION_APPOINTMENT){
 				$colval = "Missing $notificationType";
 			}else if($notificationName == StringConstants::INCOMPLETED_SCHEDULES){
-				$colval = "Incompleted $notificationType";
+				$colval = "Late $notificationType PO Report";
 			}
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $colval);
@@ -1484,7 +1488,7 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 			
 			$apNotificationTitle = str_replace("Scheduled", "Appointment", $notificationType);
 			$notificationTitle = $notificationType;
-			if($notificationName != StringConstants::UPCOMING_INSPECTION_SCHEDULE ){
+			if($notificationName != StringConstants::UPCOMING_INSPECTIONS ){
 				$notificationTitle = str_replace("Appointment", "Scheduled", $notificationType);
 			}
 			if($notificationName == StringConstants::INCOMPLETED_SCHEDULES ){
