@@ -113,6 +113,9 @@ if(isset($_REQUEST["id"])){
 	border-bottom:1px silver dashed;
 	padding:20px 10px;
 }
+.m-b{
+	margin-bottom:0px;
+}
 </style>
 </head>
 <body>
@@ -159,14 +162,6 @@ if(isset($_REQUEST["id"])){
                                 			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTrans()?>" 
                                 			name="trans" class="form-control">
 	                            </div>
-	                        </div>
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text" id="container" 
-                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getContainer()?>" 
-                                			name="container" class="form-control">
-	                            </div>
 	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA:</label>
 	                        	<div class="col-lg-4">
@@ -178,15 +173,13 @@ if(isset($_REQUEST["id"])){
 	                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $etaDatesArr[0]?></span>
 	                            	<?php }?>
 	                            </div>
-	                            
 	                        </div>
-	                         <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Terminal:</label>
+	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
 	                        	<div class="col-lg-4">
-	                        		<?php 
-                                	    $select = DropDownUtils::getTerminalTypes("terminal", "", $containerSchedule->getTerminal(),false);
-			                            echo $select;
-	                             	?>
+	                        		<input type="text" id="container" 
+                                			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getContainer()?>" 
+                                			name="container" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabelDark">ETA Notes:</label>
 	                        	<div class="col-lg-4">
@@ -194,9 +187,21 @@ if(isset($_REQUEST["id"])){
                                 			maxLength="1000" value="" 
                                 			name="etanotes" class="form-control">
 	                            </div>
+	                           
+	                            
 	                        </div>
+	                         
 							<div class="row">
 								<div class="col-lg-6">
+									<div class="form-group row">
+			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">Terminal:</label>
+			                        	<div class="col-lg-8">
+			                        		<?php 
+		                                	    $select = DropDownUtils::getTerminalTypes("terminal", "", $containerSchedule->getTerminal(),false);
+					                            echo $select;
+			                             	?>
+			                            </div>
+			                        </div>
 									<div class="form-group row">
 			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">Terminal Appointment:</label>
 			                        	<div class="col-lg-8">
@@ -217,7 +222,7 @@ if(isset($_REQUEST["id"])){
 			                        </div>
 								</div>
 								<div class="col-lg-6">
-									<div class="row" style="height:100px; overflow:scroll">
+									<div class="row" style="height:150px; overflow:scroll">
 			                       		<ul class="list-group" style="margin:0px">
 			                       			<?php foreach ($etaNotesArr as $etaNote){
 			                       			?>
@@ -236,7 +241,7 @@ if(isset($_REQUEST["id"])){
 						<div class="row">
 							<div class="col-lg-6 darkdiv" style="position:relative">
 								<div class="form-group row">
-		                     		<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Scheduled Pickup Date:</label>
+		                     		<label class="col-lg-4 col-form-label bg-formLabelDark" style="padding:0px">Empty Scheduled Pickup Date:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
 		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getEmptyScheduledPickUpDate()?>" name="emptyscheduledpickupdate" id="emptyscheduledpickupdate" class="form-control  dateControl">
@@ -255,7 +260,9 @@ if(isset($_REQUEST["id"])){
 		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
 		                            	<?php }?>
 		                            </div>
-		                            <label class="col-lg-4 col-form-label bg-formLabelDark">Custom Exam Terminal:</label>
+		                        </div>
+		                        <div class="form-group row">
+		                        	<label class="col-lg-4 col-form-label bg-formLabelDark">Custom Exam Terminal:</label>
 			                        <div class="col-lg-8">
 			                       		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getCustomExamTerminal()?>" name="customexamterminal" id="customexamterminal" class="form-control">
 		                            </div>
@@ -269,8 +276,8 @@ if(isset($_REQUEST["id"])){
 		                        </div>
 		                    </div>
 							<div class="col-lg-6 deliverydiv" style="position:relative">
-								<div class="form-group row">
-		                     		<label class="col-lg-4 col-form-label  bg-formLabelMauve">Scheduled Delivery:</label>
+								<div class="form-group row" style="margin-bottom:27px">
+		                     		<label class="col-lg-4 col-form-label bg-formLabelMauve">Scheduled Delivery:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
 		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getScheduledDeliveryDateTime()?>" name="scheduleddeliverydatetime" id="scheduleddeliverydatetime" class="form-control  dateTimeControl">
@@ -320,7 +327,7 @@ if(isset($_REQUEST["id"])){
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="row">
 							<div class="col-lg-6 darkdiv" style="position:relative">
-								 <div class="form-group row">
+								 <div class="form-group row" style="margin-bottom:29px">
 								 	<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Return Date:</label>
 		                        	<div class="col-lg-8">
 		                        		<div class="input-group date">
