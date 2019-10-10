@@ -10,6 +10,7 @@ $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
 $idCompletedChecked = "";
+$isHotContainer = "";
 $sampleReceivedChecked = "";
 $receivedOmsChecked = "";
 $sampleReceivedOmsChecked = "";
@@ -57,6 +58,9 @@ if(isset($_REQUEST["id"])){
  	}
  	if(!empty($containerSchedule->getIssamplesReceivedinWMS())){
  		$sampleReceivedWmsChecked = "checked";
+ 	}
+ 	if(!empty($containerSchedule->getIsHotContainer())){
+ 	    $isHotContainer = "checked";
  	}
  	$containerScheduleDatesMgr = ContainerScheduleDatesMgr::getInstance();
  	$containerScheduleDatesArr = $containerScheduleDatesMgr->findByContainerScheduleSeq($seq);
@@ -155,14 +159,6 @@ if(isset($_REQUEST["id"])){
                                 			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTrans()?>" 
                                 			name="trans" class="form-control">
 	                            </div>
-	                            
-	                            <label class="col-lg-2 col-form-label bg-formLabelDark">Warehouse:</label>
-	                        	<div class="col-lg-4">
-                                	<?php 
-                                	    $select = DropDownUtils::getWareHouseTypes("warehouse", "", $containerSchedule->getWarehouse(),false);
-			                            echo $select;
-	                             	?>
-	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
@@ -259,6 +255,17 @@ if(isset($_REQUEST["id"])){
 		                            		<span class="col-lg-12 b-r-xs"> &nbsp;</span>
 		                            	<?php }?>
 		                            </div>
+		                            <label class="col-lg-4 col-form-label bg-formLabelDark">Custom Exam Terminal:</label>
+			                        <div class="col-lg-8">
+			                       		<input type="text" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getCustomExamTerminal()?>" name="customexamterminal" id="customexamterminal" class="form-control">
+		                            </div>
+		                        </div>
+		                         <div class="form-group row">
+				                    <label class="col-lg-4 col-form-label bg-formLabelDark">Custom Exam Status:</label>
+			                        <div class="col-lg-8">
+			                        	<?php  $select = DropDownUtils::getCustomExampStatusTypes("customexamstatus", "", $containerSchedule->getCustomExamStatus(),false);
+    			                        echo $select;?>
+		                            </div>
 		                        </div>
 		                    </div>
 							<div class="col-lg-6 deliverydiv" style="position:relative">
@@ -289,7 +296,22 @@ if(isset($_REQUEST["id"])){
 	                        		<div class="col-lg-8">
 	                        			<input tabindex="<?php echo $deliveryTabIndex?>" type="text" maxLength="25" value="<?php echo $containerSchedule->getDeliveryGate()?>" name="deliverygate" id="deliverygate" class="form-control">
 									</div>
-	                            </div>
+							    </div>
+							    <div class="form-group row">
+							    	<label class="col-lg-4 col-form-label bg-formLabelMauve">Warehouse:</label>
+    	                        	<div class="col-lg-8">
+                                    	<?php 
+                                    	    $select = DropDownUtils::getWareHouseTypes("warehouse", "", $containerSchedule->getWarehouse(),false);
+    			                            echo $select;
+    	                             	?>
+    	                            </div>
+    	                         </div>
+    	                         <div class="form-group row i-checks">
+        	                    	<label class="col-lg-4 col-form-label bg-formLabelMauve">Hot Container:</label>
+        	                        <div class="col-lg-8">
+        								<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $isHotContainer?> name="ishotcontainer"/>	
+        							</div>
+        	                	</div>
 							</div>	
 						 </div>
 					</div>

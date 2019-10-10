@@ -11,6 +11,7 @@ require_once $ConstantsArray['dbServerUrl'] .'Managers/ContainerScheduleNotesMgr
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TruckerType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/WareHouseType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TerminalType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomExamStatusType.php");
 class ContainerScheduleMgr{
 	private static $containerScheduleMgr;
 	private static $dataStore;

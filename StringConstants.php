@@ -9,6 +9,7 @@ class StringConstants{
 	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
 	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "ALPINE BI | Container Schedule Dates Change Notification";
+	const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "ALPINE BI | Container Schedule Change Terminal Appointment Date";
 	
 	//Containder Schedule Report
 	const ETA_REPORT = "ALPINE BI Containers | ETA Report";

@@ -1766,7 +1766,7 @@ public static function exportEmailLogs($emailLogs){
 	->setKeywords("office 2007 openxml php")
 	->setCategory("Report");
 	$alphas = range('A', 'Z');
-	$alphas = ExportUtil::createColumnsArray("AF");
+	$alphas = ExportUtil::createColumnsArray("AI");
 	$count = 1;
 	$i = 0;
 	$colName = $alphas[$i++]. $count;
@@ -1780,10 +1780,6 @@ public static function exportEmailLogs($emailLogs){
 
 	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,"Trans");
-	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
-
-	$colName = $alphas[$i++]. $count;
-	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Warehouse");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 
 	$colName = $alphas[$i++]. $count;
@@ -1819,6 +1815,14 @@ public static function exportEmailLogs($emailLogs){
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Custom Exam Terminal");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Customer Exam Status");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Empty Return Date");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
@@ -1837,6 +1841,14 @@ public static function exportEmailLogs($emailLogs){
 	
 	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Delivery Gate");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Warehouse");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Hot Container");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	$colName = $alphas[$i++]. $count;
@@ -1914,21 +1926,21 @@ public static function exportEmailLogs($emailLogs){
 					'bold'  => true,
 					'color' => array('rgb' => 'FFFFFFFF'),
 			));
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")->applyFromArray($styleArray);
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:O1")->applyFromArray($styleArray);
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:N1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:O1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
 	->setRGB('000000');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("O1:S1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("P1:V1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
 	->setRGB('87cefa');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("T1:AF1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("W1:AI1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
@@ -1939,7 +1951,7 @@ public static function exportEmailLogs($emailLogs){
 	$top_vertical = PHPExcel_Style_Alignment::VERTICAL_TOP;
 	$sheet = $objPHPExcel->setActiveSheetIndex(0);
 	$sheet->getRowDimension('1')->setRowHeight(32);
-	$sheet->getStyle("A1:AE1")->getAlignment()->applyFromArray(
+	$sheet->getStyle("A1:AI1")->getAlignment()->applyFromArray(
 			array("vertical" => PHPExcel_Style_Alignment::VERTICAL_CENTER)
 			);;
 	if(!empty($containerSchedules)){
@@ -1958,11 +1970,7 @@ public static function exportEmailLogs($emailLogs){
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getTrans());
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
-				
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getWarehouse());
-			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
-				
+					
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getContainer());
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
@@ -1999,6 +2007,20 @@ public static function exportEmailLogs($emailLogs){
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyLFDDate);
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getCustomExamTerminal());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
+			$customExamStatus = "";
+			if(!empty($containerSchedule->getCustomExamStatus())){
+			    $customExamStatus = $containerSchedule->getCustomExamStatus();
+			    $customExamStatus = CustomExamStatusType::getValue($customExamStatus);
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customExamStatus);
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
 			$emptyReturnDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyReturnDate(),$fromformat,$toFormat);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$emptyReturnDate);
@@ -2018,6 +2040,18 @@ public static function exportEmailLogs($emailLogs){
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getDeliveryGate());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $containerSchedule->getWarehouse());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+			
+			$hotContainer = "NO";
+			if(!empty($containerSchedule->getIsHotContainer())){
+			    $hotContainer = "YES";
+			}
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $hotContainer);
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
 			$colName = $alphas[$i++]. $count;

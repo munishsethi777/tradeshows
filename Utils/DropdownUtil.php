@@ -7,6 +7,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/WareHouseType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TruckerType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomExamStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -105,6 +106,11 @@ class DropDownUtils {
 	
 	public static function getWareHouseTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = WareHouseType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	}
+	
+	public static function getCustomExampStatusTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = CustomExamStatusType::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	

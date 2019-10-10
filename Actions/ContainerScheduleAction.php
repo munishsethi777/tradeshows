@@ -62,6 +62,7 @@ if($call == "saveContainerSchedule"){
 			$containerScheduleNoteMgr->saveFromContainerSchedule($containerSchedule, $existingContainerSchedule);
 			$loggedInUserName = $sessionUtil->getUserLoggedInName();
 			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+			ContainerScheduleReportUtil::sendTerminalAppointmentChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 		}
 		$response["seq"] = $id;
 // 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
