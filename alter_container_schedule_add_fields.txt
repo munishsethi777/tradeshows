@@ -1,0 +1,1 @@
+ALTER TABLE `containerschedules` ADD `customexamterminal` VARCHAR(200) NULL AFTER `emptyscheduledpickupdate`, ADD `ishotcontainer` TINYINT NULL AFTER `customexamterminal`, ADD `customexamstatus` VARCHAR(50) NULL AFTER `ishotcontainer`;
