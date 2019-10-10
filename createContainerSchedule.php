@@ -313,7 +313,7 @@ if(isset($_REQUEST["id"])){
     	                             	?>
     	                            </div>
     	                         </div>
-    	                         <div class="form-group row i-checks">
+    	                         <div class="form-group row i-checksnormal">
         	                    	<label class="col-lg-4 col-form-label bg-formLabelMauve">Hot Container:</label>
         	                        <div class="col-lg-8">
         								<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $isHotContainer?> name="ishotcontainer"/>	
@@ -543,6 +543,10 @@ $(document).ready(function(){
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-brown',
 	   	radioClass: 'iradio_square-brown',
+	});
+	$('.i-checksnormal').iCheck({
+		checkboxClass: 'icheckbox_square-grey',
+	   	radioClass: 'iradio_square-grey',
 	});
 	$("#graphictype").chosen({width:"100%"});
 	$('.dateControl').datetimepicker({
