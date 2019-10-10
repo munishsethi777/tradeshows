@@ -37,7 +37,7 @@ class ContainerScheduleReportUtil
         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For this week for dates $currentDateStr to $dateWithIntervalStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
+        $roleName = Permissions::getName(Permissions::container_information); //WareHouse (Blue)
         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
@@ -274,7 +274,7 @@ class ContainerScheduleReportUtil
             $body = MailUtil::appendToEmailTemplateContainer($content);
             $toEmails = array("baljeetgaheer@gmail.com");
             $subject = StringConstants::CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION;
-            $roleName = Permissions::getName(Permissions::container_information); //WareHouse (Blue)
+            $roleName = Permissions::getName(Permissions::container_information); //outside vendor (Black)
             $userMgr = UserMgr::getInstance();
             $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
             $toEmails = array();
@@ -286,6 +286,59 @@ class ContainerScheduleReportUtil
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
                     $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_DATE_CHANGE_NOTIFICATION ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
+        
+    }
+    
+    public static function sendTerminalAppointmentChangedNotification($containerSchedule,
+        $existingContainerSchedule,$userName)
+    {
+        $terminalAppointmentDateTime = $containerSchedule->getTerminalAppointmentDatetime();
+        
+        $existingTerminalAppointmentDateTime = $existingContainerSchedule->getTerminalAppointmentDatetime();
+        
+        $awuRef = $containerSchedule->getAWUReference();
+        $html = "user <b>$userName</b> has updated a terminal appointment date for <b>AWU#$awuRef</b> with following date:<br>";
+        $hasChangedDate = false;
+        if(!empty($existingTerminalAppointmentDateTime)){
+            $existingTerminalAppointmentDateTime = DateUtil::StringToDateByGivenFormat(DateUtil::$DB_FORMAT_WITH_TIME,$existingTerminalAppointmentDateTime);
+        }
+        if ($terminalAppointmentDateTime != $existingTerminalAppointmentDateTime){
+            if(!empty($existingTerminalAppointmentDateTime)){
+                $existingTerminalAppointmentDateTime = $existingTerminalAppointmentDateTime->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $existingTerminalAppointmentDateTime = "Empty";
+            }
+            if(!empty($terminalAppointmentDateTime)){
+                $terminalAppointmentDateTime = $terminalAppointmentDateTime->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $terminalAppointmentDateTime = "Empty";
+            }
+            $html .= "Terminal Appointment Date from <b>$existingTerminalAppointmentDateTime</b> to <b>$terminalAppointmentDateTime</b><br>";
+            $hasChangedDate = true;
+        }
+        if($hasChangedDate){
+            $phAnValues = array();
+            $phAnValues["DETAIL"] = $html;
+            $content = file_get_contents("../CSChangedAlpinePickupDateEmailTemplate.php");
+            $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $body = MailUtil::appendToEmailTemplateContainer($content);
+            $toEmails = array("baljeetgaheer@gmail.com");
+            $subject = StringConstants::CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE;
+            $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
+            $userMgr = UserMgr::getInstance();
+            $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
+            $toEmails = array();
+            foreach ($users as $user){
+                array_push($toEmails,$user->getEmail());
+            }
+            $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
+            if($bool){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE ,$user->getEmail(), null,$user->getSeq());
                 }
             }
         }

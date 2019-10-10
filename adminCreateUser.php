@@ -284,7 +284,7 @@ if(in_array(1,$departmentSeqArr)){
                                             </div>
                                         </div>
                                         <div id='containerPermissionsDiv' class="panel-body i-checks">
-                                            <label class="col-lg-8 col-form-label bg-formLabelDark">Container Information  </label>
+                                            <label class="col-lg-8 col-form-label bg-formLabelDark">Container Information<small>(Outside Vendor)</small></label>
 				                        	<div class="col-lg-4 ">
 				                        		<input type="checkbox" <?php echo $containerInformationChecked?> value="container_information" id="containerpermission" name="permissions[]"/>
 				                            </div>

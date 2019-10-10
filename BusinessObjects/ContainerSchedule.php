@@ -41,6 +41,9 @@ class ContainerSchedule {
 	private $createdon;
 	private $lastmodifiedon;
 	private $emptyscheduledpickupdate;
+	private $customexamterminal;
+	private $customexamstatus;
+	private $ishotcontainer;
 	public function setSeq($seq) {
 		$this->seq = $seq;
 	}
@@ -283,6 +286,28 @@ class ContainerSchedule {
 	public function getEmptyScheduledPickUpDate(){
 	    return $this->emptyscheduledpickupdate;
 	}
+	
+	public function setCustomExamTerminal($customexamterminal_){
+	    $this->customexamterminal = $customexamterminal_;
+	}
+	public function getCustomExamTerminal(){
+	    return $this->customexamterminal;
+	}
+	
+	public function setCustomExamStatus($customerexamstatus_){
+	    $this->customexamstatus = $customerexamstatus_;
+	}
+	public function getCustomExamStatus(){
+	    return $this->customexamstatus;
+	}
+	
+	public function setIsHotContainer($ishotcontainer_){
+	    $this->ishotcontainer = $ishotcontainer_;
+	}
+	public function getIsHotContainer(){
+	    return $this->ishotcontainer;
+	}
+	
 	
 	public function from_array($array) {
 		foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
