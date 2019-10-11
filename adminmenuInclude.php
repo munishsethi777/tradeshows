@@ -68,7 +68,7 @@ if($file == "dashboard.php"){
 	$manageContainerSchedules = "active";
 }elseif($file == "manageEmailLogs.php"){
     $manageEmailLogs ="active";
-}elseif($file == "manageTeams.php"){
+}elseif($file == "manageTeams.php" || $file == "createTeam.php"){
     $manageTeams = "active";
 }
 
@@ -239,6 +239,20 @@ if($file == "dashboard.php"){
 	                   		</a>
 	                	</li>
                 	<?php }?>
+                	<?php if(in_array(DepartmentType::Users,$departments)){?> 
+                    	<li class="<?php echo $isManageUsers;?>">
+                            <a href="adminManageUsers.php"><i class="fa fa-group"></i> 
+                            	<span class="nav-label">Manage Users</span>  
+                            </a>
+                    	</li>
+                	<?php }?>
+                	<?php if(in_array(DepartmentType::Teams,$departments)){?> 
+                        <li class="<?php echo $manageTeams;?>">
+                            <a href="manageTeams.php"><i class="fa fa-group"></i> 
+                            	<span class="nav-label">Manage Teams</span>  
+                            </a>
+                        </li>
+                    <?php }?>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  
