@@ -305,19 +305,7 @@ if(in_array(1,$departmentSeqArr)){
 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Departments</label>
 	                        </div>
 	                    	<div class="form-group row i-checks">
-	                    		<?php foreach($departments as $department){
-	                    				$checked = "";
-	                    				foreach($userDepartments as $userDepartment){
-	                    					if($userDepartment->getDepartmentSeq() == $department->getSeq()){
-	                    						$checked = "checked";
-	                    					}
-	                    				}
-	                    				?>
-		                       		<label class="col-lg-2 col-form-label bg-formLabel"><?php echo $department->getTitle();?></label>
-		                        	<div class="col-lg-2">
-		                        		<input type="checkbox" name="dep<?php echo $department->getSeq();?>" <?php echo $checked?>/>
-		                            </div>
-	                            <?php }?>
+	                    		
 	                        </div> 
 	                        -->    
 	                 	 
