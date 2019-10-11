@@ -5,4 +5,6 @@ class DepartmentType extends BasicEnum{
 	const Graphics_Logs = "Graphics Logs";
 	const Item_Specs = "Item Specs";
 	const Container_Schedules = "Container Schedules";
+	const Users = "Users";
+	const Teams = "Teams";
 }
