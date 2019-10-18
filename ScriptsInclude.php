@@ -483,6 +483,20 @@ $(document).ready(function() {
             	 });
         	});
         	filterQstr += "&filterscount="+f;
+        	var sortinformation = $("#"+gridId).jqxGrid('getsortinformation');
+        	// The sortcolumn represents the sort column's datafield. If there's no sort column, the sortcolumn is null.                            
+        	var sortcolumn = sortinformation.sortcolumn;
+        	if(sortcolumn != null){
+            	// The sortdirection is an object with two fields: 'ascending' and 'descending'. Ex: { 'ascending': true, 'descending': false }                            
+            	var sortdirection = sortinformation.sortdirection;
+            	var sortOrder = "desc";
+            	if(sortdirection.ascending == true){
+                	sortOrder = "asc";
+            	}
+            	var sortQstr = "&sortdatafield="+sortcolumn+ "&sortorder=" + sortOrder;
+            	filterQstr += sortQstr
+        	}
+                
         	return filterQstr;
         }
 </script>

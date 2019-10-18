@@ -286,6 +286,10 @@ public static function exportCustomers($customers){
 		$count = 2;
 		$i = 0;
 		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "ID");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		
+		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		$colName = $alphas[$i++]. $count;
@@ -347,6 +351,9 @@ public static function exportCustomers($customers){
 		$count = 3;
 		$i = 0;
 		foreach($qcSchedules as $qcSchedule){
+		    $colName = $alphas[$i++]. $count;
+		    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["seq"]);
+		    
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["qccode"]);
 	
