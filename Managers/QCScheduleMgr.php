@@ -52,6 +52,11 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
     }
+    
+    public function bulkDeleteByImport($filePath){
+        $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
+        return $qcScheduleImportUtil->deleteByImport($filePath);
+    }
 	
 	public function importQCSchedules($file,$isUpdate,$updateItemNos){
 		$inputFileName = $file['tmp_name'];
@@ -76,7 +81,7 @@ class QCScheduleMgr{
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
 		//$query = "select classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq ";
-		$query = "select classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
+		$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
 		
 		if($isSessionGeneralUser){
 			if(count($myTeamMembersArr) == 0){

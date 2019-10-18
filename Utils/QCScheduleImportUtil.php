@@ -6,6 +6,7 @@ class QCScheduleImportUtil
 {
     private $fieldNames;
     private static $qcImportUtil;
+    private $BULK_DELETE_COUNT = "100";
     private static $ACTUAL_FIELDS_NAMES = array(
         "qc",
         "classcode",
@@ -77,7 +78,51 @@ class QCScheduleImportUtil
             throw $e;
         }
     }
-
+    
+    public function deleteByImport($filePath)
+    {
+        if(file_exists($filePath)){
+            $inputFileName = $filePath;
+            $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+            $sheet = $objPHPExcel->getActiveSheet();
+            $maxCell = $sheet->getHighestRowAndColumn();
+            $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
+            try {
+              $this->bulkDelete($sheetData);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }else{
+            echo "File Not found";
+        }
+    }
+    
+    
+    public function bulkDelete($sheetData){
+        $qcScheduleMgr = QCScheduleMgr::getInstance();
+        $totalCount = 0;
+        $idArr = array();
+        $count = 0;
+        $lastKey = count($sheetData)-1;
+        foreach ($sheetData as $key=>$data) {
+            if ($key == 0) {
+                continue;
+            }
+            $id = $data[0];
+            array_push($idArr,$id);
+            $count++;
+            if($count == $this->BULK_DELETE_COUNT || $lastKey == $key){
+                $ids = implode(",", $idArr);
+                $qcScheduleMgr->deleteByIds($ids);
+                echo $count . " QCSchedules deleted sucessfully. Seq - $ids <br>";
+                $totalCount += $count;
+                $count = 0;
+                $idArr = array();
+            }
+        }
+        $messages = "Total " . $totalCount . " QCSchedules deleted sucessfully";
+        echo $messages;
+    }
     
     public function marksAsCompleted($sheetData){
         $this->fieldNames = $sheetData[0];
