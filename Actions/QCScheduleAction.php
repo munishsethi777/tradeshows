@@ -136,6 +136,18 @@ if($call == "importQCSchedules"){
 	}
 	$response["incorrectPassword"] = $incorrectPassword;
 }
+
+if($call == "bulkDelete"){
+    try{
+        $filePath = "/Users/baljeetgaheer/Downloads/QCSchedules-RURALKING to delete_copy.xlsx";
+        $response = $qcScheduleMgr->bulkDeleteByImport($filePath);
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+        echo "Error - $message";
+    }
+}
+
 if($call == "getAllQCSchedules"){
 	$qcSchedulesJson = $qcScheduleMgr->getQCScheudlesForGrid();
 	echo json_encode(utf8ize($qcSchedulesJson));
