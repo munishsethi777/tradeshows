@@ -72,7 +72,7 @@ class QCScheduleMgr{
 	}
 	
 	
-	public function exportQCSchedules($queryString){
+	public function exportQCSchedules($queryString,$qcscheduleSeqs){
 		$output = array();
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
@@ -90,8 +90,14 @@ class QCScheduleMgr{
 				$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
 				$query .= " where users.seq in($myTeamMembersCommaSeparated)";
 			}
+			if(!empty($qcscheduleSeqs)){
+			    $query .= " and qcschedules.seq in ($qcscheduleSeqs)";
+			}
+		}else{
+		    if(!empty($qcscheduleSeqs)){
+		        $query .= " where qcschedules.seq in ($qcscheduleSeqs)";
+		    }
 		}
-		
 		$qcSchedules = array();
 		$qcSchedules = self::$dataStore->executeQuery($query,true);
 		ExportUtil::exportQCSchedules($qcSchedules);
