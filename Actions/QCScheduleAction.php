@@ -139,7 +139,7 @@ if($call == "importQCSchedules"){
 
 if($call == "bulkDelete"){
     try{
-        $filePath = "/Users/baljeetgaheer/Downloads/QCSchedules-RURALKING to delete_copy.xlsx";
+        $filePath = "/Users/baljeetgaheer/Downloads/QCSchedules-RURALKING to delete_copy1.xlsx";
         $response = $qcScheduleMgr->bulkDeleteByImport($filePath);
     }catch(Exception $e){
         $success = 0;
@@ -156,7 +156,8 @@ if($call == "getAllQCSchedules"){
 if($call == "export"){
 	try{
 		$queryString = $_GET["queryString"];
-		$response = $qcScheduleMgr->exportQCSchedules($queryString);
+		$qcscheduleSeqs = $_GET["qcscheduleseq"];
+		$response = $qcScheduleMgr->exportQCSchedules($queryString,$qcscheduleSeqs);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

@@ -2,6 +2,7 @@
 class ExportUtil{
 	private static $VERTICAL = "vertical";
 	private static $HORIZONTAL = "horizontal";
+	public static $EXPORT_ROW_LIMIT = 5000;
 public static function exportCustomers($customers){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
@@ -352,7 +353,7 @@ public static function exportCustomers($customers){
 		$i = 0;
 		foreach($qcSchedules as $qcSchedule){
 		    $colName = $alphas[$i++]. $count;
-		    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["seq"]);
+		    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["scheduleseq"]);
 		    
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["qccode"]);

@@ -2,6 +2,7 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/QcscheduleApproval.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php");
@@ -13,6 +14,7 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $permissionUtil = PermissionUtil::getInstance();
 $hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
 $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
+$exportLimit = ExportUtil::$EXPORT_ROW_LIMIT;
 //$qcscheduleseq = "";
 
 /*$QcscheduleApprovals = "";
@@ -122,7 +124,6 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
    </div>
    <form id="form1" name="form1" method="GET" action="Actions/QCScheduleAction.php">
      	<input type="hidden" id="call" name="call" value="export" />
-     	<input type="hidden" id="queryString" name="queryString"/>
    </form>
    <form id="form2" name="form2" method="post" action="adminCreateQCSchedule.php" target='_blank'>
     	<input type="hidden" id="id" name="id"/>
@@ -133,7 +134,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
     	<input type="hidden" id="call" name="call" value="exportPlanner" />
     	<input type="hidden" id="isCompleted" name="isCompleted" value="1" />
    </form> 
-    
+    <?include "exportInclude.php"?>
 	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
     	<div class="modal-content animated fadeInRight">
@@ -337,6 +338,9 @@ $(document).ready(function(){
     $('#daterange').on('apply.daterangepicker', function(ev, picker){
     	applyFilter();
     });
+    $("#exportBtn").click(function(e){
+		exportFinal(e,this);
+	});
  });
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
@@ -449,10 +453,11 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
         		}
     			$("#updateQCScheduleApprovalModal").modal('show');
 		    }
-     });
-
-			 
+     });			 
 }
+var state;
+var isSelectAll = false;
+var selectedRows = [];
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
@@ -479,6 +484,7 @@ function loadGrid(){
     	html += "</div>";
         return html;
     }
+
 	var renderCompletedColumn = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var isCompleted = data["iscompleted"];
@@ -487,8 +493,8 @@ function loadGrid(){
         }else{
         	return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:red;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-square-o"></i></div>';
         }	
-        
     }
+    
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
@@ -532,7 +538,9 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
-        datafields: [{name: 'seq', type: 'integer' },
+        datafields: [
+        			{name: 'id', type: 'integer' },
+            		{name: 'seq', type: 'integer' },
                     { name: 'iscompleted', type: 'boolean' }, 
                     { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
@@ -604,7 +612,6 @@ function loadGrid(){
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
-		showfilterrow: false,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -612,9 +619,10 @@ function loadGrid(){
 		enabletooltips: true,
 		columnsresize: true,
 		columnsreorder: true,
-		showstatusbar: true,
-		virtualmode: true,
 		selectionmode: 'checkbox',
+		showstatusbar: true,
+		showtoolbar: true,
+		virtualmode: true,
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
@@ -759,28 +767,89 @@ function loadGrid(){
             downloadButton.click(function (event) {
             	location.href = ("files/QCSchedules_template.xlsx");
             });
+            $("#qcscheduleGrid").bind('rowselect', function (event) {
+				var selectedRowIndex = event.args.rowindex;
+				var pageSize = event.args.owner.rows.records.length - 1;
+				if($.isArray(selectedRowIndex)){
+					if(isSelectAll){
+						isSelectAll = false;
+					} else{
+						isSelectAll = true;
+					}
+					$('#qcscheduleGrid').jqxGrid('clearselection');
+					if(isSelectAll){
+						for (i = 0; i <= pageSize; i++) {
+							var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
+							$('#qcscheduleGrid').jqxGrid('selectrow', index);
+						}
+					}
+				}
+			});
         }
     });
+    $('#qcscheduleGrid').on('rowselect', function (event) 
+			{
+			    var args = event.args;
+			    var rowBoundIndex = args.rowindex;
+			    var rowData = args.row;
+			    selectedRows[rowBoundIndex] = rowData;
+			});
+	$('#qcscheduleGrid').on('rowunselect', function (event) 
+			{
+				var args = event.args;
+				var rowBoundIndex = args.rowindex;
+				delete selectedRows[rowBoundIndex];
+			});
 }
+
+function exportFinal(e,btn){
+	var exportOption = $('input[name=exportOption]:checked').val()
+	var rowscount = 0;
+	var limit = <?php echo $exportLimit?>;
+	if(exportOption == "selectedRows"){
+		var selectedRowIndexes = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
+		if(selectedRowIndexes.length > 0){
+		}else{
+			noRowSelectedAlert();
+			return;
+		}
+		rowscount = selectedRowIndexes.length;
+		if(rowscount > limit){
+			 bootbox.alert("Cannot export more than <?php echo $exportLimit?> rows!", function() {});	
+			 return;		
+		}
+		var ids = [];
+		$.each(selectedRowIndexes, function(index , value){
+			if(value != -1){
+				var dataRow = selectedRows[value]//$("#qcscheduleGrid").jqxGrid('getrowdata', value);
+				ids.push(dataRow.id);
+			}
+		});
+		$("#qcscheduleseq").val(ids);
+		
+		
+	}else{
+		var datainformation = $('#qcscheduleGrid').jqxGrid('getdatainformation');
+		rowscount = datainformation.rowscount;
+		$("#qcscheduleseq").val("");
+		if(rowscount > limit){
+			 bootbox.alert("Cannot export more than <?php echo $exportLimit?> rows!", function() {});	
+			 return;		
+		}
+	}
+	e.preventDefault();
+	var l = Ladda.create(btn);
+	l.start();
+	$('#exportForm').submit();
+	l.stop();
+	$('#exportModalForm').modal('hide');
+	$('#qcscheduleGrid').jqxGrid('clearselection');
+}
+
 function exportItemsConfirm(filterString){
-	bootbox.confirm({
-	    message: "Do you want to export items?",
-	    buttons: {
-	        confirm: {
-	            label: 'Yes',
-	            className: 'btn-success'
-	        },
-	        cancel: {
-	            label: 'No',
-	            className: 'btn-danger'
-	        }
-	    },
-	    callback: function (result) {
-		    if(result){
-				exportItems(filterString); 
-		    }
-	    }
-	});
+	var selectedRowIndexes = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
+	$('#exportModalForm').modal('show');
+	$("#queryString").val(filterString);
 }
 
 function exportItems(filterString){
