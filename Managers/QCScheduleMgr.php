@@ -554,6 +554,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 				$approval = QCScheduleApprovalType::getValue($approval);
 			}
 			$qcSchedule["responsetype"] = $approval;
+			$qcSchedule["id"] = $qcSchedule["seq"];
 			$qcSchedule["isSv"] = $isSessionSV;
 			$lastModifiedOn = $qcSchedule["lastmodifiedon"];
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);

@@ -455,6 +455,9 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
 		    }
      });			 
 }
+var state;
+var isSelectAll = false;
+var selectedRows = [];
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
@@ -535,7 +538,9 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'lastmodifiedon',
         sortdirection: 'desc',
-        datafields: [{name: 'seq', type: 'integer' },
+        datafields: [
+        			{name: 'id', type: 'integer' },
+            		{name: 'seq', type: 'integer' },
                     { name: 'iscompleted', type: 'boolean' }, 
                     { name: 'qccode', type: 'string' }, 
                     { name: 'classcode', type: 'string' },
@@ -607,7 +612,6 @@ function loadGrid(){
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
-		showfilterrow: false,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -615,9 +619,10 @@ function loadGrid(){
 		enabletooltips: true,
 		columnsresize: true,
 		columnsreorder: true,
-		showstatusbar: true,
-		virtualmode: true,
 		selectionmode: 'checkbox',
+		showstatusbar: true,
+		showtoolbar: true,
+		virtualmode: true,
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
@@ -762,12 +767,45 @@ function loadGrid(){
             downloadButton.click(function (event) {
             	location.href = ("files/QCSchedules_template.xlsx");
             });
+            $("#qcscheduleGrid").bind('rowselect', function (event) {
+				var selectedRowIndex = event.args.rowindex;
+				var pageSize = event.args.owner.rows.records.length - 1;
+				if($.isArray(selectedRowIndex)){
+					if(isSelectAll){
+						isSelectAll = false;
+					} else{
+						isSelectAll = true;
+					}
+					$('#qcscheduleGrid').jqxGrid('clearselection');
+					if(isSelectAll){
+						for (i = 0; i <= pageSize; i++) {
+							var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
+							$('#qcscheduleGrid').jqxGrid('selectrow', index);
+						}
+					}
+				}
+			});
         }
     });
+    $('#qcscheduleGrid').on('rowselect', function (event) 
+			{
+			    var args = event.args;
+			    var rowBoundIndex = args.rowindex;
+			    var rowData = args.row;
+			    selectedRows[rowBoundIndex] = rowData;
+			});
+	$('#qcscheduleGrid').on('rowunselect', function (event) 
+			{
+				var args = event.args;
+				var rowBoundIndex = args.rowindex;
+				delete selectedRows[rowBoundIndex];
+			});
 }
 
 function exportFinal(e,btn){
 	var exportOption = $('input[name=exportOption]:checked').val()
+	var rowscount = 0;
+	var limit = <?php echo $exportLimit?>;
 	if(exportOption == "selectedRows"){
 		var selectedRowIndexes = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
 		if(selectedRowIndexes.length > 0){
@@ -775,15 +813,29 @@ function exportFinal(e,btn){
 			noRowSelectedAlert();
 			return;
 		}
-	}else{
-		var datainformation = $('#qcscheduleGrid').jqxGrid('getdatainformation');
-		var rowscount = datainformation.rowscount;
-		var limit = <?php echo $exportLimit?>;
+		rowscount = selectedRowIndexes.length;
 		if(rowscount > limit){
 			 bootbox.alert("Cannot export more than <?php echo $exportLimit?> rows!", function() {});	
 			 return;		
 		}
+		var ids = [];
+		$.each(selectedRowIndexes, function(index , value){
+			if(value != -1){
+				var dataRow = $("#qcscheduleGrid").jqxGrid('getrowdata', value);
+				ids.push(dataRow.id);
+			}
+		});
+		$("#qcscheduleseq").val(ids);
+		
+		
+	}else{
+		var datainformation = $('#qcscheduleGrid').jqxGrid('getdatainformation');
+		rowscount = datainformation.rowscount;
 		$("#qcscheduleseq").val("");
+		if(rowscount > limit){
+			 bootbox.alert("Cannot export more than <?php echo $exportLimit?> rows!", function() {});	
+			 return;		
+		}
 	}
 	e.preventDefault();
 	var l = Ladda.create(btn);
@@ -791,20 +843,12 @@ function exportFinal(e,btn){
 	$('#exportForm').submit();
 	l.stop();
 	$('#exportModalForm').modal('hide');
-	showResponseToastr(data,"exportModalForm","exportForm","exportMainDiv");
+	$('#qcscheduleGrid').jqxGrid('clearselection');
 }
 
 function exportItemsConfirm(filterString){
-	$('#exportModalForm').modal('show');
 	var selectedRowIndexes = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
-	var ids = [];
-	$.each(selectedRowIndexes, function(index , value){
-		if(value != -1){
-			var dataRow = $("#qcscheduleGrid").jqxGrid('getrowdata', value);
-			ids.push(dataRow.seq);
-		}
-	});
-	$("#qcscheduleseq").val(ids);
+	$('#exportModalForm').modal('show');
 	$("#queryString").val(filterString);
 }
 
