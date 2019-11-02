@@ -821,7 +821,7 @@ function exportFinal(e,btn){
 		var ids = [];
 		$.each(selectedRowIndexes, function(index , value){
 			if(value != -1){
-				var dataRow = $("#qcscheduleGrid").jqxGrid('getrowdata', value);
+				var dataRow = selectedRows[value]//$("#qcscheduleGrid").jqxGrid('getrowdata', value);
 				ids.push(dataRow.id);
 			}
 		});
