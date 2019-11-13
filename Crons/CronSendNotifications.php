@@ -29,16 +29,27 @@ try{
         $lastExeDay = getLastExecutionDate(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE);
         if($lastExeDay != $day){
             //Admin Notfications
-            QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
-            QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::SUPERVISOR);
+//             QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
+//             QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::SUPERVISOR);
+//             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
+//             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
+            
+            //QC Notifications
+//             QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
+//             QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
+//             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
+//             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
+            
+            //Admin Notfications
+            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR);
             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
             
             //QC Notifications
-            QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
-            QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
+            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::QC);
             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
+            
             $configurationMgr->saveConfiguration(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE,$currentDate);
             $logger->info("sendPendingQCScheduleNotifications sent Successfully");
         }
@@ -56,8 +67,7 @@ try{
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
         $lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
         $flag = false;
-        if(52
-            == 12){
+        if($hours == 12){
             if($lastExeDay != $day && $lastExeHours != 12){
                 $flag= true;
             }
