@@ -119,9 +119,9 @@ class QCNotificationsUtil{
 	    }elseif($userType == UserType::QC){
 	        $qcUsers = $userMgr->getQCsForQCReport();
 	        foreach($qcUsers as $user){
-	            $finalInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFinalInspectionDate($user->getSeq());
-	            $middleInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForMiddleInspectionDate($user->getSeq());
-	            $firstInspectionQcSchedules = $qcScheduleMgr->getPendingShechededForFirstInspectionDate($user->getSeq());
+	            $finalInspectionQcSchedules = $qcScheduleMgr->getPendingForFinalInspectionDate($user->getSeq());
+	            $middleInspectionQcSchedules = $qcScheduleMgr->getPendingForMiddleInspectionDate($user->getSeq());
+	            $firstInspectionQcSchedules = $qcScheduleMgr->getPendingForFirstInspectionDate($user->getSeq());
 	            $pendingSchedules[NotificationType::SC_FINAL_INPECTION_DATE] = $finalInspectionQcSchedules;
 	            $pendingSchedules[NotificationType::SC_MIDDLE_INSPECTION_DATE] = $middleInspectionQcSchedules;
 	            $pendingSchedules[NotificationType::SC_FIRST_INSPECTION_DATE] = $firstInspectionQcSchedules;
