@@ -26,7 +26,6 @@ if($call == "saveContainerSchedule"){
 		if(empty($containerSchedule->getAWUReference())){
 		    throw new Exception(StringConstants::AWU_REFERENCE_NOT_EMPTY);
 		}
-		
 		$existingContainerSchedule = new ContainerSchedule();
 		$seq = 0;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){

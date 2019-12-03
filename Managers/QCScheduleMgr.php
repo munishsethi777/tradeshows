@@ -80,8 +80,9 @@ class QCScheduleMgr{
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-		//$query = "select classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq ";
-		$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
+		$query = "select qcschedules.seq as scheduleseq,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		//$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
 		
 		if($isSessionGeneralUser){
 			if(count($myTeamMembersArr) == 0){
@@ -99,7 +100,7 @@ class QCScheduleMgr{
 		    }
 		}
 		$qcSchedules = array();
-		$qcSchedules = self::$dataStore->executeQuery($query,true);
+		$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
 		ExportUtil::exportQCSchedules($qcSchedules);
 	}
 	

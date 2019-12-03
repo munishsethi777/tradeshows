@@ -2,10 +2,12 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/GraphicLogReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
@@ -41,6 +43,7 @@ if($call == "saveGraphicLog"){
 		$isUsaNotesUpdated = false;
 		$isChinaNotesUpdated = false;
 		$isGraphicNotesUpddates = false;
+		$isGraphicStatusChanged = false;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = StringConstants::GRAPHIC_LOG_UPDATED_SUCCESSFULLY;
@@ -48,6 +51,9 @@ if($call == "saveGraphicLog"){
 			$isUsaNotesUpdated = $graphicLog->getUSANotes() != $existingGraphicLog->getUSANotes();
 			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
 			$isGraphicNotesUpddates = $graphicLog->getGraphicsToChinaNotes() != $existingGraphicLog->getGraphicsToChinaNotes();
+			$isGraphicStatusChanged = $graphicLog->getGraphicStatus() != $existingGraphicLog->getGraphicStatus();
+			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
+			$containerScheduleNoteMgr->saveFromGraphicLog($graphicLog, $existingGraphicLog);
 		}
 		$graphicLog->setSeq($seq);
 		if(empty($graphicLog->getUserSeq())){
@@ -97,14 +103,23 @@ if($call == "saveGraphicLog"){
 			$graphicLog->setLabelWidth(null);
 			$graphicLog->setLabelHeight(null);
 		}
+		if($isGraphicStatusChanged){
+		    $graphicLog->setGraphicStatusChangeDate(new DateTime());
+		}
 		$id = $graphicLogMgr->save($graphicLog);
 		if($id > 0){
+		    if($isGraphicStatusChanged){
+		        $graphicStatus = $graphicLog->getGraphicStatus();
+		        if($graphicStatus == GraphicStatusType::getName(GraphicStatusType::MISSING_INFO_FROM_CHINA)){
+		            GraphicLogReportUtil::sendGraphicLogGraphicStatusChangedNotification($graphicLog);
+		        }
+		    }
 			if($isUsaNotesUpdated){
-				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"USA");
+			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"USA");
 			}else if($isChinaNotesUpdated){
-				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"CHINA");
+			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"CHINA");
 			}else if($isGraphicNotesUpddates){
-				QCNotificationsUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"GRAPHIC");
+			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"GRAPHIC");
 			}
 		}
 	}catch(Exception $e){

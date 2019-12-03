@@ -1,0 +1,12 @@
+[29-May-2019 17:18:23 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:24 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:24 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:24 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:24 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:24 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73
+[29-May-2019 17:18:43 Asia/Kolkata] PHP Warning:  file_get_contents(../emailTemplate.php): failed to open stream: No such file or directory in /home/satyainf/public_html/tradeshows/Utils/MailUtil.php on line 73

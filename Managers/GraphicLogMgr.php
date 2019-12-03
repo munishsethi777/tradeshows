@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicStatusType.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
@@ -14,12 +15,16 @@ class GraphicLogMgr{
 	private $dataTypeErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 27;
+	private static $currentDateWith7daysInterval;
+	private static $timeZone = "America/Los_Angeles";
 	public static function getInstance()
 	{
 		if (!self::$graphicLogMgr)
 		{
 			self::$graphicLogMgr = new GraphicLogMgr();
 			self::$dataStore = new BeanDataStore(GraphicsLog::$className, GraphicsLog::$tableName);
+			self::$currentDateWith7daysInterval = DateUtil::getDateInDBFormat(7,null,self::$timeZone);
+			
 		}
 		return self::$graphicLogMgr;
 	}
@@ -388,6 +393,8 @@ class GraphicLogMgr{
 		$graphicLog->setDraftDate($this->getDateStr($graphicLog->getDraftDate()));
 		$graphicLog->setBuyerReviewReturnDate($this->getDateStr($graphicLog->getBuyerReviewReturnDate()));
 		$graphicLog->setManagerReviewReturnDate($this->getDateStr($graphicLog->getManagerReviewReturnDate()));
+		$graphicLog->setRobbyReviewDate($this->getDateStr($graphicLog->getRobbyReviewDate()));
+		$graphicLog->setGraphicStatusChangeDate($this->getDateTimeStr($graphicLog->getGraphicStatusChangeDate()));
 		return $graphicLog;
 	}
 	
@@ -395,60 +402,76 @@ class GraphicLogMgr{
 		return self::$dataStore->deleteInList($ids);
 	}
 	
-// 	public function getPendindSchedules($notificationType){
-// 		$qcSchedules = array();
-// 		if($notificationType == NotificationType::SC_READY_DATE){
-// 			$qcSchedules = $this->getPendingShechededForReadyDate();
-// 		}else if($notificationType == NotificationType::SC_FINAL_INPECTION_DATE){
-// 			$qcSchedules = $this->getPendingShechededForFinalInspectionDate();
-// 		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
-// 			$qcSchedules = $this->getPendingShechededForFirstInspectionDate();
-// 		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
-// 			$qcSchedules = $this->getPendingShechededForMiddleInspectionDate();
-// 		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
-// 			$qcSchedules = $this->getPendingShechededForProductionStartDate();
-// 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
-// 			$qcSchedules = $this->getPendingShechededForGraphicReceiveDate();
-// 		}
-// 		$poSchedules = $this->groupByPO($qcSchedules);
-// 		return $poSchedules;
-// 	}
+	private $select = "select users.fullname, classcodes.classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq ";
 	
-// 	public function getPendingShechededForReadyDate(){
-// 		$query = "select * from qcschedules where apreadydate > CURDATE() and apreadydate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acreadydate is NULL order by QC ASC, classcodes ASC, apreadydate ASC";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
+	//Report APIs
 	
-// 	public function getPendingShechededForFinalInspectionDate(){
-// 		$query = "select * from qcschedules where apfinalinspectiondate > CURDATE() and apfinalinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfinalinspectiondate is NULL order by QC ASC, classcode ASC,apfinalinspectiondate asc";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
+	//Projects due for the week / If greater than 25, some kind of red flag (as that is more than 1 person could probably handle in a week)
+	public function getForProjectDueForNextWeek(){
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $currentDateWithInterval = self::$currentDateWith7daysInterval;
+	    $query = $this->select . "where finalgraphicsduedate >= '$currentDate' and finalgraphicsduedate < '$currentDateWithInterval'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
 	
-// 	public function getPendingShechededForMiddleInspectionDate(){
-// 		$query = "select * from qcschedules where apmiddleinspectiondate > CURDATE() and apmiddleinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acmiddleinspectiondate is NULL order by QC ASC, classcode ASC,apmiddleinspectiondate asc";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
+	public function getForProjectOverDue(){
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $query = $this->select . "where finalgraphicsduedate < '$currentDate'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
 	
-// 	public function getPendingShechededForFirstInspectionDate(){
-// 		$query = "select * from qcschedules where apfirstinspectiondate > CURDATE() and apfirstinspectiondate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acfirstinspectiondate is NULL order by QC ASC, classcode ASC,apfirstinspectiondate asc";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
+	public function getForProjectCompletedLastWeek(){
+	    $currentDate =  DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $dateIntervalWith7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true,self::$timeZone);
+	    $query = $this->select . " where graphiccompletiondate >= '$dateIntervalWith7Days' and graphiccompletiondate < '$currentDate'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
 	
-// 	public function getPendingShechededForProductionStartDate(){
-// 		$query = "select * from qcschedules where approductionstartdate > CURDATE() and approductionstartdate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acproductionstartdate is NULL order by QC ASC, classcode ASC,approductionstartdate asc";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
 	
-// 	public function getPendingShechededForGraphicReceiveDate(){
-// 		$query = "select * from qcschedules where apgraphicsreceivedate > CURDATE() and apgraphicsreceivedate <= DATE_ADD(CURDATE(), INTERVAL 7 DAY) and acgraphicsreceivedate is NULL order by QC ASC, classcode ASC,apgraphicsreceivedate asc";
-// 		$qcschedules = self::$dataStore->executeObjectQuery($query);
-// 		return $qcschedules;
-// 	}
+	public function getByGraphicStatus($status){
+	    $status = GraphicStatusType::getName($status);
+	    $query = $this->select . "where graphicstatus = '$status'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
+	
+	public function getByPastDueWithMissingInfoFromChina(){
+	    $currentDate = DateUtil::getDateInDBFormat(0,null);
+	    $missingFromChina = GraphicStatusType::getName(GraphicStatusType::MISSING_INFO_FROM_CHINA);
+	    $query = $this->select . "where graphicstatus = '$missingFromChina' and finalgraphicsduedate < '$currentDate'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
+	
+	
+	public function getForProjectDueForToday(){
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $query = $this->select . "where finalgraphicsduedate = '$currentDate'";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
+	
+	
+	
+	public function getForProjectDueLessThan20FromEntry(){
+	    $query = $this->select . "where datediff(finalgraphicsduedate,chinaofficeentrydate) < 20";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
+	
+	public function getForProjectDueLessThan20FromToday(){
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $lastDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
+	    $query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20";
+	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
+	    return $graphicLogs;
+	}
+	
+	
+
 	
 	private function convertStrToDate($date){
 		$format = 'm-d-y';
@@ -466,6 +489,14 @@ class GraphicLogMgr{
 			$date = $date->format("m-d-Y");
 		}
 		return $date;
+	}
+	private function getDateTimeStr($date){
+	    $sessionUtil = SessionUtil::getInstance();
+	    $timeZone = $sessionUtil->getUserLoggedInTimeZone();
+	    if(!empty($date)){
+	        $date = DateUtil::convertDateToFormatWithTimeZone($date, "Y-m-d H:i:s", "m-d-Y h:i a",$timeZone);
+	    }
+	    return $date;
 	}
 	
 	

@@ -7,6 +7,7 @@ class GraphicStatusType extends BasicEnum{
 	const IN_PROGRESS = "In Progress";
 	const BUYERS_REVIEWING = "Buyer's Reviewing";
 	const ROBBY_REVIEWING = "Robby Reviewing";
+	const MANAGER_REVIEWING = "Manager Reviewing";
 	const PENDING_CUSTOMER_APPROVAL = "Pending Customer Approval";
 	const PENDING_ATTORNEY_APPROVAL = "Pending Attorney Approval";
 	const PREPARING_FOR_PRINT = "Preparing for Print";

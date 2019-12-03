@@ -9,6 +9,7 @@ class ContainerScheduleNote {
 	private $notestype;
 	private $createdon;
 	private $createdby;
+	private $graphiclogseq;
 	
 	function setSeq($seq) {
 		$this->seq = $seq;
@@ -22,6 +23,14 @@ class ContainerScheduleNote {
 	function getContainerscheduleseq() {
 		return $this->containerscheduleseq;
 	}
+	
+	function setGraphicLogSeq($graphicLogSeq_){
+	    $this->graphiclogseq = $graphicLogSeq_;
+	}
+	function getGraphicLogSeq(){
+	    return $this->graphiclogseq;
+	}
+	
 	function setNotes($notes) {
 		$this->notes = $notes;
 	}

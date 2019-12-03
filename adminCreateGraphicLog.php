@@ -1,5 +1,6 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
@@ -20,6 +21,8 @@ $hasGraphicDesignerPermission = $permissionUtil->hasGraphicDesignerPermission();
 $chinaTabIndex = "";
 $usaTabIndex = "";
 $graphicTabIndex = "";
+$disabled = "";
+$dateControl = "dateControl";
 if(!$hasUsaPermission){
 	$usaTabIndex = -1;
 }
@@ -29,6 +32,7 @@ if(!$hasChinaPermission){
 if(!$hasGraphicDesignerPermission){
 	$graphicTabIndex = -1;
 }
+$notesToChinaArr = array();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -43,7 +47,15 @@ if(isset($_POST["id"])){
  		$hasPrivate = "checked";
  	}
  	$enteredBySeq = $graphicLog->getUserSeq();
+ 	$disabled = "readonly";
+ 	$dateControl = "";
+ 	$containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
+ 	$containerScheduleNotesArr = $containerScheduleNotesMgr->findByGraphicLogSeq($seq);
+ 	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office])){
+ 	    $notesToChinaArr = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office];
+ 	}
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -70,6 +82,9 @@ if(isset($_POST["id"])){
 .outterDiv{
 	border-bottom:1px silver dashed;
 	padding:20px 10px;
+}
+#graphicstatus{
+	margin-bottom:0px !important;
 }
 </style>
 </head>
@@ -238,7 +253,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Entry Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control currentdatepicker" <?php echo $readOnlyPO?>>
                                 		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            	
@@ -314,7 +329,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  datepicker" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  currentdatepicker" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                           	</div>
@@ -326,6 +341,9 @@ if(isset($_POST["id"])){
 				                           	$select = DropDownUtils::getGraphicStatusTypes("graphicstatus", "", $graphicLog->getGraphicStatus(),false);
 				                            echo $select;
 	                             		?>
+	                             		<?php if(!empty($graphicLog->getGraphicStatusChangeDate())){?>
+	                             			<span class="col-lg-12 b-r-xs bg-default text-danger label">Last Changed : <?php echo $graphicLog->getGraphicStatusChangeDate()?></span>
+	                             		<?php }?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Submitted to China Date:</label>
 	                        	<div class="col-lg-4">
@@ -373,12 +391,33 @@ if(isset($_POST["id"])){
 	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            </div>
 	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Robby Review Date:</label>
+	                       		<div class="col-lg-4">
+		                        	<div class="input-group date">
+	                                	<input tabindex="<?php echo $graphicTabIndex?>" type="text"  id="robbyreviewdate" maxLength="250" value="<?php echo $graphicLog->getRobbyReviewDate()?>" name="robbyreviewdate" class="form-control datepicker" <?php echo $readOnlyPO?>>
+	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            </div>
+	                            </div>
 	                        </div> 
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to China Office :</label>
-	                        	<div class="col-lg-10">
-	                            	<textarea tabindex="<?php echo $graphicTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
-	                            </div>
+	                        	<div class="panel panel-primary">
+									<div class="panel-heading">Notes to China Office</div>
+									<div class="panel-body">
+	                                  	<textarea tabindex="<?php echo $graphicTabIndex?>" style="font-size:12px" 
+	                                  		id="graphicstochinanotes" name="graphicstochinanotes" class="form-control" maxlength="1000" tabindex="-1"><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
+										<div class="row">
+				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+				                       			<?php foreach ($notesToChinaArr as $note){
+			                       			?>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> <?php echo $note->getCreatedOn()?> <a class="text-info" href="#"><?php echo $note->email ?></a> <?php echo $note->getNotes()?>.
+		                                        </li>
+		                                    <?php }?>
+				                       		</ul>
+				                       	</div>
+									</div>
+		                     		
+		                     	</div>
 	                        </div> 
 	                    </div>
 	                    <div class="bg-white p-xs">
@@ -444,6 +483,16 @@ $(document).ready(function(){
 	    format:'m-d-Y',
 	    scrollMonth : false,
 		scrollInput : false,
+		onSelectDate:function(ct,$i){
+			setDuration();
+		}
+	})
+	$('.currentdatepicker').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	    scrollMonth : false,
+		scrollInput : false,
+		minDate : 0,
 		onSelectDate:function(ct,$i){
 			setDuration();
 		}
