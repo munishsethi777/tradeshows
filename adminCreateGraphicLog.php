@@ -338,6 +338,9 @@ if(isset($_POST["id"])){
 				                           	$select = DropDownUtils::getGraphicStatusTypes("graphicstatus", "", $graphicLog->getGraphicStatus(),false);
 				                            echo $select;
 	                             		?>
+	                             		<?php if(!empty($graphicLog->getGraphicStatusChangeDate())){?>
+	                             			<span class="col-lg-12 b-r-xs bg-default text-danger label">Last Changed : <?php echo $graphicLog->getGraphicStatusChangeDate()?></span>
+	                             		<?php }?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Submitted to China Date:</label>
 	                        	<div class="col-lg-4">

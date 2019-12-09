@@ -389,6 +389,7 @@ class GraphicLogMgr{
 		$graphicLog->setBuyerReviewReturnDate($this->getDateStr($graphicLog->getBuyerReviewReturnDate()));
 		$graphicLog->setManagerReviewReturnDate($this->getDateStr($graphicLog->getManagerReviewReturnDate()));
 		$graphicLog->setRobbyReviewDate($this->getDateStr($graphicLog->getRobbyReviewDate()));
+		$graphicLog->setGraphicStatusChangeDate($this->getDateTimeStr($graphicLog->getGraphicStatusChangeDate()));
 		return $graphicLog;
 	}
 	
@@ -467,6 +468,14 @@ class GraphicLogMgr{
 			$date = $date->format("m-d-Y");
 		}
 		return $date;
+	}
+	private function getDateTimeStr($date){
+	    $format = 'Y-m-d H:i:s';
+	    if(!empty($date)){
+	        $date = DateUtil::StringToDateByGivenFormat($format, $date);
+	        $date = $date->format("m-d-Y h:i a");
+	    }
+	    return $date;
 	}
 	
 	
