@@ -397,7 +397,8 @@ if(isset($_POST["id"])){
 	                        	<div class="panel panel-primary">
 									<div class="panel-heading">Notes to China Office</div>
 									<div class="panel-body">
-	                                  	<textarea tabindex="<?php echo $graphicTabIndex?>" style="font-size:12px" id="graphicstochinanotes" name="graphicstochinanotes" class="form-control" maxlength="1000" tabindex="-1"></textarea>
+	                                  	<textarea tabindex="<?php echo $graphicTabIndex?>" style="font-size:12px" 
+	                                  		id="graphicstochinanotes" name="graphicstochinanotes" class="form-control" maxlength="1000" tabindex="-1"><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
 										<div class="row">
 				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
 				                       			<?php foreach ($notesToChinaArr as $note){
