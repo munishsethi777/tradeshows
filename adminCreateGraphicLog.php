@@ -250,7 +250,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Entry Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input <?php echo $disabled?> tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control <?php echo $dateControl?>" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control currentdatepicker" <?php echo $readOnlyPO?>>
                                 		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            	
@@ -326,7 +326,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input <?php echo $disabled?> tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  <?php echo $dateControl?>" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  currentdatepicker" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                           	</div>
@@ -476,6 +476,16 @@ $(document).ready(function(){
 	    format:'m-d-Y',
 	    scrollMonth : false,
 		scrollInput : false,
+		onSelectDate:function(ct,$i){
+			setDuration();
+		}
+	})
+	$('.currentdatepicker').datetimepicker({
+	    timepicker:false,
+	    format:'m-d-Y',
+	    scrollMonth : false,
+		scrollInput : false,
+		minDate : 0,
 		onSelectDate:function(ct,$i){
 			setDuration();
 		}
