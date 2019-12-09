@@ -200,6 +200,25 @@ if($call == "resetPassword"){
         $message  = $e->getMessage();
     }
 }
+if($call == "refreshSession"){
+		$sessionUtil = SessionUtil::getInstance();
+		$userSeq = $sessionUtil->getUserLoggedInSeq();
+		$user = $userMgr->findBySeq($userSeq);
+    	if(!empty($userSeq)){
+    		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
+    		$departmentMgr = DepartmentMgr::getInstance();
+    		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
+    		$teamsMgr = TeamMgr::getInstance();
+    		$teamusers = $teamsMgr->getUserTeam($user->getSeq());
+    		$sessionUtil->createUserSession($user,$userRoles,$departments);
+    		$sessionUtil->setMyTeamMembers($teamusers);
+    		echo 1;
+    		return;
+    	}
+    	echo 0;
+    	return;
+}
+
 $response["success"] = $success;
 $response["message"] = $message;
 $response["url"] = $redirect;

@@ -527,6 +527,15 @@ if(isset($_REQUEST["id"])){
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	setInterval(function () {
+		$.post('Actions/UserAction.php?call=refreshSession',function(data){
+			alert(data);
+			if(data == 0){
+				location.href = "userLogin.php";
+			}
+		});
+    },60000);
+    
 	var hasContainerInformation = "<?php echo $hasContainerScheduleInformationPermission?>";
 	var hasDeliveryInformation = "<?php echo $hasContainerDeliveryPermission?>";
 	var hasOfficeInformation = "<?php echo $hasContainerOfficeInformationPermission?>";
