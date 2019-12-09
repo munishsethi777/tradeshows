@@ -42,6 +42,7 @@ if($call == "saveGraphicLog"){
 		$isUsaNotesUpdated = false;
 		$isChinaNotesUpdated = false;
 		$isGraphicNotesUpddates = false;
+		$isGraphicStatusChanged = false;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = StringConstants::GRAPHIC_LOG_UPDATED_SUCCESSFULLY;
@@ -49,6 +50,7 @@ if($call == "saveGraphicLog"){
 			$isUsaNotesUpdated = $graphicLog->getUSANotes() != $existingGraphicLog->getUSANotes();
 			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
 			$isGraphicNotesUpddates = $graphicLog->getGraphicsToChinaNotes() != $existingGraphicLog->getGraphicsToChinaNotes();
+			$isGraphicStatusChanged = $graphicLog->getGraphicStatus() != $existingGraphicLog->getGraphicStatus();
 			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
 			$containerScheduleNoteMgr->saveFromGraphicLog($graphicLog, $existingGraphicLog);
 		}
@@ -99,6 +101,9 @@ if($call == "saveGraphicLog"){
 			$graphicLog->setLabelLength(null);
 			$graphicLog->setLabelWidth(null);
 			$graphicLog->setLabelHeight(null);
+		}
+		if($isGraphicStatusChanged){
+		    $graphicLog->setGraphicStatusChangeDate(new DateTime());
 		}
 		$id = $graphicLogMgr->save($graphicLog);
 		if($id > 0){
