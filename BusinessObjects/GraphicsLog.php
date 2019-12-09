@@ -6,7 +6,7 @@ class GraphicsLog{
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
 	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$labeltype,$labellength,$labelwidth,$labelheight;
-	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate,$classcodeseq;
+	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate,$classcodeseq,$robbyreviewdate;
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
 
@@ -268,6 +268,13 @@ class GraphicsLog{
 	}
 	public function getClassCodeSeq(){
 		return $this->classcodeseq;
+	}
+	
+	public function setRobbyReviewDate($reviewDate_){
+	    $this->robbyreviewdate = $reviewDate_;
+	}
+	public function getRobbyReviewDate(){
+	    return $this->robbyreviewdate;
 	}
 	
 	

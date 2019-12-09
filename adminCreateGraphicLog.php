@@ -20,6 +20,8 @@ $hasGraphicDesignerPermission = $permissionUtil->hasGraphicDesignerPermission();
 $chinaTabIndex = "";
 $usaTabIndex = "";
 $graphicTabIndex = "";
+$disabled = "";
+$dateControl = "dateControl";
 if(!$hasUsaPermission){
 	$usaTabIndex = -1;
 }
@@ -43,7 +45,10 @@ if(isset($_POST["id"])){
  		$hasPrivate = "checked";
  	}
  	$enteredBySeq = $graphicLog->getUserSeq();
+ 	$disabled = "readonly";
+ 	$dateControl = "";
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -238,7 +243,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Entry Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                		<input <?php echo $disabled?> tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control <?php echo $dateControl?>" <?php echo $readOnlyPO?>>
                                 		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            	
@@ -314,7 +319,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  datepicker" <?php echo $readOnlyPO?>>
+                                		<input <?php echo $disabled?> tabindex="<?php echo $graphicTabIndex?>" type="text" id="graphicartiststartdate"   maxLength="250" value="<?php echo $graphicLog->getGraphicArtistStartDate()?>" name="graphicartiststartdate" class="form-control  <?php echo $dateControl?>" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                           	</div>
@@ -370,6 +375,13 @@ if(isset($_POST["id"])){
 	                       		<div class="col-lg-4">
 		                        	<div class="input-group date">
 	                                	<input tabindex="<?php echo $graphicTabIndex?>" type="text"  id="managerreviewreturndate" maxLength="250" value="<?php echo $graphicLog->getManagerReviewReturnDate()?>" name="managerreviewreturndate" class="form-control datepicker" <?php echo $readOnlyPO?>>
+	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                            </div>
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Robby Review Date:</label>
+	                       		<div class="col-lg-4">
+		                        	<div class="input-group date">
+	                                	<input tabindex="<?php echo $graphicTabIndex?>" type="text"  id="robbyreviewdate" maxLength="250" value="<?php echo $graphicLog->getRobbyReviewDate()?>" name="robbyreviewdate" class="form-control datepicker" <?php echo $readOnlyPO?>>
 	                                	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 		                            </div>
 	                            </div>

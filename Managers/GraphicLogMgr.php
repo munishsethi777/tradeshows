@@ -388,6 +388,7 @@ class GraphicLogMgr{
 		$graphicLog->setDraftDate($this->getDateStr($graphicLog->getDraftDate()));
 		$graphicLog->setBuyerReviewReturnDate($this->getDateStr($graphicLog->getBuyerReviewReturnDate()));
 		$graphicLog->setManagerReviewReturnDate($this->getDateStr($graphicLog->getManagerReviewReturnDate()));
+		$graphicLog->setRobbyReviewDate($this->getDateStr($graphicLog->getRobbyReviewDate()));
 		return $graphicLog;
 	}
 	
