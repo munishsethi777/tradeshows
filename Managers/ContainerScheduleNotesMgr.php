@@ -45,7 +45,18 @@ class ContainerScheduleNotesMgr{
     	}
     }
     
-    public function getScheduleNoteObj($containerSchedule,$noteType){
+    public function saveFromGraphicLog($graphicLog,$existingGraphicLog){
+        $notesToChinaOffice = $graphicLog->getGraphicsToChinaNotes();
+        $existinNnotesToChinaOffice = $existingGraphicLog->getGraphicsToChinaNotes();
+        if(!empty($notesToChinaOffice) && $notesToChinaOffice != $existinNnotesToChinaOffice){
+            $containerScheduleNote = $this->getScheduleNoteObjFromGraphicLog($graphicLog,
+                ContainerScheduleNoteType::notes_to_china_office);
+            $this->save($containerScheduleNote);
+        }
+    }
+    
+    
+    private function getScheduleNoteObj($containerSchedule,$noteType){
     	$containerScheduleNote = new ContainerScheduleNote();
     	$containerScheduleNote->setContainerscheduleseq($containerSchedule->getSeq());
     	$notes = "";
@@ -63,12 +74,34 @@ class ContainerScheduleNotesMgr{
     	return $containerScheduleNote;
     }
     
+    private function getScheduleNoteObjFromGraphicLog($graphicLog,$noteType){
+        $containerScheduleNote = new ContainerScheduleNote();
+        $containerScheduleNote->setGraphicLogSeq($graphicLog->getSeq());
+        $notes = "";
+        if($noteType == ContainerScheduleNoteType::notes_to_china_office){
+            $notes = $graphicLog->getGraphicsToChinaNotes();
+        }
+        $containerScheduleNote->setNotes($notes);
+        $sessionUtil = SessionUtil::getInstance();
+        $userSeq = $sessionUtil->getUserLoggedInSeq();
+        $containerScheduleNote->setCreatedby($userSeq);
+        $containerScheduleNote->setNotesType($noteType);
+        $containerScheduleNote->setCreatedon(new DateTime());
+        return $containerScheduleNote;
+    }
+    
     public function findByContainerScheduleSeq($containerScheduleSeq){
-    	$colVal["containerscheduleseq"] = $containerScheduleSeq;
     	$query = "select users.email,containerschedulenotes.* from containerschedulenotes inner join users on containerschedulenotes.createdby = users.seq where containerscheduleseq = $containerScheduleSeq order by seq desc";
     	$containerScheduleNotes =  self::$dataStore->executeObjectQuery($query);
     	$containerScheduleNotes = $this->groupByNoteType($containerScheduleNotes);
     	return $containerScheduleNotes;
+    }
+    
+    public function findByGraphicLogSeq($graphicLogSeq){
+        $query = "select users.email,containerschedulenotes.* from containerschedulenotes inner join users on containerschedulenotes.createdby = users.seq where graphiclogseq = $graphicLogSeq order by seq desc";
+        $containerScheduleNotes =  self::$dataStore->executeObjectQuery($query);
+        $containerScheduleNotes = $this->groupByNoteType($containerScheduleNotes);
+        return $containerScheduleNotes;
     }
     
     function groupByNoteType($array) {

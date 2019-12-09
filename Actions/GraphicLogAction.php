@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
@@ -48,6 +49,8 @@ if($call == "saveGraphicLog"){
 			$isUsaNotesUpdated = $graphicLog->getUSANotes() != $existingGraphicLog->getUSANotes();
 			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
 			$isGraphicNotesUpddates = $graphicLog->getGraphicsToChinaNotes() != $existingGraphicLog->getGraphicsToChinaNotes();
+			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
+			$containerScheduleNoteMgr->saveFromGraphicLog($graphicLog, $existingGraphicLog);
 		}
 		$graphicLog->setSeq($seq);
 		if(empty($graphicLog->getUserSeq())){

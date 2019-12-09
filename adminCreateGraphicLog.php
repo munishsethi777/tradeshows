@@ -1,5 +1,6 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
@@ -31,6 +32,7 @@ if(!$hasChinaPermission){
 if(!$hasGraphicDesignerPermission){
 	$graphicTabIndex = -1;
 }
+$notesToChinaArr = array();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -47,6 +49,11 @@ if(isset($_POST["id"])){
  	$enteredBySeq = $graphicLog->getUserSeq();
  	$disabled = "readonly";
  	$dateControl = "";
+ 	$containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
+ 	$containerScheduleNotesArr = $containerScheduleNotesMgr->findByGraphicLogSeq($seq);
+ 	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office])){
+ 	    $notesToChinaArr = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office];
+ 	}
 }
 
 ?>
@@ -390,20 +397,20 @@ if(isset($_POST["id"])){
 	                        	<div class="panel panel-primary">
 									<div class="panel-heading">Notes to China Office</div>
 									<div class="panel-body">
-	                                  	<textarea style="font-size:12px" id="emptynotes" name="emptynotes" class="form-control" maxlength="1000" tabindex="-1" value=""></textarea>
+	                                  	<textarea tabindex="<?php echo $graphicTabIndex?>" style="font-size:12px" id="graphicstochinanotes" name="graphicstochinanotes" class="form-control" maxlength="1000" tabindex="-1"></textarea>
 										<div class="row">
-				                       		<ul class="list-group" style="padding:10px 10px 0px 10px"></ul>
+				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+				                       			<?php foreach ($notesToChinaArr as $note){
+			                       			?>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> <?php echo $note->getCreatedOn()?> <a class="text-info" href="#"><?php echo $note->email ?></a> <?php echo $note->getNotes()?>.
+		                                        </li>
+		                                    <?php }?>
+				                       		</ul>
 				                       	</div>
 									</div>
-		                     		<div style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div>
+		                     		
 		                     	</div>
-	                        
-	                        
-	                        
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to China Office :</label>
-	                        	<div class="col-lg-10">
-	                            	<textarea tabindex="<?php echo $graphicTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="graphicstochinanotes" ><?php echo $graphicLog->getGraphicsToChinaNotes()?></textarea>
-	                            </div>
 	                        </div> 
 	                    </div>
 	                    <div class="bg-white p-xs">

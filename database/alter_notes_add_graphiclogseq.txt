@@ -1,0 +1,1 @@
+ALTER TABLE `containerschedulenotes` ADD `graphiclogseq` BIGINT NULL AFTER `createdby`;
