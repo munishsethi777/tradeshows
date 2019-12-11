@@ -486,50 +486,7 @@ class QCNotificationsUtil{
 		return $body;
 	}
 	
-	public static function sendGraphicLogNotesUpdatedNotification($graphicLog,$noteType){
-		$loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
-		$phAnValues = array();
-		$phAnValues["NOTES_NAME"] = $noteType;
-		$phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
-		$phAnValues["ITEM_ID"] = $graphicLog->getSKU();
-		$phAnValues["PO_NUMBER"] = $graphicLog->getPO();
-		$noteDetail = "";
-		$roleName = "";
-		if($noteType == "USA"){
-			$noteDetail = $graphicLog->getUSANotes();
-			$roleName  = Permissions::usa_team;
-		}else if($noteType == "CHINA"){
-			$roleName  = Permissions::china_team;
-			$noteDetail = $graphicLog->getChinaNotes();
-		}else if($noteType == "GRAPHIC"){
-			$noteDetail = $graphicLog->getGraphicsToChinaNotes();
-			$roleName  = Permissions::graphic_designer;
-		}
-		$roleName = Permissions::getName($roleName);
-		$phAnValues["NOTES_DETAIL"] = $noteDetail;
-		$content = file_get_contents("../GraphicLogsNotesUpdatedTemplate.php");
-		$content = self::replacePlaceHolders($phAnValues, $content);
-		$html = MailUtil::appendToEmailTemplateContainer($content);
-		$userMgr = UserMgr::getInstance();
-		$users = $userMgr->getUsersForGraphicNotesUpdatedReport($roleName);
-		$toEmails = array();
-		$phAnValues = array();
-		foreach ($users as $user){
-			$phAnValues["FULL_NAME"] = $user->getFullName();
-			$html = self::replacePlaceHolders($phAnValues, $html);
-			array_push($toEmails,$user->getEmail());
-		}
-		if(!empty($toEmails)){
-			$subject = $noteType . " Notes Updated For Graphic Logs on Alpinebi";
-			$flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
-			if($flag){
-			    $emaillogMgr = EmailLogMgr::getInstance();
-			    foreach ($users as $user){
-			        $emaillogMgr->saveEmailLog(EmailLogType::GRAPHIC_LOG_NOTES_UPDATED ,$user->getEmail(), null,$user->getSeq());
-			    }
-			}
-		}	
-	}
+	
 	//NOT IN USE
 	public static function sendQCApprovalNotification($qcSchedule){
 		$itemNo = $qcSchedule->getItemNumbers();

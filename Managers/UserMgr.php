@@ -208,6 +208,18 @@ where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPE
 	    return $users;
 	}
 	
+	public function getAllUsersForGraphicLogs(){
+	    $usaTeam = Permissions::getName(Permissions::usa_team);
+	    $chinaTeam = Permissions::getName(Permissions::china_team);
+	    $graphicDesigner = Permissions::getName(Permissions::graphic_designer);
+	    $sql = "SELECT users.* FROM users
+inner join userdepartments on userdepartments.userseq = users.seq and users.issendnotifications = 1
+inner join userroles on users.seq = userroles.userseq
+where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or users.usertype = 'USER') and (userroles.role = '$usaTeam' or userroles.role = '$chinaTeam' or userroles.role = '$graphicDesigner')";
+	    $users = self::$userDataStore->executeObjectQuery($sql);
+	    return $users;
+	}
+	
 	public function getAdminForSendReport(){
 	    $colval = array();
 	    $colval["usertype"] = 'ADMIN';
