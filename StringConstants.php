@@ -143,7 +143,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "munishsethi777@gmail.com";
 	
 	
 }

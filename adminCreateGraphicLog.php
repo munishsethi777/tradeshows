@@ -83,6 +83,9 @@ if(isset($_POST["id"])){
 	border-bottom:1px silver dashed;
 	padding:20px 10px;
 }
+#graphicstatus{
+	margin-bottom:0px !important;
+}
 </style>
 </head>
 <body>
