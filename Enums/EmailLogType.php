@@ -27,4 +27,16 @@ class EmailLogType extends BasicEnum{
     const GRAPHIC_LOG_NOTES_UPDATED = "GraphicLogNotesUpdated";
     const QC_APPROVED_REJECT_NOTIFICATION = "QCApprovedRejectNotification";
     const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "ContainerScheduleChangeTerminalAppointmentDate";
+    
+    const GRAPHIC_LOG_PROJECT_DUE_REPORT =  "GraphicLogProjectDueReport";
+    const GRAPHIC_LOG_PROJECT_OVERDUE_REPORT =  "GraphicLogProjectOverDueReport";
+    const GRAPHIC_LOG_PROJECT_COMPLETED_LAST_WEEK_REPORT =  "GraphicLogProjectCompletedLastWeek";
+    const GRAPHIC_LOG_PROJECT_IN_BUYER_REVIEW =  "GraphicLogProjectInBuyerReview";
+    const GRAPHIC_LOG_PROJECT_IN_MANAGER_REVIEW =  "GraphicLogProjectInManagerReview";
+    const GRAPHIC_LOG_PROJECT_MISSING_INFO_FROM_CHINA =  "GraphicLogProjectMissingInfoFromChina";
+    const GRAPHIC_LOG_PROJECT_DUE_FOR_TODAY_REPORT =  "GraphicLogProjectDueForTodayReport";
+    const GRAPHIC_LOG_PROJECT_DUE_FOR_LESS_THAN_20_DAYS_REPORT =  "GraphicLogProjectDueLessThan20FromEntryDate";
+    const GRAPHIC_LOG_PROJECT_DUE_FOR_LESS_THAN_20_DAYS_FROM_TODAY =  "GraphicLogProjectDueLessThan20FromToday";
+    const GRAPHIC_LOG_PROJECT_MISSING_INFO_FROM_CHINA_DAILY =  "GraphicLogProjectMissingInfoFromChinaDaily";
+    const GRAPHIC_LOG_PROJECT_PAST_DUE_WITH_MISSING_INFO_FROM_CHINA =  "GraphicLogProjectPastDueWithMissingInfoFromChina";
 }

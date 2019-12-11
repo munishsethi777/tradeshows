@@ -6,6 +6,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Crons/backups.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ContainerScheduleReportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/GraphicLogReportUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 $timeZone = "Asia/Kolkata";
 $datetimeZone = new DateTimeZone($timeZone);
@@ -29,18 +30,6 @@ try{
         $lastExeDay = getLastExecutionDate(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE);
         if($lastExeDay != $day){
             //Admin Notfications
-//             QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
-//             QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::SUPERVISOR);
-//             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
-//             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
-            
-            //QC Notifications
-//             QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
-//             QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
-//             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
-//             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
-            
-            //Admin Notfications
             QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR);
             QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
             QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
@@ -54,7 +43,7 @@ try{
             $logger->info("sendPendingQCScheduleNotifications sent Successfully");
         }
     }
-   if($dayOfWeek == 5 && $hours == 10){
+    if($dayOfWeek == 5 && $hours == 10){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_SEND_QC_PLANNER_REPORT_LAST_EXE);
         if($lastExeDay != $day){
             $qcScheduleMgr = QCScheduleMgr::getInstance();
@@ -88,6 +77,14 @@ try{
         if($lastExeDay != $day){
             ContainerScheduleReportUtil::sendETAReport();
             $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE,$currentDate);
+            //graphic log reports
+            GraphicLogReportUtil::sendProjectsCompletedLastWeek();
+            GraphicLogReportUtil::sendProjectsOverDueTillNow();
+            GraphicLogReportUtil::sendProjectsCompletedLastWeek();
+            GraphicLogReportUtil::sendProjectsInBuyerReview();
+            GraphicLogReportUtil::sendProjectsInManagerReview();
+            GraphicLogReportUtil::sendProjectsInRobbyReview();
+            GraphicLogReportUtil::sendProjectsMissingInfoFromChina();
             $logger->info("Beginning weekly notifications sent successfully");
         }
     }
@@ -108,6 +105,12 @@ try{
             ContainerScheduleReportUtil::sendMissingTerminalAppointmentDateReport();
             ContainerScheduleReportUtil::sendMissingScheduleDeliveryDateReport();
             $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_DAILY_LAST_EXE,$currentDate);
+            //Graphic Log Reports
+            GraphicLogReportUtil::sendProjectsPastDueWithMissingInfoFromChina();
+            GraphicLogReportUtil::sendProjectsDueForToday();
+            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromEntryDate();
+            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromToday();
+            GraphicLogReportUtil::sendProjectsMissingInfoFromChina(true);
             $logger->info("Beginning Daily notifications sent successfully");
         }
     }
