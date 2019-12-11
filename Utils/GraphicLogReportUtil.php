@@ -23,6 +23,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_DUE_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueForNextWeek();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
