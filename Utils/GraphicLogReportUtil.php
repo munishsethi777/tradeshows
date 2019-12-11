@@ -7,7 +7,7 @@ class GraphicLogReportUtil
 { 
     private static $timeZone = "America/Los_Angeles";
     private static $GL_DEP_SEQ = 2;
-    private static function getHtml($subject,$detail){
+    private static function getHtml($subject,$detail){              
         $content = file_get_contents("../CSReportEmailTemplate.php");
         $phAnValues = array();
         $phAnValues["DETAIL"] = $detail;
@@ -211,8 +211,7 @@ class GraphicLogReportUtil
         }
     }
     
-    //Weekly/Monday & Daily
-    //No. of projects with pending info. From buyers/China 
+    //Weekly/Monday & Daily No. of projects with pending info. From buyers/China 
     public static function sendProjectsMissingInfoFromChina($isDaily = false){
         $subject = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
