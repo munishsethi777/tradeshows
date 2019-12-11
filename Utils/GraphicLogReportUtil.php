@@ -3,6 +3,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicStatusType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 class GraphicLogReportUtil
 { 
     private static $timeZone = "America/Los_Angeles";
@@ -35,7 +37,7 @@ class GraphicLogReportUtil
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y) . "_to_" . $dateWithInterval->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
         $userMgr = UserMgr::getInstance();
-        $reportDetail = $reportName . " For next week for dates $currentDateStr to $dateWithIntervalStr";
+        $reportDetail = $reportName . " for dates $currentDateStr to $dateWithIntervalStr";
         $body = self::getHtml($subject, $reportDetail);
         $roleName = Permissions::getName(Permissions::usa_team);
         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
@@ -382,7 +384,11 @@ class GraphicLogReportUtil
     public static function sendGraphicLogGraphicStatusChangedNotification($graphicLog){
         $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
         $phAnValues = array();
-        $phAnValues["GRAPHIC_STATUS"] = $graphicLog->getGraphicStatus();
+        $graphicStatus = $graphicLog->getGraphicStatus();
+        if(!empty($graphicStatus)){
+            $graphicStatus = GraphicStatusType::getValue($graphicStatus);
+        }
+        $phAnValues["GRAPHIC_STATUS"] = $graphicStatus;
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["ITEM_ID"] = $graphicLog->getSKU();
         $phAnValues["PO_NUMBER"] = $graphicLog->getPO();

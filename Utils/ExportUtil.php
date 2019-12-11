@@ -703,7 +703,7 @@ public static function exportCustomers($customers){
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 		$colName = $alphas[$i]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "NOTES FROM \nGRAPHICS TO \nCHINA \nOFFICE");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "NOTES FROM GRAPHICS TO \nCHINA OFFICE");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 		$count = 3;
@@ -742,8 +742,12 @@ public static function exportCustomers($customers){
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getSKU());
 	
+			$graphicType = $graphicLog->getGraphicType();
+			if(!empty($graphicType)){
+			    $graphicType = GraphicType::getValue($graphicType);
+			}
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getGraphicType());
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicType);
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$graphicLog->getTagType());
@@ -813,8 +817,12 @@ public static function exportCustomers($customers){
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicArtistStartDate);
 			
+			$graphicStatus = $graphicLog->getGraphicStatus();
+			if(!empty($graphicStatus)){
+			    $graphicStatus = GraphicStatusType::getValue($graphicStatus);
+			}
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicStatus());
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicStatus);
 			
 			$graphicCompletionDate = $graphicLog->getGraphicCompletionDate();
 			if(!empty($graphicCompletionDate)){
