@@ -16,13 +16,14 @@ class GraphicLogMgr{
 	private $fieldNames;
 	private static $FIELD_COUNT = 27;
 	private static $currentDateWith7daysInterval;
+	private static $timeZone = "America/Los_Angeles";
 	public static function getInstance()
 	{
 		if (!self::$graphicLogMgr)
 		{
 			self::$graphicLogMgr = new GraphicLogMgr();
 			self::$dataStore = new BeanDataStore(GraphicsLog::$className, GraphicsLog::$tableName);
-			self::$currentDateWith7daysInterval = DateUtil::getDateInDBFormat(7);
+			self::$currentDateWith7daysInterval = DateUtil::getDateInDBFormat(7,null,self::$timeZone);
 			
 		}
 		return self::$graphicLogMgr;
@@ -407,7 +408,7 @@ class GraphicLogMgr{
 	
 	//Projects due for the week / If greater than 25, some kind of red flag (as that is more than 1 person could probably handle in a week)
 	public function getForProjectDueForNextWeek(){
-	    $currentDate = DateUtil::getDateInDBFormat(0,null);
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 	    $currentDateWithInterval = self::$currentDateWith7daysInterval;
 	    $query = $this->select . "where finalgraphicsduedate >= '$currentDate' and finalgraphicsduedate < '$currentDateWithInterval'";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
@@ -415,15 +416,15 @@ class GraphicLogMgr{
 	}
 	
 	public function getForProjectOverDue(){
-	    $currentDate = DateUtil::getDateInDBFormat(0,null);
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 	    $query = $this->select . "where finalgraphicsduedate < '$currentDate'";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}
 	
 	public function getForProjectCompletedLastWeek(){
-	    $currentDate =  DateUtil::getDateInDBFormat(0,null);
-	    $dateIntervalWith7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true);
+	    $currentDate =  DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $dateIntervalWith7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true,self::$timeZone);
 	    $query = $this->select . " where graphiccompletiondate >= '$dateIntervalWith7Days' and graphiccompletiondate < '$currentDate'";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
@@ -447,7 +448,7 @@ class GraphicLogMgr{
 	
 	
 	public function getForProjectDueForToday(){
-	    $currentDate = DateUtil::getDateInDBFormat(0,null);
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 	    $query = $this->select . "where finalgraphicsduedate = '$currentDate'";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
@@ -462,8 +463,8 @@ class GraphicLogMgr{
 	}
 	
 	public function getForProjectDueLessThan20FromToday(){
-	    $currentDate = DateUtil::getDateInDBFormat(0,null);
-	    $lastDate = DateUtil::getDateInDBFormatWithInterval(1,null,true);
+	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+	    $lastDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
 	    $query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
