@@ -54,6 +54,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_OVERDUE_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectOverDue();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_OVERDUE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -83,6 +86,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_COMPLETED_PREVIOUS_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectCompletedLastWeek();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_COMPLETED_PREVIOUS_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(1,null,true,self::$timeZone);
@@ -114,6 +120,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_IN_BUYER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::BUYERS_REVIEWING);
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_BUYER_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -142,7 +151,10 @@ class GraphicLogReportUtil
     public static function sendProjectsInManagerReview(){
         $subject = StringConstants::PROJECT_IN_MANAGER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MANAGER_REVIEWING);;
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MANAGER_REVIEWING);
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_MANAGER_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -171,7 +183,10 @@ class GraphicLogReportUtil
     public static function sendProjectsInRobbyReview(){
         $subject = StringConstants::PROJECT_IN_ROBBY_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::ROBBY_REVIEWING);;
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::ROBBY_REVIEWING);
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_ROBBY_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -201,7 +216,10 @@ class GraphicLogReportUtil
     public static function sendProjectsMissingInfoFromChina($isDaily = false){
         $subject = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MISSING_INFO_FROM_CHINA);;
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MISSING_INFO_FROM_CHINA);
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
@@ -237,6 +255,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByPastDueWithMissingInfoFromChina();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
@@ -266,6 +287,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_DUE_TODAY_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueForToday();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_TODAY_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -295,6 +319,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueLessThan20FromEntry();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
@@ -323,6 +350,9 @@ class GraphicLogReportUtil
         $subject = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueLessThan20FromToday();
+        if(empty($graphiclogs)){
+            return;
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
