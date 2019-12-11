@@ -2,6 +2,7 @@
 require_once ("MainDB.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Utils/SessionUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 class BeanDataStore {
 	private $className;
