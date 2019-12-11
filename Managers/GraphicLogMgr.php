@@ -491,10 +491,10 @@ class GraphicLogMgr{
 		return $date;
 	}
 	private function getDateTimeStr($date){
-	    $format = 'Y-m-d H:i:s';
+	    $sessionUtil = SessionUtil::getInstance();
+	    $timeZone = $sessionUtil->getUserLoggedInTimeZone();
 	    if(!empty($date)){
-	        $date = DateUtil::StringToDateByGivenFormat($format, $date);
-	        $date = $date->format("m-d-Y h:i a");
+	        $date = DateUtil::convertDateToFormatWithTimeZone($date, "Y-m-d H:i:s", "m-d-Y h:i a",$timeZone);
 	    }
 	    return $date;
 	}
