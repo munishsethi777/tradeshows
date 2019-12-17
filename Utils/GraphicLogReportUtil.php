@@ -28,6 +28,9 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
+        if(count($graphiclogs) > 25){
+            $subject .= " 25+";
+        }
         $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
