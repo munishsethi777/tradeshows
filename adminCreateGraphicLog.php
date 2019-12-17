@@ -33,6 +33,8 @@ if(!$hasGraphicDesignerPermission){
 	$graphicTabIndex = -1;
 }
 $notesToChinaArr = array();
+$notesToGraphic = array();
+$notesToUsa = array();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -53,6 +55,12 @@ if(isset($_POST["id"])){
  	$containerScheduleNotesArr = $containerScheduleNotesMgr->findByGraphicLogSeq($seq);
  	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office])){
  	    $notesToChinaArr = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_china_office];
+ 	}
+ 	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_graphics])){
+ 	    $notesToGraphic = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_graphics];
+ 	}
+ 	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_usa_office])){
+ 	    $notesToUsa = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_usa_office];
  	}
 }
 
@@ -241,8 +249,28 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">USA Notes to Graphics :</label>
 	                        	<div class="col-lg-10">
 	                            	<textarea  tabindex="<?php echo $usaTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="usanotes" ><?php echo $graphicLog->getUSANotes()?></textarea>
+	                            	
 	                            </div>
-	                        </div>                        
+	                        </div>   
+							 <div class="form-group row">
+	                        	<div class="panel panel-primary">
+									<div class="panel-heading">USA Notes to Graphics</div>
+									<div class="panel-body">
+	                                   		<textarea  tabindex="<?php echo $usaTabIndex?>" class="form-control" maxLength="1000" name="usanotes" ><?php echo $graphicLog->getUSANotes()?></textarea>
+										<div class="row">
+				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+				                       			<?php foreach ($notesToGraphic as $note){
+			                       			?>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> <?php echo $note->getCreatedOn()?> <a class="text-info" href="#"><?php echo $note->email ?></a> <?php echo $note->getNotes()?>.
+		                                        </li>
+		                                    <?php }?>
+				                       		</ul>
+				                       	</div>
+									</div>
+		                     		
+		                     	</div>
+	                        </div>                     
 	                    </div>
 	                    
 	                     <div class="bg-white1 p-xs outterDiv" style="position:relative" id="chinadiv">
@@ -304,11 +332,31 @@ if(isset($_POST["id"])){
 		                        </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office:</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office</label>
 	                        	<div class="col-lg-10">
 	                            	<textarea tabindex="<?php echo $chinaTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
+	                            	
 	                            </div>
 	                        </div> 
+	                        <div class="form-group row">
+	                        	<div class="panel panel-primary">
+									<div class="panel-heading">Notes to US Office</div>
+									<div class="panel-body">
+	                                   	<textarea tabindex="<?php echo $chinaTabIndex?>" class="form-control" maxLength="1000" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
+										<div class="row">
+				                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
+				                       			<?php foreach ($notesToUsa as $note){
+			                       			?>
+		                                        <li class="list-group-item">
+		                                            <i class="fa fa-clock-o"></i> <?php echo $note->getCreatedOn()?> <a class="text-info" href="#"><?php echo $note->email ?></a> <?php echo $note->getNotes()?>.
+		                                        </li>
+		                                    <?php }?>
+				                       		</ul>
+				                       	</div>
+									</div>
+		                     		
+		                     	</div>
+	                        </div>   
 	                    </div>
 	                     <div class="bg-white1 p-xs outterDiv" style="position:relative" id="graphicdiv">
                         	<div class="form-group row">
