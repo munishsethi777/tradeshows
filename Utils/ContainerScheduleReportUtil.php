@@ -24,6 +24,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::ETA_REPORT;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getETADatesPendingInNextSevenDays();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -57,6 +60,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::EMPTY_RETURN;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getEmptyReturnDatePastEmptyLFD();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -90,6 +96,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::DAILY_SCHEDULE_REPORT;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getPendingScheduleDeliveryDateForToday();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -104,6 +113,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::MISSING_ALPINE_NOTIFICATION_PICKUP_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingAlpineNotificationDate();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -118,6 +130,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::MISSING_IDS;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingIDReport();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -133,6 +148,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::MISSING_TERMINAL_APPT_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingTerminalAppointmentDate();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -147,6 +165,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::MISSING_SCHEDULE_DELIVERY_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingScheduleDeliveryDate();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -160,6 +181,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::MISSING_CONFIRM_DELIVERY_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingConfirmDeliveryDate();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -174,6 +198,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::EMPTY_WMS_DATES;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingReceivedDatesInWMS();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
@@ -188,6 +215,9 @@ class ContainerScheduleReportUtil
         $subject = StringConstants::EMPTY_OMS_DATES;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingReceivedDatesInOMS();
+        if(empty($containerSchedules)){
+            return;
+        }
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);

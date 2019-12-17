@@ -46,11 +46,26 @@ class ContainerScheduleNotesMgr{
     }
     
     public function saveFromGraphicLog($graphicLog,$existingGraphicLog){
+       // $graphicLog = new GraphicsLog();
         $notesToChinaOffice = $graphicLog->getGraphicsToChinaNotes();
         $existinNnotesToChinaOffice = $existingGraphicLog->getGraphicsToChinaNotes();
         if(!empty($notesToChinaOffice) && $notesToChinaOffice != $existinNnotesToChinaOffice){
             $containerScheduleNote = $this->getScheduleNoteObjFromGraphicLog($graphicLog,
                 ContainerScheduleNoteType::notes_to_china_office);
+            $this->save($containerScheduleNote);
+        }
+        $usaNotes = $graphicLog->getUSANotes();
+        $existinUsaNotes = $existingGraphicLog->getUSANotes();
+        if(!empty($usaNotes) && $usaNotes != $existinUsaNotes){
+            $containerScheduleNote = $this->getScheduleNoteObjFromGraphicLog($graphicLog,
+                ContainerScheduleNoteType::notes_to_graphics);
+            $this->save($containerScheduleNote);
+        }
+        $chinaNotes = $graphicLog->getChinaNotes();
+        $existinChinaNotes = $existingGraphicLog->getChinaNotes();
+        if(!empty($chinaNotes) && $chinaNotes != $existinChinaNotes){
+            $containerScheduleNote = $this->getScheduleNoteObjFromGraphicLog($graphicLog,
+                ContainerScheduleNoteType::notes_to_usa_office);
             $this->save($containerScheduleNote);
         }
     }
@@ -80,6 +95,12 @@ class ContainerScheduleNotesMgr{
         $notes = "";
         if($noteType == ContainerScheduleNoteType::notes_to_china_office){
             $notes = $graphicLog->getGraphicsToChinaNotes();
+        }
+        if($noteType == ContainerScheduleNoteType::notes_to_graphics){
+            $notes = $graphicLog->getUSANotes();
+        }
+        if($noteType == ContainerScheduleNoteType::notes_to_usa_office){
+            $notes = $graphicLog->getChinaNotes();
         }
         $containerScheduleNote->setNotes($notes);
         $sessionUtil = SessionUtil::getInstance();
