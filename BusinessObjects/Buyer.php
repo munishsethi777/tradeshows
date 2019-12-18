@@ -1,8 +1,10 @@
 <?php
-class Customer{
-    private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
-    public static $className = "Customer";
-    public static $tableName = "customers";
+class Buyer{
+    private $seq,$firstname,$lastname,$email,$officephone,$cellphone,$notes,$customerseq,$createdby,$createdon,$lastmodifiedon,$category;
+    
+    public static $className = "Buyer";
+    public static $tableName = "buyers";
+    
     public function setSeq($seq_){
         $this->seq = $seq_;
     }
@@ -10,40 +12,56 @@ class Customer{
         return $this->seq;
     }
     
-    public function setFullName($customerName_){
-        $this->fullname = $customerName_;
+    public function setFirstName($fName_){
+        $this->firstname = $fName_;
     }
-    public function getFullName(){
-        return $this->fullname;
-    }
-    
-    public function setCustomerId($customerId_){
-        $this->customerid = $customerId_;
-    }
-    public function getCustomerId(){
-        return $this->customerid;
+    public function getFirstName(){
+        return $this->firstname;
     }
     
-    public function setBusinessType($businessType_){
-        $this->businesstype = $businessType_;
+    public function setLastName($lName_){
+        return $this->lastname = $lName_;
     }
-    public function getBusinessType(){
-        return $this->businesstype;
-    }
-    
-    public function setSalesPersonName($salesPersonName_){
-        $this->salespersonname = $salesPersonName_;
-    }
-    public function getSalesPersonName() {
-        return $this->salespersonname;
+    public function getLastName(){
+        return $this->lastname;
     }
     
-    public function setSalesPersonId($salesPersonId_){
-        $this->salespersonid = $salesPersonId_;
+    public function setEmail($email_){
+        $this->email = $email_;
     }
-    public function getSalesPersonId(){
-        return $this->salespersonid;
+    public function getEmail(){
+        return $this->email;
     }
+    
+    public function setOfficePhone($officePhone_) {
+        $this->officephone = $officePhone_;
+    }
+    
+    public function getOfficePhone(){
+        return $this->officephone;
+    }
+    
+    public function setCellPhone($cellPhone_){
+        $this->cellphone = $cellPhone_;
+    }
+    public function getCellPhone(){
+        return $this->cellphone;
+    }
+    
+    public function setNotes($notes_){
+        $this->notes = $notes_;
+    }
+    public function getNotes(){
+        return $this->notes;
+    }
+    
+    public function setCustomerSeq($customerSeq_){
+        $this->customerseq = $customerSeq_;
+    }
+    public function getCustomerSeq(){
+        return $this->customerseq;
+    }
+    
     public function setCreatedBy($createdBy_){
         $this->createdby = $createdBy_;
     }
@@ -65,6 +83,12 @@ class Customer{
         return $this->lastmodifiedon;
     }
     
+    public function setCategory($category_){
+        $this->category = $category_;
+    }
+    public function getCategory(){
+        return $this->category;
+    }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );
@@ -94,4 +118,5 @@ class Customer{
             }
         }
     }
+    
 }

@@ -1,9 +1,11 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerBusinessType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class CustomerMgr{
@@ -25,6 +27,14 @@ class CustomerMgr{
 	  
     public function saveCustomer($conn,$customer){
     	self::$dataStore->saveObject($customer, $conn);
+    }
+    
+    public function saveCustomerObject($customer){
+        $id = self::$dataStore->save($customer);
+        if(!empty($id)){
+            $buyer = BuyerMgr::getInstance();
+            $buyer->saveFromCustomer($id);
+        }
     }
     
     public function updateOject($conn,$customer,$condition){
@@ -255,7 +265,23 @@ class CustomerMgr{
 	
 	public function findBySeq($seq){
 		$customer = self::$dataStore->findArrayBySeq($seq);
+		$createdon = $customer["createdon"];
+		$createdon = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$createdon);
+		$customer["createdon"] = $createdon->format("m-d-Y h:i a");
+		$businessType = CustomerBusinessType::getValue($customer["businesstype"]);
+		$customer["businesstype"] = $businessType;
 		return $customer;
+	}
+	
+	public function findByCustomerSeq($seq){
+	    $customer = self::$dataStore->findBySeq($seq);
+	    return $customer;
+	}
+	
+	function getCustomerBuyers($customerSeq){
+	    $buyerMgr = BuyerMgr::getInstance();
+	    $buyers = $buyerMgr->getBuyersByCustomerSeq($customerSeq);
+	    return $buyers;
 	}
 	
 	public function searchCustomers($searchString){
@@ -265,6 +291,14 @@ class CustomerMgr{
 		}
 		$users =   self::$dataStore->executeQuery($sql);
 		return $users;
+	}
+	
+	public function deleteByCustomerSeq($customerSeqs){
+	   $flag =  self::$dataStore->deleteInList($customerSeqs);
+	   if($flag){
+	       $buyerMgr = BuyerMgr::getInstance();
+	       $buyerMgr->deleteByCustomerSeq($customerSeqs);
+	   }
 	}
 	
 }

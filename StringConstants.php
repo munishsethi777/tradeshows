@@ -121,8 +121,12 @@ class StringConstants{
 	//TEAM ACTION STRING
 	const TEAM_SAVED_SUCCESSFULLY    = "Team saved successfully.";
 	const TEAMS_DELETE_SUCCESSFULLY  = "Teams Deleted successfully";
-	const TEAM_UPDATE_SUCCESSFULLY   = "Team update successfully";
+	const TEAM_UPDATE_SUCCESSFULLY   = "Team updated successfully";
 	
+	//CUSTOMER ACTION STRING
+	const CUSTOMER_SAVED_SUCCESSFULLY    = "Customer saved successfully.";
+	const CUSTOMERS_DELETE_SUCCESSFULLY  = "Customers Deleted successfully";
+	const CUSTOMER_UPDATE_SUCCESSFULLY   = "Customer updated successfully";
 	//CUSTOMER MANAGER STRING CONSTANT
 	const IMPORT_CORRECT_FILE = "Please import the correct file";
 	const CUSTOMER_IMPORTED_SUCCESSFULLY = "Customers Imported Successfully!";
@@ -144,7 +148,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "munishsethi777@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
 	
 	
 }
