@@ -8,6 +8,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/WareHouseType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TruckerType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomExamStatusType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerBusinessType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -38,6 +39,11 @@ class DropDownUtils {
 		return $str;
 	}
 	
+	public static function getBusinessTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = CustomerBusinessType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	
 	public static function getReasonTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$enums = ReasonCodeType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
@@ -57,6 +63,8 @@ class DropDownUtils {
 		$enums = GraphicStatusType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Type");
 	}
+	
+	
 	
 	public static function getTagTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled) {
 		$enums = TagType::getAll();

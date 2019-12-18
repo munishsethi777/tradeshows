@@ -1,5 +1,6 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
@@ -25,6 +26,14 @@ class CustomerMgr{
 	  
     public function saveCustomer($conn,$customer){
     	self::$dataStore->saveObject($customer, $conn);
+    }
+    
+    public function saveCustomerObject($customer){
+        $id = self::$dataStore->save($customer);
+        if(!empty($id)){
+            $buyer = BuyerMgr::getInstance();
+            $buyer->saveFromCustomer($id);
+        }
     }
     
     public function updateOject($conn,$customer,$condition){
@@ -256,6 +265,17 @@ class CustomerMgr{
 	public function findBySeq($seq){
 		$customer = self::$dataStore->findArrayBySeq($seq);
 		return $customer;
+	}
+	
+	public function findByCustomerSeq($seq){
+	    $customer = self::$dataStore->findBySeq($seq);
+	    return $customer;
+	}
+	
+	function getCustomerBuyers($customerSeq){
+	    $buyerMgr = BuyerMgr::getInstance();
+	    $buyers = $buyerMgr->getBuyersByCustomerSeq($customerSeq);
+	    return $buyers;
 	}
 	
 	public function searchCustomers($searchString){

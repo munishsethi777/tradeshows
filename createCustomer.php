@@ -1,13 +1,16 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
-require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
-require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+$customerMgr = CustomerMgr::getInstance();
+$customer = new Customer();
+$customerSeq = 0;
+if(isset($_POST["id"])){
+    $seq = $_POST["id"];
+    $customer = $customerMgr->findByCustomerSeq($seq);
+    $customerSeq = $customer->getSeq();
+}
 ?>
 
 <!DOCTYPE html>
@@ -68,39 +71,43 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="createUserForm" method="post" action="Actions/CustomerAction.php" class="m-t-sm">
-                     		<input type="hidden" id ="call" name="call"  value="saveUser"/>
-                        	<input type="hidden" id ="seq" name="seq"  value=""/>
+                 	 <form id="createCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-sm">
+                     		<input type="hidden" id ="call" name="call"  value="saveCustomer"/>
+                        	<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
                         
                         	 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 	                        	<div class="col-lg-10">
-	                        		<input type="text" required maxLength="250" value="" name="password" class="form-control">
+	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" name="fullname" class="form-control">
 	                            </div>
 	                        </div>
 	                        
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">ID</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="" name="fullname" class="form-control">
+	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
 	                        	<div class="col-lg-4">
-	                        		<select class="form-control">
-	                        			<option>Direct</option>
-	                        			<option>Domesitc</option>
-	                        			<option>DotCom</option>
-	                        		</select>
+<!-- 	                        		<select name="businesstype" class="form-control"> -->
+<!-- 	                        			<option>Direct</option> -->
+<!-- 	                        			<option>Domesitc</option> -->
+<!-- 	                        			<option>DotCom</option> -->
+<!-- 	                        		</select> -->
+										<?php 
+    										$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false);
+    			                            echo $select;
+	                             		?>
 	                            </div>
 	                       </div>
 	                       <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="" name="fullname" class="form-control">
+	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text"  maxLength="250" value="" name="fullname" class="form-control">
+	                        		<input type="text"  maxLength="250" value="<?php echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
 	                            </div>
 	                       </div>
 	                       <div class="form-group row m-b-xs">
@@ -113,81 +120,23 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 	                        	<label class="col-lg-2 col-form-label bg-formLabel m-xxs">Phone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel m-xxs">CellPhone</label>
 	                       </div>
-	                       
-	                       <div class="buyers">
-	                       	
-		                       <div class="form-group row m-b-xs">
-		                       		<div class="col-lg-2 m-xxs no-padding">
-		                            	<input type="text" maxLength="250" value="" name="firstname" class="form-control" placeholder="firstname">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="lastname" class="form-control" placeholder="lastname">
-		                            </div>
-		                            <div class="col-lg-3 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="emailid" class="form-control" placeholder="emailid">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="phone" class="form-control" placeholder="phone">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="cellphone" class="form-control" placeholder="cellphone">
-		                            </div>
-		                       </div>
-		                       <div class="form-group row">
-		                       		<div class="col-lg-11 p-xxs">
-		                            	<textarea placeholder="notes" class="form-control"></textarea>
-		                            </div>
-		                            <div class="col-lg-1 pull-right">
-		                        		<a href="" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>
-		                            </div>
-		                            
-		                            <div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>
-		                            
-		                       </div>
-		                       
-		                       <div class="form-group row m-b-xs">
-		                       		<div class="col-lg-2 m-xxs no-padding">
-		                            	<input type="text" maxLength="250" value="" name="firstname" class="form-control" placeholder="firstname">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="lastname" class="form-control" placeholder="lastname">
-		                            </div>
-		                            <div class="col-lg-3 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="emailid" class="form-control" placeholder="emailid">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="phone" class="form-control" placeholder="phone">
-		                            </div>
-		                            <div class="col-lg-2 m-xxs no-padding">
-		                        		<input type="text" maxLength="250" value="" name="cellphone" class="form-control" placeholder="cellphone">
-		                            </div>
-		                       </div>
-		                       <div class="form-group row">
-		                       		<div class="col-lg-11 p-xxs">
-		                            	<textarea placeholder="notes" class="form-control"></textarea>
-		                            </div>
-		                            <div class="col-lg-1 pull-right">
-		                        		<a href="" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>
-		                            </div>
-		                       </div>
-		                       
-		                       <div class="col-lg-12 pull-right">
-		                       		<div class="col-lg-1 pull-right">
-		                        		<button class="btn btn-xs btn-success" onclick="addBuyer()" type="button">
-		                        		<i class="fa fa-plus"></i> Buyer</button>
-		                        	</div>
-		                        </div>
+	                       <div id="buyers" class="buyers">
 	                       </div>
-	                       
+	                        <div class="col-lg-12 pull-right">
+	                       		<div class="col-lg-1 pull-right">
+	                        		<button class="btn btn-xs btn-success" onclick="addBuyer()" type="button">
+	                        		<i class="fa fa-plus"></i> Buyer</button>
+	                        	</div>
+	                        </div>
 	                       
 	                        <div class="form-group row">
 	                       		<div class="col-lg-2">
-		                        	<button class="btn btn-primary" onclick="saveUser()" type="button" style="width:85%">
+		                        	<button class="btn btn-primary" onclick="saveCustomer()" type="button" style="width:85%">
 	                                	Save
 		                          	</button>
 		                        </div>
 		                        <div class="col-lg-2">
-		                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">
+		                          	<a class="btn btn-default" href="showCustomers.php" type="button" style="width:85%">
 	                                	Cancel
 		                          	</a>
 		                        </div>
@@ -202,6 +151,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 </body>
 </html>
 <script type="text/javascript">
+var customerSeq = "<?php echo $customerSeq ?>";
 $(document).ready(function(){
 	
 	$('.i-checks').iCheck({
@@ -216,22 +166,97 @@ $(document).ready(function(){
 			$(".qcDIV").hide();
 		}
 	});
-	
+
+	$('.delete').click(function() {
+		deleteBuyer(this);	
+	});
+	populateCustomer();
 });
 
+function addBuyer(isDefaultRow,buyer){
+	var firstName = "";
+	var lastName = "";
+	var emailid = "";
+	var phone = "";
+	var cellPhone = "";
+	var note = "";
+	if (typeof buyer !== "undefined"){
+		firstName = buyer.firstname;
+		lastName = buyer.lastname;
+		emailid = buyer.email;
+		phone = buyer.officephone;
+		cellPhone = buyer.cellphone;
+		note = buyer.notes;
+	}
+	var html = '<div class="buyerDiv">';
+   		html += '<div class="form-group row m-b-xs">';
+		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<input type="text" maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
+		html += '</div>'
+		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<input type="text" maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
+		html += '</div>';
+		html += '<div class="col-lg-3 m-xxs no-padding">';
+		html += '<input type="text" maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
+		html += '</div>';
+		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<input type="text" maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<input type="text" maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '</div>';
+		html += '</div>';
+		html += '<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">';
+		html += '<textarea name="notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+		html +='</div>';
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+    		html += '<div class="col-lg-1 pull-right">';
+    		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+    		html += '</div>';
+		}
+		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>';
+		$("#buyers").append(html);
+}
 
-function saveUser(){
-	if($("#createUserForm")[0].checkValidity()) {
+function populateCustomer(){
+	if(customerSeq != 0){
+    	$.get("Actions/CustomerAction.php?call=getCustomerBuyers&id=<?php echo $customerSeq ?>", function(data){
+       		var jsonData = $.parseJSON(data);
+       		var buyers = jsonData.buyers;
+       		var i = 0;
+       		$.each( buyers, function( index, buyer ){
+           		if(i == 0){
+       				addBuyer(true,buyer);
+           		}else{
+           			addBuyer(false,buyer);
+           		} 
+           		i++;
+       		});
+       		
+		});
+	}else{
+		addBuyer(true)
+	}
+}
+
+function deleteBuyer(btn){
+	$(btn).closest('.buyerDiv').remove();
+}
+
+function saveCustomer(){
+	if($("#createCustomerForm")[0].checkValidity()) {
 		showHideProgress()
-		$('#createUserForm').ajaxSubmit(function( data ){
+		$('#createCustomerForm').ajaxSubmit(function( data ){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminManageUsers.php"},100);
+			   window.setTimeout(function(){window.location.href = "showCustomers.php"},100);
 		   }
 	    })	
 	}else{
-		$("#createUserForm")[0].reportValidity();
+		$("#createCustomerForm")[0].reportValidity();
 	}
 }
 </script>
