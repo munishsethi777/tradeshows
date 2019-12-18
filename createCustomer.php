@@ -137,7 +137,7 @@ if(isset($_POST["id"])){
 		                          	</button>
 		                        </div>
 		                        <div class="col-lg-2">
-		                          	<a class="btn btn-default" href="showCustomers.php" type="button" style="width:85%">
+		                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">
 	                                	Cancel
 		                          	</a>
 		                        </div>
@@ -271,7 +271,7 @@ function saveCustomer(){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "showCustomers.php"},100);
+			   window.setTimeout(function(){window.location.href = "manageCustomers.php"},100);
 		   }
 	    })	
 	}else{

@@ -9,8 +9,8 @@ CREATE TABLE `buyers` (
   `notes` varchar(1000) DEFAULT NULL,
   `createdby` bigint(20) NOT NULL,
   `createdon` datetime NOT NULL,
-  `lastmodifiedon` datetime NOT NULL
-  `category` varchar(20) NOT NULL,
+  `lastmodifiedon` datetime NOT NULL,
+  `category` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
