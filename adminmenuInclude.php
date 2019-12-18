@@ -190,8 +190,8 @@ if($file == "dashboardmain.php"){
                 	$departmentMgr = DepartmentMgr::getInstance();
                 	$departments = $departmentMgr->getUserAssignedDepartments($userLoggedInSeq);
                 	?>
-                	<li class="<?php echo $isUserDashboard?>">
-	                    <a href="userDashboard.php"><i class="fa fa-tachometer"></i> 
+                	<li class="<?php echo $isDashboard?>">
+	                    <a href="dashboardmain.php"><i class="fa fa-tachometer"></i> 
 	                    	<span class="nav-label ">Dashboard</span>  
 	                    </a>
 	                </li>
@@ -253,7 +253,7 @@ if($file == "dashboardmain.php"){
                         </li>
                     <?php }?>
                      <li class="<?php echo $manageCustomers;?>">
-                       <a href="showCustomers.php"><i class="fa fa-group"></i> 
+                       <a href="manageCustomers.php"><i class="fa fa-group"></i> 
                     	   	<span class="nav-label">Manage Customers</span>  
                        </a>
                 	</li>
