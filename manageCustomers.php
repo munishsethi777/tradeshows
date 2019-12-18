@@ -84,7 +84,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                 </div>
            	</div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+              	<button type="button" onclick="previous()" id="prevBtn"  class="btn btn-white">Previous</button>
+				<button type="button" onclick="next()" id="nextBtn" class="btn btn-white">Next</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -97,7 +99,25 @@ $(document).ready(function(){
     	loadGrid()
 	//});
 });
-function showCustomerDetails(seq){
+function previous(){
+	currentRowId = currentRowId-1;
+	if(ids[currentRowId] == undefined){
+		currentRowId = 0; 
+	}
+	prevSeq = ids[currentRowId];
+	showCustomerDetails(prevSeq,currentRowId);
+}
+function next(){
+	currentRowId = currentRowId+1;
+	if(ids[currentRowId] == undefined){
+		currentRowId = 0; 
+	}
+	nextSeq = ids[currentRowId];
+	showCustomerDetails(nextSeq,currentRowId);
+}
+var currentRowId =  0;
+function showCustomerDetails(seq,rowId){
+	currentRowId = rowId;
 	$.getJSON("Actions/CustomerAction.php?call=getCustomerDetails&seq="+seq, function(data){
 		var item = data.customer;
 		var buyer = data.buyers
@@ -118,11 +138,13 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+var ids = [];
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#customerGrid').jqxGrid('getrowdata', row);
+        ids[row] = data["seq"];
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:showCustomerDetails("+ data['seq'] + ")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
+            	html +="<a href='javascript:showCustomerDetails("+ data['seq'] + "," + row +")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
             html += "</div>";
         return html;
     }
