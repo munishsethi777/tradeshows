@@ -48,7 +48,7 @@ if($file == "dashboard.php"){
 	$manageItems = "active";
 }elseif($file=="adminManageItemSpecifications.php" || $file=="adminImportItemSpecifications.php"){
 	$manageItemSpecification = "active";
-}elseif($file=="adminImportCustomers.php" || $file=="adminManageCustomers.php"){
+}elseif($file=="createCustomer.php" || $file=="showCustomers.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
 	$adminManageOrders = "active";
@@ -133,13 +133,7 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Email Logs</span>  
                     </a>
                 </li>
-                
-                <!-- 
-                <li class="<?php echo $manageCustomers;?>">
-                   <a href="adminManageCustomers.php"><i class="fa fa-group"></i> 
-                	   	<span class="nav-label">Manage Customers</span>  
-                   </a>
-                </li>
+                 <!--
                 <li class="<?php echo $adminManageOrders;?>">
                    <a href="adminManageOrders.php"><i class="fa fa-truck"></i> 
                 	   	<span class="nav-label">Manage Orders</span>  
@@ -181,6 +175,11 @@ if($file == "dashboard.php"){
                     <a href="manageTeams.php"><i class="fa fa-group"></i> 
                     	<span class="nav-label">Manage Teams</span>  
                     </a>
+                </li>
+                <li class="<?php echo $manageCustomers;?>">
+                   <a href="showCustomers.php"><i class="fa fa-group"></i> 
+                	   	<span class="nav-label">Manage Customers</span>  
+                   </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminChangePassword.php"><i class="fa fa-key"></i> 
@@ -253,6 +252,11 @@ if($file == "dashboard.php"){
                             </a>
                         </li>
                     <?php }?>
+                     <li class="<?php echo $manageCustomers;?>">
+                       <a href="showCustomers.php"><i class="fa fa-group"></i> 
+                    	   	<span class="nav-label">Manage Customers</span>  
+                       </a>
+                	</li>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  
