@@ -114,11 +114,12 @@ if(isset($_POST["id"])){
 	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers to the Customer</label>
 	                       </div>
 	                       <div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel m-xxs">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel m-xxs">Last Name</label>
-	                        	<label class="col-lg-3 col-form-label bg-formLabel m-xxs">Email</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel m-xxs">Phone</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel m-xxs">CellPhone</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       </div>
 	                       <div id="buyers" class="buyers">
 	                       </div>
@@ -190,19 +191,22 @@ function addBuyer(isDefaultRow,buyer){
 	}
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
-		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
 		html += '</div>'
-		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
 		html += '</div>';
-		html += '<div class="col-lg-3 m-xxs no-padding">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
-		html += '<div class="col-lg-2 m-xxs no-padding">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text" maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '</div>';
