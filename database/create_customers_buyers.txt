@@ -1,6 +1,6 @@
 CREATE TABLE `buyers` (
   `seq` bigint(20) NOT NULL,
-  `categoryseq` bigint(20) NOT NULL,
+  `customerseq` bigint(20) NOT NULL,
   `firstname` varchar(200) NOT NULL,
   `lastname` varchar(200) DEFAULT NULL,
   `email` varchar(250) DEFAULT NULL,
@@ -10,6 +10,7 @@ CREATE TABLE `buyers` (
   `createdby` bigint(20) NOT NULL,
   `createdon` datetime NOT NULL,
   `lastmodifiedon` datetime NOT NULL
+  `category` varchar(20) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -20,7 +21,7 @@ CREATE TABLE `buyers` (
 
 CREATE TABLE `customers` (
   `seq` bigint(20) NOT NULL,
-  `id` varchar(6) NOT NULL,
+  `customerid` varchar(6) NOT NULL,
   `fullname` varchar(250) NOT NULL,
   `businesstype` varchar(100) NOT NULL,
   `salespersonid` varchar(50) DEFAULT NULL,
