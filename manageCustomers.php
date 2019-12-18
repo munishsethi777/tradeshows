@@ -63,7 +63,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                        		<label class="col-sm-2 lblTitle">ID #</label>
                            	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
                             <label class="col-sm-2">Name</label>
-                           	<div class="col-sm-4"><label class="customerid lblDesc"></label></div>
+                           	<div class="col-sm-4"><label class="fullname lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
                        		<label class="col-lg-2">Sales Person</label>
