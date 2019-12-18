@@ -250,7 +250,13 @@ class CustomerMgr{
 	
 	public function findAllArr($isApplyFilter = false){
 		$customerArr = self::$dataStore->findAllArr($isApplyFilter);
-		return $customerArr;
+		$mainArr = array();
+		foreach ($customerArr as $customer){
+		    $businessType = CustomerBusinessType::getValue($customer["businesstype"]);
+		    $customer["businesstype"] = $businessType;
+		    array_push($mainArr,$customer);
+		}
+		return $mainArr;
 	}
 	
 	public function findSeqByCustomerId($customerId){
