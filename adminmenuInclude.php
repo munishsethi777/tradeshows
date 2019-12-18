@@ -30,7 +30,7 @@ $manageContainerSchedules = "";
 $manageEmailLogs = "";
 $manageTeams ="";
 //echo  $file;
-if($file == "dashboard.php"){
+if($file == "dashboardmain.php"){
 	$isDashboard = "active";
 }elseif($file=="adminShowList.php" || $file=="adminCreateShow.php"){
 	$isTradeShows = "active";
@@ -48,7 +48,7 @@ if($file == "dashboard.php"){
 	$manageItems = "active";
 }elseif($file=="adminManageItemSpecifications.php" || $file=="adminImportItemSpecifications.php"){
 	$manageItemSpecification = "active";
-}elseif($file=="createCustomer.php" || $file=="showCustomers.php"){
+}elseif($file=="createCustomer.php" || $file=="manageCustomers.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
 	$adminManageOrders = "active";
@@ -94,7 +94,7 @@ if($file == "dashboard.php"){
                 </li>
                 <?php if($isSessionAdmin){?>
                 <li class="<?php echo $isDashboard;?>">
-                    <a href="dashboard.php"><i class="fa fa-tachometer"></i> 
+                    <a href="dashboardmain.php"><i class="fa fa-tachometer"></i> 
                     	<span class="nav-label ">Dashboard</span>  
                     </a>
                 </li>
@@ -177,7 +177,7 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $manageCustomers;?>">
-                   <a href="showCustomers.php"><i class="fa fa-group"></i> 
+                   <a href="manageCustomers.php"><i class="fa fa-group"></i> 
                 	   	<span class="nav-label">Manage Customers</span>  
                    </a>
                 </li>
