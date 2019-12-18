@@ -44,7 +44,7 @@ if(isset($_POST["id"])){
 .col-form-label{
 	line-height:1;
 }
-.buyers input{
+.buyers input,.buyers select{
 	font-size:12px;
 	padding:4px;
 	height:25px;
@@ -85,7 +85,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">ID</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" class="form-control">
+	                            	<input type="text" required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
 	                        	<div class="col-lg-4">
@@ -181,6 +181,9 @@ function addBuyer(isDefaultRow,buyer){
 	var phone = "";
 	var cellPhone = "";
 	var note = "";
+	var christmasSeected = "";
+	var outdoorSeected = "";
+	var patriotic = "";
 	if (typeof buyer !== "undefined"){
 		firstName = buyer.firstname;
 		lastName = buyer.lastname;
@@ -188,26 +191,38 @@ function addBuyer(isDefaultRow,buyer){
 		phone = buyer.officephone;
 		cellPhone = buyer.cellphone;
 		note = buyer.notes;
+		category = buyer.category;
+		if(category == "christmas"){
+			christmasSeected = "selected"
+		}else if(category == "outdoor_decor"){
+			outdoorSeected = "selected"
+		}else if(category == "Patriotic"){
+			patriotic = "selected"
+		}
 	}
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
+		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
 		html += '</div>'
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
+		html += '<input type="text" required maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input type="text" required maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
+		html += '<input type="text" required maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<input type="text" required maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<select name="category[]" class="form-control">';
+		html += '<option '+christmasSeected+' value="christmas">Christmas</option>';
+		html += '<option '+outdoorSeected+' value="outdoor_decor">Outdoor Decor</option>';
+		html += '<option '+patriotic+' value="patriotic">Patriotic</option>';
+		html += '</select>';
 		html += '</div>';
 		html += '</div>';
 		html += '<div class="form-group row">';

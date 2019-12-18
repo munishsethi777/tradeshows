@@ -71,7 +71,7 @@ if($call == "getCustomerDetails"){
 		$customer = $customerMgr->findBySeq($_GET["seq"]);
 		$response["customer"] = $customer;
 		$buyerMgr = BuyerMgr::getInstance();
-		$buyers = $buyerMgr->getBuyersByCustomerSeq($_GET["seq"]);
+		$buyers = $buyerMgr->findArrByCustomerSeq($_GET["seq"]);
 		$response["buyers"] = $buyers;
 	}catch(Exception $e){
 		$success = 0;
@@ -99,6 +99,16 @@ if($call == "searchCustomers"){
 	}
 	echo json_encode($response);
 	return;
+}
+if($call == "deleteCustomers"){
+    $ids = $_GET["ids"];
+    try{
+        $customerMgr->deleteByCustomerSeq($ids);
+        $message = StringConstants::CUSTOMERS_DELETE_SUCCESSFULLY;
+    }catch(Exception $e){
+        $success = 0;
+        $message = $e->getMessage();
+    }
 }
 $response["success"] = $success;
 $response["message"] = $message;

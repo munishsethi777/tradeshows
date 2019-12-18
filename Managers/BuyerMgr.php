@@ -1,7 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Buyer.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 class BuyerMgr{
     
     private static  $buyerMgr;
@@ -25,6 +25,7 @@ class BuyerMgr{
         $officePhones = $_REQUEST["phone"];
         $cellPhones = $_REQUEST["cellphone"];
         $notes = $_REQUEST["notes"];
+        $categories = $_REQUEST["category"];
         foreach ($firstNames as $key=>$firstName){
             $buyer = new Buyer();
             $buyer->setCustomerSeq($customerSeq);
@@ -37,6 +38,7 @@ class BuyerMgr{
             $buyer->setNotes($notes[$key]);
             $buyer->setLastModifiedOn(new DateTime());
             $buyer->setOfficePhone($officePhones[$key]);
+            $buyer->setCategory($categories[$key]);
             $id = self::$dataStore->save($buyer);
         }
     }
@@ -47,8 +49,20 @@ class BuyerMgr{
           return $buyers;
     }
     
-    private function deleteByCustomerSeq($customerSeq){
-        $colVal = array("customerseq"=>$customerSeq);
-        return self::$dataStore->deleteByAttribute($colVal);
+    public function findArrByCustomerSeq($customerSeq){
+        $buyers = $this->getBuyersByCustomerSeq($customerSeq);
+        $array = array();
+        foreach ($buyers as $buyer){
+            $category = $buyer["category"];
+            $category = BuyerCategoryType::getValue($category);
+            $buyer["category"] = $category;
+            array_push($array,$buyer);
+        }
+        return $array;
+    }
+    
+    public function deleteByCustomerSeq($customerSeq){
+        $query = "delete from buyers where customerseq in ($customerSeq)";
+        return self::$dataStore->executeQuery($query);
     }
 }

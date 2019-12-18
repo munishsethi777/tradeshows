@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerBusinessType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class CustomerMgr{
@@ -264,6 +265,11 @@ class CustomerMgr{
 	
 	public function findBySeq($seq){
 		$customer = self::$dataStore->findArrayBySeq($seq);
+		$createdon = $customer["createdon"];
+		$createdon = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$createdon);
+		$customer["createdon"] = $createdon->format("m-d-Y h:i a");
+		$businessType = CustomerBusinessType::getValue($customer["businesstype"]);
+		$customer["businesstype"] = $businessType;
 		return $customer;
 	}
 	
@@ -285,6 +291,14 @@ class CustomerMgr{
 		}
 		$users =   self::$dataStore->executeQuery($sql);
 		return $users;
+	}
+	
+	public function deleteByCustomerSeq($customerSeqs){
+	   $flag =  self::$dataStore->deleteInList($customerSeqs);
+	   if($flag){
+	       $buyerMgr = BuyerMgr::getInstance();
+	       $buyerMgr->deleteByCustomerSeq($customerSeqs);
+	   }
 	}
 	
 }
