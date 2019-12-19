@@ -99,21 +99,28 @@ $(document).ready(function(){
     	loadGrid()
 	//});
 });
+var hasNext = true;
 function previous(){
 	currentRowId = currentRowId-1;
 	if(ids[currentRowId] == undefined){
-		currentRowId = 0; 
+		currentRowId = 0;
+		//return; 
 	}
 	prevSeq = ids[currentRowId];
+	hasNext = true;
 	showCustomerDetails(prevSeq,currentRowId);
 }
 function next(){
-	currentRowId = currentRowId+1;
-	if(ids[currentRowId] == undefined){
-		currentRowId = 0; 
+	if(hasNext){
+    	currentRowId = currentRowId+1;
+    	if(ids[currentRowId] == undefined){
+    		hasNext = false; 
+    		currentRowId = currentRowId-1;
+    		return;
+    	}
+    	nextSeq = ids[currentRowId];
+    	showCustomerDetails(nextSeq,currentRowId);
 	}
-	nextSeq = ids[currentRowId];
-	showCustomerDetails(nextSeq,currentRowId);
 }
 var currentRowId =  0;
 function showCustomerDetails(seq,rowId){
@@ -125,10 +132,40 @@ function showCustomerDetails(seq,rowId){
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-		var html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th></tr>';
+		var html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
 	    var tablerows = "";
 	    $.each(buyer,function(key,buyer){
-		    tablerows += "<tr class='tabRows'><td>"+ buyer.firstname + "</td><td>"+  buyer.lastname  +"</td><td>"+  buyer.email  + "</td><td>"+  buyer.officephone  + "</td><td>" + buyer.cellphone  +"</td><td>" + buyer.category  +"</td><td>"+ buyer.notes +"</td></tr>";
+		    var firstname = "";
+			var lastName = "";
+			var email = "";
+			var officePhone = "";
+			var cellPhone = "";
+			var category = "";
+			var notes = "";
+			lastmodifiedon = "";
+			if(buyer.firstname  != null ){
+				firstname = buyer.firstname;
+			}
+			if(buyer.email  != null ){
+				email = buyer.email;
+			}
+			if(buyer.officePhone  != null ){
+				officePhone = buyer.officePhone;
+			}
+			
+			if(buyer.cellPhone  != null ){
+				cellPhone =  buyer.cellphone;
+			}
+			if(buyer.category  != null ){
+				category = buyer.category;
+			}
+			if(buyer.notes  != null ){
+				notes = buyer.notes;
+			}
+			if(buyer.lastmodifiedon  != null ){
+				lastmodifiedon = buyer.lastmodifiedon;
+			}
+			tablerows += "<tr class='tabRows'><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
 		});
 		html += tablerows;
 		$(".buyers").html(html);
@@ -179,6 +216,7 @@ function loadGrid(){
         beforeprocessing: function(data)
         {        
             source.totalrecords = data.TotalRows;
+            ids = [];
         },
         filter: function()
         {
