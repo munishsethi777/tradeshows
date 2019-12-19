@@ -246,7 +246,7 @@ function loadGrid(){
     $("#customerGrid").jqxGrid(
     {
     	width: '100%',
-		height: '75%',
+		height: '600px',
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
