@@ -226,17 +226,19 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-            //var exportButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
+            var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             //var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
         
+            container.append(importButton);
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);
             container.append(reloadButton);
             statusbar.append(container);
+            importButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             editButton.jqxButton({  width: 70, height: 18 });
@@ -245,9 +247,9 @@ function loadGrid(){
             addButton.click(function (event) {
                 location.href = ("createCustomer.php");
             });
-//             exportButton.click(function (event) {
-//         	   exportCustomersConfirm();
-//             });
+	        importButton.click(function (event) {
+	        	location.href = ("importCustomers.php");
+    	    });
             deleteButton.click(function (event) {
             	deleteRows("customerGrid","Actions/CustomerAction.php?call=deleteCustomers");
            	});

@@ -185,12 +185,24 @@ function addBuyer(isDefaultRow,buyer){
 	var outdoorSeected = "";
 	var patriotic = "";
 	if (typeof buyer !== "undefined"){
-		firstName = buyer.firstname;
-		lastName = buyer.lastname;
-		emailid = buyer.email;
-		phone = buyer.officephone;
-		cellPhone = buyer.cellphone;
-		note = buyer.notes;
+		if(buyer.firstname != null){
+			firstName = buyer.firstname;
+		}
+		if(buyer.lastname != null){
+			lastName = buyer.lastname;
+		}
+		if(buyer.email != null){
+			emailid = buyer.email;
+		}
+		if(buyer.officephone != null){
+			phone = buyer.officephone;
+		}
+		if(buyer.cellphone != null){
+			cellPhone = buyer.cellphone;
+		}
+		if(buyer.notes != null){
+			note = buyer.notes;
+		}
 		category = buyer.category;
 		if(category == "christmas"){
 			christmasSeected = "selected"
@@ -206,16 +218,16 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
 		html += '</div>'
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
+		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
+		html += '<input type="text"  maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<select name="category[]" class="form-control">';

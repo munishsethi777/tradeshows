@@ -43,6 +43,11 @@ class BuyerMgr{
         }
     }
     
+    public function saveBuyerObject($buyer,$conn){
+        $id = self::$dataStore->saveObject($buyer,$conn);
+        return $id;
+    }
+    
     public function getBuyersByCustomerSeq($customerSeq){
           $query = "select * from buyers where customerseq = $customerSeq";
           $buyers = self::$dataStore->executeQuery($query,false,true);

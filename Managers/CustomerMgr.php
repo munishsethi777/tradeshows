@@ -26,7 +26,8 @@ class CustomerMgr{
 	}
 	  
     public function saveCustomer($conn,$customer){
-    	self::$dataStore->saveObject($customer, $conn);
+    	$id = self::$dataStore->saveObject($customer, $conn);
+    	return $id;
     }
     
     public function saveCustomerObject($customer){
@@ -61,7 +62,7 @@ class CustomerMgr{
 		$messages = "";
 		$customerIdAlreadyExists = 0;
 		$customerArr = array();
-		if(self::$FIELD_COUNT == count($this->fieldNames)){
+		//if(self::$FIELD_COUNT == count($this->fieldNames)){
 			foreach ($sheetData as $key=>$data){
 				if($key == 0){
 					continue;
@@ -77,10 +78,10 @@ class CustomerMgr{
 					$success = 0;
 				}
 			}
-		}else{
-		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
-			$success = 0;
-		}
+		//}else{
+		    //$messages .= StringConstants::IMPORT_CORRECT_FILE;
+			//$success = 0;
+		//}
 		$response = array();
 		$response["message"] = $messages;
 		$response["success"] = $success;
@@ -101,11 +102,15 @@ class CustomerMgr{
 		$savedCustomerCount = 0;
 		$success = 1;
 		$exstingCustomerIds = array();
-		foreach ($customerArr as $customer){
+		
+		foreach ($customerArr as $customerAndBuyers){
+		    $customer = $customerAndBuyers["customer"];
+		    $buyers = $customerAndBuyers["buyers"];
+		    $id = $customer->getSeq();
 			$customerId = $customer->getCustomerId();
 			try {
 				if(!$isUpdate){
-					$this->saveCustomer($conn, $customer);
+				    $id = $this->saveCustomer($conn, $customer);
 					$savedCustomerCount++;
 				}else{
 					if(in_array($customerId, $updateIds)){
@@ -117,13 +122,28 @@ class CustomerMgr{
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
-					$customerIdAlreadyExists++;
+					//$customerIdAlreadyExists++;
 					array_push($exstingCustomerIds, $customerId);
+					$id = $this->updateByCustomerByid($customer);
+					$savedCustomerCount++;
 				}else{
-					$messages .= $e->getMessage();
+					$messages .= $e->getMessage() . " for customer id $customerId";
+					$hasError = true;
+					$success = 0;
 				}
-				$hasError = true;
-				$success = 0;
+				
+			}
+			if(!empty($buyers)){
+			    $buyerMgr = BuyerMgr::getInstance();
+			    try{
+			        $buyerMgr->deleteByCustomerSeq($id);
+        			foreach ($buyers as $buyer){
+        			    $buyer->setCustomerSeq($id);
+        			    $buyerMgr->saveBuyerObject($buyer,$conn);
+        			}
+			    }catch (Exception $e){
+			        $messages .= $e->getMessage() . " for customer id $customerId";
+			    }
 			}
 		}
 		$conn->commit();
@@ -154,86 +174,65 @@ class CustomerMgr{
 	
 	private function getCustomerObj($data){
 		$customer = new Customer();
-		$customerId = $data[0];
-		$name = $data[1];
-		$phone = $data[2];
-		$address = $data[3];
-		$address1 = $data[4];
-		$city = $data[5];
-		$st = $data[6];
-		$zip = $data[7];
-		$email = $data[8];
-		$attention = $data[9];
-		$fax = $data[10];
-		$terms = $data[11];
-		$sales1 = $data[12];
-		$sales2 = $data[13];
-		$sales3 = $data[14];
-		$sales4 = $data[15];
-		$createdDate = $data[16];
-		
+		$name = $data[0];
+		$customerId = $data[1];
+		$salesPersonId = $data[2];
+		$salesPersonName = $data[3];
 		$message = "";
 		if(!empty($customerId)){
-			$message .= $this->validateNumeric($customerId, $this->fieldNames[0]);
+			//$message .= $this->validateNumeric($customerId, $this->fieldNames[0]);
 			$customer->setCustomerId($customerId);
 		}else{
 			$message .= "- " . $this->fieldNames[0]." is required!";
 		}
 		if(!empty($name)){
-			$customer->setCustomerName($name);
+			$customer->setFullName($name);
 		}
-		if(!empty($phone)){
-			$customer->setPhone($phone);
+		if(!empty($salesPersonId)){
+		    $customer->setSalesPersonId($salesPersonId);
 		}
-		if(!empty($address)){
-			$customer->setAddress($address);
-		}
-		if(!empty($address1)){
-			$customer->setAddress1($address1);
-		}
-		if(!empty($city)){
-			$customer->setCity($city);
-		}
-		if(!empty($st)){
-			$customer->setState($st);
-		}
-		if(!empty($zip)){
-			$customer->setZip($zip);
-		}
-		if(!empty($email)){
-			$customer->setEmail($email);
-		}
-		if(!empty($attention)){
-			$customer->setAttention($attention);
-		}
-		if(!empty($fax)){
-			$customer->setFax($fax);
-		}
-		if(!empty($terms)){
-			$customer->setTerms($terms);
-		}
-		if(!empty($sales1)){
-			$customer->setSales1($sales1);
-		}
-		if(!empty($sales2)){
-			$customer->setSales2($sales2);
-		}
-		if(!empty($sales3)){
-			$customer->setSales3($sales3);
-		}
-		if(!empty($sales4)){
-			$customer->setSales4($sales4);
-		}
-		if(!empty($createdDate)){
-			$createDateStr = PHPExcel_Shared_Date::ExcelToPHP($createdDate);
-			$date = new DateTime();
-			$date->setTimestamp($createDateStr);
-			$customer->setCreateDate($date);
+		if(!empty($salesPersonName)){
+		    $customer->setSalesPersonName($salesPersonName);
 		}
 		$customer->setCreatedOn(new DateTime());
 		$customer->setLastModifiedOn(new DateTime());
+		$sessionUtil = SessionUtil::getInstance();
+		$createBy = $sessionUtil->getUserLoggedInSeq();
+		$customer->setCreatedBy($createBy);
+		$customerAndBuyers = array();
+		$customerAndBuyers["customer"] = $customer;
+		
+		$firstName = preg_replace('!\s+!', ' ', $data[4]);
+		$emailId = $data[6];
+		$officePhone = $data[7];
+		$buyers = array();
+		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
+    		$buyer1 = new Buyer();
+    		$buyer1->setFirstName($firstName);
+    		$buyer1->setEmail($emailId);
+    		$buyer1->setOfficePhone($officePhone);
+    		$buyer1->setCreatedBy($createBy);
+    		$buyer1->setCreatedOn(new DateTime());
+    		$buyer1->setLastModifiedOn(new DateTime());
+    		array_push($buyers,$buyer1);
+		}
+		$firstName =  preg_replace('!\s+!', ' ', $data[8]);
+		$emailId = $data[9];
+		$officePhone = $data[10];
+		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
+    		$buyer2 = new Buyer();
+    		$buyer2->setFirstName($firstName);
+    		$buyer2->setEmail($emailId);
+    		$buyer2->setOfficePhone($officePhone);
+    		$buyer2->setCreatedBy($createBy);
+    		$buyer2->setCreatedOn(new DateTime());
+    		$buyer2->setLastModifiedOn(new DateTime());
+    		array_push($buyers,$buyer2);
+		}
+		
+		$customerAndBuyers["buyers"] = $buyers;
 		$this->validationErrors = $message;
-		return $customer;
+		return $customerAndBuyers;
 	}
 	
 	public function getCustomersForGrid(){
@@ -305,6 +304,16 @@ class CustomerMgr{
 	       $buyerMgr = BuyerMgr::getInstance();
 	       $buyerMgr->deleteByCustomerSeq($customerSeqs);
 	   }
+	}
+	
+	public function updateByCustomerByid($customer){
+	    $condition = array("customerid" => $customer->getCustomerId());
+	    $colVal = array("fullname" => $customer->getFullName(),
+	        "salespersonname" => $customer->getSalesPersonName(), 
+	        "salespersonid" => $customer->getSalesPersonID());
+	    self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
+	    $customerSeq = $this->findSeqByCustomerId($customer->getCustomerId());
+	    return $customerSeq;
 	}
 	
 }
