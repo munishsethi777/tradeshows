@@ -48,7 +48,7 @@ if($file == "dashboardmain.php"){
 	$manageItems = "active";
 }elseif($file=="adminManageItemSpecifications.php" || $file=="adminImportItemSpecifications.php"){
 	$manageItemSpecification = "active";
-}elseif($file=="createCustomer.php" || $file=="manageCustomers.php"){
+}elseif($file=="createCustomer.php" || $file=="manageCustomers.php" || $file == "importCustomers.php"){
 	$manageCustomers = "active";
 }elseif($file=="adminImportOrders.php" || $file=="adminManageOrders.php"){
 	$adminManageOrders = "active";

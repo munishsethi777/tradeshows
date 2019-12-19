@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Buyer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 class BuyerMgr{
     
     private static  $buyerMgr;
@@ -43,6 +44,11 @@ class BuyerMgr{
         }
     }
     
+    public function saveBuyerObject($buyer,$conn){
+        $id = self::$dataStore->saveObject($buyer,$conn);
+        return $id;
+    }
+    
     public function getBuyersByCustomerSeq($customerSeq){
           $query = "select * from buyers where customerseq = $customerSeq";
           $buyers = self::$dataStore->executeQuery($query,false,true);
@@ -56,6 +62,9 @@ class BuyerMgr{
             $category = $buyer["category"];
             $category = BuyerCategoryType::getValue($category);
             $buyer["category"] = $category;
+            $lastModifiedOn = $buyer["lastmodifiedon"];
+            $lastModifiedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$lastModifiedOn);
+            $buyer["lastmodifiedon"] = $lastModifiedOn->format("m-d-Y h:i a");
             array_push($array,$buyer);
         }
         return $array;
