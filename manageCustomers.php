@@ -125,7 +125,9 @@ function next(){
 var currentRowId =  0;
 function showCustomerDetails(seq,rowId){
 	currentRowId = rowId;
+	showHideProgress();
 	$.getJSON("Actions/CustomerAction.php?call=getCustomerDetails&seq="+seq, function(data){
+		showHideProgress();
 		var item = data.customer;
 		var buyer = data.buyers
 		$('#customerDetailsModal').modal('show');
