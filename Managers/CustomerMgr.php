@@ -249,10 +249,15 @@ class CustomerMgr{
 	
 	public function findAllArr($isApplyFilter = false){
 		$customerArr = self::$dataStore->findAllArr($isApplyFilter);
+		$sessoinUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $sessoinUtil->getUserLoggedInTimeZone();
 		$mainArr = array();
 		foreach ($customerArr as $customer){
 		    $businessType = CustomerBusinessType::getValue($customer["businesstype"]);
 		    $customer["businesstype"] = $businessType;
+		    $lastModifiedOn = $customer["lastmodifiedon"];
+		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+		    $customer["lastmodifiedon"] = $lastModifiedOn;
 		    array_push($mainArr,$customer);
 		}
 		return $mainArr;
@@ -270,9 +275,11 @@ class CustomerMgr{
 	
 	public function findBySeq($seq){
 		$customer = self::$dataStore->findArrayBySeq($seq);
+		$sessoinUtil = SessionUtil::getInstance();
+		$loggedInUserTimeZone = $sessoinUtil->getUserLoggedInTimeZone();
 		$createdon = $customer["createdon"];
-		$createdon = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$createdon);
-		$customer["createdon"] = $createdon->format("m-d-Y h:i a");
+		$createdon = DateUtil::convertDateToFormatWithTimeZone($createdon, "Y-m-d H:i:s", "m-d-Y h:i a",$loggedInUserTimeZone);
+		$customer["createdon"] = $createdon;
 		$businessType = CustomerBusinessType::getValue($customer["businesstype"]);
 		$customer["businesstype"] = $businessType;
 		return $customer;

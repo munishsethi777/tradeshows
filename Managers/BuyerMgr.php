@@ -58,13 +58,15 @@ class BuyerMgr{
     public function findArrByCustomerSeq($customerSeq){
         $buyers = $this->getBuyersByCustomerSeq($customerSeq);
         $array = array();
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         foreach ($buyers as $buyer){
             $category = $buyer["category"];
             $category = BuyerCategoryType::getValue($category);
             $buyer["category"] = $category;
             $lastModifiedOn = $buyer["lastmodifiedon"];
-            $lastModifiedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$lastModifiedOn);
-            $buyer["lastmodifiedon"] = $lastModifiedOn->format("m-d-Y h:i a");
+            $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "m-d-Y h:i a",$loggedInUserTimeZone);
+            $buyer["lastmodifiedon"] = $lastModifiedOn;
             array_push($array,$buyer);
         }
         return $array;
