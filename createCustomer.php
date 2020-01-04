@@ -125,7 +125,7 @@ if(isset($_POST["id"])){
 	                       </div>
 	                        <div class="col-lg-12 pull-right">
 	                       		<div class="col-lg-1 pull-right">
-	                        		<button class="btn btn-xs btn-success" onclick="addBuyer()" type="button">
+	                        		<button class="btn btn-xs btn-success" id="addBuyerBtn" onclick="addBuyer()" type="button">
 	                        		<i class="fa fa-plus"></i> Buyer</button>
 	                        	</div>
 	                        </div>
@@ -173,7 +173,7 @@ $(document).ready(function(){
 	});
 	populateCustomer();
 });
-
+var index = 0;
 function addBuyer(isDefaultRow,buyer){
 	var firstName = "";
 	var lastName = "";
@@ -181,9 +181,9 @@ function addBuyer(isDefaultRow,buyer){
 	var phone = "";
 	var cellPhone = "";
 	var note = "";
-	var christmasSeected = "";
-	var outdoorSeected = "";
-	var patriotic = "";
+	var category = "";
+	index++;
+	var id = index;
 	if (typeof buyer !== "undefined"){
 		if(buyer.firstname != null){
 			firstName = buyer.firstname;
@@ -204,14 +204,9 @@ function addBuyer(isDefaultRow,buyer){
 			note = buyer.notes;
 		}
 		category = buyer.category;
-		if(category == "christmas"){
-			christmasSeected = "selected"
-		}else if(category == "outdoor_decor"){
-			outdoorSeected = "selected"
-		}else if(category == "Patriotic"){
-			patriotic = "selected"
-		}
+		id = buyer.seq
 	}
+	var ddId =  'categorySelectDiv'+id;
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
@@ -230,11 +225,8 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<select name="category[]" class="form-control">';
-		html += '<option '+christmasSeected+' value="christmas">Christmas</option>';
-		html += '<option '+outdoorSeected+' value="outdoor_decor">Outdoor Decor</option>';
-		html += '<option '+patriotic+' value="patriotic">Patriotic</option>';
-		html += '</select>';
+		html += '<div id="'+ddId+'"><select name="category[]" class="form-control">';
+		html += '</select></div>';
 		html += '</div>';
 		html += '</div>';
 		html += '<div class="form-group row">';
@@ -249,6 +241,8 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
 		$("#buyers").append(html);
+		
+		populateBuyerCategories(category,ddId);
 }
 
 function populateCustomer(){
@@ -272,8 +266,19 @@ function populateCustomer(){
 	}
 }
 
+function populateBuyerCategories(selected,selectDivId){
+	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, function(data){
+   		var jsonData = $.parseJSON(data);
+   		var ddhtml = jsonData.categoryDD;	
+   		$("#"+selectDivId).html(ddhtml);
+	});
+}
+
 function deleteBuyer(btn){
 	$(btn).closest('.buyerDiv').remove();
+// 	if(index > 0){
+// 		index--;
+// 	}
 }
 
 function saveCustomer(){

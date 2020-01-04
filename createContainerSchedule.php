@@ -134,7 +134,7 @@ if(isset($_REQUEST["id"])){
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="createGraphicLogForm" method="post" action="Actions/ContainerScheduleAction.php">
+                 	 <form id="createGraphicLogForm" autocomplete="off" method="post" action="Actions/ContainerScheduleAction.php">
                      	<input type="hidden" id ="call" name="call"  value="saveContainerSchedule"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $containerSchedule->getSeq()?>"/>
                         <div class="bg-white1 p-xs outterDiv darkdiv" style="position:relative">
@@ -529,13 +529,14 @@ if(isset($_REQUEST["id"])){
 $(document).ready(function(){
 	setInterval(function () {
 		$.post('Actions/UserAction.php?call=refreshSession',function(data){
-			alert(data);
+			//alert(data);
 			if(data == 0){
 				location.href = "userLogin.php";
 			}
 		});
     },60000);
-    
+	$('.dateControl').attr("autocomplete","off");
+	$('.dateTimeControl').attr("autocomplete","off");
 	var hasContainerInformation = "<?php echo $hasContainerScheduleInformationPermission?>";
 	var hasDeliveryInformation = "<?php echo $hasContainerDeliveryPermission?>";
 	var hasOfficeInformation = "<?php echo $hasContainerOfficeInformationPermission?>";
@@ -658,9 +659,6 @@ function setDuration(){
 		var daysDiff = datediff(startDate,endDate);
 		$("#duration").val(daysDiff);	
 	}
-	
-
-	
 }
 function parseDate(str) {
     var mdy = str.split('-');

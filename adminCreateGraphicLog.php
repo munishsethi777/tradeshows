@@ -515,6 +515,9 @@ $(document).ready(function(){
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
+	$('.dateControl').attr("autocomplete","off");
+	$('.datepicker').attr("autocomplete","off");
+	$('.currentdatepicker').attr("autocomplete","off");
 	$("#graphictype").chosen({width:"100%"});
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
