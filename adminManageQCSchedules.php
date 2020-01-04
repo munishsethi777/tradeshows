@@ -437,15 +437,19 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
        		    $("#modalPoLabel").text(approvalInfo.po);
        		    $("#modalItemnumberLabel").text(approvalInfo.itemnumbers);   
        		 	$("#approvalSeq").val(approvalInfo.seq);
-       		    arr.shift()
+       		   // arr.shift()
        		    var flag = false;
     			$.each(arr, function(key,value){
     				flag = true;
     				qcCode = value["qccode"];
     				if(value["qccode"] == null){
     					qcCode = "n.a";
-    				}    				
-    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + value["respondedon"] +"</td><td>"+ value["responsecomments"] +"</td></tr>";
+    				}  
+    				respondedon = value["respondedon"];
+    				if(value["respondedon"] == null){
+    					respondedon = "n.a";
+    				}   				
+    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + respondedon +"</td><td>"+ value["responsecomments"] +"</td></tr>";
         		});
         		if(flag){
       				html += tablerows;   			  			
@@ -679,7 +683,7 @@ function loadGrid(){
                 location.href = ("adminCreateQCSchedule.php");
             });
             weeklyReportButton.click(function (event) {
-            	window.open('http://alpinebi.com/Crons/PendingQCScheduleCron.php');
+            	window.open('http://localhost:8080/tradeshows/Crons/PendingQCScheduleCron.php');
             });
             editButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
@@ -738,24 +742,24 @@ function loadGrid(){
              exportPlannerButton.click(function (event) {
             	 exportPlanner();
              });
-//              $("#qcscheduleGrid").bind('rowselect', function (event) {
-//                  var selectedRowIndex = event.args.rowindex;
-//                   var pageSize = event.args.owner.rows.records.length - 1;                       
-//                  if($.isArray(selectedRowIndex)){           
-//                      if(isSelectAll){
-//                          isSelectAll = false;    
-//                      } else{
-//                          isSelectAll = true;
-//                      }                                                                     
-//                      $('#qcscheduleGrid').jqxGrid('clearselection');
-//                      if(isSelectAll){
-//                          for (i = 0; i <= pageSize; i++) {
-//                              var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
-//                              $('#qcscheduleGrid').jqxGrid('selectrow', index);
-//                          }    
-//                      }
-//                  }                        
-//             });
+             $("#qcscheduleGrid").bind('rowselect', function (event) {
+                 var selectedRowIndex = event.args.rowindex;
+                  var pageSize = event.args.owner.rows.records.length - 1;                       
+                 if($.isArray(selectedRowIndex)){           
+                     if(isSelectAll){
+                         isSelectAll = false;    
+                     } else{
+                         isSelectAll = true;
+                     }                                                                     
+                     $('#qcscheduleGrid').jqxGrid('clearselection');
+                     if(isSelectAll){
+                         for (i = 0; i <= pageSize; i++) {
+                             var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
+                             $('#qcscheduleGrid').jqxGrid('selectrow', index);
+                         }    
+                     }
+                 }                        
+            });
             // reload grid data.
             reloadButton.click(function (event) {
                 $("#qcscheduleGrid").jqxGrid("clearfilters");

@@ -178,6 +178,7 @@ function editShow(seq){
     $("#form1").submit();
 }
 var ids = [];
+isSelectAll = false;
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#customerGrid').jqxGrid('getrowdata', row);
