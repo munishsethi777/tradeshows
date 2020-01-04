@@ -125,6 +125,12 @@ if(in_array(1,$departmentSeqArr)){
 	border-bottom:1px silver dashed;
 	padding:20px 10px;
 }
+.todo-list{
+	font-size:12px !important;
+}
+.todo-list > li{
+	padding:8px !important;
+}
 </style>
 </head>
 <body>
@@ -205,97 +211,244 @@ if(in_array(1,$departmentSeqArr)){
 <!-- 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Permissions</label> -->
 <!-- 	                        </div> -->
 	                        <div class="form-group row i-checks m-t-xl">
-	                        	<div class="col-lg-4">
+	                        	<div class="col-lg-12">
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            QC Schedules
-                                             <div class="pull-right">
+                                             <div class="pull-left m-r-sm">
                                             	<input type="checkbox" class="i-checks" <?php echo $qcDepartmentChecked?> value="1" id="qcDepartment" name="departments[]"/>
-                                            </div>
+                                            </div>  QC Schedules
                                         </div>
                                         <div id="qcPermissionsDiv" class="panel-body i-checks">
-                                            <label class="col-lg-8 col-form-label bg-formLabel">Quality Controller</label>
-				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" <?php echo $qcChecked?> value="qc" id="qcpermission" name="permissions[]"/>
-				                            </div>
+                                        
+                                            <label class="col-lg-3 col-form-label">
+                                            	<input type="checkbox" <?php echo $qcChecked?> value="qc" id="qcpermission" name="permissions[]"/>
+				                        		Quality Controller
+                                            </label>
+				                        	
+				                        	<label class="col-lg-3 col-form-label">
+				                        		<input type="checkbox" <?php echo $classCodeChecked?> value="class_code" id="classcodepermission" name="permissions[]"/>
+												Class Code
+											</label>
+				                        	
+				                        	<label class="col-lg-3 col-form-label">
+				                        		<input type="checkbox" <?php echo $weeklyMailButtonChecked?> value="weekly_mail_button" id="weeklymailbuttonpermission" name="permissions[]"/>
+				                            	Weekly Mail Button
+				                        		
+				                            </label>
 				                            
-				                            <div class="qcDIV form-group col-lg-12 m-t-xs" style="display:<?php echo "block"?>">
-					                            <label class="col-lg-4 col-form-label bg-formLabel">QC Code :</label>
+				                            <label class="col-lg-3 col-form-label">
+				                            	<input type="checkbox" <?php echo $qcPlannerButtonChecked?> value="qc_planner_button" id="qcplannerbuttonpermission" name="permissions[]"/>
+				                            	Qc Planner Button
+				                            </label>
+				                            <div class="row m-t-xl"></div>
+				                            <label class="col-lg-3 col-form-label">
+				                            	<input type="checkbox" <?php echo $qcApprovedRejectNotification?> value="approved_reject_notification" id="qcapprovalrejectpermission" name="permissions[]"/>
+				                            	Approved/Reject Notification
+				                            </label>
+				                        	
+				                            <div class="qcDIV form-group col-lg-6" style="display:<?php echo "block"?>">
+					                            <label class="col-lg-3 col-form-label">QC Code :</label>
 					                        	<div class="col-lg-8">
 					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
 					                            </div>
 					                        </div>
-					                        <label class="col-lg-8 col-form-label bg-formLabel">Class Code</label>
-				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" <?php echo $classCodeChecked?> value="class_code" id="classcodepermission" name="permissions[]"/>
-				                            </div>
-				                            
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Weekly Mail Button</label>
-				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" <?php echo $weeklyMailButtonChecked?> value="weekly_mail_button" id="weeklymailbuttonpermission" name="permissions[]"/>
-				                            </div>
-				                            
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Qc Planner Button</label>
-				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" <?php echo $qcPlannerButtonChecked?> value="qc_planner_button" id="qcplannerbuttonpermission" name="permissions[]"/>
-				                            </div>
-				                            
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Approved/Reject Notification</label>
-				                        	<div class="col-lg-4">
-				                        		<input type="checkbox" <?php echo $qcApprovedRejectNotification?> value="approved_reject_notification" id="qcapprovalrejectpermission" name="permissions[]"/>
-				                            </div>
+					                        <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
+				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Upcoming Inspections Report</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Appointments Report</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Incompleted Schedules Report</span>
+						                        </li>
+											</ul>
+						                    
+						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
+						                    	<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Pending QC Approval Report</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">QC Planner Report</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">QC Approved/Rejected (Instant)</span>
+						                        </li>
+						                    </ul>
 				                            
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-4">
+                                <div class="col-lg-12">
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            Graphic Logs
-                                            <div class="pull-right">
+                                            <div class="pull-left m-r-sm">
                                             	<input type="checkbox" <?php echo $graphicDepartmentChecked?> value="2" id="graphicDepartment" name="departments[]"/>
-                                            </div>
+                                            </div>Graphic Logs
                                         </div>
                                         <div id="graphicPermissionsDiv" class="panel-body i-checks">
-                                            <label class="col-lg-8 col-form-label bg-formLabel">USA Team</label>
-				                        	<div class="col-lg-4">
+                                            <label class="col-lg-3 col-form-label">
 				                        		<input type="checkbox" <?php echo $usaTeamChecked?> value="usa_team" id="usaTeamPermission" name="permissions[]"/>
-				                            </div>
+				                            	USA Team
+				                            </label>
 				                            
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">China Team</label>
-				                        	<div class="col-lg-4 m-t-xs">
+				                            <label class="col-lg-3 col-form-label">
 				                        		<input type="checkbox" <?php echo $chinaTeamChecked?> value="china_team" id="chinaTeamPermission" name="permissions[]"/>
-				                            </div>
+				                            	China Team
+				                            </label>
 				                            
-				                            <label class="col-lg-8 col-form-label bg-formLabel m-t-xs">Graphic Designer</label>
-				                        	<div class="col-lg-4 m-t-xs">
+				                            <label class="col-lg-3 col-form-label">
 				                        		<input type="checkbox" <?php echo $graphicDesignerChecked?> value="graphic_designer" id="graphicDesignerPermission"  name="permissions[]"/>
-				                            </div>
+				                            	Graphic Designer
+				                            </label>
+				                            
+				                            <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
+				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects Completed Last Week</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects Over Due till now</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects In Buyer Review</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects In Manager Review</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects In Robby Review</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects Missing Info From China</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Project Passed Due with Missing Info From China</span>
+						                        </li>
+											</ul>
+						                    
+						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
+						                    	
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Project Due for Today</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Proect Due less than 20 das from entry date</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Project Due Less than 20 days from today</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Projects Missing Info from China</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Graphic Logs Status change (Instant)</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Graphic Logs Notes Update (Instant)</span>
+						                        </li>
+						                    </ul>
+				                            
                                         </div>
                                     </div>
                                 </div>
-	                        	<div class="col-lg-4">
+	                        	<div class="col-lg-12">
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            Container Schedule
-                                             <div class="pull-right">
+                                            <div class="pull-left m-r-sm">
                                             	<input type="checkbox" <?php echo $containerDepartmentChecked?> value="4" id="containerDepartment" name="departments[]"/>
-                                            </div>
+                                            </div>Container Schedule
                                         </div>
                                         <div id='containerPermissionsDiv' class="panel-body i-checks">
-                                            <label class="col-lg-8 col-form-label bg-formLabelDark">Container Information<small>(Outside Vendor)</small></label>
-				                        	<div class="col-lg-4 ">
+                                            <label class="col-lg-3 col-form-label bg-formLabelDark m-r-sm">
 				                        		<input type="checkbox" <?php echo $containerInformationChecked?> value="container_information" id="containerpermission" name="permissions[]"/>
-				                            </div>
-				                            <label class="col-lg-8 col-form-label bg-formLabelMauve m-t-xs">Delivery Information  </label>
-				                        	<div class="col-lg-4 m-t-xs">
+				                            	Container Information
+				                            </label>
+				                            
+				                            <label class="col-lg-3 col-form-label bg-formLabelMauve m-r-sm">
 				                        		<input type="checkbox" <?php echo $containerDeliveryChecked?> value="container_delivery_information" id="containerdevilerypermission" name="permissions[]"/>
-				                            </div>
-				                            <label class="col-lg-8 col-form-label bg-formLabelBrown m-t-xs">Office Information  </label>
-				                        	<div class="col-lg-4 m-t-xs">
+				                            	Delivery Information
+				                            </label>
+				                            <label class="col-lg-3 col-form-label bg-formLabelBrown">
 				                        		<input type="checkbox" <?php echo $containerOfficeChecked?> value="container_office_information" id="containerofficepermission" name="permissions[]"/>
-				                            </div>
+				                            	Office Information
+				                            </label>
+				                            <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
+				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Send ETA Report</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Empty Return Date Past Empty LFD Report</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Pending Schedule Delivery Date for Today Report</span>
+						                        </li>
+						                        <li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Empty Alpine Notication Pickup Date</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing ID Report</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Terminal Appointment Date</span>
+						                        </li>
+											</ul>
+						                    
+						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
+						                    	<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Schedule Delivery Date</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Confirmed Delivery Date</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Received Dates in WMS</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Missing Received Dates in OMS</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Send Alpine Picking Date Change (Instant)</span>
+						                        </li>
+												<li>
+						                           	<input type="checkbox"/>
+													<span class="m-l-xs">Terminal Appointment Date Change (Instant)</span>
+						                        </li>
+						                    </ul>
+				                            
                                         </div>
                                     </div>
                                 </div>
