@@ -3,9 +3,11 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerBusinessType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class CustomerMgr{
@@ -294,6 +296,11 @@ class CustomerMgr{
 	    $buyerMgr = BuyerMgr::getInstance();
 	    $buyers = $buyerMgr->getBuyersByCustomerSeq($customerSeq);
 	    return $buyers;
+	}
+	
+	function getCustomerBuyerCategories($selected){
+	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false);
+	    return $ddhtml;
 	}
 	
 	public function searchCustomers($searchString){

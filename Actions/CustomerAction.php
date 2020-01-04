@@ -87,6 +87,15 @@ if($call == "getCustomerBuyers"){
         $message  = $e->getMessage();
     }
 }
+if($call == "getBuyerCategories"){
+    try{
+        $ddhtml = $customerMgr->getCustomerBuyerCategories($_GET["selected"]);
+        $response["categoryDD"] = $ddhtml;
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
 if($call == "searchCustomers"){
 	$searchString = $_GET["q"];
 	$customers  = $customerMgr->searchCustomers($searchString);

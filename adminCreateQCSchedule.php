@@ -84,7 +84,6 @@ if($isSessionGeneralUser && !$isSessionSV){
     }else{
         $isCompleted = "";
     }
-   
  }
 ?>
 <!DOCTYPE html>
@@ -435,6 +434,8 @@ $(document).ready(function(){
 		if(firstInspectionNa != ""){
 			showHideFirstNaDiv(true);
 		}
+	$('.dateControl').attr("autocomplete","off");
+	$('.shipDateControl').attr("autocomplete","off");	
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
 	    format:'m-d-Y',
