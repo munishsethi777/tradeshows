@@ -260,7 +260,7 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-
+isSelectAll = false;
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#graphiclogGrid').jqxGrid('getrowdata', row);
@@ -429,9 +429,25 @@ function loadGrid(){
             	initDateRanges();
             	//$("#graphiclogGrid").jqxGrid({ source: dataAdapter });
             });
-            //downloadButton.click(function (event) {
-            	//location.href = ("files/QCSchedules_template.xlsx");
-            //});
+            $("#graphiclogGrid").bind('rowselect', function (event) {
+                var selectedRowIndex = event.args.rowindex;
+                 var pageSize = event.args.owner.rows.records.length - 1;                       
+                if($.isArray(selectedRowIndex)){           
+                    if(isSelectAll){
+                        isSelectAll = false;    
+                    } else{
+                        isSelectAll = true;
+                    }                                                                     
+                    $('#graphiclogGrid').jqxGrid('clearselection');
+                    if(isSelectAll){
+                        for (i = 0; i <= pageSize; i++) {
+                            var index = $('#graphiclogGrid').jqxGrid('getrowboundindex', i);
+                            $('#graphiclogGrid').jqxGrid('selectrow', index);
+                        }    
+                    }
+                }                        
+           });
+
         }
     });
 }

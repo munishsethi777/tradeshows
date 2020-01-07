@@ -50,6 +50,7 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+isSelectAll = false;    
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#usersGrid').jqxGrid('getrowdata', row);

@@ -275,10 +275,10 @@ if(isset($_POST["id"])){
 	                    
 	                     <div class="bg-white1 p-xs outterDiv" style="position:relative" id="chinadiv">
                         	<div class="form-group row">
-	                       		<label class="col-lg-3 col-form-label bg-primary">To be filled by China Team </label>
+	                       		<label class="col-lg-3 col-form-label bg-formLabelMauve" style="background-color:#5e96ff;padding:5px 10px !important;color:white">To be filled by China Team </label>
 	                        </div>
                         	<div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Entry Date :</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabelMauve">Entry Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
                                 		<input tabindex="<?php echo $chinaTabIndex?>" tabindex="<?php echo $chinaTabIndex?>" onchange="callChinaEntryDate(this.value)"  type="text" maxLength="250" value="<?php echo $graphicLog->getChinaOfficeEntryDate()?>" name="chinaofficeentrydate" id="chinaofficeentrydate" class="form-control currentdatepicker" <?php echo $readOnlyPO?>>
@@ -286,7 +286,7 @@ if(isset($_POST["id"])){
 	                            	</div>
 	                            	
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Final Graphics Due Date :</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Final Graphics Due Date :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
 	                            		<input tabindex="<?php echo $chinaTabIndex?>" type="text" maxLength="250" value="<?php echo $graphicLog->getFinalGraphicsDueDate()?>" name="finalgraphicsduedate" id="finalgraphicsduedate" class="form-control dateControl" <?php echo $readOnlyPO?>>
@@ -295,14 +295,14 @@ if(isset($_POST["id"])){
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Confirmed PO Ship Date :</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabelMauve">Confirmed PO Ship Date:</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
 		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="text" maxLength="250" value="<?php echo $graphicLog->getConfirmedPOShipDate()?>" name="confirmedposhipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 		                            	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Entered By:</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Entered By:</label>
 	                       		<div class="col-lg-4">
 		                        	<div class="input-group date">
 		                        		<?php 
@@ -314,32 +314,25 @@ if(isset($_POST["id"])){
 	                        </div>
 	                        <div id="graphicFields" style="display:none">
 		                        <div class="form-group row">
-		                       		<label class="col-lg-2 col-form-label bg-formLabel">Dimensions of Graphics :</label>
+		                       		<label class="col-lg-2 col-form-label bg-formLabelMauve">Dimensions of Graphics :</label>
 		                        </div>
 		                        <div class="form-group row">
-		                       		<label class="col-lg-2 col-form-label bg-formLabel">Length:</label>
+		                       		<label class="col-lg-2 col-form-label bg-formLabelMauve">Length:</label>
 		                        	<div class="col-lg-2">
 		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
 			                        </div>
-		                            <label class="col-lg-2 col-form-label bg-formLabel">Width:</label>
+		                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Width:</label>
 		                        	<div class="col-lg-2">
 		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
 		                            </div>
-		                            <label class="col-lg-2 col-form-label bg-formLabel">Height:</label>
+		                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Height:</label>
 		                        	<div class="col-lg-2">
 		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
 		                            </div>
 		                        </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notes to US Office</label>
-	                        	<div class="col-lg-10">
-	                            	<textarea tabindex="<?php echo $chinaTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
-	                            	
-	                            </div>
-	                        </div> 
-	                        <div class="form-group row">
-	                        	<div class="panel panel-primary">
+	                        	<div class="panel panel-mauve">
 									<div class="panel-heading">Notes to US Office</div>
 									<div class="panel-body">
 	                                   	<textarea tabindex="<?php echo $chinaTabIndex?>" class="form-control" maxLength="1000" name="chinanotes" ><?php echo $graphicLog->getChinaNotes()?></textarea>
@@ -515,6 +508,9 @@ $(document).ready(function(){
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
+	$('.dateControl').attr("autocomplete","off");
+	$('.datepicker').attr("autocomplete","off");
+	$('.currentdatepicker').attr("autocomplete","off");
 	$("#graphictype").chosen({width:"100%"});
 	$('.dateControl').datetimepicker({
 	    timepicker:false,
