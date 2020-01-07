@@ -62,24 +62,20 @@ if($call == "saveUser"){
 		$id = $userMgr->saveUser($user);
 		$departmentMgr->deleteUseDepartments($id);
 		$userMgr->deleteUseRoles($id);
-		try{
-			foreach($permissions as $key => $value){
-				$userRole = new UserRole();
-				$userRole->setUserSeq($id);
-				$userRole->setRole($value);
-				$userRole->setCreatedOn(new DateTime());
-				$userMgr->saveUserRole($userRole);
-			}
-			foreach($departments as $key => $value){
-				$userDept = new UserDepartment();
-				$userDept->setUserSeq($id);
-				$userDept->setDepartmentSeq($value);
-				$userDept->setLastModifiedOn(new DateTime());
-				$userDept->setCreatedOn(new DateTime());
-				$departmentMgr->saveUserDepartment($userDept);
-			}
-		}catch(Exception $e){
-			return $e->getMessage();
+		foreach($permissions as $key => $value){
+			$userRole = new UserRole();
+			$userRole->setUserSeq($id);
+			$userRole->setRole($value);
+			$userRole->setCreatedOn(new DateTime());
+			$userMgr->saveUserRole($userRole);
+		}
+		foreach($departments as $key => $value){
+			$userDept = new UserDepartment();
+			$userDept->setUserSeq($id);
+			$userDept->setDepartmentSeq($value);
+			$userDept->setLastModifiedOn(new DateTime());
+			$userDept->setCreatedOn(new DateTime());
+			$departmentMgr->saveUserDepartment($userDept);
 		}
 	}catch(Exception $e){
 		$success = 0;
