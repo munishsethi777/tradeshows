@@ -63,7 +63,6 @@ class StringConstants{
 	
 	// USER ACTION STRING CONSTANT
 	const WEB_PORTAL_LINK = "http://www.alpinebi.com";
-	const QC_PLANNER = "ALPINE BI | QC Planner";
 	const PERMISSION_AllOW = "No Permission is Allow";
 	const SERVER_ERROR = "Server Error!";
 	const USER_DOES_NOT_EXITS_WITH_THIS_USER_NAME = "User does not exists with this user name";
