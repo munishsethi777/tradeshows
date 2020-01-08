@@ -65,12 +65,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 											    <span></span> <i class="fa fa-caret-down"></i>
 											</div>
 			                            </div>
-			                            <div class="col-lg-2 pull-right">
-			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
-			                            		<option value="returned">Not Returned</option>
-			                            		<option value="notreturned">Returned</option>
-			                            		</select>
-			                            </div>
+<!-- 			                            <div class="col-lg-2 pull-right"> -->
+<!-- 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control"> -->
+<!-- 			                            		<option value="returned">Not Returned</option> -->
+<!-- 			                            		<option value="notreturned">Returned</option> -->
+<!-- 			                            	</select> -->
+<!-- 			                            </div> -->
 			                        </div>
 		                     	
 		                     	<div id="containerScheduleGrid"></div>
