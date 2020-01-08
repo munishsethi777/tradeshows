@@ -39,6 +39,7 @@ $isSendNotifications = "";
 $qcDepartmentChecked = "";
 $containerDepartmentChecked = "";
 $graphicDepartmentChecked  = "";
+$customerDepartmentChecked = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
@@ -266,7 +267,7 @@ if(in_array(1,$departmentSeqArr)){
 						                        </li>
 						                        <li>
 						                           	<input name="permissions[]" type="checkbox" value="incompleted_schedules_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::incompleted_schedules_report_weekly), $userRoles) ?  "checked" : ""?>/>
-													<span class="m-l-xs" >Incompleted Schedules Report</span>
+													<span class="m-l-xs" >Incompleted Schedules Report (Weekly)</span>
 						                        </li>
 											</ul>
 						                    
@@ -452,6 +453,21 @@ if(in_array(1,$departmentSeqArr)){
                                         </div>
                                     </div>
                                 </div>
+	                        	<div class="col-lg-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left m-r-sm">
+                                            	<input type="checkbox" <?php echo $customerDepartmentChecked?> value="2" id="customerDepartment" name="departments[]" />
+                                            </div>Customer Management
+                                        </div>
+                                        <div id="graphicPermissionsDiv" class="panel-body i-checks">
+                                            <label class="col-lg-3 col-form-label">
+				                        		<input type="checkbox" <?php echo $usaTeamChecked?> value="usa_team" id="usaTeamPermission" name="permissions[]"/>
+				                            	Manage Customers
+				                            </label>
+                                    </div>
+                                </div>
+	                        
 	                        </div>
 	                    	<!-- 
 	                    	<div class="form-group row m-t-xl">
