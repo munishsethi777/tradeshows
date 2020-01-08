@@ -4,6 +4,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/ContainerScheduleNotificationType.php");
+
 class ContainerScheduleReportUtil
 {   
     private static $CS_DEP_SEQ = 4;
@@ -17,10 +19,22 @@ class ContainerScheduleReportUtil
         return $html;
     }
     
+    private static function getCSUsersByNotificationType($users,$notificationType){
+        if(isset($users[ContainerScheduleNotificationType::getName($notificationType)])){
+            return $users[ContainerScheduleNotificationType::getName($notificationType)];
+        }else{
+            return null;
+        }
+    }
     
     //Weekly
     private static $N_J_Y = "n_j_y";
-    public static function sendETAReport(){
+    public static function sendETAReport($users){
+        $users = self::getCSUsersByNotificationType($users,
+            ContainerScheduleNotificationType::send_eta_report_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::ETA_REPORT;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getETADatesPendingInNextSevenDays();
@@ -37,11 +51,11 @@ class ContainerScheduleReportUtil
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y) . "_to_" . $dateWithInterval->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For this week for dates $currentDateStr to $dateWithIntervalStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::container_information); //WareHouse (Blue)
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::container_information); //WareHouse (Blue)
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -56,7 +70,12 @@ class ContainerScheduleReportUtil
     }
     
     //Weekly
-    public static function sendEmptyReturnDatePastEmptyLFDReport(){
+    public static function sendEmptyReturnDatePastEmptyLFDReport($users){
+        $users = self::getCSUsersByNotificationType($users,
+            ContainerScheduleNotificationType::empty_return_date_past_empty_lFD_report_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::EMPTY_RETURN;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getEmptyReturnDatePastEmptyLFD();
@@ -73,11 +92,11 @@ class ContainerScheduleReportUtil
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+        // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For past week for dates $dateWithIntervalStr to $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
+        // $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
+        // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -92,7 +111,7 @@ class ContainerScheduleReportUtil
     }
     
     //Daily
-    public static function sendPendingScheduleDeliveryDateForTodayReport(){
+    public static function sendPendingScheduleDeliveryDateForTodayReport($users){
         $subject = StringConstants::DAILY_SCHEDULE_REPORT;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getPendingScheduleDeliveryDateForToday();
@@ -105,11 +124,12 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::DAILY_SCHEDULE_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_PENDING_SCHEDULE_DELIVERY_DATE;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::pending_schedule_delivery_date_for_today_report_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     //Daily
-    public static function sendEmptyAlpineNotificationPickupDateReport(){
+    public static function sendEmptyAlpineNotificationPickupDateReport($users){
         $subject = StringConstants::MISSING_ALPINE_NOTIFICATION_PICKUP_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingAlpineNotificationDate();
@@ -122,11 +142,12 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::MISSING_ALPINE_NOTIFICATION_PICKUP_DATE_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_PENDING_EMPTY_ALPINE_NOTIFICATION_PICKUP_DATE;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::empty_alpine_notication_pickup_date_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     //Daily
-    public static function sendMissingIDReport(){
+    public static function sendMissingIDReport($users){
         $subject = StringConstants::MISSING_IDS;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingIDReport();
@@ -139,12 +160,13 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::MISSING_IDS_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_IDS;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_id_report_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     
     //Daily
-    public static function sendMissingTerminalAppointmentDateReport(){
+    public static function sendMissingTerminalAppointmentDateReport($users){
         $subject = StringConstants::MISSING_TERMINAL_APPT_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingTerminalAppointmentDate();
@@ -157,11 +179,12 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::MISSING_TERMINAL_APPT_DATE_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_TERMINAL_APPT_DATE;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_terminal_appointment_date_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     //Daily
-    public static function sendMissingScheduleDeliveryDateReport(){
+    public static function sendMissingScheduleDeliveryDateReport($users){
         $subject = StringConstants::MISSING_SCHEDULE_DELIVERY_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingScheduleDeliveryDate();
@@ -174,10 +197,11 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::MISSING_SCHEDULE_DELIVERY_DATE_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_SCHEDULE_DELIVERY_DATE;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_schedule_delivery_date_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     //Daily
-    public static function sendMissingConfirmDeliveryDateReport(){
+    public static function sendMissingConfirmDeliveryDateReport($users){
         $subject = StringConstants::MISSING_CONFIRM_DELIVERY_DATE;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingConfirmDeliveryDate();
@@ -190,11 +214,12 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::MISSING_CONFIRM_DELIVERY_DATE_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_CONFIRM_DELIVERY_DATE;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_confirm_delivery_date_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     //Daily
-    public static function sendMissingReceivedDatesInWMSReport(){
+    public static function sendMissingReceivedDatesInWMSReport($users){
         $subject = StringConstants::EMPTY_WMS_DATES;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingReceivedDatesInWMS();
@@ -207,11 +232,12 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::EMPTY_WMS_DATES_REPORT_NAME;
         $roleName = Permissions::container_delivery_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_RECEIVED_DATE_WMS;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_received_dates_in_wms_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
     }
     
     //Daily
-    public static function sendMissingReceivedDatesInOMSReport(){
+    public static function sendMissingReceivedDatesInOMSReport($users){
         $subject = StringConstants::EMPTY_OMS_DATES;
         $ds = ContainerScheduleDataStore::getInstance();
         $containerSchedules = $ds->getMissingReceivedDatesInOMS();
@@ -224,19 +250,24 @@ class ContainerScheduleReportUtil
         $reportName = StringConstants::EMPTY_OMS_DATES_REPORT_NAME;
         $roleName = Permissions::container_office_information;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_RECEIVED_DATE_OMS;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType);
+        $notificationType = ContainerScheduleNotificationType::missing_received_dates_in_oms_daily;
+        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
         
     }
     
-    private static function sendDailyMail($subject,$reportName,$receiverPermission,$excelData,$emailLogType){
+    private static function sendDailyMail($subject,$reportName,$receiverPermission,$excelData,$emailLogType,$notificationType,$users){
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
-        $userMgr = UserMgr::getInstance();
+       // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);//WareHouse (Blue)
-        $users = $userMgr->getUserssByRoleAndDepartment(Permissions::getName($receiverPermission), self::$CS_DEP_SEQ);
+       // $users = $userMgr->getUserssByRoleAndDepartment(Permissions::getName($receiverPermission), self::$CS_DEP_SEQ);
+        $users = self::getCSUsersByNotificationType($users,$notificationType);
+        if(empty($users)){
+            return;
+        }
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -252,8 +283,14 @@ class ContainerScheduleReportUtil
     }
     
     public static function sendAlpinePickUpDateChangedNotification($containerSchedule, 
-        $existingContainerSchedule,$userName)
-    {
+        $existingContainerSchedule,$userName){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getCSUsersByNotificationType($users,
+            ContainerScheduleNotificationType::send_alpine_picking_date_change_instant);
+        if(empty($users)){
+            return;
+        }
         $scheduleDeliveryDate = $containerSchedule->getScheduledDeliveryDateTime();
         $scheduleAlpinePickupDate = $containerSchedule->getAlpineNotificatinPickupDateTime();
         
@@ -304,9 +341,9 @@ class ContainerScheduleReportUtil
             $body = MailUtil::appendToEmailTemplateContainer($content);
             $toEmails = array("baljeetgaheer@gmail.com");
             $subject = StringConstants::CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION;
-            $roleName = Permissions::getName(Permissions::container_information); //outside vendor (Black)
-            $userMgr = UserMgr::getInstance();
-            $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
+            //$roleName = Permissions::getName(Permissions::container_information); //outside vendor (Black)
+            
+            //$users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
             $toEmails = array();
             foreach ($users as $user){
                 array_push($toEmails,$user->getEmail());
@@ -357,9 +394,14 @@ class ContainerScheduleReportUtil
             $body = MailUtil::appendToEmailTemplateContainer($content);
             $toEmails = array("baljeetgaheer@gmail.com");
             $subject = StringConstants::CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE;
-            $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
+//             $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
             $userMgr = UserMgr::getInstance();
-            $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
+            $users = $userMgr->getAllUsersWithRoles();
+            $users = self::getCSUsersByNotificationType($users,
+                ContainerScheduleNotificationType::terminal_appointment_date_change_instant);
+            if(empty($users)){
+                return;
+            }
             $toEmails = array();
             foreach ($users as $user){
                 array_push($toEmails,$user->getEmail());

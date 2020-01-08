@@ -8,13 +8,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleNotificationType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/EmailLogType.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 
 
 class QCNotificationsUtil{
-	
+    
+	//not in use
 	public static function sendUpcomingInspectionScheduleNotification($userType){
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
@@ -81,16 +83,29 @@ class QCNotificationsUtil{
 		
 	}
 	
-	
-	public static function sendUpcomingInspectionNotification($userType){
-	    $userMgr = UserMgr::getInstance();
+	private static function getQCUsersByNotificationType($users,$notificationType){
+	    if(isset($users[QCScheduleNotificationType::getName($notificationType)])){
+	        return $users[QCScheduleNotificationType::getName($notificationType)];
+	    }else{
+	        return null;
+	    }
+	}
+	public static function sendUpcomingInspectionNotification($userType,$users){
 	    $qcScheduleMgr = QCScheduleMgr::getInstance();
 	    $subject = StringConstants::UPCOMING_INSPECTIONS;
 	    $fromToDates = self::getWeeklyFromToDateArr();
 	    $fromDate = $fromToDates["fromDate"];
 	    $toDate = $fromToDates["toDate"];
 	    $fileName = EmailLogType::QC_UPCOMING_INSPECTION ."_".$fromDate."_to_".$toDate;
+	    $finalInspectionQcSchedules = array();
+	    $middleInspectionQcSchedules = array();
+	    $firstInspectionQcSchedules = array();
 	    if($userType == UserType::SUPERVISOR){
+	        $supervisors = self::getQCUsersByNotificationType($users, 
+	            QCScheduleNotificationType::upcoming_inspections_report_weekly);
+	        if(empty($supervisors)){
+	            return;
+	        }
 	        $finalInspectionQcSchedules = $qcScheduleMgr->getPendingForFinalInspectionDate();
 	        $middleInspectionQcSchedules = $qcScheduleMgr->getPendingForMiddleInspectionDate();
 	        $firstInspectionQcSchedules = $qcScheduleMgr->getPendingForFirstInspectionDate();
@@ -100,7 +115,7 @@ class QCNotificationsUtil{
 	        $html = self::getQCNotificationHtml($pendingSchedules,$subject);
 	        $excelData = ExportUtil::exportQcWeeklyReport($pendingSchedules, $subject, true);
 	        $attachments = array($fileName=>$excelData);
-	        $supervisors = $userMgr->getSupervisorsForQCReport();
+	        //$supervisors = $userMgr->getSupervisorsForQCReport();
 	        $toEmails = array();
 	        foreach ($supervisors as $user){
 	            array_push($toEmails,$user->getEmail());
@@ -117,8 +132,13 @@ class QCNotificationsUtil{
 	            
 	        }
 	    }elseif($userType == UserType::QC){
-	        $qcUsers = $userMgr->getQCsForQCReport();
-	        foreach($qcUsers as $user){
+	       // $qcUsers = $userMgr->getQCsForQCReport();
+	        $qcUsers = self::getQCUsersByNotificationType($users,
+	            QCScheduleNotificationType::upcoming_inspections_report_weekly);
+	        if(empty($qcUsers)){
+	            return;
+	        }
+	         foreach($qcUsers as $user){
 	            $finalInspectionQcSchedules = $qcScheduleMgr->getPendingForFinalInspectionDate($user->getSeq());
 	            $middleInspectionQcSchedules = $qcScheduleMgr->getPendingForMiddleInspectionDate($user->getSeq());
 	            $firstInspectionQcSchedules = $qcScheduleMgr->getPendingForFirstInspectionDate($user->getSeq());
@@ -157,7 +177,7 @@ class QCNotificationsUtil{
 		$toDateStr = $toDate->format("n-j-y");
 		return array("fromDate"=>$fromDateStr,"toDate"=>$toDateStr);
 	}
-	
+	//not in use
 	public static function sendUpcomingInspectionAppointmentNotification($userType){
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
@@ -223,12 +243,17 @@ class QCNotificationsUtil{
 		
 	}
 	 
-	public static function sendMissingAppoitmentNotification($userType){
+	public static function sendMissingAppoitmentNotification($userType,$users){
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::MISSING_INSPECTION_APPOINTMENT;	
 		$fileName = EmailLogType::QC_MISSING_APPOINTMENT_NOTIFICATION;
 		if($userType == UserType::SUPERVISOR){    
+		    $supervisors = self::getQCUsersByNotificationType($users,
+		        QCScheduleNotificationType::missing_appointments_report_weekly);
+		    if(empty($supervisors)){
+		        return;
+		    }
 			$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate();
 			$middleInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForMiddleInspectionDate();
 			$firstInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFirstInspectionDate();
@@ -238,7 +263,7 @@ class QCNotificationsUtil{
 			$html = self::getQCNotificationHtml($missingAppointments,$subject);
 			$excelData = ExportUtil::exportQcWeeklyReport($missingAppointments, $subject, true);
 			$attachments = array($fileName=>$excelData);
-			$supervisors = $userMgr->getSupervisorsForQCReport();
+			//$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
@@ -254,7 +279,12 @@ class QCNotificationsUtil{
 			       
 		  }
 		}else if($userType == UserType::QC){
-			$qcUsers = $userMgr->getQCsForQCReport();
+			//$qcUsers = $userMgr->getQCsForQCReport();
+		    $qcUsers = self::getQCUsersByNotificationType($users,
+		        QCScheduleNotificationType::missing_appointments_report_weekly);
+		    if(empty($qcUsers)){
+		        return;
+		    }
 			foreach($qcUsers as $user){
 				$finalInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForFinalInspectionDate($user->getSeq());
 				$middleInspectionMissingAppoitment = $qcScheduleMgr->getMissingAppoitmentForMiddleInspectionDate($user->getSeq());
@@ -285,12 +315,17 @@ class QCNotificationsUtil{
 	}
 	
 	//Late Schedule
-	public static function sendIncompletedSchedulesNotification($userType){
+	public static function sendIncompletedSchedulesNotification($userType,$users){
 		$userMgr = UserMgr::getInstance();
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$subject = StringConstants::INCOMPLETED_SCHEDULES;
 		$fileName = EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION;
 		if($userType == UserType::SUPERVISOR){
+		    $supervisors = self::getQCUsersByNotificationType($users,
+		        QCScheduleNotificationType::incompleted_schedules_report_weekly);
+		    if(empty($supervisors)){
+		        return;
+		    }
 			$finalInspectionMissingDate = $qcScheduleMgr->getMissingActualFinalInspectionDate();
 			$middleInspectionMissingDate = $qcScheduleMgr->getMissingActualMiddleInspectionDate();
 			$firstInspectionMissingDate = $qcScheduleMgr->getMissingActualFirstInspectionDate();
@@ -300,7 +335,7 @@ class QCNotificationsUtil{
 			$html = self::getQCNotificationHtml($missingActualDates,$subject);
 			$excelData = ExportUtil::exportQcWeeklyReport($missingActualDates, $subject, true);
 			$attachments = array($fileName=>$excelData);
-			$supervisors = $userMgr->getSupervisorsForQCReport();
+			//$supervisors = $userMgr->getSupervisorsForQCReport();
 			$toEmails = array();
 			foreach ($supervisors as $user){
 				array_push($toEmails,$user->getEmail());
@@ -315,7 +350,12 @@ class QCNotificationsUtil{
 				    }
 			}
 		}elseif($userType == UserType::QC){
-			$qcUsers = $userMgr->getQCsForQCReport();
+			//$qcUsers = $userMgr->getQCsForQCReport();
+		    $qcUsers = self::getQCUsersByNotificationType($users,
+		        QCScheduleNotificationType::incompleted_schedules_report_weekly);
+		    if(empty($qcUsers)){
+		        return;
+		    }
 			foreach($qcUsers as $user){
 				$finalInspectionMissingDate = $qcScheduleMgr->getMissingActualFinalInspectionDate($user->getSeq());
 				$middleInspectionMissingDate = $qcScheduleMgr->getMissingActualMiddleInspectionDate($user->getSeq());
@@ -518,6 +558,13 @@ class QCNotificationsUtil{
 	}
 	
 	public static function sendQCApprovedRejectNotification($approvalSeq,$comments,$superVisorName){
+	    $userMgr = UserMgr::getInstance();
+	    $users = $userMgr->getAllUsersWithRoles();
+	    $users = self::getQCUsersByNotificationType($users, 
+	        QCScheduleNotificationType::qc_approved_rejected_instant);
+	    if(empty($users)){
+	        return;
+	    }
 	    $qcScheduleMgr = QCScheduleMgr::getInstance();
 	    $qcSchedule = $qcScheduleMgr->findByApprovalSeq($approvalSeq);
 	    $itemNo = $qcSchedule["itemnumbers"];
@@ -533,9 +580,8 @@ class QCNotificationsUtil{
 	    $content = file_get_contents("../QCApprovedRjectEmailTemplate.php");
 	    $content = self::replacePlaceHolders($phAnValues, $content);
 	    $html = MailUtil::appendToEmailTemplateContainer($content);
-	    $userMgr = UserMgr::getInstance();
-	    $rolName = Permissions::getName(Permissions::approved_reject_notification);
-	    $users = $userMgr->getUserssByRoleAndDepartment($rolName, 1);
+	    //$rolName = Permissions::getName(Permissions::approved_reject_notification);
+	    //$users = $userMgr->getUserssByRoleAndDepartment($rolName, 1);
 	    $toEmails = array();
 	    $phAnValues = array();
 	    foreach ($users as $user){
@@ -560,8 +606,12 @@ class QCNotificationsUtil{
 	
 	
 	
-	public static function sendPendingQCApprovalNotification(){
-		$userMgr = UserMgr::getInstance();
+	public static function sendPendingQCApprovalNotification($supervisors){
+		$supervisors = self::getQCUsersByNotificationType($supervisors,
+		    QCScheduleNotificationType::pending_qc_approval_report_weekly);
+		if(empty($supervisors)){
+		    return;
+		}
 		$qcScheduleMgr = QCScheduleMgr::getInstance();
 		$pendingQcSchedules = $qcScheduleMgr->getPendingQcForApprovals();
 		$tableHtml = file_get_contents("../QCApprovalStatusEmailTemplate.php");
@@ -603,7 +653,7 @@ class QCNotificationsUtil{
 		
 		$excelData = ExportUtil::exportQcPendingForApprovals($pendingQcSchedules, StringConstants::PENDING_QC_APPROVALS, true);
 		$attachments = array("QCPendingApprovals"=>$excelData);
-		$supervisors = $userMgr->getSupervisorsForQCReport();
+		
 		$toEmails = array();
 		$EmaillogMgr = EmailLogMgr::getInstance();
 		$subject = StringConstants::PENDING_QC_APPROVALS;
@@ -620,12 +670,17 @@ class QCNotificationsUtil{
 		}
 	}
 		
-	public static function sendQCPlannerNotification($dataArr,$isSendEmail){
+	public static function sendQCPlannerNotification($dataArr,$isSendEmail,$users){
 	    $attachment = ExportUtil::exportQcPlannerReport($dataArr, $isSendEmail);
 	    $attachments = array(StringConstants::QC_PLANNER=>$attachment);
 	    if($isSendEmail){
     	    $userMgr = UserMgr::getInstance();
-    	    $users = $userMgr->getUsersForSendQcPlannerReport();
+    	    //$users = $userMgr->getUsersForSendQcPlannerReport();
+    	    $users = self::getQCUsersByNotificationType($users, 
+    	        QCScheduleNotificationType::qc_planner_report_weekly);
+    	    if(empty($users)){
+    	        return ;
+    	    }
     	    $admin = $userMgr->getAdminForSendReport();
     	    $toEmails = array();
     	    if(!empty($users)){

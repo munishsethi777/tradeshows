@@ -49,15 +49,15 @@ class StringConstants{
 	const PROJECT_IN_ROBBY_REVIEW_REPORT = "ALPINE BI Graphics | Projects in Robby's Review";
 	const PROJECT_IN_ROBBY_REVIEW_REPORT_NAME = "Projects in Robby review";
 	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT = "ALPINE BI Graphics | Projects with Pending Info from China Team";
-	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects with pending information from buyers/China";
+	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects with pending information from buyers(China)";
 	const PROJECT_DUE_TODAY_REPORT = "ALPINE BI Graphics | Projects Due for the Day";
 	const PROJECT_DUE_TODAY_REPORT_NAME = "Projects due for the day";
 	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT = "ALPINE BI Graphics | Projects Due in less than 20 days from China Entry Date";
 	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT_NAME = "Due in Less than 20 Days from China Entry Date";
 	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT = "ALPINE BI Graphics | Projects Due in less than 20 days";
 	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT_NAME = "Projects entered that day that is due in less than 20 days";
-	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "ALPINE BI Graphics | Projects with Pending Info from China Team";
-	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "ALPINE BI Graphics | Projects with Pending Info from China Team";
+	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "ALPINE BI Graphics | Projects with Pending Info from China Team (Daily)";
+	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "ALPINE BI Graphics | Projects Past Due with Pending Info from China Team";
 	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects past due because we don't have information to complete";
 	
 	

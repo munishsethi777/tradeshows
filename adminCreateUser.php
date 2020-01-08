@@ -7,6 +7,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Department.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleNotificationType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicLogsNotificationType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/ContainerScheduleNotificationType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
@@ -84,7 +87,6 @@ if(in_array(1,$departmentSeqArr)){
 }if(in_array(4,$departmentSeqArr)){
 	$containerDepartmentChecked = "checked";
 }
-
 /*echo $optiondata = array('<script type="text/javascript">
                      $(document).ready(function(){ 
 	                 $("#timezone option").each(function(){
@@ -255,30 +257,30 @@ if(in_array(1,$departmentSeqArr)){
 					                        <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
 				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Upcoming Inspections Report</span>
+						                           	<input name="permissions[]" value="upcoming_inspections_report_weekly" type="checkbox" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::upcoming_inspections_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Upcoming Inspections Report (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Appointments Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_appointments_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::missing_appointments_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs" >Missing Appointments Report (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Incompleted Schedules Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="incompleted_schedules_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::incompleted_schedules_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs" >Incompleted Schedules Report</span>
 						                        </li>
 											</ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
 						                    	<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Pending QC Approval Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="pending_qc_approval_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::pending_qc_approval_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Pending QC Approval Report (Weekly)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">QC Planner Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="qc_planner_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_planner_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">QC Planner Report (Weelky)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
+						                           	<input name="permissions[]" type="checkbox" value="qc_approved_rejected_instant" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_approved_rejected_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">QC Approved/Rejected (Instant)</span>
 						                        </li>
 						                    </ul>
@@ -291,7 +293,7 @@ if(in_array(1,$departmentSeqArr)){
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left m-r-sm">
-                                            	<input type="checkbox" <?php echo $graphicDepartmentChecked?> value="2" id="graphicDepartment" name="departments[]"/>
+                                            	<input type="checkbox" <?php echo $graphicDepartmentChecked?> value="2" id="graphicDepartment" name="departments[]" />
                                             </div>Graphic Logs
                                         </div>
                                         <div id="graphicPermissionsDiv" class="panel-body i-checks">
@@ -313,59 +315,57 @@ if(in_array(1,$departmentSeqArr)){
 				                            <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
 				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects Completed Last Week</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_completed_last_week_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_completed_last_week_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects Completed Last Week (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects Over Due till now</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_over_due_till_now_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_over_due_till_now_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects Over Due till now (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects In Buyer Review</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_in_buyer_review_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_in_buyer_review_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects In Buyer Review (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects In Manager Review</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_in_manager_review_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_in_manager_review_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects In Manager Review (Weekly)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects In Robby Review</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_in_robby_review_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_in_robby_review_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects In Robby Review (Weekly)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects Missing Info From China</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_missing_info_from_china_weekly" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_missing_info_from_china_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects Missing Info From China (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Project Passed Due with Missing Info From China</span>
+						                           	<input name="permissions[]" type="checkbox" value="project_passed_due_with_missing_info_from_china_daily" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::project_passed_due_with_missing_info_from_china_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Project Passed Due with Missing Info From China (Daily)</span>
 						                        </li>
 											</ul>
-						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
-						                    	
-												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Project Due for Today</span>
+						                    	<li>
+						                           	<input name="permissions[]" type="checkbox" value="projects_due_for_today_daily" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_due_for_today_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Project Due for Today (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Proect Due less than 20 das from entry date</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_due_less_than_20_days_from_entry_date_daily" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_due_less_than_20_days_from_entry_date_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Proect Due less than 20 days from entry date (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Project Due Less than 20 days from today</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_due_less_than_20_days_from_today_daily" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_due_less_than_20_days_from_today_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Project Due Less than 20 days from today (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Projects Missing Info from China</span>
+						                           	<input name="permissions[]" type="checkbox" value="projects_missing_info_from_china_daily" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_missing_info_from_china_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Projects Missing Info from China (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
+						                           	<input name="permissions[]" type="checkbox" value="graphic_logs_status_change_instant" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::graphic_logs_status_change_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Graphic Logs Status change (Instant)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
+						                           	<input name="permissions[]" type="checkbox" value="graphic_logs_notes_update_instant" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::graphic_logs_notes_update_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Graphic Logs Notes Update (Instant)</span>
 						                        </li>
 						                    </ul>
@@ -397,54 +397,54 @@ if(in_array(1,$departmentSeqArr)){
 				                            <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
 				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Send ETA Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="send_eta_report_weekly" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::send_eta_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Send ETA Report (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Empty Return Date Past Empty LFD Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="empty_return_date_past_empty_lFD_report_weekly" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::empty_return_date_past_empty_lFD_report_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Empty Return Date Past Empty LFD Report (Weekly)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Pending Schedule Delivery Date for Today Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="pending_schedule_delivery_date_for_today_report_daily"<?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::pending_schedule_delivery_date_for_today_report_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Pending Schedule Delivery Date for Today Report (Daily)</span>
 						                        </li>
 						                        <li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Empty Alpine Notication Pickup Date</span>
+						                           	<input name="permissions[]" type="checkbox" value="empty_alpine_notication_pickup_date_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::empty_alpine_notication_pickup_date_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Empty Alpine Notication Pickup Date (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing ID Report</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_id_report_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_id_report_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing ID Report (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Terminal Appointment Date</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_terminal_appointment_date_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_terminal_appointment_date_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing Terminal Appointment Date (Daily)</span>
 						                        </li>
 											</ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
 						                    	<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Schedule Delivery Date</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_schedule_delivery_date_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_schedule_delivery_date_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing Schedule Delivery Date (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Confirmed Delivery Date</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_confirm_delivery_date_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_confirm_delivery_date_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing Confirmed Delivery Date (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Received Dates in WMS</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_received_dates_in_wms_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_received_dates_in_wms_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing Received Dates in WMS (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
-													<span class="m-l-xs">Missing Received Dates in OMS</span>
+						                           	<input name="permissions[]" type="checkbox" value="missing_received_dates_in_oms_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_received_dates_in_oms_daily), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Missing Received Dates in OMS (Daily)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
+						                           	<input name="permissions[]" type="checkbox" value="send_alpine_picking_date_change_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::send_alpine_picking_date_change_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Send Alpine Picking Date Change (Instant)</span>
 						                        </li>
 												<li>
-						                           	<input type="checkbox"/>
+						                           	<input name="permissions[]" type="checkbox" value="terminal_appointment_date_change_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::terminal_appointment_date_change_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Terminal Appointment Date Change (Instant)</span>
 						                        </li>
 						                    </ul>

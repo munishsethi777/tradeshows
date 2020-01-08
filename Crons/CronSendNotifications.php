@@ -3,6 +3,7 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Crons/backups.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ContainerScheduleReportUtil.php");
@@ -17,42 +18,51 @@ $dayOfWeek = $currentDate->format("w");
 $logger = Logger::getLogger ( "logger" );
 $configurationMgr = ConfigurationMgr::getInstance();
 $cronConfigs = $configurationMgr->getCronConfigs();
+$userMgr = UserMgr::getInstance();
+$allUsers = $userMgr->getAllUsersWithRoles();
+$supervisors = $userMgr->getAllUsersWithRoles(UserType::SUPERVISOR);
+$users = $userMgr->getAllUsersWithRoles(UserType::USER);
+$isDeveloperModeOn = StringConstants::IS_DEVELOPER_MODE == "1";
 try{
-    if($hours == 10){
+    if($hours == 10 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE);
         if($lastExeDay != $day){
-            QCNotificationsUtil::sendPendingQCApprovalNotification();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE,$currentDate);
+            QCNotificationsUtil::sendPendingQCApprovalNotification($supervisors);
+            if(!($isDeveloperModeOn)){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE,$currentDate);
+            }
             $logger->info("sendPendingQCApprovalNotification sent Successfully");
         }
     }
-    if($dayOfWeek == 5 && $hours == 10){
+    if($dayOfWeek == 5 && $hours == 10 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE);
         if($lastExeDay != $day){
             //Admin Notfications
-            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR);
-            QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
-            QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
-            
+            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR,$supervisors);
+            QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR,$supervisors);
+            QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR,$supervisors);
             //QC Notifications
-            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::QC);
-            QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
-            QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
-            
-            $configurationMgr->saveConfiguration(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE,$currentDate);
+            QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::QC,$users);
+            QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC,$users);
+            QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC,$users);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$PENDING_QCSCHEDULE_CRON_LAST_EXE,$currentDate);
+            }
             $logger->info("sendPendingQCScheduleNotifications sent Successfully");
         }
     }
-    if($dayOfWeek == 5 && $hours == 10){
+    if($dayOfWeek == 5 && $hours == 10 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_SEND_QC_PLANNER_REPORT_LAST_EXE);
         if($lastExeDay != $day){
             $qcScheduleMgr = QCScheduleMgr::getInstance();
-            $qcScheduleMgr->exportQCPlannerReport(true);
-            $configurationMgr->saveConfiguration(Configuration::$CRON_SEND_QC_PLANNER_REPORT_LAST_EXE,$currentDate);
+            $qcScheduleMgr->exportQCPlannerReport(true,$allUsers);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_SEND_QC_PLANNER_REPORT_LAST_EXE,$currentDate);
+            }
             $logger->info("QCPlanner Notifications sent Successfully");
         }
     }
-    if($hours == 12 || $hours == 24){
+    if($hours == 12 || $hours == 24 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
         $lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
         $flag = false;
@@ -72,55 +82,63 @@ try{
             $logger->info("Cron Backup completed Successfully");
         }
     }
-    if($dayOfWeek == 1 && $hours == 22){
+    if($dayOfWeek == 1 && $hours == 22 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE);
         if($lastExeDay != $day){
-            ContainerScheduleReportUtil::sendETAReport();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE,$currentDate);
+            ContainerScheduleReportUtil::sendETAReport($allUsers);
+            
             //graphic log reports
-            GraphicLogReportUtil::sendProjectsCompletedLastWeek();
-            GraphicLogReportUtil::sendProjectsOverDueTillNow();
-            GraphicLogReportUtil::sendProjectsCompletedLastWeek();
-            GraphicLogReportUtil::sendProjectsInBuyerReview();
-            GraphicLogReportUtil::sendProjectsInManagerReview();
-            GraphicLogReportUtil::sendProjectsInRobbyReview();
-            GraphicLogReportUtil::sendProjectsMissingInfoFromChina();
+            GraphicLogReportUtil::sendProjectsCompletedLastWeek($allUsers);
+            GraphicLogReportUtil::sendProjectsOverDueTillNow($allUsers);
+            GraphicLogReportUtil::sendProjectsInBuyerReview($allUsers);
+            GraphicLogReportUtil::sendProjectsInManagerReview($allUsers);
+            GraphicLogReportUtil::sendProjectsInRobbyReview($allUsers);
+            GraphicLogReportUtil::sendProjectsMissingInfoFromChina($allUsers);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE,$currentDate);
+            }
             $logger->info("Beginning weekly notifications sent successfully");
         }
     }
-    if($dayOfWeek == 6 && $hours == 6){
+    if($dayOfWeek == 6 && $hours == 6 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_END_WEEKLY_LAST_EXE);
         if($lastExeDay != $day){
-            ContainerScheduleReportUtil::sendEmptyReturnDatePastEmptyLFDReport();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_END_WEEKLY_LAST_EXE,$currentDate);
+            ContainerScheduleReportUtil::sendEmptyReturnDatePastEmptyLFDReport($allUsers);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_END_WEEKLY_LAST_EXE,$currentDate);
+            }
             $logger->info("End weekly notifications sent successfully");
         }
     }
-    if($hours == 21){
+    if($hours == 21 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BEGINNING_DAILY_LAST_EXE);
         if($lastExeDay != $day){
-            ContainerScheduleReportUtil::sendPendingScheduleDeliveryDateForTodayReport();
-            ContainerScheduleReportUtil::sendEmptyAlpineNotificationPickupDateReport();
-            ContainerScheduleReportUtil::sendMissingIDReport();
-            ContainerScheduleReportUtil::sendMissingTerminalAppointmentDateReport();
-            ContainerScheduleReportUtil::sendMissingScheduleDeliveryDateReport();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_DAILY_LAST_EXE,$currentDate);
+            ContainerScheduleReportUtil::sendPendingScheduleDeliveryDateForTodayReport($allUsers);
+            ContainerScheduleReportUtil::sendEmptyAlpineNotificationPickupDateReport($allUsers);
+            ContainerScheduleReportUtil::sendMissingIDReport($allUsers);
+            ContainerScheduleReportUtil::sendMissingTerminalAppointmentDateReport($allUsers);
+            ContainerScheduleReportUtil::sendMissingScheduleDeliveryDateReport($allUsers);
             //Graphic Log Reports
-            GraphicLogReportUtil::sendProjectsPastDueWithMissingInfoFromChina();
-            GraphicLogReportUtil::sendProjectsDueForToday();
-            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromEntryDate();
-            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromToday();
-            GraphicLogReportUtil::sendProjectsMissingInfoFromChina(true);
+            GraphicLogReportUtil::sendProjectsPastDueWithMissingInfoFromChina($allUsers);
+            GraphicLogReportUtil::sendProjectsDueForToday($allUsers);
+            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromEntryDate($allUsers);
+            GraphicLogReportUtil::sendProjectsDueLessThan20DaysFromToday($allUsers);
+            GraphicLogReportUtil::sendProjectsMissingInfoFromChina($allUsers,true);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_DAILY_LAST_EXE,$currentDate);
+            }
             $logger->info("Beginning Daily notifications sent successfully");
         }
     }
-    if($hours == 5){
+    if($hours == 5 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_END_DAILY_LAST_EXE);
         if($lastExeDay != $day){
-            ContainerScheduleReportUtil::sendMissingConfirmDeliveryDateReport();
-            ContainerScheduleReportUtil::sendMissingReceivedDatesInWMSReport();
-            ContainerScheduleReportUtil::sendMissingReceivedDatesInOMSReport();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_END_DAILY_LAST_EXE,$currentDate);
+            ContainerScheduleReportUtil::sendMissingConfirmDeliveryDateReport($allUsers);
+            ContainerScheduleReportUtil::sendMissingReceivedDatesInWMSReport($allUsers);
+            ContainerScheduleReportUtil::sendMissingReceivedDatesInOMSReport($allUsers);
+            if(!$isDeveloperModeOn){
+                $configurationMgr->saveConfiguration(Configuration::$CRON_END_DAILY_LAST_EXE,$currentDate);
+            }
             $logger->info("End Daily notifications sent successfully");
         }
     }
