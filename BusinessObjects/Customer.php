@@ -1,6 +1,8 @@
 <?php
 class Customer{
     private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
+    private $priority,$isstore,$storeid,$storename;
+    
     public static $className = "Customer";
     public static $tableName = "customers";
     public function setSeq($seq_){
@@ -50,7 +52,30 @@ class Customer{
     public function getCreatedBy(){
         return $this->createdby;
     }
-    
+    public function setPriority($val){
+    	$this->priority = $val;
+    }
+    public function getPriority(){
+    	return $this->priority;
+    }
+    public function setIsStore($val){
+    	$this->isstore = $val;
+    }
+    public function getIsStore(){
+    	return $this->isstore;
+    }
+    public function setStoreId($val){
+    	$this->storeid = $val;
+    }
+    public function getStoreId(){
+    	return $this->storeid;
+    }
+    public function setStoreName($val){
+    	$this->storename = $val;
+    }
+    public function getStoreName(){
+    	return $this->storename;
+    }
     public function setCreatedOn($createdOn_){
         $this->createdon = $createdOn_;
     }

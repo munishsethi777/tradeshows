@@ -1,0 +1,1 @@
+ALTER TABLE `customers` ADD `isstore` TINYINT NOT NULL AFTER `createdby`, ADD `storeid` VARCHAR(50) NULL AFTER `isstore`, ADD `storename` VARCHAR(500) NULL AFTER `storeid`, ADD `priority` VARCHAR(10) NULL AFTER `storename`;

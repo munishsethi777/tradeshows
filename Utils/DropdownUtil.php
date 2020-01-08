@@ -10,6 +10,8 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomExamStatusType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerBusinessType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BuyerCategoryType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
+
 
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
@@ -140,7 +142,10 @@ class DropDownUtils {
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	
-
+	public static function getPriorityTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = PriorityType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	}
 	
 	
 	

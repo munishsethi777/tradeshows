@@ -61,4 +61,4 @@ ALTER TABLE `buyers`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;c
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;

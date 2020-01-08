@@ -74,8 +74,40 @@ if(isset($_POST["id"])){
                  	 <form id="createCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="saveCustomer"/>
                         	<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
-                        
-                        	 <div class="form-group row">
+                        	<div class="form-group row i-checks">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Store </label>
+	                        	<div class="col-lg-4">
+	                        		<input type="checkbox" class="isstore"/>
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Priority </label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+    										$select = DropDownUtils::getPriorityTypes("priority", null, $customer->getPriority(),false);
+    			                            echo $select;
+	                             	?>
+	                        	</div>
+	                         </div>
+	                         <div class="form-group row storeDetailsDiv" style="display:none">
+	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
+		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
+		                        	<div class="col-lg-10">
+		                        		<select name="fullNameSelect" class="fullNameSelect form-control">
+		                        			<option>ACE HARDWARE CORP</option>
+		                        		</select>
+		                            </div>
+	                            </div>
+	                            <div class="form-group row no-margins">
+			                       	<label class="col-lg-2 col-form-label bg-formLabel">Store Name</label>
+			                        <div class="col-lg-4">
+			                        	<input type="text"  maxLength="250" value="<?php echo $customer->getStoreName()?>" name="storename" class="form-control">
+			                        </div>
+			                        <label class="col-lg-2 col-form-label bg-formLabel">Store ID</label>
+			                        <div class="col-lg-4">
+			                        	<input type="text"  maxLength="250" value="<?php echo $customer->getStoreId()?>" name="storeid" class="form-control">
+			                        </div>
+			                    </div>
+	                       	</div>
+                        	 <div class="form-group row customerNameTextDiv">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 	                        	<div class="col-lg-10">
 	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" name="fullname" class="form-control">
@@ -83,7 +115,7 @@ if(isset($_POST["id"])){
 	                        </div>
 	                        
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">ID</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" class="form-control">
 	                            </div>
@@ -110,6 +142,7 @@ if(isset($_POST["id"])){
 	                        		<input type="text"  maxLength="250" value="<?php echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
 	                            </div>
 	                       </div>
+	                       
 	                       <div class="form-group row m-b-xs">
 	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers to the Customer</label>
 	                       </div>
@@ -154,7 +187,7 @@ if(isset($_POST["id"])){
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
 $(document).ready(function(){
-	
+	$(".fullNameSelect").chosen({ width: '100%' });
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -171,8 +204,21 @@ $(document).ready(function(){
 	$('.delete').click(function() {
 		deleteBuyer(this);	
 	});
+	$('.isstore').on('ifChanged', function(event){
+		showHideStoreFields();
+  	});
 	populateCustomer();
 });
+function showHideStoreFields(){
+	var flag  = $(".isstore").is(':checked');
+	if(flag){
+		$(".storeDetailsDiv").slideDown();
+		$(".customerNameTextDiv").hide();
+	}else{
+		$(".storeDetailsDiv").slideUp();
+		$(".customerNameTextDiv").show();	
+	}
+}
 var index = 0;
 function addBuyer(isDefaultRow,buyer){
 	var firstName = "";
