@@ -1120,7 +1120,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 	    return $qcSchedulesFinalInspections;
 	}
 	private $commonDates = array();
-	public function exportQCPlannerReport($isSendEmail = false){
+	public function exportQCPlannerReport($isSendEmail = false,$users = null){
 	    $qcSchedulesFirstInspections =  $this->getQcPendingAcFirstInpection();
 	    $qcSchedulesMiddleInspections =  $this->getQcPendingAcMiddleInpection();
 	    $qcSchedulesFinalInspections =  $this->getQcPendingAcFinalInpection();
@@ -1135,7 +1135,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 	    $mainDataArr = array();
 	    $mainDataArr["data"] = $dataArr;
 	    $mainDataArr["dates"] = $this->commonDates;
-	    QCNotificationsUtil::sendQCPlannerNotification($mainDataArr, $isSendEmail);
+	    QCNotificationsUtil::sendQCPlannerNotification($mainDataArr, $isSendEmail,$users);
 	    return $dataArr;
 	}
 	

@@ -208,6 +208,32 @@ where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPE
 	    return $users;
 	}
 	
+	public function getAllUsersWithRoles($userType = null){
+	    $sql = "select users.*,userroles.role from users inner join userroles on users.seq = userroles.userseq";
+	    if(!empty($userType)){
+	        $sql .= " and users.usertype = '$userType'";
+	    }
+	    $users = self::$userDataStore->executeObjectQuery($sql);
+	    $users = $this->_group_by($users);
+	    return $users;
+	}
+	
+	public function groupByUserType($users){
+	    $return = array();
+	    foreach($users as $val) {
+	        $return[$val->getUserType()][] = $val;
+	    }
+	    return $return;
+	}
+	
+	function _group_by($array) {
+	    $return = array();
+	    foreach($array as $val) {
+	        $return[$val->role][] = $val;
+	    }
+	    return $return;
+	}
+	
 	public function getAllUsersForGraphicLogs(){
 	    $usaTeam = Permissions::getName(Permissions::usa_team);
 	    $chinaTeam = Permissions::getName(Permissions::china_team);
