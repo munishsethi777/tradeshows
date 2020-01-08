@@ -245,13 +245,7 @@ if(isset($_POST["id"])){
 	                             	</div>
 	                           </div>
 	                        </div>
-	                         <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">USA Notes to Graphics :</label>
-	                        	<div class="col-lg-10">
-	                            	<textarea  tabindex="<?php echo $usaTabIndex?>" class="col-lg-12 col-form-label" maxLength="1000" rows="3" name="usanotes" ><?php echo $graphicLog->getUSANotes()?></textarea>
-	                            	
-	                            </div>
-	                        </div>   
+	                          
 							 <div class="form-group row">
 	                        	<div class="panel panel-primary">
 									<div class="panel-heading">USA Notes to Graphics</div>
