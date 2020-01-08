@@ -5,6 +5,8 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicStatusType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicLogsNotificationType.php");
+
 class GraphicLogReportUtil
 { 
     private static $timeZone = "America/Los_Angeles";
@@ -20,6 +22,7 @@ class GraphicLogReportUtil
     
     private static $N_J_Y = "n_j_y";
     
+    //not in use
     //Weekly/Monday - Projects due this 
     public static function sendProjectsDueForWeekReport(){
         $subject = StringConstants::PROJECT_DUE_REPORT;
@@ -58,7 +61,12 @@ class GraphicLogReportUtil
     }
    
     //Weekly/Monday - No. projects overdue  
-    public static function sendProjectsOverDueTillNow(){
+    public static function sendProjectsOverDueTillNow($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_over_due_till_now_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_OVERDUE_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectOverDue();
@@ -71,11 +79,12 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+        //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+        //$roleName = Permissions::getName(Permissions::usa_team);
+        // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+        
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -89,8 +98,21 @@ class GraphicLogReportUtil
         }
     }
     
+    private static function getGLUsersByNotificationType($users,$notificationType){
+        if(isset($users[GraphicLogsNotificationType::getName($notificationType)])){
+            return $users[GraphicLogsNotificationType::getName($notificationType)];
+        }else{
+            return null;
+        }
+    }
+    
     //Weekly/Monday - No. of projected completed previous week
-    public static function sendProjectsCompletedLastWeek(){
+    public static function sendProjectsCompletedLastWeek($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_completed_last_week_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_COMPLETED_PREVIOUS_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectCompletedLastWeek();
@@ -105,11 +127,12 @@ class GraphicLogReportUtil
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+       // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For last week for dates $dateWithIntervalStr to $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+       // $roleName = Permissions::getName(Permissions::usa_team);
+        //$users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+        
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -124,7 +147,12 @@ class GraphicLogReportUtil
     }
     
     //Weekly/Monday - No. of projects in buyers review
-    public static function sendProjectsInBuyerReview(){
+    public static function sendProjectsInBuyerReview($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_in_buyer_review_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_IN_BUYER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::BUYERS_REVIEWING);
@@ -137,11 +165,11 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+        //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+        //$roleName = Permissions::getName(Permissions::usa_team);
+        // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -156,7 +184,12 @@ class GraphicLogReportUtil
     }
     
     //Weekly/Monday - No. of projects in manager review
-    public static function sendProjectsInManagerReview(){
+    public static function sendProjectsInManagerReview($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_in_manager_review_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_IN_MANAGER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MANAGER_REVIEWING);
@@ -169,11 +202,11 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::usa_team);
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -188,7 +221,12 @@ class GraphicLogReportUtil
     }
     
     //Weekly/Monday - No. of projects in robby review
-    public static function sendProjectsInRobbyReview(){
+    public static function sendProjectsInRobbyReview($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_in_robby_review_weekly);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_IN_ROBBY_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::ROBBY_REVIEWING);
@@ -201,11 +239,11 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::usa_team);
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -220,7 +258,15 @@ class GraphicLogReportUtil
     }
     
     //Weekly/Monday & Daily No. of projects with pending info. From buyers/China 
-    public static function sendProjectsMissingInfoFromChina($isDaily = false){
+    public static function sendProjectsMissingInfoFromChina($users,$isDaily = false){
+        $notificationType = GraphicLogsNotificationType::projects_missing_info_from_china_daily;
+        if(!$isDaily){
+            $notificationType = GraphicLogsNotificationType::projects_missing_info_from_china_weekly;
+        }
+        $users = self::getGLUsersByNotificationType($users,$notificationType);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MISSING_INFO_FROM_CHINA);
@@ -236,14 +282,14 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        if($isDaily){
-            $roleName = Permissions::getName(Permissions::china_team);
-        }
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::usa_team);
+//         if($isDaily){
+//             $roleName = Permissions::getName(Permissions::china_team);
+//         }
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -258,7 +304,12 @@ class GraphicLogReportUtil
     }
     
     //Daily/Beginning of day - Projects past due because we don’t have information to complete
-    public static function sendProjectsPastDueWithMissingInfoFromChina(){
+    public static function sendProjectsPastDueWithMissingInfoFromChina($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::project_passed_due_with_missing_info_from_china_daily);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getByPastDueWithMissingInfoFromChina();
@@ -271,11 +322,11 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::china_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::china_team);
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -290,7 +341,12 @@ class GraphicLogReportUtil
     }
     
     //Daily/Beginning of day - List of Items Due for the Day
-    public static function sendProjectsDueForToday(){
+    public static function sendProjectsDueForToday($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_due_for_today_daily);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_DUE_TODAY_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueForToday();
@@ -303,11 +359,11 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+//         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " for date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $roleName = Permissions::getName(Permissions::usa_team);
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+//         $roleName = Permissions::getName(Permissions::usa_team);
+//         $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -322,7 +378,12 @@ class GraphicLogReportUtil
     }
 
     //Daily/Beginning of day - Due in Less than 20 Days from China Entry Date
-    public static function sendProjectsDueLessThan20DaysFromEntryDate(){
+    public static function sendProjectsDueLessThan20DaysFromEntryDate($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_due_less_than_20_days_from_entry_date_daily);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueLessThan20FromEntry();
@@ -335,10 +396,10 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+       // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $users = $userMgr->getAllUsersForGraphicLogs();
+       // $users = $userMgr->getAllUsersForGraphicLogs();
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -353,7 +414,12 @@ class GraphicLogReportUtil
     }
     
     //Daily/Beginning of day - Projects entered that day that is due in less than 20 days
-    public static function sendProjectsDueLessThan20DaysFromToday(){
+    public static function sendProjectsDueLessThan20DaysFromToday($users){
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::projects_due_less_than_20_days_from_today_daily);
+        if(empty($users)){
+            return;
+        }
         $subject = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
         $graphiclogs = $graphicLogMgr->getForProjectDueLessThan20FromToday();
@@ -366,10 +432,10 @@ class GraphicLogReportUtil
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        $userMgr = UserMgr::getInstance();
+        //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " from date $currentDateStr";
         $body = self::getHtml($subject, $reportDetail);
-        $users = $userMgr->getAllUsersForGraphicLogs();
+       // $users = $userMgr->getAllUsersForGraphicLogs();
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -385,6 +451,13 @@ class GraphicLogReportUtil
     
     //Instant when graphic status changed from graphic log - Missing Info from China
     public static function sendGraphicLogGraphicStatusChangedNotification($graphicLog){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::graphic_logs_status_change_instant);
+        if(empty($users)){
+            return;
+        }
         $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
         $phAnValues = array();
         $graphicStatus = $graphicLog->getGraphicStatus();
@@ -398,13 +471,12 @@ class GraphicLogReportUtil
         $date = new DateTime();
         $dateStr = $date->format("m-d-Y h:i a");
         $phAnValues["CURRENT_DATE"] = $dateStr;
-        $roleName = Permissions::china_team;
-        $roleName = Permissions::getName($roleName);
+      //  $roleName = Permissions::china_team;
+        //$roleName = Permissions::getName($roleName);
         $content = file_get_contents("../GraphicLogsGraphicStatusChangedTemplate.php");
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
-        $userMgr = UserMgr::getInstance();
-        $users = $userMgr->getUsersForGraphicNotesUpdatedReport($roleName);
+        //$users = $userMgr->getUsersForGraphicNotesUpdatedReport($roleName);
         $toEmails = array();
         $phAnValues = array();
         foreach ($users as $user){
@@ -426,6 +498,13 @@ class GraphicLogReportUtil
     
     //Instant when notes updated from graphic log
     public static function sendGraphicLogNotesUpdatedNotification($graphicLog,$noteType){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::graphic_logs_notes_update_instant);
+        if(empty($users)){
+            return;
+        }
         $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
         $phAnValues = array();
         $phAnValues["NOTES_NAME"] = $noteType;
@@ -449,8 +528,7 @@ class GraphicLogReportUtil
         $content = file_get_contents("../GraphicLogsNotesUpdatedTemplate.php");
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
-        $userMgr = UserMgr::getInstance();
-        $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
+       // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
         $phAnValues = array();
         foreach ($users as $user){
