@@ -8,12 +8,14 @@ $customer = new Customer();
 $customerSeq = 0;
 $storeChecked = "";
 $storeDisplay = "none";
+$customerSelectDisabled = "disabled";
 if(isset($_POST["id"])){
     $seq = $_POST["id"];
     $customer = $customerMgr->findByCustomerSeq($seq);
     if(!empty($customer->getIsStore())){
         $storeChecked = "checked";
         $storeDisplay = "block";
+        $customerSelectDisabled = "";
     }
     $customerSeq = $customer->getSeq();
 }
@@ -97,7 +99,7 @@ if(isset($_POST["id"])){
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 		                        	<div class="col-lg-10">
-		                        		<select name="fullNameSelect" onchange="setCustomerId(this.value)" id="customerSelect" class="fullNameSelect form-control">
+		                        		<select name="fullNameSelect" <?php echo $customerSelectDisabled?> onchange="setCustomerId(this.value)" id="customerSelect" class="fullNameSelect form-control">
 		                        			<?php if($seq > 0){
 		                        			    echo ('<option selected value="'.$seq.'">'.$customer->getFullName().'</option>');
 		                        			}?>
