@@ -66,9 +66,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 											</div>
 			                            </div>
 			                            <div class="col-lg-2 pull-right">
-			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
-			                            		<option value="returned">Not Returned</option>
-			                            		<option value="notreturned">Returned</option>
+			                            	<select id="emptyReturnStatusDD" name="emptyReturnStatusDD" class="form-control">
+			                            		<option value="0">Not Returned</option>
+			                            		<option value="1">Returned</option>
 			                            	</select>
 			                            </div>
 			                        </div>
@@ -125,19 +125,20 @@ function initDateRanges(){//building date search module
 	    }, cb);
 	    cb(start, end);
 }
+var applyFilter = "";
 $(document).ready(function(){
-   	loadGrid();
+   	
    	initDateRanges();
    	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
 	});
-    var applyFilter = function () {
+    applyFilter = function () {
        var addedFilterFields = [];
        var existingFilter = $('#containerScheduleGrid').jqxGrid('getfilterinformation')
        var datafield = $("#fieldNameDD").val();
        $("#containerScheduleGrid").jqxGrid('clearfilters');
-       if(datafield != ''){
+      //if(datafield != ''){
     	   //showFilterFieldColumn();
 	 	   $("#containerScheduleGrid").jqxGrid('clear');
 	 	   var filtertype = 'stringfilter';
@@ -146,13 +147,16 @@ $(document).ready(function(){
 	       var filterData = getFilterQueryData();
 	       $.each(filterData, function( key, value ) {
 	           var fieldName = key;
+	           if(fieldName == ""){
+		           return;
+	           }
 	           var filtergroup = new $.jqx.filter();	 
 	           if(value != null && value != "" && value != "all"){
 	        	   $.each(value, function( k, v ) {
 	        		   var filter_or_operator = 0;
 		               var filtervalue = v;
 		               var filtercondition = 'less_than_or_equal';
-		               if(k == "isCompleted"){
+		               if(k == "emptyreturndate"){
 		            	   filtergroup = new $.jqx.filter();	 
 		            	   filtertype = 'stringfilter';
 			               if(v > 0){
@@ -160,9 +164,7 @@ $(document).ready(function(){
 			               }else{
 			            	   filtercondition = 'null';   
 			               }
-			               fieldName = fieldName.substring(2);
-			               fieldName = "ac" + fieldName;	 		
-		               }else{
+			           }else{
 		               		if(k == "from"){
 		            	   		var filtercondition = 'greater_than_or_equal';    
 		               		}
@@ -178,9 +180,9 @@ $(document).ready(function(){
 	       });
 	        // apply the filters.
 	       $("#containerScheduleGrid").jqxGrid('applyfilters');
-       }
+      // }
     }
-    
+    loadGrid();
     // applies the filter.
     $("#fieldNameDD").change(function () {
 		var datafield = $("#fieldNameDD").val();
@@ -191,16 +193,10 @@ $(document).ready(function(){
     	//}
  	   	applyFilter()
     });
-    $("#conditionDD").change(function () {
+    $("#emptyReturnStatusDD").change(function () {
  	   applyFilter()
     });
-   
-    $("#valueDD").change(function () {
- 	   applyFilter()
-    });
-    //$("#isCompleted").change(function () {
- 	  // applyFilter()
-   // });
+    
     $('.i-checks').on('ifChanged', function(event){
     	 applyFilter()
     });
@@ -220,20 +216,10 @@ $(document).ready(function(){
 		}
 		
 		
-		var conditionDD = $("#conditionDD").val();
-		var dayValue = $("#valueDD").val();
-		var isCompletedCheck =$("input[type='checkbox'][name='isCompleted']:checked").val()
-		var isCompleted = 0;
-		if(isCompletedCheck == "on"){
-			isCompleted = 1
-		}
+		var conditionDD = $("#emptyReturnStatusDD").val();
 		var fromDate = new Date();
 		var toDate = new Date();
-		if(conditionDD == "past"){
-			fromDate = subtractDays(fromDate, dayValue);
-		}else{
-			toDate = addDays(toDate, dayValue);
-		}
+		
 		var fromDateStr = dateToStr(fromDate);
 		var toDateStr = dateToStr(toDate);
 
@@ -244,15 +230,11 @@ $(document).ready(function(){
 		toDateStr = drp.endDate.format('MM-DD-YYYY');
 		toDateStr += " 23:59:00";
 		
-
 		
 		var data = {from:fromDateStr,to:toDateStr}
-		isScheduleFeild = datafield.startsWith("sc")
-		if(isScheduleFeild){
-			 data = {from:fromDateStr,to:toDateStr,isCompleted:isCompleted}
-		}
 		var dataArr = {};
 		dataArr[datafield] = data;
+		dataArr['emptyreturndate'] = {emptyreturndate:conditionDD};
 		return dataArr
 	}
 function showFilterFieldColumn(){
@@ -275,6 +257,13 @@ function editShow(seq){
 }
 isSelectAll = false;
 function loadGrid(){
+	
+	var defaultFilter = function(){
+        var jqxFilter = new $.jqx.filter();
+        var filter = jqxFilter.createfilter('stringfilter', '1', 'null');
+        jqxFilter.addfilter(0, filter);
+        return jqxFilter;
+    }();
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#containerScheduleGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
@@ -287,7 +276,7 @@ function loadGrid(){
       { text: 'terminalappointmentdatetime', datafield: 'terminalappointmentdatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
       { text: 'lfdpickupdate', datafield: 'lfdpickupdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
       { text: 'emptylfddate', datafield: 'emptylfddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
-      { text: 'emptyreturndate', datafield: 'emptyreturndate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
+      { text: 'emptyreturndate', datafield: 'emptyreturndate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy',filtertype: 'input',filter: defaultFilter } ,
 
       { text: 'samplesreceivedinomsdate', datafield: 'samplesreceivedinomsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
       { text: 'containerreceivedinomsdate', datafield: 'containerreceivedinomsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
@@ -306,8 +295,7 @@ function loadGrid(){
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:true,width:"13%"},
       { text: 'Confirmed delivery', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" } ,	
       { text: 'Scheduled delivery', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
-      { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" }	
-      
+      { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
     ]
    
     var source =
@@ -337,7 +325,7 @@ function loadGrid(){
                     { name: 'containerreceivedinwmsdate', type: 'date' },
                     { name: 'samplesreceivedinwmsdate', type: 'date' },
                     { name: 'container', type: 'string' },
-                    { name: 'terminal', type: 'fullname' }, 
+                    { name: 'terminal', type: 'fullname' },
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/ContainerScheduleAction.php?call=getAllContainerSchedules',
@@ -388,6 +376,9 @@ function loadGrid(){
 		showstatusbar: true,
 		virtualmode: true,
 		selectionmode: 'checkbox',
+		ready: function () {
+			//applyFilter();
+	    },
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },

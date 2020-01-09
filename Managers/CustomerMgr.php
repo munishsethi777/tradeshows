@@ -312,6 +312,24 @@ class CustomerMgr{
 		return $users;
 	}
 	
+	public function getCustomerIdBySeq($seq){
+	    $sql = "select customerid from customers where seq = $seq";
+	    $users =   self::$dataStore->executeQuery($sql);
+	    if(!empty($users)){
+	        return $users[0][0];
+	    }
+	    return null;
+	}
+	
+	public function searchCustomer($searchString){
+	    $sql = "select customers.* from customers";
+	    if($searchString != null){
+	        $sql .= " where fullname like '". $searchString ."%' ";
+	    }
+	    $customers =   self::$dataStore->executeQuery($sql);
+	    return $customers;
+	}
+	
 	public function deleteByCustomerSeq($customerSeqs){
 	   $flag =  self::$dataStore->deleteInList($customerSeqs);
 	   if($flag){

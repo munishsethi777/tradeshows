@@ -426,7 +426,7 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
 	}
 	 $.get("Actions/QcscheduleApprovalAction.php?call=getQCSchedules" + "&qcscheduleseq=" + qcscheduleSeq ,function(data){
 			arr = $.parseJSON(data);
-			var html ='<table class="table table-striped"><tr><th>Applied by</th><th>QC</th><th>Response</th><th>Applied On</th><th>Responded On</th><th>Comments</th></tr>';
+			var html ='<h3>Earlier Requests</h3><table class="table table-striped"><tr><th>Applied by</th><th>QC</th><th>Response</th><th>Applied On</th><th>Responded On</th><th>Comments</th></tr>';
 		    var tablerows = "";
 		    if(arr.length > 0){
     		    var approvalInfo = arr[0];
@@ -437,19 +437,19 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
        		    $("#modalPoLabel").text(approvalInfo.po);
        		    $("#modalItemnumberLabel").text(approvalInfo.itemnumbers);   
        		 	$("#approvalSeq").val(approvalInfo.seq);
-       		    //arr.shift()
+       		   // arr.shift()
        		    var flag = false;
     			$.each(arr, function(key,value){
     				flag = true;
     				qcCode = value["qccode"];
     				if(value["qccode"] == null){
     					qcCode = "n.a";
-    				} 
+    				}  
     				respondedon = value["respondedon"];
     				if(value["respondedon"] == null){
     					respondedon = "n.a";
-    				}  
-    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" +respondedon +"</td><td>"+ value["responsecomments"] +"</td></tr>";
+    				}   				
+    				tablerows += "<tr class='tabRows'><td>"+ value["fullname"] + "</td><td>"+  qcCode +"</td><td>"+  value["responsetype"] + "</td><td>"+  value["appliedon"] + "</td><td>" + respondedon +"</td><td>"+ value["responsecomments"] +"</td></tr>";
         		});
         		if(flag){
       				html += tablerows;   			  			
@@ -742,24 +742,24 @@ function loadGrid(){
              exportPlannerButton.click(function (event) {
             	 exportPlanner();
              });
-             $("#qcscheduleGrid").bind('rowselect', function (event) {
-                 var selectedRowIndex = event.args.rowindex;
-                  var pageSize = event.args.owner.rows.records.length - 1;                       
-                 if($.isArray(selectedRowIndex)){           
-                     if(isSelectAll){
-                         isSelectAll = false;    
-                     } else{
-                         isSelectAll = true;
-                     }                                                                     
-                     $('#qcscheduleGrid').jqxGrid('clearselection');
-                     if(isSelectAll){
-                         for (i = 0; i <= pageSize; i++) {
-                             var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
-                             $('#qcscheduleGrid').jqxGrid('selectrow', index);
-                         }    
-                     }
-                 }                        
-            });
+//              $("#qcscheduleGrid").bind('rowselect', function (event) {
+//                  var selectedRowIndex = event.args.rowindex;
+//                   var pageSize = event.args.owner.rows.records.length - 1;                       
+//                  if($.isArray(selectedRowIndex)){           
+//                      if(isSelectAll){
+//                          isSelectAll = false;    
+//                      } else{
+//                          isSelectAll = true;
+//                      }                                                                     
+//                      $('#qcscheduleGrid').jqxGrid('clearselection');
+//                      if(isSelectAll){
+//                          for (i = 0; i <= pageSize; i++) {
+//                              var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
+//                              $('#qcscheduleGrid').jqxGrid('selectrow', index);
+//                          }    
+//                      }
+//                  }                        
+//             });
             // reload grid data.
             reloadButton.click(function (event) {
                 $("#qcscheduleGrid").jqxGrid("clearfilters");

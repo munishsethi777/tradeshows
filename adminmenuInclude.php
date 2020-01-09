@@ -251,12 +251,13 @@ if($file == "dashboardmain.php"){
                             	<span class="nav-label">Manage Teams</span>  
                             </a>
                         </li>
-                    <?php }?>
-                     <li class="<?php echo $manageCustomers;?>">
+                    <?php } if(in_array(DepartmentType::Manage_Customers,$departments)){?>
+                    <li class="<?php echo $manageCustomers;?>">
                        <a href="manageCustomers.php"><i class="fa fa-group"></i> 
                     	   	<span class="nav-label">Manage Customers</span>  
                        </a>
                 	</li>
+                	<?php }?>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  

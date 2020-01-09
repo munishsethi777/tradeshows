@@ -61,6 +61,10 @@ class PermissionUtil{
 	public function hasContainerScheduleDepartment(){
 		return in_array(DepartmentType::Container_Schedules,self::$departments);
 	}
+	public function hasManageCustomerDepartment(){
+	    return in_array(DepartmentType::Manage_Customers,self::$departments);
+	}
+	
 	public static function isAuthenticate($page){
 			self::$sessionUtil = SessionUtil::getInstance();
 			self::$departments = self::$sessionUtil->getUserDepartments();
@@ -82,7 +86,14 @@ class PermissionUtil{
 				if(in_array($department, self::$departments)){
 					return true;
 				}
-			}else{
+			}else if($page == "createCustomer.php" ||
+			    $page == "manageCustomers.php"){
+			        $department = DepartmentType::Manage_Customers;
+			        if(in_array($department, self::$departments)){
+			            return true;
+			        }
+			}
+			else{
 				return true;
 			}
 		return false;

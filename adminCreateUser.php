@@ -30,6 +30,7 @@ $qcChecked = "";
 $weeklyMailButtonChecked = "";
 $qcPlannerButtonChecked = "";
 $qcApprovedRejectNotification = "";
+$isManageCustomerChecked = "";
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -87,6 +88,8 @@ if(in_array(1,$departmentSeqArr)){
 	$graphicDepartmentChecked = "checked";
 }if(in_array(4,$departmentSeqArr)){
 	$containerDepartmentChecked = "checked";
+}if(in_array(7,$departmentSeqArr)){
+    $customerDepartmentChecked = "checked";
 }
 /*echo $optiondata = array('<script type="text/javascript">
                      $(document).ready(function(){ 
@@ -457,15 +460,9 @@ if(in_array(1,$departmentSeqArr)){
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left m-r-sm">
-                                            	<input type="checkbox" <?php echo $customerDepartmentChecked?> value="2" id="customerDepartment" name="departments[]" />
+                                            	<input type="checkbox" <?php echo $customerDepartmentChecked?> value="7" id="customerDepartment" name="departments[]" />
                                             </div>Customer Management
-                                        </div>
-                                        <div id="graphicPermissionsDiv" class="panel-body i-checks">
-                                            <label class="col-lg-3 col-form-label">
-				                        		<input type="checkbox" <?php echo $usaTeamChecked?> value="usa_team" id="usaTeamPermission" name="permissions[]"/>
-				                            	Manage Customers
-				                            </label>
-                                    </div>
+                                        </div>                                  
                                 </div>
 	                        
 	                        </div>

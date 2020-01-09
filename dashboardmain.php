@@ -67,16 +67,17 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 									</div>
 		                        </div>
 		                    <?php } ?>
-		                    
-		                    <div class="col-lg-3">
-			                        <div class="widget bg-primary text-center  p-h-xl">
-			                        	<div class="row">
-			                        		<a href="manageCustomers.php">
-			                        		<h1 class="m-t-xs font-bold"><i class="fa fa-users"></i></h1>
-			                                <span>Customer Management</span></a>
-			                            </div>
-									</div>
-		                        </div>
+		                     <?php if($isSessionAdmin || $permissionUtil->hasManageCustomerDepartment()){?>
+    		                    <div class="col-lg-3">
+    			                        <div class="widget bg-primary text-center  p-h-xl">
+    			                        	<div class="row">
+    			                        		<a href="manageCustomers.php">
+    			                        		<h1 class="m-t-xs font-bold"><i class="fa fa-users"></i></h1>
+    			                                <span>Customer Management</span></a>
+    			                            </div>
+    									</div>
+    		                        </div>
+		                        <?php }?>
 		                    <?php if(empty( ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment())))
 		                     {
 		                         echo "<center> <b>". StringConstants::PERMISSION_AllOW . "</b> </center>";

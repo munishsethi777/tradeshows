@@ -34,7 +34,10 @@ class ContainerScheduleMgr{
 	public function getContainerSchedulesForGrid(){
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
-		$containerSchedules = $this->findAllArr(true);
+		//$containerSchedules = $this->findAllArr(true);
+		$query = "select * from containerschedules";
+		$query = $this->applyDefaultCondition($query);
+		$containerSchedules = self::$dataStore->executeQuery($query,true);
 		$mainArr = array();
 		foreach ($containerSchedules as $containerSchedule){
 		    $wareHouse = $containerSchedule["warehouse"];
@@ -62,8 +65,23 @@ class ContainerScheduleMgr{
 		return $mainArr;
 	}
 	
+	private function applyDefaultCondition($query){
+	    if (isset($_GET['filterscount']))
+	    {
+	        $filterscount = $_GET['filterscount'];
+	        if ($filterscount > 0){
+	        }else{
+	            $query .= " where emptyreturndate is NULL";
+	            
+	        }
+	    }
+	    return $query;
+	}
+	
 	public function getAllCount(){
-		$count = self::$dataStore->executeCountQuery(null,true);
+	    $query = "select count(*) from containerschedules";
+	    $query = $this->applyDefaultCondition($query);
+	    $count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
 	

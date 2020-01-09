@@ -6,9 +6,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $customerMgr = CustomerMgr::getInstance();
 $customer = new Customer();
 $customerSeq = 0;
+$storeChecked = "";
+$storeDisplay = "none";
 if(isset($_POST["id"])){
     $seq = $_POST["id"];
     $customer = $customerMgr->findByCustomerSeq($seq);
+    if(!empty($customer->getIsStore())){
+        $storeChecked = "checked";
+        $storeDisplay = "block";
+    }
     $customerSeq = $customer->getSeq();
 }
 ?>
@@ -77,7 +83,7 @@ if(isset($_POST["id"])){
                         	<div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Store </label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" class="isstore"/>
+	                        		<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Priority </label>
 	                        	<div class="col-lg-4">
@@ -87,12 +93,14 @@ if(isset($_POST["id"])){
 	                             	?>
 	                        	</div>
 	                         </div>
-	                         <div class="form-group row storeDetailsDiv" style="display:none">
+	                         <div class="form-group row storeDetailsDiv" style="display:<?php $storeDisplay?>">
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 		                        	<div class="col-lg-10">
-		                        		<select name="fullNameSelect" class="fullNameSelect form-control">
-		                        			<option>ACE HARDWARE CORP</option>
+		                        		<select name="fullNameSelect" onchange="setCustomerId(this.value)" id="customerSelect" class="fullNameSelect form-control">
+		                        			<?php if($seq > 0){
+		                        			    echo ('<option selected value="'.$seq.'">'.$customer->getFullName().'</option>');
+		                        			}?>
 		                        		</select>
 		                            </div>
 	                            </div>
@@ -110,14 +118,14 @@ if(isset($_POST["id"])){
                         	 <div class="form-group row customerNameTextDiv">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 	                        	<div class="col-lg-10">
-	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" name="fullname" class="form-control">
+	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" id="fullname" name="fullname" class="form-control">
 	                            </div>
 	                        </div>
 	                        
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" class="form-control">
+	                            	<input type="text" required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
 	                        	<div class="col-lg-4">
@@ -187,7 +195,7 @@ if(isset($_POST["id"])){
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
 $(document).ready(function(){
-	$(".fullNameSelect").chosen({ width: '100%' });
+	//$(".fullNameSelect").chosen({ width: '100%' });
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -207,16 +215,22 @@ $(document).ready(function(){
 	$('.isstore').on('ifChanged', function(event){
 		showHideStoreFields();
   	});
-	populateCustomer();
+	populateCustomerBuyers();
+	loadCustomers();
+	
 });
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
 	if(flag){
 		$(".storeDetailsDiv").slideDown();
 		$(".customerNameTextDiv").hide();
+		$("#fullname").attr("disabled","disabled");
+		$("#customerSelect").removeAttr("disabled");
 	}else{
 		$(".storeDetailsDiv").slideUp();
-		$(".customerNameTextDiv").show();	
+		$(".customerNameTextDiv").show();
+		$("#customerSelect").attr("disabled","disabled");
+		$("#fullname").removeAttr("disabled");	
 	}
 }
 var index = 0;
@@ -291,7 +305,7 @@ function addBuyer(isDefaultRow,buyer){
 		populateBuyerCategories(category,ddId);
 }
 
-function populateCustomer(){
+function populateCustomerBuyers(){
 	if(customerSeq != 0){
     	$.get("Actions/CustomerAction.php?call=getCustomerBuyers&id=<?php echo $customerSeq ?>", function(data){
        		var jsonData = $.parseJSON(data);
@@ -310,6 +324,39 @@ function populateCustomer(){
 	}else{
 		addBuyer(true)
 	}
+}
+function setCustomerId(seq){
+	$.get("Actions/CustomerAction.php?call=getCustomerIdBySeq&seq="+seq, function(data){
+   		var jsonData = $.parseJSON(data);
+   		var customerId = jsonData.customerid;	
+   		$("#customerid").val(customerId);
+	});
+}
+function loadCustomers(){		
+    $(".fullNameSelect").select2({
+        ajax: {
+        url: "Actions/CustomerAction.php?call=searchCustomer",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          return data;
+        },
+        cache: true
+      },
+      minimumInputLength: 1,
+      width: '100%'
+    });
+    var selectedSeqs = "<?echo $seq?>";
+    if(selectedSeqs.length > 0){
+    	$(".fullNameSelect").val(selectedSeqs).trigger('change', [{flag:true}]);
+    } 
+    
 }
 
 function populateBuyerCategories(selected,selectDivId){

@@ -21,6 +21,15 @@ if($call == "saveCustomer"){
         $customer = new Customer();
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
+        if(isset($_REQUEST["fullNameSelect"])){
+            $existingCustomer = $customerMgr->findByCustomerSeq($_REQUEST["fullNameSelect"]);
+            $customer->setFullName($existingCustomer->getFullName());
+        }
+        $isStore = 0;
+        if(isset($_REQUEST["isstore"])){
+            $isStore = 1;
+        }
+        $customer->setIsStore($isStore);
         $customer->setCreatedby($sessionUtil->getUserLoggedInSeq());
         $customer->setCreatedon(new DateTime());
         $customer->setLastmodifiedon(new DateTime());
@@ -78,6 +87,17 @@ if($call == "getCustomerDetails"){
 		$message  = $e->getMessage();
 	}
 }
+
+if($call == "getCustomerIdBySeq"){
+    try{
+        $customerId = $customerMgr->getCustomerIdBySeq($_GET["seq"]);
+        $response["customerid"] = $customerId;
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
+
 if($call == "getCustomerBuyers"){
     try{
         $customer = $customerMgr->getCustomerBuyers($_GET["id"]);
@@ -109,6 +129,21 @@ if($call == "searchCustomers"){
 	echo json_encode($response);
 	return;
 }
+
+if($call == "searchCustomer"){
+    $searchString = $_GET["q"];
+    $customers  = $customerMgr->searchCustomer($searchString);
+    $response['results'] = array();
+    foreach($customers as $customer){
+        $json = array();
+        $json['text'] = $customer['fullname'];
+        $json['id'] = $customer['seq'];
+        array_push($response['results'],$json);
+    }
+    echo json_encode($response);
+    return;
+}
+
 if($call == "deleteCustomers"){
     $ids = $_GET["ids"];
     try{

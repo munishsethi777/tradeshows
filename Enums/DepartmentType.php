@@ -7,4 +7,5 @@ class DepartmentType extends BasicEnum{
 	const Container_Schedules = "Container Schedules";
 	const Users = "Users";
 	const Teams = "Teams";
+	const Manage_Customers = "Manage Customers";
 }
