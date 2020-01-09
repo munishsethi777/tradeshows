@@ -93,7 +93,7 @@ if(isset($_POST["id"])){
 	                             	?>
 	                        	</div>
 	                         </div>
-	                         <div class="form-group row storeDetailsDiv" style="display:<?php $storeDisplay?>">
+	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 		                        	<div class="col-lg-10">
