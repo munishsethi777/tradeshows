@@ -1,0 +1,3 @@
+ALTER TABLE customers DROP INDEX customerid;
+
+ALTER TABLE customers ADD UNIQUE(customerid,storeid);
