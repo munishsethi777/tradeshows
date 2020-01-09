@@ -209,7 +209,7 @@ where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPE
 	}
 	
 	public function getAllUsersWithRoles($userType = null){
-	    $sql = "select users.*,userroles.role from users inner join userroles on users.seq = userroles.userseq";
+	    $sql = "select users.*,userroles.role from users inner join userroles on users.seq = userroles.userseq where users.issendnotifications = 1";
 	    if(!empty($userType)){
 	        $sql .= " and users.usertype = '$userType'";
 	    }
