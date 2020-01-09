@@ -8,4 +8,5 @@ class DepartmentType extends BasicEnum{
 	const Users = "Users";
 	const Teams = "Teams";
 	const Manage_Customers = "Manage Customers";
+	const Email_Logs = "Email Logs";
 }

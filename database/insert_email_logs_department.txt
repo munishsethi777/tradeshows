@@ -1,0 +1,1 @@
+INSERT INTO `departments` (`seq`, `title`, `isenabled`, `createdon`, `lastmodifiedon`) VALUES (NULL, 'Email Logs', '1', '2020-01-09 00:00:00', '2019-06-09 00:00:00');

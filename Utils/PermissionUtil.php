@@ -92,6 +92,17 @@ class PermissionUtil{
 			        if(in_array($department, self::$departments)){
 			            return true;
 			        }
+			}else if($page == "adminCreateUser.php" ||
+			    $page == "adminManageUsers.php"){
+			        $department = DepartmentType::Users;
+			        if(in_array($department, self::$departments)){
+			            return true;
+			        }
+			}else if($page == "manageEmailLogs.php"){
+			        $department = DepartmentType::Email_Logs;
+			        if(in_array($department, self::$departments)){
+			            return true;
+			        }
 			}
 			else{
 				return true;

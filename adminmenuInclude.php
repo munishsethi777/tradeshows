@@ -209,7 +209,7 @@ if($file == "dashboardmain.php"){
 		                    </a>
                 		</li>
                 	<?php }?>
-                	 <?php if($isSessionSupervisor){?>
+                	 <?php if($isSessionSupervisor || in_array(DepartmentType::Email_Logs,$departments)){?>
 		              <li class="<?php echo $manageEmailLogs;?>">
 		                    <a href="manageEmailLogs.php"><i class="fa fa-envelope"></i> 
 		                    	<span class="nav-label">Email Logs</span>  
