@@ -367,7 +367,8 @@ class ContainerScheduleReportUtil
         $existingTerminalAppointmentDateTime = $existingContainerSchedule->getTerminalAppointmentDatetime();
         
         $awuRef = $containerSchedule->getAWUReference();
-        $html = "user <b>$userName</b> has updated a terminal appointment date for <b>AWU#$awuRef</b> with following date:<br>";
+        $containerNum = $containerSchedule->getContainer();
+        $html = "user <b>$userName</b> has updated a terminal appointment date for <b>Container#$containerNum</b> and <b>AWU#$awuRef</b> with following date:<br>";
         $hasChangedDate = false;
         if(!empty($existingTerminalAppointmentDateTime)){
             $existingTerminalAppointmentDateTime = DateUtil::StringToDateByGivenFormat(DateUtil::$DB_FORMAT_WITH_TIME,$existingTerminalAppointmentDateTime);
