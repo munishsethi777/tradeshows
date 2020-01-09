@@ -297,7 +297,8 @@ class ContainerScheduleReportUtil
         $existingScheduleDeliveryDate = $existingContainerSchedule->getScheduledDeliveryDateTime();
         $existingScheduleAlpinePickupDate = $existingContainerSchedule->getAlpineNotificatinPickupDateTime();
         $awuRef = $containerSchedule->getAWUReference();
-        $html = "User $userName has updated a container schedule with AWU#$awuRef with following dates:<br>";
+        $containerNumber = $containerSchedule->getContainer();
+        $html = "User $userName has updated a container schedule with Container#$containerNumber and AWU#$awuRef with following dates:<br>";
         $hasChangedDate = false;
         if(!empty($existingScheduleDeliveryDate)){
             $existingScheduleDeliveryDate = DateUtil::StringToDateByGivenFormat(DateUtil::$DB_FORMAT_WITH_TIME,$existingScheduleDeliveryDate);
