@@ -9,6 +9,7 @@ $customerSeq = 0;
 $storeChecked = "";
 $storeDisplay = "none";
 $customerSelectDisabled = "disabled";
+$customerIdDisabled = "";
 if(isset($_POST["id"])){
     $seq = $_POST["id"];
     $customer = $customerMgr->findByCustomerSeq($seq);
@@ -16,6 +17,7 @@ if(isset($_POST["id"])){
         $storeChecked = "checked";
         $storeDisplay = "block";
         $customerSelectDisabled = "";
+        $customerIdDisabled = "readonly";
     }
     $customerSeq = $customer->getSeq();
 }
@@ -127,7 +129,7 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
+	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
 	                        	<div class="col-lg-4">
@@ -224,11 +226,13 @@ $(document).ready(function(){
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
 	if(flag){
+		$("#customerid").attr("readonly","readonly");
 		$(".storeDetailsDiv").slideDown();
 		$(".customerNameTextDiv").hide();
 		$("#fullname").attr("disabled","disabled");
 		$("#customerSelect").removeAttr("disabled");
 	}else{
+		$("#customerid").removeAttr("readonly");
 		$(".storeDetailsDiv").slideUp();
 		$(".customerNameTextDiv").show();
 		$("#customerSelect").attr("disabled","disabled");
