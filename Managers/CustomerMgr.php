@@ -117,23 +117,21 @@ class CustomerMgr{
 				}else{
 					if(in_array($customerId, $updateIds)){
 						$condition["customerid"] = $customer->getCustomerId();
-						$this->updateOject($conn, $customer, $condition);
+						$condition["storeid"] = $customer->getStoreId();
+						$id = $this->updateOject($conn, $customer, $condition);
 					}
 				}
 			}
 			catch ( Exception $e) {
-				$trace = $e->getTrace();
-				if($trace[0]["args"][0][1] == "1062"){
-					//$customerIdAlreadyExists++;
-					array_push($exstingCustomerIds, $customerId);
-					$id = $this->updateByCustomerByid($customer);
-					$savedCustomerCount++;
-				}else{
-					$messages .= $e->getMessage() . " for customer id $customerId";
-					$hasError = true;
-					$success = 0;
-				}
-				
+			    $trace = $e->getTrace();
+			    if($trace[0]["args"][0][1] == "1062"){
+			        $customerIdAlreadyExists++;
+			        array_push($exstingCustomerIds, $customerId);
+			    }else{
+			        $messages .= $e->getMessage();
+			    }
+			    $hasError = true;
+			    $success = 0;
 			}
 			if(!empty($buyers)){
 			    $buyerMgr = BuyerMgr::getInstance();
