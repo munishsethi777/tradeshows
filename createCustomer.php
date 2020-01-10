@@ -8,6 +8,7 @@ $customer = new Customer();
 $customerSeq = 0;
 $storeChecked = "";
 $storeDisplay = "none";
+$customerTextDisplay = "";
 $customerSelectDisabled = "disabled";
 $customerIdDisabled = "";
 if(isset($_POST["id"])){
@@ -17,6 +18,7 @@ if(isset($_POST["id"])){
         $storeChecked = "checked";
         $storeDisplay = "block";
         $customerSelectDisabled = "";
+        $customerTextDisplay = "none";
         $customerIdDisabled = "readonly";
     }
     $customerSeq = $customer->getSeq();
@@ -119,7 +121,7 @@ if(isset($_POST["id"])){
 			                        </div>
 			                    </div>
 	                       	</div>
-                        	 <div class="form-group row customerNameTextDiv">
+                        	 <div class="form-group row customerNameTextDiv" style="display:<?php echo $customerTextDisplay?>">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 	                        	<div class="col-lg-10">
 	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" id="fullname" name="fullname" class="form-control">

@@ -176,10 +176,15 @@ class CustomerMgr{
 	
 	private function getCustomerObj($data){
 		$customer = new Customer();
-		$name = $data[0];
-		$customerId = $data[1];
-		$salesPersonId = $data[2];
-		$salesPersonName = $data[3];
+		$customerId = $data[0];
+		$storeId = $data[1];
+		$name = $data[2];
+		$storeName = $data[3];
+		$priority = $data[4];
+		
+		$salesPersonId = $data[5];
+		$salesPersonName = $data[6];
+		$businessType = $data[7];
 		$message = "";
 		if(!empty($customerId)){
 			//$message .= $this->validateNumeric($customerId, $this->fieldNames[0]);
@@ -201,38 +206,49 @@ class CustomerMgr{
 		$sessionUtil = SessionUtil::getInstance();
 		$createBy = $sessionUtil->getUserLoggedInSeq();
 		$customer->setCreatedBy($createBy);
+		if(!empty($storeId)){
+		    $customer->setStoreName($storeName);
+		    $customer->setIsStore(1);
+		}else{
+		    $storeId = "";
+		}
+		$customer->setStoreId($storeId);
+		if(empty($priority)){
+		    $priority = "B";
+		}
+		$customer->setPriority($priority);
+		$customer->setBusinessType($businessType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;
 		
-		$firstName = preg_replace('!\s+!', ' ', $data[4]);
-		$emailId = $data[6];
-		$officePhone = $data[7];
-		$buyers = array();
-		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
-    		$buyer1 = new Buyer();
-    		$buyer1->setFirstName($firstName);
-    		$buyer1->setEmail($emailId);
-    		$buyer1->setOfficePhone($officePhone);
-    		$buyer1->setCreatedBy($createBy);
-    		$buyer1->setCreatedOn(new DateTime());
-    		$buyer1->setLastModifiedOn(new DateTime());
-    		array_push($buyers,$buyer1);
-		}
-		$firstName =  preg_replace('!\s+!', ' ', $data[8]);
-		$emailId = $data[9];
-		$officePhone = $data[10];
-		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
-    		$buyer2 = new Buyer();
-    		$buyer2->setFirstName($firstName);
-    		$buyer2->setEmail($emailId);
-    		$buyer2->setOfficePhone($officePhone);
-    		$buyer2->setCreatedBy($createBy);
-    		$buyer2->setCreatedOn(new DateTime());
-    		$buyer2->setLastModifiedOn(new DateTime());
-    		array_push($buyers,$buyer2);
-		}
-		
-		$customerAndBuyers["buyers"] = $buyers;
+// 		$firstName = preg_replace('!\s+!', ' ', $data[4]);
+// 		$emailId = $data[6];
+// 		$officePhone = $data[7];
+ 		$buyers = array();
+// 		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
+//     		$buyer1 = new Buyer();
+//     		$buyer1->setFirstName($firstName);
+//     		$buyer1->setEmail($emailId);
+//     		$buyer1->setOfficePhone($officePhone);
+//     		$buyer1->setCreatedBy($createBy);
+//     		$buyer1->setCreatedOn(new DateTime());
+//     		$buyer1->setLastModifiedOn(new DateTime());
+//     		array_push($buyers,$buyer1);
+// 		}
+// 		$firstName =  preg_replace('!\s+!', ' ', $data[8]);
+// 		$emailId = $data[9];
+// 		$officePhone = $data[10];
+// 		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
+//     		$buyer2 = new Buyer();
+//     		$buyer2->setFirstName($firstName);
+//     		$buyer2->setEmail($emailId);
+//     		$buyer2->setOfficePhone($officePhone);
+//     		$buyer2->setCreatedBy($createBy);
+//     		$buyer2->setCreatedOn(new DateTime());
+//     		$buyer2->setLastModifiedOn(new DateTime());
+//     		array_push($buyers,$buyer2);
+// 		}
+ 		$customerAndBuyers["buyers"] = $buyers;
 		$this->validationErrors = $message;
 		return $customerAndBuyers;
 	}
@@ -339,10 +355,14 @@ class CustomerMgr{
 	}
 	
 	public function updateByCustomerByid($customer){
-	    $condition = array("customerid" => $customer->getCustomerId());
+	    $condition = array("customerid" => $customer->getCustomerId(),"storeid" => $customer->getStoreId());
 	    $colVal = array("fullname" => $customer->getFullName(),
 	        "salespersonname" => $customer->getSalesPersonName(), 
-	        "salespersonid" => $customer->getSalesPersonID());
+	        "salespersonid" => $customer->getSalesPersonID(),
+	        "storename" => $customer->getStoreName(),
+	        "priority" => $customer->getPriority(),
+	        "businesstype" => $customer->getBusinessType()
+	    );
 	    self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
 	    $customerSeq = $this->findSeqByCustomerId($customer->getCustomerId());
 	    return $customerSeq;
