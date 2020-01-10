@@ -215,6 +215,9 @@ class CustomerMgr{
 		    $priority = "B";
 		}
 		$customer->setPriority($priority);
+		if(!empty($businessType)){
+		    $businessType = CustomerBusinessType::getName($businessType);
+		}
 		$customer->setBusinessType($businessType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;

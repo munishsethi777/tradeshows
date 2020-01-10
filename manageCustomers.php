@@ -192,9 +192,9 @@ function loadGrid(){
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Customer ID', datafield: 'customerid',width:"13%"},
       { text: 'Name', datafield: 'fullname', width:"22%"},
-      { text: 'BusinessType', datafield: 'businesstype',width:"15%"},
+      { text: 'Store Name', datafield: 'storename', width:"25%"},
+      { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
       { text: 'Sales Person', datafield: 'salespersonname',width:"18%"},
-      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"22%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'},
       { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'7%'}
     ]
    
@@ -208,7 +208,7 @@ function loadGrid(){
         datafields: [{ name: 'seq', type: 'integer' }, 
                      { name: 'customerid', type: 'string' }, 
                     { name: 'fullname', type: 'string' }, 
-                    { name: 'fullname', type: 'string' }, 
+                    { name: 'storename', type: 'string' }, 
                     { name: 'businesstype', type: 'string' },
                     { name: 'salespersonname', type: 'string' },
                     { name: 'lastmodifiedon', type: 'date' }
