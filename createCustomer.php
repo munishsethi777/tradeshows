@@ -65,6 +65,9 @@ if(isset($_POST["id"])){
 	font-size:12px;
 	padding:4px;
 }
+#category{
+	margin-bottom:0px !important;
+}
 </style>
 </head>
 <body>
@@ -86,7 +89,7 @@ if(isset($_POST["id"])){
                  	 <form id="createCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="saveCustomer"/>
                         	<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
-                        	<div class="form-group row i-checks">
+                        	<div class="row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Store </label>
 	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
@@ -99,6 +102,20 @@ if(isset($_POST["id"])){
 	                             	?>
 	                        	</div>
 	                         </div>
+	                         <div class="row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
+	                        	<div class="col-lg-4">
+ 	                        		<?php 
+    									$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false);
+    			                        echo $select;
+	                             	?>
+	                            </div>
+	                       </div>
+	                       
 	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
@@ -121,31 +138,14 @@ if(isset($_POST["id"])){
 			                        </div>
 			                    </div>
 	                       	</div>
-                        	 <div class="form-group row customerNameTextDiv" style="display:<?php echo $customerTextDisplay?>">
+                        	<div class="form-group row customerNameTextDiv" style="display:<?php echo $customerTextDisplay?>">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
 	                        	<div class="col-lg-10">
 	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" id="fullname" name="fullname" class="form-control">
 	                            </div>
 	                        </div>
 	                        
-	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
-	                        	<div class="col-lg-4">
-<!-- 	                        		<select name="businesstype" class="form-control"> -->
-<!-- 	                        			<option>Direct</option> -->
-<!-- 	                        			<option>Domesitc</option> -->
-<!-- 	                        			<option>DotCom</option> -->
-<!-- 	                        		</select> -->
-										<?php 
-    										$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false);
-    			                            echo $select;
-	                             		?>
-	                            </div>
-	                       </div>
+	                        
 	                       <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label>
 	                        	<div class="col-lg-4">
