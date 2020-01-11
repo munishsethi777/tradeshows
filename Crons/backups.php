@@ -30,7 +30,7 @@ class backups extends  DBvars{
     		
     		$results = $mysqli->query ( "SHOW CREATE TABLE " . $table );
     		while ( $row = $results->fetch_array () ) {
-    			$contents .= $row [1] . ";\n\n";
+    			//$contents .= $row [1] . ";\n\n";
     		}
     		
     		$results = $mysqli->query ( "SELECT * FROM " . $table );

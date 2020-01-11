@@ -24,6 +24,29 @@ $supervisors = $userMgr->getAllUsersWithRoles(UserType::SUPERVISOR);
 $users = $userMgr->getAllUsersWithRoles(UserType::USER);
 $isDeveloperModeOn = StringConstants::IS_DEVELOPER_MODE == "1";
 try{
+	if($hours == 12 || $hours == 24 || ($isDeveloperModeOn)){
+		$lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
+		$lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
+		$flag = false;
+		if($hours == 12 || ($isDeveloperModeOn)){
+			if(($lastExeDay != $day && $lastExeHours != 12) || ($isDeveloperModeOn)){
+				$flag= true;
+			}
+		}
+		if($hours == 24 || ($isDeveloperModeOn)){
+			if(($lastExeDay == $day && $lastExeHours != 24) || ($isDeveloperModeOn)){
+				$flag= true;
+			}
+		}
+		if($flag){
+			backups::backup_mysql_database();
+			if(!($isDeveloperModeOn)){
+				$configurationMgr->saveConfiguration(Configuration::$CRON_BACKUP_LAST_EXE,$currentDate);
+			}
+			$logger->info("Cron Backup completed Successfully");
+		}
+	}
+	die;
     if($hours == 10 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE);
         if($lastExeDay != $day){
@@ -62,26 +85,7 @@ try{
             $logger->info("QCPlanner Notifications sent Successfully");
         }
     }
-    if($hours == 12 || $hours == 24 || ($isDeveloperModeOn)){
-        $lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
-        $lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
-        $flag = false;
-        if($hours == 12){
-            if($lastExeDay != $day && $lastExeHours != 12){
-                $flag= true;
-            }
-        }
-        if($hours == 24){
-            if($lastExeDay == $day && $lastExeHours != 24){
-                $flag= true;
-            }
-        }
-        if($flag){
-            backups::backup_mysql_database();
-            $configurationMgr->saveConfiguration(Configuration::$CRON_BACKUP_LAST_EXE,$currentDate);
-            $logger->info("Cron Backup completed Successfully");
-        }
-    }
+    
     if($dayOfWeek == 1 && $hours == 22 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE);
         if($lastExeDay != $day){

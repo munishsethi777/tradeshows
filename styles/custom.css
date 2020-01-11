@@ -178,7 +178,9 @@ ul.nav-second-level{
 	border: 1px solid #b3b4b5 !important;
 }
 .bg-formLabel{
-	background-color:rgba(25, 173, 143, 0.16);
+	/**background-color:rgba(25, 173, 143, 0.16);**/
+	background-color:#1ab394;
+	color:white;
 	padding:9px 7px !important;
 }
 .bg-formLabelDark{

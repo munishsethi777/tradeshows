@@ -64,10 +64,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                     <small>Complete details of the selected Customer</small>
                         
                         <div class="form-group row m-t-sm">
-                       		<label class="col-sm-2 lblTitle">ID #</label>
+                       		<label class="col-sm-2 lblTitle">Customer Id #</label>
                            	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
-                            <label class="col-sm-2">Name</label>
+                            <label class="col-sm-2 lblTitle">Priority</label>
+                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+                        </div>
+                        <div class="form-group row m-t-sm">
+                        	<label class="col-sm-2">Customer Name</label>
                            	<div class="col-sm-4"><label class="fullname lblDesc"></label></div>
+                        	
                         </div>
                         <div class="form-group row">
                        		<label class="col-lg-2">Sales Person</label>
@@ -80,6 +85,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                            	<div class="col-lg-4"><label class="businesstype lblDesc"></label></div>
                        		<label class="col-lg-2">Created On</label>
                            	<div class="col-lg-4"><label class="createdon lblDesc"></label></div>
+                        </div>
+                        <div class="form-group row">
+                       		 <label class="col-lg-2">Store Id</label>
+                           	<div class="col-lg-4"><label class="storeid lblDesc"></label></div>
+                       		<label class="col-lg-2">Store Name</label>
+                           	<div class="col-lg-4"><label class="storename lblDesc"></label></div>
                         </div><br>
                         <div class="buyers"></div>
                     </div>
@@ -277,11 +288,11 @@ function loadGrid(){
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
         
-            container.append(importButton);
-            container.append(templateButton);
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);
+            container.append(importButton);
+            container.append(templateButton);
             container.append(reloadButton);
             statusbar.append(container);
             importButton.jqxButton({  width: 65, height: 18 });
