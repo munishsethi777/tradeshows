@@ -201,6 +201,25 @@ ul.nav-second-level{
 	color:white;
 	padding:9px 7px !important;
 }
+.bg-formLabelBrownSm{
+	background-color:rgba(131, 98, 0, 0.69);
+	color:white;
+	padding:4px !important;
+	font-weight:400;
+}
+.bg-formLabelMauveSm{
+	background-color:#A4C2F4;
+	color:black;
+	padding:4px !important;
+	font-weight:400;
+}
+.bg-formLabelDarkSm{
+	background-color:rgba(0, 0, 0, 0.6);
+	color:white;
+	padding:4px !important;
+	font-weight:400;
+}
+
 .list-group-item{
 	font-size:12px;
 	padding:6px !important;

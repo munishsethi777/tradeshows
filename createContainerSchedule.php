@@ -132,6 +132,118 @@ if(isset($_REQUEST["id"])){
 							<h5 class="pageTitle">Create/Edit Container Schedule</h5>
 					</nav>
                  </div>
+                 
+                 
+                 
+	             <div class="ibox-content">
+	             	<?php include 'progress.php';?>
+		                <div class="row">
+		                    <div class="col-sm-12">
+		                    <h3>Container Details</h3>
+		                        
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Container#:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">AWU#:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trucker:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trans:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+								<div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal Appt:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">LFD Pickup:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Pickup:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty LFD:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Custom Exam Terminal:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Custom Exam Status:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Date:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Notes:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Scheduled Delivery:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelMauveSm">Confirmed Delivery:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Delivery Gate:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Warehouse:</label>
+		                           	<div class="col-sm-2"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelMauveSm">Hot Container:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Notif Pickup Date:</label>
+		                           	<div class="col-sm-2"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Pickup Notes:</label>
+		                           	<div class="col-sm-10"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Container Doc Path:</label>
+		                           	<div class="col-sm-10"><label class="customerid lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Ids Complete:</label>
+		                           	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Samples:</label>
+		                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">MSRF Created:</label>
+		                           	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received:</label>
+		                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-lg-4 col-lg-offset-1 bg-formLabelBrownSm text-center">CONTAINER</label>
+		                            <label class="col-lg-4 col-lg-offset-2 bg-formLabelBrownSm text-center">SAMPLES</label>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in OMS:</label>
+		                           	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in OMS:</label>
+		                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in WMS:</label>
+		                           	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in WMS:</label>
+		                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+		                        </div>
+		                    </div>
+		                </div>
+	                </div>
+                 
+                 
+                 
+                 
+                 
+                 
                  <div class="ibox-content">
                  	<?include "progress.php"?>
                  	 <form id="createGraphicLogForm" autocomplete="off" method="post" action="Actions/ContainerScheduleAction.php">
