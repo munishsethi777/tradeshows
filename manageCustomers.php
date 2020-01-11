@@ -46,6 +46,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    <form id="form1" name="form1" method="post" action="createCustomer.php">
    		<input type="hidden" id="id" name="id"/>
    </form> 
+   <form id="form2" name="form2" method="post" action="Actions/CustomerAction.php">
+   		<input type="hidden" id ="call" name="call"  value="export"/>
+   		<input type="hidden" id="queryString" name="queryString"/>
+   </form> 
      <!-- Modal Box for update comments and status -->  
 <div class="modal inmodal bs-example-modal-lg" id="customerDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -280,18 +284,19 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-            //var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
+            var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
         
-            
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);
             container.append(importButton);
+            container.append(templateButton);
             container.append(reloadButton);
             statusbar.append(container);
             importButton.jqxButton({  width: 65, height: 18 });
+            templateButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             editButton.jqxButton({  width: 70, height: 18 });
@@ -305,6 +310,10 @@ function loadGrid(){
     	    });
             deleteButton.click(function (event) {
             	deleteRows("customerGrid","Actions/CustomerAction.php?call=deleteCustomers");
+           	});
+            templateButton.click(function (event) {
+            	filterQstr = getFilterString("customerGrid");
+          	  	exportCustomersConfirm(filterQstr);
            	});
             editButton.click(function (event){
             	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
@@ -345,7 +354,7 @@ function loadGrid(){
         }
     });
 }
-function exportCustomersConfirm(){
+function exportCustomersConfirm(filterQstr){
 	bootbox.confirm({
 	    message: "Do you want to export customers?",
 	    buttons: {
@@ -360,12 +369,13 @@ function exportCustomersConfirm(){
 	    },
 	    callback: function (result) {
 		    if(result){
-		    	exportCustomers(); 
+		    	exportCustomers(filterQstr); 
 		    }
 	    }
 	});
 }
-function exportCustomers(){
-	$("#form1").submit();
+function exportCustomers(filterQstr){
+	$("#queryString").val(filterQstr);
+	$("#form2").submit();
 }
 </script>

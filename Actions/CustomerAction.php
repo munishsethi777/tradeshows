@@ -69,7 +69,8 @@ if($call == "getAllCustomers"){
 }
 if($call == "export"){
 	try{
-		$response = $customerMgr->exportCustomers();
+	    $queryString = $_GET["queryString"];
+	    $response = $customerMgr->exportCustomers($queryString);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

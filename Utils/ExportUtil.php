@@ -3,7 +3,7 @@ class ExportUtil{
 	private static $VERTICAL = "vertical";
 	private static $HORIZONTAL = "horizontal";
 	public static $EXPORT_ROW_LIMIT = 5000;
-public static function exportCustomers($customers){
+	public static function exportCustomers($data){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
 		->setLastModifiedBy("Admin")
@@ -12,103 +12,145 @@ public static function exportCustomers($customers){
 		->setDescription("Customers")
 		->setKeywords("office 2007 openxml php")
 		->setCategory("Report");
-		$alphas = range('A', 'Z');
+		$alphas = ExportUtil::createColumnsArray("ZZ");;
 		$rowCount = 1;
 		$count = 1;
 		$i = 0;
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "customerid");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CUS_ID_NUM");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "name");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "STORE_ID");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "phone");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CUS_NAME");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "address");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CHAIN_STORE_NAME");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "address1");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Priority");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "city");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SALES_REP_ID");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "st");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SALES_REP");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "zip");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Type");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "email");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "attention");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "fax");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "terms");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "sales1");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "sales2");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "sales3");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "sales4");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "createdate");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Key");
 		$count = 2;
 		$i = 0;
+		$customers = $data["customers"];
+		$buyers = $data["buyers"];
+		$maxBuyerCount = count(max($buyers));
+		if($maxBuyerCount < 2){
+		    $maxBuyerCount = 2;
+		}
+		$array = array();
+		$index = 0;
 		foreach($customers as $customer){
+		    if(in_array($customer["seq"], $array)){
+		        continue;
+		    }
+		    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getCustomerId());
-			
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["customerid"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getCustomerName());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storeid"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getPhone());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["fullname"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getAddress());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storename"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customer->getAddress1());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customer["priority"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getCity());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonid"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getState());
-	
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonname"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$businessType = $customer["businesstype"];
+			if(!empty($businessType)){
+			    $businessType = CustomerBusinessType::getValue($businessType);
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getZip());
-	
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getEmail());
-	
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getAttention());
-	
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getFax());
-			
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getTerms());
-			
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getSales1());
-			
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getSales2());
-			
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getSales3());
-			
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer->getSales4());
-			
-			$createdDate = DateUtil::StringToDateByGivenFormat("Y-m-d", $customer->getCreateDate());
-			$colName = $alphas[$i++]. $count;
-			$createdDateStr = $createdDate->format("m/d/y"); 
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $createdDateStr);
-			
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessType);
+			$hColIndex = 9;
+			$colIndex = 9;
+			$cusBuyers = $buyers[$customer["seq"]];
+		    for ($j = 0; $j < $maxBuyerCount; $j++) {
+		        if($index == 0){
+		            $color = ExportUtil::getRandomColor();
+		            $colIndex = $hColIndex;
+		            $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+		            $colName = $alphas[$hColIndex++]. $rowCount;
+		            $startCol = $colName;
+		            $col = $j+1;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer" . $col . "FirstName");
+		            $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "LastName");
+			        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "Email");
+			        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "Phone");
+			        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "CellPhone");
+			        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "Category");
+			        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$hColIndex])->setAutoSize(true);
+			        $colName = $alphas[$hColIndex++]. $rowCount;
+			        $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Buyer". $col . "Notes");
+			        $endCol = $colName;
+			        $objPHPExcel->getActiveSheet()->getStyle($startCol.":".$endCol)->getFill()
+			        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+			        ->getStartColor()
+			        ->setRGB($color);
+			        
+		        }
+		        if(isset($cusBuyers[$j])){
+		            $buyer = $cusBuyers[$j];
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["firstname"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["lastname"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["email"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["officephone"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["cellphone"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $category = $buyer["category"];
+		            if(!empty($category)){
+		                $category = BuyerCategoryType::getValue($category);
+		            }
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["category"]);
+		            $colName = $alphas[$colIndex++]. $count;
+		            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $buyer["notes"]);
+		        }
+			}
+			$index++;
 			$count++;
 			$i = 0;
+			array_push($array,$customer["seq"]);
 		}
+		$objPHPExcel->getActiveSheet()->getStyle("A1:I1")->getFill()
+		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+		->getStartColor()
+		->setRGB('CCE5FF');
+		$firstRow = 'A1:'.$objPHPExcel->getActiveSheet()->getHighestColumn().'1';
+		$objPHPExcel->getActiveSheet()
+		->getStyle($firstRow)
+		->getFont()
+		->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle($firstRow)->applyFromArray(ExportUtil::$default_style);
 		$objPHPExcel->getActiveSheet()->setTitle("Report");
 		 
 		 
@@ -132,7 +174,13 @@ public static function exportCustomers($customers){
 		ob_end_clean();
 		$objWriter->save('php://output');
 	}
+	private static $colors = array();
 	
+	private static function getRandomColor(){
+	    self::$colors = array("ebdddd","e9ebdd","ddebea","dfddeb","ebddea");
+	    shuffle(self::$colors);
+	    return self::$colors[0];
+	}
 	
 	public static function exportOrders($orders){
 		$objPHPExcel = new PHPExcel();
