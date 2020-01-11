@@ -110,16 +110,32 @@ class CustomerMgr{
 		    $buyers = $customerAndBuyers["buyers"];
 		    $id = $customer->getSeq();
 			$customerId = $customer->getCustomerId();
+			$flag = false;
 			try {
 				if(!$isUpdate){
 				    $id = $this->saveCustomer($conn, $customer);
 					$savedCustomerCount++;
+					$flag = true;
 				}else{
 					if(in_array($customerId, $updateIds)){
 						$condition["customerid"] = $customer->getCustomerId();
 						$condition["storeid"] = $customer->getStoreId();
-						$id = $this->updateOject($conn, $customer, $condition);
+						$this->updateOject($conn, $customer, $condition);
+						$id = $this->findSeqByCustomerId($customer->getCustomerId());
+						$flag = true;
 					}
+				}
+				if(!empty($buyers) && $flag){
+				   $buyerMgr = BuyerMgr::getInstance();
+				    try{
+				        $buyerMgr->deleteByCustomerSeq($id);
+				        foreach ($buyers as $buyer){
+				            $buyer->setCustomerSeq($id);
+				            $buyerMgr->saveBuyerObject($buyer,$conn);
+				        }
+				    }catch (Exception $e){
+				        $messages .= $e->getMessage() . " for customer id $customerId";
+				    }
 				}
 			}
 			catch ( Exception $e) {
@@ -132,18 +148,6 @@ class CustomerMgr{
 			    }
 			    $hasError = true;
 			    $success = 0;
-			}
-			if(!empty($buyers)){
-			    $buyerMgr = BuyerMgr::getInstance();
-			    try{
-			        $buyerMgr->deleteByCustomerSeq($id);
-        			foreach ($buyers as $buyer){
-        			    $buyer->setCustomerSeq($id);
-        			    $buyerMgr->saveBuyerObject($buyer,$conn);
-        			}
-			    }catch (Exception $e){
-			        $messages .= $e->getMessage() . " for customer id $customerId";
-			    }
 			}
 		}
 		$conn->commit();
@@ -167,9 +171,34 @@ class CustomerMgr{
 		return $message;
 	}
 	
-	public function exportCustomers(){
-		$customers = self::$dataStore->findAll();
-		ExportUtil::exportCustomers($customers);
+	public function exportCustomers($queryString){
+	    $output = array();
+	    parse_str($queryString, $output);
+	    $_GET = array_merge($_GET,$output);
+	    $query = "select customers.*,buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes from customers left join buyers on customers.seq = buyers.customerseq";
+	    $customers = self::$dataStore->executeQuery($query,true);
+	    $buyers = $this->group_by($customers);
+	    $data["customers"] = $customers;
+	    $data["buyers"] = $buyers;
+	    ExportUtil::exportCustomers($data);
+	}
+	
+	function group_by($array) {
+	    $return = array();
+	    foreach($array as $val) {
+	        $buyer = array();
+	        if(isset($val["firstname"])){
+    	        $buyer["firstname"] = $val["firstname"];
+    	        $buyer["lastname"] = $val["lastname"];
+    	        $buyer["email"] = $val["email"];
+    	        $buyer["cellphone"] = $val["cellphone"];
+    	        $buyer["officephone"] = $val["officephone"];
+    	        $buyer["category"] = $val["category"];
+    	        $buyer["notes"] = $val["notes"];
+	        }
+	        $return[$val["seq"]][] = $buyer;
+	    }
+	    return $return;
 	}
 	
 	private function getCustomerObj($data){
@@ -183,6 +212,40 @@ class CustomerMgr{
 		$salesPersonId = $data[5];
 		$salesPersonName = $data[6];
 		$businessType = $data[7];
+		if(count($data) > 9){
+    		$buyerData = $data;
+    		$buyerData = array_slice($buyerData, 9); 
+    		$buyerFieldCount = count($buyerData);
+    		if ($buyerFieldCount % 7 == 0) {
+    		    $sessionUtil = SessionUtil::getInstance();
+    		    $createBy = $sessionUtil->getUserLoggedInSeq();
+    		    $index = 0;
+    		    $buyers = array();
+    		    $buyerCount = $buyerFieldCount / 7;
+    		    for($i=0;$i<$buyerCount;$i++){
+    		        $buyer = new Buyer();
+    		        $firstName = $buyerData[$index++];
+    		        if(empty($firstName)){
+    		            continue;
+    		        }
+    		        $buyer->setFirstName($firstName);
+    		        $buyer->setLastName($buyerData[$index++]);
+    		        $buyer->setEmail($buyerData[$index++]);
+    		        $buyer->setOfficePhone($buyerData[$index++]);
+    		        $buyer->setCellPhone($buyerData[$index++]);
+    		        $category = $buyerData[$index++];
+    		        $category = BuyerCategoryType::getName($category);
+    		        $buyer->setCategory($category);
+    		        $buyer->setNotes($buyerData[$index++]);
+    		        $buyer->setCreatedBy($createBy);
+            		$buyer->setCreatedOn(new DateTime());
+            		$buyer->setLastModifiedOn(new DateTime());
+            		array_push($buyers,$buyer);
+    		    }
+    		}else{
+    		    throw new Exception("Missing Buyer's Fields.Pls chek the sample file.");
+    		}
+		}
 		$message = "";
 		if(!empty($customerId)){
 			//$message .= $this->validateNumeric($customerId, $this->fieldNames[0]);
@@ -221,34 +284,6 @@ class CustomerMgr{
 		$customer->setBusinessType($businessType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;
-		
-// 		$firstName = preg_replace('!\s+!', ' ', $data[4]);
-// 		$emailId = $data[6];
-// 		$officePhone = $data[7];
- 		$buyers = array();
-// 		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
-//     		$buyer1 = new Buyer();
-//     		$buyer1->setFirstName($firstName);
-//     		$buyer1->setEmail($emailId);
-//     		$buyer1->setOfficePhone($officePhone);
-//     		$buyer1->setCreatedBy($createBy);
-//     		$buyer1->setCreatedOn(new DateTime());
-//     		$buyer1->setLastModifiedOn(new DateTime());
-//     		array_push($buyers,$buyer1);
-// 		}
-// 		$firstName =  preg_replace('!\s+!', ' ', $data[8]);
-// 		$emailId = $data[9];
-// 		$officePhone = $data[10];
-// 		if(!empty($firstName) || !empty($emailId) || !empty($officePhone)){
-//     		$buyer2 = new Buyer();
-//     		$buyer2->setFirstName($firstName);
-//     		$buyer2->setEmail($emailId);
-//     		$buyer2->setOfficePhone($officePhone);
-//     		$buyer2->setCreatedBy($createBy);
-//     		$buyer2->setCreatedOn(new DateTime());
-//     		$buyer2->setLastModifiedOn(new DateTime());
-//     		array_push($buyers,$buyer2);
-// 		}
  		$customerAndBuyers["buyers"] = $buyers;
 		$this->validationErrors = $message;
 		return $customerAndBuyers;
