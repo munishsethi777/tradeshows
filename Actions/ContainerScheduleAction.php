@@ -175,6 +175,15 @@ if($call == "deleteContainerSchedule"){
 		$message = $e->getMessage();
 	}
 }
+if($call == "getContainerScheduleDetails"){
+    try{
+        $containerSchedule = $containerScheduleMgr->findArrBySeqForView($_GET["seq"]);
+        $response["containerSchedule"] = $containerSchedule;
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

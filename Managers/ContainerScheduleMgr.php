@@ -205,6 +205,81 @@ class ContainerScheduleMgr{
 		return $return;
 	}
 	
+	public function findArrBySeqForView($seq){
+	    $containerSchedule = self::$dataStore->findArrayBySeq($seq);
+	    $fromFormatWithTime = "Y-m-d H:i:s";
+	    $fromformat = "Y-m-d";
+	    $toFormatWithTime = "m-d-Y h:i a";
+	    $toFormat = "m-d-Y";
+	    $dateStr = $containerSchedule["etadatetime"];
+	    $containerSchedule["etadatetime"] = 
+	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    
+	    $dateStr = $containerSchedule["terminalappointmentdatetime"];
+	    $containerSchedule["terminalappointmentdatetime"] =  
+	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    
+	    $dateStr = $containerSchedule["ldfpickupdate"];
+	    $containerSchedule["ldfpickupdate"] = 
+	           DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["scheduleddeliverydatetime"];
+	    $containerSchedule["scheduleddeliverydatetime"] = 
+	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    
+	    $dateStr = $containerSchedule["confirmeddeliverydatetime"];
+	    $containerSchedule["confirmeddeliverydatetime"] =  
+	        DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    
+	    $dateStr = $containerSchedule["emptylfddate"];
+	    $containerSchedule["emptylfddate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["emptyreturndate"];
+	    $containerSchedule["emptyreturndate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["alpinenotificatinpickupdatetime"];
+	    $containerSchedule["alpinenotificatinpickupdatetime"] =
+	        DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    
+	    $dateStr = $containerSchedule["msrfcreateddate"] ;
+	    $containerSchedule["msrfcreateddate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["samplesreceiveddate"];
+	    $containerSchedule["samplesreceiveddate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["containerreceivedinomsdate"];
+	    $containerSchedule["containerreceivedinomsdate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["samplesreceivedinomsdate"];
+	    $containerSchedule["samplesreceivedinomsdate"] =
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["containerreceivedinwmsdate"];
+	    $containerSchedule["containerreceivedinwmsdate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    
+	    $dateStr = $containerSchedule["samplesReceivedinWMSDate"];
+	    $containerSchedule["samplesReceivedinWMSDate"] = 
+	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+	    $containerSchedule["issamplesreceived"] = $this->getYesNo($containerSchedule["issamplesreceived"]);
+	    $containerSchedule["isidscomplete"] = $this->getYesNo($containerSchedule["isidscomplete"]);
+	    return $containerSchedule;
+	}
+	
+	private function getYesNo($bool){
+	    if(!empty($bool)){
+	        $bool = "Yes";
+	    }else{
+	        $bool = "No";
+	    }
+	    return $bool;
+	}
+	
 	public function findBySeqForEdit($seq){
 		$containerSchedule = self::$dataStore->findBySeq($seq);
 		$fromFormatWithTime = "Y-m-d H:i:s";
