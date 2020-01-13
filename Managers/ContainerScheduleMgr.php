@@ -268,6 +268,11 @@ class ContainerScheduleMgr{
 	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
 	    $containerSchedule["issamplesreceived"] = $this->getYesNo($containerSchedule["issamplesreceived"]);
 	    $containerSchedule["isidscomplete"] = $this->getYesNo($containerSchedule["isidscomplete"]);
+	    $containerSchedule["containerno"] = $containerSchedule["container"];
+	    if(!empty($containerSchedule["customexamstatus"])){
+	        $containerSchedule["customexamstatus"] = 
+	            CustomExamStatusType::getValue($containerSchedule["customexamstatus"]);
+	    }
 	    return $containerSchedule;
 	}
 	
