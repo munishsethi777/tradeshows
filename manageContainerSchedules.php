@@ -88,18 +88,163 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    <form id="form2" name="form2" method="post" action="createContainerSchedule.php">
     	<input type="hidden" id="id" name="id"/>
    </form> 
-
+	<div class="modal inmodal bs-example-modal-lg" id="containerDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content animated fadeInRight">
+          <div class="modal-body itemDetailsModalDiv mainDiv">
+            <div class="ibox">
+              <div class="ibox-content">
+	             	<?php include 'progress.php';?>
+		                <div class="row">
+		                    <div class="col-sm-12">
+		                    <h3>Container Details</h3>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Container#:</label>
+		                           	<div class="col-sm-2"><label class="container lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">AWU#:</label>
+		                           	<div class="col-sm-2"><label class="awureference lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trucker:</label>
+		                           	<div class="col-sm-2"><label class="truckername lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trans:</label>
+		                           	<div class="col-sm-2"><label class="trans lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA:</label>
+		                           	<div class="col-sm-2"><label class="etadatetime lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
+		                           	<div class="col-sm-2"><label class="etanotes lblDesc text-primary"></label></div>
+		                        </div>
+								<div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal:</label>
+		                           	<div class="col-sm-2"><label class="terminal lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal Appt:</label>
+		                           	<div class="col-sm-2"><label class="terminalappointmentdatetime lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">LFD Pickup:</label>
+		                           	<div class="col-sm-2"><label class="lfdpickupdate lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Schedule Pickup:</label>
+		                           	<div class="col-sm-2"><label class="emptyscheduledpickupdate lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty LFD:</label>
+		                           	<div class="col-sm-2"><label class="emptylfddate lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Custom Exam Terminal:</label>
+		                           	<div class="col-sm-2"><label class="customexamterminal lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Custom Exam Status:</label>
+		                           	<div class="col-sm-2"><label class="customexamstatus lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Date:</label>
+		                           	<div class="col-sm-2"><label class="emptyreturndate lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Notes:</label>
+		                           	<div class="col-sm-2"><label class="emptynotes lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Scheduled Delivery:</label>
+		                           	<div class="col-sm-2"><label class="scheduleddeliverydatetime lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelMauveSm">Confirmed Delivery:</label>
+		                           	<div class="col-sm-2"><label class="confirmeddeliverydatetime lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Delivery Gate:</label>
+		                           	<div class="col-sm-2"><label class="deliverygate lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Warehouse:</label>
+		                           	<div class="col-sm-2"><label class="warehouse lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelMauveSm">Hot Container:</label>
+		                           	<div class="col-sm-2"><label class="ishotcontainer lblDesc text-primary"></label></div>
+		                           	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Notif Pickup Date:</label>
+		                           	<div class="col-sm-2"><label class="alpinenotificatinpickupdatetime lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Pickup Notes:</label>
+		                           	<div class="col-sm-10"><label class="notificationnotes lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Container Doc Path:</label>
+		                           	<div class="col-sm-10"><label class="containerdocspath lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Ids Complete:</label>
+		                           	<div class="col-sm-4"><label class="isidscomplete lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Samples:</label>
+		                           	<div class="col-sm-4"><label class="issamplesreceived lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">MSRF Created:</label>
+		                           	<div class="col-sm-4"><label class="msrfcreateddate lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received:</label>
+		                           	<div class="col-sm-4"><label class="samplesreceiveddate lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-lg-4 col-lg-offset-1 bg-formLabelBrownSm text-center">CONTAINER</label>
+		                            <label class="col-lg-4 col-lg-offset-2 bg-formLabelBrownSm text-center">SAMPLES</label>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in OMS:</label>
+		                           	<div class="col-sm-4"><label class="containerreceivedinomsdate lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in OMS:</label>
+		                           	<div class="col-sm-4"><label class="samplesreceivedinomsdate lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in WMS:</label>
+		                           	<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
+		                            <label class="col-sm-2 lblTitle bg-formLabelBrownSm">Received in WMS:</label>
+		                           	<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
+		                        </div>
+		                    </div>
+		                </div>
+	                </div>
+                </div>
+           	</div>
+            <div class="modal-footer">
+              	<button type="button" onclick="previous()" id="prevBtn"  class="btn btn-white">Previous</button>
+				<button type="button" onclick="next()" id="nextBtn" class="btn btn-white">Next</button>
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script type="text/javascript">
-function showItemDetails(seq){
-	$.getJSON("Actions/ItemAction.php?call=getItemDetails&seq="+seq, function(data){
-		item = data.item;
-		$('#itemDetailsModal').modal('show');
+var hasNext = true;
+var currentRowId =  0;
+function previous(){
+	currentRowId = currentRowId-1;
+	if(ids[currentRowId] == undefined){
+		currentRowId = 0;
+		//return; 
+	}
+	prevSeq = ids[currentRowId];
+	hasNext = true;
+	showItemDetails(prevSeq,currentRowId);
+}
+function next(){
+	if(hasNext){
+    	currentRowId = currentRowId+1;
+    	if(ids[currentRowId] == undefined){
+    		hasNext = false; 
+    		currentRowId = currentRowId-1;
+    		return;
+    	}
+    	nextSeq = ids[currentRowId];
+    	showItemDetails(nextSeq,currentRowId);
+	}
+}
+
+function showItemDetails(seq,rowId){
+	currentRowId = rowId;
+	showHideProgress();
+	$.getJSON("Actions/ContainerScheduleAction.php?call=getContainerScheduleDetails&seq="+seq, function(data){
+		showHideProgress();
+		var item = data.containerSchedule;
+		$('#containerDetailModal').modal('show');
 		$.each(item,function(key,val){
-			$(".item"+key).text(val);
+			$("."+key).text(val);
 		});
 	});
 }
+
 function initDateRanges(){//building date search module
 	    var start = moment().subtract(29, 'days');
 	    var end = moment();
@@ -255,7 +400,21 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
+function showCustomerDetails(seq,rowId){
+	currentRowId = rowId;
+	showHideProgress();
+	$.getJSON("Actions/CustomerAction.php?call=getCustomerDetails&seq="+seq, function(data){
+		showHideProgress();
+		var item = data.customer;
+		var buyer = data.buyers
+		$('#customerDetailsModal').modal('show');
+		$.each(item,function(key,val){
+			$("."+key).text(val);
+		});
+	});
+}
 isSelectAll = false;
+var ids = [];
 function loadGrid(){
 	
 	var defaultFilter = function(){
@@ -266,8 +425,9 @@ function loadGrid(){
     }();
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#containerScheduleGrid').jqxGrid('getrowdata', row);
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:showItemDetails("+ data['seq'] + ")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
+        ids[row] = data["seq"];
+        var html = "<div style='text-align: center; margin-top:6px;'>"
+            	html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['awureference']+"</a>";
             html += "</div>";
         return html;
     }
@@ -285,7 +445,7 @@ function loadGrid(){
       { text: 'containerreceivedinwmsdate', datafield: 'containerreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
       { text: 'samplesreceivedinwmsdate', datafield: 'samplesreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
       
-      { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
+      { text: 'AWU Ref', datafield: 'awureference', width:"10%",cellsrenderer:actions},
       { text: 'Trucker Name', datafield: 'truckername', width:"10%"},
       { text: 'Trans', datafield: 'trans', width:"10%"},
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
