@@ -110,7 +110,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                    <h3>Container Details</h3>
 		                        <div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Container#:</label>
-		                           	<div class="col-sm-2"><label class="container lblDesc text-primary"></label></div>
+		                           	<div class="col-sm-2"><label class="containerno lblDesc text-primary"></label></div>
 		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">AWU#:</label>
 		                           	<div class="col-sm-2"><label class="awureference lblDesc text-primary"></label></div>
 		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trucker:</label>

@@ -65,7 +65,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         
                         <div class="form-group row m-t-sm">
                        		<label class="col-sm-2 lblTitle">Customer Id #</label>
-                           	<div class="col-sm-4"><label class="container lblDesc text-primary"></label></div>
+                           	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
                             <label class="col-sm-2 lblTitle">Priority</label>
                            	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
                         </div>
@@ -195,22 +195,32 @@ function editShow(seq){
 var ids = [];
 isSelectAll = false;
 function loadGrid(){
+// 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
+//         data = $('#customerGrid').jqxGrid('getrowdata', row);
+//         ids[row] = data["seq"];
+//         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
+//             	html +="<a href='javascript:showCustomerDetails("+ data['seq'] + "," + row +")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
+//             html += "</div>";
+//         return html;
+//     }
+
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#customerGrid').jqxGrid('getrowdata', row);
         ids[row] = data["seq"];
-        var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:showCustomerDetails("+ data['seq'] + "," + row +")' ><i class='fa fa-search' title='ViewDetails'></i></a>";
+        var html = "<div style='text-align: center; margin-top:6px;'>"
+            	html +="<a title='View Detail' href='javascript:showCustomerDetails("+ data['seq'] + "," + row +")' >"+data['customerid']+"</a>";
             html += "</div>";
         return html;
     }
+    
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Customer ID', datafield: 'customerid',width:"13%"},
+      { text: 'Customer ID', datafield: 'customerid',width:"8%",cellsrenderer:actions},
       { text: 'Name', datafield: 'fullname', width:"22%"},
       { text: 'Store Name', datafield: 'storename', width:"25%"},
       { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
       { text: 'Sales Person', datafield: 'salespersonname',width:"18%"},
-      { text: 'Action', datafield: 'action',cellsrenderer:actions,width:'7%'}
+      { text: 'Last Modified', datafield: 'lastmodifiedon' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"11%" },
     ]
    
     var source =
