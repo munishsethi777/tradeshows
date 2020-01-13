@@ -17,6 +17,16 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	.form-group{
     		margin-bottom:5px;
     	}
+    	.lblTitle{
+    		padding:2px 4px !important;
+    		font-size:9pt;
+    	}
+    	
+    	@media screen and (min-width: 992px) {
+	        .modal-lg {
+	          width: 1050px; /* New width for large modal */
+	        }
+	    }
     </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
