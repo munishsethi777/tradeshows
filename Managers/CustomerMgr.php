@@ -204,6 +204,9 @@ class CustomerMgr{
 	private function getCustomerObj($data){
 		$customer = new Customer();
 		$customerId = $data[0];
+		if(strlen($customerId) < 6){
+	        throw new Exception("Customer id should not be less than 6 digits!");
+		}
 		$storeId = $data[1];
 		$name = $data[2];
 		$storeName = $data[3];
