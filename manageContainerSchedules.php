@@ -426,7 +426,6 @@ function showCustomerDetails(seq,rowId){
 isSelectAll = false;
 var ids = [];
 function loadGrid(){
-	
 	var defaultFilter = function(){
         var jqxFilter = new $.jqx.filter();
         var filter = jqxFilter.createfilter('stringfilter', '1', 'null');
@@ -437,7 +436,7 @@ function loadGrid(){
         data = $('#containerScheduleGrid').jqxGrid('getrowdata', row);
         ids[row] = data["seq"];
         var html = "<div style='text-align: center; margin-top:6px;'>"
-            	html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['awureference']+"</a>";
+            	html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['container']+"</a>";
             html += "</div>";
         return html;
     }
@@ -454,17 +453,17 @@ function loadGrid(){
       { text: 'samplesreceiveddate', datafield: 'samplesreceiveddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
       { text: 'containerreceivedinwmsdate', datafield: 'containerreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
       { text: 'samplesreceivedinwmsdate', datafield: 'samplesreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
-      
-      { text: 'AWU Ref', datafield: 'awureference', width:"10%",cellsrenderer:actions},
+
+      { text: 'Container', datafield: 'container',width:"10%",cellsrenderer:actions},
+      { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
       { text: 'Trucker Name', datafield: 'truckername', width:"10%"},
       { text: 'Trans', datafield: 'trans', width:"10%"},
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
-      { text: 'Container', datafield: 'container',width:"10%"},
-      { text: 'ETA', datafield: 'etadatetime',width:"15%",cellsformat: 'M-dd-yyyy hh:mm tt'},
+      { text: 'ETA', datafield: 'etadatetime',width:"17%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:true,width:"13%"},
-      { text: 'Confirmed delivery', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" } ,	
       { text: 'Scheduled delivery', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
+      { text: 'Confirmed delivery', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" } ,	
       { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
     ]
    
