@@ -23,7 +23,7 @@ if($call == "saveContainerSchedule"){
 	    $message = StringConstants::CONTAINER_SCHEDULE_SAVED_SUCCESSFULLY;
 		$containerSchedule = new ContainerSchedule();
 		$containerSchedule->createFromRequest($_REQUEST);
-		if(empty($containerSchedule->getAWUReference())){
+		if(empty($containerSchedule->getContainer())){
 		    throw new Exception(StringConstants::AWU_REFERENCE_NOT_EMPTY);
 		}
 		$existingContainerSchedule = new ContainerSchedule();
@@ -52,6 +52,9 @@ if($call == "saveContainerSchedule"){
 		}
 		$id = $containerScheduleMgr->save($containerSchedule);
 		
+		$isEtaNotesUpdated = false;
+		$isEmptyReturnNotesUpdated = false;
+		$isAlpineNotesUpdated = false;
 		if($id > 0){
 			$containerSchedule->setSeq($id);
 			$containerScheduleDateMgr = ContainerScheduleDatesMgr::getInstance();
@@ -62,52 +65,23 @@ if($call == "saveContainerSchedule"){
 			$loggedInUserName = $sessionUtil->getUserLoggedInName();
 			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendTerminalAppointmentChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+			$isEtaNotesUpdated = $containerSchedule->getETANotes() != $existingContainerSchedule->getETANotes();
+			$isEmptyReturnNotesUpdated = $containerSchedule->getEmptyNotes() != $existingContainerSchedule->getEmptyNotes();
+			$isAlpineNotesUpdated = $containerSchedule->getNotificationNotes() != $existingContainerSchedule->getNotificationNotes();
 		}
 		$response["seq"] = $id;
-// 		if(!empty($graphicLog->getIsCustomHangTagNeeded())){
-// 			$graphicLog->setIsCustomHangTagNeeded(1);
-// 		}else{
-// 			$graphicLog->setIsCustomHangTagNeeded(0);
-// 		}
-// 		if(!empty($graphicLog->getIsCustomWrapTagNeeded())){
-// 			$graphicLog->setIsCustomWrapTagNeeded(1);
-// 		}else{
-// 			$graphicLog->setIsCustomWrapTagNeeded(0);
-// 		}
-// 		if(!empty($graphicLog->getIsPrivateLabel())){
-// 			$graphicLog->setIsPrivateLabel(1);
-// 		}else{
-// 			$graphicLog->setIsPrivateLabel(0);
-// 			$graphicLog->setLabelType(null);
-// 			$graphicLog->setLabelLength(null);
-// 			$graphicLog->setLabelWidth(null);
-// 			$graphicLog->setLabelHeight(null);
-// 		}
-// 		$graphicType = $graphicLog->getGraphicType();
-// 		$graphicCount = count($graphicLog);
-// 		if($graphicCount == 1 && 
-// 				$graphicType[0] == GraphicType::getName(GraphicType::a4_label)){
-// 			$graphicLog->setGraphicLength(null);
-// 			$graphicLog->setGraphicWidth(null);
-// 			$graphicLog->setGraphicHeight(null);
-// 		}
-// 		if($graphicLog->getTagType() != "custom"){
-// 			$graphicLog->setTagLength(null);
-// 			$graphicLog->setTagWidth(null);
-// 			$graphicLog->setTagHeight(null);
-// 		}
-		
-// 		if(!empty($graphicType)){
-// 			$graphicType = implode(",",$graphicType);
-// 		}
-// 		$graphicLog->setGraphicType($graphicType);
-// 		if($graphicLog->getLabelType() != "custom"){
-// 			$graphicLog->setLabelLength(null);
-// 			$graphicLog->setLabelWidth(null);
-// 			$graphicLog->setLabelHeight(null);
-// 		}
-		
-		//$id = $graphicLogMgr->save($graphicLog);
+		if($id > 0){
+		    if($isEtaNotesUpdated){
+		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+		            ContainerScheduleNotificationType::eta_notes_updated_instant);
+		    }else if($isEmptyReturnNotesUpdated){
+		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+		            ContainerScheduleNotificationType::empty_return_notes_updated_instant);
+		    }else if($isAlpineNotesUpdated){
+		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
+		    }
+		}
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

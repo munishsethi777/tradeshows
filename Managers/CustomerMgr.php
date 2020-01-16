@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerBusinessType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BusinessCategoryType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 
 class CustomerMgr{
@@ -214,7 +215,7 @@ class CustomerMgr{
 		
 		$salesPersonId = $data[5];
 		$salesPersonName = $data[6];
-		$businessType = $data[7];
+		$businessCategoryType = $data[7];
 		if(count($data) > 9){
     		$buyerData = $data;
     		$buyerData = array_slice($buyerData, 9); 
@@ -281,10 +282,10 @@ class CustomerMgr{
 		    $priority = "B";
 		}
 		$customer->setPriority($priority);
-		if(!empty($businessType)){
-		    $businessType = CustomerBusinessType::getName($businessType);
+		if(!empty($businessCategoryType)){
+		    $businessCategoryType = BusinessCategoryType::getName($businessCategoryType);
 		}
-		$customer->setBusinessType($businessType);
+		$customer->setBusinessCategory($businessCategoryType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;
  		$customerAndBuyers["buyers"] = $buyers;
@@ -339,6 +340,8 @@ class CustomerMgr{
 		$customer["createdon"] = $createdon;
 		$businessType = CustomerBusinessType::getValue($customer["businesstype"]);
 		$customer["businesstype"] = $businessType;
+		$businessCategory = BusinessCategoryType::getValue($customer["businesscategory"]);
+		$customer["businesscategory"] = $businessCategory;
 		return $customer;
 	}
 	

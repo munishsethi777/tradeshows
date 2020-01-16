@@ -430,7 +430,15 @@ if(in_array(1,$departmentSeqArr)){
 						                           	<input name="permissions[]" type="checkbox" value="missing_terminal_appointment_date_daily" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::missing_terminal_appointment_date_daily), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Missing Terminal Appointment Date (Daily)</span>
 						                        </li>
-											</ul>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="eta_notes_updated_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::eta_notes_updated_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">ETA Notes Updated (Instant)</span>
+						                        </li>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="empty_return_notes_updated_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::empty_return_notes_updated_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Empty Return Notes Updated (Instant)</span>
+						                        </li>
+						                   </ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
 						                    	<li>
@@ -456,6 +464,14 @@ if(in_array(1,$departmentSeqArr)){
 												<li>
 						                           	<input name="permissions[]" type="checkbox" value="terminal_appointment_date_change_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::terminal_appointment_date_change_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Terminal Appointment Date Change (Instant)</span>
+						                        </li>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="alpine_pickup_notes_updated_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Alpine Pickup Notes Updated (Instant)</span>
+						                        </li>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="charge_back_weekly" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::charge_back_weekly), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Charge Back (Weekly)</span>
 						                        </li>
 						                    </ul>
 				                            

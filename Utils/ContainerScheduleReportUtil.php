@@ -417,5 +417,103 @@ class ContainerScheduleReportUtil
             }
         }
         
+        
+        
+    }
+    
+    
+    public static function sendDueTransModalNotification($users){
+        $subject = StringConstants::DUE_TRANS_MODAL;
+        $ds = ContainerScheduleDataStore::getInstance();
+        
+        $dueLast7Days = $ds->getDueTransModalLast7Days() * 30 ;
+        $dueCurrentMonth = $ds->getDueTransModalForCurrentMonth()  * 30;
+        $dueCurrentYear = $ds->getDueTransModalForCurrentYear() * 30;
+        
+        
+        $due7WeekForTerminal = $ds->getDueTransModalTerminalAppDateLast7Days() * 30 ;
+        $dueCurrentMonthForTerminal = $ds->getDueTransModalTerminalAppDateForCurrentMonth()  * 30;
+        $dueCurrentYearForTerminal = $ds->getDueTransModalTerminalAppDateForCurrentYear() * 30;
+        
+        $phAnValues = array();
+        $phAnValues["last_7_days_charge_for_pickup_date"] = $dueLast7Days;
+        $phAnValues["current_Month_charge_for_pickup_date"] = $dueCurrentMonth;
+        $phAnValues["year_Month_charge_for_pickup_date"] = $dueCurrentYear;
+        
+            
+        $phAnValues["last_7_days_charge_for_terminal_date"] = $due7WeekForTerminal;
+        $phAnValues["current_Month_charge_for_terminal_date"] = $dueCurrentMonthForTerminal;
+        $phAnValues["year_charge_for_terminal_date"] = $dueCurrentYearForTerminal;
+       
+        $detail = file_get_contents("../emailTemplateChargeBackNotice.php");
+        $detail = MailUtil::replacePlaceHolders($phAnValues, $detail);
+        $body = MailUtil::appendToEmailTemplateContainer($detail);
+        $toEmails = array("baljeetgaheer@gmail.com");
+        $users = self::getCSUsersByNotificationType($users,
+            ContainerScheduleNotificationType::charge_back_weekly);
+        if(empty($users)){
+            return;
+        }
+        $toEmails = array();
+        foreach ($users as $user){
+            array_push($toEmails,$user->getEmail());
+        }
+        $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
+        if($bool){
+            $emaillogMgr = EmailLogMgr::getInstance();
+            foreach ($users as $user){
+                $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHARGE_BACK_ ,$user->getEmail(), null,$user->getSeq());
+            }
+        }
+    }
+    
+    //Instant when notes updated from graphic log
+    public static function sendContainerScheduleNotesUpdatedNotification($containerSchedule,$notificationType){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getCSUsersByNotificationType($users,$notificationType);
+        if(empty($users)){
+            return;
+        }
+        //$containerSchedule = new ContainerSchedule();
+        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $phAnValues = array();
+        $noteType = "ETA";
+        $emailLogType = EmailLogType::CONTAINER_SCHEDULE_ETA_NOTES_UPDATED;
+        $noteDetail = $containerSchedule->getETANotes();
+        if($notificationType == ContainerScheduleNotificationType::empty_return_notes_updated_instant){
+            $noteType = "Empty Return";
+            $noteDetail = $containerSchedule->getEmptyNotes();
+            $emailLogType = EmailLogType::CONTAINER_SCHEDULE_EMPTY_RETURN_NOTES_UPDATED;
+        }else if($notificationType == ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant){
+            $noteType = "Alpine Pickup";
+            $noteDetail = $containerSchedule->getNotificationNotes();
+            $emailLogType = EmailLogType::CONTAINER_SCHEDULE_ALPINE_NOTES_UPDATED;
+        }
+        if(empty($noteDetail)){
+            return;
+        }
+        $phAnValues["NOTES_NAME"] = $noteType ;
+        $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+        $phAnValues["CONTAINER_NO"] = $containerSchedule->getContainer();
+        $phAnValues["NOTES_DETAIL"] = $noteDetail;
+        $content = file_get_contents("../ContainerScheduleNotesUpdatedTemplate.php");
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+        $html = MailUtil::appendToEmailTemplateContainer($content);
+        $toEmails = array();
+        $phAnValues = array();
+        foreach ($users as $user){
+            array_push($toEmails,$user->getEmail());
+        }
+        if(!empty($toEmails)){
+            $subject = $noteType . " Notes Updated For Container Schedule on Alpinebi";
+            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+            if($flag){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog($emailLogType ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 class Customer{
     private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
-    private $priority,$isstore,$storeid,$storename;
+    private $priority,$isstore,$storeid,$storename,$businesscategory;
     
     public static $className = "Customer";
     public static $tableName = "customers";
@@ -88,6 +88,12 @@ class Customer{
     }
     public function getLastModifiedOn(){
         return $this->lastmodifiedon;
+    }
+    public function setBusinessCategory($businessCategory_){
+        $this->businesscategory = $businessCategory_;
+    }
+    public function getBusinessCategory(){
+        return $this->businesscategory;
     }
     
     public function from_array($array) {

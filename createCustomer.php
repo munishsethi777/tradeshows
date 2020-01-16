@@ -115,7 +115,15 @@ if(isset($_POST["id"])){
 	                             	?>
 	                            </div>
 	                       </div>
-	                       
+	                       <div class="row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Business Category</label>
+	                        	<div class="col-lg-4">
+ 	                        		<?php 
+ 	                        		    $select = DropDownUtils::getBusinessCategoryTypes("businesscategory", null, $customer->getBusinessCategory(),false,true);
+    			                        echo $select;
+	                             	?>
+	                            </div>
+	                       </div>
 	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>

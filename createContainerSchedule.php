@@ -177,7 +177,7 @@ if(isset($_REQUEST["id"])){
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Container:</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" id="container" 
+	                        		<input required type="text" id="container" 
                                 			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getContainer()?>" 
                                 			name="container" class="form-control">
 	                            </div>

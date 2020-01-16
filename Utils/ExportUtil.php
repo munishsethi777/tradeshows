@@ -50,7 +50,8 @@ class ExportUtil{
 		    }
 		    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["customerid"]);
+		    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["customerid"]);
+			
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storeid"]);
@@ -70,13 +71,13 @@ class ExportUtil{
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonname"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
-			$businessType = $customer["businesstype"];
-			if(!empty($businessType)){
-			    $businessType = CustomerBusinessType::getValue($businessType);
+			$businessCategory = $customer["businesscategory"];
+			if(!empty($businessCategory)){
+			    $businessCategory = BusinessCategoryType::getValue($businessCategory);
 			}
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessType);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessCategory);
 			$hColIndex = 9;
 			$colIndex = 9;
 			$cusBuyers = $buyers[$customer["seq"]];

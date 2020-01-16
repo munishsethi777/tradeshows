@@ -87,6 +87,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                            	<div class="col-lg-4"><label class="createdon lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
+                       		 <label class="col-lg-2">Business Category</label>
+                           	<div class="col-lg-4"><label class="businesscategory lblDesc"></label></div>
+                        </div>
+                        <div class="form-group row">
                        		 <label class="col-lg-2">Store Id</label>
                            	<div class="col-lg-4"><label class="storeid lblDesc"></label></div>
                        		<label class="col-lg-2">Store Name</label>

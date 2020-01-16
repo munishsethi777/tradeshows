@@ -33,6 +33,8 @@ class StringConstants{
 	const EMPTY_WMS_DATES_REPORT_NAME = "Missing Received Dates in WMS Report";
 	const EMPTY_OMS_DATES = "ALPINE BI Containers | Missing Received Dates in OMS Report";
 	const EMPTY_OMS_DATES_REPORT_NAME = "Missing Received Dates in OMS Report";
+	const DUE_TRANS_MODAL = "ALPINE BI Containers | Due Trans Modal";
+	
 	
 	
 	//Graphic Log Report
@@ -91,6 +93,7 @@ class StringConstants{
 	const CONTAINER_SCHEDULE_UPDATE_SUCCESSFULLY = "Container Schedule updated successfully!";
 	const CONTAINER_SCHEDULE_DELETE_SUCCESSFULLY = "Container Schedule(s) Deleted successfully";
 	const AWU_REFERENCE_NOT_EMPTY = "AWU Reference can not be empty";
+	const CONTAINER_NOT_EMPTY = "Container can not be empty";
 	const INCORRECT_PASSWORD  = "Incorrect Password!";
 	
 	//GRAPHIC LOG ACTION STRING CONSTANT
@@ -147,7 +150,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com,munishsethi777@gmail.com";
 	
 	
 }

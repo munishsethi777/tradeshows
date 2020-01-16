@@ -110,6 +110,53 @@ class ContainerScheduleDataStore extends BeanDataStore
         return $containerSchedules;
     }
     
+    //Due Transmodel notification
+    public function getDueTransModalForCurrentMonth(){
+        $query = "select count(*) from containerschedules
+WHERE MONTH(alpinenotificatinpickupdatetime ) = MONTH(CURRENT_DATE())
+AND YEAR(alpinenotificatinpickupdatetime ) = YEAR(CURRENT_DATE()) and emptyreturndate > alpinenotificatinpickupdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    public function getDueTransModalLast7Days(){
+        $query = "SELECT count(*) FROM containerschedules
+	        WHERE alpinenotificatinpickupdatetime BETWEEN NOW() - INTERVAL 7 DAY AND NOW() and emptyreturndate > alpinenotificatinpickupdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    public function getDueTransModalForCurrentYear(){
+        $query = "select count(*) from containerschedules
+WHERE YEAR(alpinenotificatinpickupdatetime ) = YEAR(CURRENT_DATE()) and emptyreturndate > alpinenotificatinpickupdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    public function getDueTransModalTerminalAppDateForCurrentMonth(){
+        $query = "select count(*) from containerschedules
+WHERE MONTH(terminalappointmentdatetime ) = MONTH(CURRENT_DATE())
+AND YEAR(terminalappointmentdatetime ) = YEAR(CURRENT_DATE()) and scheduleddeliverydatetime > terminalappointmentdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    public function getDueTransModalTerminalAppDateLast7Days(){
+        $query = "SELECT count(*) FROM containerschedules
+	        WHERE terminalappointmentdatetime BETWEEN NOW() - INTERVAL 7 DAY AND NOW() and scheduleddeliverydatetime > terminalappointmentdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    public function getDueTransModalTerminalAppDateForCurrentYear(){
+        $query = "select count(*) from containerschedules
+WHERE YEAR(terminalappointmentdatetime ) = YEAR(CURRENT_DATE()) and scheduleddeliverydatetime > terminalappointmentdatetime";
+        $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
+        return $containerSchedules;
+    }
+    
+    
+    
     //-------******************* -------
     
 }
