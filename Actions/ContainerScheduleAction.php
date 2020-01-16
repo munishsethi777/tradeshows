@@ -70,20 +70,20 @@ if($call == "saveContainerSchedule"){
 			$isAlpineNotesUpdated = $containerSchedule->getNotificationNotes() != $existingContainerSchedule->getNotificationNotes();
 		}
 		$response["seq"] = $id;
-		if($id > 0){
-		    if($isEtaNotesUpdated){
-		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
-		            ContainerScheduleNotificationType::eta_notes_updated_instant);
-		    }
-		    if($isEmptyReturnNotesUpdated){
-		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
-		            ContainerScheduleNotificationType::empty_return_notes_updated_instant);
-		    }
-		    if($isAlpineNotesUpdated){
-		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
-		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
-		    }
-		}
+// 		if($id > 0){
+// 		    if($isEtaNotesUpdated){
+// 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+// 		            ContainerScheduleNotificationType::eta_notes_updated_instant);
+// 		    }
+// 		    if($isEmptyReturnNotesUpdated){
+// 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+// 		            ContainerScheduleNotificationType::empty_return_notes_updated_instant);
+// 		    }
+// 		    if($isAlpineNotesUpdated){
+// 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
+// 		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
+// 		    }
+// 		}
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
