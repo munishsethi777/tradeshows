@@ -74,10 +74,12 @@ if($call == "saveContainerSchedule"){
 		    if($isEtaNotesUpdated){
 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
 		            ContainerScheduleNotificationType::eta_notes_updated_instant);
-		    }else if($isEmptyReturnNotesUpdated){
+		    }
+		    if($isEmptyReturnNotesUpdated){
 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
 		            ContainerScheduleNotificationType::empty_return_notes_updated_instant);
-		    }else if($isAlpineNotesUpdated){
+		    }
+		    if($isAlpineNotesUpdated){
 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
 		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
 		    }
