@@ -120,8 +120,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trans:</label>
 		                           	<div class="col-sm-2"><label class="trans lblDesc text-primary"></label></div>
 		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA:</label>
-		                           	<div class="col-sm-2"><label class="etadatetime lblDesc text-primary"></label></div>
-		                           	
+		                           	<div class="col-sm-6"><label class="etadatetime lblDesc text-primary"></label></div>
 		                        </div>
 								<div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal:</label>
@@ -147,11 +146,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
-		                           	<div class="col-sm-2"><label class="etanotes lblDesc text-primary"></label></div>
+		                           	<div class="col-sm-10"><span class="etanotes lblDesc text-primary"></span></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Notes:</label>
-		                           	<div class="col-sm-2"><label class="emptynotes lblDesc text-primary"></label></div>
+		                           	<div class="col-sm-10"><span class="emptynotes lblDesc text-primary"></span></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Scheduled Delivery:</label>
@@ -169,11 +168,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                        	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Notif Pickup Date:</label>
-		                           	<div class="col-sm-2"><label class="alpinenotificatinpickupdatetime lblDesc text-primary"></label></div>
+		                           	<div class="col-sm-6"><label class="alpinenotificatinpickupdatetime lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Pickup Notes:</label>
-		                           	<div class="col-sm-10"><label class="notificationnotes lblDesc text-primary"></label></div>
+		                           	<div class="col-sm-10"><span class="notificationnotes lblDesc text-primary"></span></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelBrownSm">Container Doc Path:</label>
@@ -255,7 +254,11 @@ function showItemDetails(seq,rowId){
 		var item = data.containerSchedule;
 		$('#containerDetailModal').modal('show');
 		$.each(item,function(key,val){
-			$("."+key).text(val);
+			if(key == "etanotes" || key == "emptynotes" || key == "notificationnotes"){
+				$("."+key).html(val);
+			}else{
+				$("."+key).text(val);
+			}
 		});
 	});
 }

@@ -207,6 +207,8 @@ class ContainerScheduleMgr{
 	
 	public function findArrBySeqForView($seq){
 	    $containerSchedule = self::$dataStore->findArrayBySeq($seq);
+	    $containerScheduleDatesMgr = ContainerScheduleDatesMgr::getInstance();
+	    $containerScheduleDatesArr = $containerScheduleDatesMgr->findByContainerScheduleSeq($seq);
 	    $fromFormatWithTime = "Y-m-d H:i:s";
 	    $fromformat = "Y-m-d";
 	    $toFormatWithTime = "m-d-Y h:i a";
@@ -214,6 +216,11 @@ class ContainerScheduleMgr{
 	    $dateStr = $containerSchedule["etadatetime"];
 	    $containerSchedule["etadatetime"] = 
 	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+        $etaDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::eta];
+        array_shift($etaDatesArr);
+        if(!empty($etaDatesArr)){
+            $containerSchedule["etadatetime"] = $containerSchedule["etadatetime"] . " (Earlier Date : ".$etaDatesArr[0].")";
+        }
 	    
 	    $dateStr = $containerSchedule["terminalappointmentdatetime"];
 	    $containerSchedule["terminalappointmentdatetime"] =  
@@ -242,7 +249,12 @@ class ContainerScheduleMgr{
 	    $dateStr = $containerSchedule["alpinenotificatinpickupdatetime"];
 	    $containerSchedule["alpinenotificatinpickupdatetime"] =
 	        DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
-	    
+        $notificationDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::notification_pickup];
+        array_shift($notificationDatesArr);
+        if(!empty($notificationDatesArr)){
+            $containerSchedule["alpinenotificatinpickupdatetime"] = $containerSchedule["alpinenotificatinpickupdatetime"] . " (Earlier Date : ".$notificationDatesArr[0].")";
+        }
+	        
 	    $dateStr = $containerSchedule["msrfcreateddate"] ;
 	    $containerSchedule["msrfcreateddate"] = 
 	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
@@ -273,7 +285,30 @@ class ContainerScheduleMgr{
 	        $containerSchedule["customexamstatus"] = 
 	            CustomExamStatusType::getValue($containerSchedule["customexamstatus"]);
 	    }
+	    $containerSchedule["etanotes"] = $this->getNotesForView($seq, ContainerScheduleNoteType::eta);
+	    $containerSchedule["emptynotes"] = $this->getNotesForView($seq, ContainerScheduleNoteType::empty_return);
+	    $containerSchedule["notificationnotes"] = $this->getNotesForView($seq, ContainerScheduleNoteType::notification_pickup);
 	    return $containerSchedule;
+	}
+	
+	private function getNotesForView($seq,$type){
+	    $containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
+	    $containerScheduleNotesArr = $containerScheduleNotesMgr->findByContainerScheduleSeq($seq);
+	    $notesHtml = "";
+	    if(isset($containerScheduleNotesArr[$type])){
+	        $notes =  $containerScheduleNotesArr[$type];
+	        foreach ($notes as $note){
+	            $notesHtml .= '<li class="list-group-item">';
+	            $notesHtml .= '<i class="fa fa-clock-o"></i>';
+	            $notesHtml .= $note->getCreatedOn() . " "; 
+	            $notesHtml .= '<a class="text-info" href="#">';
+	            $notesHtml .= $note->email . " ";
+	            $notesHtml .= '</a>' . $note->getNotes();
+				$notesHtml .= '</li>';
+	        }
+	        return $notesHtml;
+	    }
+	    
 	}
 	
 	private function getYesNo($bool){
