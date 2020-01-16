@@ -121,8 +121,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                           	<div class="col-sm-2"><label class="trans lblDesc text-primary"></label></div>
 		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA:</label>
 		                           	<div class="col-sm-2"><label class="etadatetime lblDesc text-primary"></label></div>
-		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
-		                           	<div class="col-sm-2"><label class="etanotes lblDesc text-primary"></label></div>
+		                           	
 		                        </div>
 								<div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Terminal:</label>
@@ -147,6 +146,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                           	<div class="col-sm-2"><label class="emptyreturndate lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
+		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
+		                           	<div class="col-sm-2"><label class="etanotes lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
 		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Empty Return Notes:</label>
 		                           	<div class="col-sm-2"><label class="emptynotes lblDesc text-primary"></label></div>
 		                        </div>
@@ -163,7 +166,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                           	<div class="col-sm-2"><label class="warehouse lblDesc text-primary"></label></div>
 		                            <label class="col-sm-2 lblTitle bg-formLabelMauveSm">Hot Container:</label>
 		                           	<div class="col-sm-2"><label class="ishotcontainer lblDesc text-primary"></label></div>
-		                           	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Notif Pickup Date:</label>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                        	<label class="col-sm-2 lblTitle bg-formLabelMauveSm">Alpine Notif Pickup Date:</label>
 		                           	<div class="col-sm-2"><label class="alpinenotificatinpickupdatetime lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
