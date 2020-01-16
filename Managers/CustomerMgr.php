@@ -215,7 +215,8 @@ class CustomerMgr{
 		
 		$salesPersonId = $data[5];
 		$salesPersonName = $data[6];
-		$businessCategoryType = $data[7];
+		$businessType = $data[7];
+		$businessCategoryType = $data[8];
 		if(count($data) > 9){
     		$buyerData = $data;
     		$buyerData = array_slice($buyerData, 9); 
@@ -282,9 +283,13 @@ class CustomerMgr{
 		    $priority = "B";
 		}
 		$customer->setPriority($priority);
+		if(!empty($businessType)){
+		    $businessType = CustomerBusinessType::getName($businessType);
+		}
 		if(!empty($businessCategoryType)){
 		    $businessCategoryType = BusinessCategoryType::getName($businessCategoryType);
 		}
+		$customer->setBusinessType($businessType);
 		$customer->setBusinessCategory($businessCategoryType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;

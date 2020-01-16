@@ -33,6 +33,8 @@ class ExportUtil{
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Type");
 		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Category");
+		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Key");
 		$count = 2;
 		$i = 0;
@@ -71,6 +73,13 @@ class ExportUtil{
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonname"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$businessType = $customer["businesstype"];
+			if(!empty($businessType)){
+			    $businessType = CustomerBusinessType::getValue($businessType);
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessType);
 			$businessCategory = $customer["businesscategory"];
 			if(!empty($businessCategory)){
 			    $businessCategory = BusinessCategoryType::getValue($businessCategory);
