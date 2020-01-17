@@ -506,7 +506,7 @@ class ContainerScheduleReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = $noteType . " Notes Updated For Container Schedule on Alpinebi";
+            $subject = "ALPINE BI Containers | Updated " . $noteType . " Notes";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
