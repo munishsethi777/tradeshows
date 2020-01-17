@@ -110,7 +110,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
 	                        	<div class="col-lg-4">
  	                        		<?php 
-    									$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false);
+    									$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false,true);
     			                        echo $select;
 	                             	?>
 	                            </div>

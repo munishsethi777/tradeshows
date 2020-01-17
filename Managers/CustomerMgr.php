@@ -215,10 +215,11 @@ class CustomerMgr{
 		
 		$salesPersonId = $data[5];
 		$salesPersonName = $data[6];
-		$businessCategoryType = $data[7];
-		if(count($data) > 9){
+		$businessType = $data[7];
+		$businessCategoryType = $data[8];
+		if(count($data) > 10){
     		$buyerData = $data;
-    		$buyerData = array_slice($buyerData, 9); 
+    		$buyerData = array_slice($buyerData, 10); 
     		$buyerFieldCount = count($buyerData);
     		if ($buyerFieldCount % 7 == 0) {
     		    $sessionUtil = SessionUtil::getInstance();
@@ -282,9 +283,13 @@ class CustomerMgr{
 		    $priority = "B";
 		}
 		$customer->setPriority($priority);
+		if(!empty($businessType)){
+		    $businessType = CustomerBusinessType::getName($businessType);
+		}
 		if(!empty($businessCategoryType)){
 		    $businessCategoryType = BusinessCategoryType::getName($businessCategoryType);
 		}
+		$customer->setBusinessType($businessType);
 		$customer->setBusinessCategory($businessCategoryType);
 		$customerAndBuyers = array();
 		$customerAndBuyers["customer"] = $customer;

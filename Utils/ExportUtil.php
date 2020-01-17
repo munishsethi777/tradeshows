@@ -33,6 +33,8 @@ class ExportUtil{
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Type");
 		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Category");
+		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Key");
 		$count = 2;
 		$i = 0;
@@ -71,6 +73,13 @@ class ExportUtil{
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonname"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$businessType = $customer["businesstype"];
+			if(!empty($businessType)){
+			    $businessType = CustomerBusinessType::getValue($businessType);
+			}
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessType);
 			$businessCategory = $customer["businesscategory"];
 			if(!empty($businessCategory)){
 			    $businessCategory = BusinessCategoryType::getValue($businessCategory);
@@ -78,8 +87,8 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessCategory);
-			$hColIndex = 9;
-			$colIndex = 9;
+			$hColIndex = 10;
+			$colIndex = 10;
 			$cusBuyers = $buyers[$customer["seq"]];
 		    for ($j = 0; $j < $maxBuyerCount; $j++) {
 		        if($index == 0){
@@ -142,7 +151,7 @@ class ExportUtil{
 			$i = 0;
 			array_push($array,$customer["seq"]);
 		}
-		$objPHPExcel->getActiveSheet()->getStyle("A1:I1")->getFill()
+		$objPHPExcel->getActiveSheet()->getStyle("A1:J1")->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('CCE5FF');

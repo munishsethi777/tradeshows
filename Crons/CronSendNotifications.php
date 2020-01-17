@@ -46,7 +46,6 @@ try{
 			$logger->info("Cron Backup completed Successfully");
 		}
 	}
-	die;
     if($hours == 10 || ($isDeveloperModeOn)){
         $lastExeDay = getLastExecutionDate(Configuration::$CRON_PENDING_QC_APPROVAL_LAST_EXE);
         if($lastExeDay != $day){
@@ -98,6 +97,7 @@ try{
             GraphicLogReportUtil::sendProjectsInManagerReview($allUsers);
             GraphicLogReportUtil::sendProjectsInRobbyReview($allUsers);
             GraphicLogReportUtil::sendProjectsMissingInfoFromChina($allUsers);
+            ContainerScheduleReportUtil::sendDueTransModalNotification($allUsers);
             if(!$isDeveloperModeOn){
                 $configurationMgr->saveConfiguration(Configuration::$CRON_BEGINNING_WEEKLY_LAST_EXE,$currentDate);
             }

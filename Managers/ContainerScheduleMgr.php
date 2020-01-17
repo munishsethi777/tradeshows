@@ -300,7 +300,7 @@ class ContainerScheduleMgr{
 	        foreach ($notes as $note){
 	            $notesHtml .= '<li class="list-group-item">';
 	            $notesHtml .= '<i class="fa fa-clock-o"></i>';
-	            $notesHtml .= $note->getCreatedOn() . " "; 
+	            $notesHtml .= " ".$note->getCreatedOn() . " "; 
 	            $notesHtml .= '<a class="text-info" href="#">';
 	            $notesHtml .= $note->email . " ";
 	            $notesHtml .= '</a>' . $note->getNotes();
