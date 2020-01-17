@@ -8,6 +8,8 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/WareHouseType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TruckerType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomExamStatusType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/FreightType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/DefectiveAllowanceDeductionsType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerBusinessType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BuyerCategoryType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
@@ -40,6 +42,15 @@ class DropDownUtils {
 		}
 		$str .= "</select>";
 		return $str;
+	}
+	
+	public static function getFreightTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = FreightType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	public static function getDefectiveAllowanceDeductionsTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = DefectiveAllowanceDeductionsType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	
 	public static function getBusinessTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {

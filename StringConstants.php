@@ -33,7 +33,7 @@ class StringConstants{
 	const EMPTY_WMS_DATES_REPORT_NAME = "Missing Received Dates in WMS Report";
 	const EMPTY_OMS_DATES = "ALPINE BI Containers | Missing Received Dates in OMS Report";
 	const EMPTY_OMS_DATES_REPORT_NAME = "Missing Received Dates in OMS Report";
-	const DUE_TRANS_MODAL = "ALPINE BI Containers | Due Trans Modal";
+	const DUE_TRANS_MODAL = "ALPINE BI Containers | Financial Impact To Trans Modal";
 	
 	
 	
@@ -150,7 +150,11 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com,munishsethi777@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
+	
+	//ALPINE SPECIAL PROGRAM
+	const ALPINE_PROG_SAVED_SUCCESSFULLY    = "Alpine Program saved successfully.";
+	const ALPINE_PROG_UPDATED_SUCCESSFULLY   = "Alpine Program updated successfully";
 	
 	
 }

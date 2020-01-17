@@ -46,6 +46,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    <form id="form1" name="form1" method="post" action="createCustomer.php">
    		<input type="hidden" id="id" name="id"/>
    </form> 
+   <form id="form3" name="form3" method="post" action="createCustomerSpecialProgramForm.php">
+   		<input type="hidden" id="customerSeq" name="customerSeq"/>
+   </form> 
    <form id="form2" name="form2" method="post" action="Actions/CustomerAction.php">
    		<input type="hidden" id ="call" name="call"  value="export"/>
    		<input type="hidden" id="queryString" name="queryString"/>
@@ -223,8 +226,8 @@ function loadGrid(){
       { text: 'Name', datafield: 'fullname', width:"22%"},
       { text: 'Store Name', datafield: 'storename', width:"25%"},
       { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
+      { text: 'Category', datafield: 'businesscategory',width:"12%"},
       { text: 'Sales Person', datafield: 'salespersonname',width:"18%"},
-      { text: 'Last Modified', datafield: 'lastmodifiedon' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"11%" },
     ]
    
     var source =
@@ -232,13 +235,14 @@ function loadGrid(){
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'lastmodifiedon',
-        sortdirection: 'desc',
+        sortcolumn: 'customerid',
+        sortdirection: 'asc',
         datafields: [{ name: 'seq', type: 'integer' }, 
                      { name: 'customerid', type: 'string' }, 
                     { name: 'fullname', type: 'string' }, 
                     { name: 'storename', type: 'string' }, 
                     { name: 'businesstype', type: 'string' },
+                    { name: 'businesscategory', type: 'string' },
                     { name: 'salespersonname', type: 'string' },
                     { name: 'lastmodifiedon', type: 'date' }
                     ],                          
@@ -301,13 +305,15 @@ function loadGrid(){
             var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
-        
+            var addSpecialProgButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-squar'></i><span style='margin-left: 4px; position: relative;'>Add Special Prog.</span></div>");
+            
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);
             container.append(importButton);
             container.append(templateButton);
             container.append(reloadButton);
+            container.append(addSpecialProgButton);
             statusbar.append(container);
             importButton.jqxButton({  width: 65, height: 18 });
             templateButton.jqxButton({  width: 65, height: 18 });
@@ -315,6 +321,7 @@ function loadGrid(){
             reloadButton.jqxButton({  width: 70, height: 18 });
             editButton.jqxButton({  width: 70, height: 18 });
             deleteButton.jqxButton({  width: 70, height: 18 });
+            addSpecialProgButton.jqxButton({  width: 120, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("createCustomer.php");
@@ -342,6 +349,20 @@ function loadGrid(){
                 var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
                 $("#id").val(row.seq);                        
                 $("#form1").submit();    
+            });
+            addSpecialProgButton.click(function (event){
+            	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
+                var value = -1;
+                indexes = selectedrowindex.filter(function(item) { 
+                    return item !== value
+                })
+                if(indexes.length != 1){
+                    bootbox.alert("Please Select single row.", function() {});
+                    return;    
+                }
+                var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
+                $("#customerSeq").val(row.seq);                        
+                $("#form3").submit();    
             });
              $("#customerGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
