@@ -321,6 +321,8 @@ class CustomerMgr{
 		    $lastModifiedOn = $customer["lastmodifiedon"];
 		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
 		    $customer["lastmodifiedon"] = $lastModifiedOn;
+		    $businessCategory = BusinessCategoryType::getValue($customer["businesscategory"]);
+		    $customer["businesscategory"] = $businessCategory;
 		    array_push($mainArr,$customer);
 		}
 		return $mainArr;
