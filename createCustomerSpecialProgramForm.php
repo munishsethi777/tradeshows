@@ -105,11 +105,17 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Start Date</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="250" value="<?php echo $startDate?>" name="startdate" id="startdate" class="form-control dateControl">
+	                        		<div class="input-group date">
+                                		<input type="text" required  maxLength="250" value="<?php echo $startDate?>" name="startdate" id="startdate" class="form-control dateControl">
+	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+	                            	</div>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">End Date</label>
 	                        	<div class="col-lg-4">
- 	                        		<input type="text" required  maxLength="250" value="<?php echo $endDate?>" name="enddate" id="enddate" class="form-control dateControl">
+	                        		<div class="input-group date">
+                                		<input type="text" required  maxLength="250" value="<?php echo $endDate?>" name="enddate" id="enddate" class="form-control dateControl">
+	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+	                            	</div>
 	                            </div>
 	                       	</div>
 	                       	
