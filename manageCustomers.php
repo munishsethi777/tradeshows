@@ -306,6 +306,7 @@ function loadGrid(){
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var addSpecialProgButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-squar'></i><span style='margin-left: 4px; position: relative;'>Add Special Prog.</span></div>");
+            var addQuestionaire = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-squar'></i><span style='margin-left: 4px; position: relative;'>Add Questionnaire</span></div>");
             
             container.append(addButton);
             container.append(editButton);
@@ -314,6 +315,8 @@ function loadGrid(){
             container.append(templateButton);
             container.append(reloadButton);
             container.append(addSpecialProgButton);
+            container.append(addQuestionaire);
+            
             statusbar.append(container);
             importButton.jqxButton({  width: 65, height: 18 });
             templateButton.jqxButton({  width: 65, height: 18 });
@@ -322,6 +325,7 @@ function loadGrid(){
             editButton.jqxButton({  width: 70, height: 18 });
             deleteButton.jqxButton({  width: 70, height: 18 });
             addSpecialProgButton.jqxButton({  width: 120, height: 18 });
+            addQuestionaire.jqxButton({  width: 120, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("createCustomer.php");
@@ -361,6 +365,22 @@ function loadGrid(){
                     return;    
                 }
                 var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
+                $("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
+                $("#customerSeq").val(row.seq);                        
+                $("#form3").submit();    
+            });
+            addQuestionaire.click(function (event){
+            	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
+                var value = -1;
+                indexes = selectedrowindex.filter(function(item) { 
+                    return item !== value
+                })
+                if(indexes.length != 1){
+                    bootbox.alert("Please Select single row.", function() {});
+                    return;    
+                }
+                var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
+                $("#form3").attr('action', 'createCustomerQuestionaire.php');
                 $("#customerSeq").val(row.seq);                        
                 $("#form3").submit();    
             });
