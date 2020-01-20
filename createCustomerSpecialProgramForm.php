@@ -106,14 +106,14 @@ if(isset($_POST["customerSeq"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Start Date</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" required  maxLength="250" value="<?php echo $startDate?>" name="startdate" id="startdate" class="form-control dateControl">
+                                		<input type="text"   maxLength="250" value="<?php echo $startDate?>" name="startdate" id="startdate" class="form-control dateControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">End Date</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input type="text" required  maxLength="250" value="<?php echo $endDate?>" name="enddate" id="enddate" class="form-control dateControl">
+                                		<input type="text"   maxLength="250" value="<?php echo $endDate?>" name="enddate" id="enddate" class="form-control dateControl">
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
@@ -122,17 +122,17 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Price Program </label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getPriceProgram()?>" name="priceprogram" id="priceprogram" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getPriceProgram()?>" name="priceprogram" id="priceprogram" class="form-control">
 	                        	</div>
 	                        </div>
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Regular Terms</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getRegularTerms()?>" name="regularterms" id="regularterms" class="form-control">
+	                            	<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getRegularTerms()?>" name="regularterms" id="regularterms" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">InSeason Terms</label>
 	                        	<div class="col-lg-4">
- 	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getInseasonTerms()?>" name="inseasonterms" id="inseasonterms" class="form-control">
+ 	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getInseasonTerms()?>" name="inseasonterms" id="inseasonterms" class="form-control">
 	                            </div>
 	                       	</div>
                         	
@@ -158,17 +158,17 @@ if(isset($_POST["customerSeq"])){
 	                        	
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Rebate Program<br> <small>and method of payment</small></label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getRebateProgramAndPaymentMethod()?>" name="rebateprogramandpaymentmethod" id="rebateprogramandpaymentMethod" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getRebateProgramAndPaymentMethod()?>" name="rebateprogramandpaymentmethod" id="rebateprogramandpaymentMethod" class="form-control">
 	                        	</div>
 	                        </div>
                         	<div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Defective %</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
 	                        	</div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Paying back to customer</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getHowPayingBackCustomer()?>" name="howpayingbackcustomer" id="howpayingbackcustomer" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getHowPayingBackCustomer()?>" name="howpayingbackcustomer" id="howpayingbackcustomer" class="form-control">
 	                        	</div>
 	                        </div>
                         	<div class="form-group row i-checks">
@@ -184,19 +184,19 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Promotional Allowance<br> <small>and method of payment</small></label>
 	                        	<div class="col-lg-10">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getPromotionalAllowance()?>" name="promotionalallowance" id="promotionalallowance" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getPromotionalAllowance()?>" name="promotionalallowance" id="promotionalallowance" class="form-control">
 	                        	</div>
 	                        </div>
 	                       	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Other Allowances<br> <small>and method of payment</small></label>
 	                        	<div class="col-lg-10">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getOtherAllowance()?>" name="otherallowance" id="otherallowance" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getOtherAllowance()?>" name="otherallowance" id="otherallowance" class="form-control">
 	                        	</div>
 	                        </div>
 	                       	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Additional Remarks</label>
 	                        	<div class="col-lg-10">
-	                        		<input type="text" required  maxLength="250" value="<?php echo $alpineSpecialProg->getAdditionalRemarks()?>" name="additionalremarks" id="additionalremarks" class="form-control">
+	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getAdditionalRemarks()?>" name="additionalremarks" id="additionalremarks" class="form-control">
 	                        	</div>
 	                        </div>
 	                       	<div class="form-group row i-checks">

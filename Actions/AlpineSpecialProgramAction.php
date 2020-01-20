@@ -20,6 +20,11 @@ if($call == "saveAlpineProg"){
         $seq =  $_REQUEST["seq"];
         $AlpineSpecialProg = new AlpineSpecialProgram();
         $AlpineSpecialProg->from_array($_REQUEST);
+        if(!empty($AlpineSpecialProg->getStartDate()) && !empty($AlpineSpecialProg->getEndDate())){
+            if($AlpineSpecialProg->getStartDate() > $AlpineSpecialProg->getEndDate()){
+                throw new Exception("End date should be greater than start date!");
+            }
+        }
         if($seq > 0){
             $message = StringConstants::ALPINE_PROG_UPDATED_SUCCESSFULLY;
         }
