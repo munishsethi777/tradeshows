@@ -83,6 +83,38 @@ if(isset($_POST["customerSeq"])){
 .panel,.panel-heading{
 	border-radius:0px;
 }
+#customerselectxmasitemsfrom{
+	margin-bottom:0px !important;
+}
+.bg-formLabel,
+.panel-primary > .panel-heading,
+.panel-mauve > .panel-heading{
+	background-color:rgba(236, 236, 236, 1) !important;
+	border-color:rgba(236, 236, 236, 1) !important;
+	color:grey;
+}
+.panel-primary,
+.panel-mauve{
+	border-color:rgba(236, 236, 236, 1) !important;
+}
+.primaryLI{
+	background-color:#1ab394 !important;
+	border-radius:4px 4px 0px 0px;
+}
+.mauveLI{
+	background-color:#A4C2F4 !important;
+	border-radius:4px 4px 0px 0px;
+}
+.darkLI{
+	background-color:rgba(0, 0, 0, 0.6) !important;
+	border-radius:4px 4px 0px 0px;
+}
+.nav-tabs > li > a{
+	color:grey;
+}
+.nav > li.active a{
+	color:white !important;
+}
 </style>
 </head>
 <body>
@@ -101,17 +133,35 @@ if(isset($_POST["customerSeq"])){
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
-                 	 <form id="createChristmasQuestionForm" method="post" action="Actions/CustomerChristmasQuestionAction.php" class="m-t-sm">
+                 	<ul class="nav nav-tabs" role="tablist">
+		            	<li class="primaryLI active"><a class="nav-link" data-toggle="tab" href="#tab-1"> CHRISTMAS QUESTIONS</a></li>
+						<li class="darkLI"><a class="nav-link" data-toggle="tab" href="#tab-2">OPPURTUNITY BUYS</a></li>
+						<li class="mauveLI"><a class="nav-link" data-toggle="tab" href="#tab-3">SPRING QUESTIONS</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" id="tab-1" class="tab-pane active">
+                 		<form id="createChristmasQuestionForm" method="post" action="Actions/CustomerChristmasQuestionAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="savechristmasQuestion"/>
                         	<input type="hidden" id ="customerseq" name="customerseq"  value="<?php echo $customerSeq?>"/>
                         	
                         	<div class="christmasMainDiv">
-	                        	<div class="form-group row">
-		                       		<label class="col-lg-4 col-form-label bg-primary"><h2>CHRISTMAS QUESTIONS</h2></label>
-		                        </div>
+<!-- 	                        	<div class="form-group row"> -->
+<!-- 		                       		<label class="col-lg-4 col-form-label bg-primary"><h2>CHRISTMAS QUESTIONS</h2></label> -->
+<!-- 		                        </div> -->
 		                        
 		                        <div class="row">
-									<div class="col-lg-6">
+									<div class="col-lg-10">
+										<div class="form-group">
+				                        	<div class="row m-b-xxs">
+					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
+					                        	<div class="col-lg-4">
+					                        		<select class="form-control">
+					                        			<option>2020</option>
+					                        			<option>2021</option>
+					                        		</select>
+					                        	</div>
+					                        </div>
+					                    </div>
 				                       <div class="form-group">
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Are you Interested in Christmas?</label>
@@ -210,7 +260,7 @@ if(isset($_POST["customerSeq"])){
 				                    
 				                    
 				                    
-				                    <div class="col-lg-6">
+				                    <div class="col-lg-10">
 				                    	<div class="form-group">
 					                    	<div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Did we pitch that we want to be your main vendor of Holiday and Décor?
@@ -285,16 +335,28 @@ if(isset($_POST["customerSeq"])){
 			                    </div>
 							</div>
 	                   </form>
-	                   
-	                   <form id="createOppurtunityBuyForm" method="post" action="Actions/CustomerOppurtunityBuyAction.php" class="m-t-xl">
+	                   </div>
+		                <div role="tabpanel" id="tab-2" class="tab-pane">
+		                   <form id="createOppurtunityBuyForm" method="post" action="Actions/CustomerOppurtunityBuyAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="saveOppurtunityBuy"/>
                         	<input type="hidden" id ="customerseq" name="customerseq"  value="<?php echo $customerSeq?>"/>
                         	<div class="oppurtunityMainDiv">
-	                        	<div class="form-group row">
-		                       		<label class="col-lg-4 col-form-label bg-formLabelDark"><h2>OPPORTUNITY BUYS</h2></label>
-		                        </div>
+<!-- 	                        	<div class="form-group row"> -->
+<!-- 		                       		<label class="col-lg-4 col-form-label bg-formLabelDark"><h2>OPPORTUNITY BUYS</h2></label> -->
+<!-- 		                        </div> -->
 		                        <div class="row">
-									<div class="col-lg-6">
+									<div class="col-lg-10">
+										<div class="form-group">
+				                        	<div class="row m-b-xxs">
+					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
+					                        	<div class="col-lg-4">
+					                        		<select class="form-control">
+					                        			<option>2020</option>
+					                        			<option>2021</option>
+					                        		</select>
+					                        	</div>
+					                        </div>
+					                    </div>
 				                       <div class="form-group">
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelDark">What trade shows are they going to in 2021?</label>
@@ -310,7 +372,7 @@ if(isset($_POST["customerSeq"])){
 					                        </div>
 				                        </div>
 				                   	</div> 
-				                    <div class="col-lg-6">
+				                    <div class="col-lg-10">
 				                    	<div class="form-group">
 					                    	<div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelDark">Closeout and left over List Sent Date : <br><small>(Give them every day items and Amazing prices to keep conversatin alive all the time)</small></label>
@@ -334,23 +396,34 @@ if(isset($_POST["customerSeq"])){
 			                    </div>
 		                    </div>
 	                   </form> 
+	                   </div>
 	                   
 	                   
 	                   
 	                   
-	                   
-	                   
-	                   <form id="createSpringQuesForm" method="post" action="Actions/CustomerSpringQuestionAction.php" class="m-t-xl">
+	                   <div role="tabpanel" id="tab-3" class="tab-pane">
+	                   <form id="createSpringQuesForm" method="post" action="Actions/CustomerSpringQuestionAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="saveSpringQuestion"/>
                         	<input type="hidden" id ="customerseq" name="customerseq"  value="<?php echo $customerSeq?>"/>
                         	<div class="springMainDiv">
-	                        	<div class="form-group row">
-		                       		<label class="col-lg-4 col-form-label bg-formLabelMauve"><h2>SPRING QUESTIONS</h2>
-		                       			<br><small>(Questions for Each buyer if handling different categories)</small>
-		                       		</label>
-		                        </div>
+<!-- 	                        	<div class="form-group row"> -->
+<!-- 		                       		<label class="col-lg-4 col-form-label bg-formLabelMauve"><h2>SPRING QUESTIONS</h2> -->
+<!-- 		                       			<br><small>(Questions for Each buyer if handling different categories)</small> -->
+<!-- 		                       		</label> -->
+<!-- 		                        </div> -->
 		                        <div class="row">
-									<div class="col-lg-6">
+									<div class="col-lg-10">
+										<div class="form-group">
+				                        	<div class="row m-b-xxs">
+					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
+					                        	<div class="col-lg-4">
+					                        		<select class="form-control">
+					                        			<option>2020</option>
+					                        			<option>2021</option>
+					                        		</select>
+					                        	</div>
+					                        </div>
+					                    </div>
 				                       <div class="form-group">
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have you sent them Spring catalog link?</label>
@@ -448,7 +521,7 @@ if(isset($_POST["customerSeq"])){
 				                        
 				                        
 				                   	</div> 
-				                    <div class="col-lg-6">
+				                    <div class="col-lg-10">
 				                    	<div class="form-group">
 					                    	<div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Did we pitch that we want to be your main vendor of Holiday and Décor?<br>And my customers are vendor consolidating?</label>
@@ -540,8 +613,8 @@ if(isset($_POST["customerSeq"])){
 			                    </div>
 							</div>
 	                   </form>
-	                   
-	                   
+	                   </div>
+	                 </div> 
 	                   
 	                         
 	         	</div>

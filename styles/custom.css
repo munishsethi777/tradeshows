@@ -96,10 +96,10 @@ ul#side-menu.nav{
 	background-image:none !important;
 	background-color:#eaeaeb !important;
 }
-.nav > li > a{
+#side-menu > li > a{
 	color: #6d747f !important;
 }
-.nav > li.active, .nav > li > a:hover{
+#side-menu > li.active, #side-menu > li > a:hover{
 	background: #e5e5e5 !important;	
 }
 div#wrapper{
