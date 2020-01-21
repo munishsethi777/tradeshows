@@ -45,6 +45,12 @@ class DropDownUtils {
 		$str .= "</select>";
 		return $str;
 	}
+	
+	public static function getYearDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = array(2020=>2020,2021=>2021);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	
 	public static function getSeasonShowsDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = SeasonShowNameType::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);

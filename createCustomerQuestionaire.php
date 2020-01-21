@@ -155,10 +155,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		    $select = DropDownUtils::getYearDD("year", null, $customerChristmasQuestion->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -350,10 +350,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		$select = DropDownUtils::getYearDD("year", null, $customerOppurtunityBuy->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -361,7 +361,10 @@ if(isset($_POST["customerSeq"])){
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelDark">What trade shows are they going to in 2021?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="text" name="tradeshowsgoingto" value="<?php echo $customerOppurtunityBuy->getTradeshowsGoingTo()?>" id="tradeshowsgoingto" class="form-control">
+					                        		<?php 
+					                        		    $select = DropDownUtils::getSeasonShowsDD("tradeshowsgoingto", null, $customerOppurtunityBuy->getTradeshowsGoingTo(),false,true);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
@@ -417,10 +420,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		$select = DropDownUtils::getYearDD("year", null, $customerSpringQuestion->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
