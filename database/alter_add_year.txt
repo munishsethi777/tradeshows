@@ -1,0 +1,3 @@
+ALTER TABLE customerchristmasquestions ADD `year` INT NULL;
+ALTER TABLE customeroppurtunitybuys ADD `year` INT NULL;
+ALTER TABLE customerspringquestions ADD `year` INT NULL;

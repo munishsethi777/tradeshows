@@ -6,6 +6,7 @@ class CustomerChristmasQuestion{
     private $isxmassamplessent,$isstrategicplanningmeetingappointment,$strategicplanningmeetdate,$isinvitedtoxmasshowroom,$invitedtoxmasshowroomdate,$invitedtoxmasshowroomreminderdate;
     private $isholidayshopcompleted,$isholidayshopcomsummaryemailsent,$christmas2020reviewingdate,$customerselectxmasitemsfrom;
     private $isxmasbuylastyear,$xmasbuylastyearamount,$isreceivingsellthru,$isrobbyreviewedsellthrough,$isvisitcustomerin4qtr,$christmasquotebydate;
+    private $year;
     
     public function getSeq(){
         return $this->seq;
@@ -189,6 +190,13 @@ class CustomerChristmasQuestion{
     
     public function setXmasBuyLastYearAmount($xmasbuylastyearamount){
         $this->xmasbuylastyearamount = $xmasbuylastyearamount;
+    }
+    
+    public function setYear($year_){
+        $this->year = $year_;
+    }
+    public function getYear(){
+        return $this->year;
     }
     
     public function from_array($array) {

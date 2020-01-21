@@ -7,6 +7,8 @@ class CustomerOppurtunityBuy
     private $dinnerappointmentdate;
     private $closeoutleftoversincedate;
     private $isxmascateloglinksent;
+    private $year;
+    
     public static $className = "CustomerOppurtunityBuy";
     public static $tableName = "customeroppurtunitybuys";
     public function getSeq(){
@@ -55,6 +57,13 @@ class CustomerOppurtunityBuy
     
     public function getIsXmasCatelogLinkSent(){
         return $this->isxmascateloglinksent;
+    }
+    
+    public function setYear($year_){
+        $this->year = $year_;
+    }
+    public function getYear(){
+        return $this->year;
     }
     
     

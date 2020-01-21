@@ -26,6 +26,7 @@ class CustomerSpringQuestion
     private $customerselectingspringitemsfrom;
     private $isvisitcustomerduring2ndqtr;
     private $quotespringbydate;
+    private $year;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -220,6 +221,13 @@ class CustomerSpringQuestion
     
     public function setQuoteSpringByDate($quotespringbydate){
         $this->quotespringbydate = $quotespringbydate;
+    }
+    
+    public function setYear($year_){
+        $this->year = $year_;
+    }
+    public function getYear(){
+        return $this->year;
     }
     
     public function from_array($array) {
