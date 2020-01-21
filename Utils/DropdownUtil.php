@@ -14,6 +14,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerBusinessType.php"
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BuyerCategoryType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BusinessCategoryType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/XmasItemFromType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -42,6 +43,11 @@ class DropDownUtils {
 		}
 		$str .= "</select>";
 		return $str;
+	}
+	
+	public static function getXmasItemFromDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = XmasItemFromType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	
 	public static function getFreightTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
