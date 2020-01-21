@@ -156,5 +156,8 @@ class StringConstants{
 	const ALPINE_PROG_SAVED_SUCCESSFULLY    = "Alpine Program saved successfully.";
 	const ALPINE_PROG_UPDATED_SUCCESSFULLY   = "Alpine Program updated successfully";
 	
+	const SAVED_SUCCESSFULLY    = "Saved successfully.";
+	const UPDATED_SUCCESSFULLY   = "Updated successfully";
+	
 	
 }
