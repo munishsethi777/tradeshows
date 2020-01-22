@@ -254,6 +254,9 @@ class CustomerSpringQuestion
                     }
                 }
                 if (! empty ( $value )) {
+                    if(is_array($value)){
+                        $value = implode(",", $value);
+                    }
                     $this->{$attrName} = $value;
                 }
             }
