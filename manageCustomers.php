@@ -46,7 +46,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    <form id="form1" name="form1" method="post" action="createCustomer.php">
    		<input type="hidden" id="id" name="id"/>
    </form> 
-   <form id="form3" name="form3" method="post" action="createCustomerSpecialProgramForm.php">
+   <form id="form3" name="form3" target="_blank" method="post" action="createCustomerSpecialProgramForm.php">
    		<input type="hidden" id="customerSeq" name="customerSeq"/>
    </form> 
    <form id="form2" name="form2" method="post" action="Actions/CustomerAction.php">
@@ -211,7 +211,7 @@ function loadGrid(){
 //         return html;
 //     }
 
-	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
+	var showCustomerDetailAction = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#customerGrid').jqxGrid('getrowdata', row);
         ids[row] = data["seq"];
         var html = "<div style='text-align: center; margin-top:6px;'>"
@@ -219,15 +219,25 @@ function loadGrid(){
             html += "</div>";
         return html;
     }
+	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
+        data = $('#customerGrid').jqxGrid('getrowdata', row);
+        ids[row] = data["seq"];
+        var html = "<div style='margin-left:9px;margin-top:1px;font-size:18px;'>"
+            	html +="<a title='Add Questionnaire ' href='javascript:addQuestionnaire("+ data['seq'] + ")'></i><i class='fa fa-question-circle' title='Add Questionnaire'></i></a>";
+            	html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-plus-square' title='Add Special Prog.'></i></a></span>"
+            html += "</div>";
+        return html;
+    }
     
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Customer ID', datafield: 'customerid',width:"8%",cellsrenderer:actions},
-      { text: 'Name', datafield: 'fullname', width:"22%"},
-      { text: 'Store Name', datafield: 'storename', width:"25%"},
+      { text: 'Customer ID', datafield: 'customerid',width:"8%",cellsrenderer:showCustomerDetailAction},
+      { text: 'Name', datafield: 'fullname', width:"25%"},
+      { text: 'Store Name', datafield: 'storename', width:"20%"},
       { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
       { text: 'Category', datafield: 'businesscategory',width:"12%"},
-      { text: 'Sales Person', datafield: 'salespersonname',width:"18%"},
+      { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
+      { text: 'Actions', datafield: 'action',width:"8%",cellsrenderer:actions},
     ]
    
     var source =
@@ -244,7 +254,8 @@ function loadGrid(){
                     { name: 'businesstype', type: 'string' },
                     { name: 'businesscategory', type: 'string' },
                     { name: 'salespersonname', type: 'string' },
-                    { name: 'lastmodifiedon', type: 'date' }
+                    { name: 'lastmodifiedon', type: 'date' },
+                    { name: 'action', type: 'string' }
                     ],                          
         url: 'Actions/CustomerAction.php?call=getAllCustomers',
         root: 'Rows',
@@ -314,8 +325,8 @@ function loadGrid(){
             container.append(importButton);
             container.append(templateButton);
             container.append(reloadButton);
-            container.append(addSpecialProgButton);
-            container.append(addQuestionaire);
+           // container.append(addSpecialProgButton);
+           // container.append(addQuestionaire);
             
             statusbar.append(container);
             importButton.jqxButton({  width: 65, height: 18 });
@@ -324,8 +335,8 @@ function loadGrid(){
             reloadButton.jqxButton({  width: 70, height: 18 });
             editButton.jqxButton({  width: 70, height: 18 });
             deleteButton.jqxButton({  width: 70, height: 18 });
-            addSpecialProgButton.jqxButton({  width: 120, height: 18 });
-            addQuestionaire.jqxButton({  width: 120, height: 18 });
+          //  addSpecialProgButton.jqxButton({  width: 120, height: 18 });
+            //addQuestionaire.jqxButton({  width: 120, height: 18 });
             // create new row.
             addButton.click(function (event) {
                 location.href = ("createCustomer.php");
@@ -354,36 +365,36 @@ function loadGrid(){
                 $("#id").val(row.seq);                        
                 $("#form1").submit();    
             });
-            addSpecialProgButton.click(function (event){
-            	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
-                var value = -1;
-                indexes = selectedrowindex.filter(function(item) { 
-                    return item !== value
-                })
-                if(indexes.length != 1){
-                    bootbox.alert("Please Select single row.", function() {});
-                    return;    
-                }
-                var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
-                $("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
-                $("#customerSeq").val(row.seq);                        
-                $("#form3").submit();    
-            });
-            addQuestionaire.click(function (event){
-            	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
-                var value = -1;
-                indexes = selectedrowindex.filter(function(item) { 
-                    return item !== value
-                })
-                if(indexes.length != 1){
-                    bootbox.alert("Please Select single row.", function() {});
-                    return;    
-                }
-                var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
-                $("#form3").attr('action', 'createCustomerQuestionaire.php');
-                $("#customerSeq").val(row.seq);                        
-                $("#form3").submit();    
-            });
+//             addSpecialProgButton.click(function (event){
+//             	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
+//                 var value = -1;
+//                 indexes = selectedrowindex.filter(function(item) { 
+//                     return item !== value
+//                 })
+//                 if(indexes.length != 1){
+//                     bootbox.alert("Please Select single row.", function() {});
+//                     return;    
+//                 }
+//                 var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
+//                 $("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
+//                 $("#customerSeq").val(row.seq);                        
+//                 $("#form3").submit();    
+//             });
+//             addQuestionaire.click(function (event){
+//             	var selectedrowindex = $("#customerGrid").jqxGrid('selectedrowindexes');
+//                 var value = -1;
+//                 indexes = selectedrowindex.filter(function(item) { 
+//                     return item !== value
+//                 })
+//                 if(indexes.length != 1){
+//                     bootbox.alert("Please Select single row.", function() {});
+//                     return;    
+//                 }
+//                 var row = $('#customerGrid').jqxGrid('getrowdata', indexes);
+//                 $("#form3").attr('action', 'createCustomerQuestionaire.php');
+//                 $("#customerSeq").val(row.seq);                        
+//                 $("#form3").submit();    
+//             });
              $("#customerGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                  var pageSize = event.args.owner.rows.records.length - 1;                       
@@ -409,6 +420,18 @@ function loadGrid(){
         }
     });
 }
+
+function addQuestionnaire(seq){
+	$("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
+    $("#customerSeq").val(seq);                        
+    $("#form3").submit();
+}
+function addSplProg(seq){
+	$("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
+    $("#customerSeq").val(seq);                        
+    $("#form3").submit();
+}
+
 function exportCustomersConfirm(filterQstr){
 	bootbox.confirm({
 	    message: "Do you want to export customers?",
