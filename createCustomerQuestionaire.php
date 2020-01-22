@@ -6,7 +6,10 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerOppurtunit
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerOppurtunityBuyMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerSpringQuestion.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerSpringQuestionMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/SeasonShowNameType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+
 $customerChristmasQuestionMgr = CustomerChristmasQuestionMgr::getInstance();
 $customerChristmasQuestion = new CustomerChristmasQuestion();
 
@@ -17,6 +20,10 @@ $customerSpringQuestionMgr= CustomerSpringQuestionMgr::getInstance();
 $customerSpringQuestion = new CustomerSpringQuestion();
 
 $customerSeq = 0;
+$buyerCategoriesSpringQues = BuyerCategoryType::getAll();
+$tradeShowsTypeOppBuy = SeasonShowNameType::getAll();
+$selectedCategoriesSpringQues = array();
+$selectedTradeShowsTypeOppBuy = array();
 if(isset($_POST["customerSeq"])){
     $customerSeq = $_POST["customerSeq"];
     $customerChristmasQuestion = $customerChristmasQuestionMgr->findByCustomerSeq($customerSeq);
@@ -27,9 +34,17 @@ if(isset($_POST["customerSeq"])){
     if(empty($customerOppurtunityBuy)){
         $customerOppurtunityBuy = new CustomerOppurtunityBuy();
     }
+    if(!empty($customerOppurtunityBuy->getTradeshowsGoingTo())){
+        $selectedTradeShowsTypeOppBuy = explode(",",
+            $customerOppurtunityBuy->getTradeshowsGoingTo());
+    }
     $customerSpringQuestion = $customerSpringQuestionMgr->findByCustomerSeq($customerSeq);
     if(empty($customerSpringQuestion)){
         $customerSpringQuestion = new CustomerSpringQuestion();
+    }
+    if(!empty($customerSpringQuestion->getCategoriesShouldSellThem())){
+        $selectedCategoriesSpringQues = explode(",", 
+            $customerSpringQuestion->getCategoriesShouldSellThem());
     }
 }
 ?>
@@ -155,10 +170,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		    $select = DropDownUtils::getYearDD("year", null, $customerChristmasQuestion->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -350,10 +365,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		$select = DropDownUtils::getYearDD("year", null, $customerOppurtunityBuy->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -361,7 +376,16 @@ if(isset($_POST["customerSeq"])){
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelDark">What trade shows are they going to in 2021?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="text" name="tradeshowsgoingto" value="<?php echo $customerOppurtunityBuy->getTradeshowsGoingTo()?>" id="tradeshowsgoingto" class="form-control">
+					                        		<select class="tradeshowsgoingto form-control" name="tradeshowsgoingto[]" multiple  >
+    					                   		     		<?php 
+    					                   		     		foreach($tradeShowsTypeOppBuy as $key=>$value){
+    					                   		     		    $selected = "";
+    					                   		     		    if(in_array($key,$selectedTradeShowsTypeOppBuy)){
+    					                   		     		        $selected = "selected";
+    					                   		     		    }
+    					                   		     		    echo ('<option '.$selected.' value="'.$key.'">'.$value.'</option>');
+        					                   		       }?>
+    					                   		       </select>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
@@ -417,10 +441,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
 					                        	<div class="col-lg-4">
-					                        		<select class="form-control">
-					                        			<option>2020</option>
-					                        			<option>2021</option>
-					                        		</select>
+					                        		<?php 
+					                        		$select = DropDownUtils::getYearDD("year", null, $customerSpringQuestion->getYear(),false,false);
+                    			                        echo $select;
+                	                             	?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -543,8 +567,17 @@ if(isset($_POST["customerSeq"])){
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What categories have they not bought That I should sell them?<br><small>Example Bistro Sets</small></label>
 					                        	<div class="col-lg-4">
-					                   		     		<input type="text" name="categoriesshouldsellthem" value="<?php echo $customerSpringQuestion->getCategoriesShouldSellThem()?>" id="categoriesshouldsellthem" class="form-control">
-					                        	</div>
+					                        			<select class="categoriesshouldsellthem form-control" name="categoriesshouldsellthem[]" multiple  >
+    					                   		     		<?php 
+    					                   		     		foreach($buyerCategoriesSpringQues as $key=>$value){
+    					                   		     		    $selected = "";
+    					                   		     		    if(in_array($key,$selectedCategoriesSpringQues)){
+    					                   		     		        $selected = "selected";
+    					                   		     		    }
+    					                   		     		    echo ('<option '.$selected.' value="'.$key.'">'.$value.'</option>');
+        					                   		       }?>
+    					                   		       </select>
+                    			             	</div>
 				                        	</div>
 				                        </div>
 										
@@ -640,7 +673,10 @@ $(document).ready(function(){
 		onSelectDate:function(ct,$i){
 			//setDuration();
 		}
-	})	
+	});
+	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
+	$('.tradeshowsgoingto').select2({companies: true,width:245,placeholder: "Select Shows",});
+	
 });
 function saveQuestionnaire(formName){
 	formName = "#" + formName;

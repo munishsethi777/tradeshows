@@ -15,6 +15,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BuyerCategoryType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BusinessCategoryType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/XmasItemFromType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/SeasonShowNameType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -43,6 +44,16 @@ class DropDownUtils {
 		}
 		$str .= "</select>";
 		return $str;
+	}
+	
+	public static function getYearDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = array(2020=>2020,2021=>2021);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	
+	public static function getSeasonShowsDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = SeasonShowNameType::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	
 	public static function getXmasItemFromDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {

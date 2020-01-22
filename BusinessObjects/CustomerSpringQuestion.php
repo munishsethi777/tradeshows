@@ -26,6 +26,7 @@ class CustomerSpringQuestion
     private $customerselectingspringitemsfrom;
     private $isvisitcustomerduring2ndqtr;
     private $quotespringbydate;
+    private $year;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -222,6 +223,13 @@ class CustomerSpringQuestion
         $this->quotespringbydate = $quotespringbydate;
     }
     
+    public function setYear($year_){
+        $this->year = $year_;
+    }
+    public function getYear(){
+        return $this->year;
+    }
+    
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );
@@ -246,6 +254,9 @@ class CustomerSpringQuestion
                     }
                 }
                 if (! empty ( $value )) {
+                    if(is_array($value)){
+                        $value = implode(",", $value);
+                    }
                     $this->{$attrName} = $value;
                 }
             }
