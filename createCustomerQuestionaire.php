@@ -89,9 +89,9 @@ if(isset($_POST["customerSeq"])){
 .bg-formLabel,
 .panel-primary > .panel-heading,
 .panel-mauve > .panel-heading{
-	background-color:rgba(236, 236, 236, 1) !important;
+	background-color:#f3f3f4 !important;
 	border-color:rgba(236, 236, 236, 1) !important;
-	color:grey;
+	color:#676a6c;
 }
 .panel-primary,
 .panel-mauve{
