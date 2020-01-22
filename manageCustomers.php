@@ -422,7 +422,7 @@ function loadGrid(){
 }
 
 function addQuestionnaire(seq){
-	$("#form3").attr('action', 'createCustomerSpecialProgramForm.php');
+	$("#form3").attr('action', 'createCustomerQuestionaire.php');
     $("#customerSeq").val(seq);                        
     $("#form3").submit();
 }
