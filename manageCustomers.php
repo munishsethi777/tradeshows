@@ -223,8 +223,8 @@ function loadGrid(){
         data = $('#customerGrid').jqxGrid('getrowdata', row);
         ids[row] = data["seq"];
         var html = "<div style='margin-left:9px;margin-top:1px;font-size:18px;'>"
-            	html +="<a title='Add Questionnaire ' href='javascript:addQuestionnaire("+ data['seq'] + ")'></i><i class='fa fa-question-circle' title='Add Questionnaire'></i></a>";
-            	html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-plus-square' title='Add Special Prog.'></i></a></span>"
+            	html +="<a title='Add Questionnaire ' href='javascript:addQuestionnaire("+ data['seq'] + ")'></i><i class='fa fa-question' title='Add Questionnaire'></i></a>";
+            	html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-calendar' title='Add Special Prog.'></i></a></span>"
             html += "</div>";
         return html;
     }
