@@ -38,7 +38,7 @@ if(!empty($seq) && !$isadded){
             	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>')">Spring Questions for Category(s) - 
             	<label class="springQuestionsPanelHeading<?echo $seq?>"></label></a>
                 <span style="font-size: 18px;"><a title="Delete" onclick="removePanel('<?echo $seq?>','<?php echo $isadded?>')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
-                <span style="font-size: 18px;"><a disabled title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
+                <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
         </h5>
     </div>
     	<?php if($isadded){?>
