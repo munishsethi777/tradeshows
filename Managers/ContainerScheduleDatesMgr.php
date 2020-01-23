@@ -34,6 +34,8 @@ class ContainerScheduleDatesMgr{
     		$dateTime = $containerSchedule->getConfirmedDeliveryDateTime();
     	}else if($dateTimeType == ContainerScheduleDateType::notification_pickup){
     		$dateTime = $containerSchedule->getAlpineNotificatinPickupDateTime();
+    	}else if($dateTimeType == ContainerScheduleDateType::requested_delivery){
+    		$dateTime = $containerSchedule->getRequestedDeliveryDateTime();
     	}
     	$containerScheduleDate->setDatetime($dateTime);
     	$containerScheduleDate->setDatetimetype($dateTimeType);
@@ -64,6 +66,15 @@ class ContainerScheduleDatesMgr{
     	if($pickupDateTime!= null && $pickupDateTime !=  $existingPickupDateTime){
     		$containerScheduleDate = $this->getContainerScheduleDateObj(
     				$containerSchedule, ContainerScheduleDateType::notification_pickup);
+    		$this->save($containerScheduleDate);
+    	}
+    	
+    	$requestedDDateTime = $containerSchedule->getRequestedDeliveryDateTime();
+    	$existingRequestedDDateTimeStr = $existingContainerSchedle->getRequestedDeliveryDateTime();
+    	$existingRequestedDDateTime = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $requestedDDateTime);
+    	if($requestedDDateTime !=null && $requestedDDateTime !=  $existingRequestedDDateTime){
+    		$containerScheduleDate = $this->getContainerScheduleDateObj(
+    				$containerSchedule, ContainerScheduleDateType::requested_delivery);
     		$this->save($containerScheduleDate);
     	}
     }

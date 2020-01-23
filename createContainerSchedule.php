@@ -20,6 +20,7 @@ $informationTabIndex = "";
 $deliveryTabIndex = "";
 $officeTabIndex = "";
 $etaDatesArr = array();
+$requestedDeliveryDatesArr = array();
 $confirmDeliveryDatesArr = array();
 $pickUpdatesArr = array();
 $etaNotesArr = array();
@@ -73,7 +74,11 @@ if(isset($_REQUEST["id"])){
  	}if(isset($containerScheduleDatesArr[ContainerScheduleDateType::notification_pickup])){
  		$pickUpdatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::notification_pickup];
  		array_shift($pickUpdatesArr);
+ 	}if(isset($containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery])){
+ 		$requestedDeliveryDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery];
+ 		array_shift($requestedDeliveryDatesArr);
  	}
+ 	
  	
  	$containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
  	$containerScheduleNotesArr = $containerScheduleNotesMgr->findByContainerScheduleSeq($seq);
@@ -240,6 +245,18 @@ if(isset($_REQUEST["id"])){
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="row">
 							<div class="col-lg-6 darkdiv" style="position:relative">
+								<div class="form-group row">
+		                     		<label class="col-lg-4 col-form-label bg-formLabelDark" style="padding:0px">Requested Delivery:</label>
+			                        <div class="col-lg-8">
+			                        	<div class="input-group date">
+		                               		<input type="text" tabindex="<?php echo $informationTabIndex?>"  value="<?php echo $containerSchedule->getRequestedDeliveryDateTime()?>" name="requesteddeliverydatetime" id="requesteddeliverydatetime" class="form-control  dateTimeControl">
+			                           		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			                           	</div>
+			                           	<?php if(count($requestedDeliveryDatesArr) > 0){?>
+		                            		<span class="col-lg-12 b-r-xs bg-default text-danger label">Earlier Date : <?php echo $requestedDeliveryDatesArr[0]?></span>
+		                            	<?php }?>
+			                        </div>
+			                    </div>
 								<div class="form-group row">
 		                     		<label class="col-lg-4 col-form-label bg-formLabelDark" style="padding:0px">Empty Scheduled Pickup Date:</label>
 			                        <div class="col-lg-8">

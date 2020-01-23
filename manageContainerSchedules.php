@@ -145,6 +145,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                           	<div class="col-sm-2"><label class="emptyreturndate lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
+		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Requested Delivery Date:</label>
+		                           	<div class="col-sm-10"><label class="requesteddeliverydatetime lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
 		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
 		                           	<div class="col-sm-10"><span class="etanotes lblDesc text-primary"></span></div>
 		                        </div>

@@ -44,6 +44,7 @@ class ContainerSchedule {
 	private $customexamterminal;
 	private $customexamstatus;
 	private $ishotcontainer;
+	private $requesteddeliverydatetime;
 	public function setSeq($seq) {
 		$this->seq = $seq;
 	}
@@ -307,7 +308,12 @@ class ContainerSchedule {
 	public function getIsHotContainer(){
 	    return $this->ishotcontainer;
 	}
-	
+	public function setRequestedDeliveryDateTime($requestedDeliveryDateTime) {
+		$this->requesteddeliverydatetime = $requestedDeliveryDateTime;
+	}
+	public function getRequestedDeliveryDateTime() {
+		return $this->requesteddeliverydatetime;
+	}
 	
 	public function from_array($array) {
 		foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
