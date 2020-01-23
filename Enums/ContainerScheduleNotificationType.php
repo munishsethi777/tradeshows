@@ -13,6 +13,7 @@ class ContainerScheduleNotificationType extends BasicEnum{
     const missing_received_dates_in_oms_daily = "Missing Received Dates in OMS (Daily)";
     const send_alpine_picking_date_change_instant = "Send Alpine Picking Date Change (Instant)";
     const terminal_appointment_date_change_instant = "Terminal Appointment Date Change (Instant)";
+    const requested_delivery_date_change_instant = "Requested Delivery Date Change (Instant)";
     const eta_notes_updated_instant = "ETA Notes Updated (Instant)";
     const empty_return_notes_updated_instant = "Empty Return Notes Updated (Instant)";
     const alpine_pickup_notes_updated_instant = "Alpine Pickup Notes Updated (Instant)";
