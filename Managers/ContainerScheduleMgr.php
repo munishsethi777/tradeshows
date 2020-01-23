@@ -135,6 +135,10 @@ class ContainerScheduleMgr{
 	            $etaDates = $this->getDates($dates[ContainerScheduleDateType::eta]);
 	            $containerSchedule->setEtaDateTime($etaDates);
 	        }
+	        if(isset($dates[ContainerScheduleDateType::requested_delivery])){
+	        	$requestedDeliveryDates = $this->getDates($dates[ContainerScheduleDateType::requested_delivery]);
+	        	$containerSchedule->setRequestedDeliveryDateTime($requestedDeliveryDates);
+	        }
 	        if(isset($dates[ContainerScheduleDateType::confirmed_delivery])){
 	            $confirmDeliveryDates = $this->getDates($dates[ContainerScheduleDateType::confirmed_delivery]);
 	            $containerSchedule->setConfirmedDeliveryDateTime($confirmDeliveryDates);
@@ -221,6 +225,17 @@ class ContainerScheduleMgr{
         if(!empty($etaDatesArr)){
             $containerSchedule["etadatetime"] = $containerSchedule["etadatetime"] . " (Earlier Date : ".$etaDatesArr[0].")";
         }
+        
+        $dateStr = $containerSchedule["requesteddeliverydatetime"];
+        $containerSchedule["requesteddeliverydatetime"] =
+        DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+        $reqDDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery];
+        array_shift($reqDDatesArr);
+        if(!empty($etaDatesArr)){
+        	$containerSchedule["requesteddeliverydatetime"] = $containerSchedule["requesteddeliverydatetime"] . " (Earlier Date : ".$reqDDatesArr[0].")";
+        }
+        
+        
 	    
 	    $dateStr = $containerSchedule["terminalappointmentdatetime"];
 	    $containerSchedule["terminalappointmentdatetime"] =  
@@ -369,6 +384,9 @@ class ContainerScheduleMgr{
 		$dateStr = $containerSchedule->getSamplesReceivedinWMSDate();
 		$containerSchedule->setSamplesReceivedinWMSDate(
 				DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat));
+		$requestedDeliverydateStr = $containerSchedule->getRequestedDeliveryDateTime();
+		$containerSchedule->setRequestedDeliveryDateTime(
+				DateUtil::convertDateToFormat($requestedDeliverydateStr,$fromFormatWithTime,$toFormatWithTime));
 		return $containerSchedule;
 	}
 	
