@@ -28,6 +28,32 @@ if($call == "saveSpringQuestion"){
         $message  = $e->getMessage();
     }
 }
+
+if($call == "getByCustoimerSeq"){
+    try{
+        $customerSeq =  $_REQUEST["customerseq"];
+        $customerSpringQuestion = $CustomerSpringQuestionMgr->findArrByCustomerSeq($customerSeq);
+        $response["data"] = json_encode($customerSpringQuestion);
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
+if($call == "deleteBySeq"){
+    try{
+        $seq =  $_REQUEST["seq"];
+        $flag = $CustomerSpringQuestionMgr->deleteBySeq($seq);
+        if($flag){
+            $message = "Deleted Successfully";
+        }else{
+            $message = "Action not completed,Server Error!";
+            $success = 0; 
+        }
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

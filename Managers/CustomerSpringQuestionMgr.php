@@ -18,7 +18,7 @@ class CustomerSpringQuestionMgr
     }
     
     public function saveSpringQuestion($springQuestion){
-        $this->deleteByCustomerSeq($springQuestion->getCustomerSeq());
+        //$this->deleteByCustomerSeq($springQuestion->getCustomerSeq());
         $id = self::$dataStore->save($springQuestion);
         return $id;
     }
@@ -26,6 +26,11 @@ class CustomerSpringQuestionMgr
     public function deleteByCustomerSeq($customerSeq){
         $query = "delete from customerspringquestions where customerseq in ($customerSeq)";
         return self::$dataStore->executeQuery($query);
+    }
+    
+    public function deleteBySeq($seq){
+        $flag = self::$dataStore->deleteBySeq($seq);
+        return $flag;
     }
     
     public function findByCustomerSeq($customerSeq){
@@ -36,6 +41,18 @@ class CustomerSpringQuestionMgr
             return $customerSpringQuestions;
         }
         return null;
+    }
+    
+    public function findArrByCustomerSeq($customerSeq){
+        $query = "select * from customerspringquestions where customerseq = $customerSeq";
+        $customerSpringQuestions = self::$dataStore->executeQuery($query,false,true);
+        return $customerSpringQuestions;
+    }
+    
+    public function findbySeq($seq){
+        $customerSpringQuestion = self::$dataStore->findBySeq($seq);
+        $customerSpringQuestion = $this->convertDateFormat($customerSpringQuestion);
+        return $customerSpringQuestion;
     }
     
     private function convertDateFormat($customerSpringQuestion){
@@ -66,6 +83,35 @@ class CustomerSpringQuestionMgr
         $customerSpringQuestion->setQuoteSpringByDate($dateStr);
         
         
+        return $customerSpringQuestion;
+    }
+    
+    private function convertDateFormatForArr($customerSpringQuestion){
+        $fromFormat = "Y-m-d";
+        $toFormat = "m-d-Y";
+        $dateStr = $customerSpringQuestion["strategicplanningmeetingmate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["strategicplanningmeetingmate"] = $dateStr;
+        
+        $dateStr = $customerSpringQuestion["invitedtospringshowroomdate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["invitedtospringshowroomdate"] = $dateStr;
+        
+        $dateStr =  $customerSpringQuestion["invitedtospringshowroomreminderdate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["invitedtospringshowroomreminderdate"] = $dateStr;
+        
+        $dateStr =  $customerSpringQuestion["christmasquotebydate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["christmasquotebydate"] = $dateStr;
+        
+        $dateStr = $customerSpringQuestion["springreviewingdate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["springreviewingdate"] = $dateStr;
+        
+        $dateStr = $customerSpringQuestion["quotespringbydate"];
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion["quotespringbydate"] = $dateStr;
         return $customerSpringQuestion;
     }
     

@@ -162,6 +162,8 @@
 <link href="styles/plugins/jsTree/style.min.css" rel="stylesheet">
 <script src="scripts/plugins/jsTree/jstree.min.js"></script>
 
+<!-- Is Dirrty Form -->
+<script src="scripts/jquery.dirrty.js"></script>
 <!-- Calendar -->
 <script src="scripts/plugins/fullcalendar/moment.min.js"></script>
 <script src="scripts/plugins/fullcalendar/fullcalendar.min.js"></script>

@@ -421,43 +421,10 @@ if(isset($_POST["customerSeq"])){
 		                    </div>
 	                   </form> 
 	                   </div>
-	                   
-	                   
-	                   
-	                   
-						<div role="tabpanel" id="tab-3" class="tab-pane">
+	             		<div role="tabpanel" id="tab-3" class="tab-pane">
 							<div class="panel-group" id="accordion">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h5 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" 
-                                                	href="#collapseOne" class="collapsed" 
-                                                	aria-expanded="false">Spring Questions for Category(s) - </a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseOne" class="panel-collapse in collapse" style="">
-                                            <div class="panel-body">
-                                            	<?php include("createCustomerQuestionaireSpringForm.php");?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h5 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" 
-                                                	href="#collapseTwo" class="collapsed" 
-                                                	aria-expanded="false">Spring Questions for Category(s) - 
-                                                	<label class="springQuestionsPanelHeading1"></label></a>
-                                                <a href="#" class="pull-right"><i class="fa fa-times"></i></a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse" style="">
-                                            <div class="panel-body">
-                                            	<?php include("createCustomerQuestionaireSpringForm.php");?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a class="pull-right">Add More</a>
+                                    <div id="springQuesPanel"></div>
+                                    <a onclick="javascript:addSpringQuestionForm(0,true)" class="pull-right">Add More</a>
                                 </div>
 	                   		
 						</div>
@@ -474,6 +441,7 @@ if(isset($_POST["customerSeq"])){
 </html>
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
+var index = 0;
 $(document).ready(function(){
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
@@ -492,12 +460,100 @@ $(document).ready(function(){
 	$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.tradeshowsgoingto').select2({companies: true,width:245,placeholder: "Select Shows",});
 	
-	$('.formCategories').on('select2:select', function (e) {
-	    var data = e.params.data;
-	    $(".springQuestionsPanelHeading1").append(data.text);
-	});
+// 	$('.formCategories').on('select2:select', function (e) {
+// 		$("#first").val(); 
+// 	    var data = e.params.data;
+// 	    $(".springQuestionsPanelHeading1").append(data.text);
+// 	});
+	loadSpringQuesForms();
 	
 });
+function loadSpringQuesForms(){
+	$.get("Actions/CustomerSpringQuestionAction.php?call=getByCustoimerSeq&customerseq="+customerSeq, function(data){
+   		var jsonData = $.parseJSON(data);
+   		var springQuesArr = $.parseJSON(jsonData.data);	
+   		if(springQuesArr.length > 0){
+       		$.each(springQuesArr,function(key,value){
+       			addSpringQuestionForm(value.seq,0);
+       		});
+   		}else{
+   			addSpringQuestionForm(0,true);
+   		}
+	});
+}
+
+function addSpringQuestionDiv(selectedSpringQuesSeq){
+	var divName = "springQuesDiv" + selectedSpringQuesSeq;
+	if (document.getElementById(divName)) {
+	  alert('New form already added!');
+	  return false;
+	} else {
+		var springQuesDiv = "<div id='springQuesDiv" + selectedSpringQuesSeq  +"'></div>";
+		$('#springQuesPanel').append(springQuesDiv);
+		return true;
+	}	
+}
+
+function addSpringQuestionForm(seq,isAdded){
+	index++;
+	if(isAdded){
+		seq = index;
+	}
+	var flag = addSpringQuestionDiv(seq);
+	if(flag == true){
+    	$.ajax({
+    	  	url: "createCustomerQuestionaireSpringForm.php?seq="+seq+"&customerseq="+customerSeq+"&isadded="+isAdded+"&index="+index,    	  
+    	}).done(function(data) { // data what is sent back by the php page 
+    		collapseAll("",isAdded);       	
+    	  	$('#springQuesDiv' + seq).html(data); // display data
+    	  	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
+    		$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
+    		$('.i-checks').iCheck({
+    			checkboxClass: 'icheckbox_square-green',
+    		   	radioClass: 'iradio_square-green',
+    		});
+    		$('.dateControl').datetimepicker({
+    		    timepicker:false,
+    		    format:'m-d-Y',
+    		    scrollMonth : false,
+    			scrollInput : false,
+    			onSelectDate:function(ct,$i){
+    			}
+    		});
+    		$('#springCategory' + seq).on('change', function (e) {
+        		var selectedValues = $(this).select2('data');
+        		setCategoriesOnHeader(selectedValues,seq)
+    	 	});
+    		if(!isAdded){
+    			var selectedValues = $('#springCategory' + seq).select2('data');
+    			setCategoriesOnHeader(selectedValues,seq);
+    		}
+    		$("#createSpringQuesForm"+seq).dirrty().on("dirty", function(){
+    			$("#saveSpringQuesBtn"+seq).removeAttr("disabled");
+    		}).on("clean", function(){
+    			$("#saveSpringQuesBtn"+seq).attr("disabled", "disabled");
+    		});
+    	});
+    	
+	}
+}
+
+function setCategoriesOnHeader(selectedValues,seq){
+	var textArr =[];
+	$.each(selectedValues,function(key,value){
+		textArr.push(value.text);
+	});
+	var textStr = textArr.join(", ")
+	$(".springQuestionsPanelHeading"+seq).text(textStr);
+}
+
+function collapseAll(id,isAdded){
+	$("#springQuesPanel .panel-collapse").each(function() {
+		if(id != this.id || isAdded == true){
+			$(this).attr("class","panel-collapse collapse");
+		}
+	});
+}
 function saveQuestionnaire(formName){
 	formName = "#" + formName;
 	if($(formName)[0].checkValidity()) {
@@ -506,11 +562,35 @@ function saveQuestionnaire(formName){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
 		   if(flag){
-			   window.setTimeout(function(){window.location.href = "manageCustomers.php"},100);
+			   if(!formName.includes("createSpringQuesForm")){
+			   		window.setTimeout(function(){window.location.href = "manageCustomers.php"},100);
+			   }
 		   }
 	    })	
 	}else{
 		$(formName)[0].reportValidity();
 	}
+}
+function removePanel(seq,isAddedNew){
+	bootbox.confirm("Do you realy want to delete this spring questionnaire?", function(result) {
+        if(result){
+        	var mainPanelId = "panelMainDiv" + seq;
+        	if(isAddedNew == ''){
+        		$.get("Actions/CustomerSpringQuestionAction.php?call=deleteBySeq&seq="+seq, function(data){
+        			showResponseToastr(data,null,null,"ibox");	
+        			$( "div" ).remove( "#"+mainPanelId );		
+        		});
+        	}else{
+        		$( "div" ).remove( "#"+mainPanelId );	
+        	}
+        }
+	});
+}
+function SomethingChanged(control){
+    if( control.value != control.InitVal )
+         control.IsDirty = true;
+    else
+         control.IsDirty = false;
+    alert(control.IsDirty);
 }
 </script>
