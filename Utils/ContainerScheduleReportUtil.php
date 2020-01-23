@@ -360,6 +360,61 @@ class ContainerScheduleReportUtil
         
     }
     
+    public static function sendRequestedDeliveryDateChangedNotification($containerSchedule,
+        $existingContainerSchedule,$userName)
+    {
+        $requestedDeliveryDateTime = $containerSchedule->getRequestedDeliveryDateTime();
+        
+        $existingRequestedDeliveryDateTime = $existingContainerSchedule->getRequestedDeliveryDateTime();
+        
+        $awuRef = $containerSchedule->getAWUReference();
+        $containerNum = $containerSchedule->getContainer();
+        $html = "user <b>$userName</b> has updated a Requested delivery date for <b>Container#$containerNum</b> and <b>AWU#$awuRef</b> with following date:<br>";
+        $hasChangedDate = false;
+        if(!empty($existingRequestedDeliveryDateTime)){
+            $existingRequestedDeliveryDateTime = DateUtil::StringToDateByGivenFormat(DateUtil::$DB_FORMAT_WITH_TIME,$existingRequestedDeliveryDateTime);
+        }
+        if ($requestedDeliveryDateTime != $existingRequestedDeliveryDateTime){
+            if(!empty($existingRequestedDeliveryDateTime)){
+                $existingRequestedDeliveryDateTime = $existingRequestedDeliveryDateTime->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $existingRequestedDeliveryDateTime = "Empty";
+            }
+            if(!empty($requestedDeliveryDateTime)){
+                $requestedDeliveryDateTime = $requestedDeliveryDateTime->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $requestedDeliveryDateTime = "Empty";
+            }
+            $html .= "Requested Delivery Date from <b>$existingRequestedDeliveryDateTime</b> to <b>$requestedDeliveryDateTime</b><br>";
+            $hasChangedDate = true;
+        }
+        if($hasChangedDate){
+            $phAnValues = array();
+            $phAnValues["DETAIL"] = $html;
+            $content = file_get_contents("../CSChangedAlpinePickupDateEmailTemplate.php");
+            $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $body = MailUtil::appendToEmailTemplateContainer($content);
+            $subject = StringConstants::CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE;
+            $userMgr = UserMgr::getInstance();
+            $users = $userMgr->getAllUsersWithRoles();
+            $users = self::getCSUsersByNotificationType($users,
+                ContainerScheduleNotificationType::requested_delivery_date_change_instant);
+            if(empty($users)){
+                return;
+            }
+            $toEmails = array();
+            foreach ($users as $user){
+                array_push($toEmails,$user->getEmail());
+            }
+            $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
+            if($bool){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
+    }
     public static function sendTerminalAppointmentChangedNotification($containerSchedule,
         $existingContainerSchedule,$userName)
     {

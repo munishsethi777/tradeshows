@@ -438,6 +438,10 @@ if(in_array(1,$departmentSeqArr)){
 						                           	<input name="permissions[]" type="checkbox" value="empty_return_notes_updated_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::empty_return_notes_updated_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Empty Return Notes Updated (Instant)</span>
 						                        </li>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="requested_delivery_date_change_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::requested_delivery_date_change_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Requested Delivery Date Change (Instant)</span>
+						                        </li>
 						                   </ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">

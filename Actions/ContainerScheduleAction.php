@@ -65,6 +65,8 @@ if($call == "saveContainerSchedule"){
 			$loggedInUserName = $sessionUtil->getUserLoggedInName();
 			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendTerminalAppointmentChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+			ContainerScheduleReportUtil::sendRequestedDeliveryDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+			
 			$isEtaNotesUpdated = $containerSchedule->getETANotes() != $existingContainerSchedule->getETANotes();
 			$isEmptyReturnNotesUpdated = $containerSchedule->getEmptyNotes() != $existingContainerSchedule->getEmptyNotes();
 			$isAlpineNotesUpdated = $containerSchedule->getNotificationNotes() != $existingContainerSchedule->getNotificationNotes();
