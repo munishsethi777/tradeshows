@@ -247,11 +247,101 @@ class ContainerScheduleReportUtil
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
+        $fromformatWithTime = "Y-m-d H:i:s";
+        $toFormatWithTime= "n/j/y h:i a";
+        $fromformat = "Y-m-d";
+        $toFormat = "n/j/y";
+        $rows = "";
+        $backRoundcolor = "";
+        $count = 1;
+        foreach ($containerSchedulesArr as $containerSchedule){
+            $trPhAnValues = array();
+            $tableRowContent = file_get_contents("../emailTemplateContainerScheduleOMSReportTableRows.php");
+            $trPhAnValues["CONTAINER_NO"] = "#". $containerSchedule->getContainer();
+            $etaDate = DateUtil::convertDateToFormat($containerSchedule->getETANotesdatetime(),
+                $fromformatWithTime,$toFormatWithTime);
+            if(empty($etaDate)){
+                $etaDate = "n.a";
+            }
+            $trPhAnValues["ETA_DATE"] = $etaDate;
+            $msrfDate = DateUtil::convertDateToFormat($containerSchedule->getMsrfCreatedDate(),
+                $fromformat,$toFormat);
+            if(empty($msrfDate)){
+                $msrfDate = "n.a";
+            }
+            $trPhAnValues["MSRF_DATE"] = $msrfDate;
+            
+            $sampleReceivedDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedDate(),
+                $fromformat,$toFormat);
+            if(empty($sampleReceivedDate)){
+                $sampleReceivedDate = "_";
+            }
+            $trPhAnValues["SAMPLE_RECEIVED"] = $sampleReceivedDate;
+            
+            $containerReceivedInOms  =  DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinOMSDate(),
+                $fromformat,$toFormat);
+            if(empty($containerReceivedInOms)){
+                $containerReceivedInOms = "_";
+            }
+            $trPhAnValues["CONTAINER_IN_OMS"] = $containerReceivedInOms;
+            
+            $sampleReceivedInOms = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinOMSDate(),
+                $fromformat,$toFormat);
+            if(empty($sampleReceivedInOms)){
+                $sampleReceivedInOms = "_";
+            }
+            $trPhAnValues["SAMPLES_IN_OMS"] = $sampleReceivedInOms;
+            
+           $containerReceivedInWms = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinWMSDate(),
+                $fromformat,$toFormat);
+           if(empty($containerReceivedInWms)){
+               $containerReceivedInWms = "_";
+           }
+           $trPhAnValues["CONTAINER_IN_WMS"] = $containerReceivedInWms;
+           
+           $sampleReceivedInWms =  DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinWMSDate(),
+                $fromformat,$toFormat);
+           if(empty($sampleReceivedInWms)){
+               $sampleReceivedInWms = "_";
+           }
+           $trPhAnValues["SAMPLES_IN_WMS"] = $sampleReceivedInWms;
+           $backroundColor = "#f3f3f4";
+           if($count % 2 == 0){
+               $backroundColor = "#ffffff";
+           }
+           $trPhAnValues["BACKROUND_COLOR"] = $backroundColor;
+           $rows .= MailUtil::replacePlaceHolders($trPhAnValues, $tableRowContent);
+           $count++;
+        }
+        $content = file_get_contents("../emailTemplateContainerScheduleOMSReport.php");
+        $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
+        $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
+        $phAnValues = array();
+        $phAnValues["TABLE_ROWS"] = $rows;
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $reportName = StringConstants::EMPTY_OMS_DATES_REPORT_NAME;
-        $roleName = Permissions::container_office_information;
+        $reportDetail = $reportName . " For $currentDateStr" . $content;
         $emailLogType = EmailLogType::CONTAINER_SCHEDULE_MISSING_RECEIVED_DATE_OMS;
         $notificationType = ContainerScheduleNotificationType::missing_received_dates_in_oms_daily;
-        return self::sendDailyMail($subject,$reportName,$roleName,$excelData,$emailLogType,$notificationType,$users);
+        $body = self::getHtml($subject, $reportDetail);
+        $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $attachments = array($fileName=>$excelData);
+        $users = self::getCSUsersByNotificationType($users,$notificationType);
+        if(empty($users)){
+            return;
+        }
+        $toEmails = array();
+        foreach ($users as $user){
+            array_push($toEmails,$user->getEmail());
+        }
+        $flag =  MailUtil::sendSmtpMail($subject, $body, $toEmails, true,$attachments);
+        if($flag){
+            $emaillogMgr = EmailLogMgr::getInstance();
+            foreach ($users as $user){
+                $emaillogMgr->saveEmailLog($emailLogType,$user->getEmail(), null,$user->getSeq());
+            }
+        }
+        return $flag;
         
     }
     
@@ -279,7 +369,7 @@ class ContainerScheduleReportUtil
                 $emaillogMgr->saveEmailLog($emailLogType,$user->getEmail(), null,$user->getSeq());
             }
         }
-        
+        return $flag;
     }
     
     public static function sendAlpinePickUpDateChangedNotification($containerSchedule, 
