@@ -351,10 +351,12 @@ class BeanDataStore {
 			$STH = $conn->prepare ( "delete from " . $this->tableName . " where seq = " . $seq );
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
+			return true;
 		} catch ( Exception $e ) {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
+		return false;
 	}
 	
 	public function deleteInList($ids) {
