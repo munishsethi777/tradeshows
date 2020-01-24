@@ -22,7 +22,8 @@ if($call == "saveSpringQuestion"){
         if($seq > 0){
             $message = StringConstants::UPDATED_SUCCESSFULLY;
         }
-        $CustomerSpringQuestionMgr->saveSpringQuestion($customerSpringQuestion);
+        $id = $CustomerSpringQuestionMgr->saveSpringQuestion($customerSpringQuestion);
+        $response["seq"] = $id;
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();

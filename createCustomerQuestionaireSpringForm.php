@@ -38,7 +38,7 @@ if(!empty($seq) && !$isadded){
             <a data-toggle="collapse" data-parent="#accordion" 
             	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>')">Spring Questions for Category(s) - 
             	<label class="springQuestionsPanelHeading<?echo $seq?>"></label></a>
-                <span style="font-size: 18px;"><a title="Delete" onclick="removePanel('<?echo $seq?>','<?php echo $isadded?>')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
+                <span style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
                 <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
         </h5>
     </div>
@@ -53,6 +53,7 @@ if(!empty($seq) && !$isadded){
             	<input type="hidden" id="call" name="call" value="saveSpringQuestion" />
             	<input type="hidden" id="customerseq" name="customerseq" value="<?php echo $customerSeq?>" />
             	<input type="hidden" id="seq" name="seq" value="<?php echo $id?>" />
+            	<input type="hidden" id="isaddNew" name="isaddNew" value="<?php echo $$isadded?>" />
             	<div class="springMainDiv">
             		<div class="row">
             			<div class="col-lg-10">

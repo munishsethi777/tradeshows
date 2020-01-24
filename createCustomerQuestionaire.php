@@ -569,18 +569,28 @@ function saveQuestionnaire(formName){
 		$(formName).ajaxSubmit(function( data ){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
+		   if(flag){
+			   var obj = $.parseJSON(data);
+			   $(formName + " #seq").val(obj.seq);
+			   $(formName + " #isaddNew").val('');
+			   //$("#deletePanel" + seq).removeAttr("onclick");
+			   //$(formName + " #deletePanel").attr("onclick","removePanel("+obj.seq+",'')");
+		   }
 		   $('html, body').animate({scrollTop:$(document).height()}, 'slow');
 	    })	
 	}else{
 		$(formName)[0].reportValidity();
 	}
 }
-function removePanel(seq,isAddedNew){
+function removePanel(seq){
 	bootbox.confirm("Do you realy want to delete this spring questionnaire?", function(result) {
         if(result){
+        	formName = "#createSpringQuesForm" + seq;
+        	id = $(formName + " #seq").val();
+        	isAddedNew =  $(formName + " #isaddNew").val();
         	var mainPanelId = "panelMainDiv" + seq;
         	if(isAddedNew == ''){
-        		$.get("Actions/CustomerSpringQuestionAction.php?call=deleteBySeq&seq="+seq, function(data){
+        		$.get("Actions/CustomerSpringQuestionAction.php?call=deleteBySeq&seq="+id, function(data){
         			showResponseToastr(data,null,null,"ibox");	
         			$( "div" ).remove( "#"+mainPanelId );		
         		});
