@@ -374,10 +374,7 @@ if(!empty($seq) && !$isadded){
             					onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" type="button"
             					style="width: 85%">Save</button>
             			</div>
-            			<div class="col-lg-2">
-            				<a class="btn btn-default" href="manageCustomers.php" type="button"
-            					style="width: 85%">Cancel</a>
-            			</div>
+            			
             		</div>
             	</div>
             </form>

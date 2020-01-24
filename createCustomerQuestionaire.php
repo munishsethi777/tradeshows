@@ -344,9 +344,7 @@ if(isset($_POST["customerSeq"])){
 		                       		<div class="col-lg-2">
 			                        	<button class="btn btn-primary" onclick="saveQuestionnaire('createChristmasQuestionForm')" type="button" style="width:85%">Save</button>
 			                        </div>
-			                        <div class="col-lg-2">
-			                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">Cancel</a>
-			                        </div>
+			                      
 			                    </div>
 							</div>
 	                   </form>
@@ -414,9 +412,7 @@ if(isset($_POST["customerSeq"])){
 		                       		<div class="col-lg-2">
 			                        	<button class="btn bg-formLabelDark" onclick="saveQuestionnaire('createOppurtunityBuyForm')" type="button" style="width:85%">Save</button>
 			                        </div>
-			                        <div class="col-lg-2">
-			                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">Cancel</a>
-			                        </div>
+			                        
 			                    </div>
 		                    </div>
 	                   </form> 
