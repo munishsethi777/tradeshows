@@ -2,6 +2,8 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerSpringQuestion.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
+
 class CustomerSpringQuestionMgr
 {
     private static  $CustomerSpringQuestionMgr;
@@ -19,8 +21,48 @@ class CustomerSpringQuestionMgr
     
     public function saveSpringQuestion($springQuestion){
         //$this->deleteByCustomerSeq($springQuestion->getCustomerSeq());
+        $this->validateFormCategories($springQuestion);
         $id = self::$dataStore->save($springQuestion);
         return $id;
+    }
+    
+    private function validateFormCategories($springQuestion){
+       // $springQuestion = new CustomerSpringQuestion();
+        $categories = $springQuestion->getCategory();
+        $categoriesArr = array();
+        if(!empty($categories)){
+            $categoriesArr = explode(",", $categories);
+        }
+        $existingCategories = $this->getCatgoriesByCustomerSeq($springQuestion);
+        $duplicateCategories = array();
+        foreach ($categoriesArr as $category){
+            foreach ($existingCategories as $existingCategory){
+                $existingCategory = explode(",", $existingCategory);
+                if(in_array($category, $existingCategory)){
+                    $categoryValue = BuyerCategoryType::getValue($category);
+                    array_push($duplicateCategories,$categoryValue);
+                }
+            }
+        }
+        if(!empty($duplicateCategories)){
+            $duplicateCategories = implode(",", $duplicateCategories);
+            throw new Exception("Questionnarie already saved for categories :- " . $duplicateCategories);
+        }
+    }
+    
+    private function getCatgoriesByCustomerSeq($springQuestion){
+        $seq = $springQuestion->getSeq();
+        $customerSeq = $springQuestion->getCustomerSeq();
+        $query = "select category from customerspringquestions where customerseq in ($customerSeq)";
+        if(!empty($seq)){
+            $query .= " and seq != $seq";
+        }
+        $springQuestions = self::$dataStore->executeQuery($query, false,true);
+        if(!empty($springQuestions)){
+            $category  = array_map(create_function('$o', 'return $o["category"];'), $springQuestions);
+            return $category;
+        }
+        return array();
     }
     
     public function deleteByCustomerSeq($customerSeq){

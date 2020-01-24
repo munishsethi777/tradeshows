@@ -8,6 +8,7 @@ $customerSeq = $_REQUEST["customerseq"];
 $seq = $_REQUEST["seq"];
 $id = $seq;
 $isadded = !empty($_GET["isadded"]);
+$islast = !empty($_GET["islast"]);
 if($isadded){
     $id = 0;
 }
@@ -41,7 +42,7 @@ if(!empty($seq) && !$isadded){
                 <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
         </h5>
     </div>
-    	<?php if($isadded){?>
+    	<?php if($isadded || $islast){?>
 			<div id="collapse<?php echo $seq?>" class="panel-collapse collapse in" style="" aria-expanded="true">
 		<?php }else{?>
 			<div id="collapse<?php echo $seq?>" class="panel-collapse collapse" style="" >

@@ -333,7 +333,7 @@ if(isset($_POST["customerSeq"])){
 											 <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">When do we need to quote you christmas by?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedToxMasShowroomReminderDate()?>" name="invitedtoxmasshowroomreminderdate" id="invitedtoxmasshowroomreminderdate" class="form-control dateControl">
+					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristMasquoteByDate()?>" name="christmasquotebydate" id="christmasquotebydate" class="form-control dateControl">
 					                        	</div>
 				                        	</div>
 										</div>
@@ -424,7 +424,7 @@ if(isset($_POST["customerSeq"])){
 	             		<div role="tabpanel" id="tab-3" class="tab-pane">
 							<div class="panel-group" id="accordion">
                                     <div id="springQuesPanel"></div>
-                                    <a onclick="javascript:addSpringQuestionForm(0,true)" class="pull-right">Add More</a>
+                                    <a onclick="javascript:addSpringQuestionForm(0,true,true)" class="pull-right">Add More</a>
                                 </div>
 	                   		
 						</div>
@@ -471,13 +471,21 @@ $(document).ready(function(){
 function loadSpringQuesForms(){
 	$.get("Actions/CustomerSpringQuestionAction.php?call=getByCustoimerSeq&customerseq="+customerSeq, function(data){
    		var jsonData = $.parseJSON(data);
-   		var springQuesArr = $.parseJSON(jsonData.data);	
-   		if(springQuesArr.length > 0){
+   		var springQuesArr = $.parseJSON(jsonData.data);
+   		var length = springQuesArr.length;	
+   		if(length > 0){
+   	   		$i = 1;
+   	   		isLast = 0;
+   	   		
        		$.each(springQuesArr,function(key,value){
-       			addSpringQuestionForm(value.seq,0);
+           		if($i == length){
+           			isLast = true;
+           		}               		
+       			addSpringQuestionForm(value.seq,0,isLast);
+       			$i++;
        		});
    		}else{
-   			addSpringQuestionForm(0,true);
+   			addSpringQuestionForm(0,true,true);
    		}
 	});
 }
@@ -494,7 +502,7 @@ function addSpringQuestionDiv(selectedSpringQuesSeq){
 	}	
 }
 
-function addSpringQuestionForm(seq,isAdded){
+function addSpringQuestionForm(seq,isAdded,isLast){
 	index++;
 	if(isAdded){
 		seq = index;
@@ -502,7 +510,7 @@ function addSpringQuestionForm(seq,isAdded){
 	var flag = addSpringQuestionDiv(seq);
 	if(flag == true){
     	$.ajax({
-    	  	url: "createCustomerQuestionaireSpringForm.php?seq="+seq+"&customerseq="+customerSeq+"&isadded="+isAdded+"&index="+index,    	  
+    	  	url: "createCustomerQuestionaireSpringForm.php?seq="+seq+"&customerseq="+customerSeq+"&isadded="+isAdded+"&index="+index+"&islast="+isLast,    	  
     	}).done(function(data) { // data what is sent back by the php page 
     		collapseAll("",isAdded);       	
     	  	$('#springQuesDiv' + seq).html(data); // display data
@@ -533,8 +541,7 @@ function addSpringQuestionForm(seq,isAdded){
     		}).on("clean", function(){
     			$("#saveSpringQuesBtn"+seq).attr("disabled", "disabled");
     		});
-    	});
-    	
+    	});	
 	}
 }
 
@@ -554,6 +561,7 @@ function collapseAll(id,isAdded){
 		}
 	});
 }
+
 function saveQuestionnaire(formName){
 	formName = "#" + formName;
 	if($(formName)[0].checkValidity()) {
@@ -561,11 +569,7 @@ function saveQuestionnaire(formName){
 		$(formName).ajaxSubmit(function( data ){
 		   showHideProgress();
 		   var flag = showResponseToastr(data,null,null,"ibox");
-		   if(flag){
-			   if(!formName.includes("createSpringQuesForm")){
-			   		window.setTimeout(function(){window.location.href = "manageCustomers.php"},100);
-			   }
-		   }
+		   $('html, body').animate({scrollTop:$(document).height()}, 'slow');
 	    })	
 	}else{
 		$(formName)[0].reportValidity();
