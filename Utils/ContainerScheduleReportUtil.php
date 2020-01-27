@@ -10,6 +10,10 @@ class ContainerScheduleReportUtil
 {   
     private static $CS_DEP_SEQ = 4;
     private static $timeZone = "America/Los_Angeles";
+    private static $fromformatWithTime = "Y-m-d H:i:s";
+    private static $toFormatWithTime= "n/j/y h:i a";
+    private static $fromformat = "Y-m-d";
+    private static $toFormat = "n/j/y";
     private static function getHtml($subject,$detail){
         $content = file_get_contents("../CSReportEmailTemplate.php");
         $phAnValues = array();
@@ -68,7 +72,13 @@ class ContainerScheduleReportUtil
             }
         }
     }
-    
+    private static function  removeMultipleEtaDates($etaDate){
+        $index = strpos($etaDate,"\n");
+        if($index !== false){
+            $etaDate = substr($etaDate, 0,$index);
+        }
+        return $etaDate;
+    }
     //Weekly
     public static function sendEmptyReturnDatePastEmptyLFDReport($users){
         $users = self::getCSUsersByNotificationType($users,
@@ -85,6 +95,72 @@ class ContainerScheduleReportUtil
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
+        $count = 1;
+        $rows = "";
+        foreach ($containerSchedulesArr as $containerSchedule){
+            $trPhAnValues = array();
+            $tableRowContent = file_get_contents("../emailTemplateContainerScheduleERDPasLFDTableRows.php");
+            $trPhAnValues["CONTAINER_NO"] = "#". $containerSchedule->getContainer();
+            $etaDate = $containerSchedule->getEtaDateTime();
+            if(empty($etaDate)){
+                $etaDate = "n.a";
+            }
+            $trPhAnValues["ETA_DATE"] = self::removeMultipleEtaDates($etaDate);
+            $terminal = $containerSchedule->getTerminal();
+            if(empty($terminal)){
+                $terminal = "n.a";
+            }
+            $trPhAnValues["TERMINAL_NAME"] = $terminal;
+            
+            $terminalAppointmentDate = DateUtil::convertDateToFormat($containerSchedule->getTerminalAppointmentDateTime(),
+                self::$fromformatWithTime,self::$toFormatWithTime);
+            if(empty($terminalAppointmentDate)){
+                $terminalAppointmentDate = "_";
+            }
+            $trPhAnValues["TERMINAL_APPOINTMENT"] = $terminalAppointmentDate;
+            
+            $lfdPickupDate  =  DateUtil::convertDateToFormat($containerSchedule->getLFDPickupDate(),
+                self::$fromformat,self::$toFormat);
+            if(empty($lfdPickupDate)){
+                $lfdPickupDate = "_";
+            }
+            $trPhAnValues["LFD_PICKUP"] = $lfdPickupDate;
+            
+            $shedulePickupDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyScheduledPickUpDate(),
+                self::$fromformat,self::$toFormat);
+            if(empty($shedulePickupDate)){
+                $shedulePickupDate = "_";
+            }
+            $trPhAnValues["EMPTY_SCHEDULE_PICKUP_DATE"] = $shedulePickupDate;
+            
+            $emptyLfdDate = DateUtil::convertDateToFormat($containerSchedule->getEmptyLfdDate(),
+                self::$fromformat,self::$toFormat);
+            if(empty($emptyLfdDate)){
+                $emptyLfdDate = "_";
+            }
+            $trPhAnValues["EMPTY_LFD"] = $emptyLfdDate;
+            
+            $emptyReturnDate =  DateUtil::convertDateToFormat($containerSchedule->getEmptyReturnDate(),
+                self::$fromformat,self::$toFormat);
+            if(empty($emptyReturnDate)){
+                $emptyReturnDate = "_";
+            }
+            $trPhAnValues["EMPTY_RETURN_DATE"] = $emptyReturnDate;
+            $backroundColor = "#f3f3f4";
+            if($count % 2 == 0){
+                $backroundColor = "#ffffff";
+            }
+            $trPhAnValues["BACKROUND_COLOR"] = $backroundColor;
+            $rows .= MailUtil::replacePlaceHolders($trPhAnValues, $tableRowContent);
+            $count++;
+        }
+        
+        $content = file_get_contents("../emailTemplateContainerScheduleERDatePastEmptyLFDReport.php");
+        $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
+        $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
+        $phAnValues = array();
+        $phAnValues["TABLE_ROWS"] = $rows;
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $reportName = StringConstants::EMPTY_RETURN_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(1,null,true,self::$timeZone);
         $dateWithInterval = DateUtil::getDateWithInterval(7,null,true,self::$timeZone);
@@ -92,11 +168,8 @@ class ContainerScheduleReportUtil
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
         $attachments = array($fileName=>$excelData);
-        // $userMgr = UserMgr::getInstance();
-        $reportDetail = $reportName . " For past week for dates $dateWithIntervalStr to $currentDateStr";
+        $reportDetail = $reportName . " For past week for dates $dateWithIntervalStr to $currentDateStr" . $content;
         $body = self::getHtml($subject, $reportDetail);
-        // $roleName = Permissions::getName(Permissions::container_delivery_information); //WareHouse (Blue)
-        // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
         $toEmails = array();
         foreach ($users as $user){
             array_push($toEmails,$user->getEmail());
@@ -247,60 +320,54 @@ class ContainerScheduleReportUtil
         $containerSchedulMgr = ContainerScheduleMgr::getInstance();
         $containerSchedulesArr = $containerSchedulMgr->setNotesAndDates($containerSchedules);
         $excelData = ExportUtil::exportContainerSchedules($containerSchedulesArr,true);
-        $fromformatWithTime = "Y-m-d H:i:s";
-        $toFormatWithTime= "n/j/y h:i a";
-        $fromformat = "Y-m-d";
-        $toFormat = "n/j/y";
         $rows = "";
-        $backRoundcolor = "";
         $count = 1;
         foreach ($containerSchedulesArr as $containerSchedule){
             $trPhAnValues = array();
             $tableRowContent = file_get_contents("../emailTemplateContainerScheduleOMSReportTableRows.php");
             $trPhAnValues["CONTAINER_NO"] = "#". $containerSchedule->getContainer();
-            $etaDate = DateUtil::convertDateToFormat($containerSchedule->getETANotesdatetime(),
-                $fromformatWithTime,$toFormatWithTime);
+            $etaDate = $containerSchedule->getEtaDateTime();
             if(empty($etaDate)){
                 $etaDate = "n.a";
             }
-            $trPhAnValues["ETA_DATE"] = $etaDate;
+            $trPhAnValues["ETA_DATE"] = self::removeMultipleEtaDates($etaDate);
             $msrfDate = DateUtil::convertDateToFormat($containerSchedule->getMsrfCreatedDate(),
-                $fromformat,$toFormat);
+                self::$fromformat,self::$toFormat);
             if(empty($msrfDate)){
                 $msrfDate = "n.a";
             }
             $trPhAnValues["MSRF_DATE"] = $msrfDate;
             
             $sampleReceivedDate = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedDate(),
-                $fromformat,$toFormat);
+                self::$fromformat,self::$toFormat);
             if(empty($sampleReceivedDate)){
                 $sampleReceivedDate = "_";
             }
             $trPhAnValues["SAMPLE_RECEIVED"] = $sampleReceivedDate;
             
             $containerReceivedInOms  =  DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinOMSDate(),
-                $fromformat,$toFormat);
+                self::$fromformat,self::$toFormat);
             if(empty($containerReceivedInOms)){
                 $containerReceivedInOms = "_";
             }
             $trPhAnValues["CONTAINER_IN_OMS"] = $containerReceivedInOms;
             
             $sampleReceivedInOms = DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinOMSDate(),
-                $fromformat,$toFormat);
+                self::$fromformat,self::$toFormat);
             if(empty($sampleReceivedInOms)){
                 $sampleReceivedInOms = "_";
             }
             $trPhAnValues["SAMPLES_IN_OMS"] = $sampleReceivedInOms;
             
            $containerReceivedInWms = DateUtil::convertDateToFormat($containerSchedule->getContainerReceivedinWMSDate(),
-                $fromformat,$toFormat);
+               self::$fromformat,self::$toFormat);
            if(empty($containerReceivedInWms)){
                $containerReceivedInWms = "_";
            }
            $trPhAnValues["CONTAINER_IN_WMS"] = $containerReceivedInWms;
            
            $sampleReceivedInWms =  DateUtil::convertDateToFormat($containerSchedule->getSamplesReceivedinWMSDate(),
-                $fromformat,$toFormat);
+               self::$fromformat,self::$toFormat);
            if(empty($sampleReceivedInWms)){
                $sampleReceivedInWms = "_";
            }
