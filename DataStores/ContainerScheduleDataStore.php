@@ -35,7 +35,7 @@ class ContainerScheduleDataStore extends BeanDataStore
     public function getEmptyReturnDatePastEmptyLFD(){
         $currentDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
         $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true,self::$timeZone);
-        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate < emptylfddate";
+        $query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate > emptylfddate";
         $containerSchedules = self::$containerScheduleDataStore->executeObjectQuery($query);
         return $containerSchedules;
     }
