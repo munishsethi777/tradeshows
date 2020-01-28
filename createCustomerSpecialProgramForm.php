@@ -12,6 +12,7 @@ $defectiveAllowancesignedChecked = "";
 $IsBackOrderAcceptedchecked = "";
 $startDate = null;
 $endDate = null;
+$displayDefective = "none";
 if(isset($_POST["customerSeq"])){
     $customerSeq = $_POST["customerSeq"];
     $alpineSpecialProg = $alpineSpecialProgMgr->findByCustomerSeq($customerSeq);
@@ -32,6 +33,9 @@ if(isset($_POST["customerSeq"])){
     }
     if(!empty($alpineSpecialProg->getEndDate())){
         $endDate = DateUtil::convertDateToFormat($alpineSpecialProg->getEndDate(), "Y-m-d", "m-d-Y") ;
+    }
+    if(!empty($alpineSpecialProg->getIsDefectiveAllowancesigned())){
+        $displayDefective = "";
     }
 }
 ?>
@@ -165,11 +169,11 @@ if(isset($_POST["customerSeq"])){
 	                        	</div>
 	                        </div>
                         	<div class="form-group row i-checks">
-                        		<div class="col-lg-6 no-padding">
-                        			<span class="col-lg-12 no-padding deff">
+                        		<div class="col-lg-6 no-padding" >
+                        			<span class="col-lg-12 no-padding deff" style="display: <?php echo $displayDefective?>">
 			                       		<label class="col-lg-4 col-form-label bg-formLabel">Defective %</label>
 			                        	<div class="col-lg-8">
-			                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
+			                        		<input type="text" maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
 			                        	</div>
 		                        	</span>
 	                        	</div>

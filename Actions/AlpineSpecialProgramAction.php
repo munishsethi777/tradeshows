@@ -25,6 +25,9 @@ if($call == "saveAlpineProg"){
                 throw new Exception("End date should be greater than start date!");
             }
         }
+        if(empty($AlpineSpecialProg->getIsDefectiveAllowancesigned())){
+           $AlpineSpecialProg->setDefectivePercent(null); 
+        }
         if($seq > 0){
             $message = StringConstants::ALPINE_PROG_UPDATED_SUCCESSFULLY;
         }
