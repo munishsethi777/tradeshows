@@ -16,6 +16,8 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BusinessCategoryType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/XmasItemFromType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/SeasonShowNameType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerRegularTermsType.php");
+
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
@@ -64,6 +66,10 @@ class DropDownUtils {
 	public static function getFreightTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = FreightType::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	public static function getCustomerRegularTermsDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = CustomerRegularTermsType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	public static function getDefectiveAllowanceDeductionsTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = DefectiveAllowanceDeductionsType::getAll();

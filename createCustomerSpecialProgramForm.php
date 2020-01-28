@@ -76,7 +76,7 @@ if(isset($_POST["customerSeq"])){
 	font-size:12px;
 	padding:4px;
 }
-#category{
+#category, #regularterms, #freight{
 	margin-bottom:0px !important;
 }
 </style>
@@ -128,7 +128,10 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Regular Terms</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getRegularTerms()?>" name="regularterms" id="regularterms" class="form-control">
+	                            	<?php 
+	                        		    $select = DropDownUtils::getCustomerRegularTermsDD("regularterms", null, $alpineSpecialProg->getRegularTerms(),false,true);
+    			                        echo $select;
+	                             	?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">InSeason Terms</label>
 	                        	<div class="col-lg-4">
@@ -139,10 +142,10 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Freight</label>
 	                        	<div class="col-lg-4">
-	                        		<?php 
-	                        		    $select = DropDownUtils::getFreightTypes("freight", null, $alpineSpecialProg->getFreight(),false,true);
-    			                        echo $select;
-	                             	?>
+		                        		<?php 
+		                        		    $select = DropDownUtils::getFreightTypes("freight", null, $alpineSpecialProg->getFreight(),false,true);
+	    			                        echo $select;
+		                             	?>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">EDI Customer</label>
 	                        	<div class="col-lg-4">
@@ -153,7 +156,7 @@ if(isset($_POST["customerSeq"])){
                         	<div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Defective Allowance</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" name="isdefectiveallowancesigned" <?php echo $defectiveAllowancesignedChecked?> class="form-control"/>
+	                        		<input type="checkbox" id="isdefectiveallowancesigned" name="isdefectiveallowancesigned" <?php echo $defectiveAllowancesignedChecked?> class="form-control"/>
 	                        	</div>
 	                        	
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Rebate Program<br> <small>and method of payment</small></label>
@@ -162,9 +165,13 @@ if(isset($_POST["customerSeq"])){
 	                        	</div>
 	                        </div>
                         	<div class="form-group row i-checks">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Defective %</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
+                        		<div class="col-lg-6 no-padding">
+                        			<span class="col-lg-12 no-padding deff">
+			                       		<label class="col-lg-4 col-form-label bg-formLabel">Defective %</label>
+			                        	<div class="col-lg-8">
+			                        		<input type="text"   maxLength="250" value="<?php echo $alpineSpecialProg->getDefectivePercent()?>" name="defectivepercent" id="defectivepercent" class="form-control">
+			                        	</div>
+		                        	</span>
 	                        	</div>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Paying back to customer</label>
 	                        	<div class="col-lg-4">
@@ -244,8 +251,19 @@ $(document).ready(function(){
 			//setDuration();
 		}
 	})
+	showHideDefectivePercent();
+	$('#isdefectiveallowancesigned').on('ifChanged', function(event){
+		showHideDefectivePercent();
+  	});
 });
-
+function showHideDefectivePercent(){
+	var flag  = $("#isdefectiveallowancesigned").is(':checked');
+	if(flag){
+		$(".deff").slideDown();	
+	}else{
+		$(".deff").slideUp();	
+	}
+}
 var index = 0;
 function saveAlpinProg(){
 	if($("#createAlpineProgForm")[0].checkValidity()) {
