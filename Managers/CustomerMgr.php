@@ -352,6 +352,11 @@ class CustomerMgr{
 		return $customer;
 	}
 	
+	public function findArrBySeq($customerSeq){
+	    $customers = self::$dataStore->findArrayBySeq($customerSeq);
+	    return $customers;
+	}
+	
 	public function findByCustomerSeq($seq){
 	    $customer = self::$dataStore->findBySeq($seq);
 	    return $customer;
@@ -415,6 +420,20 @@ class CustomerMgr{
 	    self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
 	    $customerSeq = $this->findSeqByCustomerId($customer->getCustomerId());
 	    return $customerSeq;
+	}
+	
+	public function getAllCustomerNames(){
+	    $customers = self::$dataStore->findAll();
+	    $customerArr = array();
+	    if(!empty($customers)){
+    	    foreach ($customers as $customer){
+    	        $arr = array();
+    	        $arr["seq"] = $customer->getSeq();
+    	        $arr["fullname"] = $customer->getFullName();
+    	        array_push($customerArr,$arr);
+    	    }
+	    }
+	    return $customerArr;
 	}
 	
 }
