@@ -152,7 +152,7 @@ class ReportingDataMgr{
     }
     
     public function getProjectsOverDueTillNowCount(){
-        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate < '". date("Y-m-d") ."' and graphiccompletiondate is null";
+        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate < '". date('Y-m-d') ."' and graphiccompletiondate is null";
         $finalGraphicsDueDateCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return ($finalGraphicsDueDateCount);
     }
@@ -179,12 +179,12 @@ class ReportingDataMgr{
         return $graphicsLogs;
     }
     public function getProjectPassedDueWithMissingInfoFromChinaCount(){
-        $query = "select count(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china) ."' and finalgraphicsduedate < ". date("Y-m-d");
+        $query = "select count(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china) ."' and finalgraphicsduedate < '". date('Y-m-d') ."'";
         $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return $graphicsLogs;
     }
     public function getProjectsDueForTodayCount(){
-        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate = ".date("Y-m-d") ." and graphiccompletiondate is null";
+        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate = '".date("Y-m-d") ."' and graphiccompletiondate is null";
         $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return $graphicsLogs;
     }
@@ -194,7 +194,7 @@ class ReportingDataMgr{
         return $projectDueLessThan20DaysFromEntryDateCount;
     }
     public function getProjectDueLessThan20DaysFromTodayCount(){
-        $query = "SELECT count(seq) from graphicslogs where DATEDIFF(finalgraphicsduedate,".date("Y-m-d").") IS NOT NULL AND DATEDIFF(finalgraphicsduedate,".date("Y-m-d").")<20 AND graphiccompletiondate IS NULL";
+        $query = "SELECT count(seq) from graphicslogs where DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."') IS NOT NULL AND DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."')<20 AND graphiccompletiondate IS NULL";
         $projectDueLessThan20DaysFromTodayCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return $projectDueLessThan20DaysFromTodayCount;
     }
