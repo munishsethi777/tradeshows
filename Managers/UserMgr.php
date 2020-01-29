@@ -35,6 +35,9 @@ class UserMgr{
 	    $query = "select * from users where email = '$username'";
 	    $user = self::$userDataStore->executeQuery($query,false,true);
 	    if(!empty($user)){
+	        if($password != $user[0]["password"]){
+	            throw new Exception(StringConstants::INCORRECT_USERNAME_PASSWORD);
+	        }
 	        $this->isValidForMobileDuringLogin($user[0]["seq"]);
 	        return $user[0];
 	    }

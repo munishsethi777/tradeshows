@@ -2,6 +2,7 @@
 require_once('../../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $sessionUtil = SessionUtil::getInstance();
 $userMgr = UserMgr::getInstance();
 $call = "";
