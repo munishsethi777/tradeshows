@@ -4,7 +4,7 @@ class User{
 	public static $className = "user";
 	
 	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon,$usertimezone;
-	private $lastloggedindate;
+	private $lastloggedindate,$isenabledmobile,$deviceid,$gcmid;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -89,6 +89,27 @@ class User{
 	}
 	public function getLastLoggedInDate(){
 	    return $this->lastloggedindate;
+	}
+	
+	public function setIsEnabledMobile($val){
+	    $this->isenabledmobile = $val;
+	}
+	public function getIsEnabledMobile(){
+	    return $this->isenabledmobile;
+	}
+	
+	public function setDeviceId($deviceId_){
+	    $this->deviceid = $deviceId_;
+	}
+	public function getDeviceId(){
+	    return $this->deviceid;
+	}
+	
+	public function setGCMId($val){
+	    $this->gcmid = $val;
+	}
+	public function getGCMId(){
+	    return $this->gcmid;
 	}
 	
 	function createFromRequest($request){

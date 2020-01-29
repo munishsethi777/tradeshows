@@ -1,4 +1,6 @@
 <?php
+use Aws\S3\Exception\EntityTooLargeException;
+
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
@@ -28,6 +30,15 @@ class UserMgr{
 			return $user[0];
 		}
 		return null;
+	}
+	public function logInUserforMobile($username, $password){
+	    $query = "select * from users where email = '$username'";
+	    $user = self::$userDataStore->executeQuery($query,false,true);
+	    if(!empty($user)){
+	        $this->isValidForMobileDuringLogin($user[0]["seq"]);
+	        return $user[0];
+	    }
+	    return null;
 	}
 	
 	public function getAllUsers(){
@@ -140,6 +151,11 @@ class UserMgr{
 	public function findBySeq($seq){
 		$user = self::$userDataStore->findBySeq($seq);
 		return $user;
+	}
+	
+	public function findArrBySeq($seq){
+	    $user = self::$userDataStore->findBySeq($seq);
+	    return $user;
 	}
 	
 	public function FindByUserName($userName){
@@ -341,4 +357,30 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 	    $condition = array("seq" => $seq);
 	    self::$userDataStore->updateByAttributesWithBindParams($colVal,$condition);
 	}
+	
+	public function isValidForMobile($userSeq){
+	    $user = self::$userDataStore->findBySeq($userSeq);
+	    $message = "";
+	    if(empty($user->getIsEnabled())){
+	        $message = "Invalid Access!";
+	    }
+	    if(empty($user->getIsEnabledMobile())){
+	        $message = "This user is not activated for mobile login!";
+	    }	 
+	    return $message;
+	}
+	public function isValidForMobileDuringLogin($userSeq){
+	    $message = $this->isValidForMobile($userSeq);
+	    if(!empty($message)){
+	        throw new Exception($message);
+	    }
+	}
+	
+	public function updateLastLoggedInAndGCM($user){
+	    $colValPair['lastloggedindate'] = $user["lastloggedindate"];
+	    $colValPair['deviceid'] = $user["deviceid"];
+	    $conditionPair['seq'] = $user["seq"];
+	    self::$userDataStore->updateByAttributesWithBindParams($colValPair,$conditionPair);
+	}
+
 }
