@@ -235,6 +235,19 @@ class SessionUtil{
 	}
 	
 	
+	
+	public function createMobileUserSession($GET){
+	    if(isset($GET["userSeq"])){
+	        $userSeq = $GET["userSeq"];
+	        $arr = new ArrayObject();
+	        $arr[0] = $userSeq;
+	        $_SESSION[self::$USER_LOGGED_IN] = $arr;
+	        $_SESSION[self::$ROLE] = "admin";
+	    }
+	}
+	
+	
+	
 	public function destroySession(){
 		$boolAdmin = self::isSessionAdmin();
 		$_SESSION = array();
