@@ -429,7 +429,12 @@ class CustomerMgr{
     	    foreach ($customers as $customer){
     	        $arr = array();
     	        $arr["seq"] = $customer->getSeq();
-    	        $arr["fullname"] = $customer->getFullName();
+    	        $customerName = $customer->getFullName();
+    	        $storeName = $customer->getStoreName();
+    	        if(!empty($storeName)){
+    	            $customerName .= " - " . $storeName;
+    	        }
+    	        $arr["fullname"] = $customerName;
     	        array_push($customerArr,$arr);
     	    }
 	    }
