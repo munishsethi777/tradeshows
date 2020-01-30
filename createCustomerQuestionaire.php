@@ -534,8 +534,9 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     		if(!isAdded){
     			var selectedValues = $('#springCategory' + seq).select2('data');
     			setCategoriesOnHeader(selectedValues,seq);
-    			handleCategorySelect(seq)
+    			
     		}
+    		handleCategorySelect(seq)
     		$("#createSpringQuesForm"+seq).dirrty().on("dirty", function(){
     			$("#saveSpringQuesBtn"+seq).removeAttr("disabled");
     		}).on("clean", function(){

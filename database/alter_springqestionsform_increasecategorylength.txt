@@ -1,0 +1,1 @@
+ALTER TABLE `customerspringquestions` CHANGE `category` `category` VARCHAR(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;

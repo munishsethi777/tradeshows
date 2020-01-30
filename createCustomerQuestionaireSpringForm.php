@@ -17,6 +17,7 @@ $customerSpringQuestion = new CustomerSpringQuestion();
 $buyerCategoriesSpringQues = BuyerCategoryType::getAll();
 $selectedCategory = array();
 $selectedCategoriesSpringQues = array();
+$isAllChecked = "checked";
 if(!empty($seq) && !$isadded){
     $seq = $seq;
     $customerSpringQuestionMgr= CustomerSpringQuestionMgr::getInstance();
@@ -30,7 +31,12 @@ if(!empty($seq) && !$isadded){
         $selectedCategory = explode(",",
             $customerSpringQuestion->getCategory());
     }
+    if(empty($customerSpringQuestion->getIsAllCategoriesSelected())){
+    	$isAllChecked = "";
+    }
 }
+
+
 ?>
 <div id="panelMainDiv<?echo $seq?>" class="panel panel-default">
     <div class="panel-heading">
@@ -59,23 +65,28 @@ if(!empty($seq) && !$isadded){
             			<div class="col-lg-10">
             				<div class="form-group">
             					<div class="row m-b-xxs">
-            						<label class="col-lg-6 col-form-label bg-formLabel">Select Category(s)</label>
-            						<div class="col-lg-6">
-            							<select id="springCategory<?echo $seq?>" class="formCategories form-control"
-            								name="category[]" multiple>
-            							<?php
-            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
-            									$selected = "";
-            									if (in_array ( $key, $selectedCategory )) {
-            										$selected = "selected";
-            									}
-            									echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-            								}
-            							?>
-                					    </select>
-                					    <input type="checkbox" class="i-checks form-control"
-            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
-            								<?php echo !empty($customerSpringQuestion->getIsAllCategoriesSelected())?"checked":""?> /> <label>All</label>
+            						<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
+            						<div class="col-lg-4">
+            							<div>
+	            							<input type="checkbox" class="i-checks form-control pull-left"
+	            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
+	            								<?php echo $isAllChecked?> /> <label>All</label>
+	            						</div>
+	            						<div class="m-t-sm">
+	            							<select id="springCategory<?echo $seq?>" class="formCategories form-control"
+	            								name="category[]" multiple>
+	            							<?php
+	            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
+	            									$selected = "";
+	            									if (in_array ( $key, $selectedCategory )) {
+	            										$selected = "selected";
+	            									}
+	            									echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
+	            								}
+	            							?>
+	                					    </select>
+	                					</div>
+                					    
                                     </div>
             					</div>
             				</div>
@@ -385,3 +396,4 @@ if(!empty($seq) && !$isadded){
     </div>
 </div>
 </script>
+
