@@ -59,9 +59,9 @@ if(!empty($seq) && !$isadded){
             			<div class="col-lg-10">
             				<div class="form-group">
             					<div class="row m-b-xxs">
-            						<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
-            						<div class="col-lg-4">
-                                    	<select id="springCategory<?echo $seq?>" class="formCategories form-control"
+            						<label class="col-lg-6 col-form-label bg-formLabel">Select Category(s)</label>
+            						<div class="col-lg-6">
+            							<select id="springCategory<?echo $seq?>" class="formCategories form-control"
             								name="category[]" multiple>
             							<?php
             								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
@@ -73,6 +73,9 @@ if(!empty($seq) && !$isadded){
             								}
             							?>
                 					    </select>
+                					    <input type="checkbox" class="i-checks form-control"
+            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
+            								<?php echo !empty($customerSpringQuestion->getIsAllCategoriesSelected())?"checked":""?> /> <label>All</label>
                                     </div>
             					</div>
             				</div>

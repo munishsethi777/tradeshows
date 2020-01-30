@@ -27,6 +27,7 @@ class CustomerSpringQuestion
     private $isvisitcustomerduring2ndqtr;
     private $quotespringbydate;
     private $year;
+    private $isallcategoriesselected;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -228,6 +229,13 @@ class CustomerSpringQuestion
     }
     public function getYear(){
         return $this->year;
+    }
+    
+    public function setIsAllCategoriesSelected($isAllSelected_){
+        $this->isallcategoriesselected = $isAllSelected_;
+    }
+    public function getIsAllCategoriesSelected(){
+        return $this->isallcategoriesselected;
     }
     
     public function from_array($array) {

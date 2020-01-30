@@ -528,9 +528,13 @@ function addSpringQuestionForm(seq,isAdded,isLast){
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq)
     	 	});
+    	 	$("#isallcategoriesselected" + seq).on('ifChanged', function(event){
+    	 		handleCategorySelect(seq);
+  			});
     		if(!isAdded){
     			var selectedValues = $('#springCategory' + seq).select2('data');
     			setCategoriesOnHeader(selectedValues,seq);
+    			handleCategorySelect(seq)
     		}
     		$("#createSpringQuesForm"+seq).dirrty().on("dirty", function(){
     			$("#saveSpringQuesBtn"+seq).removeAttr("disabled");
@@ -539,6 +543,20 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     		});
     	});	
 	}
+}
+
+function handleCategorySelect(seq){
+	var flag  = $("#isallcategoriesselected" + seq).is(':checked');
+	var selectedValues = [{text:"All"}];
+	if(flag){
+		$('#springCategory' + seq).next(".select2-container").hide();	
+		$('#springCategory' + seq).attr("disabled","disabled");
+	}else{
+		$('#springCategory' + seq).removeAttr("disabled")
+		$('#springCategory' + seq).next(".select2-container").show();
+		selectedValues = $('#springCategory' + seq).select2('data');	
+	}
+	setCategoriesOnHeader(selectedValues,seq)
 }
 
 function setCategoriesOnHeader(selectedValues,seq){

@@ -21,6 +21,12 @@ class CustomerSpringQuestionMgr
     
     public function saveSpringQuestion($springQuestion){
         //$this->deleteByCustomerSeq($springQuestion->getCustomerSeq());
+        if(!empty($springQuestion->getIsAllCategoriesSelected())){
+            $allCategories = BuyerCategoryType::getAll();
+            $allCategoriesNames = array_keys($allCategories);
+            $allCategories = implode(",", $allCategoriesNames);
+            $springQuestion->setCategory($allCategories);
+        }
         $this->validateFormCategories($springQuestion);
         $id = self::$dataStore->save($springQuestion);
         return $id;
