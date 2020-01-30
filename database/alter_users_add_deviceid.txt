@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `gcmid` VARCHAR(1000) NULL AFTER `lastloggedindate`, ADD `deviceid` VARCHAR(1000) NULL AFTER `gcmid`;
