@@ -55,6 +55,12 @@ class BuyerMgr{
           return $buyers;
     }
     
+    public function getBuyersObjectByCustomerSeq($customerSeq){
+        $query = "select * from buyers where customerseq = $customerSeq";
+        $buyers = self::$dataStore->executeObjectQuery($query,false);
+        return $buyers;
+    }
+    
     public function findArrByCustomerSeq($customerSeq){
         $buyers = $this->getBuyersByCustomerSeq($customerSeq);
         $array = array();
@@ -75,5 +81,49 @@ class BuyerMgr{
     public function deleteByCustomerSeq($customerSeq){
         $query = "delete from buyers where customerseq in ($customerSeq)";
         return self::$dataStore->executeQuery($query);
+    }
+    
+    public function findBySeq($seq){
+        $buyer = self::$dataStore->findBySeq($seq);
+        return $buyer;
+    }
+    
+    //Mobile API
+    public function getBuyerDetailBySeq($seq){
+        $buyer = $this->findBySeq($seq);
+        $keyValArr = array();
+        $mainArr = array();
+    
+        $keyValArr["name"] = "ID";
+        $keyValArr["value"] = $buyer->getSeq();
+        array_push($mainArr,$keyValArr);
+        
+        $cellPhone = $buyer->getCellPhone();
+        $keyValArr["name"] = "Cell Phone";
+        $keyValArr["value"] = $cellPhone;
+        array_push($mainArr,$keyValArr);
+        
+        $keyValArr["name"] = "Email Id";
+        $keyValArr["value"] = $buyer->getEmail();
+        array_push($mainArr,$keyValArr);
+        
+        $keyValArr["name"] = "Category";
+        $keyValArr["value"] = $buyer->getCategory();
+        array_push($mainArr,$keyValArr);
+        
+        $keyValArr["name"] = "Notes";
+        $keyValArr["value"] = $buyer->getNotes();
+        array_push($mainArr,$keyValArr);
+        $name = $buyer->getFirstName();
+        if(!empty($buyer->getLastName())){
+            $name .= " " . $buyer->getLastName();
+        }
+        $response["buyername"] = $name;
+        $response["buyerfirstname"] = $buyer->getFirstName();
+        $response["buyerlastname"] = $buyer->getLastName();
+        $response["buyercellphone"] = $cellPhone;
+         $response["buyeremail"] = $buyer->getEmail();
+        $response["buyer"] = $mainArr;
+        return $response;
     }
 }

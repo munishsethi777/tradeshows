@@ -24,17 +24,17 @@ $supervisors = $userMgr->getAllUsersWithRoles(UserType::SUPERVISOR);
 $users = $userMgr->getAllUsersWithRoles(UserType::USER);
 $isDeveloperModeOn = StringConstants::IS_DEVELOPER_MODE == "1";
 try{
-	if($hours == 12 || $hours == 24 || ($isDeveloperModeOn)){
+	if($hours == 17 || $hours == 23 || ($isDeveloperModeOn)){
 		$lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
 		$lastExeHours = getLastExecutionHours(Configuration::$CRON_BACKUP_LAST_EXE);
 		$flag = false;
-		if($hours == 12 || ($isDeveloperModeOn)){
-			if(($lastExeDay != $day && $lastExeHours != 12) || ($isDeveloperModeOn)){
+		if($hours == 17 || ($isDeveloperModeOn)){
+			if(($lastExeDay != $day && $lastExeHours != 17) || ($isDeveloperModeOn)){
 				$flag= true;
 			}
 		}
-		if($hours == 24 || ($isDeveloperModeOn)){
-			if(($lastExeDay == $day && $lastExeHours != 24) || ($isDeveloperModeOn)){
+		if($hours == 23 || ($isDeveloperModeOn)){
+			if(($lastExeDay == $day && $lastExeHours != 23) || ($isDeveloperModeOn)){
 				$flag= true;
 			}
 		}

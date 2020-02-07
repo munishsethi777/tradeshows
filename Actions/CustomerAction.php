@@ -89,6 +89,7 @@ if($call == "getCustomerDetails"){
 	}
 }
 
+
 if($call == "getCustomerIdBySeq"){
     try{
         $customerId = $customerMgr->getCustomerIdBySeq($_GET["seq"]);

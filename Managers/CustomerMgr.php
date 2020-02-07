@@ -368,6 +368,12 @@ class CustomerMgr{
 	    return $buyers;
 	}
 	
+	function getCustomerBuyerObjects($customerSeq){
+	    $buyerMgr = BuyerMgr::getInstance();
+	    $buyers = $buyerMgr->getBuyersObjectByCustomerSeq($customerSeq);
+	    return $buyers;
+	}
+	
 	function getCustomerBuyerCategories($selected){
 	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false);
 	    return $ddhtml;
@@ -440,5 +446,80 @@ class CustomerMgr{
 	    }
 	    return $customerArr;
 	}
+	
+// 	public function getCustomerDetailBySeq($customerSeq){
+// 	    $customer = $this->findByCustomerSeq($customerSeq);
+// 	    $customerArr = array();
+// 	    $customerArr["ID"] = $customer->getSeq();
+// 	    $businessType = $customer->getBusinessType();
+// 	    if(!empty($businessType)){
+// 	        $businessType = CustomerBusinessType::getValue($businessType);
+// 	    }
+// 	    $customerArr["BusinessType"] = $businessType;
+// 	    $customerArr["Sales Person"] = $customer->getSalesPersonName();
+// 	    $customerArr["Sales Person ID"] = $customer->getSalesPersonId();
+// 	    $lastModifiedOn = $customer->getLastModifiedOn();
+// 	    if(!empty($lastModifiedOn)){
+// 	        $lastModifiedOn = DateUtil::convertDateToFormat($lastModifiedOn, DateUtil::$DB_FORMAT_WITH_TIME, "jS F Y");
+// 	    }
+// 	    $customerArr["Last Modified On"] = $lastModifiedOn;
+// 	    return $customerArr;
+// 	}
+	
+	public function getCustomerDetailBySeq($customerSeq){
+	    $customer = $this->findByCustomerSeq($customerSeq);
+	    $keyValArr = array();
+	    $mainArr = array();
+	    $keyValArr["name"] = "ID";
+	    $keyValArr["value"] = $customer->getSeq();
+	    array_push($mainArr,$keyValArr);
+	    
+	    $businessType = $customer->getBusinessType();
+	    if(!empty($businessType)){
+	        $businessType = CustomerBusinessType::getValue($businessType);
+	    }
+	    $keyValArr["name"] = "BusinessType";
+	    $keyValArr["value"] = $businessType;
+	    array_push($mainArr,$keyValArr);
+	    
+	    $keyValArr["name"] = "Sales Person";
+	    $keyValArr["value"] = $customer->getSalesPersonName();
+	    array_push($mainArr,$keyValArr);
+	   
+	    $lastModifiedOn = $customer->getLastModifiedOn();
+	    if(!empty($lastModifiedOn)){
+	        $lastModifiedOn = DateUtil::convertDateToFormat($lastModifiedOn, DateUtil::$DB_FORMAT_WITH_TIME, "jS F Y");
+	    }
+	    $keyValArr["name"] = "Sales Person ID";
+	    $keyValArr["value"] = $customer->getSalesPersonId();
+	    array_push($mainArr,$keyValArr);
+	    
+	    $keyValArr["name"] = "Last Modified On";
+	    $keyValArr["value"] = $lastModifiedOn;
+	    array_push($mainArr,$keyValArr);
+	    $response = array();
+	    $response["customername"] = $customer->getFullName();
+	    $response["storename"] = $customer->getStoreName();
+	    $response["customerDetail"] = $mainArr;
+	    $response["buyers"] = $this->getBuyersJson($customerSeq);
+	    return $response;
+	}
+	
+	private function getBuyersJson($customerSeq){
+	    $buyers = $this->getCustomerBuyerObjects($customerSeq);
+	    $keyValArr = array();
+	    $mainArr = array();
+	    foreach ($buyers as $buyer){
+	        $keyValArr["id"] = $buyer->getSeq();
+	        $name = $buyer->getFirstName();
+	        if(!empty($buyer->getLastName())){
+	            $name .= " " . $buyer->getLastName();
+	        }
+	        $keyValArr["value"] = $name;
+	        array_push($mainArr,$keyValArr);
+	    }
+	    return $mainArr;
+	}
+	
 	
 }
