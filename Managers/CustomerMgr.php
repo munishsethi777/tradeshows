@@ -33,12 +33,13 @@ class CustomerMgr{
     	return $id;
     }
     
-    public function saveCustomerObject($customer){
+    public function saveCustomerObject($customer,$isSaveBuyer = true){
         $id = self::$dataStore->save($customer);
-        if(!empty($id)){
+        if(!empty($id) && $isSaveBuyer){
             $buyer = BuyerMgr::getInstance();
             $buyer->saveFromCustomer($id);
         }
+        return $id;
     }
     
     public function updateOject($conn,$customer,$condition){
@@ -413,7 +414,6 @@ class CustomerMgr{
 	       $buyerMgr->deleteByCustomerSeq($customerSeqs);
 	   }
 	}
-	
 	public function updateByCustomerByid($customer){
 	    $condition = array("customerid" => $customer->getCustomerId(),"storeid" => $customer->getStoreId());
 	    $colVal = array("fullname" => $customer->getFullName(),
@@ -471,7 +471,7 @@ class CustomerMgr{
 	    $keyValArr = array();
 	    $mainArr = array();
 	    $keyValArr["name"] = "ID";
-	    $keyValArr["value"] = $customer->getSeq();
+	    $keyValArr["value"] = $customer->getCustomerId();
 	    array_push($mainArr,$keyValArr);
 	    
 	    $businessType = $customer->getBusinessType();

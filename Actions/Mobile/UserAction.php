@@ -96,7 +96,7 @@ if($call == "forgotPassword"){
 if($call == "getUserDetail"){
     try{
         $userSeq = $sessionUtil->getUserLoggedInSeq();
-        $response["userDetail"] = $userMgr->findArrBySeq($userSeq);
+        $response["user"] = $userMgr->findArrBySeq($userSeq);
      }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();
@@ -106,8 +106,9 @@ if($call == "updateUserDetail"){
     try{
         $seq = $sessionUtil->getUserLoggedInSeq();
         $user = $userMgr->findBySeq($seq);
-        $user = $user->from_array($_REQUEST);
-        $user->setLastModifiedOn(new DateTime());
+        $userData = $_REQUEST["user"];
+        $userData = json_decode($userData,true);
+        $user->from_array($userData);
         $userMgr->saveUser($user);
         $message = StringConstants::SETTINGS_UPDATE_SUCCCESSFULLY;
     }catch (Exception $e){

@@ -43,7 +43,10 @@ class BuyerMgr{
             $id = self::$dataStore->save($buyer);
         }
     }
-    
+    public function saveBuyer($buyer){
+        $id = self::$dataStore->save($buyer);
+        return $id;
+    }
     public function saveBuyerObject($buyer,$conn){
         $id = self::$dataStore->saveObject($buyer,$conn);
         return $id;
@@ -83,8 +86,17 @@ class BuyerMgr{
         return self::$dataStore->executeQuery($query);
     }
     
+    public function deleteByBuyerSeq($buyerSeqs){
+        $flag =  self::$dataStore->deleteInList($buyerSeqs);
+        return $flag;
+    }
+    
     public function findBySeq($seq){
         $buyer = self::$dataStore->findBySeq($seq);
+        return $buyer;
+    }
+    public function findArrBySeq($seq){
+        $buyer = self::$dataStore->findArrayBySeq($seq);
         return $buyer;
     }
     

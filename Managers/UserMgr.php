@@ -157,7 +157,7 @@ class UserMgr{
 	}
 	
 	public function findArrBySeq($seq){
-	    $user = self::$userDataStore->findBySeq($seq);
+	    $user = self::$userDataStore->findArrayBySeq($seq);
 	    return $user;
 	}
 	
