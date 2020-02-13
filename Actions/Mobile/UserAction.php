@@ -107,6 +107,7 @@ if($call == "updateUserDetail"){
         $seq = $sessionUtil->getUserLoggedInSeq();
         $user = $userMgr->findBySeq($seq);
         $user = $user->from_array($_REQUEST);
+        $user->setLastModifiedOn(new DateTime());
         $userMgr->saveUser($user);
         $message = StringConstants::SETTINGS_UPDATE_SUCCCESSFULLY;
     }catch (Exception $e){

@@ -36,6 +36,7 @@ $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
 $showQCDiv = "none";
 $isEnabled = "";
+$isEnabledMobile = "";
 $isSendNotifications = "";
 $qcDepartmentChecked = "";
 $containerDepartmentChecked = "";
@@ -56,6 +57,9 @@ if(isset($_POST["id"])){
 	}
 	if($user->getIsSendNotifications() == 1){
 		$isSendNotifications = "checked";
+	}
+	if($user->getIsEnabledMobile() == 1){
+		$isEnabledMobile = "checked";
 	}
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
@@ -187,17 +191,7 @@ if(in_array(1,$departmentSeqArr)){
 	                            </div>
 	                       </div>
 	                        
-	                        <div class="form-group row i-checks">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $isEnabled?> name="isenabled"/>
-	                            </div>
-	                            
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Send Notifications :</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" <?php echo $isSendNotifications?> name="issendnotifications"/>
-	                            </div>
-	                        </div>
+	                       
 	                        
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">User Type:</label>
@@ -218,10 +212,23 @@ if(in_array(1,$departmentSeqArr)){
                                      ?>
 	                            </div>
 	                       </div>
-	                        
-<!-- 	                        <div class="form-group row m-t-xl"> -->
-<!-- 	                       		<label class="col-lg-3 col-form-label bg-primary">Select Permissions</label> -->
-<!-- 	                        </div> -->
+                         	<div class="form-group row i-checks">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
+	                        	<div class="col-lg-1 m-t-xs">
+	                        		<input type="checkbox" <?php echo $isEnabled?> name="isenabled"/>
+	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Send Notifications :</label>
+	                        	<div class="col-lg-1 m-t-xs">
+	                        		<input type="checkbox" <?php echo $isSendNotifications?> name="issendnotifications"/>
+	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Mobile Enabled :</label>
+	                        	<div class="col-lg-2 m-t-xs">
+	                        		<input type="checkbox" <?php echo $isEnabledMobile?> name="isenabledmobile"/>
+	                            </div>
+	                        </div>
+
 	                        <div class="form-group row i-checks m-t-xl">
 	                        	<div class="col-lg-12">
                                     <div class="panel panel-primary">

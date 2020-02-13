@@ -39,6 +39,11 @@ if($call == "saveUser"){
 		}else {
 			$user->setIsEnabled(0);
 		}
+		if(isset($_REQUEST["isenabledmobile"])){
+			$user->setIsEnabledMobile(1);
+		}else {
+			$user->setIsEnabledMobile(0);
+		}
 		if(isset($_REQUEST["issendnotifications"])){
 			$user->setIsSendNotifications(1);
 		}else {
