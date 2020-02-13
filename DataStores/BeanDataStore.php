@@ -450,6 +450,37 @@ class BeanDataStore {
 			throw $e ;
 		}
 	}
+	public function executeConditionQueryForArray($colValuePair, $isApplyFilter = false) {
+		try {
+			$query_array = array ();
+			$paramValueArr = array ();
+			foreach ( $colValuePair as $key => $value ) {
+				if ($value != null || $value==0) {
+					$query_array [] = $this->tableName.".".$key . ' = ?' ;
+					array_push ( $paramValueArr, $value );
+				}
+			}
+			$query = "SELECT ".$this->tableName.".* FROM " . $this->tableName;
+				
+			if (count ( $query_array ) > 0) {
+				$query .= " WHERE " . implode ( " AND ", $query_array );
+			}
+			if ($isApplyFilter) {
+				$query = FilterUtil::applyFilter ( $query );
+			}
+			$db = MainDB::getInstance ();
+			$conn = $db->getConnection ();
+			$STH = $conn->prepare ( $query );
+			$STH->execute ($paramValueArr);
+			$this->throwException ( $STH->errorInfo () );
+			$objList = $STH->fetchAll ( PDO::FETCH_ASSOC );
+			return $objList;
+		} catch ( Exception $e ) {
+			$this->logger->error ( "Error occured :" . $e );
+			throw $e ;
+		}
+	}
+	
 	
 	
 	public function executeInListQuery($colValues, $isApplyFilter = false) {

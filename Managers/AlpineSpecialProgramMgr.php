@@ -29,10 +29,19 @@ class AlpineSpecialProgramMgr{
     
     public function findByCustomerSeq($customerSeq){
         $condition = array("customerseq"=>$customerSeq);
-        $alpineSpProg = self::$dataStore->executeConditionQuery($condition);
+        $alpineSpProg = self::$dataStore->executeConditionQueryF($condition);
         if(!empty($alpineSpProg)){
             return $alpineSpProg[0];
         }
         return null;
     }
+    public function findArrByCustomerSeq($customerSeq){
+    	$condition = array("customerseq"=>$customerSeq);
+    	$alpineSpProg = self::$dataStore->executeConditionQueryForArray($condition);
+    	if(!empty($alpineSpProg)){
+    		return $alpineSpProg[0];
+    	}
+    	return null;
+    }
+    
 }

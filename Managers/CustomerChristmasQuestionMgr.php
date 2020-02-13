@@ -38,7 +38,11 @@ class CustomerChristmasQuestionMgr{
         }
         return null;
     }
-    
+    public function findArrByCustomerSeq($customerSeq){
+    	$condition = array("customerseq"=>$customerSeq);
+    	$customerChritmasQuestion = self::$dataStore->executeConditionQueryForArray($condition);
+    	return $customerChritmasQuestion;
+    }
     private function convertDateFormat($customerChritmasQuestion){
         $fromFormat = "Y-m-d";
         $toFormat = "m-d-Y";

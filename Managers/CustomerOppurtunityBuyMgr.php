@@ -37,6 +37,11 @@ class CustomerOppurtunityBuyMgr
         }
         return null;
     }
+    public function findArrByCustomerSeq($customerSeq){
+    	$condition = array("customerseq"=>$customerSeq);
+    	$customerOppurtunityBuys = self::$dataStore->executeConditionQueryForArray($condition);
+    	return $customerOppurtunityBuys;
+    }
     
     private function convertDateFormat($customerOppurtunityBuys){
         $fromFormat = "Y-m-d";
