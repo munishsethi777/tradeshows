@@ -1,12 +1,12 @@
 <?php 
 require_once('IConstants.inc');
-//require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
-//$session = SessionUtil::getInstance();
-//$bool = $session->isSessionAdmin();
-//if($bool == true){
-//	header("location: showReports.php");
-//	die;
-//}
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+$session = SessionUtil::getInstance();
+$bool = $session->isSessionAdmin();
+if($bool == true){
+	header("location: dashboardmain.php");
+	die;
+}
 ?>
 <!DOCTYPE html>
 <html>

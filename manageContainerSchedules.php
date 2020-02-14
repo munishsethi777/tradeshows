@@ -468,14 +468,15 @@ function loadGrid(){
 
       { text: 'Container', datafield: 'container',width:"10%",cellsrenderer:actions},
       { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
-      { text: 'Trucker Name', datafield: 'truckername', width:"10%"},
-      { text: 'Trans', datafield: 'trans', width:"10%"},
+      { text: 'Trucker', datafield: 'truckername', width:"5%"},
+      { text: 'Trans', datafield: 'trans', width:"7%"},
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
-      { text: 'ETA', datafield: 'etadatetime',width:"17%",cellsformat: 'M-dd-yyyy hh:mm tt'},
+      { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:true,width:"13%"},
-      { text: 'Scheduled delivery', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
-      { text: 'Confirmed delivery', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" } ,	
+      { text: 'Requested dlvry', datafield: 'requesteddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
+      { text: 'Scheduled dlvry', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
+      { text: 'Confirmed dlvry', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" } ,	
       { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
     ]
    
@@ -498,6 +499,7 @@ function loadGrid(){
                     { name: 'emptylfddate', type: 'date' },
                     { name: 'emptyreturndate', type: 'date' },
                     { name: 'confirmeddeliverydatetime', type: 'date' },
+                    { name: 'requesteddeliverydatetime', type: 'date' },
                     { name: 'alpinenotificatinpickupdatetime', type: 'date' },
                     { name: 'samplesreceivedinomsdate', type: 'date' },
                     { name: 'containerreceivedinomsdate', type: 'date' },
