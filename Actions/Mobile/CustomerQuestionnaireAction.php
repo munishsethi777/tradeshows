@@ -27,12 +27,11 @@ $specialProgramMgr = AlpineSpecialProgramMgr::getInstance();
 $oppBuysMgr = CustomerOppurtunityBuyMgr::getInstance();
 $springQuesMgr = CustomerSpringQuestionMgr::getInstance();
 $christmasQuesMgr = CustomerChristmasQuestionMgr::getInstance();
-
 if($call == "getSpecialProgramDetails"){
     try{
-        $customerSeq = $_REQUEST["customerseq"];
-        $response = $specialProgramMgr->findArrByCustomerSeq($customerSeq);
-        
+        $customerSeq = $_REQUEST["customerSeq"];
+        $splProg = $specialProgramMgr->findArrByCustomerSeq($customerSeq);
+        $response["specialProg"] =  $splProg;
     }catch (Exception $e){
         $success = 0;
         $message  = $e->getMessage();
@@ -65,7 +64,6 @@ if($call == "getChristmasQuestionDetails"){
 		$message  = $e->getMessage();
 	}
 }
-
 
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Credentials: true");

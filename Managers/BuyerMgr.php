@@ -120,7 +120,11 @@ class BuyerMgr{
         array_push($mainArr,$keyValArr);
         
         $keyValArr["name"] = "Category";
-        $keyValArr["value"] = $buyer->getCategory();
+        $category = $buyer->getCategory();
+        if(!empty($category)){
+            $category = BuyerCategoryType::getValue($buyer->getCategory());
+        }
+        $keyValArr["value"] = $category;
         array_push($mainArr,$keyValArr);
         
         $keyValArr["name"] = "Notes";

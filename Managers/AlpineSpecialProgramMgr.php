@@ -29,7 +29,7 @@ class AlpineSpecialProgramMgr{
     
     public function findByCustomerSeq($customerSeq){
         $condition = array("customerseq"=>$customerSeq);
-        $alpineSpProg = self::$dataStore->executeConditionQueryF($condition);
+        $alpineSpProg = self::$dataStore->executeConditionQuery($condition);
         if(!empty($alpineSpProg)){
             return $alpineSpProg[0];
         }
