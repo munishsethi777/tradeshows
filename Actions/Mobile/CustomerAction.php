@@ -62,8 +62,19 @@ if($call == "getCustomerDetails"){
     try{
         if(isset($_REQUEST["customerseq"]) && !empty($_REQUEST["customerseq"])){
             $customerSeq = $_REQUEST["customerseq"];
-            //$response = $customerMgr->getCustomerDetailBySeq($customerSeq);
-            //$response["customer"] = $customerMgr->findArrBySeq($customerSeq);
+            $response = $customerMgr->getCustomerDetailBySeq($customerSeq);
+        }else{
+            throw new Exception("customerseq param null!");
+        }
+    }catch (Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
+if($call == "getCustomerDetailsAndBuyers"){
+    try{
+        if(isset($_REQUEST["customerseq"]) && !empty($_REQUEST["customerseq"])){
+            $customerSeq = $_REQUEST["customerseq"];
             $response = $customerMgr->getCustomerDetailsWithBuyers($customerSeq);
         }else{
             throw new Exception("customerseq param null!");
