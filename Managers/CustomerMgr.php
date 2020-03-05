@@ -504,7 +504,12 @@ class CustomerMgr{
 	    $response["buyers"] = $this->getBuyersJson($customerSeq);
 	    return $response;
 	}
-	
+	public function getCustomerDetailsWithBuyers($customerSeq){
+	    $response = array();
+	    $response["customer"] = $this->findArrBySeq($customerSeq);
+	    $response["buyers"] = $this->getBuyersJson($customerSeq);
+	    return $response;
+	}
 	private function getBuyersJson($customerSeq){
 	    $buyers = $this->getCustomerBuyerObjects($customerSeq);
 	    $keyValArr = array();

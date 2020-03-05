@@ -60,7 +60,9 @@ if($call == "getCustomerDetails"){
     try{
         if(isset($_REQUEST["customerseq"]) && !empty($_REQUEST["customerseq"])){
             $customerSeq = $_REQUEST["customerseq"];
-            $response = $customerMgr->getCustomerDetailBySeq($customerSeq);
+            //$response = $customerMgr->getCustomerDetailBySeq($customerSeq);
+            //$response["customer"] = $customerMgr->findArrBySeq($customerSeq);
+            $response = $customerMgr->getCustomerDetailsWithBuyers($customerSeq);
         }else{
             throw new Exception("customerseq param null!");
         }
