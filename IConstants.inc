@@ -6,7 +6,7 @@
     ,'ImagePath' => $docroot .'/tradeshows/Images/menuImages/')
   ;
   $ConstantsArray['ApplicationURL'] = "http://localhost/tradeshows/";
-
+  $ConstantsArray['buyerImagePath'] = $ConstantsArray['ApplicationURL'] . '/images/buyerimages/';
   //$ConstantsArray = array('dbServerUrl' => '/home/satyain/public_html/giftcard/');
   //Logger::configure($ConstantsArray['dbServerUrl'] .'log4php/log4php.xml');
   $ConstantsArray['ApplicationURL'] = "http://localhost/tradeshows";
