@@ -17,6 +17,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	.form-group{
     		margin-bottom:5px;
     	}
+        .rounded-circle{
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -156,10 +159,11 @@ function showCustomerDetails(seq,rowId){
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-		var html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
+		var html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
 	    var tablerows = "";
 	    $.each(buyer,function(key,buyer){
-		    var firstname = "";
+		    var dppic = "";
+            var firstname = "";
 			var lastName = "";
 			var email = "";
 			var officePhone = "";
@@ -167,17 +171,21 @@ function showCustomerDetails(seq,rowId){
 			var category = "";
 			var notes = "";
 			lastmodifiedon = "";
+            if(buyer.imageextension != null){
+                dppic = "<?php echo $ConstantsArray['ApplicationURL'];?>" + "/" + buyer.imageextension;
+            }
 			if(buyer.firstname  != null ){
 				firstname = buyer.firstname;
 			}
 			if(buyer.email  != null ){
 				email = buyer.email;
+                
 			}
-			if(buyer.officePhone  != null ){
-				officePhone = buyer.officePhone;
+			if(buyer.officephone  != null ){
+				officePhone = buyer.officephone;
 			}
 			
-			if(buyer.cellPhone  != null ){
+			if(buyer.cellphone  != null ){
 				cellPhone =  buyer.cellphone;
 			}
 			if(buyer.category  != null ){
@@ -189,7 +197,7 @@ function showCustomerDetails(seq,rowId){
 			if(buyer.lastmodifiedon  != null ){
 				lastmodifiedon = buyer.lastmodifiedon;
 			}
-			tablerows += "<tr class='tabRows'><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
+			tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
 		});
 		html += tablerows;
 		$(".buyers").html(html);

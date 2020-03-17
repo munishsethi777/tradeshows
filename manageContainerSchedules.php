@@ -473,11 +473,11 @@ function loadGrid(){
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
       { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
-      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:true,width:"13%"},
       { text: 'Requested dlvry', datafield: 'requesteddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
       { text: 'Scheduled dlvry', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
       { text: 'Confirmed dlvry', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" } ,	
       { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
+	  {text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:false,width:"13%"},
     ]
    
     var source =

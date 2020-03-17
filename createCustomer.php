@@ -11,6 +11,7 @@ $storeDisplay = "none";
 $customerTextDisplay = "";
 $customerSelectDisabled = "disabled";
 $customerIdDisabled = "";
+$seq="";
 if(isset($_POST["id"])){
     $seq = $_POST["id"];
     $customer = $customerMgr->findByCustomerSeq($seq);

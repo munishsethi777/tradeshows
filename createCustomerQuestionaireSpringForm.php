@@ -59,7 +59,7 @@ if(!empty($seq) && !$isadded){
             	<input type="hidden" id="call" name="call" value="saveSpringQuestion" />
             	<input type="hidden" id="customerseq" name="customerseq" value="<?php echo $customerSeq?>" />
             	<input type="hidden" id="seq" name="seq" value="<?php echo $id?>" />
-            	<input type="hidden" id="isaddNew" name="isaddNew" value="<?php echo $$isadded?>" />
+            	<input type="hidden" id="isaddNew" name="isaddNew" value="<?php echo $isadded?>" />
             	<div class="springMainDiv">
             		<div class="row">
             			<div class="col-lg-10">
