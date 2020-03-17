@@ -172,7 +172,7 @@ function showCustomerDetails(seq,rowId){
 			var notes = "";
 			lastmodifiedon = "";
             if(buyer.imageextension != null){
-                dppic = "<?php echo $ConstantsArray['ApplicationURL'];?>" + "/" + buyer.imageextension;
+                dppic = "<?php echo $ConstantsArray['buyerImagePath'];?>" + buyer.imageextension;
             }
 			if(buyer.firstname  != null ){
 				firstname = buyer.firstname;
