@@ -78,7 +78,13 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
     									</div>
     		                        </div>
 		                        <?php }?>
-		                    <?php if(empty( ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment())))
+		                    <?php if(empty( 
+		                        ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || 
+		                        ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || 
+		                        ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment()) || 
+		                        ($isSessionAdmin || $permissionUtil->hasManageCustomerDepartment())
+		                        
+		                        ))
 		                     {
 		                         echo "<center> <b>". StringConstants::PERMISSION_AllOW . "</b> </center>";
 		                         echo '<a href="logout.php" class="clsLogout">Logout</a>';

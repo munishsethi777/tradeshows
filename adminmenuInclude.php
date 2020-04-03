@@ -196,6 +196,13 @@ if($file == "dashboardmain.php"){
 	                    </a>
 	                </li>
 	                <?php if(in_array(DepartmentType::Item_Specs,$departments)){?>
+	                	<li class="<?php echo $manageItems;?>">
+		                    <a href="adminManageItems.php"><i class="fa fa-database"></i> 
+		                    	<span class="nav-label">Manage Items</span>  
+		                    </a>
+		                </li>
+		            <?php }?>
+	                <?php if(in_array(DepartmentType::Item_Specs,$departments)){?>
 	                	<li class="<?php echo $manageItemSpecification;?>">
 		                    <a href="adminManageItemSpecifications.php"><i class="fa fa-database"></i> 
 		                    	<span class="nav-label">Manage Items Specs.</span>  

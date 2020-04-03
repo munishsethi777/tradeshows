@@ -44,6 +44,7 @@ $graphicDepartmentChecked  = "";
 $customerDepartmentChecked = "";
 $userDepartmentChecked = "";
 $emailLogsChecked = "";
+$itemSpecificsChecked = "";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
@@ -100,6 +101,8 @@ if(in_array(1,$departmentSeqArr)){
     $userDepartmentChecked = "checked";
 }if(in_array(8,$departmentSeqArr)){
     $emailLogsChecked = "checked";
+}if(in_array(3,$departmentSeqArr)){
+    $itemSpecificsChecked = "checked";
 }
 /*echo $optiondata = array('<script type="text/javascript">
                      $(document).ready(function(){ 
@@ -501,7 +504,7 @@ if(in_array(1,$departmentSeqArr)){
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left m-r-sm">
-                                            	<input type="checkbox" <?php echo $userDepartmentChecked?> value="5" id="customerDepartment" name="departments[]" />
+                                            	<input type="checkbox" <?php echo $userDepartmentChecked?> value="5" id="userDepartment" name="departments[]" />
                                             </div>User Management
                                         </div>                                  
                                 </div>
@@ -509,10 +512,19 @@ if(in_array(1,$departmentSeqArr)){
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left m-r-sm">
-                                            	<input type="checkbox" <?php echo $emailLogsChecked?> value="8" id="customerDepartment" name="departments[]" />
+                                            	<input type="checkbox" <?php echo $emailLogsChecked?> value="8" id="userDepartment" name="departments[]" />
                                             </div>Email Logs Management
                                         </div>                                  
                                 </div>
+                                <div class="col-lg-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left m-r-sm">
+                                            	<input type="checkbox" <?php echo $itemSpecificsChecked?> value="3" id="itemSpecificsDepartment" name="departments[]" />
+                                            </div>Item Specifications
+                                        </div>                                  
+                                </div>
+	                        
 	                        
 	                        </div>
 	                    	<!-- 
