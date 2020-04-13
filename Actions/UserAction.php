@@ -94,24 +94,29 @@ if($call == "loginUser"){
 	
 	$user = $userMgr->logInUser($username, $password);
 	if(!empty($user) && $user->getPassword() == $password){
-		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
-		$departmentMgr = DepartmentMgr::getInstance();
-		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
-		$teamsMgr = TeamMgr::getInstance();
-		$teamusers = $teamsMgr->getUserTeam($user->getSeq());
-		$sessionUtil = SessionUtil::getInstance();
-		$sessionUtil->createUserSession($user,$userRoles,$departments);
-		$sessionUtil->setMyTeamMembers($teamusers);
-		$response["user"] = $userMgr->toArray($user);
-		$userMgr->updateLastLoggedInDate($user->getSeq());
-		$message = StringConstants::LOGIN_SUCCESSFULLY;
-		if(!empty($_SESSION['url'])){
-		  $redirect = $_SESSION['url'];
-		 }
-		/*if($_SESSION['url'])
-		{
-		    header("location:". $_SESSION['url']);
-		}*/
+		if($user->getIsEnabled() != true){
+			$success = 0;
+			$message = StringConstants::USER_DISABLED;
+		}else{
+			$userRoles = $userMgr->getUserRolesArr($user->getSeq());
+			$departmentMgr = DepartmentMgr::getInstance();
+			$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
+			$teamsMgr = TeamMgr::getInstance();
+			$teamusers = $teamsMgr->getUserTeam($user->getSeq());
+			$sessionUtil = SessionUtil::getInstance();
+			$sessionUtil->createUserSession($user,$userRoles,$departments);
+			$sessionUtil->setMyTeamMembers($teamusers);
+			$response["user"] = $userMgr->toArray($user);
+			$userMgr->updateLastLoggedInDate($user->getSeq());
+			$message = StringConstants::LOGIN_SUCCESSFULLY;
+			if(!empty($_SESSION['url'])){
+			  $redirect = $_SESSION['url'];
+			 }
+			/*if($_SESSION['url'])
+			{
+			    header("location:". $_SESSION['url']);
+			}*/
+		}
 		
 	}else{
 		$success = 0;

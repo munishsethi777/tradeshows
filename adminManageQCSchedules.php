@@ -633,7 +633,8 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-            var editButton = $("<div title='Edit' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+            var editButton = $("<div title='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+            var bulkEditButton = $("<div title='Bulk Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Bulk Edit</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var importCompletedButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import Completed</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
@@ -645,6 +646,7 @@ function loadGrid(){
             
             container.append(addButton);
             container.append(editButton);
+            container.append(bulkEditButton);
            // container.append(deleteButton);
 
             container.append(exportButton);
@@ -663,6 +665,7 @@ function loadGrid(){
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
            	editButton.jqxButton({  width: 65, height: 18 });
+           	bulkEditButton.jqxButton({  width: 90, height: 18 });
 
            	<?php if($sessionUtil->isSessionAdmin()){?>
 	            importButton.jqxButton({  width: 65, height: 18 });
@@ -691,36 +694,54 @@ function loadGrid(){
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
                 })
-                var lastPo = 0;
-                var isValid = true;
                 var itemIds = [];
                 var seqs = [];
+                var selectedPOs = [];
                 $.each(indexes, function(index , value){
                 	 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', value);
-                	 var po = row.po;
-                	 if(lastPo != 0){
-                    	 if(po != lastPo){
-                    		 bootbox.alert("Please Select single row for edit.", function() {});
-                    		 isValid = false;
-                             return;  
-                    	 }
-                	 }
+                	 selectedPOs.push(row.po);
                 	 seqs.push(row.seq);
-                	 lastPo = po
-                	 itemIds.push(row.itemnumbers);
-                	     
+                	 itemIds.push(row.itemnumbers); 
                 });
-                if(!isValid){
+                selectedPOs = removeDuplicates(selectedPOs);
+                if(selectedPOs.length > 1){
+                	bootbox.alert("Please Select single row to edit.", function() {});
+            		isValid = false;
                     return;
                 }
-//                 if(indexes.length != 1){
-//                     bootbox.alert("Please Select single row for edit.", function() {});
-//                     return;    
-//                 }
                 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', indexes);
                 $("#id").val(seqs[0]);  
                 $("#seqs").val(seqs);   
-                $("#itemnumbers").val(itemIds);                        
+                $("#itemnumbers").val(itemIds);
+                $("#form2").attr('action', 'adminCreateQCSchedule.php');                         
+                $("#form2").submit();    
+            });
+            bulkEditButton.click(function (event){
+            	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
+                var value = -1;
+                indexes = selectedrowindex.filter(function(item) { 
+                    return item !== value
+                })
+                var itemIds = [];
+                var seqs = [];
+                var selectedPOs = [];
+                $.each(indexes, function(index , value){
+                	 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', value);
+                	 selectedPOs.push(row.po);
+                	 seqs.push(row.seq);
+                	 itemIds.push(row.itemnumbers); 
+                });
+                selectedPOs = removeDuplicates(selectedPOs);
+                //if(selectedPOs.length > 1){
+                	//bootbox.alert("Please Select single row to edit.", function() {});
+            		//isValid = false;
+                    //return;
+                //}
+                var row = $('#qcscheduleGrid').jqxGrid('getrowdata', indexes);
+                $("#id").val(seqs[0]);  
+                $("#seqs").val(seqs);   
+                $("#itemnumbers").val(itemIds);
+                $("#form2").attr('action', 'adminBulkUpdateQCSchedule.php');                       
                 $("#form2").submit();    
             });
             // delete row.
@@ -742,24 +763,6 @@ function loadGrid(){
              exportPlannerButton.click(function (event) {
             	 exportPlanner();
              });
-//              $("#qcscheduleGrid").bind('rowselect', function (event) {
-//                  var selectedRowIndex = event.args.rowindex;
-//                   var pageSize = event.args.owner.rows.records.length - 1;                       
-//                  if($.isArray(selectedRowIndex)){           
-//                      if(isSelectAll){
-//                          isSelectAll = false;    
-//                      } else{
-//                          isSelectAll = true;
-//                      }                                                                     
-//                      $('#qcscheduleGrid').jqxGrid('clearselection');
-//                      if(isSelectAll){
-//                          for (i = 0; i <= pageSize; i++) {
-//                              var index = $('#qcscheduleGrid').jqxGrid('getrowboundindex', i);
-//                              $('#qcscheduleGrid').jqxGrid('selectrow', index);
-//                          }    
-//                      }
-//                  }                        
-//             });
             // reload grid data.
             reloadButton.click(function (event) {
                 $("#qcscheduleGrid").jqxGrid("clearfilters");
@@ -791,6 +794,12 @@ function loadGrid(){
 			});
         }
     });
+    function removeDuplicates(arr) { 
+        let outputArray = arr.filter(function(v, i, self){ 
+            return i == self.indexOf(v); 
+        }); 
+        return outputArray; 
+    } 
     $('#qcscheduleGrid').on('rowselect', function (event) 
 			{
 			    var args = event.args;

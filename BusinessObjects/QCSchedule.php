@@ -6,7 +6,7 @@ class QCSchedule{
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
 	$notes,$status, $userseq, $createdon, $lastmodifiedon,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,$classcodeseq,
-	$acmiddleinspectionnotes,$acfirstinspectionnotes,$iscompleted;
+	$acmiddleinspectionnotes,$acfirstinspectionnotes,$iscompleted,$apgraphicsreceivedatenareason;
 	
 	public static $className = "QCSchedule";
 	public static $tableName = "qcschedules";
@@ -242,8 +242,18 @@ class QCSchedule{
 	public function getIsCompleted(){
 	    return $this->iscompleted;
 	}
+	public function setAPGraphicsReceiveDateNAReason($val){
+		$this->apgraphicsreceivedatenareason = $val;
+	}
+	public function getAPGraphicsReceiveDateNAReason(){
+		return $this->apgraphicsreceivedatenareason;
+	}
 	
-	
+	public function __construct($object) {
+		foreach($object as $property => $value) {
+			$this->$property = $value;
+		}
+	}
 	
 	public function createFromRequest($request){
 		if (is_array($request)){

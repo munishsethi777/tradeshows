@@ -10,6 +10,7 @@ $qcScheduleMgr = QCScheduleMgr::getInstance();
 $readOnlyPO = "";
 $middleInspectionChk = "";
 $firstInspectionChk = "";
+$graphicsReceiveChk = "";
 $qcUser = 0;
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance();
@@ -33,7 +34,7 @@ if($isSessionGeneralUser && !$isSessionSV){
  	$seq = $_POST["id"];
  	$seqs = $_POST["seqs"];
  	if($seq != $seqs){
- 		$qcScheduleAndFieldState = $qcScheduleMgr->findBySeqs($seqs);
+ 		$qcScheduleAndFieldState = $qcScheduleMgr->findCommonQCAndFieldStates($seqs);
  		$qcSchedule = $qcScheduleAndFieldState["qcschedule"];
  		$fieldStateArr = $qcScheduleAndFieldState["fieldState"];
  	}else{
@@ -51,7 +52,10 @@ if($isSessionGeneralUser && !$isSessionSV){
  	}
  	if(!empty($qcSchedule->getApFirstInspectionDateNaReason())){
  		$firstInspectionChk = "checked";
- 	}	
+ 	}
+ 	if(!empty($qcSchedule->getAPGraphicsReceiveDateNAReason())){
+ 		$graphicsReceiveChk = "checked";
+ 	}
  	$readOnlyPO = "readonly";
  	if(!$isSessionAdmin){
  	    $readOnlyShipDate = "readonly";
@@ -110,6 +114,11 @@ if($isSessionGeneralUser && !$isSessionSV){
 .outterDiv{
 	border-bottom:1px silver dashed;
 	padding:20px 20px;
+}
+#apmiddleinspectiondatenareason,
+#apfirstinspectiondatenareason,
+#apgraphicsreceivedatenareason{
+	margin-bottom:0px !important;
 }
 </style>
 </head>
@@ -247,12 +256,6 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            		<input type="text" placeholder="Select Date" id="apmiddleinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPMiddleInspectionDate()?>" name="apmiddleinspectiondate" class="form-control dateControl" <?php echo isset($fieldStateArr["apmiddleinspectiondate"])?$fieldStateArr["apmiddleinspectiondate"]:""?>>
 	                            	</div>
 	                            	<div style="display:none" id="middleNaDiv">
-<!-- 	                           			<select id="apmiddleinspectiondatenareason" name="apmiddleinspectiondatenareason" class="form-control"> -->
-<!-- 	                           				<option value="farDistance">Select Reason</option> -->
-<!-- 	                           				<option value="farDistance">Far Distance</option> -->
-<!-- 	                           				<option value="smallQuantities">Small Quantities</option> -->
-<!-- 	                           				<option value="producedInSubAssembly">Produced in Sub Assembly</option> -->
-<!-- 	                           			</select> -->
 										<?php 
 			                             	$select = DropDownUtils::getReasonTypes("apmiddleinspectiondatenareason", null, $qcSchedule->getApMiddleInspectionDateNaReason(),false,true);
 			                                echo $select;
@@ -269,12 +272,6 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            		<input type="text" placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" value="<?php echo $qcSchedule->getAPFirstInspectionDate()?>" name="apfirstinspectiondate" class="form-control dateControl" <?php echo isset($fieldStateArr["apfirstinspectiondate"])?$fieldStateArr["apfirstinspectiondate"]:""?>>
 	                            	</div>
 	                            	<div style="display:none" id="firstNaDiv">
-<!-- 	                           			<select id="apfirstinspectiondatenareason" name="apfirstinspectiondatenareason" class="form-control"> -->
-<!-- 	                           				<option value="farDistance">Select Reason</option> -->
-<!-- 	                           				<option value="farDistance">Far Distance</option> -->
-<!-- 	                           				<option value="smallQuantities">Small Quantities</option> -->
-<!-- 	                           				<option value="producedInSubAssembly">Produced in Sub Assembly</option> -->
-<!-- 	                           			</select> -->
 										<?php 
 			                             	$select = DropDownUtils::getReasonTypes("apfirstinspectiondatenareason", null, $qcSchedule->getApFirstInspectionDateNaReason(),false,true);
 			                                echo $select;
@@ -294,10 +291,23 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                            	<input type="text" placeholder="Select Date" id="approductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getAPProductionStartDate()?>" name="approductionstartdate" class="form-control dateControl" <?php echo isset($fieldStateArr["approductionstartdate"])?$fieldStateArr["approductionstartdate"]:""?>>
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text" placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl" <?php echo isset($fieldStateArr["apgraphicsreceivedate"])?$fieldStateArr["apgraphicsreceivedate"]:""?>>
-
+	                        	<div class="col-lg-2">
+	                        		<div id="graphicsReceiveDateDiv">
+	                            		<input type="text" placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl" <?php echo isset($fieldStateArr["apgraphicsreceivedate"])?$fieldStateArr["apgraphicsreceivedate"]:""?>>
+	                            	</div>
+	                            	<div style="display:none" id="graphicsNaReasonDiv">
+										<?php 
+			                             	$select = DropDownUtils::getGraphicsNAReasonTypes("apgraphicsreceivedatenareason", null, $qcSchedule->getAPGraphicsReceiveDateNAReason(),false,true);
+			                                echo $select;
+	                             		?>
+	                        		</div>
 	                            </div>
+	                             <label class="col-lg-1 col-form-label">NA</label>
+	                            <div class="col-lg-1 i-checks">
+	                            	<input type="checkbox" <?php echo $graphicsReceiveChk?> id="apGraphicsReceiveChk" name="apGraphicsReceiveChk" class="form-control" <?php echo isset($fieldStateArr["apMiddleInspectionChk"])?$fieldStateArr["apMiddleInspectionChk"]:""?>>
+	                            </div>
+	                            
+	                            
 	                       </div>
 	                  </div>
 	                  
@@ -425,15 +435,21 @@ $(document).ready(function(){
 	   	radioClass: 'iradio_square-green',
 	   	
 	});
-	var middleInspectionNa = "<?php echo $middleInspectionChk?>"
-		if(middleInspectionNa != ""){
-			showHideMiddleNaDiv(true);
-		}
+	var middleInspectionNa = "<?php echo $middleInspectionChk?>";
+	if(middleInspectionNa != ""){
+		showHideMiddleNaDiv(true);
+	}
 
-		var firstInspectionNa = "<?php echo $firstInspectionChk?>"
-		if(firstInspectionNa != ""){
-			showHideFirstNaDiv(true);
-		}
+	var firstInspectionNa = "<?php echo $firstInspectionChk?>";
+	if(firstInspectionNa != ""){
+		showHideFirstNaDiv(true);
+	}
+
+	var graphicsReceiveNa = "<?php echo $graphicsReceiveChk?>";
+	if(graphicsReceiveNa != ""){
+		showHideGraphicsNaDiv(true);
+	}
+	
 	$('.dateControl').attr("autocomplete","off");
 	$('.shipDateControl').attr("autocomplete","off");	
 	$('.dateControl').datetimepicker({
@@ -463,6 +479,14 @@ $(document).ready(function(){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
 		showHideMiddleNaDiv(flag)
   	});
+	$('#apFirstInspectionChk').on('ifChanged', function(event){
+		var flag  = $("#apFirstInspectionChk").is(':checked');
+		showHideFirstNaDiv(flag);
+	});
+	$('#apGraphicsReceiveChk').on('ifChanged', function(event){
+		var flag  = $("#apGraphicsReceiveChk").is(':checked');
+		showHideGraphicsNaDiv(flag);
+	});
 	requiredAcFinalInspection();
 	$('#isapproval').on('ifChanged', function(event){
 		requiredAcFinalInspection();
@@ -477,8 +501,8 @@ function requiredAcFinalInspection(){
 		$("#acfinalinspectiondate").removeAttr("required");
 	}
 }
-	function showHideMiddleNaDiv(flag){
-		if(flag){
+function showHideMiddleNaDiv(flag){
+	if(flag){
 		$("#middleInspectionSelectDate").hide();
 		$("#middleNaDiv").show();
 		$("#acmiddleinspectiondate").val("");
@@ -488,10 +512,10 @@ function requiredAcFinalInspection(){
 		$("#middleInspectionSelectDate").show();
 		$("#middleNaDiv").hide();
 	}
-	}
+}
 
-	function showHideFirstNaDiv(flag){
-		if(flag){
+function showHideFirstNaDiv(flag){
+	if(flag){
 		$("#firstInspectionSelectDate").hide();
 		$("#firstNaDiv").show();
 		$("#acfirstinspectiondate").val("");
@@ -501,12 +525,24 @@ function requiredAcFinalInspection(){
 		$("#firstInspectionSelectDate").show();
 		$("#firstNaDiv").hide();
 	}
-	}
+}
 
-$('#apFirstInspectionChk').on('ifChanged', function(event){
-	var flag  = $("#apFirstInspectionChk").is(':checked');
-	showHideFirstNaDiv(flag);
-	});
+function showHideGraphicsNaDiv(flag){
+	if(flag){
+		$("#graphicsReceiveDateDiv").hide();
+		$("#graphicsNaReasonDiv").show();
+		$("#acgraphicsreceivedate").val("");
+		$("#acgraphicsreceivedate").attr("disabled","disabled");
+	}else{
+		$("#acgraphicsreceivedate").removeAttr("disabled");
+		$("#graphicsReceiveDateDiv").show();
+		$("#graphicsNaReasonDiv").hide();
+	}
+}
+
+
+
+	
 $('.editor').summernote({
 	height: 120,
 	minHeight: null,             // set minimum height of editor

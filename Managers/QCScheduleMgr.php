@@ -437,81 +437,27 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			$readyDate = $this->convertStrToDate($shipDateStr);
 			$readyDate->modify('-14 day');
 			$qcSchedule->setSCReadyDate($readyDate);
-			//$qcSchedule->setAPReadyDate($readyDate);
 			
 			$finalInspectionDate = $this->convertStrToDate($shipDateStr);
 			$finalInspectionDate->modify('-10 day');
 			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-			//$qcSchedule->setAPFinalInspectionDate($finalInspectionDate);
 			
 			$middleInspectionDate = $this->convertStrToDate($shipDateStr);
 			$middleInspectionDate->modify('-15 day');
 			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-			//$qcSchedule->setAPMiddleInspectionDate($middleInspectionDate);
 			
 			$firstInspectionDate = $this->convertStrToDate($shipDateStr);
 			$firstInspectionDate->modify('-35 day');
 			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-			//$qcSchedule->setAPFirstInspectionDate($firstInspectionDate);
 			
 			$productionStartDate = $this->convertStrToDate($shipDateStr);
 			$productionStartDate->modify('-45 day');
 			$qcSchedule->setSCProductionStartDate($productionStartDate);
-			//$qcSchedule->setAPProductionStartDate($productionStartDate);
 				
 			$graphicReceiveDate = $this->convertStrToDate($shipDateStr);
 			$graphicReceiveDate->modify('-30 day');
 			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-			//$qcSchedule->setAPGraphicsReceiveDate($graphicReceiveDate);
 		}
-// 		if(!empty($readyDate)){
-// 			$readyDate = $this->validateDate($readyDate);
-// 			$qcSchedule->setSCReadyDate($readyDate);
-// 		}
-// 		if(!empty($finalInspectionDate)){
-// 			$finalInspectionDate = $this->validateDate($finalInspectionDate);
-// 			$qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-// 		}
-// 		if(!empty($middleInspectionDate)){
-// 			$middleInspectionDate = $this->validateDate($middleInspectionDate);
-// 			$qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-// 		}
-// 		if(!empty($firstInspectionDate)){
-// 			$firstInspectionDate = $this->validateDate($firstInspectionDate);
-// 			$qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-// 		}
-// 		if(!empty($productionStartDate)){
-// 			$productionStartDate = $this->validateDate($productionStartDate);
-// 			$qcSchedule->setSCProductionStartDate($productionStartDate);
-// 		}
-// 		if(!empty($graphicReceiveDate)){
-// 			$graphicReceiveDate = $this->validateDate($graphicReceiveDate);
-// 			$qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-// 		}
-// 		if(!empty($ac_readyDate)){
-// 			$ac_readyDate = $this->validateDate($ac_readyDate);
-// 			$qcSchedule->setACReadyDate($ac_readyDate);
-// 		}
-// 		if(!empty($ac_finalInspectionDate)){
-// 			$ac_finalInspectionDate = $this->validateDate($ac_finalInspectionDate);
-// 			$qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
-// 		}
-// 		if(!empty($ac_middleInspectionDate)){
-// 			$ac_middleInspectionDate = $this->validateDate($ac_middleInspectionDate);
-// 			$qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
-// 		}
-// 		if(!empty($ac_firstInpectionDate)){
-// 			$ac_firstInpectionDate =  $this->validateDate($ac_firstInpectionDate);
-// 			$qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
-// 		}
-// 		if(!empty($ac_productionStartDate)){
-// 			$ac_productionStartDate = $this->validateDate($ac_productionStartDate);
-// 			$qcSchedule->setACProductionStartDate($ac_productionStartDate);
-// 		}
-// 		if(!empty($ac_graphicDateReceive)){
-// 			$ac_graphicDateReceive = $this->validateDate($ac_graphicDateReceive);
-// 			$qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
-// 		}
 		if(!empty($note)){
 			$qcSchedule->setNotes($note);
 		}
@@ -590,8 +536,18 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 		$itemArr = self::$dataStore->findAllArr($isApplyFilter);
 		return $itemArr;
 	}
+	
+	public function findAllBySeqsForBulkEdit($seqs){
+		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules
+left join users on qcschedules.qcuser = users.seq
+left join classcodes on qcschedules.classcodeseq = classcodes.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		$qcSchedules = self::$dataStore->executeQuery($query,false,false,false);
+		return $qcSchedules;
+	}
+	
 	private $commonQcObj;
-	public function findBySeqs($seqs){
+	public function findCommonQCAndFieldStates($seqs){
 		$query = "select * from qcschedules where seq in ($seqs)";
 		$qcSchedules = self::$dataStore->executeQuery($query,false,true);
 		$fieldStateArr = array();

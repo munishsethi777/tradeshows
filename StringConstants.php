@@ -66,7 +66,7 @@ class StringConstants{
 	
 	// USER ACTION STRING CONSTANT
 	const WEB_PORTAL_LINK = "http://www.alpinebi.com";
-	const PERMISSION_AllOW = "No Permission is Allow";
+	const PERMISSION_AllOW = "No Permission is Allowed";
 	const SERVER_ERROR = "Server Error!";
 	const USER_DOES_NOT_EXITS_WITH_THIS_USER_NAME = "User does not exists with this user name";
 	const FORGET_MESSAGE_SUCCESS  = "Forgot password request submitted successfully. Pls check your email for further details.";
@@ -81,7 +81,7 @@ class StringConstants{
 	const INCORRECT_CURRENT_PASSWORD = "Incorrect Current Password!";
 	const USER_DELETE_SUCCESSFULLY = "Users Deleted successfully";
 	const LOGIN_SUCCESSFULLY = "Login successfully";
-	
+	const USER_DISABLED = "User with this username is currently disabled. Please contact system administrator";
 	//CLASS CODE ACTION STRING CONSTANT 
 	const CLASS_CODE_SAVED_SUCCESSFULLY  = "Class Code saved successfully.";
 	const CLASS_CODE_UPDATE_SUCCESSFULLY = "Class Code Updated successfully.";
@@ -151,7 +151,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "baljeetgaheer@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "munishsethi777@gmail.com";
 	
 	//ALPINE SPECIAL PROGRAM
 	const ALPINE_PROG_SAVED_SUCCESSFULLY    = "Alpine Program saved successfully.";

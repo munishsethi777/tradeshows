@@ -17,6 +17,8 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BusinessCategoryType.php"
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/XmasItemFromType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/SeasonShowNameType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerRegularTermsType.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicsNAReasonType.php");
+
 
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
@@ -185,7 +187,10 @@ class DropDownUtils {
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	
-	
+	public static function getGraphicsNAReasonTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$enums = GraphicsNAReasonType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
+	}
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false,$disabled = "") {
 		$id = $selectName;

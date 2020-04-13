@@ -69,6 +69,11 @@ if($call == "saveQCSchedule"){
 			}else{
 				$qcSchedule->setAPFirstInspectionDate(null);
 			}
+			if(!isset($_REQUEST["apGraphicsReceiveChk"])){
+				$qcSchedule->setAPGraphicsReceiveDateNAReason(null);
+			}else{
+				$qcSchedule->setAPGraphicsReceiveDate(null);
+			}
 			if(isset($_REQUEST["iscompleted"])){
 			    $qcSchedule->setIsCompleted(1);    
 			}else{

@@ -5,4 +5,5 @@ class ReasonCodeType extends BasicEnum{
 	const small_quantities = "Small Quantities";
 	const produced_in_sub_assembly = "Produced in Sub Assembly";
 	const previously_completed = "Previously Completed";
+	const simple_product = "Simple Order";
 }
