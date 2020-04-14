@@ -479,6 +479,14 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 left join users on qcschedules.qcuser = users.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		
+		$query ="select  poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , poinchargeuser,qcschedules.* from qcschedules 
+left join users on qcschedules.qcuser = users.seq
+left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+left join classcodes on qcschedules.classcodeseq = classcodes.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq 
+in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		
 		$sessionUtil = SessionUtil::getInstance();
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$isSessionSV = $sessionUtil->isSessionSupervisor();
@@ -506,7 +514,8 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			$lastModifiedOn = $qcSchedule["lastmodifiedon"];
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
 			$qcSchedule["lastmodifiedon"] = $lastModifiedOn;
-			$qcSchedule["poincharge"] = $qcSchedule["poinchargeuser"];
+			$qcSchedule["users.qccode"] = $qcSchedule["qccode"];
+			$qcSchedule["poinchargeusers.qccode"] = $qcSchedule["poqccode"];
 			array_push($arr,$qcSchedule);
 		}
 		$mainArr["Rows"] = $arr;
@@ -517,7 +526,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	public function getAllCount($isApplyFilter,$isGeneralUser,$qcLoggedInSeq,$isSessionSV){
 // 		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq
 // left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
-		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq
+		$query = "select count(*) from qcschedules left join users on qcschedules.qcuser = users.seq left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq) ";
 		$sessionUtil = SessionUtil::getInstance();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();

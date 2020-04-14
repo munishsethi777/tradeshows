@@ -61,7 +61,7 @@ if($call == "saveUser"){
 		//}
 		$user->setSeq($seq);
 		$user->setLastModifiedOn(new DateTime());
-		if(!in_array("qc",$permissions)){
+		if(!in_array("qc",$permissions) && !in_array("po_incharge",$permissions)){
 			$user->setQCCode(null);
 		}
 		$id = $userMgr->saveUser($user);

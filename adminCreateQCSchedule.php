@@ -160,7 +160,7 @@ if($isSessionGeneralUser && !$isSessionSV){
 								<label class="col-lg-2 col-form-label bg-formLabel">PO</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-										$select = DropDownUtils::getPOUsers("pouser", null,$poUser,false,true);
+										$select = DropDownUtils::getPOUsers("poinchargeuser", null,$qcSchedule->getPoInchargeUser(),false,true);
 		                        		echo $select;
 	                        			if($isSessionGeneralUser && !$isSessionSV){?>
 	                        				<input type="hidden" id="pouserhidden" value="<?php echo $poUser?>" name="pouser">

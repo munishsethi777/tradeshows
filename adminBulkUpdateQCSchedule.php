@@ -15,6 +15,7 @@ $firstInspectionChk = "";
 $qcUser = 0;
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance ();
+$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser ();
 $isSessionSV = $sessionUtil->isSessionSupervisor ();
 $isSessionAdmin = $sessionUtil->isSessionAdmin ();
@@ -73,6 +74,7 @@ if (isset ( $_POST ["id"] )) {
 .selectedPODiv{
 	overflow-y:scroll;
 }
+
 </style>
 </head>
 <body>
@@ -96,7 +98,29 @@ if (isset ( $_POST ["id"] )) {
                      	<input type="hidden" id ="seqs" name="seqs"  value="<?php echo $seqs?>"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
-                        
+                      <div class="bg-white p-xs outterDiv">
+	                        <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">QC</label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
+		                        		echo $select;
+	                        			if($isSessionGeneralUser && !$isSessionSV){?>
+	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
+	                        			<?php }
+                             		?>
+	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
+	                        	<div class="col-lg-4">
+ 	                            	<input type="hidden" name="classcode" id="classcode">
+	                            	<?php 
+				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false,true,false);
+				                            echo $select;
+	                             		?>
+	                            </div>
+	                        </div>
+	                  </div>  
                         
 	                  
 	                  <div class="bg-white p-xs outterDiv">
@@ -135,12 +159,6 @@ if (isset ( $_POST ["id"] )) {
 	                            		<input type="text" placeholder="Select Date" id="apfirstinspectiondate" maxLength="250" name="apfirstinspectiondate" class="form-control dateControl">
 	                            	</div>
 	                            	<div style="display:none" id="firstNaDiv">
-<!-- 	                           			<select id="apfirstinspectiondatenareason" name="apfirstinspectiondatenareason" class="form-control"> -->
-<!-- 	                           				<option value="farDistance">Select Reason</option> -->
-<!-- 	                           				<option value="farDistance">Far Distance</option> -->
-<!-- 	                           				<option value="smallQuantities">Small Quantities</option> -->
-<!-- 	                           				<option value="producedInSubAssembly">Produced in Sub Assembly</option> -->
-<!-- 	                           			</select> -->
 										<?php 
 			                             	$select = DropDownUtils::getReasonTypes("apfirstinspectiondatenareason", null, $qcSchedule->getApFirstInspectionDateNaReason(),false,true);
 			                                echo $select;
@@ -153,6 +171,31 @@ if (isset ( $_POST ["id"] )) {
 
 	                            </div>
 	                        </div>
+	                        <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
+	                        	<div class="col-lg-4">
+
+	                            	<input type="text" placeholder="Select Date" id="approductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getAPProductionStartDate()?>" name="approductionstartdate" class="form-control dateControl" <?php echo isset($fieldStateArr["approductionstartdate"])?$fieldStateArr["approductionstartdate"]:""?>>
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
+	                        	<div class="col-lg-2">
+	                        		<div id="graphicsReceiveDateDiv">
+	                            		<input type="text" placeholder="Select Date" id="apgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getAPGraphicsReceiveDate()?>" name="apgraphicsreceivedate" class="form-control dateControl" <?php echo isset($fieldStateArr["apgraphicsreceivedate"])?$fieldStateArr["apgraphicsreceivedate"]:""?>>
+	                            	</div>
+	                            	<div style="display:none" id="graphicsNaReasonDiv">
+										<?php 
+			                             	$select = DropDownUtils::getGraphicsNAReasonTypes("apgraphicsreceivedatenareason", null, $qcSchedule->getAPGraphicsReceiveDateNAReason(),false,true);
+			                                echo $select;
+	                             		?>
+	                        		</div>
+	                            </div>
+	                             <label class="col-lg-1 col-form-label">NA</label>
+	                            <div class="col-lg-1 i-checks">
+	                            	<input type="checkbox" <?php echo $graphicsReceiveChk?> id="apGraphicsReceiveChk" name="apGraphicsReceiveChk" class="form-control" <?php echo isset($fieldStateArr["apMiddleInspectionChk"])?$fieldStateArr["apMiddleInspectionChk"]:""?>>
+	                            </div>
+	                            
+	                            
+	                       </div>
 	                        
 	                  </div>
 	                  
@@ -197,6 +240,16 @@ if (isset ( $_POST ["id"] )) {
 	                                <textarea id="acfirstinspectionnotes" maxLength="2500" name="acfirstinspectionnotes" class="form-control editor"><?php echo $qcSchedule->getAcFirstInspectionNotes()?></textarea>
 	                            </div>
 	                       </div>
+	                       <div class="form-group row">
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Production Start Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" placeholder="Select Date" id="acproductionstartdate" maxLength="250" value="<?php echo $qcSchedule->getACProductionStartDate()?>" name="acproductionstartdate" class="form-control dateControl" <?php echo isset($fieldStateArr["acproductionstartdate"])?$fieldStateArr["acproductionstartdate"]:""?>>
+	                            </div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Graphics Receive Date</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" placeholder="Select Date" id="acgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getACGraphicsReceiveDate()?>" name="acgraphicsreceivedate" class="form-control dateControl" <?php echo isset($fieldStateArr["acgraphicsreceivedate"])?$fieldStateArr["acgraphicsreceivedate"]:""?>>
+	                            </div>
+	                       </div>
 	                       
 	                  </div>
 					<div class="selectedPODiv">
@@ -225,25 +278,25 @@ if (isset ( $_POST ["id"] )) {
 							
 							
 							?>
-							<tr>
-								<td class="i-checks"><input type="checkbox"></th>
+							<tr class="tr<?php echo $qcSchedule["seq"] ?>">
+								<td class="i-checks"><input class="selectionChk" id="<?php echo $qcSchedule["seq"] ?>" type="checkbox"></th>
+								<td><?php echo $qcSchedule["qc"];?></th>
 								<td><?php echo $qcSchedule["classcode"];?></th>
-								<td><?php echo $qcSchedule->getClassCodeSeq();?></th>
-								<td><?php echo $qcSchedule->getAPReadyDate();?></th>
-								<td><?php echo $qcSchedule->getAPFinalInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getAPMiddleInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getAPFirstInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getAPProductionStartDate();?></th>
-								<td><?php echo $qcSchedule->getAPGraphicsReceiveDate();?></th>
-								<td><?php echo $qcSchedule->getACReadyDate();?></th>
-								<td><?php echo $qcSchedule->getACFinalInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getACMiddleInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getACFirstInspectionDate();?></th>
-								<td><?php echo $qcSchedule->getAcMiddleInspectionNotes();?></th>
-								<td><?php echo $qcSchedule->getAcFirstInspectionNotes();?></th>
-								<td><?php echo $qcSchedule->getACProductionStartDate();?></th>
-								<td><?php echo $qcSchedule->getACGraphicsReceiveDate();?></th>
-								<td><?php echo $qcSchedule->getNotes();?></th>
+								<td><?php echo $qcSchedule["apreadydate"];?></th>
+								<td><?php echo $qcSchedule["apfinalinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["apmiddleinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["apfirstinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["approductionstartdate"];?></th>
+								<td><?php echo $qcSchedule["apgraphicsreceivedate"];?></th>
+								<td><?php echo $qcSchedule["acreadydate"];?></th>
+								<td><?php echo $qcSchedule["acfinalinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["acmiddleinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["acfirstinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["acmiddleinspectiondate"];?></th>
+								<td><?php echo $qcSchedule["acfirstinspectionnotes"];?></th>
+								<td><?php echo $qcSchedule["acproductionstartdate"];?></th>
+								<td><?php echo $qcSchedule["acgraphicsreceivedate"];?></th>
+								<td><?php echo $qcSchedule["notes"];?></th>
 								
 							</tr>
 						
@@ -331,6 +384,16 @@ $(document).ready(function(){
 	$('#isapproval').on('ifChanged', function(event){
 		requiredAcFinalInspection();
   	});
+	
+	$('.selectionChk').on('ifChanged', function(event){
+		var flag  = $("#"+this.id).is(':checked');
+		if(flag){
+			$(".tr"+this.id).addClass("nav-header",100);
+		}else{
+			$(".tr"+this.id).removeClass("nav-header");
+		}
+  	});
+  	
 });
 
 function requiredAcFinalInspection(){

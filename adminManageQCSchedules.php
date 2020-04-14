@@ -503,13 +503,13 @@ function loadGrid(){
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
-      { text: 'QC.', datafield: 'qccode', width:"10%"},
-	  {text: 'PoIncharge', datafield:'poincharge', width:"10%"},
-      { text: 'Code', datafield: 'classcode',width:"10%"},
-      { text: 'PO', datafield: 'po',width:"12%"},
+      { text: 'QC.', datafield: 'users.qccode', width:"10%"},
+	  {text: 'PO Incharge', datafield:'poinchargeusers.qccode', width:"10%"},
+      { text: 'Code', datafield: 'classcode',width:"7%"},
+      { text: 'PO', datafield: 'po',width:"10%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
-      { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%"},
+      { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"10%"},
       { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Frst Insp', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -533,7 +533,7 @@ function loadGrid(){
       { text: 'responsecomments', datafield: 'responsecomments',width:"12%",hidden:true},
       { text: 'qcapprovalseq', datafield: 'qcapprovalseq',width:"12%",hidden:true},
       { text: 'Ac Ready', datafield: 'acreadydate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
-      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"18%"},
+      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"},
       { text: 'Approval', datafield: 'responsetype',width:"7%",cellsrenderer:actions}
     ]
    
@@ -548,8 +548,8 @@ function loadGrid(){
         			{name: 'id', type: 'integer' },
             		{name: 'seq', type: 'integer' },
                     { name: 'iscompleted', type: 'boolean' }, 
-                    { name: 'qccode', type: 'string' }, 
-					{ name: 'poincharge', type: 'string'},
+                    { name: 'users.qccode', type: 'string' }, 
+					{ name: 'poinchargeusers.qccode', type: 'string'},
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },
                     { name: 'potype', type: 'string' } ,

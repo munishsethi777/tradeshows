@@ -123,7 +123,7 @@ class DropDownUtils {
 	
 	public static function getPOUsers($selectName,$onChangeMethod, $selectedValue,$isRequired,$isAll = false){
 		$userMgr = UserMgr::getInstance();
-		$users = $userMgr->getPOUsersArrForDD();
+		$users = $userMgr->getPOInchargeUsersArrForDD();
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select PO");
 	}
 

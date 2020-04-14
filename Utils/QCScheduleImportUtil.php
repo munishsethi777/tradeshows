@@ -9,7 +9,8 @@ class QCScheduleImportUtil
     private $BULK_DELETE_COUNT = "100";
     private static $ACTUAL_FIELDS_NAMES = array(
         "qc",
-        "classcode",
+    	"poperson",
+        "classcodes",
         "po#",
         "potype",
         "itemno",
@@ -32,7 +33,8 @@ class QCScheduleImportUtil
 
     private static $FIELDS_NAMES = array(
         "Qc",
-        "Class Code",
+    	"PO Person",
+        "Class Codes",
         "PO#",
         "PO Type",
         "Item No",
@@ -52,7 +54,8 @@ class QCScheduleImportUtil
         "Notes",
         "Final Status"
     );
-
+	
+    
     public static function getInstance()
     {
         if (! self::$qcImportUtil) {
@@ -271,47 +274,62 @@ class QCScheduleImportUtil
         $userMgr = UserMgr::getInstance();
         $qcUsers = $userMgr->getQCUsersArrForDD();
         $qcUsers = array_flip($qcUsers);
+        $poinchargeUsers = $userMgr->getPOInchargeUsersArrForDD();
+        $poinchargeUsers = array_flip($poinchargeUsers);
         $classCodeMgr = ClassCodeMgr::getInstance();
+        
         $qc = $data[0];
+        $qc = strtoupper(trim($qc));
         $qcUserSeq = $qcUsers[$qc];
-        $classCode = $data[1];
-        $po = $data[2];
-        $poType = $data[3];
-        $itemNo = $data[4];
+        $poincharge = $data[1];
+        $poinchargeUserSeq = $poinchargeUsers[strtoupper(trim($poincharge))];
+        
+        $classCode = $data[2];
+        $po = $data[3];
+        $poType = $data[4];
+        $itemNo = $data[5];
         $itemNoArr = array();
         if (! empty($itemNo)) {
             $itemNoArr = $this->getItemNoArr($itemNo);
         }
-        $shipDateStr = $data[5];
+        $shipDateStr = $data[6];
 
-        $readyDate = $data[6];
+        $readyDate = $data[7];
 
-        $finalInspectionDate = $data[7];
-        $middleInspectionDate = $data[8];
-        $firstInspectionDate = $data[9];
+        $finalInspectionDate = $data[8];
+        $middleInspectionDate = $data[9];
+        $firstInspectionDate = $data[10];
 
-        $productionStartDate = $data[10];
-        $graphicReceiveDate = $data[11];
-        $ac_readyDate = $data[12];
-        $ac_finalInspectionDate = $data[13];
+        $productionStartDate = $data[11];
+        $graphicReceiveDate = $data[12];
+        $ac_readyDate = $data[13];
+        $ac_finalInspectionDate = $data[14];
 
-        $ac_middleInspectionDate = $data[14];
-        $ac_firstInpectionDate = $data[15];
+        $ac_middleInspectionDate = $data[15];
+        $ac_firstInpectionDate = $data[16];
 
-        $ac_productionStartDate = $data[16];
-        $ac_graphicDateReceive = $data[17];
-        $note = $data[18];
-        $finalStatus = $data[19];
+        $ac_productionStartDate = $data[17];
+        $ac_graphicDateReceive = $data[18];
+        $note = $data[19];
+        $finalStatus = $data[20];
 
         $this->dataTypeErrors = "";
 
         $qcSchedule = new QCSchedule();
 
-        if (! empty($qc)) {
+        if (! empty($qc) && ! empty($qcUserSeq)) {
             $qcSchedule->setQC($qc);
             $qcSchedule->setQCUser($qcUserSeq);
+        }else{
+        	throw new Exception("'$qc' QC not found in database!");
         }
-
+        if (! empty($poincharge)) {
+        	if(!empty($poinchargeUserSeq)){
+        		$qcSchedule->setPOInchargeUser($poinchargeUserSeq);
+        	}else{
+        		throw new Exception("'$poincharge' PO Incharge not found in database!");
+        	}
+        }
         if (! empty($classCode)) {
             $classCodeObj = $classCodeMgr->findByClassCode($classCode);
             $classCodeSeq = 0;
@@ -343,7 +361,7 @@ class QCScheduleImportUtil
             $currentTime->setTime(0,0);
             $shipDate->setTime(0,0);
             if($shipDate < $currentTime){
-                throw new Exception(StringConstants::SHIP_DATE_IS_IN_PAST);
+                //throw new Exception(StringConstants::SHIP_DATE_IS_IN_PAST);
             }
             $readyDate = $this->convertStrToDate($shipDateStr);
             $readyDate->modify('-14 day');

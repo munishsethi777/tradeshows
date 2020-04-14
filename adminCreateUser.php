@@ -26,7 +26,7 @@ $graphicDesignerChecked = "";
 $containerInformationChecked = "";
 $containerDeliveryChecked = "";
 $containerOfficeChecked = "";
-$qcChecked = "";
+$poInchargeChecked = "";
 $weeklyMailButtonChecked = "";
 $qcPlannerButtonChecked = "";
 $qcApprovedRejectNotification = "";
@@ -74,6 +74,8 @@ if(in_array(Permissions::china_team,$userRoles)){
 	$graphicDesignerChecked = "checked";
 }if(in_array(Permissions::qc,$userRoles)){
 	$qcChecked = "checked";
+}if(in_array(Permissions::po_incharge,$userRoles)){
+	$poInchargeChecked = "checked";
 }if(in_array(Permissions::container_information,$userRoles)){
 	$containerInformationChecked = "checked";
 }if(in_array(Permissions::container_delivery_information,$userRoles)){
@@ -246,6 +248,11 @@ if(in_array(1,$departmentSeqArr)){
                                             	<input type="checkbox" <?php echo $qcChecked?> value="qc" id="qcpermission" name="permissions[]"/>
 				                        		Quality Controller
                                             </label>
+                                            
+                                            <label class="col-lg-3 col-form-label">
+				                        		<input type="checkbox" <?php echo $poInchargeChecked?> value="po_incharge" id="poinchargepermission" name="permissions[]"/>
+												PO Incharge
+											</label>
 				                        	
 				                        	<label class="col-lg-3 col-form-label">
 				                        		<input type="checkbox" <?php echo $classCodeChecked?> value="class_code" id="classcodepermission" name="permissions[]"/>
@@ -262,15 +269,15 @@ if(in_array(1,$departmentSeqArr)){
 				                            	<input type="checkbox" <?php echo $qcPlannerButtonChecked?> value="qc_planner_button" id="qcplannerbuttonpermission" name="permissions[]"/>
 				                            	Qc Planner Button
 				                            </label>
-				                            <div class="row m-t-xl"></div>
+				                            
 				                            <label class="col-lg-3 col-form-label">
 				                            	<input type="checkbox" <?php echo $qcApprovedRejectNotification?> value="approved_reject_notification" id="qcapprovalrejectpermission" name="permissions[]"/>
 				                            	Approved/Reject Notification
 				                            </label>
 				                        	
 				                            <div class="qcDIV form-group col-lg-6" style="display:<?php echo "block"?>">
-					                            <label class="col-lg-3 col-form-label">QC Code :</label>
-					                        	<div class="col-lg-8">
+					                            <label class="col-lg-6 col-form-label">QC/PO Incharge Code :</label>
+					                        	<div class="col-lg-6">
 					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
 					                            </div>
 					                        </div>
@@ -627,7 +634,7 @@ function disabledQCPermissions(){
 		$("#weeklymailbuttonpermission").attr("disabled","disabled");
 		$("#qcplannerbuttonpermission").attr("disabled","disabled");
 		$("#qcapprovalrejectpermission").attr("disabled","disabled");
-		
+		$("#poinchargepermission").attr("disabled","disabled");
 		
 	}else{
 		$("#qccode").removeAttr("disabled");
@@ -636,6 +643,7 @@ function disabledQCPermissions(){
 		$("#weeklymailbuttonpermission").removeAttr("disabled");
 		$("#qcplannerbuttonpermission").removeAttr("disabled");
 		$("#qcapprovalrejectpermission").removeAttr("disabled");
+		$("#poinchargepermission").removeAttr("disabled");
 	}
 }
 function disabledContainerPermissions(){
