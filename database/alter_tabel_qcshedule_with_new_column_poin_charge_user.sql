@@ -1,0 +1,1 @@
+ALTER TABLE `qcschedules` ADD `poinchargeuser` BIGINT NULL AFTER `iscompleted`;

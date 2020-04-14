@@ -121,6 +121,12 @@ class DropDownUtils {
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select QC");
 	}
 	
+	public static function getPOUsers($selectName,$onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getPOUsersArrForDD();
+		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select PO");
+	}
+
 	public static function getGraphicDesigersUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$userMgr = UserMgr::getInstance();
 		$users = $userMgr->getGraphicDesignersArrForDD();

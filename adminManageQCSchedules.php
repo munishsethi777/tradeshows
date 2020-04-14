@@ -468,6 +468,7 @@ function loadGrid(){
         var responseType = data["responsetype"];
         var responseComments = data["responsecomments"];
         var qc = data["qccode"];
+		var po = data["pocode"];
         var code = data["classcode"];
         var po = data["po"];
         var itemno = data["itemnumbers"];
@@ -503,6 +504,7 @@ function loadGrid(){
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
       { text: 'QC.', datafield: 'qccode', width:"10%"},
+	  {text: 'PoIncharge', datafield:'poincharge', width:"10%"},
       { text: 'Code', datafield: 'classcode',width:"10%"},
       { text: 'PO', datafield: 'po',width:"12%"},
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
@@ -547,6 +549,7 @@ function loadGrid(){
             		{name: 'seq', type: 'integer' },
                     { name: 'iscompleted', type: 'boolean' }, 
                     { name: 'qccode', type: 'string' }, 
+					{ name: 'poincharge', type: 'string'},
                     { name: 'classcode', type: 'string' },
                     { name: 'po', type: 'string' },
                     { name: 'potype', type: 'string' } ,

@@ -12,6 +12,7 @@ $middleInspectionChk = "";
 $firstInspectionChk = "";
 $graphicsReceiveChk = "";
 $qcUser = 0;
+$poUser = 0;
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
@@ -87,7 +88,7 @@ if($isSessionGeneralUser && !$isSessionSV){
         $isCompleted = "checked";
     }else{
         $isCompleted = "";
-    }
+	}
  }
 ?>
 <!DOCTYPE html>
@@ -155,6 +156,17 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                        			<?php }
                              		?>
 	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
+	                            </div>
+								<label class="col-lg-2 col-form-label bg-formLabel">PO</label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+										$select = DropDownUtils::getPOUsers("pouser", null,$poUser,false,true);
+		                        		echo $select;
+	                        			if($isSessionGeneralUser && !$isSessionSV){?>
+	                        				<input type="hidden" id="pouserhidden" value="<?php echo $poUser?>" name="pouser">
+	                        			<?php }
+                             		?>
+	                            	<input style="display: none" type="text" id="po" maxLength="250" value="" name="po" class="form-control">
 	                            </div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">

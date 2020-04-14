@@ -184,6 +184,7 @@ class UserMgr{
 		}
 		return $arr;
 	}
+
 	public function getPOInchargeUsersArrForDD(){//Deprecated
 		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'po_incharge' and users.isenabled = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);
@@ -193,6 +194,16 @@ class UserMgr{
 		}
 		return $arr;
 	}
+
+	
+	public function getPOUsersArrForDD(){
+		// Going to use StringConstants as a comma seperated string 
+		$poIncharges = StringConstants::PO_INCHARGE_USERSEQS;
+		$poIncharges = split(',', $poIncharges);
+		return $poIncharges;
+	}
+
+
 	public function getGraphicDesignersArrForDD(){//Deprecated
 		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' and users.isenabled = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);

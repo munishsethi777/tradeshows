@@ -352,6 +352,9 @@ class ExportUtil{
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PoIncharge");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Class Code");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		$colName = $alphas[$i++]. $count;
@@ -415,7 +418,10 @@ class ExportUtil{
 		    
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["qccode"]);
-	
+			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["poinchargeuser"]);
+
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["classcode"]);
 	
@@ -554,33 +560,33 @@ class ExportUtil{
 			$i = 0;
 		}
 		$objPHPExcel->getActiveSheet()->setTitle("QCSchedules");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A1:L1')
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A1:M1')
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('FFFF99');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A2:L2')
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('A2:M2')
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('FFFF99');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle('M1:R1')
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('N1:S1')
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('D3D3D3');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle('M2:R2')
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('N2:S2')
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('D3D3D3');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle('S1:S2')
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle('T1:T2')
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('FF0000');
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('M1:R1');
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:M1');
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells('N1:S1');
 		
 		
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet

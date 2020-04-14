@@ -160,5 +160,5 @@ class StringConstants{
 	const SAVED_SUCCESSFULLY    = "Saved successfully.";
 	const UPDATED_SUCCESSFULLY   = "Updated successfully";
 	
-	
+	const PO_INCHARGE_USERSEQS = "3,10,15,16,17,18,19,20";
 }

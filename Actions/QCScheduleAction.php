@@ -47,6 +47,10 @@ if($call == "saveQCSchedule"){
 		$seq = $_REQUEST["seq"];
 		$seqs = $_REQUEST["seqs"];
 		$seqs = explode(",",$seqs);
+		$poUser = (int)$_REQUEST["pouser"];
+		$poIncharges = StringConstants::PO_INCHARGE_USERSEQS;
+		$poIncharges = split(',', $poIncharges);
+		$poUser = $poIncharges[$poUser];
 		foreach (array_filter($itemNumbers) as $key=>$itemNumber){
 			$seq = 0;
 			$qcSchedule = new QCSchedule();
@@ -59,6 +63,7 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->createFromRequest($_REQUEST);
 			$qcSchedule->setSeq($seq);
 			$qcSchedule->setItemNumbers($itemNumber);
+			$qcSchedule->setPoInchargeUser($poUser);
 			if(!isset($_REQUEST["apMiddleInspectionChk"])){
 				$qcSchedule->setApMiddleInspectionDateNaReason(null);
 			}else{
