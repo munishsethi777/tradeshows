@@ -1,0 +1,1 @@
+ALTER TABLE `qcschedules` ADD FOREIGN KEY (poinchargeuser) REFERENCES users (seq)

@@ -80,7 +80,7 @@ class QCScheduleMgr{
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-		$query = "select qcschedules.seq as scheduleseq,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+		$query = "select qcschedules.seq as scheduleseq,classcode,qccode , poinchargeuser,qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		//$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
 		
@@ -475,7 +475,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	public function getQCScheudlesForGrid(){
 //  		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
 //  left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
-		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules 
+		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , poinchargeuser,qcschedules.* from qcschedules 
 left join users on qcschedules.qcuser = users.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq
 left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
@@ -506,6 +506,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 			$lastModifiedOn = $qcSchedule["lastmodifiedon"];
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
 			$qcSchedule["lastmodifiedon"] = $lastModifiedOn;
+			$qcSchedule["poincharge"] = $qcSchedule["poinchargeuser"];
 			array_push($arr,$qcSchedule);
 		}
 		$mainArr["Rows"] = $arr;
