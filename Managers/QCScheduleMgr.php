@@ -538,11 +538,10 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function findAllBySeqsForBulkEdit($seqs){
-		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules
+		$query = "select  classcode, qcschedules.* from qcschedules
 left join users on qcschedules.qcuser = users.seq
-left join classcodes on qcschedules.classcodeseq = classcodes.seq
-left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
-		$qcSchedules = self::$dataStore->executeQuery($query,false,false,false);
+left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedules.seq in ($seqs)";
+		$qcSchedules = self::$dataStore->executeQuery($query,false,true,false);
 		return $qcSchedules;
 	}
 	

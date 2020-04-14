@@ -184,7 +184,15 @@ class UserMgr{
 		}
 		return $arr;
 	}
-	
+	public function getPOInchargeUsersArrForDD(){//Deprecated
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'po_incharge' and users.isenabled = 1";
+		$users = self::$userDataStore->executeObjectQuery($sql);
+		$arr = array();
+		foreach($users as $user){
+			$arr[$user->getSeq()] = $user->getQCCode();
+		}
+		return $arr;
+	}
 	public function getGraphicDesignersArrForDD(){//Deprecated
 		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' and users.isenabled = 1";
 		$users = self::$userDataStore->executeObjectQuery($sql);
