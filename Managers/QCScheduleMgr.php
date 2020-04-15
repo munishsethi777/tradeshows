@@ -70,7 +70,60 @@ class QCScheduleMgr{
 		    throw $e;
 		}
 	}
-	
+	private function setValueIfExists($arr,$arrIndex,$value){
+		if($value != null){
+			$arr[$arrIndex] = $value;
+		}
+		return $arr;
+	}
+	public function bulkUpdateQCSchedules($qcschedule,$qcschedulesCommStr){
+		$qcSchedule = new QCSchedule($qcschedule);
+		$colVal = array();
+		
+		$colVal = $this->setValueIfExists($colVal,"qcuser",$qcSchedule->getQCUser());
+		$colVal = $this->setValueIfExists($colVal,"poinchargeuser",$qcSchedule->getPOInchargeUser());
+		$colVal = $this->setValueIfExists($colVal,"classcodeseq",$qcSchedule->getClassCodeSeq());
+		$colVal = $this->setValueIfExists($colVal,"iscompleted",$qcSchedule->getIsCompleted());
+		$colVal = $this->setValueIfExists($colVal,"apreadydate",$qcSchedule->getAPReadyDate());
+		$colVal = $this->setValueIfExists($colVal,"apfinalinspectiondate",$qcSchedule->getAPFinalInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"apmiddleinspectiondate",$qcSchedule->getAPMiddleInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"apfirstinspectiondate",$qcSchedule->getAPFirstInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"approductionstartdate",$qcSchedule->getAPProductionStartDate());
+		$colVal = $this->setValueIfExists($colVal,"apgraphicsreceivedate",$qcSchedule->getAPGraphicsReceiveDate());
+		$colVal = $this->setValueIfExists($colVal,"acreadydate",$qcSchedule->getACReadyDate());
+		$colVal = $this->setValueIfExists($colVal,"acfinalinspectiondate",$qcSchedule->getACFinalInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"acmiddleinspectiondate",$qcSchedule->getACMiddleInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"acfirstinspectiondate",$qcSchedule->getACFirstInspectionDate());
+		$colVal = $this->setValueIfExists($colVal,"acproductionstartdate",$qcSchedule->getACProductionStartDate());
+		$colVal = $this->setValueIfExists($colVal,"acgraphicsreceivedate",$qcSchedule->getACGraphicsReceiveDate());
+		
+		$colVal = $this->setValueIfExists($colVal,"acfirstinspectionnotes",$qcSchedule->getAcFirstInspectionNotes());
+		$colVal = $this->setValueIfExists($colVal,"acmiddleinspectionnotes",$qcSchedule->getAcMiddleInspectionNotes());
+		
+		$colVal = $this->setValueIfExists($colVal,"apfirstinspectiondatenareason",$qcSchedule->getApFirstInspectionDateNaReason());
+		$colVal = $this->setValueIfExists($colVal,"apmiddleinspectiondatenareason",$qcSchedule->getApMiddleInspectionDateNaReason());
+		$colVal = $this->setValueIfExists($colVal,"apgraphicsreceivedatenareason",$qcSchedule->getAPGraphicsReceiveDateNAReason());
+		if(!empty($qcSchedule->getApFirstInspectionDateNaReason())){
+			$colVal["apfirstinspectiondate"] = null;
+		}else{
+			$colVal["apfirstinspectiondatenareason"] = null;
+		}
+		if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
+			$colVal["apmiddleinspectiondate"] = null;
+		}else{
+			$colVal["apmiddleinspectiondatenareason"] = null;
+		}
+		if(!empty($qcSchedule->getAPGraphicsReceiveDateNAReason())){
+			$colVal["apgraphicsreceivedate"] = null;
+		}else{
+			$colVal["apgraphicsreceivedatenareason"] = null;
+		}
+		
+		$colVal["lastmodifiedon"] = new DateTime();
+		
+		$condition = array("seq" => $qcschedulesCommStr);
+		self::$dataStore->updateByAttributesWithBindParams($colVal,$condition,true);
+	}
 	
 	public function exportQCSchedules($queryString,$qcscheduleSeqs){
 		$output = array();
@@ -473,12 +526,10 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function getQCScheudlesForGrid(){
-//  		$query = "select qcschedulesapproval.responsecomments ,qcschedulesapproval.seq as qcapprovalseq,responsetype, qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq
-//  left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq ";
-		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , poinchargeuser,qcschedules.* from qcschedules 
-left join users on qcschedules.qcuser = users.seq
-left join classcodes on qcschedules.classcodeseq = classcodes.seq
-left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+// 		$query = "select  classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, qccode , poinchargeuser,qcschedules.* from qcschedules 
+// left join users on qcschedules.qcuser = users.seq
+// left join classcodes on qcschedules.classcodeseq = classcodes.seq
+// left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		
 		$query ="select  poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , poinchargeuser,qcschedules.* from qcschedules 
 left join users on qcschedules.qcuser = users.seq
@@ -548,8 +599,9 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function findAllBySeqsForBulkEdit($seqs){
-		$query = "select  classcode, qcschedules.* from qcschedules
+		$query = "select pousers.qccode poqccode,users.qccode uqccode, classcodes.classcode, qcschedules.* from qcschedules
 left join users on qcschedules.qcuser = users.seq
+left join users pousers on qcschedules.poinchargeuser = pousers.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedules.seq in ($seqs)";
 		$qcSchedules = self::$dataStore->executeQuery($query,false,true,false);
 		return $qcSchedules;

@@ -47,10 +47,6 @@ if($call == "saveQCSchedule"){
 		$seq = $_REQUEST["seq"];
 		$seqs = $_REQUEST["seqs"];
 		$seqs = explode(",",$seqs);
-		//$poUser = (int)$_REQUEST["pouser"];
-		//$poIncharges = StringConstants::PO_INCHARGE_USERSEQS;
-		//$poIncharges = split(',', $poIncharges);
-		//$poUser = $poIncharges[$poUser];
 		foreach (array_filter($itemNumbers) as $key=>$itemNumber){
 			$seq = 0;
 			$qcSchedule = new QCSchedule();
@@ -63,7 +59,6 @@ if($call == "saveQCSchedule"){
 			$qcSchedule->createFromRequest($_REQUEST);
 			$qcSchedule->setSeq($seq);
 			$qcSchedule->setItemNumbers($itemNumber);
-			//$qcSchedule->setPoInchargeUser($poUser);
 			if(!isset($_REQUEST["apMiddleInspectionChk"])){
 				$qcSchedule->setApMiddleInspectionDateNaReason(null);
 			}else{
@@ -115,7 +110,55 @@ if($call == "saveQCSchedule"){
 		$message  = $e->getMessage();
 	}
 }
-
+if($call == "bulkUpdateQCSchedule"){
+	try{
+		$seq = $_REQUEST["seq"];
+		$message = StringConstants::QC_SCHEDULE_SAVED_SUCCESSFULLY;
+		
+		if(count($_REQUEST["qcschedulescheck"]) == 0){
+			throw new Exception("No QC Schedule selected to be updated.");
+		}
+		$qcSchedule = new QCSchedule();
+		$qcSchedule->createFromRequest($_REQUEST);
+		if(!isset($_REQUEST["apMiddleInspectionChk"])){
+			$qcSchedule->setApMiddleInspectionDateNaReason(null);
+		}else{
+			$qcSchedule->setAPMiddleInspectionDate(null);
+		}
+		if(!isset($_REQUEST["apFirstInspectionChk"])){
+			$qcSchedule->setApFirstInspectionDateNaReason(null);
+		}else{
+			$qcSchedule->setAPFirstInspectionDate(null);
+		}
+		if(!isset($_REQUEST["apGraphicsReceiveChk"])){
+			$qcSchedule->setAPGraphicsReceiveDateNAReason(null);
+		}else{
+			$qcSchedule->setAPGraphicsReceiveDate(null);
+		}
+		if(isset($_REQUEST["iscompleted"])){
+			$qcSchedule->setIsCompleted(1);
+		}else{
+			$qcSchedule->setIsCompleted(0);
+		}
+		
+		if($qcSchedule->getAcFirstInspectionNotes() == "<p><br></p>"){
+			$qcSchedule->setAcFirstInspectionNotes(NULL);
+		}
+		if($qcSchedule->getAcMiddleInspectionNotes() == "<p><br></p>"){
+			$qcSchedule->setAcMiddleInspectionNotes(NULL);
+		}
+		if($qcSchedule->getNotes() == "<p><br></p>"){
+			$qcSchedule->setNotes(NULL);
+		}
+		$qcSchedule->setLastModifiedOn(new DateTime());
+		$qcSeqs = implode(",", $_REQUEST["qcschedulescheck"]);
+		$qcScheduleMgr->bulkUpdateQCSchedules($qcSchedule, $qcSeqs);
+	
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 if($call == "importQCSchedules"){
 	try{
 		$isUpdate = false;

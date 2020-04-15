@@ -649,7 +649,7 @@ function loadGrid(){
             
             container.append(addButton);
             container.append(editButton);
-            //container.append(bulkEditButton);
+            container.append(bulkEditButton);
            // container.append(deleteButton);
 
             container.append(exportButton);
@@ -693,6 +693,10 @@ function loadGrid(){
             });
             editButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
+            	if(selectedrowindex.length == 0){
+            		bootbox.alert("Please Select QC Schedule to edit.", function() {});
+            		return;
+            	}
                 var value = -1;
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
@@ -721,6 +725,10 @@ function loadGrid(){
             });
             bulkEditButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
+            	if(selectedrowindex.length == 0){
+            		bootbox.alert("Please Select QC Schedules to Bulk edit.", function() {});
+            		return;
+            	}
                 var value = -1;
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
