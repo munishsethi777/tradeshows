@@ -157,7 +157,7 @@ if($isSessionGeneralUser && !$isSessionSV){
                              		?>
 	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
 	                            </div>
-								<label class="col-lg-2 col-form-label bg-formLabel">PO</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">PO Incharge</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
 										$select = DropDownUtils::getPOUsers("poinchargeuser", null,$qcSchedule->getPoInchargeUser(),false,true);
