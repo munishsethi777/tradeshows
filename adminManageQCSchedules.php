@@ -649,7 +649,7 @@ function loadGrid(){
             
             container.append(addButton);
             container.append(editButton);
-            container.append(bulkEditButton);
+            //container.append(bulkEditButton);
            // container.append(deleteButton);
 
             container.append(exportButton);
