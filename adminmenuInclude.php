@@ -189,6 +189,7 @@ if($file == "dashboardmain.php"){
                 <?php }else{
                 	$departmentMgr = DepartmentMgr::getInstance();
                 	$departments = $departmentMgr->getUserAssignedDepartments($userLoggedInSeq);
+                	$permissions = $sessionUtil::getInstance()->getUserLoggedInPermissions();
                 	?>
                 	<li class="<?php echo $isDashboard?>">
 	                    <a href="dashboardmain.php"><i class="fa fa-tachometer"></i> 
@@ -209,14 +210,14 @@ if($file == "dashboardmain.php"){
 		                    </a>
 		                </li>
 		            <?php }?>
-		            <?php if($isSessionSupervisor){?>
+		            <?php if(in_array(Permissions::getName(Permissions::class_code), $permissions)){?>
 		              <li class="<?php echo $manageClassCodes;?>">
 		                    <a href="manageClassCodes.php"><i class="fa fa-flag"></i> 
 		                    	<span class="nav-label">Class Codes</span>  
 		                    </a>
                 		</li>
                 	<?php }?>
-                	 <?php if($isSessionSupervisor || in_array(DepartmentType::Email_Logs,$departments)){?>
+                	 <?php if(in_array(DepartmentType::Email_Logs,$departments)){?>
 		              <li class="<?php echo $manageEmailLogs;?>">
 		                    <a href="manageEmailLogs.php"><i class="fa fa-envelope"></i> 
 		                    	<span class="nav-label">Email Logs</span>  
