@@ -12,6 +12,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleNotificationType.p
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/EmailLogType.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 
 
 class QCNotificationsUtil{
@@ -704,5 +705,11 @@ class QCNotificationsUtil{
     	     }
     	   }    	      	    
 	    }
-	}	
+	}
+	
+	public static function sendQCBulkUpdateNotification($qcScheduleNew, $qcSchedules){
+		ExportUtil::exportQCSchedules($qcSchedules);
+		
+	}
+	
 }
