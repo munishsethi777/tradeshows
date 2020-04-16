@@ -743,9 +743,11 @@ function loadGrid(){
                 var selectedPOs = [];
                 $.each(indexes, function(index , value){
                 	 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', value);
-                	 selectedPOs.push(row.po);
-                	 seqs.push(row.seq);
-                	 itemIds.push(row.itemnumbers); 
+					 if(!(row.responsetype == "Approved" ) && !(row.responsetype == "Pending")){
+						seqs.push(row.seq);
+						selectedPOs.push(row.po);
+						itemIds.push(row.itemnumbers); 
+					}
                 });
                 selectedPOs = removeDuplicates(selectedPOs);
                 //if(selectedPOs.length > 1){

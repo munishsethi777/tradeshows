@@ -256,8 +256,10 @@ class QCSchedule{
 	}
 	
 	public function __construct($object = null) {
-		foreach($object as $property => $value) {
-			$this->$property = $value;
+		if($object !== null){
+			foreach($object as $property => $value) {
+				$this->$property = $value;
+			}
 		}
 	}
 	

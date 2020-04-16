@@ -13,15 +13,21 @@ $readOnlyPO = "";
 $middleInspectionChk = "";
 $firstInspectionChk = "";
 $qcUser = 0;
+$seqs = 0;
+$seq = 0;
+$graphicsReceiveChk = "";
 $qcUserReadonly = "";
 $sessionUtil = SessionUtil::getInstance ();
 $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser ();
 $isSessionSV = $sessionUtil->isSessionSupervisor ();
 $isSessionAdmin = $sessionUtil->isSessionAdmin ();
-
-$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
-
+if($_REQUEST['seqs'] == ""){
+	$qcSchedules = array();
+}else{
+	$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
+}
+$isCompleted = "";
 ?>
 <!DOCTYPE html>
 <html>

@@ -624,6 +624,7 @@ function setDates(shipDateStr){
 }
 function saveQCSchedule(){
 	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
+	$("#qc").val(($( "#qcuser option:selected" ).text()));
 	if($("#createQCScheduleForm")[0].checkValidity()) {
 		showHideProgress()
 		$('#createQCScheduleForm').ajaxSubmit(function( data ){
