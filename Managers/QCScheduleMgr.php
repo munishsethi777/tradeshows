@@ -76,7 +76,7 @@ class QCScheduleMgr{
 		}
 		return $arr;
 	}
-	public function bulkUpdateQCSchedules($qcschedule,$qcschedulesCommStr){
+	public function bulkUpdateQCSchedules($qcschedule,$qcschedulesArr){
 		$qcSchedule = new QCSchedule($qcschedule);
 		$colVal = array();
 		
@@ -118,11 +118,22 @@ class QCScheduleMgr{
 		}else{
 			$colVal["apgraphicsreceivedatenareason"] = null;
 		}
-		
 		$colVal["lastmodifiedon"] = new DateTime();
+		$qcSeqsStr = implode(",", $qcschedulesArr);
 		
-		$condition = array("seq" => $qcschedulesCommStr);
+		
+		$condition = array("seq" => $qcSeqsStr);
 		self::$dataStore->updateByAttributesWithBindParams($colVal,$condition,true);
+		
+		if(isset($_POST["isapproval"])){
+			foreach($qcschedulesArr as $qcScheduleSeq){
+				$qcSchedule->setSeq($qcScheduleSeq);
+				$qcApprovalMgr = QcscheduleApprovalMgr::getInstance();
+				$qcApprovalMgr->saveApprovalFromQCSchedule($qcSchedule);
+			}
+		}
+		$qcSchedules = self::$dataStore->executeInList($condition);
+		//QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedule, $qcSchedules);
 	}
 	
 	public function exportQCSchedules($queryString,$qcscheduleSeqs){
@@ -599,7 +610,7 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function findAllBySeqsForBulkEdit($seqs){
-		$query = "select pousers.qccode poqccode,users.qccode uqccode, classcodes.classcode, qcschedules.* from qcschedules
+		$query = "select pousers.qccode poqccode,users.qccode qccode, classcodes.classcode, qcschedules.seq scheduleseq, qcschedules.* from qcschedules
 left join users on qcschedules.qcuser = users.seq
 left join users pousers on qcschedules.poinchargeuser = pousers.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedules.seq in ($seqs)";
