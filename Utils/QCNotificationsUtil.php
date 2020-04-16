@@ -12,7 +12,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/QCScheduleNotificationType.p
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/EmailLogType.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PHPExcelUtils.php");
 
 
 class QCNotificationsUtil{
@@ -709,9 +709,27 @@ class QCNotificationsUtil{
 	    }
 	}
 	
-	public static function sendQCBulkUpdateNotification($qcScheduleNew, $qcSchedules){
-		ExportUtil::exportQCSchedules($qcSchedules);
+	public static function sendQCBulkUpdateNotification($qcSchedules, $qcScheduleNewArr){
+		$excelData = PHPExcelUtil::exportQCSchedulesBulkUpdate($qcSchedules, $qcScheduleNewArr,1);
+		$attachments = array("BulkUpdateSchedules.xls"=>$excelData);
+		$subject = "Bulk Update Schedules";
+		$html = "Bulk Update Schedules";
 		
+		$userMgr = UserMgr::getInstance();
+		$allUsers = $userMgr->getAllUsersWithRoles();
+		$usersEmails = self::getQCUsersByNotificationType($allUsers,QCScheduleNotificationType::qc_bulk_update_log);
+		$toEmails = array();
+		foreach ($usersEmails as $user){
+			array_push($toEmails,$user->getEmail());
+		}
+		if(!empty($toEmails)){
+			$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+			$EmaillogMgr = EmailLogMgr::getInstance();
+			if($bool){
+				foreach ($usersEmails as $user){
+					$EmaillogMgr->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
+				}
+			}
+		}
 	}
-	
 }

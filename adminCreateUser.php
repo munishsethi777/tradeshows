@@ -295,6 +295,10 @@ if(in_array(1,$departmentSeqArr)){
 						                           	<input name="permissions[]" type="checkbox" value="incompleted_schedules_report_weekly" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::incompleted_schedules_report_weekly), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs" >Incompleted Schedules Report (Weekly)</span>
 						                        </li>
+						                        <li>
+						                           	<input name="permissions[]" type="checkbox" value="<?php echo QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_bulk_update_log)?>" <?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_bulk_update_log), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs" >QC Schedules Bulk update log (Instant)</span>
+						                        </li>
 											</ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">

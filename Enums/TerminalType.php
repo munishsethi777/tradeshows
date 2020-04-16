@@ -3,6 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class TerminalType extends BasicEnum{
     const apl = "APL";
     const apm = "APM";
+    const everport = "EVERPORT TERMINAL SERVICES";
     const its = "ITS";
     const lbct = "LBCT";
     const pct = "PCT";
@@ -12,4 +13,5 @@ class TerminalType extends BasicEnum{
     const wbct = "WBCT";
     const yti = "YTI";
     const yusen = "YUSEN";
+    
 }

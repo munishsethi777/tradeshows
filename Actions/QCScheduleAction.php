@@ -151,7 +151,10 @@ if($call == "bulkUpdateQCSchedule"){
 			$qcSchedule->setNotes(NULL);
 		}
 		$qcSchedule->setLastModifiedOn(new DateTime());
-		$qcSeqs = implode(",", $_REQUEST["qcschedulescheck"]);
+		
+		//$qcSeqs = implode(",", $_REQUEST["qcschedulescheck"]);
+		$qcSeqs = $_REQUEST["qcschedulescheck"];
+		
 		$qcScheduleMgr->bulkUpdateQCSchedules($qcSchedule, $qcSeqs);
 	
 	}catch(Exception $e){

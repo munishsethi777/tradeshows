@@ -1,5 +1,4 @@
 <?
-
 include ("SessionCheck.php");
 require_once ('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "BusinessObjects/QCSchedule.php");
@@ -22,12 +21,21 @@ $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser ();
 $isSessionSV = $sessionUtil->isSessionSupervisor ();
 $isSessionAdmin = $sessionUtil->isSessionAdmin ();
+
 if($_REQUEST['seqs'] == ""){
 	$qcSchedules = array();
 }else{
 	$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
 }
 $isCompleted = "";
+
+
+//$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
+//$qc = array("QC"=> "MUNISH");
+//QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedules, $qc);
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -90,7 +98,12 @@ $isCompleted = "";
                      	<input type="hidden" id ="call" name="call"  value="bulkUpdateQCSchedule"/>
                      	<input type="hidden" id ="seqs" name="seqs"  value="<?php echo $seqs?>"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
-                        <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
+                        
+                        <input type="hidden" id ="poqccode" name="poqccode"/>
+                        <input type="hidden" id ="qccode" name="qccode"/>
+                        <input type="hidden" id ="classcode" name="classcode"/>
+                        
+                        
                       <div class="bg-white p-xs outterDiv">
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">QC</label>
@@ -110,7 +123,13 @@ $isCompleted = "";
                              		?>
 	                            	<input style="display: none" type="text" id="po" maxLength="250" value="" name="po" class="form-control">
 	                            </div>
-	                            
+	                           
+	                           <label class="col-lg-2 col-form-label bg-formLabel">Submit for Approval</label>
+	                        	<div class="col-lg-4">
+	                        		<input type="checkbox" id="isapproval" class="form-control i-checks" name="isapproval"/>
+	                           </div>
+	                           
+	                        
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
  	                            	<?php 
@@ -295,7 +314,7 @@ $isCompleted = "";
 								<td class="i-checks">
 									<input class="selectionChk" value="<?php echo $qcSchedule["seq"] ?>" id="<?php echo $qcSchedule["seq"] ?>" type="checkbox" name="qcschedulescheck[]">
 									</td>
-								<td><?php echo $qcSchedule["uqccode"];?></td>
+								<td><?php echo $qcSchedule["qccode"];?></td>
 								<td><?php echo $qcSchedule["poqccode"];?></td>
 								<td><?php echo $qcSchedule["classcode"];?></td>
 								<td><?php echo $qcSchedule["po"];?></td>
@@ -543,7 +562,16 @@ function setDates(shipDateStr){
 function saveQCSchedule(){
 	bootbox.confirm("Are you sure you want to update the selected row(s)?", function(result) {
         if(result){
-			$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
+			if($("#poinchargeuser").val() != ""){
+            	$("#poqccode").val($("#poinchargeuser option:selected").text());
+			}
+			if($("#qcuser").val() != ""){
+            	$("#qccode").val($("#qcuser option:selected").text());
+			}
+            if($("#classcodeseq").val() != ""){
+				$("#classcode").val($("#classcodeseq option:selected").text());
+            }
+			
 			if($("#createQCScheduleForm")[0].checkValidity()) {
 				showHideProgress()
 				$('#createQCScheduleForm').ajaxSubmit(function( data ){

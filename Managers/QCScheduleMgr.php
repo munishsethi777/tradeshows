@@ -78,52 +78,65 @@ class QCScheduleMgr{
 	}
 	public function bulkUpdateQCSchedules($qcschedule,$qcschedulesArr){
 		$qcSchedule = new QCSchedule($qcschedule);
-		$colVal = array();
+		$scheduleArrNewValues = array();
 		
-		$colVal = $this->setValueIfExists($colVal,"qcuser",$qcSchedule->getQCUser());
-		$colVal = $this->setValueIfExists($colVal,"poinchargeuser",$qcSchedule->getPOInchargeUser());
-		$colVal = $this->setValueIfExists($colVal,"classcodeseq",$qcSchedule->getClassCodeSeq());
-		$colVal = $this->setValueIfExists($colVal,"iscompleted",$qcSchedule->getIsCompleted());
-		$colVal = $this->setValueIfExists($colVal,"apreadydate",$qcSchedule->getAPReadyDate());
-		$colVal = $this->setValueIfExists($colVal,"apfinalinspectiondate",$qcSchedule->getAPFinalInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"apmiddleinspectiondate",$qcSchedule->getAPMiddleInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"apfirstinspectiondate",$qcSchedule->getAPFirstInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"approductionstartdate",$qcSchedule->getAPProductionStartDate());
-		$colVal = $this->setValueIfExists($colVal,"apgraphicsreceivedate",$qcSchedule->getAPGraphicsReceiveDate());
-		$colVal = $this->setValueIfExists($colVal,"acreadydate",$qcSchedule->getACReadyDate());
-		$colVal = $this->setValueIfExists($colVal,"acfinalinspectiondate",$qcSchedule->getACFinalInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"acmiddleinspectiondate",$qcSchedule->getACMiddleInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"acfirstinspectiondate",$qcSchedule->getACFirstInspectionDate());
-		$colVal = $this->setValueIfExists($colVal,"acproductionstartdate",$qcSchedule->getACProductionStartDate());
-		$colVal = $this->setValueIfExists($colVal,"acgraphicsreceivedate",$qcSchedule->getACGraphicsReceiveDate());
-		
-		$colVal = $this->setValueIfExists($colVal,"acfirstinspectionnotes",$qcSchedule->getAcFirstInspectionNotes());
-		$colVal = $this->setValueIfExists($colVal,"acmiddleinspectionnotes",$qcSchedule->getAcMiddleInspectionNotes());
-		
-		$colVal = $this->setValueIfExists($colVal,"apfirstinspectiondatenareason",$qcSchedule->getApFirstInspectionDateNaReason());
-		$colVal = $this->setValueIfExists($colVal,"apmiddleinspectiondatenareason",$qcSchedule->getApMiddleInspectionDateNaReason());
-		$colVal = $this->setValueIfExists($colVal,"apgraphicsreceivedatenareason",$qcSchedule->getAPGraphicsReceiveDateNAReason());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"qcuser",$qcSchedule->getQCUser());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"poinchargeuser",$qcSchedule->getPOInchargeUser());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"classcodeseq",$qcSchedule->getClassCodeSeq());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"iscompleted",$qcSchedule->getIsCompleted());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apreadydate",$qcSchedule->getAPReadyDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apfinalinspectiondate",$qcSchedule->getAPFinalInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apmiddleinspectiondate",$qcSchedule->getAPMiddleInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apfirstinspectiondate",$qcSchedule->getAPFirstInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"approductionstartdate",$qcSchedule->getAPProductionStartDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apgraphicsreceivedate",$qcSchedule->getAPGraphicsReceiveDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acreadydate",$qcSchedule->getACReadyDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acfinalinspectiondate",$qcSchedule->getACFinalInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acmiddleinspectiondate",$qcSchedule->getACMiddleInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acfirstinspectiondate",$qcSchedule->getACFirstInspectionDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acproductionstartdate",$qcSchedule->getACProductionStartDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acgraphicsreceivedate",$qcSchedule->getACGraphicsReceiveDate());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acfirstinspectionnotes",$qcSchedule->getAcFirstInspectionNotes());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"acmiddleinspectionnotes",$qcSchedule->getAcMiddleInspectionNotes());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apfirstinspectiondatenareason",$qcSchedule->getApFirstInspectionDateNaReason());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apmiddleinspectiondatenareason",$qcSchedule->getApMiddleInspectionDateNaReason());
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"apgraphicsreceivedatenareason",$qcSchedule->getAPGraphicsReceiveDateNAReason());
 		if(!empty($qcSchedule->getApFirstInspectionDateNaReason())){
-			$colVal["apfirstinspectiondate"] = null;
+			$scheduleArrNewValues["apfirstinspectiondate"] = null;
 		}else{
-			$colVal["apfirstinspectiondatenareason"] = null;
+			$scheduleArrNewValues["apfirstinspectiondatenareason"] = null;
 		}
 		if(!empty($qcSchedule->getApMiddleInspectionDateNaReason())){
-			$colVal["apmiddleinspectiondate"] = null;
+			$scheduleArrNewValues["apmiddleinspectiondate"] = null;
 		}else{
-			$colVal["apmiddleinspectiondatenareason"] = null;
+			$scheduleArrNewValues["apmiddleinspectiondatenareason"] = null;
 		}
 		if(!empty($qcSchedule->getAPGraphicsReceiveDateNAReason())){
-			$colVal["apgraphicsreceivedate"] = null;
+			$scheduleArrNewValues["apgraphicsreceivedate"] = null;
 		}else{
-			$colVal["apgraphicsreceivedatenareason"] = null;
+			$scheduleArrNewValues["apgraphicsreceivedatenareason"] = null;
 		}
-		$colVal["lastmodifiedon"] = new DateTime();
+		$scheduleArrNewValues["lastmodifiedon"] = new DateTime();
 		$qcSeqsStr = implode(",", $qcschedulesArr);
-		
-		
 		$condition = array("seq" => $qcSeqsStr);
-		self::$dataStore->updateByAttributesWithBindParams($colVal,$condition,true);
+		
+		//Query to get qcschedules pre updated values to send notification with original and new values
+		$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode , poinchargeuser,qcschedules.* from qcschedules
+		left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq
+		left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+		left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)
+		where qcschedules.seq in ($qcSeqsStr)";
+		$qcSchedulesOriginals = self::$dataStore->executeQuery($query,false,true);
+		
+		//Updating the schedules after fetching original values above
+		self::$dataStore->updateByAttributesWithBindParams($scheduleArrNewValues,$condition,true);
+		
+		//Setting these strings after updating the qcschedules above to prevent making bad update sql
+		
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"qccode",$_REQUEST["qccode"]);
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"poqccode",$_REQUEST["poqccode"]);
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"classcode",$_REQUEST["classcode"]);
+		
 		
 		if(isset($_POST["isapproval"])){
 			foreach($qcschedulesArr as $qcScheduleSeq){
@@ -132,8 +145,8 @@ class QCScheduleMgr{
 				$qcApprovalMgr->saveApprovalFromQCSchedule($qcSchedule);
 			}
 		}
-		$qcSchedules = self::$dataStore->executeInList($condition);
-		//QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedule, $qcSchedules);
+		
+		QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedulesOriginals, $scheduleArrNewValues);
 	}
 	
 	public function exportQCSchedules($queryString,$qcscheduleSeqs){
