@@ -19,25 +19,9 @@ $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser ();
 $isSessionSV = $sessionUtil->isSessionSupervisor ();
 $isSessionAdmin = $sessionUtil->isSessionAdmin ();
-$readOnlyShipDate = "";
-if ($isSessionGeneralUser && ! $isSessionSV) {
-	$qcUser = $sessionUtil->getUserLoggedInSeq ();
-	$qcUserReadonly = "readonly";
-}
-$seq = 0;
-$seqs = 0;
-$isSubmitApprovalDisabled = "";
-$disabledSubmitComments = "";
-$approvalChecked = "";
-$isCompleted = "";
-$qcSchedules = null;
-if (isset ( $_POST ["id"] )) {
-	$seq = $_POST ["id"];
-	$seqs = $_POST ["seqs"];
-	if ($seq != $seqs) {
-		$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit( $seqs );
-	}
-}
+
+$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,14 +49,17 @@ if (isset ( $_POST ["id"] )) {
 	padding:20px 20px;
 }
 .selectedPOTable{
-	width:1800px !important;
-	max-width:1800px !important;
+	width:4000px !important;
+	max-width:4000px !important;
 }
-.selectedPOTable th{
-	width:200px;
-}
+
 .selectedPODiv{
 	overflow-y:scroll;
+}
+#apmiddleinspectiondatenareason,
+#apfirstinspectiondatenareason,
+#apgraphicsreceivedatenareason{
+	margin-bottom:0px !important;
 }
 
 </style>
@@ -94,7 +81,7 @@ if (isset ( $_POST ["id"] )) {
                  <div class="ibox-content">
                  	<?include "progress.php"?>
                  	 <form id="createQCScheduleForm" method="post" action="Actions/QCScheduleAction.php" class="">
-                     	<input type="hidden" id ="call" name="call"  value="saveQCSchedule"/>
+                     	<input type="hidden" id ="call" name="call"  value="bulkUpdateQCSchedule"/>
                      	<input type="hidden" id ="seqs" name="seqs"  value="<?php echo $seqs?>"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $seq?>"/>
                         <input type="hidden" id="materialtotalpercent" name="materialtotalpercent"/>
@@ -105,19 +92,25 @@ if (isset ( $_POST ["id"] )) {
 	                        		<?php 
 										$select = DropDownUtils::getQCUsers("qcuser", null,$qcUser,false,true);
 		                        		echo $select;
-	                        			if($isSessionGeneralUser && !$isSessionSV){?>
-	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
-	                        			<?php }
-                             		?>
+		                        	?>
 	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $qcSchedule->getQC()?>" name="qc" class="form-control">
 	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">PO Incharge</label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+										$select = DropDownUtils::getPOUsers("poinchargeuser", null,$qcSchedule->getPoInchargeUser(),false,true);
+		                        		echo $select;
+                             		?>
+	                            	<input style="display: none" type="text" id="po" maxLength="250" value="" name="po" class="form-control">
+	                            </div>
+	                            
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
- 	                            	<input type="hidden" name="classcode" id="classcode">
-	                            	<?php 
-				                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false,true,false);
-				                            echo $select;
-	                             		?>
+ 	                            	<?php 
+			                           	$select = DropDownUtils::getClassCodes("classcodeseq", "", $qcSchedule->getClassCodeSeq(),false,true,false);
+			                            echo $select;
+                             		?>
 	                            </div>
 	                        </div>
 	                  </div>  
@@ -250,56 +243,75 @@ if (isset ( $_POST ["id"] )) {
 	                            	<input type="text" placeholder="Select Date" id="acgraphicsreceivedate" maxLength="250" value="<?php echo $qcSchedule->getACGraphicsReceiveDate()?>" name="acgraphicsreceivedate" class="form-control dateControl" <?php echo isset($fieldStateArr["acgraphicsreceivedate"])?$fieldStateArr["acgraphicsreceivedate"]:""?>>
 	                            </div>
 	                       </div>
+	                       <div class="form-group row">
+	                       		
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Completed</label>
+	                        	<div class="col-lg-10 completed">
+	                        		<input type="checkbox" <?php echo $isCompleted; ?>  id="iscompleted" class="form-control i-checks" name="iscompleted" />
+	                           </div>
+	                       		
+	                       	</div>
 	                       
 	                  </div>
+	                  
 					<div class="selectedPODiv">
+						<h4 class="p-h-sm areaTitle">Please select QC Schedules you would like to update.</h4>
 						<table class="selectedPOTable table table-bordered" >
 							<tr>
-								<th class="col-form-label bg-formLabel"></th>
+								<th class="col-form-label bg-formLabel" width="50px !important"></th>
 								<th class="col-form-label bg-formLabel">QC</th>
+								<th class="col-form-label bg-formLabel">PO Incharge</th>
 								<th class="col-form-label bg-formLabel">Class Code</th>
+								<th class="col-form-label bg-formLabel">PO #</th>
+								<th class="col-form-label bg-formLabel">PO Type</th>
+								<th class="col-form-label bg-formLabel">Item #</th>
+								<th class="col-form-label bg-formLabel">Ship Date</th>
 								<th class="col-form-label bg-formLabel">AP Ready Date</th>
-								<th class="col-form-label bg-formLabel">AP Final Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AP Middle Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AP First Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AP Production Start Date</th>
 								<th class="col-form-label bg-formLabel">AP Graphics Receive Date</th>
-								<th class="col-form-label bg-formLabel">AC Ready Date</th>
-								<th class="col-form-label bg-formLabel">AC Final Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AC Middle Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AC First Inspection Date</th>
-								<th class="col-form-label bg-formLabel">AC Middle Inspection Notes</th>
-								<th class="col-form-label bg-formLabel">AC First Inspection Notes</th>
-								<th class="col-form-label bg-formLabel">AC Production Start Date</th>
-								<th class="col-form-label bg-formLabel">AC Graphics Receive Date</th>
-								<th class="col-form-label bg-formLabel">AC Final Inspection Notes</th>
-							</tr>
-						<?php foreach ($qcSchedules as $qcSchedule){
-							
-							
-							?>
-							<tr class="tr<?php echo $qcSchedule["seq"] ?>">
-								<td class="i-checks"><input class="selectionChk" id="<?php echo $qcSchedule["seq"] ?>" type="checkbox"></th>
-								<td><?php echo $qcSchedule["qc"];?></th>
-								<td><?php echo $qcSchedule["classcode"];?></th>
-								<td><?php echo $qcSchedule["apreadydate"];?></th>
-								<td><?php echo $qcSchedule["apfinalinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["apmiddleinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["apfirstinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["approductionstartdate"];?></th>
-								<td><?php echo $qcSchedule["apgraphicsreceivedate"];?></th>
-								<td><?php echo $qcSchedule["acreadydate"];?></th>
-								<td><?php echo $qcSchedule["acfinalinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["acmiddleinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["acfirstinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["acmiddleinspectiondate"];?></th>
-								<td><?php echo $qcSchedule["acfirstinspectionnotes"];?></th>
-								<td><?php echo $qcSchedule["acproductionstartdate"];?></th>
-								<td><?php echo $qcSchedule["acgraphicsreceivedate"];?></th>
-								<td><?php echo $qcSchedule["notes"];?></th>
+								<th class="col-form-label bg-formLabel">AP Production Start Date</th>
+								<th class="col-form-label bg-formLabel">AP First Inspection Date</th>
+								<th class="col-form-label bg-formLabel">AP Middle Inspection Date</th>
+								<th class="col-form-label bg-formLabel">AP Final Inspection Date</th>
 								
+								<th class="col-form-label bg-formLabel">AC Ready Date</th>
+								<th class="col-form-label bg-formLabel">AC Graphics Receive Date</th>
+								<th class="col-form-label bg-formLabel">AC Production Start Date</th>
+								<th class="col-form-label bg-formLabel">AC First Inspection Date</th>
+								<th class="col-form-label bg-formLabel">AC Middle Inspection Date</th>
+								<th class="col-form-label bg-formLabel">AC Final Inspection Date</th>
+								
+								<th class="col-form-label bg-formLabel">AC Final Inspection Notes</th>
+								<th class="col-form-label bg-formLabel">AC Middle Inspection Notes</th>
+								<th class="col-form-label bg-formLabel">Completed</th>
 							</tr>
-						
+						<?php foreach ($qcSchedules as $qcSchedule){?>
+							<tr class="tr<?php echo $qcSchedule["seq"] ?>">
+								<td class="i-checks">
+									<input class="selectionChk" value="<?php echo $qcSchedule["seq"] ?>" id="<?php echo $qcSchedule["seq"] ?>" type="checkbox" name="qcschedulescheck[]">
+									</td>
+								<td><?php echo $qcSchedule["uqccode"];?></td>
+								<td><?php echo $qcSchedule["poqccode"];?></td>
+								<td><?php echo $qcSchedule["classcode"];?></td>
+								<td><?php echo $qcSchedule["po"];?></td>
+								<td><?php echo $qcSchedule["potype"];?></td>
+								<td><?php echo $qcSchedule["itemnumbers"];?></td>
+								<td><?php echo $qcSchedule["shipdate"];?></td>
+								<td><?php echo $qcSchedule["apreadydate"];?></td>
+								<td><?php echo $qcSchedule["apgraphicsreceivedate"];?></td>
+								<td><?php echo $qcSchedule["approductionstartdate"];?></td>
+								<td><?php echo $qcSchedule["apfirstinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["apmiddleinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["apfinalinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["acreadydate"];?></td>
+								<td><?php echo $qcSchedule["acgraphicsreceivedate"];?></td>
+								<td><?php echo $qcSchedule["acproductionstartdate"];?></td>
+								<td><?php echo $qcSchedule["acfirstinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["acmiddleinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["acfinalinspectiondate"];?></td>
+								<td><?php echo $qcSchedule["acfirstinspectionnotes"];?></td>
+								<td><?php echo $qcSchedule["acmiddleinspectionnotes"];?></td>
+								<td><?php echo $qcSchedule["iscompleted"];?></td>
+							</tr>
 						<?php }?>
 							
 						</table>
@@ -332,6 +344,16 @@ if (isset ( $_POST ["id"] )) {
 <script type="text/javascript">
 var qcReadonly = "<?php echo $qcUserReadonly?>";
 $(document).ready(function(){
+
+	$('.selectionChk').on('ifChanged', function(event){
+		var flag  = $("#"+this.id).is(':checked');
+		if(flag){
+			$(".tr"+this.id).addClass("nav-header",100);
+		}else{
+			$(".tr"+this.id).removeClass("nav-header");
+		}
+  	});
+  	
 	if(qcReadonly != ""){
 		$("#qcuser").attr("disabled","disabled");
 	}else{
@@ -342,15 +364,21 @@ $(document).ready(function(){
 	   	radioClass: 'iradio_square-green',
 	   	
 	});
-	var middleInspectionNa = "<?php echo $middleInspectionChk?>"
-		if(middleInspectionNa != ""){
-			showHideMiddleNaDiv(true);
-		}
+	var middleInspectionNa = "<?php echo $middleInspectionChk?>";
+	if(middleInspectionNa != ""){
+		showHideMiddleNaDiv(true);
+	}
 
-		var firstInspectionNa = "<?php echo $firstInspectionChk?>"
-		if(firstInspectionNa != ""){
-			showHideFirstNaDiv(true);
-		}
+	var firstInspectionNa = "<?php echo $firstInspectionChk?>";
+	if(firstInspectionNa != ""){
+		showHideFirstNaDiv(true);
+	}
+
+	var graphicsReceiveNa = "<?php echo $graphicsReceiveChk?>";
+	if(graphicsReceiveNa != ""){
+		showHideGraphicsNaDiv(true);
+	}
+	
 	$('.dateControl').attr("autocomplete","off");
 	$('.shipDateControl').attr("autocomplete","off");	
 	$('.dateControl').datetimepicker({
@@ -366,13 +394,8 @@ $(document).ready(function(){
 		scrollInput : false,
 		minDate: 0
 	});
-	<?php if($readOnlyShipDate == "readonly"){?>
-		$("#shipdate").prop('disabled', true) ;
-	<?php }?>
 	
-	<?php if($readOnlyComplete == "readonly"){?>
-		 //$("#iscompleted").prop("disabled", true);
-	<?php }?>
+	
 	
 	handleIsCompletedCheckbox();
 	
@@ -380,20 +403,18 @@ $(document).ready(function(){
 		var flag  = $("#apMiddleInspectionChk").is(':checked');
 		showHideMiddleNaDiv(flag)
   	});
+	$('#apFirstInspectionChk').on('ifChanged', function(event){
+		var flag  = $("#apFirstInspectionChk").is(':checked');
+		showHideFirstNaDiv(flag);
+	});
+	$('#apGraphicsReceiveChk').on('ifChanged', function(event){
+		var flag  = $("#apGraphicsReceiveChk").is(':checked');
+		showHideGraphicsNaDiv(flag);
+	});
 	requiredAcFinalInspection();
 	$('#isapproval').on('ifChanged', function(event){
 		requiredAcFinalInspection();
   	});
-	
-	$('.selectionChk').on('ifChanged', function(event){
-		var flag  = $("#"+this.id).is(':checked');
-		if(flag){
-			$(".tr"+this.id).addClass("nav-header",100);
-		}else{
-			$(".tr"+this.id).removeClass("nav-header");
-		}
-  	});
-  	
 });
 
 function requiredAcFinalInspection(){
@@ -404,8 +425,8 @@ function requiredAcFinalInspection(){
 		$("#acfinalinspectiondate").removeAttr("required");
 	}
 }
-	function showHideMiddleNaDiv(flag){
-		if(flag){
+function showHideMiddleNaDiv(flag){
+	if(flag){
 		$("#middleInspectionSelectDate").hide();
 		$("#middleNaDiv").show();
 		$("#acmiddleinspectiondate").val("");
@@ -415,10 +436,10 @@ function requiredAcFinalInspection(){
 		$("#middleInspectionSelectDate").show();
 		$("#middleNaDiv").hide();
 	}
-	}
+}
 
-	function showHideFirstNaDiv(flag){
-		if(flag){
+function showHideFirstNaDiv(flag){
+	if(flag){
 		$("#firstInspectionSelectDate").hide();
 		$("#firstNaDiv").show();
 		$("#acfirstinspectiondate").val("");
@@ -428,12 +449,24 @@ function requiredAcFinalInspection(){
 		$("#firstInspectionSelectDate").show();
 		$("#firstNaDiv").hide();
 	}
-	}
+}
 
-$('#apFirstInspectionChk').on('ifChanged', function(event){
-	var flag  = $("#apFirstInspectionChk").is(':checked');
-	showHideFirstNaDiv(flag);
-	});
+function showHideGraphicsNaDiv(flag){
+	if(flag){
+		$("#graphicsReceiveDateDiv").hide();
+		$("#graphicsNaReasonDiv").show();
+		$("#acgraphicsreceivedate").val("");
+		$("#acgraphicsreceivedate").attr("disabled","disabled");
+	}else{
+		$("#acgraphicsreceivedate").removeAttr("disabled");
+		$("#graphicsReceiveDateDiv").show();
+		$("#graphicsNaReasonDiv").hide();
+	}
+}
+
+
+
+	
 $('.editor').summernote({
 	height: 120,
 	minHeight: null,             // set minimum height of editor
@@ -502,19 +535,23 @@ function setDates(shipDateStr){
 	$("#scgraphicsreceivedate").val(graphicsDateStr);
 }
 function saveQCSchedule(){
-	$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
-	if($("#createQCScheduleForm")[0].checkValidity()) {
-		showHideProgress()
-		$('#createQCScheduleForm').ajaxSubmit(function( data ){
-		   showHideProgress();
-		   var flag = showResponseToastr(data,null,null,"ibox");
-		   if(flag){
-			   window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},100);
-		   }
-	    })	
-	}else{
-		$("#createQCScheduleForm")[0].reportValidity();
-	}
+	bootbox.confirm("Are you sure you want to update the selected row(s)?", function(result) {
+        if(result){
+			$("#classcode").val(($( "#classcodeseq option:selected" ).text()));
+			if($("#createQCScheduleForm")[0].checkValidity()) {
+				showHideProgress()
+				$('#createQCScheduleForm').ajaxSubmit(function( data ){
+				   showHideProgress();
+				   var flag = showResponseToastr(data,null,null,"ibox");
+				   if(flag){
+					   window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},100);
+				   }
+			    })	
+			}else{
+				$("#createQCScheduleForm")[0].reportValidity();
+			}
+        }
+	});
 }
 function getDate(dateString) {
     var parts = dateString.split('-');

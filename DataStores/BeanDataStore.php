@@ -45,7 +45,8 @@ class BeanDataStore {
 			$id = $object->getSeq ();
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "setNAForLockedField" && $methodName != "from_array" && $methodName != "createFromRequest") {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "setNAForLockedField" && $methodName != "from_array" && $methodName != "createFromRequest"
+						&& $methodName != "__construct") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {
@@ -126,7 +127,7 @@ class BeanDataStore {
 			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest" && $methodName != "__construct") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {
@@ -197,7 +198,7 @@ class BeanDataStore {
 		try {
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
-				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest") {
+				if (! $this->startsWith ( $methodName, "set" ) && $methodName != "from_array" && $methodName != "createFromRequest" && $methodName != "__construct") {
 					if ($count > 0) {
 						$reflect = new ReflectionMethod ( $object, $methodName );
 						if ($reflect->isPublic ()) {
@@ -553,7 +554,7 @@ class BeanDataStore {
 			throw $e ;
 		}
 	}
-	public function updateByAttributesWithBindParams($colValuePair, $condiationPair = null) {
+	public function updateByAttributesWithBindParams($colValuePair, $condiationPair = null, $isSingleINCriteria =false) {
 		try {
 			$paramValueArr = array ();
 			$flag = false;
@@ -565,8 +566,15 @@ class BeanDataStore {
 				array_push ( $paramValueArr, $value );
 			}
 			foreach ( $condiationPair as $key => $value ) {
-				$query_array [] = $key . ' = ?';
-				array_push ( $paramValueArr, $value );
+				//condition is based on IN comma separated values
+				if($isSingleINCriteria){
+					$query_array [] = $key . ' IN( '.$value.' )';
+				}else{
+					$query_array [] = $key . ' = ? ';
+					array_push ( $paramValueArr, $value );
+				}
+				
+				
 			}
 			$query = "update " . $this->tableName . " set " . implode ( " , ", $attribute_array );
 			if ($condiationPair != null) {

@@ -255,11 +255,11 @@ class QCSchedule{
 	    $this->poinchargeuser = $poinchargeuser;
 	}
 	
-	// public function __construct($object = null) {
-	// 	foreach($object as $property => $value) {
-	// 		$this->$property = $value;
-	// 	}
-	// }
+	public function __construct($object = null) {
+		foreach($object as $property => $value) {
+			$this->$property = $value;
+		}
+	}
 	
 	public function createFromRequest($request){
 		if (is_array($request)){
