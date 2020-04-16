@@ -151,7 +151,10 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
                      	<div class="form-group row">
                              <label class="col-lg-2 col-form-label bg-formLabel">QC:</label> 
                              <label class="col-lg-4 col-form-label" id="modalQcLabel"></label>
-                           
+							 <label class="col-lg-2 col-form-label bg-formLabel">Poincharge:</label> 
+                             <label class="col-lg-4 col-form-label" id="modalPoInchargeLabel"></label>
+						</div>
+						<div class="form-group row">
                               <label class="col-lg-2 col-form-label bg-formLabel">Code:</label>
                               <label class="col-lg-4 col-form-label" id="modalCodeLabel"></label>                           
                         </div>
@@ -432,8 +435,9 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
     		    var approvalInfo = arr[0];
        		 	$('#comment').val(approvalInfo.responsecomments);
        		 	$('#approvalStatusDD').val(approvalInfo.responsetype);
-       		    $("#modalQcLabel").text(approvalInfo.qccode);
-       		    $("#modalCodeLabel").text(approvalInfo.qccode);
+       		    $("#modalQcLabel").text(approvalInfo.qc);
+				$("#modalPoInchargeLabel").text(approvalInfo.poincharge);  
+				$("#modalCodeLabel").text(approvalInfo.qccode);
        		    $("#modalPoLabel").text(approvalInfo.po);
        		    $("#modalItemnumberLabel").text(approvalInfo.itemnumbers);   
        		 	$("#approvalSeq").val(approvalInfo.seq);
@@ -467,7 +471,8 @@ function loadGrid(){
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
         var responseType = data["responsetype"];
         var responseComments = data["responsecomments"];
-        var qc = data["qccode"];
+		var qc = data["qccode"];
+		var poincharge = data["poincharge"];
 		var po = data["pocode"];
         var code = data["classcode"];
         var po = data["po"];
