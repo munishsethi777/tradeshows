@@ -13,6 +13,7 @@ class EmailLogType extends BasicEnum{
     const SV_INCOMPLETED_SCHEDULES_NOTIFICATION = "SvIncompletedSchedulesNotification";
     const QC_SCHEDULE_FOR_PLAN_REPORT           = "QcScheduleForPlanReport";
     const PENDING_QC_APPROVAL                   = "PendingQcApproval";
+    const QC_BULK_UPDATE_NOTIFICATION = "QCBulkUpdateNotification";
     const CONTAINER_SCHEDULE_DATE_CHANGE_NOTIFICATION =  "ContainerScheduleDateChangeNotification";
     const CONTAINER_SCHEDULE_EMPTY_RETURN_DATE =  "ContainerScheduleEmptyReturnDatePastEmptyLFDReport";
     const CONTAINER_SCHEDULE_PENDING_EMPTY_ALPINE_NOTIFICATION_PICKUP_DATE= "ContainerScheduleEmptyAlpineNotificationPickupDate";

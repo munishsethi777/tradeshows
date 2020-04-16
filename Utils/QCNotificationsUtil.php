@@ -710,9 +710,10 @@ class QCNotificationsUtil{
 	}
 	
 	public static function sendQCBulkUpdateNotification($qcSchedules, $qcScheduleNewArr){
+		$sessionUtil = SessionUtil::getInstance();
 		$excelData = PHPExcelUtil::exportQCSchedulesBulkUpdate($qcSchedules, $qcScheduleNewArr,1);
 		$attachments = array("BulkUpdateSchedules.xls"=>$excelData);
-		$subject = "Bulk Update Schedules";
+		$subject = "Bulk Update Schedules | ". $sessionUtil->getUserLoggedInName();
 		$html = "Bulk Update Schedules";
 		
 		$userMgr = UserMgr::getInstance();
@@ -727,7 +728,7 @@ class QCNotificationsUtil{
 			$EmaillogMgr = EmailLogMgr::getInstance();
 			if($bool){
 				foreach ($usersEmails as $user){
-					$EmaillogMgr->saveEmailLog(EmailLogType::QC_INCOMPLETED_SCHEDULES_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
+					$EmaillogMgr->saveEmailLog(EmailLogType::QC_BULK_UPDATE_NOTIFICATION ,$user->getEmail(),null,$user->getSeq());
 				}
 			}
 		}

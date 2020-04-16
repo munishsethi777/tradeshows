@@ -79,7 +79,7 @@ class QCScheduleMgr{
 	public function bulkUpdateQCSchedules($qcschedule,$qcschedulesArr){
 		$qcSchedule = new QCSchedule($qcschedule);
 		$scheduleArrNewValues = array();
-		
+		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"qc",$_REQUEST["qccode"]);
 		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"qcuser",$qcSchedule->getQCUser());
 		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"poinchargeuser",$qcSchedule->getPOInchargeUser());
 		$scheduleArrNewValues = $this->setValueIfExists($scheduleArrNewValues,"classcodeseq",$qcSchedule->getClassCodeSeq());

@@ -730,11 +730,7 @@ function loadGrid(){
             });
             bulkEditButton.click(function (event){
             	var selectedrowindex = $("#qcscheduleGrid").jqxGrid('selectedrowindexes');
-            	if(selectedrowindex.length == 0){
-            		bootbox.alert("Please Select QC Schedules to Bulk edit.", function() {});
-            		return;
-            	}
-                var value = -1;
+            	var value = -1;
                 indexes = selectedrowindex.filter(function(item) { 
                     return item !== value
                 })
@@ -747,14 +743,17 @@ function loadGrid(){
 						seqs.push(row.seq);
 						selectedPOs.push(row.po);
 						itemIds.push(row.itemnumbers); 
-					}
+					 }
                 });
                 selectedPOs = removeDuplicates(selectedPOs);
-                //if(selectedPOs.length > 1){
-                	//bootbox.alert("Please Select single row to edit.", function() {});
-            		//isValid = false;
-                    //return;
-                //}
+                if(seqs.length == 0 && selectedrowindex.length > 0){
+            		bootbox.alert("Please Select valid QC Schedules to Bulk edit. Make sure you have not selected Approved/Approval Pending schedules", function() {});
+            		return;
+            	}
+                if(seqs.length == 0){
+            		bootbox.alert("Please Select QC Schedules to Bulk edit.", function() {});
+            		return;
+            	}
                 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', indexes);
                 $("#id").val(seqs[0]);  
                 $("#seqs").val(seqs);   
