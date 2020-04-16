@@ -155,7 +155,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
                              <label class="col-lg-4 col-form-label" id="modalPoInchargeLabel"></label>
 						</div>
 						<div class="form-group row">
-                              <label class="col-lg-2 col-form-label bg-formLabel">Code:</label>
+                              <label class="col-lg-2 col-form-label bg-formLabel">Class Code:</label>
                               <label class="col-lg-4 col-form-label" id="modalCodeLabel"></label>                           
                         </div>
                         <div class="form-group row">                              
@@ -437,7 +437,7 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
        		 	$('#approvalStatusDD').val(approvalInfo.responsetype);
        		    $("#modalQcLabel").text(approvalInfo.qc);
 				$("#modalPoInchargeLabel").text(approvalInfo.poincharge);  
-				$("#modalCodeLabel").text(approvalInfo.qccode);
+				$("#modalCodeLabel").text(approvalInfo.classcode);
        		    $("#modalPoLabel").text(approvalInfo.po);
        		    $("#modalItemnumberLabel").text(approvalInfo.itemnumbers);   
        		 	$("#approvalSeq").val(approvalInfo.seq);
@@ -743,9 +743,11 @@ function loadGrid(){
                 var selectedPOs = [];
                 $.each(indexes, function(index , value){
                 	 var row = $('#qcscheduleGrid').jqxGrid('getrowdata', value);
-                	 selectedPOs.push(row.po);
-                	 seqs.push(row.seq);
-                	 itemIds.push(row.itemnumbers); 
+					 if(!(row.responsetype == "Approved" ) && !(row.responsetype == "Pending")){
+						seqs.push(row.seq);
+						selectedPOs.push(row.po);
+						itemIds.push(row.itemnumbers); 
+					}
                 });
                 selectedPOs = removeDuplicates(selectedPOs);
                 //if(selectedPOs.length > 1){

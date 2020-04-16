@@ -57,7 +57,7 @@ class QcscheduleApprovalMgr{
 	}
 	
 	public function getQcScheduleApproval($qcscheduleSeqs){
-	    $query = "SELECT poinchargeusers.qccode poqccode, qcschedules.itemnumbers,qcschedules.po,  qcschedules.qc, users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
+	    $query = "SELECT poinchargeusers.qccode poqccode, qcschedules.itemnumbers,qcschedules.po,  qcschedules.qc, users.fullname,users.qccode,classcodes.classcode, qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq inner join classcodes on classcodes.seq = qcschedules.classcodeseq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
 		//$query = "SELECT qcschedules.itemnumbers,qcschedules.po,users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
 		$approvals =  self::$dataStore->executeQuery($query);
 	    $mainArr = array();
