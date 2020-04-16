@@ -144,8 +144,10 @@ class QCScheduleMgr{
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-		$query = "select qcschedules.seq as scheduleseq,classcode,qccode , poinchargeuser,qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
-left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode , poinchargeuser,qcschedules.* from qcschedules 
+		left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+		left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+		left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		//$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
 		
 		if($isSessionGeneralUser){
@@ -973,7 +975,8 @@ left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedu
 		return $qcschedules;
 	}
 	//--------------**********-------------
-	
+	//---------------Handling poqccode----------------
+	//private $find_qc_sql = "select poinchargeusers.qccode poqccode, users.qccode,classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq  left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq ";
 	private $find_qc_sql = "select qccode,classcodes.classcode,qcschedules.* from qcschedules left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq ";
 	//------------Pending Schedules-----------
 	public function getPendingShechededForReadyDate(){//currently not in use
@@ -1074,6 +1077,11 @@ left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedu
 	public function getPendingQcForApprovals(){
 		//$query = "select classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
 		//$query = "select qccode,classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules inner join qcschedulesapproval on qcschedules.seq  = qcschedulesapproval.qcscheduleseq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join users on qcschedules.qcuser = users.seq where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
+// 		$query = "select  poinchargeusers.qccode poqccode, users.qccode,classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules 
+// left join users on qcschedules.qcuser = users.seq
+// left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+// left join classcodes on qcschedules.classcodeseq = classcodes.seq
+// left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval  GROUP by qcschedulesapproval.qcscheduleseq) where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
 		$query = "select  qccode,classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules 
 left join users on qcschedules.qcuser = users.seq
 left join classcodes on qcschedules.classcodeseq = classcodes.seq

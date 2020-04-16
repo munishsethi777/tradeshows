@@ -441,6 +441,7 @@ class QCNotificationsUtil{
 					$row .= $tableRow;
 					$rowTokens["SR_NO"] =  $srNo;
 					$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
+					//$rowTokens["PO_INCHARGE"] =  $qcSchedule->poqccode;
 					$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 					$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 					$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();
@@ -628,6 +629,7 @@ class QCNotificationsUtil{
 			$row .= $tableRow;
 			$rowTokens["SR_NO"] =  $srNo;
 			$rowTokens["QC_CODE"] =  $qcSchedule->qccode;
+			//$rowTokens["PO_INCHARGE"] = $qcSchedule->poqccode;
 			$rowTokens["CLASS_CODE"] =  $qcSchedule->classcode;
 			$rowTokens["PO_NO"] =  $qcSchedule->getPO();
 			$rowTokens["PO_TYPE"] =  $qcSchedule->getPOType();

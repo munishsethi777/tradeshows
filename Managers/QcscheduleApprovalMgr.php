@@ -57,8 +57,9 @@ class QcscheduleApprovalMgr{
 	}
 	
 	public function getQcScheduleApproval($qcscheduleSeqs){
-	    $query = "SELECT qcschedules.itemnumbers,qcschedules.po,users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
-	    $approvals =  self::$dataStore->executeQuery($query);
+	    $query = "SELECT poinchargeusers.qccode poqccode, qcschedules.itemnumbers,qcschedules.po,  qcschedules.qc, users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
+		//$query = "SELECT qcschedules.itemnumbers,qcschedules.po,users.fullname,users.qccode,qcschedulesapproval.* FROM qcschedulesapproval inner join qcschedules on qcschedulesapproval.qcscheduleseq = qcschedules.seq inner join users  on qcschedulesapproval.userseq = users.seq where qcscheduleseq in($qcscheduleSeqs) order by seq desc"; 	    
+		$approvals =  self::$dataStore->executeQuery($query);
 	    $mainArr = array();
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
@@ -68,7 +69,8 @@ class QcscheduleApprovalMgr{
 	        $appliedOn = DateUtil::convertDateToFormatWithTimeZone($appliedOn, "Y-m-d H:i:s", "n/j/y h:i a",$loggedInUserTimeZone);
 	        $respondedOn = DateUtil::convertDateToFormatWithTimeZone($respondedOn, "Y-m-d H:i:s", "n/j/y h:i a",$loggedInUserTimeZone);
 	        $approval["appliedon"] = $appliedOn;
-	        $approval["respondedon"] = $respondedOn;
+			$approval["respondedon"] = $respondedOn;
+			$approval["poincharge"] = $approval["poqccode"];
 	        array_push($mainArr,$approval);
 	    }
 	    return  $mainArr;

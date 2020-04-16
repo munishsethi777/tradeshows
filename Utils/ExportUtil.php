@@ -420,7 +420,7 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["qccode"]);
 			
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["poinchargeuser"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["poqccode"]);
 
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule["classcode"]);
@@ -1650,7 +1650,11 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
-	
+					
+			// $colName = $alphas[$i++]. $count;
+			// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO Incharge");
+			// $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Class");
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
@@ -1706,6 +1710,9 @@ public static function exportQcWeeklyReport($pendingSchedules,$notificationName,
 					$colName = $alphas[$i++]. $count;
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->qccode);
 					
+					// $colName = $alphas[$i++]. $count;
+					// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->poqccode);
+
 					$colName = $alphas[$i++]. $count;
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
 					
@@ -2404,6 +2411,10 @@ public static function exportQcPendingForApprovals($qcSchedules,$notificationNam
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "QC");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		
+		// $colName = $alphas[$i++]. $count;
+		// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO Incharge");
+		// $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Class");
@@ -2448,7 +2459,10 @@ public static function exportQcPendingForApprovals($qcSchedules,$notificationNam
 					
 				$colName = $alphas[$i++]. $count;
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->qccode);
-					
+				
+				// $colName = $alphas[$i++]. $count;
+				// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->poqccode);
+
 				$colName = $alphas[$i++]. $count;
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $qcSchedule->classcode);
 					
