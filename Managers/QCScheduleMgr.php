@@ -11,6 +11,8 @@ require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Utils/QCScheduleImportUtil.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PHPExcelUtils.php");
+
 
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
@@ -144,6 +146,7 @@ class QCScheduleMgr{
 				$qcApprovalMgr = QcscheduleApprovalMgr::getInstance();
 				$qcApprovalMgr->saveApprovalFromQCSchedule($qcSchedule);
 			}
+			$scheduleArrNewValues['responsetype'] = "Pending";
 		}
 		
 		QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedulesOriginals, $scheduleArrNewValues);
@@ -157,12 +160,10 @@ class QCScheduleMgr{
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-		$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode , poinchargeuser,qcschedules.* from qcschedules 
+		$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, poinchargeuser,qcschedules.* from qcschedules 
 		left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
 		left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
 		left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
-		//$query = "select qcschedules.seq as scheduleseq ,classcode,qccode , qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq ";
-		
 		if($isSessionGeneralUser){
 			if(count($myTeamMembersArr) == 0){
 				$query .= " where users.seq = $loggedInUserSeq ";
@@ -180,7 +181,7 @@ class QCScheduleMgr{
 		}
 		$qcSchedules = array();
 		$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
-		ExportUtil::exportQCSchedules($qcSchedules);
+		PHPExcelUtil::exportQCSchedules($qcSchedules);
 	}
 	
 	private function groupByPO($qcSchedules){
@@ -625,10 +626,22 @@ left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcschedul
 	}
 	
 	public function findAllBySeqsForBulkEdit($seqs){
-		$query = "select pousers.qccode poqccode,users.qccode qccode, classcodes.classcode, qcschedules.seq scheduleseq, qcschedules.* from qcschedules
+		$query = "select pousers.qccode poqccode,users.qccode qccode, classcodes.classcode, qcschedules.seq scheduleseq,responsetype, qcschedules.* from qcschedules
 left join users on qcschedules.qcuser = users.seq
 left join users pousers on qcschedules.poinchargeuser = pousers.seq
-left join classcodes on qcschedules.classcodeseq = classcodes.seq where qcschedules.seq in ($seqs)";
+left join classcodes on qcschedules.classcodeseq = classcodes.seq
+left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq
+in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)
+		where qcschedules.seq in ($seqs)";
+		
+// 		$query ="select  poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , poinchargeuser,qcschedules.* from qcschedules
+// left join users on qcschedules.qcuser = users.seq
+// left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+// left join classcodes on qcschedules.classcodeseq = classcodes.seq
+// left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq
+// in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		
+		
 		$qcSchedules = self::$dataStore->executeQuery($query,false,true,false);
 		return $qcSchedules;
 	}

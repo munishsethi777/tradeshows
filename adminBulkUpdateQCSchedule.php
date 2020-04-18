@@ -31,7 +31,7 @@ $isCompleted = "";
 
 
 //$qcSchedules = $qcScheduleMgr->findAllBySeqsForBulkEdit($_REQUEST['seqs'] );
-//$qc = array("QC"=> "MUNISH");
+//$qc = array("qccode"=> "MUNISH");
 //QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedules, $qc);
 
 

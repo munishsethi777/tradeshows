@@ -318,7 +318,7 @@ class ExportUtil{
 		$objWriter->save('php://output');
 	}
 	
-	
+	//Discarding this Method, Use PHPExcelUtils for the new method
 	public static function exportQCSchedules($qcSchedules){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")

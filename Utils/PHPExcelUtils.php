@@ -1,6 +1,31 @@
 <?php
 class PHPExcelUtil {
-
+	
+	public static function exportQCSchedules($qcSchedules){
+		$objPHPExcel = self::cookQCScheduledPHPExcelHeader();
+		$objPHPExcel = self::loadQCSchedulesInExcel($qcSchedules, $objPHPExcel, 3);
+		
+		if($isEmail){
+			ob_start();
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+			$excelOutput = ob_get_contents();
+			ob_end_clean();
+			return $excelOutput;
+		}
+		// der ( 'Content-Type: application/vnd.ms-excel' );
+		header ( 'Content-Disposition: attachment;filename="QCSchedules.xls"' );
+		header ( 'Cache-Control: max-age=0' );
+		header ( 'Cache-Control: max-age=1' );
+		header ( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' ); // Date in the past
+		header ( 'Last-Modified: ' . gmdate ( 'D, d M Y H:i:s' ) . ' GMT' ); // always modified
+		header ( 'Cache-Control: cache, must-revalidate' ); // HTTP/1.1
+		header ( 'Pragma: public' ); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter ( $objPHPExcel, 'Excel5' );
+		ob_end_clean ();
+		$objWriter->save ( 'php://output' );
+	}
+	
 	public static function exportQCSchedulesBulkUpdate($qcSchedules,$qcScheduleNew,$isEmail=false){
 		$arr = array();
 		array_push($arr, $qcScheduleNew);
@@ -9,18 +34,19 @@ class PHPExcelUtil {
 		$objPHPExcel = self::cookQCScheduledPHPExcelHeader();
 		$objPHPExcel = self::loadQCSchedulesInExcel($allSchedules, $objPHPExcel, 3);
 	
-		$objPHPExcel->getActiveSheet ()->setTitle ( "QCSchedules" );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'A1:N1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'A2:N2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'O1:T1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'O2:T2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'U1:Z1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'U2:Z2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'AA1:AA2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'A1:M1' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'O1:T1' );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'U1:Z1' );
-		$worksheet = $objPHPExcel->getActiveSheet();
+// 		$objPHPExcel->getActiveSheet ()->setTitle ( "QCSchedules" );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'A1:N1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'A2:N2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'O1:T1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'O2:T2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'U1:Z1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'U2:Z2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( 'AA1:AA2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'A1:M1' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'O1:T1' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 )->mergeCells ( 'U1:Z1' );
+// 		$objPHPExcel->setActiveSheetIndex ( 0 );
+ 		$worksheet = $objPHPExcel->getActiveSheet();
 		$row = 3;
 		$lastColumn = $worksheet->getHighestColumn();
 		$lastRow = $worksheet->getHighestRow();
@@ -34,10 +60,6 @@ class PHPExcelUtil {
 				}
 			}
 		}
-		
-		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-		$objPHPExcel->setActiveSheetIndex ( 0 );
-		
 		if($isEmail){
 			ob_start();
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -177,6 +199,18 @@ class PHPExcelUtil {
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $apGraphicReceiveDate );
 				
+			$apFirstInspectionDateNaReason = $qcSchedule ["apfirstinspectiondatenareason"];
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $apFirstInspectionDateNaReason );
+			
+			$apMiddleInspectionDateNaReason = $qcSchedule ["apmiddleinspectiondatenareason"];
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $apMiddleInspectionDateNaReason );
+			
+			$apGraphicReceiveDateNaReason = $qcSchedule ["apgraphicsreceivedatenareason"];
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $apGraphicReceiveDateNaReason );
+			
 			
 			$acReadyDate = $qcSchedule ["acreadydate"];
 			if (! empty ( $acReadyDate )) {
@@ -221,12 +255,54 @@ class PHPExcelUtil {
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $acGraphicReceiveDate );
 		
+			$acFirstInspectionNotes = strip_tags ( $qcSchedule ["acfirstinspectionnotes"] );
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $acFirstInspectionNotes );
+				
+			$acMiddleInspectionNotes = strip_tags ( $qcSchedule ["acmiddleinspectionnotes"] );
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $acMiddleInspectionNotes );
+			
 			$notes = strip_tags ( $qcSchedule ["notes"] );
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $notes );
+			
+			$status = strip_tags ( $qcSchedule ["status"] );
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $status );
+			
+			$approvalResponse = strip_tags ( $qcSchedule ["responsetype"] );
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $approvalResponse );
+			
+			$iscompleted = strip_tags ( $qcSchedule ["iscompleted"] );
+			if($iscompleted == 1){
+				$iscompleted = "Yes";
+			}else{
+				$iscompleted = "";
+			}
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $iscompleted );
+			
 			$count ++;
 			$i = 0;
 		}
+		$objPHPExcel->setActiveSheetIndex ( 0 );
+		$objPHPExcel->getActiveSheet()->setTitle ( "QCSchedules" );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'A1:N1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'A2:N2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'O1:W1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'O2:W2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'X1:AF1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'X2:AF2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'AG1:AI1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'AG2:AI2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:M1' );
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'O1:W1' );
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'X1:AF1' );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getFont()->setSize(16);
+		
 		return $objPHPExcel;
 	}
 	private static function cookQCScheduledPHPExcelHeader(){
@@ -249,8 +325,8 @@ class PHPExcelUtil {
 		) );
 		
 		
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "U1", "Actual" );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "U1" )->getAlignment ()->applyFromArray ( array (
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "X1", "Actual" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "X1" )->getAlignment ()->applyFromArray ( array (
 				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 		) );
 		//$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "S1", "Review" );
@@ -307,45 +383,67 @@ class PHPExcelUtil {
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Ready Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Production Start Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Production \nStart Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Graphics Receive Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Graphics \nReceive Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
-		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First Inspection \nDate NA Reason" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle Inspection \nDate NA Reason" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Graphics Receive \nDate NA Reason" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		//ACTUAL HEADERS
 		$colName = PHPExcel_Cell::stringFromColumnIndex($i ++) . $count;
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Ready Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First Inspection Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First \nInspection Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Production Start Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Production \nStart Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Graphics Receive Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Graphics \nReceive Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "First \nInspection Notes" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Middle \nInspection Notes" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final \nInspection Notes" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Status" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Approval" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Completed" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		
-		
-		$colName = self::getColName($i ++, $count);
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Notes" );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		return $objPHPExcel;
 	}
 	private static function getDateStr($date){
