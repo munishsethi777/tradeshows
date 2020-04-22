@@ -247,6 +247,18 @@ if($call == "deleteQCSchedule"){
 		$message = $e->getMessage();
 	}
 }
+if($call == "updateQCSchedules"){
+	try{
+		if(isset($_FILES["file"])){
+		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"]);
+			echo json_encode($response);
+			return;
+		}
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 function utf8ize($d) {
     if (is_array($d)) {
         foreach ($d as $k => $v) {

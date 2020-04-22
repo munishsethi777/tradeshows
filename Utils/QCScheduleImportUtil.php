@@ -82,6 +82,19 @@ class QCScheduleImportUtil
         }
     }
     
+    public function updateQCSchedules($file){
+        $inputFileName = $file['tmp_name'];
+        $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+        $sheet = $objPHPExcel->getActiveSheet();
+        $maxCell = $sheet->getHighestRowAndColumn();
+        $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
+        try{
+            return $this->validateAndUpdateFile($sheetData);
+        }catch(Exception $e){
+            throw $e;
+        }
+    }
+
     public function deleteByImport($filePath)
     {
         if(file_exists($filePath)){
@@ -229,7 +242,46 @@ class QCScheduleImportUtil
         }
         return $response;
     }
-
+    public function validateAndUpdateFile($sheetData){
+        $this->fieldNames = $sheetData[0];
+        $success = 1;
+        $messages = "";
+        $labels = array();
+        $qcScheudleArr = array();
+        foreach ($sheetData as $key => $data) {
+            if ($key == 0) {
+                $labels = $data;
+                $row = $key + 2;
+            }else{
+                $row = $key+2;
+                $imoptedData = $this->getUpdatingData($data,$labels);
+                if (empty($imoptedData)) {
+                    continue;
+                }
+                $qcschedule = $imoptedData["data"];
+                $itemIdsArr = $imoptedData["items"];
+                $itemNoArr = array();
+                foreach ($itemIdsArr as $itemId) {
+                    if (empty($itemId)) {
+                        continue;
+                    }
+                    $qc = clone $qcschedule;
+                    $qc->setItemNumbers($itemId);
+                    array_push($qcScheudleArr, $qc);
+                    array_push($itemNoArr, $itemId . $qc->getPO());
+                }
+                $rowAndItemNo[$row] = $itemNoArr;
+            }
+        }
+        $response = array();
+        $response["message"] = $messages;
+        $response["success"] = $success;
+        if (empty($messages)) {
+            $qcscheduleMgr = QCScheduleMgr::getInstance();
+            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheudleArr);
+        }
+        return $response;
+    }
     private function validateFields()
     {
         $fieldArr = $this->fieldNames;
@@ -445,12 +497,108 @@ class QCScheduleImportUtil
         return $importedData;
     }
 
+    private function getUpdatingData($data,$labels)
+    {
+        $userMgr = UserMgr::getInstance();
+        $po = $data[array_search('PO#', $labels)];
+        $itemNo = $data[array_search('Item No', $labels)];
+        $itemNoArr = array();
+        if (! empty($itemNo)) {
+            $itemNoArr = $this->getItemNoArr($itemNo);
+        }
+        $shipDateStr = $data[array_search('Ship Date', $labels)];
+        
+        $this->dataTypeErrors = "";
+
+        $qcSchedule = new QCSchedule();
+        if (! empty($po)) {
+            $qcSchedule->setPO($po);
+        }else{
+            throw new Exception("'$po' po number not found in database!");
+        }
+        if (! empty($itemNo)) {
+            $qcSchedule->setItemNumbers($itemNo);
+        }else{
+            throw new Exception("'$itemNo' item no not found in database!");
+        }
+  
+        if (! empty($shipDateStr)) {
+            $shipDate = $this->convertStrToDate($shipDateStr);
+            if($shipDate == null){
+                $shipDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $qcSchedule->setShipDate($shipDate);
+
+            if(!$shipDate){
+                throw new Exception("Invalid Ship date");
+            }
+            $currentTime = new DateTime();
+            $currentTime->setTime(0,0);
+            $shipDate->setTime(0,0);
+            $readyDate = $this->convertStrToDate($shipDateStr);
+            if($readyDate == null){
+                $readyDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $readyDate->modify('-14 day');
+            $qcSchedule->setSCReadyDate($readyDate);
+            // $qcSchedule->setAPReadyDate($readyDate);
+
+            $finalInspectionDate = $this->convertStrToDate($shipDateStr);
+            if($finalInspectionDate == null){
+                $finalInspectionDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $finalInspectionDate->modify('-10 day');
+            $qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
+            // $qcSchedule->setAPFinalInspectionDate($finalInspectionDate);
+
+            $middleInspectionDate = $this->convertStrToDate($shipDateStr);
+            if($middleInspectionDate == null){
+                $middleInspectionDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $middleInspectionDate->modify('-15 day');
+            
+            $qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
+            // $qcSchedule->setAPMiddleInspectionDate($middleInspectionDate);
+
+            $firstInspectionDate = $this->convertStrToDate($shipDateStr);
+            if($firstInspectionDate == null){
+                $firstInspectionDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $firstInspectionDate->modify('-35 day');
+            $qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
+            // $qcSchedule->setAPFirstInspectionDate($firstInspectionDate);
+
+            $productionStartDate = $this->convertStrToDate($shipDateStr);
+            if($productionStartDate == null){
+                $productionStartDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $productionStartDate->modify('-45 day');
+            $qcSchedule->setSCProductionStartDate($productionStartDate);
+            // $qcSchedule->setAPProductionStartDate($productionStartDate);
+
+            $graphicReceiveDate = $this->convertStrToDate($shipDateStr);
+            if($graphicReceiveDate == null){
+                $graphicReceiveDate = $this->convertStrToDateTime($shipDateStr);
+            }
+            $graphicReceiveDate->modify('-30 day');
+            $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
+        }
+        $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
+        $importedData = array();
+        $importedData["items"] = $itemNoArr;
+        $importedData["data"] = $qcSchedule;
+        return $importedData;
+    }
     private function convertStrToDate($date)
     {   
         if(is_string($date)){
             return null;
         }
         $date = PHPExcel_Shared_Date::ExcelToPHPObject($date);
+        return $date;
+    }
+    private function convertStrToDateTime($date){
+        $date = DateTime::createFromFormat("m/d/y", $date);
         return $date;
     }
 }

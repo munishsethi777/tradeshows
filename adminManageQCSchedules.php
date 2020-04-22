@@ -651,7 +651,7 @@ function loadGrid(){
           // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Mail Weekly Report</span></div>");
             var exportPlannerButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
-            
+            var updateButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Update Scdates</span></div>");
             container.append(addButton);
             container.append(editButton);
             container.append(bulkEditButton);
@@ -660,6 +660,7 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             container.append(downloadButton);
+			container.append(updateButton);
             <?php if($sessionUtil->isSessionAdmin()){?>
 	            container.append(importButton);
 	            container.append(importCompletedButton);
@@ -682,6 +683,7 @@ function loadGrid(){
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
             downloadButton.jqxButton({  width: 140, height: 18 });
+			updateButton.jqxButton({  width:170, height:18})
           	//deleteButton.jqxButton({  width: 65, height: 18 });
              <?php if($hasWeeklyReportButtonPermission){?>
 	            weeklyReportButton.jqxButton({  width: 150, height: 18 });
@@ -761,6 +763,9 @@ function loadGrid(){
                 $("#form2").attr('action', 'adminBulkUpdateQCSchedule.php');                       
                 $("#form2").submit();    
             });
+			updateButton.click(function (event){
+				location.href = ("adminUpdateQCSchedules.php");
+			});
             // delete row.
           /*  deleteButton.click(function (event) {
                 gridId = "qcscheduleGrid";

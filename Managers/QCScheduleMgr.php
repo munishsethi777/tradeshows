@@ -54,7 +54,11 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
     }
-    
+    public function updateQCSchedulesWithActualDates($file){
+		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
+		return $qcScheduleImportUtil->updateQCSchedules($file);
+	}
+
     public function bulkDeleteByImport($filePath){
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->deleteByImport($filePath);
@@ -423,6 +427,48 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
+	public function updateQCScheduleDates($qcScheudleArr){
+		$db_New = MainDB::getInstance();
+		$conn = $db_New->getConnection();
+		$conn->beginTransaction();
+		$hasError = false;
+		$messages = "";
+		$updatedItemCount = 0;
+		$success = 1;
+		foreach ($qcScheudleArr as $key=>$qc){
+			$itemNo = $qc->getItemNumbers();
+			$po =  $qc->getPo();
+			try {
+				$condition["itemnumbers"] = $itemNo;
+				$condition["po"] = $po;
+				$colValuePair = array();
+				$colValuePair["shipdate"] = $qc->getShipdate();
+				$colValuePair['screadydate'] = $qc->getScReadyDate();
+				$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
+				$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
+				$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
+				$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
+				$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
+				$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+
+				self::$dataStore->updateByAttributes($colValuePair, $condition);
+				$updatedItemCount++;
+			 }
+			catch ( Exception $e) {
+				$messages = $e->getMessage();
+				$success = 0;
+			}
+		}
+		if($success == 1){
+			$conn->commit();
+			$messages = StringConstants::QC_SCHEDULES_IMPORTED_SUCCESSFULLY; 
+		}
+		$response["message"] = $messages;
+		$response["success"] = $success;
+		$response["updatedItemCount"] = $updatedItemCount;
+		return $response;
+	} 
+
 	private function getRowNumberByItemId($array,$itemNo,$po){
 	    $rowNumber = 0;
 	    foreach($array as $key => $value) {
