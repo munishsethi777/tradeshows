@@ -1,4 +1,1 @@
-ALTER TABLE `classcodes` ADD `vendorid` VARCHAR(25) NOT NULL AFTER `seq`, ADD `vendorname` VARCHAR(100) NOT NULL AFTER `vendorid`;
 ALTER TABLE `classcodes` ADD `email` VARCHAR(50) NOT NULL AFTER `classcode`, ADD `contactname` VARCHAR(50) NOT NULL AFTER `email`, ADD `port` VARCHAR(50) NOT NULL AFTER `contactname`, ADD `buyername` VARCHAR(100) NOT NULL AFTER `port`, ADD `buyeremail` VARCHAR(50) NOT NULL AFTER `buyername`, ADD `assistantbuyer` VARCHAR(100) NOT NULL AFTER `buyeremail`, ADD `assistantbuyeremail` VARCHAR(50) NOT NULL AFTER `assistantbuyer`, ADD `chinarepname` VARCHAR(100) NOT NULL AFTER `assistantbuyeremail`, ADD `chinarepemail` VARCHAR(50) NOT NULL AFTER `chinerepname`;
-ALTER TABLE `classcodes` CHANGE `classcode` `classcode` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-ALTER TABLE `qcschedules` ADD CONSTRAINT `delete_classcode` FOREIGN KEY (`classcodeseq`) REFERENCES `classcodes`(`seq`) ON DELETE RESTRICT ON UPDATE NO ACTION;

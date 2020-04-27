@@ -72,67 +72,67 @@ if(isset($_POST["id"])){
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Vendor Id:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  required maxLength="50" value="<?php echo $classCode->getVendorId()?>" name="vendorid" class="form-control">
+	                            	<input type="text" maxLength="50" value="<?php echo $classCode->getVendorId()?>" name="vendorid" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Vendor Name:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="100" value="<?php echo $classCode->getVendorName()?>" name="vendorname" class="form-control">
+	                            	<input type="text" maxLength="100" value="<?php echo $classCode->getVendorName()?>" name="vendorname" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Email:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getEmail()?>" name="email" class="form-control">
+	                            	<input type="email"   maxLength="50" value="<?php echo $classCode->getEmail()?>" name="email" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Contact Name:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="50" value="<?php echo $classCode->getContactName()?>" name="contactname" class="form-control">
+	                            	<input type="text"   maxLength="50" value="<?php echo $classCode->getContactName()?>" name="contactname" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Port:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="50" value="<?php echo $classCode->getPort()?>" name="port" class="form-control">
+	                            	<input type="text"  maxLength="50" value="<?php echo $classCode->getPort()?>" name="port" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Buyer Name:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="100" value="<?php echo $classCode->getBuyerName()?>" name="buyername" class="form-control">
+	                            	<input type="text"   maxLength="100" value="<?php echo $classCode->getBuyerName()?>" name="buyername" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Buyer Email:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getBuyerEmail()?>" name="buyeremail" class="form-control">
+	                            	<input type="email"  maxLength="50" value="<?php echo $classCode->getBuyerEmail()?>" name="buyeremail" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assistant Buyer:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required maxLength="100" value="<?php echo $classCode->getAssistantBuyer()?>" class="form-control" name="assistantbuyer" class="form-control">
+	                            	<input type="text"  maxLength="100" value="<?php echo $classCode->getAssistantBuyer()?>" class="form-control" name="assistantbuyer" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assistant Buyer Email:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getAssistantBuyerEmail()?>" name="assistantbuyeremail" class="form-control">
+	                            	<input type="email"  maxLength="50" value="<?php echo $classCode->getAssistantBuyerEmail()?>" name="assistantbuyeremail" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">China Rep Name:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required maxLength="100" value="<?php echo $classCode->getChinaRepName()?>" name="chinarepname" class="form-control">
+	                            	<input type="text"  maxLength="100" value="<?php echo $classCode->getChinaRepName()?>" name="chinarepname" class="form-control">
 	                            </div>
 							 </div>
 							 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">China Rep Email:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="email" required maxLength="50" value="<?php echo $classCode->getChinaRepEmail()?>" name="chinarepemail" class="form-control">
+	                            	<input type="email"  maxLength="50" value="<?php echo $classCode->getChinaRepEmail()?>" name="chinarepemail" class="form-control">
 	                            </div>
 							 </div>
 							 

@@ -25,32 +25,7 @@ if(isset($_REQUEST["isCompleted"])){
                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 							href="#"><i class="fa fa-bars"></i> </a>
-							<h5 cl
-	public function saveOrUpdateArr($colValuePair,$ommitFieldsWhileUpdateArr){
-		$sql = "INSERT INTO classcodes(";
-		$inserter = array();
-		$conditioner = array();
-		$dupilcator = array();
-		foreach($colValuePair as $key => $value){
-			if(!empty($value)){
-				array_push($inserter,$key);
-			}
-		}
-		foreach($colValuePair as $key => $value){
-			if(!empty($value)){
-				array_push($conditioner,$value);
-			}
-		}
-		foreach($colValuePair as $key => $value){
-			if(!empty($value) and !(in_array($key,$ommitFieldsWhileUpdateArr))){
-				array_push($duplicator,$key . "=" . $value);
-			}
-		}
-		$sql .= implode(",",$inserter) . ") values(" . implode(",",$conditioner) . ") ON DUPLICATE KEY UPDATE " . implode(",",$dupilcator);
-		$classCode = self::$dataStore->executeQuery($sql);
-		return $classCode;
-
-	}ass="pageTitle">Import Item Class Codes</h5>
+							<h5 class="pageTitle">Import Item Class Codes</h5>
 					</nav>
                  </div>
                  <div class="ibox-content">
