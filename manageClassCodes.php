@@ -60,10 +60,21 @@ function loadGrid(){
     }
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Code', datafield: 'classcode', width:"35%"},
-      { text: 'Created By', datafield: 'fullname',width:"30%"},
+      { text: 'Vendor id', datafield: 'vendorid',width:"10%"},
+      { text: 'Vendor Name', datafield: 'vendorname',width:"10%"},
+      { text: 'Code', datafield: 'classcode', width:"10%"},
+      { text: 'Email', datafield: 'email', width:"10%",hidden:true},
+      { text: 'Contact Name', datafield: 'contactname', width:"20%",hidden:true },
+      { text: 'Port', datafield: 'port', width:"10%"},
+      { text: 'Buyer Name', datafield: 'buyername', width:"20%",hidden:true},
+      { text: 'Buyer Email', datafield: 'buyeremail', width:"20%",hidden:true},
+      { text: 'Assistant Buyer', datafield: 'assistantbuyer', width:"20%",hidden:true},
+      { text: 'Assistant Buyer Email', datafield: 'assistantbuyemail', width:140,hidden:true},
+      { text: 'China Rep Name', datafield: 'chinarepname', width:"20%",hidden:true},
+      { text: 'China Rep Email', datafield: 'chinarepemail', width:"20%",hidden:true},
+      { text: 'Created By', datafield: 'fullname',width:"10%"},
       { text: 'Active', datafield: 'isenabled',width:"10%" ,columntype:'checkbox'},
-      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"22%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
+      { text: 'Last Modified', datafield: 'lastmodifiedon',width:"38%",filtertype: 'date',cellsformat: 'M-dd-yyyy H:mm'}
     ]
    
     var source =
@@ -78,6 +89,17 @@ function loadGrid(){
                     { name: 'fullname', type: 'string' },
                     { name: 'isenabled', type: 'boolean' },
                     { name: 'lastmodifiedon', type: 'date' },
+                    { name: 'vendorid', type: 'string'},
+                    { name: 'vendorname', type: 'string'},
+                    { name: 'email', type:'email'},
+                    { name: 'contactname', type: 'string'},
+                    { name: 'port', type: 'string'},
+                    { name: 'buyername', type: 'string'},
+                    { name: 'buyeremail', type: 'string'},
+                    { name: 'assistantbuyer', type: 'string'},
+                    { name: 'assistantbuyeremail', type: 'string'},
+                    { name: 'chinarepname', type: 'string'},
+                    { name: 'chinarepemail', type: 'string'}
                     ],                          
         url: 'Actions/ClassCodeAction.php?call=getClassCodes',
         root: 'Rows',
@@ -135,21 +157,24 @@ function loadGrid(){
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
+            var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             container.append(addButton);
             container.append(editButton);
             container.append(deleteButton);
             container.append(reloadButton);
+            container.append(importButton);
             statusbar.append(container);
             editButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
+            importButton.jqxButton({width: 70, height: 18});
             // create new row.
             addButton.click(function (event) {
                 location.href = ("createClassCode.php");
             });
             deleteButton.click(function (event) {
-            	deleteRows("classCodeGrid","Actions/ClassCodeAction.php?call=deleteClassCode");
+                deleteRows("classCodeGrid","Actions/ClassCodeAction.php?call=deleteClassCode");
            	});
             editButton.click(function (event){
             	var selectedrowindex = $("#classCodeGrid").jqxGrid('selectedrowindexes');
@@ -186,6 +211,9 @@ function loadGrid(){
             // reload grid data.
             reloadButton.click(function (event) {
                 $("#classCodeGrid").jqxGrid({ source: dataAdapter });
+            });
+            importButton.click(function (event){
+                location.href = ('adminImportClassCodes.php');
             });
         }
     });

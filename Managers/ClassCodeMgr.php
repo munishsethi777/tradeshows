@@ -3,6 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ClassCodeImportUtil.php");
 
 
 class ClassCodeMgr{
@@ -75,5 +76,35 @@ class ClassCodeMgr{
 			return $classCode[0];
 		}
 		return null;
+	}
+	public function importClassCode($file){
+		$classCodeImportUtil = ClassCodeImportUtil::getInstance();
+		return $classCodeImportUtil->importClassCodes($file);
+	}
+	
+	public function saveOrUpdateArr($colValuePair,$ommitFieldsWhileUpdateArr){
+		$sql = "INSERT INTO classcodes(";
+		$inserter = array();
+		$conditioner = array();
+		$dupilcator = array();
+		foreach($colValuePair as $key => $value){
+			if(!empty($value)){
+				array_push($inserter,$key);
+			}
+		}
+		foreach($colValuePair as $key => $value){
+			if(!empty($value)){
+				array_push($conditioner,$value);
+			}
+		}
+		foreach($colValuePair as $key => $value){
+			if(!empty($value) and !(in_array($key,$ommitFieldsWhileUpdateArr))){
+				array_push($duplicator,$key . "=" . $value);
+			}
+		}
+		$sql .= implode(",",$inserter) . ") values(" . implode(",",$conditioner) . ") ON DUPLICATE KEY UPDATE " . implode(",",$dupilcator);
+		$classCode = self::$dataStore->executeQuery($sql);
+		return $classCode;
+
 	}
 }

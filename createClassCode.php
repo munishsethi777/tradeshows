@@ -66,9 +66,76 @@ if(isset($_POST["id"])){
                         	 <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Class Code:</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text" required  maxLength="20" value="<?php echo $classCode->getClassCode()?>" name="classcode" class="form-control">
+	                            	<input type="text"  required maxLength="25" value="<?php echo $classCode->getClassCode()?>" name="classcode" class="form-control">
 	                            </div>
-	                         </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Vendor Id:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text"  required maxLength="50" value="<?php echo $classCode->getVendorId()?>" name="vendorid" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Vendor Name:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required  maxLength="100" value="<?php echo $classCode->getVendorName()?>" name="vendorname" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Email:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getEmail()?>" name="email" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Contact Name:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required  maxLength="50" value="<?php echo $classCode->getContactName()?>" name="contactname" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Port:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required  maxLength="50" value="<?php echo $classCode->getPort()?>" name="port" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Buyer Name:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required  maxLength="100" value="<?php echo $classCode->getBuyerName()?>" name="buyername" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Buyer Email:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getBuyerEmail()?>" name="buyeremail" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assistant Buyer:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required maxLength="100" value="<?php echo $classCode->getAssistantBuyer()?>" class="form-control" name="assistantbuyer" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Assistant Buyer Email:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="email" required  maxLength="50" value="<?php echo $classCode->getAssistantBuyerEmail()?>" name="assistantbuyeremail" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">China Rep Name:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="text" required maxLength="100" value="<?php echo $classCode->getChinaRepName()?>" name="chinarepname" class="form-control">
+	                            </div>
+							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">China Rep Email:</label>
+	                        	<div class="col-lg-4">
+	                            	<input type="email" required maxLength="50" value="<?php echo $classCode->getChinaRepEmail()?>" name="chinarepemail" class="form-control">
+	                            </div>
+							 </div>
+							 
 	                         <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
 	                        	<div class="col-lg-4">
@@ -81,6 +148,11 @@ if(isset($_POST["id"])){
 		                        	<div class="col-lg-2">
 			                        	<button class="btn btn-primary" onclick="saveUser()" type="button" style="width:85%">
 		                                	Save
+			                          	</button>
+									</div>
+									<div class="col-lg-2">
+			                        	<button class="btn btn-primary" onclick="saveUserContinue()" type="button" style="width:85%">
+		                                	Save And New
 			                          	</button>
 			                        </div>
 			                        <div class="col-lg-2">
@@ -120,6 +192,18 @@ function saveUser(){
 		   if(flag){
 			   window.setTimeout(function(){window.location.href = "manageClassCodes.php"},100);
 		   }
+	    })	
+	}else{
+		$("#createUserForm")[0].reportValidity();
+	}
+}
+function saveUserContinue(){
+	if($("#createUserForm")[0].checkValidity()) {
+		showHideProgress()
+		$('#createUserForm').ajaxSubmit(function( data ){
+		   showHideProgress();
+		   var flag = showResponseToastr(data,null,null,"ibox");
+		   $(".form-control").val("");
 	    })	
 	}else{
 		$("#createUserForm")[0].reportValidity();
