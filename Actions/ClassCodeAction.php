@@ -1,6 +1,7 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
@@ -46,19 +47,39 @@ if($call == "getClassCodes"){
 	return;
 }
 if($call == "deleteClassCode"){
-	    $ids = $_GET["ids"];
-	try{
-		$flag = $classCodeMgr->deleteBySeqs($ids);
-		$message = StringConstants::CLASS_CODE_DELETED_SUCCESSFULLY; 
-	}catch(Exception $e){
-		$success = 0;
-		$message = $e->getMessage();
-		if(strpos($message,"delete_code") !== false){
-		    $message = StringConstants::CLASS_CODE_CANNOT_DELETED;
+	$ids = $_GET["ids"];
+	$ids = explode(",",$ids);
+	$failed_id = array();
+	foreach($ids as $id){
+		try{
+			$qcScheduleMgr = QCScheduleMgr::getInstance();
+			$flag = $classCodeMgr->deleteBySeqs($id);
+			if(count($failed_id) == 0){
+				$message = StringConstants::CLASS_CODE_DELETED_SUCCESSFULLY;
+			} 
+		}catch(Exception $e){
+			$success = 0;
+			$object = $classCodeMgr->findBySeq($id);
+			$failed_id[] = $object->getClassCode();
+			$message = "Failed to delete";
+			if(strpos($message,"delete_code") !== false){
+				$message = StringConstants::CLASS_CODE_CANNOT_DELETED;
+			}
 		}
+	}
+	if(!(count($failed_id) ==0)){
+		$message = implode(',',$failed_id) . " " . $message;
+	}
+}
+if($call == "importClassCode"){
+	if(isset($_FILES["file"])){
+		$response = $classCodeMgr->importClassCode($_FILES["file"]);
+		echo json_encode($response);
+		return;
 	}
 }
 $response["success"] = $success;
+
 $response["message"] = $message;
 echo json_encode($response);
 return;
