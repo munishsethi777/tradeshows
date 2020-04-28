@@ -2,7 +2,12 @@
 class Customer{
     private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
     private $priority,$isstore,$storeid,$storename,$businesscategory;
-    
+    private $freightforwarderemail;
+    private $freightforwardername;
+    private $notifyparty;
+    private $hasshippingmark;
+    private $shippingmarkname;
+    private $shippingmarktemplatepath;
     public static $className = "Customer";
     public static $tableName = "customers";
     public function setSeq($seq_){
@@ -96,6 +101,58 @@ class Customer{
         return $this->businesscategory;
     }
     
+    public function getFreightForwarderEmail(){
+        return $this->freightforwarderemail;
+    }
+    
+    public function setFreightForwarderEmail($freightforwarderemail){
+        $this->freightforwarderemail = $freightforwarderemail;
+    }
+
+    public function getFreightForwarderName(){
+        return $this->freightforwardername;
+    }
+
+    public function setFreightForwarderName($freightforwardername){
+        $this->freightforwardername = $freightforwardername;
+    }
+
+    public function getNotifyParty(){
+        return $this->notifyparty;
+    }
+
+    public function setNotifyParty($notifyparty){
+        $this->notifyparty = $notifyparty;
+    }
+
+    public function getHasShippingMark(){
+        return $this->hasshippingmark;
+    }
+
+    public function setHasShippingMark($hasshippingmark){
+        $this->hasshippingmark =$hasshippingmark;
+    }
+
+    public function setHasShippingMarkName($hasshippingmark){
+        $this->hasshippingmark = $hasshippingmark;
+    }
+
+    public function getShippingMarkName(){
+        return $this->shippingmarkname;
+    }
+
+    public function setShippingMarkName($shippingmarkname){
+        $this->shippingmarkname = $shippingmarkname;
+    }
+
+    public function getShippingMarkTemplatePath(){
+        return $this->shippingmarkname;
+    }
+
+    public function setShippingMarkTemplatePath($shippingmarktemplatepath){
+        $this->shippingmarktemplatepath = $shippingmarktemplatepath;
+    }
+
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );

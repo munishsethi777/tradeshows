@@ -21,6 +21,11 @@ if($call == "saveCustomer"){
         $customer = new Customer();
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
+        if(isset($_REQUEST['hasshipping'])){
+            $customer->setHasShippingMark("1");
+        }else{
+            $customer->setHasShippingMark("0");
+        }
         if(isset($_REQUEST["fullNameSelect"])){
             $existingCustomer = $customerMgr->findByCustomerSeq($_REQUEST["fullNameSelect"]);
             $customer->setFullName($existingCustomer->getFullName());
@@ -29,6 +34,8 @@ if($call == "saveCustomer"){
         if(isset($_REQUEST["isstore"])){
             $isStore = 1;
         }
+        //$customer->setFreightForwarderEmail($_REQUEST['freightforwarderemail']);
+        //$customer->setFreightForwarderName($_REQUEST['freightforwardername']);
         $customer->setIsStore($isStore);
         $customer->setCreatedby($sessionUtil->getUserLoggedInSeq());
         $customer->setCreatedon(new DateTime());

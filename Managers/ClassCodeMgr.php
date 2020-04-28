@@ -94,12 +94,19 @@ class ClassCodeMgr{
 		}
 		foreach($colValuePair as $key => $value){
 			if(!empty($value)){
-				array_push($conditioner,$value);
+				if($key == "lastmodifiedon" or $key == "createdon"){
+					array_push($conditioner,"'" . $value . "'");
+				}else{
+				array_push($conditioner,$value);}
 			}
 		}
 		foreach($colValuePair as $key => $value){
 			if(!empty($value) and !(in_array($key,$ommitFieldsWhileUpdateArr))){
-				array_push($duplicator,$key . "=" . $value);
+				if($key == "lastmodifiedon" or $key == "createdon"){
+					array_push($dupilcator,$key . "= '" . $value . "'");
+				}else{
+				array_push($dupilcator,$key . "=" . $value);
+			}
 			}
 		}
 		$sql .= implode(",",$inserter) . ") values(" . implode(",",$conditioner) . ") ON DUPLICATE KEY UPDATE " . implode(",",$dupilcator);
