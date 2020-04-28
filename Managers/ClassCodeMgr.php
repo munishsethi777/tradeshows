@@ -86,7 +86,7 @@ class ClassCodeMgr{
 		$sql = "INSERT INTO classcodes(";
 		$inserter = array();
 		$conditioner = array();
-		$dupilcator = array();
+		$duplicator = array();
 		foreach($colValuePair as $key => $value){
 			if(!empty($value)){
 				array_push($inserter,$key);
@@ -109,7 +109,7 @@ class ClassCodeMgr{
 			}
 			}
 		}
-		$sql .= implode(",",$inserter) . ") values(" . implode(",",$conditioner) . ") ON DUPLICATE KEY UPDATE " . implode(",",$dupilcator);
+		$sql .= implode(",",$inserter) . ") values(" . implode(",",$conditioner) . ") ON DUPLICATE KEY UPDATE " . implode(",",$duplicator);
 		$classCode = self::$dataStore->executeQuery($sql);
 		return $classCode;
 

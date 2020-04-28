@@ -73,9 +73,9 @@ class ClassCodeImportUtil{
         $customcodearr['chinarepname'] = "'".$data[array_search("China Rep Name",$labels)]."'";
         $customcodearr['chinarepemail'] = "'".$data[array_search("China Rep Email",$labels)]."'";
         $newTime = new DateTime();
-        $customcodearr['lastmodifiedon'] = $newTime->format('Y-m-d H:i:s');
+        $customcodearr['lastmodifiedon'] = "'".$newTime->format('Y-m-d H:i:s')."'";
         if(empty($data[array_search("Created On",$labels)])){
-            $customcodearr['createdon'] = $newTime->format('Y-m-d H:i:s');
+            $customcodearr['createdon'] = "'". $newTime->format('Y-m-d H:i:s')."'";
         }
         $customcodearr['isenabled'] = 1;
         return $customcodearr;

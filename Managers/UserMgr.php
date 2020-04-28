@@ -1,6 +1,4 @@
 <?php
-use Aws\S3\Exception\EntityTooLargeException;
-
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
