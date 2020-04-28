@@ -1,7 +1,7 @@
 <?php
 class PHPExcelUtil {
 	
-	public static function exportQCSchedules($qcSchedules){
+	public static function exportQCSchedules($qcSchedules,$isEmail = false){
 		$objPHPExcel = self::cookQCScheduledPHPExcelHeader();
 		$objPHPExcel = self::loadQCSchedulesInExcel($qcSchedules, $objPHPExcel, 3);
 		
@@ -456,10 +456,10 @@ class PHPExcelUtil {
 		}
 		return $date;
 	}
-	private static function getColName($i,$count=null){
+	private static function getColName($i,$rowNum=null){
 		$colName = PHPExcel_Cell::stringFromColumnIndex($i);
-		if($count != null){
-			return $colName . $count;
+		if($rowNum != null){
+			return $colName . $rowNum;
 		}
 		return $colName;
 	}
