@@ -112,6 +112,10 @@ function updateAction(){
 			}
 			$("#message").html(message);
 			$('#createNewModalForm').modal('show'); 
+		}else{
+			$('#createNewModalForm').modal('hide');
+			var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
+				    
 		}
 		});
 			

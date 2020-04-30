@@ -436,13 +436,14 @@ class QCScheduleMgr{
 		$updatedItemCount = 0;
 		$success = 1;
 		foreach ($qcScheudleArr as $key=>$qc){
-			$itemNo = $qc->getItemNumbers();
-			$po =  $qc->getPo();
+			$seq = $qc->getSeq();
 			try {
-				$condition["itemnumbers"] = $itemNo;
-				$condition["po"] = $po;
+				$condition["seq"] = $seq;
 				$colValuePair = array();
 				$colValuePair["shipdate"] = $qc->getShipdate();
+				if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipDate() == "") ){
+					$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
+				}
 				$colValuePair['screadydate'] = $qc->getScReadyDate();
 				$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
 				$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
@@ -824,7 +825,7 @@ in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcsche
 		}else if($notificationType == NotificationType::SC_FIRST_INSPECTION_DATE){
 			$qcSchedules = $this->getPendingShechededForFirstInspectionDate();
 		}else if($notificationType == NotificationType::SC_MIDDLE_INSPECTION_DATE){
-			$qcSchedules = $this->getPendingShechededForMiddleInspectionDate();
+			//$qcSchedules = $this->getPendingShechededForMiddleInspectionDate();
 		}else if($notificationType == NotificationType::SC_PRODUCTION_START_DATE){
 			$qcSchedules = $this->getPendingShechededForProductionStartDate();
 		}else if($notificationType == NotificationType::SC_GRAPHIC_RECEIVE_DATE){
