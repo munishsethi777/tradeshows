@@ -14,5 +14,5 @@ class Permissions extends BasicEnum{
 	const approved_reject_notification = "Approved/Reject Notification";
 	const manage_customers = "Manage Customers";
 	const po_incharge = "PO Incharge";
-	
+	const qc_isreadonly = "Readonly";
 }

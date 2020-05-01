@@ -50,7 +50,9 @@ class PermissionUtil{
 	public function hasQCPlannerButtonPermission(){
 	    return in_array(Permissions::getName(Permissions::qc_planner_button),self::$permissions);
 	}
-	
+	public function hasQCReadonly(){
+		return in_array(Permissions::getName(Permissions::qc_isreadonly),self::$permissions);
+	}
 	
 	public function hasQCDepartment(){
 		return in_array(DepartmentType::QC_Schedules,self::$departments);

@@ -45,6 +45,7 @@ $customerDepartmentChecked = "";
 $userDepartmentChecked = "";
 $emailLogsChecked = "";
 $itemSpecificsChecked = "";
+$qcReadOnlyChecked="";
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
 	$user = $userMgr->findBySeq($seq);
@@ -76,6 +77,8 @@ if(in_array(Permissions::china_team,$userRoles)){
 	$qcChecked = "checked";
 }if(in_array(Permissions::po_incharge,$userRoles)){
 	$poInchargeChecked = "checked";
+}if(in_array(Permissions::qc_isreadonly,$userRoles)){
+	$qcReadOnlyChecked = "checked";
 }if(in_array(Permissions::container_information,$userRoles)){
 	$containerInformationChecked = "checked";
 }if(in_array(Permissions::container_delivery_information,$userRoles)){
@@ -90,8 +93,7 @@ if(in_array(Permissions::china_team,$userRoles)){
     $qcPlannerButtonChecked  = "checked";
 }if(in_array(Permissions::approved_reject_notification,$userRoles)){
     $qcApprovedRejectNotification  = "checked";
-}
-if(in_array(1,$departmentSeqArr)){
+}if(in_array(1,$departmentSeqArr)){
 	$qcDepartmentChecked = "checked";
 }if(in_array(2,$departmentSeqArr)){
 	$graphicDepartmentChecked = "checked";
@@ -275,12 +277,16 @@ if(in_array(1,$departmentSeqArr)){
 				                            	Approved/Reject Notification
 				                            </label>
 				                        	
-				                            <div class="qcDIV form-group col-lg-6" style="display:<?php echo "block"?>">
-					                            <label class="col-lg-6 col-form-label">QC/PO Incharge Code :</label>
-					                        	<div class="col-lg-6">
-					                            	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
-					                            </div>
+				                            <label class="col-lg-3 col-form-label">QC/PO Incharge Code :</label>
+					                        <div class="col-lg-3">
+					                          	<input type="text" maxLength="250" value="<?php echo $user->getQCCode()?>" id="qccode" name="qccode" class="form-control">
 					                        </div>
+					                        
+					                        <label class="col-lg-6 col-form-label">
+				                            	<input type="checkbox" <?php echo $qcReadOnlyChecked?> value="qc_isreadonly" id="qcreadonlypermission" name="permissions[]"/>
+				                            	QC Readonly (<small>Removed Add/Save/Import/Notifications/Approve buttons</small>)
+				                            </label>
+					                        
 					                        <div class="col-lg-12 m-t-sm"><h4>Select Notifications</h4> </div>
 				                            <ul class="col-lg-6 todo-list ui-sortable p-h-xs">
 						                        <li>

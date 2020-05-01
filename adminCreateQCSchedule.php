@@ -5,6 +5,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php
 require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
+$permissionUtil = PermissionUtil::getInstance();
+$hasQCReadonly = $permissionUtil->hasQCReadonly();
+
 $qcSchedule = new QCSchedule();
 $qcScheduleMgr = QCScheduleMgr::getInstance();
 $readOnlyPO = "";
@@ -409,11 +413,13 @@ if($isSessionGeneralUser && !$isSessionSV){
                         <div class="bg-white p-xs">
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label"></label>
+	                        	<?php if(!$hasQCReadonly){?>
 	                        	<div class="col-lg-2">
 		                        	<button class="btn btn-primary" onclick="saveQCSchedule()" type="button" style="width:85%">
 	                                	Save
 		                          	</button>
 		                        </div>
+		                        <?php }?>
 		                        <div class="col-lg-2">
 		                          	<a class="btn btn-default" href="adminManageQCSchedules.php" type="button" style="width:85%">
 	                                	Cancel

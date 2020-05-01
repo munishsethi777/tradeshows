@@ -14,6 +14,7 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 $permissionUtil = PermissionUtil::getInstance();
 $hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
 $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
+$hasQCReadonly = $permissionUtil->hasQCReadonly();
 $exportLimit = ExportUtil::$EXPORT_ROW_LIMIT;
 //$qcscheduleseq = "";
 
@@ -183,9 +184,11 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
                         	</div>                     	
                         	<div id="earlierApprovals" style="margin-top:10px"></div>                 	
                        		 <div class="modal-footer">
+                                     <?php if(!$hasQCReadonly){?>
                                      <button class="btn btn-primary" data-style="expand-right" id="updateApprovalStatusBtn" type="button">
                                         <span class="ladda-label">Submit</span>
                                     </button>
+                                    <?php }?>
                                      <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                              </div>
                  	</form>
@@ -643,27 +646,35 @@ function loadGrid(){
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div title='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var bulkEditButton = $("<div title='Bulk Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Bulk Edit</span></div>");
-            var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
-            var importCompletedButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import Completed</span></div>");
+            var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
+            var importCompletedButton = $("<div title='Import Completed Data' alt='Import Completed Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-            var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
+            var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Template</span></div>");
           // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
-            var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Mail Weekly Report</span></div>");
-            var exportPlannerButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
-            var updateButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Update Scdates</span></div>");
-            container.append(addButton);
+            var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Weekly Report</span></div>");
+            var exportPlannerButton = $("<div title='Export Planner Report' alt='Export Planner Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
+            var updateButton = $("<div title='Update ShipDates' alt='Update ShipDates' style='float: left; margin-left: 5px;'><i class='fa fa-truck'></i><span style='margin-left: 4px; position: relative;'></span></div>");
+
+            <?php if(!$hasQCReadonly){?>
+            	container.append(addButton);
+            <?php }?>
             container.append(editButton);
-            container.append(bulkEditButton);
-           // container.append(deleteButton);
+            <?php if(!$hasQCReadonly){?>
+        		container.append(bulkEditButton);
+        	<?php }?>
 
             container.append(exportButton);
             container.append(reloadButton);
-            container.append(downloadButton);
-			container.append(updateButton);
+            <?php if(!$hasQCReadonly){?>
+    			container.append(downloadButton);
+    		<?php }?>
+            
+            
             <?php if($sessionUtil->isSessionAdmin()){?>
 	            container.append(importButton);
 	            container.append(importCompletedButton);
+	            container.append(updateButton);
             <?php }?>
             <?php if($hasWeeklyReportButtonPermission){?>
             	container.append(weeklyReportButton);
@@ -672,24 +683,25 @@ function loadGrid(){
 	            container.append(exportPlannerButton);
             <?php }?>
             statusbar.append(container);
-            addButton.jqxButton({  width: 65, height: 18 });
-           	editButton.jqxButton({  width: 65, height: 18 });
-           	bulkEditButton.jqxButton({  width: 90, height: 18 });
+            addButton.jqxButton({width:55, height: 18 });
+           	editButton.jqxButton({width:55, height: 18 });
+           	bulkEditButton.jqxButton({width:75, height: 18 });
 
            	<?php if($sessionUtil->isSessionAdmin()){?>
-	            importButton.jqxButton({  width: 65, height: 18 });
-	            importCompletedButton.jqxButton({  width: 130, height: 18 });
+	            importButton.jqxButton({ width: 40, height: 18 });
+	            importCompletedButton.jqxButton({ width: 40, height: 18 });
+	            updateButton.jqxButton({  width:40, height:18})
 			<?php }?>
-            exportButton.jqxButton({  width: 65, height: 18 });
-            reloadButton.jqxButton({  width: 70, height: 18 });
-            downloadButton.jqxButton({  width: 140, height: 18 });
-			updateButton.jqxButton({  width:170, height:18})
+            exportButton.jqxButton({width: 65, height: 18 });
+            reloadButton.jqxButton({width: 70, height: 18 });
+            downloadButton.jqxButton({width:70, height: 18 });
+			
           	//deleteButton.jqxButton({  width: 65, height: 18 });
              <?php if($hasWeeklyReportButtonPermission){?>
-	            weeklyReportButton.jqxButton({  width: 150, height: 18 });
+	            weeklyReportButton.jqxButton({  width: 110, height: 18 });
 	          <?php }?>
 	          <?php if($hasQcPlannerButtonPermission){?> 
-	            exportPlannerButton.jqxButton({  width: 120, height: 18 });
+	            exportPlannerButton.jqxButton({  width: 110, height: 18 });
 	          <?php }?>
             // create new row.
             addButton.click(function (event) {
