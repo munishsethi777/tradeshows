@@ -136,7 +136,7 @@ function saveAction(){
 				   $('#createNewModalForm').modal('hide');
 				   var flag = showResponseToastr(data,null,"importGraphicLogForm","ibox");
 				   if(flag){
-					  window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
+					  window.setTimeout(function(){window.location.href = "adminManageGraphicLogs.php"},500);
 				   }   
 			   }
 		   }

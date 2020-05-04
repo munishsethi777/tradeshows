@@ -14,7 +14,7 @@ class GraphicLogMgr{
 	private static $dataStore;
 	private $dataTypeErrors;
 	private $fieldNames;
-	private static $FIELD_COUNT = 27;
+	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
 	private static $timeZone = "America/Los_Angeles";
 	public static function getInstance()
@@ -46,7 +46,7 @@ class GraphicLogMgr{
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 		$sheet = $objPHPExcel->getActiveSheet();
 		$maxCell = $sheet->getHighestRowAndColumn();
-		$sheetData = $sheet->rangeToArray('A4:' . $maxCell['column'] . $maxCell['row']);
+		$sheetData = $sheet->rangeToArray('A3:' . $maxCell['column'] . $maxCell['row']);
 		return $this->validateAndSaveFile($sheetData,$isUpdate,$updateItemNos);
 	}
 	
@@ -65,6 +65,7 @@ class GraphicLogMgr{
 		$itemNoAlreadyExists = 0;
 		$success = 1;
 		$messages = "";
+		$row = 0;
 		if(self::$FIELD_COUNT == count($this->fieldNames)){
 			$mainJson = array();
 			$json = array();
@@ -75,14 +76,17 @@ class GraphicLogMgr{
 			$sessionUtil = SessionUtil::getInstance();
 			$userSeq = $sessionUtil->getUserLoggedInSeq();
 			foreach ($sheetData as $key=>$data){
-				if($key == 0){
-					continue;
-				}
+				$row = $key+3;
 				if(!array_filter($data)) {
 					continue;
 				}
-				$graphicLoc = $this->getImportedData($data);
-				array_push($graphicLogsArr, $graphicLoc);
+				try{
+				$graphicLog = $this->getImportedData($data);
+				array_push($graphicLogsArr, $graphicLog);
+				}catch (Exception $e){
+					$messages .= "Error found on row " . $row ." - ". $e->getMessage() . "<br>";
+                    $success = 0;
+				}
 			}
 		}else{
 		    $messages .= StringConstants::IMPORT_CORRECT_FILE;
@@ -112,7 +116,7 @@ class GraphicLogMgr{
 		
 		foreach ($graphicLogArr as $index => $graphicLog){
 			$rowId = 0;
-			$rowId = $index + 5;
+			$rowId = $index + 3;
 			try {
 				if(!$isUpdate){
 					$this->saveGraphicLog($conn, $graphicLog);
@@ -128,7 +132,7 @@ class GraphicLogMgr{
 			catch ( Exception $e) {
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
-					$messages .= "Row id: " . $rowId ." has duplicate values<br>";
+					$messages .= "Row id: " . $rowId ." Graphic Log already exists<br>";
 				}else{
 					$errMsg = $e->getMessage();
 					$errMsg = str_replace( "at row 1", "", $errMsg);
@@ -139,13 +143,11 @@ class GraphicLogMgr{
 				$success = 0;
 			}
 		}
-		//if(empty($messages)){
-			$conn->commit();
-		//}else{
-			//$conn->rollBack();
-		//}
 		if(!$hasError){
+			$conn->commit();
 		    $messages = StringConstants::GRAPHIC_LOGS_IMPORTED_SUCCESSFULLY;
+		}else{
+			$conn->rollBack();
 		}
 		$response["message"] = $messages;
 		$response["success"] = $success;
@@ -166,33 +168,40 @@ class GraphicLogMgr{
 	
 	private function getImportedData($data){
 		$classCodeMgr = ClassCodeMgr::getInstance();
+		$sessionUtil = SessionUtil::getInstance();
+		$userSeq = $sessionUtil->getAdminLoggedInSeq();
+		$exceptionMsgs = array();
+		
 		$usaofficeentrydate = $data[0];
 		$po = $data[1];
 		$estimatedshipdate = $data[2];
 		$classcode = $data[3];
-		$sku = $data[4];
-		$graphictype = $data[5];
-		$iscustomhangtagneeded = $data[6];
-		$iscustomwraptagneeded = $data[7];
+		$estimatedgraphicsdate = $data[4];
+		$sku = $data[5];
+		$graphictype = $data[6];
+		$tagtype = $data[7];
 		$customername = $data[8];
 		$isprivatelabel = $data[9];
-		$usanotes = $data[10];
-		$estimatedgraphicsdate = $data[11];
-		$chinaofficeentrydate = $data[12];
+		$usanotestographics = $data[10];
+		$chinaofficeentrydate = $data[11];
+		$finalgraphicsduedate = $data[12];
 		$confirmedposhipdate = $data[13];
-		$jeopardydate = $data[14];
+		$enteredby = $data[14];
 		$graphiclength = $data[15];
 		$graphicwidth = $data[16];
 		$graphicheight = $data[17];
-		$chinanotes = $data[18];
-		$finalgraphicsduedate = $data[19];
-		$graphicstochinanotes = $data[20];
-		$approxgraphicschinasentdate = $data[21];
-		$graphicstatus = $data[22];
-		$graphicartist = $data[23];
-		$graphicartiststartdate = $data[24];
-		$graphiccompletiondate = $data[25];
-		$duration = $data[26];
+		$chinanotestousa = $data[18];
+		$assigneddesigner = $data[19];
+		$graphicstartdate = $data[20];
+		$graphicstatus = $data[21];
+		$graphicsubmittochinadate = $data[22];
+		$graphiccompletiondate = $data[23];
+		$duration = $data[24];
+		$draftdate = $data[25];
+		$buyerreviewreturndate = $data[26];
+		$managerreviewreturndate = $data[27];
+		$robbyreviewreturndate = $data[28];
+		$graphictochinanotes = $data[29];
 		
 		$this->dataTypeErrors = "";	
 		$format = "m-d-y";
@@ -200,55 +209,63 @@ class GraphicLogMgr{
 		
 		$graphicLog = new GraphicsLog();
 		if(!empty($usaofficeentrydate)){
-			$usaofficeentrydate = $this->convertStrToDate($usaofficeentrydate);
-			$graphicLog->setUSAOfficeEntryDate($usaofficeentrydate);
+			if($this->validateDate($usaofficeentrydate, $format)){
+				$usaofficeentrydate = $this->convertStrToDate($usaofficeentrydate);
+				$graphicLog->setUSAOfficeEntryDate($usaofficeentrydate);
+			}else{
+				$exceptionMsgs[] = "USA Office Entry Date has bad format";
+			}
+		}else{
+			$exceptionMsgs[] = "USA Office Entry Date cannot be empty";
 		}
 		if(!empty($po)){
 			$graphicLog->setPO($po);
+		}else{
+			$exceptionMsgs[] ="PO cannot be empty";
 		}
 		if(!empty($estimatedshipdate)){
-			$estimatedshipdate = $this->convertStrToDate($estimatedshipdate);
-			$graphicLog->setEstimatedShipDate($estimatedshipdate);
+			if($this->validateDate($estimatedshipdate, $format)){
+				$estimatedshipdate = $this->convertStrToDate($estimatedshipdate);
+				$graphicLog->setEstimatedShipDate($estimatedshipdate);
+			}else{
+				$exceptionMsgs[] = "Estimated Ship Date has bad format";
+			}
 		}
 		if(!empty($classcode)){
 			$classCodeObj = $classCodeMgr->findByClassCode($classcode);
-			$classCodeSeq = 0;
 			if(!empty($classCodeObj)){
 				$classCodeSeq = $classCodeObj->getSeq();
+				$graphicLog->setClassCodeSeq($classCodeSeq);
+			}else{
+				//$exceptionMsgs[] = $classcode." Class Code not found";
 			}
-			$graphicLog->setClassCodeSeq($classCodeSeq);
+		}
+		if(!empty($estimatedgraphicsdate)){
+			if($this->validateDate($estimatedgraphicsdate, $format)){
+				$estimatedgraphicsdate = $this->convertStrToDate($estimatedgraphicsdate);
+				$graphicLog->setEstimatedGraphicsDate($estimatedgraphicsdate);
+			}else{
+				$exceptionMsgs[] = "Estimated Graphics Due Date has bad format";
+			}
 		}
 		if(!empty($sku)){
 			$graphicLog->setSKU($sku);
+		}else{
+			$exceptionMsgs[] ="Item number cannot be empty";
 		}
 		if(!empty($graphictype)){
-			$graphicLog->setGraphicType($graphictype);
+			$graphictype = str_replace(" ", "_", $graphictype);
+			$graphicLog->setGraphicType(strtolower($graphictype));
 		}
-		
-		if(!empty($iscustomhangtagneeded)){
-			if(strtolower($iscustomhangtagneeded) == "yes"){
-				$graphicLog->setIsCustomHangTagNeeded(1);
-			}else{
-				$graphicLog->setIsCustomHangTagNeeded(0);
-			}
-		}else{
-			$graphicLog->setIsCustomHangTagNeeded(0);
+		if(!empty($tagtype)){
+			$tagtype = str_replace(" ", "_", $tagtype);
+			$graphicLog->setTagType(strtolower($tagtype));
 		}
-		
-		if(!empty($iscustomwraptagneeded)){
-			if(strtolower($iscustomwraptagneeded) == "yes"){
-				$graphicLog->setIsCustomWrapTagNeeded(1);
-			}else{
-				$graphicLog->setIsCustomWrapTagNeeded(0);
-			}
-		}else{
-			$graphicLog->setIsCustomWrapTagNeeded(0);
-		}
-		
 		if(!empty($customername)){
 			$graphicLog->setCustomerName($customername);
+		}else{
+			$exceptionMsgs[] = "Customer name cannot be empty";
 		}
-		
 		if(!empty($isprivatelabel)){
 			if(strtolower($isprivatelabel) == "yes"){
 				$graphicLog->setIsPrivateLabel(1);
@@ -259,25 +276,37 @@ class GraphicLogMgr{
 			$graphicLog->setIsPrivateLabel(0);
 		}
 		
-		if(!empty($usanotes)){
-			$graphicLog->setUSANotes($usanotes);
-		}
-		if(!empty($estimatedgraphicsdate)){
-			$estimatedgraphicsdate = $this->convertStrToDate($estimatedgraphicsdate);
-			$graphicLog->setEstimatedGraphicsDate($estimatedgraphicsdate);
+		if(!empty($usanotestographics)){
+			$graphicLog->setUSANotes($usanotestographics);
 		}
 		if(!empty($chinaofficeentrydate)){
-			$chinaofficeentrydate = $this->convertStrToDate($chinaofficeentrydate);
-			$graphicLog->setChinaOfficeEntryDate($chinaofficeentrydate);
+			if($this->validateDate($chinaofficeentrydate, $format)){
+				$chinaofficeentrydate = $this->convertStrToDate($chinaofficeentrydate);
+				$graphicLog->setChinaOfficeEntryDate($chinaofficeentrydate);
+			}else{
+				$exceptionMsgs[] = "China Office Entry Date has bad format";
+			}
+		}
+		if(!empty($finalgraphicsduedate)){
+			if($this->validateDate($finalgraphicsduedate, $format)){
+				$finalgraphicsduedate = $this->convertStrToDate($finalgraphicsduedate);
+				$graphicLog->setFinalGraphicsDueDate($finalgraphicsduedate);
+			}else{
+				$exceptionMsgs[] = "Graphics Final Due Date has bad format";
+			}
 		}
 		if(!empty($confirmedposhipdate)){
-			$confirmedposhipdate = $this->convertStrToDate($confirmedposhipdate);
-			$graphicLog->setConfirmedPOShipDate($confirmedposhipdate);
+			if($this->validateDate($confirmedposhipdate, $format)){
+				$confirmedposhipdate = $this->convertStrToDate($confirmedposhipdate);
+				$graphicLog->setConfirmedPOShipDate($confirmedposhipdate);
+			}else{
+				$exceptionMsgs[] = "Confirmed PO Ship Date has bad format";
+			}
 		}
-		if(!empty($jeopardydate)){
-			$jeopardydate = $this->convertStrToDate($jeopardydate);
-			$graphicLog->setJeopardyDate($jeopardydate);
-		}
+		
+		
+		$graphicLog->setUserSeq($userSeq);
+		
 		if(!empty($graphiclength)){
 			$graphicLog->setGraphicLength($graphiclength);
 		}
@@ -287,42 +316,87 @@ class GraphicLogMgr{
 		if(!empty($graphicwidth)){
 			$graphicLog->setGraphicWidth($graphicwidth);
 		}
-		if(!empty($chinanotes)){
-			$graphicLog->setChinaNotes($chinanotes);
+		if(!empty($chinanotestousa)){
+			$graphicLog->setChinaNotes($chinanotestousa);
 		}
-		if(!empty($finalgraphicsduedate)){
-			$finalgraphicsduedate = $this->convertStrToDate($finalgraphicsduedate);
-			$graphicLog->setFinalGraphicsDueDate($finalgraphicsduedate);
-		}
-		if(!empty($graphicstochinanotes)){
-			$graphicLog->setGraphicsToChinaNotes($graphicstochinanotes);
-		}
-		if(!empty($approxgraphicschinasentdate)){
-			$approxgraphicschinasentdate = $this->convertStrToDate($approxgraphicschinasentdate);
-			$graphicLog->setApproxGraphicsChinaSentDate($approxgraphicschinasentdate);
-		}
-		if(!empty($graphicstatus)){
-			$graphicLog->setGraphicStatus($graphicstatus);
-		}
-		if(!empty($graphicartist)){
-			$graphicLog->setGraphicArtist($graphicartist);
-		}
-		if(!empty($graphicartiststartdate)){
-			$graphicartiststartdate = $this->convertStrToDate($graphicartiststartdate);
-			$graphicLog->setGraphicArtistStartDate($graphicartiststartdate);
+		
+		$graphicLog->setGraphicArtist($assigneddesigner);
+		
+		if(!empty($graphicstartdate)){
+			if($this->validateDate($graphicstartdate, $format)){
+				$graphicstartdate = $this->convertStrToDate($graphicstartdate);
+				$graphicLog->setGraphicArtistStartDate($graphicstartdate);
+			}else{
+				$exceptionMsgs[] = "Graphics Start Date has bad format";
+			}
 		}
 		if(!empty($graphiccompletiondate)){
-			$graphiccompletiondate = $this->convertStrToDate($graphiccompletiondate);
-			$graphicLog->setGraphicCompletionDate($graphiccompletiondate);
+			if($this->validateDate($graphiccompletiondate, $format)){
+				$graphiccompletiondate = $this->convertStrToDate($graphiccompletiondate);
+				$graphicLog->setGraphicCompletionDate($graphiccompletiondate);
+			}else{
+				$exceptionMsgs[] = "Graphics Completion Date has bad format";
+			}
 		}
+		if(!empty($graphicstatus)){
+			$graphicstatus = str_replace(" ", "_", $graphicstatus);
+			$graphicstatus = str_replace("'", "", $graphicstatus);	
+			$graphicLog->setGraphicStatus(strtolower($graphicstatus));
+		}
+		if(!empty($graphicsubmittochinadate)){
+			if($this->validateDate($graphicsubmittochinadate, $format)){
+				$graphicsubmittochinadate = $this->convertStrToDate($graphicsubmittochinadate);
+			$graphicLog->setApproxGraphicsChinaSentDate($graphicsubmittochinadate);
+			}else{
+				$exceptionMsgs[] = "Graphics Submitted to China Date has bad format";
+			}
+		}
+		
 		if(!empty($duration)){
 			$graphicLog->setDuration($duration);
 		}
-		
+		if(!empty($draftdate)){
+			if($this->validateDate($draftdate, $format)){
+				$draftdate = $this->convertStrToDate($draftdate);
+				$graphicLog->setDraftDate($draftdate);
+			}else{
+				$exceptionMsgs[] = "Draft Date has bad format";
+			}
+		}
+		if(!empty($buyerreviewreturndate)){
+			if($this->validateDate($buyerreviewreturndate, $format)){
+				$buyerreviewreturndate = $this->convertStrToDate($buyerreviewreturndate);
+				$graphicLog->setBuyerReviewReturnDate($buyerreviewreturndate);
+			}else{
+				$exceptionMsgs[] = "Buyer Review Return Date has bad format";
+			}
+		}
+		if(!empty($managerreviewreturndate)){
+			if($this->validateDate($managerreviewreturndate, $format)){
+				$managerreviewreturndate = $this->convertStrToDate($managerreviewreturndate);
+			$graphicLog->setManagerReviewReturnDate($managerreviewreturndate);
+			}else{
+				$exceptionMsgs[] = "Manager Review Return Date has bad format";
+			}
+			
+		}
+		if(!empty($robbyreviewreturndate)){
+			if($this->validateDate($robbyreviewreturndate, $format)){
+				$robbyreviewreturndate = $this->convertStrToDate($robbyreviewreturndate);
+				$graphicLog->setRobbyReviewDate($robbyreviewreturndate);
+			}else{
+				$exceptionMsgs[] = "Robbys Review Return Date has bad format";
+			}
+		}
+		if(!empty($graphictochinanotes)){
+			$graphicLog->setGraphicsToChinaNotes($graphictochinanotes);
+		}
 		$graphicLog->setCreatedOn(DateUtil::getCurrentDate());
 		$graphicLog->setLastModifiedOn(DateUtil::getCurrentDate());
-		$graphicLog->setUserSeq(1);
-		//$importedData["items"] = $itemNoArr;
+		$graphicLog->setUserSeq($userSeq);
+		if(!empty($exceptionMsgs)){
+			throw new Exception(implode(", ",$exceptionMsgs));
+		}
 		return $graphicLog;
 	}
 	
@@ -476,12 +550,32 @@ class GraphicLogMgr{
 	private function convertStrToDate($date){
 		$format = 'm-d-y';
 		$date = DateUtil::StringToDateByGivenFormat($format, $date);
-		if(!$date){
-			$date = DateUtil::getCurrentDate();
-		}
 		return $date;
 	}
+	private function validateDate($date, $format){
+		// if(is_string($date)){
+		$d = DateTime::createFromFormat($format, $date);
+		// if(intval($d->format("m")) < 10)
+		// {
+		//     $c = "0" . $date;
+			//     if(intval($d->format("d")) < 10)
+			//     {
+			//         $c = substr($c,0,3) . "0" . substr($c,3);
+			//     }
+			//     return $d && $d->format($format) === $c;
+			// }
+			return $d && $d->format($format) === $date;
+			// }else{
+			//     try{
+			//         $d = PHPExcel_Shared_Date::ExcelToPHPObject($date);
+				//         return true;
+				//     }catch(Exception $e){
+				//         return false;
+				//     }
+				// }
 	
+	
+		}
 	private function getDateStr($date){
 		$format = 'Y-m-d';
 		if(!empty($date)){
