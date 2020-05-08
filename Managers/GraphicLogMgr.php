@@ -421,6 +421,7 @@ class GraphicLogMgr{
     	    $lastModifiedOn = $row["lastmodifiedon"];
     	    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
     	    $row["lastmodifiedon"] = $lastModifiedOn;
+    	    $row["graphicstatus"] = GraphicStatusType::getValue($row["graphicstatus"]);
     	    array_push($arr,$row);		    
 		}
 		$mainArr["Rows"] = $arr;

@@ -271,9 +271,9 @@ function loadGrid(){
     }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'US Entry Date', datafield: 'usaofficeentrydate', filtertype: 'date', width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Est Ship date', datafield: 'estimatedshipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Est Graphic date', datafield: 'estimatedgraphicsdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'US Entry', datafield: 'usaofficeentrydate', filtertype: 'date', width:"10%",cellsformat: 'M-dd-yyyy'},
+      { text: 'Est Ship', datafield: 'estimatedshipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy'},
+      { text: 'Est Graphic Due', datafield: 'estimatedgraphicsdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:false},
       { text: 'chinaofficeentrydate', datafield: 'chinaofficeentrydate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'finalgraphicsduedate', datafield: 'finalgraphicsduedate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'confirmedposhipdate', datafield: 'confirmedposhipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
@@ -283,12 +283,13 @@ function loadGrid(){
       { text: 'draftdate', datafield: 'draftdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'managerreviewreturndate', datafield: 'managerreviewreturndate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'buyerreviewreturndate', datafield: 'buyerreviewreturndate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'Class', datafield: 'classcode', width:"10%"},
-      { text: 'PO', datafield: 'po',width:"8%"},
-      { text: 'SKU', datafield: 'sku',width:"10%"},
-      { text: 'Customer', datafield: 'customername',width:"15%"},
-      { text: 'Created By', datafield: 'fullname',width:"15%"},
-      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"15%"}
+      { text: 'Status', datafield: 'graphicstatus', width:"10%",hidden:false},
+      { text: 'Class', datafield: 'classcode', width:"5%"},
+      { text: 'PO', datafield: 'po',width:"7%"},
+      { text: 'SKU', datafield: 'sku',width:"13%"},
+      { text: 'Customer', datafield: 'customername',width:"8%"},
+      { text: 'Created By', datafield: 'fullname',width:"10%"},
+      { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"14%"}
     ]
    
     var source =
@@ -315,7 +316,8 @@ function loadGrid(){
                     { name: 'po', type: 'string' },
                     { name: 'sku', type: 'string' } ,
                     { name: 'customername', type: 'string' },
-                    { name: 'fullname', type: 'fullname' }, 
+                    { name: 'fullname', type: 'fullname' },
+                    { name: 'graphicstatus', type: 'string' },  
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/GraphicLogAction.php?call=getAllGraphicLogs',
