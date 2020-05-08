@@ -155,7 +155,7 @@ class GraphicLogReportUtil
         }
         $subject = StringConstants::PROJECT_IN_BUYER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::BUYERS_REVIEWING);
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::buyers_reviewing);
         if(empty($graphiclogs)){
             return;
         }
@@ -192,7 +192,7 @@ class GraphicLogReportUtil
         }
         $subject = StringConstants::PROJECT_IN_MANAGER_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MANAGER_REVIEWING);
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::manager_reviewing);
         if(empty($graphiclogs)){
             return;
         }
@@ -229,7 +229,7 @@ class GraphicLogReportUtil
         }
         $subject = StringConstants::PROJECT_IN_ROBBY_REVIEW_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::ROBBY_REVIEWING);
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::robby_reviewing);
         if(empty($graphiclogs)){
             return;
         }
@@ -269,7 +269,7 @@ class GraphicLogReportUtil
         }
         $subject = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT;
         $graphicLogMgr = GraphicLogMgr::getInstance();
-        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::MISSING_INFO_FROM_CHINA);
+        $graphiclogs = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::missing_info_from_china);
         if(empty($graphiclogs)){
             return;
         }

@@ -110,7 +110,7 @@ if($call == "saveGraphicLog"){
 		if($id > 0){
 		    if($isGraphicStatusChanged){
 		        $graphicStatus = $graphicLog->getGraphicStatus();
-		        if($graphicStatus == GraphicStatusType::getName(GraphicStatusType::MISSING_INFO_FROM_CHINA)){
+		        if($graphicStatus == GraphicStatusType::getName(GraphicStatusType::missing_info_from_china)){
 		            GraphicLogReportUtil::sendGraphicLogGraphicStatusChangedNotification($graphicLog);
 		        }
 		    }

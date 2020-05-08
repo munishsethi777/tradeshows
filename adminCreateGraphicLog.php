@@ -184,15 +184,15 @@ if(isset($_POST["id"])){
 	                             	<div id="tagFields" style="display:none">
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Length</label>
-		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control positive-integer">
+		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step="0.01" value="<?php echo $graphicLog->getTagLength()?>" name="taglength" id="taglength" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Width</label>
-		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step=".1"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control positive-integer">
+		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step="0.01"  value="<?php echo $graphicLog->getTagWidth()?>" name="tagwidth" id="tagwidth" class="form-control positive-integer">
 		                             	</div>
 		                             	<div class="col-sm-4">
 		                             		<label class="col-lg-2 col-form-label">Height</label>
-		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0"  step=".1" value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control positive-integer">
+		                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0"  step="0.01" value="<?php echo $graphicLog->getTagHeight()?>" name="tagheight" id="tagheight" class="form-control positive-integer">
 		                             	</div>
 	                             	</div>
 	                            </div>
@@ -231,15 +231,15 @@ if(isset($_POST["id"])){
 		                             	<div id="labelFields" style="display:none">
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Length</label>
-			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step=".1"  value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="positive-integer form-control">
+			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step="0.01"  value="<?php echo $graphicLog->getLabelLength()?>" name="labellength" id="labellength" class="positive-integer form-control">
 			                             	</div>
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Width</label>
-			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step=".1"    value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control positive-integer">
+			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step="0.01"    value="<?php echo $graphicLog->getLabelWidth()?>" name="labelwidth" id="labelwidth" class="form-control positive-integer">
 			                             	</div>
 			                             	<div class="col-sm-4">
 			                             		<label class="col-lg-2 col-form-label">Height</label>
-			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" step=".1"   value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control positive-integer">
+			                             		<input tabindex="<?php echo $usaTabIndex?>" type="number" min="0" step="0.01"   value="<?php echo $graphicLog->getLabelHeight()?>" name="labelheight" id="labelheight" class="form-control positive-integer">
 			                             	</div>
 		                             	</div>
 	                             	</div>
@@ -313,15 +313,15 @@ if(isset($_POST["id"])){
 		                        <div class="form-group row">
 		                       		<label class="col-lg-2 col-form-label bg-formLabelMauve">Length:</label>
 		                        	<div class="col-lg-2">
-		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
+		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step="0.01" value="<?php echo $graphicLog->getGraphicLength()?>" name="graphiclength"  id="graphiclength" class="form-control positive-integer">
 			                        </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Width:</label>
 		                        	<div class="col-lg-2">
-		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
+		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step="0.01" value="<?php echo $graphicLog->getGraphicWidth()?>" name="graphicwidth" id="graphicwidth" class="form-control positive-integer">
 		                            </div>
 		                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Height:</label>
 		                        	<div class="col-lg-2">
-		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step=".1" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
+		                            	<input tabindex="<?php echo $chinaTabIndex?>" type="number" min="0" step="0.01" value="<?php echo $graphicLog->getGraphicHeight()?>"  name="graphicheight" id="graphicheight" class="form-control positive-integer">
 		                            </div>
 		                        </div>
 	                        </div>

@@ -514,7 +514,7 @@ class GraphicLogMgr{
 	
 	public function getByPastDueWithMissingInfoFromChina(){
 	    $currentDate = DateUtil::getDateInDBFormat(0,null);
-	    $missingFromChina = GraphicStatusType::getName(GraphicStatusType::MISSING_INFO_FROM_CHINA);
+	    $missingFromChina = GraphicStatusType::getName(GraphicStatusType::missing_info_from_china);
 	    $query = $this->select . "where graphicstatus = '$missingFromChina' and finalgraphicsduedate < '$currentDate'";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
