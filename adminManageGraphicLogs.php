@@ -261,6 +261,17 @@ function editShow(seq){
     $("#form1").submit();
 }
 isSelectAll = false;
+
+function AddStatusDefaultFilter(){
+    var filtergroup = new $.jqx.filter();
+    var filter_or_operator = 1;
+    var filtervalue = 'Sent to Print';
+    var filtercondition = 'not_equal';
+    var filter = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+    filtergroup.addfilter(filter_or_operator, filter);
+    $("#graphiclogGrid").jqxGrid('addfilter', 'graphicstatus', filtergroup);
+    $("#graphiclogGrid").jqxGrid('applyfilters');
+};
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#graphiclogGrid').jqxGrid('getrowdata', row);
@@ -269,6 +280,9 @@ function loadGrid(){
             html += "</div>";
         return html;
     }
+	
+	var statusTypes = ["Sent to Print","Not Started","No Update Needed","Missing Info from China","In Progress","Buyer's Reviewing","Robby Reviewing","Manager Reviewing","Pending Customer Approval",
+	"Pending Attorney Approval","Preparing for Print"];
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'US Entry', datafield: 'usaofficeentrydate', filtertype: 'date', width:"10%",cellsformat: 'M-dd-yyyy'},
@@ -283,10 +297,10 @@ function loadGrid(){
       { text: 'draftdate', datafield: 'draftdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'managerreviewreturndate', datafield: 'managerreviewreturndate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'buyerreviewreturndate', datafield: 'buyerreviewreturndate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'Status', datafield: 'graphicstatus', width:"10%",hidden:false},
-      { text: 'Class', datafield: 'classcode', width:"5%"},
-      { text: 'PO', datafield: 'po',width:"7%"},
-      { text: 'SKU', datafield: 'sku',width:"13%"},
+      { text: 'Status', datafield: 'graphicstatus', width:"10%",hidden:false, filtertype: 'checkedlist',filteritems: statusTypes},
+      { text: 'Class', datafield: 'classcode', width:"5%",filtercondition: 'STARTS_WITH'},
+      { text: 'PO', datafield: 'po',width:"7%",filtercondition: 'STARTS_WITH'},
+      { text: 'SKU', datafield: 'sku',width:"13%",filtercondition: 'STARTS_WITH'},
       { text: 'Customer', datafield: 'customername',width:"8%"},
       { text: 'Created By', datafield: 'fullname',width:"10%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"14%"}
@@ -357,7 +371,7 @@ function loadGrid(){
 		source: dataAdapter,
 		filterable: true,
 		sortable: true,
-		showfilterrow: false,
+		showfilterrow: true,
 		autoshowfiltericon: true,
 		columns: columns,
 		pageable: true,
@@ -371,6 +385,9 @@ function loadGrid(){
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
+   		ready: function () {
+   	        AddStatusDefaultFilter();
+   	    },
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");

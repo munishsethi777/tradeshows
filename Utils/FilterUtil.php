@@ -137,7 +137,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                 }
                 else if ($tmpdatafield <> $filterdatafield)
                 {
-                    if($tmpfilteroperator == 0){
+                    if($_GET[$tmpdatafield."operator"] == "and"){
+                    	$tmpfilteroperator = 0;
+                    }
+                	if($tmpfilteroperator == 0){
                         $where .= ")AND(";
                     }else{
                     	$where .= " OR ";
@@ -151,6 +154,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                         $where .= " AND ";
                     }
                     else $where .= " OR ";    
+                }
+                //graphic status type is an enum
+                if($filterdatafield == "graphicstatus"){
+                	$filtervalue = GraphicStatusType::getName($filtervalue);
                 }
                 
                 // build the "WHERE" clause depending on the filter's condition, value and datafield.
