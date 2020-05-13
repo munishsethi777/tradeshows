@@ -440,16 +440,16 @@ class QCScheduleMgr{
 			try {
 				$condition["seq"] = $seq;
 				$colValuePair = array();
-				$colValuePair["shipdate"] = $qc->getShipdate();
+				//$colValuePair["shipdate"] = $qc->getShipdate();
 				if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipDate() == "") ){
 					$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
 				}
-				$colValuePair['screadydate'] = $qc->getScReadyDate();
-				$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
-				$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
-				$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
-				$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
-				$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
+				//$colValuePair['screadydate'] = $qc->getScReadyDate();
+				//$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
+				//$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
+				//$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
+				//$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
+				//$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
 				$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
 
 				self::$dataStore->updateByAttributes($colValuePair, $condition);

@@ -336,40 +336,43 @@ class QCScheduleImportUtil
         $poinchargeUsers = array_flip($poinchargeUsers);
         $classCodeMgr = ClassCodeMgr::getInstance();
         
-        $qc = $data[0];
+        $startingIndex = 0;
+        
+        $qc = $data[$startingIndex++];
         $qc = strtoupper(trim($qc));
         $qcUserSeq = $qcUsers[$qc];
-        $poincharge = $data[1];
+        $poincharge = $data[$startingIndex++];
         $poinchargeUserSeq = $poinchargeUsers[strtoupper(trim($poincharge))];
         
-        $classCode = $data[2];
-        $po = $data[3];
-        $poType = $data[4];
-        $itemNo = $data[5];
+        $classCode = $data[$startingIndex++];
+        $po = $data[$startingIndex++];
+        $poType = $data[$startingIndex++];
+        $itemNo = $data[$startingIndex++];
         $itemNoArr = array();
         if (! empty($itemNo)) {
             $itemNoArr = $this->getItemNoArr($itemNo);
         }
-        $shipDateStr = $data[6];
+        $shipDateStr = $data[$startingIndex++];
+        $latestShipDateStr = $data[$startingIndex++];
 
-        $readyDate = $data[7];
+        $readyDate = $data[$startingIndex++];
 
-        $finalInspectionDate = $data[8];
-        $middleInspectionDate = $data[9];
-        $firstInspectionDate = $data[10];
+        $finalInspectionDate = $data[$startingIndex++];
+        $middleInspectionDate = $data[$startingIndex++];
+        $firstInspectionDate = $data[$startingIndex++];
 
-        $productionStartDate = $data[11];
-        $graphicReceiveDate = $data[12];
-        $ac_readyDate = $data[13];
-        $ac_finalInspectionDate = $data[14];
+        $productionStartDate = $data[$startingIndex++];
+        $graphicReceiveDate = $data[$startingIndex++];
+        $ac_readyDate = $data[$startingIndex++];
+        $ac_finalInspectionDate = $data[$startingIndex++];
 
-        $ac_middleInspectionDate = $data[15];
-        $ac_firstInpectionDate = $data[16];
+        $ac_middleInspectionDate = $data[$startingIndex++];
+        $ac_firstInpectionDate = $data[$startingIndex++];
 
-        $ac_productionStartDate = $data[17];
-        $ac_graphicDateReceive = $data[18];
-        $note = $data[19];
-        $finalStatus = $data[20];
+        $ac_productionStartDate = $data[$startingIndex++];
+        $ac_graphicDateReceive = $data[$startingIndex++];
+        $note = $data[$startingIndex++];
+        $finalStatus = $data[$startingIndex++];
 
         $this->dataTypeErrors = "";
 
@@ -451,6 +454,11 @@ class QCScheduleImportUtil
             $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
             // $qcSchedule->setAPGraphicsReceiveDate($graphicReceiveDate);
         }
+        if (! empty($latestShipDateStr)) {
+        	$latestShipDate = $this->convertStrToDate($latestShipDateStr);
+        	$qcSchedule->setLatestShipDate($latestShipDate);
+        }
+        
         if (! empty($ac_readyDate)) {
             $ac_readyDate = $this->convertStrToDate($ac_readyDate);
             $qcSchedule->setACReadyDate($ac_readyDate);
@@ -515,7 +523,8 @@ class QCScheduleImportUtil
         $shipDateStr = $data[array_search('Ship Date', $labels)];
         $qcSchedule = new QCSchedule();
         if(!empty($latestShipDateStr)){
-            $isValidDate = $this->validateDate($latestShipDateStr,"m/d/y");
+        	$isValidDate = $this->convertStrToDate($latestShipDateStr);
+            //$isValidDate = $this->validateDate($latestShipDateStr,"m/d/y");
             if(!$isValidDate){
                 $messages[] = "Invalid Latest Ship date";
             }else{
@@ -528,8 +537,7 @@ class QCScheduleImportUtil
             }
         }
         if (! empty($shipDateStr)) {
-        
-            $isValidDate = $this->validateDate($shipDateStr,"m/d/y");
+			$isValidDate = $this->validateDate($shipDateStr,"m/d/y");
             if(!$isValidDate){
                 $messages[] = "Invalid Ship date";
             }else{
@@ -593,7 +601,7 @@ class QCScheduleImportUtil
         //     }
         //     return $d && $d->format($format) === $c;
         // }
-        return $d && $d->format($format) === $date;
+        return $d->format("n/j/y") == $date;
         // }else{
         //     try{
         //         $d = PHPExcel_Shared_Date::ExcelToPHPObject($date);
