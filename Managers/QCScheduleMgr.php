@@ -377,9 +377,9 @@ class QCScheduleMgr{
 		$success = 1;
 		foreach ($qcScheudleArr as $key=>$qc){
 			$itemNo = $qc->getItemNumbers();
-			if(strtolower($qc->getStatus()) != "pending"){
-			    continue;
-			}
+// 			if(strtolower($qc->getStatus()) != "pending"){
+// 			    continue;
+// 			}
 			$po =  $qc->getPo();
 			$shipDate = $qc->getShipdate();
 			$qc->setStatus(null);

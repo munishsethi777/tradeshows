@@ -191,7 +191,7 @@ class QCScheduleImportUtil
         $itemNoAlreadyExists = 0;
         $success = 1;
         $messages = "";
-        $this->validateFields();
+        //$this->validateFields();
         $qcScheudleArr = array();
         $sessionUtil = SessionUtil::getInstance();
         $userSeq = $sessionUtil->getUserLoggedInSeq();
@@ -336,7 +336,7 @@ class QCScheduleImportUtil
         $poinchargeUsers = array_flip($poinchargeUsers);
         $classCodeMgr = ClassCodeMgr::getInstance();
         
-        $startingIndex = 0;
+        $startingIndex = 1;
         
         $qc = $data[$startingIndex++];
         $qc = strtoupper(trim($qc));
@@ -354,35 +354,33 @@ class QCScheduleImportUtil
         }
         $shipDateStr = $data[$startingIndex++];
         $latestShipDateStr = $data[$startingIndex++];
-
         $readyDate = $data[$startingIndex++];
-
         $finalInspectionDate = $data[$startingIndex++];
         $middleInspectionDate = $data[$startingIndex++];
         $firstInspectionDate = $data[$startingIndex++];
-
         $productionStartDate = $data[$startingIndex++];
         $graphicReceiveDate = $data[$startingIndex++];
+
+        $startingIndex = $startingIndex + 9;//actual dates are in third block
         $ac_readyDate = $data[$startingIndex++];
         $ac_finalInspectionDate = $data[$startingIndex++];
-
         $ac_middleInspectionDate = $data[$startingIndex++];
         $ac_firstInpectionDate = $data[$startingIndex++];
-
         $ac_productionStartDate = $data[$startingIndex++];
         $ac_graphicDateReceive = $data[$startingIndex++];
         $note = $data[$startingIndex++];
+        $startingIndex = $startingIndex + 5;//actual dates are in third block
         $finalStatus = $data[$startingIndex++];
 
         $this->dataTypeErrors = "";
-
         $qcSchedule = new QCSchedule();
 
         if (! empty($qc) && ! empty($qcUserSeq)) {
             $qcSchedule->setQC($qc);
             $qcSchedule->setQCUser($qcUserSeq);
         }else{
-        	throw new Exception("'$qc' QC not found in database!");
+        	//we are now letting empty QC also
+        	//throw new Exception("'$qc' QC not found in database!");
         }
         if (! empty($poincharge)) {
         	if(!empty($poinchargeUserSeq)){
