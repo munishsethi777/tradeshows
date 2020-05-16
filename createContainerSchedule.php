@@ -10,6 +10,7 @@ $containerSchedule = new ContainerSchedule();
 $sessionUtil = SessionUtil::getInstance();
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
 $idCompletedChecked = "";
+$hotnotes = "";
 $isHotContainer = "";
 $sampleReceivedChecked = "";
 $receivedOmsChecked = "";
@@ -59,7 +60,10 @@ if(isset($_REQUEST["id"])){
  	}
  	if(!empty($containerSchedule->getIssamplesReceivedinWMS())){
  		$sampleReceivedWmsChecked = "checked";
- 	}
+	}
+	if(!empty($containerSchedule->getHotNotes())){
+		$hotnotes = $containerSchedule->getHotNotes();
+	}
  	if(!empty($containerSchedule->getIsHotContainer())){
  	    $isHotContainer = "checked";
  	}
@@ -293,7 +297,7 @@ if(isset($_REQUEST["id"])){
 		                        </div>
 		                    </div>
 							<div class="col-lg-6 deliverydiv" style="position:relative">
-								<div class="form-group row" style="margin-bottom:27px">
+								<div class="form-group row" >
 		                     		<label class="col-lg-4 col-form-label bg-formLabelMauve">Scheduled Delivery:</label>
 			                        <div class="col-lg-8">
 			                        	<div class="input-group date">
@@ -333,7 +337,16 @@ if(isset($_REQUEST["id"])){
     	                         <div class="form-group row i-checksnormal">
         	                    	<label class="col-lg-4 col-form-label bg-formLabelMauve">Hot Container:</label>
         	                        <div class="col-lg-8">
-        								<input tabindex="<?php echo $officeTabIndex?>" type="checkbox" <?php echo $isHotContainer?> name="ishotcontainer"/>	
+        								<input  type="checkbox" <?php echo $isHotContainer?>  tabindex="<?php echo $officeTabIndex?>" name="ishotcontainer" id="ishotcontainer" />	
+        							</div>
+								</div>
+								<div class="form-group row i-checksnormal" >
+										<div class="panel panel-mauve" id="hotnotes">
+										<div class="panel-heading">Hot Containers Notes</div>
+                                    	<div class="panel-body">
+										<textarea tabindex="<?php echo $officeTabIndex?>" style="font-size:12px"  name="hotnotes" class="form-control"
+												maxLength="1000"><?php echo $containerSchedule->getHotNotes()?></textarea>
+													
         							</div>
         	                	</div>
 							</div>	
@@ -344,7 +357,7 @@ if(isset($_REQUEST["id"])){
 					<div class="bg-white1 p-xs outterDiv">
 						<div class="row">
 							<div class="col-lg-6 darkdiv" style="position:relative">
-								 <div class="form-group row" style="margin-bottom:29px">
+								 <div class="form-group row" >
 								 	<label class="col-lg-4 col-form-label bg-formLabelDark">Empty Return Date:</label>
 		                        	<div class="col-lg-8">
 		                        		<div class="input-group date">
@@ -361,7 +374,7 @@ if(isset($_REQUEST["id"])){
 											<div class="panel-heading">Empty Return Notes</div>
 		                                    <div class="panel-body">
 		                                    	<textarea style="font-size:12px"  id="emptynotes" name="emptynotes" class="form-control"
-		                                			maxLength="1000" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getEmptyNotes()?>"></textarea>
+		                                			maxLength="1000" tabindex="<?php echo $informationTabIndex?>"><?php echo $containerSchedule->getEmptyNotes()?></textarea>
 		                                		
 													<div class="row">
 							                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
@@ -396,7 +409,7 @@ if(isset($_REQUEST["id"])){
 									<div class="panel-heading">Alpine Pickup Notes</div>
                                     <div class="panel-body">
 	                                    	<textarea tabindex="<?php echo $deliveryTabIndex?>" style="font-size:12px" id="notificationnotes" name="notificationnotes" class="form-control"
-	                                			maxLength="1000" value="<?php echo $containerSchedule->getNotificationNotes()?>"></textarea>
+	                                			maxLength="1000"><?php echo $containerSchedule->getNotificationNotes()?></textarea>
 	                                			
 	                                		<div class="row">
 					                       		<ul class="list-group" style="padding:10px 10px 0px 10px">
@@ -544,6 +557,9 @@ if(isset($_REQUEST["id"])){
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	if(!<?if(empty($isHotContainer)){echo "false";}else{echo true;}?>){
+		$("#hotnotes").hide();
+	}
 	setInterval(function () {
 		$.post('Actions/UserAction.php?call=refreshSession',function(data){
 			//alert(data);
@@ -598,6 +614,10 @@ $(document).ready(function(){
 	showHideSampleReceiveDate();
 	showHideContainerReceiveWmsDate();
 	showHideSampleReceiveWmsDate();
+	
+	$("#ishotcontainer").on('ifChanged', function(event){
+		togglehotnotes();
+	});
 	$('#iscontainerreceivedinoms').on('ifChanged', function(event){
 		showHideContainerReceiveDate();
   	});
@@ -850,5 +870,12 @@ function subtractDays(date, days) {
 	 sDate.setDate(sDate.getDate() - days);
 	 return sDate;
 }
-
+function togglehotnotes(toggle){
+	var flag = $("#ishotcontainer").is(":checked");
+	if(flag){
+		$("#hotnotes").show();
+	}else{
+		$("#hotnotes").hide();
+	}
+}
 </script>

@@ -468,7 +468,7 @@ if(in_array(Permissions::china_team,$userRoles)){
 						                        <li>
 						                           	<input name="permissions[]" type="checkbox" value="requested_delivery_date_change_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::requested_delivery_date_change_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Requested Delivery Date Change (Instant)</span>
-						                        </li>
+												</li>
 						                   </ul>
 						                    
 						                    <ul class="col-lg-6 todo-list ui-sortable p-xs">
@@ -503,6 +503,10 @@ if(in_array(Permissions::china_team,$userRoles)){
 						                        <li>
 						                           	<input name="permissions[]" type="checkbox" value="charge_back_weekly" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::charge_back_weekly), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Charge Back (Weekly)</span>
+												</li>
+												<li>
+						                           	<input name="permissions[]" type="checkbox" value="update_warehouse_from_alpine_instant" <?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::update_warehouse_from_alpine_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Update Warehouse from Alpine (Instant)</span>
 						                        </li>
 						                    </ul>
 				                            

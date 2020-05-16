@@ -18,4 +18,5 @@ class ContainerScheduleNotificationType extends BasicEnum{
     const empty_return_notes_updated_instant = "Empty Return Notes Updated (Instant)";
     const alpine_pickup_notes_updated_instant = "Alpine Pickup Notes Updated (Instant)";
     const charge_back_weekly = "Charge Back (Weekly)";
+    const update_warehouse_from_alpine_instant = "Update Warehouse from Alpine (Instant)";
 }

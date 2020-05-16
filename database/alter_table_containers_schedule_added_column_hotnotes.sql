@@ -1,0 +1,1 @@
+ALTER TABLE `containerschedules` ADD `hotnotes` VARCHAR(1000) NOT NULL AFTER `customexamterminal`;

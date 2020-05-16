@@ -5,4 +5,5 @@ class WareHouseType extends BasicEnum{
     const dcw_m_and_a = "DCW / M&A";
     const dhe = "DHE";
     const direct_to_customer = "Direct To Customer";
+    const sd_nordic ="SD-NORDIC";
 }

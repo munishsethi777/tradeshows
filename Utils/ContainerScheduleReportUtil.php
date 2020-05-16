@@ -728,4 +728,38 @@ class ContainerScheduleReportUtil
             }
         }
     }
+    public static function sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,$previousContainerSchedule,$notificationType){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getCSUsersByNotificationType($users,$notificationType);
+        if(empty($users)){
+            return;
+        }
+        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $phAnValues = array();
+        $emailLogType = EmailLogType::CONTAINER_SCHEDULE_ETA_NOTES_UPDATED;
+        $phAnValues["USER_NAME"] = $loggedInUserName;
+        $phAnValues["CONTAINER_NO"] = $containerSchedule->getContainer();
+        $phAnValues["AWU_NO"] = $containerSchedule->getAWUReference();
+        $phAnValues['ORIGINAL_WAREHOUSE']=$previousContainerSchedule->getWarehouse();
+        $phAnValues['NEW_WAREHOUSE'] = $containerSchedule->getWarehouse();
+        $content = file_get_contents("../ContainerScheduleWarehouseUpdatedTemplate.php");
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+        $html = MailUtil::appendToEmailTemplateContainer($content);
+        $toEmails = array();
+        $phAnValues = array();
+        foreach ($users as $user){
+            array_push($toEmails,$user->getEmail());
+        }
+        if(!empty($toEmails)){
+            $subject = "ALPINE BI Containers | Updated Warehouse Updated";
+            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+            if($flag){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog($emailLogType ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
+    }
 }

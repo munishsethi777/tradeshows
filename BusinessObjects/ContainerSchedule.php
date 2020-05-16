@@ -43,6 +43,7 @@ class ContainerSchedule {
 	private $emptyscheduledpickupdate;
 	private $customexamterminal;
 	private $customexamstatus;
+	private $hotnotes;
 	private $ishotcontainer;
 	private $requesteddeliverydatetime;
 	public function setSeq($seq) {
@@ -302,6 +303,13 @@ class ContainerSchedule {
 	    return $this->customexamstatus;
 	}
 	
+	public function getHotNotes(){
+		return $this->hotnotes;
+	}
+	public function setHotNotes($hotnotes){
+		$this->hotnotes = $hotnotes;
+	}
+
 	public function setIsHotContainer($ishotcontainer_){
 	    $this->ishotcontainer = $ishotcontainer_;
 	}

@@ -23,6 +23,9 @@ if($call == "saveContainerSchedule"){
 	    $message = StringConstants::CONTAINER_SCHEDULE_SAVED_SUCCESSFULLY;
 		$containerSchedule = new ContainerSchedule();
 		$containerSchedule->createFromRequest($_REQUEST);
+		if(!isset($_REQUEST['ishotcontainer'])){
+			$containerSchedule->setHotNotes(null);
+		}
 		if(empty($containerSchedule->getContainer())){
 		    throw new Exception(StringConstants::AWU_REFERENCE_NOT_EMPTY);
 		}
@@ -37,7 +40,6 @@ if($call == "saveContainerSchedule"){
 		$containerSchedule->setCreatedby($userSeq);
 		$containerSchedule->setCreatedon(new DateTime());
 		$containerSchedule->setLastModifiedon(new DateTime());
-		
 		if(empty($containerSchedule->getIsContainerReceivedinOMS())){
 			$containerSchedule->setContainerReceivedinOMSDate(null);
 		}
@@ -66,10 +68,13 @@ if($call == "saveContainerSchedule"){
 			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendTerminalAppointmentChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendRequestedDeliveryDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
-			
+			$isWarehouseUpdated = false;
 			$isEtaNotesUpdated = $containerSchedule->getETANotes() != $existingContainerSchedule->getETANotes();
 			$isEmptyReturnNotesUpdated = $containerSchedule->getEmptyNotes() != $existingContainerSchedule->getEmptyNotes();
 			$isAlpineNotesUpdated = $containerSchedule->getNotificationNotes() != $existingContainerSchedule->getNotificationNotes();
+			if($existingContainerSchedule->getWarehouse() == WareHouseType::getName(WareHouseType::alpine) ){
+				$isWarehouseUpdated = $containerSchedule->getWarehouse() != $existingContainerSchedule->getWarehouse();
+			}
 		}
 		$response["seq"] = $id;
 		if($id > 0){
@@ -84,7 +89,10 @@ if($call == "saveContainerSchedule"){
 		    if($isAlpineNotesUpdated){
 		        ContainerScheduleReportUtil::sendContainerScheduleNotesUpdatedNotification($containerSchedule,
 		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
-		    }
+			}
+			if($isWarehouseUpdated){
+				ContainerScheduleReportUtil::sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,$existingContainerSchedule,ContainerScheduleNotificationType::update_warehouse_from_alpine_instant);
+			}
 		}
 	}catch(Exception $e){
 		$success = 0;
