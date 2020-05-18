@@ -737,7 +737,8 @@ class ContainerScheduleReportUtil
         }
         $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
         $phAnValues = array();
-        $emailLogType = EmailLogType::CONTAINER_SCHEDULE_ETA_NOTES_UPDATED;
+        $noteType = "Warehouse";
+        $emailLogType = EmailLogType::CONTAINER_SCHEDULE_WAREHOUSE_UPDATED;
         $phAnValues["USER_NAME"] = $loggedInUserName;
         $phAnValues["CONTAINER_NO"] = $containerSchedule->getContainer();
         $phAnValues["AWU_NO"] = $containerSchedule->getAWUReference();
@@ -752,7 +753,7 @@ class ContainerScheduleReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = "ALPINE BI Containers | Updated Warehouse Updated";
+            $subject = "ALPINE BI Containers | Updated " .$noteType . " Updated";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();

@@ -16,6 +16,7 @@ class EmailLogType extends BasicEnum{
     const QC_BULK_UPDATE_NOTIFICATION = "QCBulkUpdateNotification";
     const CONTAINER_SCHEDULE_DATE_CHANGE_NOTIFICATION =  "ContainerScheduleDateChangeNotification";
     const CONTAINER_SCHEDULE_EMPTY_RETURN_DATE =  "ContainerScheduleEmptyReturnDatePastEmptyLFDReport";
+    const CONTAINER_SCHEDULE_EMPTY_WAREHOUSE_UPDATED = "ContainerScheduleEmptyWarehouse";
     const CONTAINER_SCHEDULE_PENDING_EMPTY_ALPINE_NOTIFICATION_PICKUP_DATE= "ContainerScheduleEmptyAlpineNotificationPickupDate";
     const CONTAINER_SCHEDULE_MISSING_IDS = "ContainerScheduleMissingIDReport";
     const CONTAINER_SCHEDULE_MISSING_TERMINAL_APPT_DATE = "ContainerScheduleMissingTerminalAppointmentDateReport";
@@ -28,7 +29,8 @@ class EmailLogType extends BasicEnum{
     const CONTAINER_SCHEDULE_ETA_NOTES_UPDATED = "ContainerScheduleETANotesUpdated";
     const CONTAINER_SCHEDULE_EMPTY_RETURN_NOTES_UPDATED = "ContainerScheduleEmtyReturnNotesUpdated";
     const CONTAINER_SCHEDULE_ALPINE_NOTES_UPDATED = "ContainerScheduleAlpineNotesUpdated";
-    
+    const CONTAINER_SCHEDULE_WAREHOUSE_UPDATED = "ContainerScheduleWarehouseUpdated";
+
     const GRAPHIC_LOG_NOTES_UPDATED = "GraphicLogNotesUpdated";
     const QC_APPROVED_REJECT_NOTIFICATION = "QCApprovedRejectNotification";
     const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "ContainerScheduleChangeTerminalAppointmentDate";
