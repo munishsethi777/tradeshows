@@ -528,12 +528,11 @@ class GraphicLogReportUtil
         $content = file_get_contents("../GraphicLogsNotesUpdatedTemplate.php");
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
-       // $users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$GL_DEP_SEQ);
         $toEmails = array();
-        $phAnValues = array();
+        //$phAnValues = array();
         foreach ($users as $user){
-            $phAnValues["FULL_NAME"] = $user->getFullName();
-            $html = MailUtil::replacePlaceHolders($phAnValues, $html);
+            //$phAnValues["FULL_NAME"] = $user->getFullName();
+            //$html = MailUtil::replacePlaceHolders($phAnValues, $html);
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
