@@ -1,67 +1,68 @@
 <?php
 class StringConstants{
-	const UPCOMING_INSPECTION_SCHEDULE = "ALPINE BI | Upcoming Inspection Schedules";
-	const UPCOMING_INSPECTIONS = "ALPINE BI | Upcoming Inspections";
-	const UPCOMING_INSPECTION_APPOITMENT = "ALPINE BI | Upcoming Inspection Appointments";
-	const MISSING_INSPECTION_APPOINTMENT = "ALPINE BI | Missing Inspection Appointments";
-	const PENDING_QC_APPROVALS = "ALPINE BI | Pending QC Approvals";
-	const INCOMPLETED_SCHEDULES = "ALPINE BI | Late Inspection Report";
-	const QC_PLANNER = "ALPINE BI | QC Planner";
-	const APPROVAL_RESPONSE_NOTIFICATION = "ALPINE BI | PO Approval Response Notification";
-	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "ALPINE BI | Container Schedule Dates Change Notification";
-	const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "ALPINE BI | Container Schedule Change Terminal Appointment Date";
-	const CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE = "ALPINE BI | Container Schedule Change Requested Delivery Date";
 	
-	//Containder Schedule Report
-	const ETA_REPORT = "ALPINE BI Containers | ETA Report";
-	const ETA_REPORT_NAME = "ETA Report";
-	const EMPTY_RETURN = "ALPINE BI Containers | Empty Return Date past Empty LFD Report";
+	//REPORTS SUBJECTS STARTS HERE -----------------
+	const UPCOMING_INSPECTION_SCHEDULE = "Alpine BI Quality| Upcoming Inspection Schedules";
+	const UPCOMING_INSPECTIONS = "Alpine BI Quality | Upcoming Inspections";
+	const UPCOMING_INSPECTION_APPOITMENT = "Alpine BI Quality | Upcoming Inspection Appointments";
+	const MISSING_INSPECTION_APPOINTMENT = "Alpine BI Quality | Missing Inspection Appointments";
+	const PENDING_QC_APPROVALS = "Alpine BI Quality | Pending QC Approvals";
+	const INCOMPLETED_SCHEDULES = "Alpine BI Quality | Late Inspection Report";
+	const QC_PLANNER = "Alpine BI Quality | QC Planner";
+	const APPROVAL_RESPONSE_NOTIFICATION = "Alpine BI Quality | PO Approval Response Notification";
+	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "Alpine BI Containers | Container Schedule Dates Change Notification";
+	const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "Alpine BI Containers | Container Schedule Change Terminal Appointment Date";
+	const CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE = "Alpine BI Containers | Container Schedule Change Requested Delivery Date";
+	const ETA_REPORT = "Alpine BI Containers | ETA Report";
+	const EMPTY_RETURN = "Alpine BI Containers | Empty Return Date past Empty LFD Report";
+	const DAILY_SCHEDULE_REPORT = "Alpine BI Containers | Daily Schedule Report";
+	
+	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE = "Alpine BI Containers | Missing Alpine Notification Pickup dates Report";
+	const MISSING_IDS = "Alpine BI Containers | Missing IDs Report";
+	const MISSING_TERMINAL_APPT_DATE = "Alpine BI Containers | Missing Terminal Appointment Dates Report";
+	const MISSING_SCHEDULE_DELIVERY_DATE = "Alpine BI Containers | Missing Scheduled Delivery Dates Report";
+	const MISSING_CONFIRM_DELIVERY_DATE = "Alpine BI Containers | Missing Confirmed Delivery Dates Report";
+	const EMPTY_WMS_DATES = "Alpine BI Containers | Missing Received Dates in WMS Report";
+	const EMPTY_OMS_DATES = "Alpine BI Containers | Missing Received Dates in OMS Report";
+	const DUE_TRANS_MODAL = "Alpine BI Containers | Financial Impact To Trans Modal";
+	
+	const PROJECT_DUE_REPORT = "Alpine BI Graphics | Projects due this Week";
+	const PROJECT_OVERDUE_REPORT = "Alpine BI Graphics | Projects OverDue";
+	const PROJECT_COMPLETED_PREVIOUS_REPORT = "Alpine BI Graphics | Projects Completed Last week";
+	const PROJECT_IN_BUYER_REVIEW_REPORT = "Alpine BI Graphics | Projects in Buyer's Review";
+	const PROJECT_IN_MANAGER_REVIEW_REPORT = "Alpine BI Graphics | Projects in Manager's Review";
+	const PROJECT_IN_ROBBY_REVIEW_REPORT = "Alpine BI Graphics | Projects in Robby's Review";
+	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT = "Alpine BI Graphics | Projects with Pending Info from China Team";
+	const PROJECT_DUE_TODAY_REPORT = "Alpine BI Graphics | Projects Due for the Day";
+	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT = "Alpine BI Graphics | Projects Due in less than 20 days from China Entry Date";
+	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT = "Alpine BI Graphics | Projects Due in less than 20 days";
+	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "Alpine BI Graphics | Projects with Pending Info from China Team (Daily)";
+	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "Alpine BI Graphics | Projects Past Due with Pending Info from China Team";
+	
+	//REPORT NAMES STARTS HERE -----------------
 	const EMPTY_RETURN_REPORT_NAME = "Empty Return Date past Empty LFD Report";
-	const DAILY_SCHEDULE_REPORT = "ALPINE BI Containers | Daily Schedule Report";
 	const DAILY_SCHEDULE_REPORT_NAME = "Daily Schedule Report";
-	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE = "ALPINE BI Containers | Missing Alpine Notification Pickup dates Report";
-	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE_REPORT_NAME = "Missing Alpine Notification Pickup dates Report";
-	
-	const MISSING_IDS = "ALPINE BI Containers | Missing IDs Report";
 	const MISSING_IDS_REPORT_NAME = "Missing IDs Report";
-	const MISSING_TERMINAL_APPT_DATE = "ALPINE BI Containers | Missing Terminal Appointment Dates Report";
-	const MISSING_TERMINAL_APPT_DATE_REPORT_NAME = "Missing Terminal Appointment Dates Report";
-	const MISSING_SCHEDULE_DELIVERY_DATE = "ALPINE BI Containers | Missing Scheduled Delivery Dates Report";
-	const MISSING_SCHEDULE_DELIVERY_DATE_REPORT_NAME = "Missing Scheduled Delivery Dates Report";
-	const MISSING_CONFIRM_DELIVERY_DATE = "ALPINE BI Containers | Missing Confirmed Delivery Dates Report";
-	const MISSING_CONFIRM_DELIVERY_DATE_REPORT_NAME = "Missing Confirmed Delivery Dates Report";
-	const EMPTY_WMS_DATES = "ALPINE BI Containers | Missing Received Dates in WMS Report";
 	const EMPTY_WMS_DATES_REPORT_NAME = "Missing Received Dates in WMS Report";
-	const EMPTY_OMS_DATES = "ALPINE BI Containers | Missing Received Dates in OMS Report";
 	const EMPTY_OMS_DATES_REPORT_NAME = "Missing Received Dates in OMS Report";
-	const DUE_TRANS_MODAL = "ALPINE BI Containers | Financial Impact To Trans Modal";
-	
-	
-	
-	//Graphic Log Report
-	const PROJECT_DUE_REPORT = "ALPINE BI Graphics | Projects due this Week";
+	const ETA_REPORT_NAME = "ETA Report";
 	const PROJECT_DUE_REPORT_NAME = "Projects due this Week";
-	const PROJECT_OVERDUE_REPORT = "ALPINE BI Graphics | Projects OverDue";
 	const PROJECT_OVERDUE_REPORT_NAME = "Projects overdue";
-	const PROJECT_COMPLETED_PREVIOUS_REPORT = "ALPINE BI Graphics | Projects Completed Last week";
+	const MISSING_ALPINE_NOTIFICATION_PICKUP_DATE_REPORT_NAME = "Missing Alpine Notification Pickup dates Report";
+	const MISSING_TERMINAL_APPT_DATE_REPORT_NAME = "Missing Terminal Appointment Dates Report";
+	const MISSING_SCHEDULE_DELIVERY_DATE_REPORT_NAME = "Missing Scheduled Delivery Dates Report";
+	const MISSING_CONFIRM_DELIVERY_DATE_REPORT_NAME = "Missing Confirmed Delivery Dates Report";
 	const PROJECT_COMPLETED_PREVIOUS_REPORT_NAME = "Projects completed previous week";
-	const PROJECT_IN_BUYER_REVIEW_REPORT = "ALPINE BI Graphics | Projects in Buyer's Review";
 	const PROJECT_IN_BUYER_REVIEW_REPORT_NAME = "Projects in buyers review";
-	const PROJECT_IN_MANAGER_REVIEW_REPORT = "ALPINE BI Graphics | Projects in Manager's Review";
 	const PROJECT_IN_MANAGER_REVIEW_REPORT_NAME = "Projects in manager review";
-	const PROJECT_IN_ROBBY_REVIEW_REPORT = "ALPINE BI Graphics | Projects in Robby's Review";
 	const PROJECT_IN_ROBBY_REVIEW_REPORT_NAME = "Projects in Robby review";
-	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT = "ALPINE BI Graphics | Projects with Pending Info from China Team";
 	const PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects with pending information from buyers(China)";
-	const PROJECT_DUE_TODAY_REPORT = "ALPINE BI Graphics | Projects Due for the Day";
 	const PROJECT_DUE_TODAY_REPORT_NAME = "Projects due for the day";
-	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT = "ALPINE BI Graphics | Projects Due in less than 20 days from China Entry Date";
 	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT_NAME = "Due in Less than 20 Days from China Entry Date";
-	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT = "ALPINE BI Graphics | Projects Due in less than 20 days";
 	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT_NAME = "Projects entered that day that is due in less than 20 days";
-	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "ALPINE BI Graphics | Projects with Pending Info from China Team (Daily)";
-	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "ALPINE BI Graphics | Projects Past Due with Pending Info from China Team";
 	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects past due because we don't have information to complete";
+	
+	
 	
 	
 	// USER ACTION STRING CONSTANT
