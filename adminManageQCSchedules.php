@@ -519,7 +519,7 @@ function loadGrid(){
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"10%"},
-      { text: 'Latest Ship Data', datafield: 'latestshipdate', filtertype: 'date', cellsformat: 'M-dd-yyyy',width: '10%'},
+      { text: 'Latest Ship Date', datafield: 'latestshipdate', filtertype: 'date', cellsformat: 'M-dd-yyyy',width: '10%'},
 	  { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Frst Insp', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},

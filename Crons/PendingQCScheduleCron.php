@@ -4,21 +4,21 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/UserType.php");
 
-
+//DISCARDED FILE NOT IN USE ANYMORE
 try{
 	//Admin Notfications
-    QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR);
+    //QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::SUPERVISOR);
     //QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::SUPERVISOR);
     //	QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::SUPERVISOR);
-    QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
-    QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
+    //QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::SUPERVISOR);
+    //QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::SUPERVISOR);
     
     //QC Notifications
-    QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::QC);
+    //QCNotificationsUtil::sendUpcomingInspectionNotification(UserType::QC);
     //QCNotificationsUtil::sendUpcomingInspectionScheduleNotification(UserType::QC);
     //	QCNotificationsUtil::sendUpcomingInspectionAppointmentNotification(UserType::QC);
-    QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
-    QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
+    //QCNotificationsUtil::sendMissingAppoitmentNotification(UserType::QC);
+    //QCNotificationsUtil::sendIncompletedSchedulesNotification(UserType::QC);
 }catch(Exception $e){
 	echo $e->getMessage();
 }

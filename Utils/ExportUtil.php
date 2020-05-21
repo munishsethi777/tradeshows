@@ -2130,7 +2130,7 @@ public static function exportEmailLogs($emailLogs){
 	->getStartColor()
 	->setRGB('000000');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("Q1:W1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("P1:W1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()

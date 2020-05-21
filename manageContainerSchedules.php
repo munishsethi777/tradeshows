@@ -471,7 +471,7 @@ function loadGrid(){
       { text: 'Trucker', datafield: 'truckername', width:"5%"},
       { text: 'Trans', datafield: 'trans', width:"7%"},
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
-	  {text: 'Hot', datafield: 'ishotcontainer',columntype:"checkbox",width: "5%"},
+	  { text: 'Hot', datafield: 'ishotcontainer',columntype:"checkbox",width: "4%"},
 	  { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
       { text: 'Requested dlvry', datafield: 'requesteddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
