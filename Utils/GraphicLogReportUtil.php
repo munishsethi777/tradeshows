@@ -536,7 +536,7 @@ class GraphicLogReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = $noteType . " Notes Updated For Graphic Logs on Alpinebi";
+            $subject = "Alpine BI Graphics | ". $noteType . " Notes Updated For Graphic Logs on Alpinebi";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
