@@ -404,17 +404,18 @@ class GraphicLogMgr{
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-	    $isSessionQc= $sessionUtil->isSessionQC();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 	    $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-	    if($isSessionQc){
-		    if(count($myTeamMembersArr) == 0){
-		        $query .= " where users.seq = $loggedinUserSeq";
-		    }else{
-		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-		        $query .= " where users.seq in($myTeamMembersCommaSeparated)";
-		    }
-	    }
+		//We dont need teams etc for QC roles
+// 	    $isSessionQc= $sessionUtil->isSessionQC();
+// 	    if($isSessionQc){
+// 		    if(count($myTeamMembersArr) == 0){
+// 		        $query .= " where users.seq = $loggedinUserSeq";
+// 		    }else{
+// 		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+// 		        $query .= " where users.seq in($myTeamMembersCommaSeparated)";
+// 		    }
+// 	    }
 		$rows = self::$dataStore->executeQuery($query,true);
 		$arr = array();
 		foreach($rows as $row){		    
@@ -432,17 +433,17 @@ class GraphicLogMgr{
 	public function getAllCount($isApplyFilter){
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-	    $isSessionQc= $sessionUtil->isSessionQC();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 	    $query = "select count(*) from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-	    if($isSessionQc){ 
-	        if(count($myTeamMembersArr) == 0){
-			    $query .= " where users.seq = $loggedinUserSeq"; 
-		    }else{
-		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-		        $query .=" where users.seq in($myTeamMembersCommaSeparated)";
-	       	}
-	    }
+		//We
+// 	    if($isSessionQc){ 
+// 	        if(count($myTeamMembersArr) == 0){
+// 			    $query .= " where users.seq = $loggedinUserSeq"; 
+// 		    }else{
+// 		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+// 		        $query .=" where users.seq in($myTeamMembersCommaSeparated)";
+// 	       	}
+// 	    }
        $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
        return $count;
 	}

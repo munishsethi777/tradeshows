@@ -171,8 +171,9 @@ class SessionUtil{
 	}
 	
 	public function isSessionQC(){
-		if($_SESSION[self::$USER_LOGGED_IN] != null && 
-				in_array(UserType::QC, $_SESSION[self::$ROLES])){
+		if(isset($_SESSION[self::$USER_LOGGED_IN]) &&
+				$_SESSION[self::$USER_LOGGED_IN] != null && 
+				in_array(Permissions::getName(Permissions::qc), $_SESSION[self::$ROLES])){
 					return true;
 		}
 		return false;

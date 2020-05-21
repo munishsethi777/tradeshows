@@ -6,7 +6,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/GraphicLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 $sessionUtil = SessionUtil::getInstance();
-$isSessionQc = $sessionUtil->isSessionQC();
+//$isSessionQc = $sessionUtil->isSessionQC();
 $graphicLog = new GraphicsLog(); 
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $readOnlyPO = "";
@@ -355,10 +355,9 @@ if(isset($_POST["id"])){
 	                        		<?php 
 										$select = DropDownUtils::getGraphicDesigersUsers("graphicartist", null,$graphicLog->getGraphicArtist(),false,true,false);
 		                        		echo $select;
-		                        		if($isSessionQc){?>
-	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $graphicLog->getGraphicArtist()?>" name="graphicartist">
-	                        			<?php }
-                             		?>
+		                        		//if($isSessionQc){?>
+	                        				<!-- <input type="hidden" id="qcuserhidden" value="<?php //echo $graphicLog->getGraphicArtist()?>" name="graphicartist"> -->
+	                        			<?php //} ?>
 	                        	
 	                        	</div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Start Date :</label>
