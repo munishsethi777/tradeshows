@@ -37,12 +37,13 @@ class ContainerScheduleMgr{
 		//$containerSchedules = $this->findAllArr(true);
 		$query = "select * from containerschedules";
 		$query = $this->applyDefaultCondition($query);
-		$containerSchedules = self::$dataStore->executeQuery($query,true);
+		$containerSchedules = self::$dataStore->executeQuery($query,true,true);
 		$mainArr = array();
 		foreach ($containerSchedules as $containerSchedule){
 		    $wareHouse = $containerSchedule["warehouse"];
 		    $terminal = $containerSchedule["terminal"];
-		    $trucker = $containerSchedule["truckername"];
+			$trucker = $containerSchedule["truckername"];
+			$isHotContainer = $containerSchedule['ishotcontainer'];
 		    if(!empty($wareHouse)){
 		        $wareHouse = WareHouseType::getValue($wareHouse);
 		    }
@@ -51,13 +52,17 @@ class ContainerScheduleMgr{
 		    }
 		    if(!empty($trucker)){
 		        $trucker = TruckerType::getValue($trucker);
-		    }
+			}
+			if($isHotContainer == NULL){
+				$isHotContainer = "0";
+			}
 		    $containerSchedule["warehouse"] = $wareHouse;
 		    $containerSchedule["terminal"] = $terminal;
 		    $containerSchedule["truckername"] = $trucker;
 		    $lastModifiedOn = $containerSchedule["lastmodifiedon"];
 		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
-		    $containerSchedule["lastmodifiedon"] = $lastModifiedOn;
+			$containerSchedule["lastmodifiedon"] = $lastModifiedOn;
+			$containerSchedule["ishotcontainer"] = $isHotContainer;
 		    array_push($mainArr,$containerSchedule);
 		}
 		$mainArr["Rows"] = $mainArr;

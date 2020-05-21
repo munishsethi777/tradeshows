@@ -66,6 +66,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
 			                            		<option value=''>Select Field</option>
 			                            		<option value="shipdate">Ship Date</option>
+												<option value="latestshipdate">Latest Ship Date</option>
 			                            		<optgroup label="Schedule Dates">
 				                            		<option value="scproductionstartdate">Scheduled Production Start</option>
 				                            		<option value="scgraphicsreceivedate">Scheduled Graphics Receive</option>
@@ -518,7 +519,8 @@ function loadGrid(){
       { text: 'Item No.', datafield: 'itemnumbers',width:"12%"},
       { text: 'PO Type', datafield: 'potype',width:"12%"},
       { text: 'Ship Date', datafield: 'shipdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"10%"},
-      { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
+      { text: 'Latest Ship Data', datafield: 'latestshipdate', filtertype: 'date', cellsformat: 'M-dd-yyyy',width: '10%'},
+	  { text: 'Sc Prod Str', datafield: 'scproductionstartdate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Grph Rcv', datafield: 'scgraphicsreceivedate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Frst Insp', datafield: 'scfirstinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
       { text: 'Sc Midl Insp', datafield: 'scmiddleinspectiondate',filtertype: 'date',cellsformat: 'M-dd-yyyy',width:"12%",hidden:true},
@@ -562,6 +564,7 @@ function loadGrid(){
                     { name: 'po', type: 'string' },
                     { name: 'potype', type: 'string' } ,
                     { name: 'shipdate', type: 'date' },
+					{ name: 'latestshipdate', type: 'date'},
                     { name: 'createdon', type: 'date' }, 
                     { name: 'isSv', type: 'bool' } ,
                     { name: 'responsetype', type: 'string' } ,

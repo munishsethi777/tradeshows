@@ -451,7 +451,7 @@ function loadGrid(){
             	html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['container']+"</a>";
             html += "</div>";
         return html;
-    }
+	}
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'terminalappointmentdatetime', datafield: 'terminalappointmentdatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
@@ -471,14 +471,16 @@ function loadGrid(){
       { text: 'Trucker', datafield: 'truckername', width:"5%"},
       { text: 'Trans', datafield: 'trans', width:"7%"},
       { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
-      { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
+	  {text: 'Hot', datafield: 'ishotcontainer',columntype:"checkbox",width: "5%"},
+	  { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
       { text: 'Requested dlvry', datafield: 'requesteddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
       { text: 'Scheduled dlvry', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
       { text: 'Confirmed dlvry', datafield: 'confirmeddeliverydatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" } ,	
       { text: 'Notification pickup', datafield: 'alpinenotificatinpickupdatetime' , filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"13%" },
 	  {text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',hidden:false,width:"13%"},
-    ]
+
+	]
    
     var source =
     {
@@ -509,7 +511,8 @@ function loadGrid(){
                     { name: 'samplesreceivedinwmsdate', type: 'date' },
                     { name: 'container', type: 'string' },
                     { name: 'terminal', type: 'fullname' },
-                    { name: 'lastmodifiedon', type: 'date' } 
+					{ name: 'lastmodifiedon', type: 'date' },
+					{ name: 'ishotcontainer', type: 'bool'}, 
                     ],                          
         url: 'Actions/ContainerScheduleAction.php?call=getAllContainerSchedules',
         root: 'Rows',

@@ -1958,7 +1958,7 @@ public static function exportEmailLogs($emailLogs){
 	->setKeywords("office 2007 openxml php")
 	->setCategory("Report");
 	$alphas = range('A', 'Z');
-	$alphas = ExportUtil::createColumnsArray("AI");
+	$alphas = ExportUtil::createColumnsArray("AJ");
 	$count = 1;
 	$i = 0;
 	$colName = $alphas[$i++]. $count;
@@ -2044,6 +2044,10 @@ public static function exportEmailLogs($emailLogs){
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
 	$colName = $alphas[$i++]. $count;
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Hot Container Notes");
+	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+	
+	$colName = $alphas[$i++]. $count;
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Alpine Notif. Pickup Date");
 	$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 	
@@ -2126,13 +2130,13 @@ public static function exportEmailLogs($emailLogs){
 	->getStartColor()
 	->setRGB('000000');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("P1:V1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("Q1:W1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
 	->setRGB('87cefa');
 	
-	$objPHPExcel->setActiveSheetIndex(0)->getStyle("W1:AI1")
+	$objPHPExcel->setActiveSheetIndex(0)->getStyle("X1:AJ1")
 	->getFill()
 	->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 	->getStartColor()
@@ -2246,6 +2250,10 @@ public static function exportEmailLogs($emailLogs){
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $hotContainer);
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 			
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getHotNotes());
+			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$containerSchedule->getAlpineNotificatinPickupDateTime());
 			self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
