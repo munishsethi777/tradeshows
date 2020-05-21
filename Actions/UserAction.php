@@ -209,8 +209,8 @@ if($call == "resetPassword"){
 if($call == "refreshSession"){
 		$sessionUtil = SessionUtil::getInstance();
 		$userSeq = $sessionUtil->getUserLoggedInSeq();
-		$user = $userMgr->findBySeq($userSeq);
-    	if(!empty($userSeq)){
+		if(!empty($userSeq)){
+    		$user = $userMgr->findBySeq($userSeq);
     		$userRoles = $userMgr->getUserRolesArr($user->getSeq());
     		$departmentMgr = DepartmentMgr::getInstance();
     		$departments = $departmentMgr->getUserAssignedDepartments($user->getSeq());
