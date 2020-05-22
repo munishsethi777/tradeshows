@@ -713,7 +713,7 @@ class QCNotificationsUtil{
 		$sessionUtil = SessionUtil::getInstance();
 		$excelData = PHPExcelUtil::exportQCSchedulesBulkUpdate($qcSchedules, $qcScheduleNewArr,1);
 		$attachments = array("BulkUpdateSchedules.xls"=>$excelData);
-		$subject = "Bulk Update Schedules | ". $sessionUtil->getUserLoggedInName();
+		$subject = "Alpine BI Quality | Bulk Update by ". $sessionUtil->getUserLoggedInName();
 		$html = "Bulk Update Schedules";
 		
 		$userMgr = UserMgr::getInstance();

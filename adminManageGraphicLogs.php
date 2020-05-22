@@ -74,7 +74,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
    </form>
-   <form id="form2" name="form2" method="post" action="adminCreateGraphicLog.php">
+   <form id="form2" name="form2" method="post" action="adminCreateGraphicLog.php" target='_blank'>
     	<input type="hidden" id="id" name="id"/>
    </form> 
 
@@ -265,10 +265,13 @@ isSelectAll = false;
 function AddStatusDefaultFilter(){
     var filtergroup = new $.jqx.filter();
     var filter_or_operator = 1;
-    var filtervalue = 'Sent to Print';
-    var filtercondition = 'not_equal';
-    var filter = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
-    filtergroup.addfilter(filter_or_operator, filter);
+    
+    var filterNullShow = filtergroup.createfilter('stringfilter', '', 'NULL');
+    filtergroup.addfilter(filter_or_operator, filterNullShow);
+
+    var filterHideSentToPrint = filtergroup.createfilter('stringfilter', 'Sent to Print', 'not_equal');
+    filtergroup.addfilter(filter_or_operator, filterHideSentToPrint);
+
     $("#graphiclogGrid").jqxGrid('addfilter', 'graphicstatus', filtergroup);
     $("#graphiclogGrid").jqxGrid('applyfilters');
 };
@@ -281,7 +284,7 @@ function loadGrid(){
         return html;
     }
 	
-	var statusTypes = ["Sent to Print","Not Started","No Update Needed","Missing Info from China","In Progress","Buyer's Reviewing","Robby Reviewing","Manager Reviewing","Pending Customer Approval",
+	var statusTypes = ["","Sent to Print","No Update Needed","Not Started","Missing Info from China","In Progress","Buyer's Reviewing","Robby Reviewing","Manager Reviewing","Pending Customer Approval",
 	"Pending Attorney Approval","Preparing for Print"];
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
