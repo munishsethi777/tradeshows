@@ -418,8 +418,12 @@ class GraphicLogMgr{
 // 	    }
 		$rows = self::$dataStore->executeQuery($query,true);
 		$arr = array();
-		foreach($rows as $row){		    
-    	    $lastModifiedOn = $row["lastmodifiedon"];
+		foreach($rows as $row){	
+		    $row["usaofficeentrydate"] = DateUtil::convertDateToFormat($row["usaofficeentrydate"], "Y-m-d", "Y-m-d H:i:s");
+		    $row["estimatedshipdate"] = DateUtil::convertDateToFormat($row["estimatedshipdate"], "Y-m-d", "Y-m-d H:i:s");
+		    $row["estimatedgraphicsdate"] = DateUtil::convertDateToFormat($row["estimatedgraphicsdate"], "Y-m-d", "Y-m-d H:i:s");
+		    $row["finalgraphicsduedate"] = DateUtil::convertDateToFormat($row["finalgraphicsduedate"], "Y-m-d", "Y-m-d H:i:s");
+		    $lastModifiedOn = $row["lastmodifiedon"];
     	    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
     	    $row["lastmodifiedon"] = $lastModifiedOn;
     	    $row["graphicstatus"] = GraphicStatusType::getValue($row["graphicstatus"]);
