@@ -1,6 +1,8 @@
 <?php
 class StringConstants{
-	
+    const WEB_PORTAL_LINK = "http://localhost/tradeshows/";
+    //const WEB_PORTAL_LINK = "http://www.alpinebi.com";
+    
 	//REPORTS SUBJECTS STARTS HERE -----------------
 	const UPCOMING_INSPECTION_SCHEDULE = "Alpine BI Quality| Upcoming Inspection Schedules";
 	const UPCOMING_INSPECTIONS = "Alpine BI Quality | Upcoming Inspections";
@@ -63,11 +65,9 @@ class StringConstants{
 	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME = "Projects past due because we don't have information to complete";
 	
 	
-	
-	
 	// USER ACTION STRING CONSTANT
-	const WEB_PORTAL_LINK = "http://www.alpinebi.com";
-	const PERMISSION_AllOW = "No Permission is Allowed";
+	
+	const PERMISSION_AllOW = "No Permission is Allow";
 	const SERVER_ERROR = "Server Error!";
 	const USER_DOES_NOT_EXITS_WITH_THIS_USER_NAME = "User does not exists with this user name";
 	const FORGET_MESSAGE_SUCCESS  = "Forgot password request submitted successfully. Pls check your email for further details.";
@@ -83,6 +83,7 @@ class StringConstants{
 	const USER_DELETE_SUCCESSFULLY = "Users Deleted successfully";
 	const LOGIN_SUCCESSFULLY = "Login successfully";
 	const USER_DISABLED = "User with this username is currently disabled. Please contact system administrator";
+	
 	//CLASS CODE ACTION STRING CONSTANT 
 	const CLASS_CODE_SAVED_SUCCESSFULLY  = "Class Code saved successfully.";
 	const CLASS_CODE_UPDATE_SUCCESSFULLY = "Class Code Updated successfully.";
@@ -131,6 +132,9 @@ class StringConstants{
 	const CUSTOMER_SAVED_SUCCESSFULLY    = "Customer saved successfully.";
 	const CUSTOMERS_DELETE_SUCCESSFULLY  = "Customers Deleted successfully";
 	const CUSTOMER_UPDATE_SUCCESSFULLY   = "Customer updated successfully";
+	const BUYER_SAVED_SUCCESSFULLY    = "Buyer saved successfully.";
+		const BUYER_UPDATE_SUCCESSFULLY    = "Buyer updated successfully.";
+	const BUYER_DELETE_SUCCESSFULLY  = "Buyer Deleted successfully";
 	//CUSTOMER MANAGER STRING CONSTANT
 	const IMPORT_CORRECT_FILE = "Please import the correct file";
 	const CUSTOMER_IMPORTED_SUCCESSFULLY = "Customers Imported Successfully!";
@@ -158,8 +162,14 @@ class StringConstants{
 	const ALPINE_PROG_SAVED_SUCCESSFULLY    = "Alpine Program saved successfully.";
 	const ALPINE_PROG_UPDATED_SUCCESSFULLY   = "Alpine Program updated successfully";
 	
+	const CHRISTMAS_QUESTION_SAVED_SUCCESSFULLY    = "Christmas questions detail saved successfully.";
+	const OPPURTUNITY_QUESTION_SAVED_SUCCESSFULLY    = "Oppurtunity questions detail saved successfully.";	
 	const SAVED_SUCCESSFULLY    = "Saved successfully.";
 	const UPDATED_SUCCESSFULLY   = "Updated successfully";
+	const DELETED_SUCCESSFULLY   = "Deleted successfully";
 	
-	const PO_INCHARGE_USERSEQS = "3,10,15,16,17,18,19,20";
+	const EARLIER_PASSWORD_DOES_NOT_MATCH = "Earlier password does not match";
+	const NEW_PASSWORD_EMPTY = "New password can not be empty";
+	const SETTINGS_UPDATE_SUCCCESSFULLY = "Settings updated successfully.";
+	const SELECT_ANY = "Select Any";
 }

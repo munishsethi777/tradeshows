@@ -287,6 +287,18 @@ function loadGrid(){
             html += "</div>";
         return html;
     }
+	var calculatedDueDateRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
+        data = $('#graphiclogGrid').jqxGrid('getrowdata', row);
+        if(data['finalgraphicsduedate'] == null && data['estimatedgraphicsdate'] != null){
+        	//return "<font style='color:rgba(26, 179, 148)'>"+ data['estimatedgraphicsdate'] +"</font>";
+        	html = '<div style="overflow: hidden; text-overflow: ellipsis; padding-bottom: 2px; text-align: left; margin-right: 2px; margin-left: 4px; margin-top: 4px;color:rgba(26, 179, 148)">';
+        	html += dataAdapter.formatDate(data['estimatedgraphicsdate'], 'M-dd-yyyy');
+			html += '</div>';
+			return html;
+        }
+		return defaulthtml;
+        
+    }
 	var statusTypes = ["","Sent to Print","No Update Needed","Not Started","Missing Info from China","In Progress","Buyer's Reviewing","Robby Reviewing","Manager Reviewing","Pending Customer Approval",
 	"Pending Attorney Approval","Preparing for Print"];
 	var columns = [
@@ -294,9 +306,9 @@ function loadGrid(){
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'US Entry', datafield: 'usaofficeentrydate', filtertype: 'date', width:"10%",cellsformat: 'M-dd-yyyy'},
       { text: 'Est Ship', datafield: 'estimatedshipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy'},
-      { text: 'Est Graphic Due', datafield: 'estimatedgraphicsdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:false},
+      { text: 'Est Graphic Due', datafield: 'estimatedgraphicsdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
+      { text: 'Due Date', datafield: 'finalgraphicsduedate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:false,cellsrenderer:calculatedDueDateRenderer},
       { text: 'chinaofficeentrydate', datafield: 'chinaofficeentrydate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
-      { text: 'finalgraphicsduedate', datafield: 'finalgraphicsduedate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'confirmedposhipdate', datafield: 'confirmedposhipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'graphicartiststartdate', datafield: 'graphicartiststartdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},
       { text: 'graphiccompletiondate', datafield: 'graphiccompletiondate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy',hidden:true},

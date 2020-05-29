@@ -50,4 +50,6 @@ class EmailLogType extends BasicEnum{
     const GRAPHIC_LOG_PROJECT_DUE_FOR_LESS_THAN_20_DAYS_FROM_TODAY =  "GraphicLogProjectDueLessThan20FromToday";
     const GRAPHIC_LOG_PROJECT_MISSING_INFO_FROM_CHINA_DAILY =  "GraphicLogProjectMissingInfoFromChinaDaily";
     const GRAPHIC_LOG_PROJECT_PAST_DUE_WITH_MISSING_INFO_FROM_CHINA =  "GraphicLogProjectPastDueWithMissingInfoFromChina";
+    
+    const GRAPHIC_LOG_FINAL_GRAPHIC_DUE_DATE_CHANGED = "GraphicLogFinalGraphicDueDateChanged";
 }

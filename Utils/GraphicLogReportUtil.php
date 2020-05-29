@@ -547,6 +547,42 @@ class GraphicLogReportUtil
         }
     }
     
+    //Instant when notes updated from graphic log
+    public static function sendFinalGraphicDueDateChangedNotification($graphicLog){
+        $userMgr = UserMgr::getInstance();
+        $users = $userMgr->getAllUsersWithRoles();
+        $users = self::getGLUsersByNotificationType($users,
+            GraphicLogsNotificationType::final_graphics_due_date_changed_instant);
+        if(empty($users)){
+            return;
+        }
+        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $phAnValues = array();
+        $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+        $phAnValues["ITEM_ID"] = $graphicLog->getSKU();
+        $phAnValues["PO_NUMBER"] = $graphicLog->getPO();
+        $phAnValues["DATE_STR"] = date_format(new DateTime(), "m-d-Y");
+        
+        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/GraphicFinalGraphicDueDateChangedTemplate.php";
+        $content = file_get_contents($emailTemplatePath);
+        
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+        $html = MailUtil::appendToEmailTemplateContainer($content);
+        $toEmails = array();
+        foreach ($users as $user){
+            array_push($toEmails,$user->getEmail());
+        }
+        if(!empty($toEmails)){
+            $subject = "Alpine BI Graphics | Final Graphic Due Date Changed on Alpinebi";
+            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+            if($flag){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog(EmailLogType::GRAPHIC_LOG_FINAL_GRAPHIC_DUE_DATE_CHANGED ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
+    }
     
     
     

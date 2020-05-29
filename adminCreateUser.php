@@ -405,6 +405,10 @@ if(in_array(Permissions::china_team,$userRoles)){
 						                           	<input name="permissions[]" type="checkbox" value="graphic_logs_notes_update_instant" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::graphic_logs_notes_update_instant), $userRoles) ?  "checked" : ""?>/>
 													<span class="m-l-xs">Graphic Logs Notes Update (Instant)</span>
 						                        </li>
+						                         <li>
+						                           	<input name="permissions[]" type="checkbox" value="final_graphics_due_date_changed_instant" <?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::final_graphics_due_date_changed_instant), $userRoles) ?  "checked" : ""?>/>
+													<span class="m-l-xs">Final Graphics Due Date Changed (Instant)</span>
+						                        </li>
 						                    </ul>
 				                            
                                         </div>

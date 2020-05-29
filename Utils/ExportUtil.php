@@ -621,7 +621,7 @@ class ExportUtil{
 		->setKeywords("office 2007 openxml php")
 		->setCategory("Report");
 		$alphas = range('A', 'Z');
-		$alphas = ExportUtil::createColumnsArray("AD");
+		$alphas = ExportUtil::createColumnsArray("AE");
 		$count = 1;
 		$i = 0;
 		$top_vertical = PHPExcel_Style_Alignment::VERTICAL_CENTER;
@@ -654,6 +654,11 @@ class ExportUtil{
 		
 	  	$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "PO #");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+		
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "DUE DATE");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 		
@@ -784,6 +789,18 @@ class ExportUtil{
 			
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getPO());
+			
+			
+			$colName = $alphas[$i++]. $count;
+			$dueDate = $graphicLog->getFinalGraphicsDueDate();
+			if(empty($dueDate) && !empty($graphicLog->getEstimatedShipDate())){
+			    $dueDate = $graphicLog->getEstimatedShipDate();
+			    $objPHPExcel->getActiveSheet()->getStyle($colName)->getFont()
+			    ->getColor()->setRGB('#1ab394');
+			}
+			$dueDate = self::getDateStr($dueDate);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $dueDate);
+			
 			
 			$estimatedShipDate =  $graphicLog->getEstimatedShipDate();
 			if(!empty($estimatedShipDate)){
@@ -939,35 +956,35 @@ class ExportUtil{
 			$i = 0;
 		}
 		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:K1")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("A1:L1")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('b3f0ff');
 		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("A2:K2")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("A2:L2")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('b3f0ff');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("L1:S1")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("M1:T1")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('ffbf80');
 		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("L2:S2")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("M2:T2")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('ffbf80');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("T1:AD1")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U1:AE1")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('e6b3b3');
 		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("T2:AD2")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U2:AE2")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()

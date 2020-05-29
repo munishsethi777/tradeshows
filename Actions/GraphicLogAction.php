@@ -44,6 +44,7 @@ if($call == "saveGraphicLog"){
 		$isChinaNotesUpdated = false;
 		$isGraphicNotesUpddates = false;
 		$isGraphicStatusChanged = false;
+		$isFinalGraphicDueDateChanged = false;
 		if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
 			$seq = $_REQUEST["seq"];
 			$message = StringConstants::GRAPHIC_LOG_UPDATED_SUCCESSFULLY;
@@ -52,6 +53,11 @@ if($call == "saveGraphicLog"){
 			$isChinaNotesUpdated = $graphicLog->getChinaNotes() != $existingGraphicLog->getChinaNotes();
 			$isGraphicNotesUpddates = $graphicLog->getGraphicsToChinaNotes() != $existingGraphicLog->getGraphicsToChinaNotes();
 			$isGraphicStatusChanged = $graphicLog->getGraphicStatus() != $existingGraphicLog->getGraphicStatus();
+			//Graphic date from DB is just date and one in new log is datetime
+			if(!empty($graphicLog->getFinalGraphicsDueDate())){
+			    $newFinalDueDate = $graphicLog->getFinalGraphicsDueDate()->format("m-d-Y");
+			    $isFinalGraphicDueDateChanged = $newFinalDueDate != $existingGraphicLog->getFinalGraphicsDueDate();
+			}
 			$containerScheduleNoteMgr = ContainerScheduleNotesMgr::getInstance();
 			$containerScheduleNoteMgr->saveFromGraphicLog($graphicLog, $existingGraphicLog);
 		}
@@ -116,10 +122,15 @@ if($call == "saveGraphicLog"){
 		    }
 			if($isUsaNotesUpdated){
 			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"USA");
-			}else if($isChinaNotesUpdated){
+			}
+			if($isChinaNotesUpdated){
 			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"CHINA");
-			}else if($isGraphicNotesUpddates){
+			}
+			if($isGraphicNotesUpddates){
 			    GraphicLogReportUtil::sendGraphicLogNotesUpdatedNotification($graphicLog,"GRAPHIC");
+			}
+			if($isFinalGraphicDueDateChanged){
+			    GraphicLogReportUtil::sendFinalGraphicDueDateChangedNotification($graphicLog);
 			}
 		}
 	}catch(Exception $e){
