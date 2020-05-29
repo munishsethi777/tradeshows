@@ -631,19 +631,19 @@ class ExportUtil{
 		$objPHPExcel->setActiveSheetIndex(0)->getStyle($colName)->getAlignment()->applyFromArray(
 		    array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
 		    );
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":K" .$count);
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells($colName . ":L" .$count);
 		
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("L".$count, "FILLED BY CHINA TEAM");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("L".$count)->getAlignment()->applyFromArray(
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("M".$count, "FILLED BY CHINA TEAM");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("M".$count)->getAlignment()->applyFromArray(
 		    array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
 		    );
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("L".$count . ":S" .$count);
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("M".$count . ":T" .$count);
 		
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("T".$count, "FILLED BY GRAPHICS TEAM USA");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("T".$count)->getAlignment()->applyFromArray(
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue("U".$count, "FILLED BY GRAPHICS TEAM USA");
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U".$count)->getAlignment()->applyFromArray(
 		    array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
 		    );
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("T".$count . ":AD" .$count);
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("U".$count . ":AE" .$count);
 		$count = 2;
 		$i = 0;
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
