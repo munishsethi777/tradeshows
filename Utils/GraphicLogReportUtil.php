@@ -562,7 +562,7 @@ class GraphicLogReportUtil
         $phAnValues["ITEM_ID"] = $graphicLog->getSKU();
         $phAnValues["PO_NUMBER"] = $graphicLog->getPO();
         $phAnValues["DATE_STR"] = date_format(new DateTime(), "m-d-Y");
-        
+        $phAnValues['FINAL_GRAPHIC_DUE_DATE'] = date_format($graphicLog->getFinalGraphicsDueDate(), "m-d-Y") ;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/GraphicFinalGraphicDueDateChangedTemplate.php";
         $content = file_get_contents($emailTemplatePath);
         
