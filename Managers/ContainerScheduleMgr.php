@@ -71,12 +71,12 @@ class ContainerScheduleMgr{
 			if($containerSchedule["emptyreturndate"] != NULL){
 				$containerSchedule["emptyreturndate"] = DateUtil::convertDateToFormat($containerSchedule["emptyreturndate"],"Y-m-d","Y-m-d H:i:s");
 			}
-			if($containerSchedule["emptynotesdatetime"] != NULL){
-				$containerSchedule["emptynotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["emptynotesdatetime"],"Y-m-d","Y-m-d H:i:s");
-			}
-			if($containerSchedule["notificationnotesdatetime"] != NULL){
-				$containerSchedule["notificationnotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["notificationnotesdatetime"],"Y-m-d","Y-m-d H:i:s");
-			}
+// 			if($containerSchedule["emptynotesdatetime"] != NULL){
+// 				$containerSchedule["emptynotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["emptynotesdatetime"],"Y-m-d","Y-m-d H:i:s");
+// 			}
+// 			if($containerSchedule["notificationnotesdatetime"] != NULL){
+// 				$containerSchedule["notificationnotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["notificationnotesdatetime"],"Y-m-d","Y-m-d H:i:s");
+// 			}
 			if($containerSchedule["msrfcreateddate"] != NULL){
 				$containerSchedule["msrfcreateddate"] = DateUtil::convertDateToFormat($containerSchedule["msrfcreateddate"],"Y-m-d","Y-m-d H:i:s");
 			}
