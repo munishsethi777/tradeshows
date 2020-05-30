@@ -45,7 +45,10 @@ $(document).ready(function(){
     	loadGrid()
 	//});
 });
-
+function editButtonClick(seq){
+	$("#id").val(seq);                        
+	$("#form1").submit(); 
+}
 function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
@@ -54,11 +57,13 @@ function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#classCodeGrid').jqxGrid('getrowdata', row);
         var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
-            	html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
+            	//html +="<a href='javascript:editShow("+ data['seq'] + ")' ><i class='fa fa-pencil-square-o' title='Edit'></i></a>";
+                html +="&ensp;<a href='javascript:editButtonClick("+ data['seq'] + ")' ><i class='fa fa-edit' title='Edit Class Codes'></i></a>";
             html += "</div>";
         return html;
     }
     var columns = [
+        {text: "Action", datafield:"actions",cellsrenderer:actions,width:"5%",filterable:false},
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Vendor id', datafield: 'vendorid',width:"10%"},
       { text: 'Vendor Name', datafield: 'vendorname',width:"10%"},
@@ -154,17 +159,17 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-            var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+            //var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             container.append(addButton);
-            container.append(editButton);
+            //container.append(editButton);
             container.append(deleteButton);
             container.append(reloadButton);
             container.append(importButton);
             statusbar.append(container);
-            editButton.jqxButton({  width: 65, height: 18 });
+            //editButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
@@ -176,20 +181,19 @@ function loadGrid(){
             deleteButton.click(function (event) {
                 deleteRows("classCodeGrid","Actions/ClassCodeAction.php?call=deleteClassCode");
            	});
-            editButton.click(function (event){
-            	var selectedrowindex = $("#classCodeGrid").jqxGrid('selectedrowindexes');
-                var value = -1;
-                indexes = selectedrowindex.filter(function(item) { 
-                    return item !== value
-                })
-                if(indexes.length != 1){
-                    bootbox.alert("Please Select single row for edit.", function() {});
-                    return;    
-                }
-                var row = $('#classCodeGrid').jqxGrid('getrowdata', indexes);
-                $("#id").val(row.seq);                        
-                $("#form1").submit();    
-            });
+            // editButton.click(function (event){
+            // 	var selectedrowindex = $("#classCodeGrid").jqxGrid('selectedrowindexes');
+            //     var value = -1;
+            //     indexes = selectedrowindex.filter(function(item) { 
+            //         return item !== value
+            //     })
+            //     if(indexes.length != 1){
+            //         bootbox.alert("Please Select single row for edit.", function() {});
+            //         return;    
+            //     }
+            //     var row = $('#classCodeGrid').jqxGrid('getrowdata', indexes);
+            //     editButtonClick(row.seq);  
+            // });
              $("#classCodeGrid").bind('rowselect', function (event) {
                  var selectedRowIndex = event.args.rowindex;
                   var pageSize = event.args.owner.rows.records.length - 1;                       

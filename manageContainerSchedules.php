@@ -435,6 +435,10 @@ function showCustomerDetails(seq,rowId){
 		});
 	});
 }
+function editButtonClick(seq){
+	$("#id").val(seq);                        
+	$("#form2").submit(); 
+}
 isSelectAll = false;
 var ids = [];
 function loadGrid(){
@@ -444,16 +448,31 @@ function loadGrid(){
         jqxFilter.addfilter(0, filter);
         return jqxFilter;
     }();
-	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
+ function actions(row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#containerScheduleGrid').jqxGrid('getrowdata', row);
-        ids[row] = data["seq"];
-        var html = "<div style='text-align: center; margin-top:6px;'>"
-            	html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['container']+"</a>";
-            html += "</div>";
-        return html;
+		ids[row] = data["seq"];
+        var html = "<div style='text-align: center; margin-top:6px;'>";
+        return [html,data];
+	}
+	var showitemdetail = function(row,columnfield, value, defaulthtml, columnproperties){
+		arr = actions(row,columnfield,value,defaulthtml,columnproperties);
+		html = arr[0];
+		data = arr[1];
+		html +="<a title='View Detail' href='javascript:showItemDetails("+ data['seq'] + "," + row +")' >"+data['container']+"</a>";
+		html += "</div>";
+		return html;
+	}
+	var editdetail = function(row, columnfield, value, defaulthtml, columnproperties){
+		arr = actions(row,columnfield,value,defaulthtml,columnproperties);
+		html = arr[0];
+		data = arr[1];
+		html +="&ensp;<a href='javascript:editButtonClick("+ data['seq'] + ")' ><i class='fa fa-edit' title='Edit Container Schedule'></i></a>";
+		html += "</div>";
+		return html;
 	}
 	var columns = [
-      { text: 'id', datafield: 'seq' , hidden:true},
+	  { text: 'Actions', datafield: 'Actions', cellsrenderer:editdetail,width:'5%',filterable: false},
+	  { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'terminalappointmentdatetime', datafield: 'terminalappointmentdatetime' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
       { text: 'lfdpickupdate', datafield: 'lfdpickupdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy'},
       { text: 'emptylfddate', datafield: 'emptylfddate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,
@@ -466,7 +485,7 @@ function loadGrid(){
       { text: 'containerreceivedinwmsdate', datafield: 'containerreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
       { text: 'samplesreceivedinwmsdate', datafield: 'samplesreceivedinwmsdate' , hidden:true,filtertype: 'date',cellsformat: 'M-dd-yyyy' } ,	
 
-      { text: 'Container', datafield: 'container',width:"10%",cellsrenderer:actions},
+      { text: 'Container', datafield: 'container',width:"10%",cellsrenderer:showitemdetail},
       { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
       { text: 'Trucker', datafield: 'truckername', width:"5%"},
       { text: 'Trans', datafield: 'trans', width:"7%"},
@@ -571,7 +590,7 @@ function loadGrid(){
         renderstatusbar: function (statusbar) {
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-            var editButton = $("<div title='Edit' alt='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+            //var editButton = $("<div title='Edit' alt='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload' alt='Reload' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
@@ -579,7 +598,7 @@ function loadGrid(){
             var deleteButton = $("<div title='Delete' alt='Delete' style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             
             container.append(addButton);
-            container.append(editButton);
+            //container.append(editButton);
             //container.append(importButton);
             container.append(exportButton);
             container.append(reloadButton);
@@ -587,7 +606,7 @@ function loadGrid(){
             container.append(deleteButton);
             statusbar.append(container);
             addButton.jqxButton({  width: 65, height: 18 });
-           	editButton.jqxButton({  width: 65, height: 18 });
+           	//editButton.jqxButton({  width: 65, height: 18 });
            // importButton.jqxButton({  width: 65, height: 18 });
             exportButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
@@ -596,20 +615,19 @@ function loadGrid(){
             addButton.click(function (event) {
                 location.href = ("createContainerSchedule.php");
             });
-            editButton.click(function (event){
-            	var selectedrowindex = $("#containerScheduleGrid").jqxGrid('selectedrowindexes');
-                var value = -1;
-                indexes = selectedrowindex.filter(function(item) { 
-                    return item !== value
-                })
-                if(indexes.length != 1){
-                    bootbox.alert("Please Select single row for edit.", function() {});
-                    return;    
-                }
-                var row = $('#containerScheduleGrid').jqxGrid('getrowdata', indexes);
-                $("#id").val(row.seq);                        
-                $("#form2").submit();    
-            });
+            // editButton.click(function (event){
+            // 	var selectedrowindex = $("#containerScheduleGrid").jqxGrid('selectedrowindexes');
+            //     var value = -1;
+            //     indexes = selectedrowindex.filter(function(item) { 
+            //         return item !== value
+            //     })
+            //     if(indexes.length != 1){
+            //         bootbox.alert("Please Select single row for edit.", function() {});
+            //         return;    
+            //     }
+            //     var row = $('#containerScheduleGrid').jqxGrid('getrowdata', indexes);
+            //     editButtonClick(row.seq);  
+            // });
             deleteButton.click(function (event) {
                 gridId = "containerScheduleGrid";
                 deleteUrl = "Actions/ContainerScheduleAction.php?call=deleteContainerSchedule";
