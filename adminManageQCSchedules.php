@@ -470,6 +470,15 @@ function showApprovalModel(qcscheduleSeq,isDisabled){
 var state;
 var isSelectAll = false;
 var selectedRows = [];
+// var seqs = [];
+// var itemIds = [];
+// function editButtonClick(seq,itemid){
+// 	$("#id").val(seq);  
+//     $("#seqs").val(seq);   
+//     $("#itemnumbers").val(itemid);
+//     $("#form2").attr('action', 'adminCreateQCSchedule.php');                         
+//     $("#form2").submit(); 
+// }
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
@@ -509,6 +518,14 @@ function loadGrid(){
         }	
     }
     
+    // var editrow = function (row, columnfield, value, defaulthtml, columnproperties) {
+    //     data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
+	// 	itemIds.push(data['itemnumbers']);
+	// 	var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
+    //         	html +="<a href='javascript:editButtonClick("+ data['seq'] + ",\"" + data['itemnumbers'] +"\")' ><i class='fa fa-edit' title='Edit QC Schedules'></i></a>";
+    //         html += "</div>";
+    //     return html;
+    // }
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: '<i style="font-size:16px" class="fa fa-thumbs-o-up"></i>', datafield: 'iscompleted', width:"3%", cellsrenderer:renderCompletedColumn},
@@ -654,7 +671,7 @@ function loadGrid(){
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Template</span></div>");
-          // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+            // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Weekly Report</span></div>");
             var exportPlannerButton = $("<div title='Export Planner Report' alt='Export Planner Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
             var updateButton = $("<div title='Update ShipDates' alt='Update ShipDates' style='float: left; margin-left: 5px;'><i class='fa fa-truck'></i><span style='margin-left: 4px; position: relative;'></span></div>");
