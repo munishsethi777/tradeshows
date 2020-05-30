@@ -534,40 +534,40 @@ class QCScheduleImportUtil
                 
             }
         }
-        if (! empty($shipDateStr)) {
-			$isValidDate = $this->validateDate($shipDateStr,"m/d/y");
-            if(!$isValidDate){
-                $messages[] = "Invalid Ship date";
-            }else{
-                $shipDate = $this->convertStrToDate($shipDateStr);
-                if($shipDate == null){
-                    $shipDate = $this->convertStrToDateTime($shipDateStr,"m/d/y");
-                }
-                $qcSchedule->setShipDate($shipDate);
-                $currentTime = new DateTime();
-                $currentTime->setTime(0,0);
-                $readyDate = clone $shipDate;
-                $readyDate->modify('-14 day');
-                $qcSchedule->setSCReadyDate($readyDate);
-                $finalInspectionDate = clone $shipDate;
-                $finalInspectionDate->modify('-10 day');
-                $qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-                $middleInspectionDate = clone $shipDate;
-                $middleInspectionDate->modify('-15 day');
-                $qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-                $firstInspectionDate = clone $shipDate;
-                $firstInspectionDate->modify('-35 day');
-                $qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-                $productionStartDate = clone $shipDate;
-                $productionStartDate->modify('-45 day');
-                $qcSchedule->setSCProductionStartDate($productionStartDate);
-                $graphicReceiveDate = clone $shipDate;
-                $graphicReceiveDate->modify('-30 day');
-                $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-            }
-        }else{
-            $messages[] = "Empty Ship Date Found";
-        }
+//         if (! empty($shipDateStr)) {
+// 			$isValidDate = $this->validateDate($shipDateStr,"m/d/y");
+//             if(!$isValidDate){
+//                 $messages[] = "Invalid Ship date";
+//             }else{
+//                 $shipDate = $this->convertStrToDate($shipDateStr);
+//                 if($shipDate == null){
+//                     $shipDate = $this->convertStrToDateTime($shipDateStr,"m/d/y");
+//                 }
+//                 $qcSchedule->setShipDate($shipDate);
+//                 $currentTime = new DateTime();
+//                 $currentTime->setTime(0,0);
+//                 $readyDate = clone $shipDate;
+//                 $readyDate->modify('-14 day');
+//                 $qcSchedule->setSCReadyDate($readyDate);
+//                 $finalInspectionDate = clone $shipDate;
+//                 $finalInspectionDate->modify('-10 day');
+//                 $qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
+//                 $middleInspectionDate = clone $shipDate;
+//                 $middleInspectionDate->modify('-15 day');
+//                 $qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
+//                 $firstInspectionDate = clone $shipDate;
+//                 $firstInspectionDate->modify('-35 day');
+//                 $qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
+//                 $productionStartDate = clone $shipDate;
+//                 $productionStartDate->modify('-45 day');
+//                 $qcSchedule->setSCProductionStartDate($productionStartDate);
+//                 $graphicReceiveDate = clone $shipDate;
+//                 $graphicReceiveDate->modify('-30 day');
+//                 $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
+//             }
+//         }else{
+//             $messages[] = "Empty Ship Date Found";
+//         }
         $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
         $qcSchedule->setSeq($seq);
         if(!empty($messages)){

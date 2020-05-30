@@ -450,10 +450,12 @@ class QCScheduleMgr{
 				//$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
 				//$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
 				//$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
-				$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
-
-				self::$dataStore->updateByAttributes($colValuePair, $condition);
-				$updatedItemCount++;
+				//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+                if(count($colValuePair) > 0){
+				    self::$dataStore->updateByAttributes($colValuePair, $condition);
+				    $updatedItemCount++;
+                }
+				
 			 }
 			catch ( Exception $e) {
 				$messages = $e->getMessage();
