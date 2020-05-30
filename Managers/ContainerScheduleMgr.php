@@ -56,11 +56,45 @@ class ContainerScheduleMgr{
 			if($isHotContainer == NULL){
 				$isHotContainer = "0";
 			}
+			if($containerSchedule["lfdpickupdate"] != NULL){
+				$containerSchedule["lfdpickupdate"] = DateUtil::convertDateToFormat($containerSchedule["lfdpickupdate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["containerreceivedinomsdate"] != NULL){
+				$containerSchedule["containerreceivedinomsdate"] = DateUtil::convertDateToFormat($containerSchedule["containerreceivedinomsdate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["containerreceivedinwmsdate"] != NULL){
+				$containerSchedule["containerreceivedinwmsdate"] = DateUtil::convertDateToFormat($containerSchedule["containerreceivedinwmsdate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["emptylfddate"] != NULL){
+				$containerSchedule["emptylfddate"] = DateUtil::convertDateToFormat($containerSchedule["emptylfddate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["emptyreturndate"] != NULL){
+				$containerSchedule["emptyreturndate"] = DateUtil::convertDateToFormat($containerSchedule["emptyreturndate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["emptynotesdatetime"] != NULL){
+				$containerSchedule["emptynotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["emptynotesdatetime"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["notificationnotesdatetime"] != NULL){
+				$containerSchedule["notificationnotesdatetime"] = DateUtil::convertDateToFormat($containerSchedule["notificationnotesdatetime"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["msrfcreateddate"] != NULL){
+				$containerSchedule["msrfcreateddate"] = DateUtil::convertDateToFormat($containerSchedule["msrfcreateddate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["samplesreceiveddate"] != NULL){
+				$containerSchedule["samplesreceiveddate"] = DateUtil::convertDateToFormat($containerSchedule["samplesreceiveddate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["samplesreceivedinomsdate"] != NULL){
+				$containerSchedule["samplesreceivedinomsdate"] = DateUtil::convertDateToFormat($containerSchedule["samplesreceivedinomsdate"],"Y-m-d","Y-m-d H:i:s");
+			}
+			if($containerSchedule["samplesreceivedinwmsdate"] != NULL){
+				$containerSchedule["samplesreceivedinwmsdate"] = DateUtil::convertDateToFormat($containerSchedule["samplesreceivedinwmsdate"],"Y-m-d","Y-m-d H:i:s");
+			}
 		    $containerSchedule["warehouse"] = $wareHouse;
 		    $containerSchedule["terminal"] = $terminal;
 		    $containerSchedule["truckername"] = $trucker;
 		    $lastModifiedOn = $containerSchedule["lastmodifiedon"];
-		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+			//$containerSchedule["terminalappointmentdatetime"] = DateUtil::convertDateToFormat($containerSchedule["terminalappointmentdatetime"],"Y-m-d","Y-m-d H:i:s");
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
 			$containerSchedule["lastmodifiedon"] = $lastModifiedOn;
 			$containerSchedule["ishotcontainer"] = $isHotContainer;
 		    array_push($mainArr,$containerSchedule);
