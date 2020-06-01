@@ -54,9 +54,9 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
     }
-    public function updateQCSchedulesWithActualDates($file){
+    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate){
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-		return $qcScheduleImportUtil->updateQCSchedules($file);
+		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
 	}
 
     public function bulkDeleteByImport($filePath){
@@ -373,7 +373,7 @@ class QCScheduleMgr{
 		$messages = "";
 		$itemNoAlreadyExists = 0;
 		$savedItemCount = 0;
-		$existingItemIds = array();
+		$updatingRowNos = array();
 		$success = 1;
 		foreach ($qcScheudleArr as $key=>$qc){
 			$itemNo = $qc->getItemNumbers();
@@ -382,13 +382,14 @@ class QCScheduleMgr{
 // 			}
 			$po =  $qc->getPo();
 			$shipDate = $qc->getShipdate();
-			$qc->setStatus(null);
+			//$qc->setStatus(null);
 			try {
 				if(!$isUpdate){
 					$this->saveQCSchedule($conn, $qc);
 					$savedItemCount++;
 				}else{
-				    if($this->in_array_r($itemNo, $updateItemNos)){
+					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
+				    if($this->in_array_r($rowNo, $updateItemNos)){
 						$condition["itemnumbers"] = $itemNo;
 						$condition["po"] = $po;
 						if ($shipDate instanceof DateTime) {
@@ -403,14 +404,18 @@ class QCScheduleMgr{
 				$trace = $e->getTrace();
 				if($trace[0]["args"][0][1] == "1062"){
 					$itemNoAlreadyExists++;
-					$rowNo = $this->getRowNumberByItemId($rowAndItemNo,$itemNo,$po);
-					if(!array_key_exists($rowNo, $existingItemIds)){
-					    $existingItemIds[$rowNo] = array();
-					}
-					array_push($existingItemIds[$rowNo],$itemNo);
+					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
+					$updatingRowNos[$rowNo] = $rowNo;
+					// if(!array_key_exists($rowNo, $existingItemIds)){
+					//     $existingItemIds[$rowNo] = array();
+					// }
+					// array_push($existingItemIds[$rowNo],$itemNo);
+					// array_push($existingItemIds[$rowNo],$po);
+					// array_push($existingItemIds[$rowNo],$shipDate);
 				}else{
 					$messages .= $e->getMessage();
 				}
+				$_SESSION["rowsToBeUpdate"] = $updatingRowNos;
 				$hasError = true;
 				$success = 0;
 			}
@@ -423,7 +428,7 @@ class QCScheduleMgr{
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		$response["savedItemCount"] = $savedItemCount;
-		$response["existingItemIds"] = $existingItemIds;
+		$response["existingItemIds"] = "";
 		return $response;
 	}
 	
@@ -440,22 +445,35 @@ class QCScheduleMgr{
 			try {
 				$condition["seq"] = $seq;
 				$colValuePair = array();
-				//$colValuePair["shipdate"] = $qc->getShipdate();
 				if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipDate() == "") ){
 					$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
 				}
-				//$colValuePair['screadydate'] = $qc->getScReadyDate();
-				//$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
-				//$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
-				//$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
-				//$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
-				//$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
-				//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
-                if(count($colValuePair) > 0){
-				    self::$dataStore->updateByAttributes($colValuePair, $condition);
-				    $updatedItemCount++;
-                }
-				
+				if(!($qc->getShipDate() == null) or !($qc->getShipDate() == "") ){
+					$colValuePair['shipdate'] = $qc->getShipDate();
+				}
+				if(!($qc->getScReadyDate() == null) or !($qc->getScReadyDate() == "")){
+					$colValuePair['screadydate'] = $qc->getScReadyDate();
+				}
+				if(!($qc->getScFinalInspectionDate() == null) or !($qc->getScFinalInspectionDate() == "")){
+					$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
+				}
+				if(!($qc->getScMiddleInspectionDate() == null) or !($qc->getScMiddleInspectionDate() == "")){
+					$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
+				}
+				if(!($qc->getScFirstInspectionDate() == null) or !($qc->getScFirstInspectionDate() == "")){
+					$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
+				}
+				if(!($qc->getScProductionStartDate() == null) or !($qc->getScProductionStartDate() == "")){
+					$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
+				}
+				if(!($qc->getSCGraphicsReceiveDate() == null) or !($qc->getSCGraphicsReceiveDate() == "")){
+					$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
+				}
+				if(!($qc->getLastModifiedOn() == null) or !($qc->getLastModifiedOn() == "")){
+					//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+				}
+				self::$dataStore->updateByAttributes($colValuePair, $condition);
+				$updatedItemCount++;
 			 }
 			catch ( Exception $e) {
 				$messages = $e->getMessage();
@@ -482,7 +500,16 @@ class QCScheduleMgr{
 	    }
 	    return $rowNumber;
 	}
-	
+	public function getRowNumberByItemIdAndShipDate($array,$itemNo,$po,$shipdate){
+		$rowNumber = 0;
+		foreach($array as $key => $value){
+			$i = $itemNo.$po.$shipdate;
+			if(in_array($i,$value)){
+				$rowNumber = $key;
+			}
+		}
+		return $rowNumber;
+	}
 	private function validateNumeric($val,$fieldName){
 		$message = "";
 		$val = str_replace(",", "", $val);

@@ -176,14 +176,18 @@ if($call == "importQCSchedules"){
 				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
-			$updateIds = $_POST["updateIds"];
-			$updateIds = json_decode($updateIds,true);
+			//$updateIds = $_POST["updateIds"];
+			//$updateIds = json_decode($updateIds,true);
+			$updateIds = $_SESSION['rowsToBeUpdate'];
 		}
 		$isCompleted = $_POST["iscompleted"];
 		if(isset($_FILES["file"])){
 			//$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
 		    $response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updateIds,$isCompleted);
 			echo json_encode($response);
+			if($response["success"] == 1){
+				unset($_SESSION['rowsToBeUpdate']);
+			}
 			return;
 		}
 	}catch(Exception $e){
@@ -250,7 +254,15 @@ if($call == "deleteQCSchedule"){
 if($call == "updateQCSchedules"){
 	try{
 		if(isset($_FILES["file"])){
-		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"]);
+			$isUpdateShipDateAndScheduleDates = false;
+			$isUpdateLatestShipDate = false;
+			if(isset($_REQUEST["updateShipDateAndScheduleDates"])){
+				$isUpdateShipDateAndScheduleDates = true;
+			}
+			if(isset($_REQUEST['updateLatestShipDate'])){
+				$isUpdateLatestShipDate = true;
+			}
+		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"],$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
 			echo json_encode($response);
 			return;
 		}

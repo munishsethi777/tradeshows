@@ -36,7 +36,17 @@ if(isset($_REQUEST["isCompleted"])){
                      	<input type="hidden" id ="password" name="password"/>
                      	<input type="hidden" id ="isupdate" name="isupdate"  value="0"/>
                      	<input type="hidden" id ="iscompleted" name="iscompleted"  value="<?php echo $isCompleted?>"/>
-                     	<div class="form-group row">
+						 <div class="form-group row i-checksnormal">
+							<div class="col-lg-offset-2 col-lg-8">
+								<input type="checkbox" id="InsertCase" name="InsertCase" disabled checked> Import Case (QC, PoIncharge, Class Code, PO#, PO Type, Item No, Ship Date, Latest Ship Date, Actual Ready Date, Actual Final Inspection Date, Actual Middle Inspection Date, Actual First Inspection Date, Actual Production Start Date, Actual Graphics Receive Date, Actual Final Inspection Notes, Status, Completed) 
+							</div>
+						</div>
+						<div class="form-group row i-checksnormal">
+							<div class="col-lg-offset-2 col-lg-8">
+								<input type="checkbox" id="updateCase" name="updateCase" disabled checked> Update Case (QC, PoIncharge, Class Code, PO Type, Latest Ship Date, Actual Ready Date, Actual Final Inspection Date, Actual Middle Inspection Date, Actual First Inspection Date, Actual Production Start Date, Actual Graphics Receive Date, Actual Final Inspection Notes, Status, Completed)
+							</div>
+						</div>  
+						 <div class="form-group row">
                        		<label class="col-lg-2 col-form-label">Select file to import</label>
                         	<div class="col-lg-8">
                             	<input type="file" id="title" name="file" class="form-control">
@@ -153,4 +163,10 @@ function saveAction(){
 		$("#importQCScheduleForm")[0].reportValidity();
 	}
 }
+$(document).ready(function() {
+		$('.i-checksnormal').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});
+	});
 </script>'
