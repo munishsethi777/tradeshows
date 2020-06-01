@@ -448,6 +448,9 @@ class QCScheduleMgr{
 				if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipDate() == "") ){
 					$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
 				}
+				if(!($qc->getShipDate() == null) or !($qc->getShipDate() == "") ){
+					$colValuePair['shipdate'] = $qc->getShipDate();
+				}
 				if(!($qc->getScReadyDate() == null) or !($qc->getScReadyDate() == "")){
 					$colValuePair['screadydate'] = $qc->getScReadyDate();
 				}
@@ -467,7 +470,7 @@ class QCScheduleMgr{
 					$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
 				}
 				if(!($qc->getLastModifiedOn() == null) or !($qc->getLastModifiedOn() == "")){
-					$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+					//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
 				}
 				self::$dataStore->updateByAttributes($colValuePair, $condition);
 				$updatedItemCount++;
