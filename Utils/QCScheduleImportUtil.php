@@ -66,7 +66,7 @@ class QCScheduleImportUtil
         return self::$qcImportUtil;
     }
 
-    public function importQCSchedules($file, $isUpdate, $updateItemNos,$isCompleted)
+    public function importQCSchedules($file, $isUpdate, $updatingRowNumbers,$isCompleted)
     {
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
@@ -75,7 +75,7 @@ class QCScheduleImportUtil
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try {
             if(empty($isCompleted)){
-                return $this->validateAndSaveFile($sheetData, $isUpdate, $updateItemNos);
+                return $this->validateAndSaveFile($sheetData, $isUpdate, $updatingRowNumbers);
             }else{
                 return $this->marksAsCompleted($sheetData);
             }
@@ -185,7 +185,7 @@ class QCScheduleImportUtil
     }
     
     
-    public function validateAndSaveFile($sheetData, $isUpdate, $updateItemNos)
+    public function validateAndSaveFile($sheetData, $isUpdate, $updatingRowNumbers)
     {
         $this->fieldNames = $sheetData[0];
         $itemNoAlreadyExists = 0;
@@ -202,25 +202,25 @@ class QCScheduleImportUtil
                 continue;
             }
             if ($isUpdate) {
-                if (!isset($updateItemNos[$row])) {
+                if (!isset($updatingRowNumbers[$row])) {
                     continue;
                 }
             }
             if($key == 0){
                 continue;
             }
-            $imoptedData = array();
+            $importedData = array();
             try {
-                    $imoptedData = $this->getImportedData($data);
+                    $importedData = $this->getImportedData($data);
             } catch (Exception $e) {
                 $messages .= "Error on row no $row - " . $e->getMessage() . "<br>";
                 $success = 0;
             }
-            if (empty($imoptedData)) {
+            if (empty($importedData)) {
                 continue;
             }
-            $qcschedule = $imoptedData["data"];
-            $itemIdsArr = $imoptedData["items"];
+            $qcschedule = $importedData["importingQCObj"];
+            $itemIdsArr = $importedData["items"];
             $itemNoArr = array();
             foreach ($itemIdsArr as $itemId) {
                 if (empty($itemId)) {
@@ -240,7 +240,7 @@ class QCScheduleImportUtil
         $response["itemalreadyexists"] = $itemNoAlreadyExists;
         if (empty($messages)) {
             $qcscheduleMgr = QCScheduleMgr::getInstance();
-            $response = $qcscheduleMgr->saveArr($qcScheudleArr, $isUpdate, $rowAndItemNo, $updateItemNos);
+            $response = $qcscheduleMgr->saveArr($qcScheudleArr, $isUpdate, $rowAndItemNo, $updatingRowNumbers);
         }
         return $response;
     }
@@ -429,32 +429,26 @@ class QCScheduleImportUtil
                 $readyDate = clone $shipDate;
                 $readyDate->modify('-14 day');
                 $qcSchedule->setSCReadyDate($readyDate);
-                // $qcSchedule->setAPReadyDate($readyDate);
-
+                
                 $finalInspectionDate = clone $shipDate;
                 $finalInspectionDate->modify('-10 day');
                 $qcSchedule->setSCFinalInspectionDate($finalInspectionDate);
-                // $qcSchedule->setAPFinalInspectionDate($finalInspectionDate);
-
+                
                 $middleInspectionDate = clone $shipDate;
                 $middleInspectionDate->modify('-15 day');
                 $qcSchedule->setSCMiddleInspectionDate($middleInspectionDate);
-                // $qcSchedule->setAPMiddleInspectionDate($middleInspectionDate);
-
+                
                 $firstInspectionDate = clone $shipDate;
                 $firstInspectionDate->modify('-35 day');
                 $qcSchedule->setSCFirstInspectionDate($firstInspectionDate);
-                // $qcSchedule->setAPFirstInspectionDate($firstInspectionDate);
-
+                
                 $productionStartDate = clone $shipDate;
                 $productionStartDate->modify('-45 day');
                 $qcSchedule->setSCProductionStartDate($productionStartDate);
-                // $qcSchedule->setAPProductionStartDate($productionStartDate);
-
+                
                 $graphicReceiveDate = clone $shipDate;
                 $graphicReceiveDate->modify('-30 day');
                 $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
-                // $qcSchedule->setAPGraphicsReceiveDate($graphicReceiveDate);
             }
         }   
         if (! empty($latestShipDateStr)) {
@@ -520,7 +514,7 @@ class QCScheduleImportUtil
         }
         $importedData = array();
         $importedData["items"] = $itemNoArr;
-        $importedData["data"] = $qcSchedule;
+        $importedData["importingQCObj"] = $qcSchedule;
         return $importedData;
     }
 

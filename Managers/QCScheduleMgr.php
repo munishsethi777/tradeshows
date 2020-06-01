@@ -50,9 +50,9 @@ class QCScheduleMgr{
     	self::$dataStore->updateObject($item, $condition, $conn);
     }
 	
-    public function importQCSchedulesWithActualDates($file,$isUpdate,$updateItemNos,$isCompeted){
+    public function importQCSchedulesWithActualDates($file,$isUpdate,$updatingRowNumbers,$isCompeted){
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updateItemNos,$isCompeted);
+        return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
     }
     public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate){
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
@@ -365,7 +365,7 @@ class QCScheduleMgr{
 	   //}
 	}
 	
-	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updateItemNos){
+	public function saveArr($qcScheudleArr,$isUpdate,$rowAndItemNo,$updatingRowNumbers){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -377,19 +377,15 @@ class QCScheduleMgr{
 		$success = 1;
 		foreach ($qcScheudleArr as $key=>$qc){
 			$itemNo = $qc->getItemNumbers();
-// 			if(strtolower($qc->getStatus()) != "pending"){
-// 			    continue;
-// 			}
 			$po =  $qc->getPo();
 			$shipDate = $qc->getShipdate();
-			//$qc->setStatus(null);
 			try {
 				if(!$isUpdate){
 					$this->saveQCSchedule($conn, $qc);
 					$savedItemCount++;
 				}else{
 					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
-				    if($this->in_array_r($rowNo, $updateItemNos)){
+				    if($this->in_array_r($rowNo, $updatingRowNumbers)){
 						$condition["itemnumbers"] = $itemNo;
 						$condition["po"] = $po;
 						if ($shipDate instanceof DateTime) {
@@ -406,12 +402,6 @@ class QCScheduleMgr{
 					$itemNoAlreadyExists++;
 					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
 					$updatingRowNos[$rowNo] = $rowNo;
-					// if(!array_key_exists($rowNo, $existingItemIds)){
-					//     $existingItemIds[$rowNo] = array();
-					// }
-					// array_push($existingItemIds[$rowNo],$itemNo);
-					// array_push($existingItemIds[$rowNo],$po);
-					// array_push($existingItemIds[$rowNo],$shipDate);
 				}else{
 					$messages .= $e->getMessage();
 				}
@@ -470,7 +460,7 @@ class QCScheduleMgr{
 					$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
 				}
 				if(!($qc->getLastModifiedOn() == null) or !($qc->getLastModifiedOn() == "")){
-					//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+					$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
 				}
 				self::$dataStore->updateByAttributes($colValuePair, $condition);
 				$updatedItemCount++;

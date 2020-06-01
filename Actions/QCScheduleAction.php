@@ -166,7 +166,7 @@ if($call == "importQCSchedules"){
 	try{
 		$isUpdate = false;
 		$incorrectPassword = 0;
-		$updateIds = array();
+		$updatingRowNumbers = array();
 		if(isset($_POST["isupdate"]) && !empty($_POST["isupdate"])){
 			$password = $_POST["password"];
 			$configurationMgr = ConfigurationMgr::getInstance();
@@ -176,14 +176,11 @@ if($call == "importQCSchedules"){
 				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
-			//$updateIds = $_POST["updateIds"];
-			//$updateIds = json_decode($updateIds,true);
-			$updateIds = $_SESSION['rowsToBeUpdate'];
+			$updatingRowNumbers = $_SESSION['rowsToBeUpdate'];
 		}
 		$isCompleted = $_POST["iscompleted"];
 		if(isset($_FILES["file"])){
-			//$response = $qcScheduleMgr->importQCSchedules($_FILES["file"],$isUpdate,$updateIds);
-		    $response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updateIds,$isCompleted);
+			$response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updatingRowNumbers,$isCompleted);
 			echo json_encode($response);
 			if($response["success"] == 1){
 				unset($_SESSION['rowsToBeUpdate']);
@@ -261,6 +258,9 @@ if($call == "updateQCSchedules"){
 			}
 			if(isset($_REQUEST['updateLatestShipDate'])){
 				$isUpdateLatestShipDate = true;
+			}
+			if(!$isUpdateShipDateAndScheduleDates && !$isUpdateLatestShipDate){
+			    throw new Exception("No Option selected. You need to select atleast one option");
 			}
 		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"],$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
 			echo json_encode($response);
