@@ -500,7 +500,7 @@ class GraphicLogMgr{
 	
 	public function getForProjectOverDue(){
 	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
-	    $query = $this->select . "where finalgraphicsduedate < '$currentDate'";
+	    $query = $this->select . "where finalgraphicsduedate < '$currentDate' and graphiccompletiondate IS NULL ";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}

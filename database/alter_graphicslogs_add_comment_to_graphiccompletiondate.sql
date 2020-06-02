@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` CHANGE `graphiccompletiondate` `graphiccompletiondate` DATE NULL DEFAULT NULL COMMENT 'this is submitted to china date';
