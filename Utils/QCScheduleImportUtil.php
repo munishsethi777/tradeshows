@@ -1,7 +1,7 @@
 <?php
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/QCScheduleMgr.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Enums/ReasonCodeType.php';
-
+require_once $ConstantsArray['dbServerUrl'] . "log4php/Logger.php";
 class QCScheduleImportUtil
 {
     private $fieldNames;
@@ -187,6 +187,7 @@ class QCScheduleImportUtil
     
     public function validateAndSaveFile($sheetData, $isUpdate, $updatingRowNumbers)
     {
+        $logger = Logger::getLogger("logger");
         $this->fieldNames = $sheetData[0];
         $itemNoAlreadyExists = 0;
         $success = 1;
@@ -240,11 +241,13 @@ class QCScheduleImportUtil
         $response["itemalreadyexists"] = $itemNoAlreadyExists;
         if (empty($messages)) {
             $qcscheduleMgr = QCScheduleMgr::getInstance();
+            $logger->info("\n\n\n\n\n QCSchedules are about to be Inserted by import process");
             $response = $qcscheduleMgr->saveArr($qcScheudleArr, $isUpdate, $rowAndItemNo, $updatingRowNumbers);
         }
         return $response;
     }
     public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
+        $logger = Logger::getLogger("logger");
         $this->fieldNames = $sheetData[0];
         $success = 1;
         $messages = "";
@@ -284,6 +287,7 @@ class QCScheduleImportUtil
         $response["success"] = $success;
         if (empty($messages)) {
             $qcscheduleMgr = QCScheduleMgr::getInstance();
+            $logger->info("\n\n\n\n\n QCSchedule is about to be updated by Import Process");
             $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
         }
         return $response;
@@ -528,7 +532,7 @@ class QCScheduleImportUtil
         if(strtolower($data[array_search("Completed",$labels)]) == "yes"){
             $isCompleted = "1";
         }else{
-            $isCompleted = null;
+            $isCompleted = "0";
         }
         if(empty($seq)){
             $messages[] = "ID is invalid,";
