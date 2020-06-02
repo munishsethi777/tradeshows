@@ -259,10 +259,13 @@ if($call == "updateQCSchedules"){
 			if(isset($_REQUEST['updateLatestShipDate'])){
 				$isUpdateLatestShipDate = true;
 			}
-			if(!$isUpdateShipDateAndScheduleDates && !$isUpdateLatestShipDate){
-			    throw new Exception("No Option selected. You need to select atleast one option");
+			$isCompletionStatus = false;
+			if(isset($_REQUEST['updateCompetionStatus'])){
+				$isCompletionStatus = true;
 			}
-		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"],$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
+			if(!$isUpdateShipDateAndScheduleDates && !$isUpdateLatestShipDate && !$isCompletionStatus)
+			    throw new Exception("No Option selected. You need to select atleast one option");
+		    $response = $qcScheduleMgr->updateQCSchedulesWithActualDates($_FILES["file"],$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
 			echo json_encode($response);
 			return;
 		}

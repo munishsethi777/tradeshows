@@ -54,9 +54,9 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
     }
-    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate){
+    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
+		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
 	}
 
     public function bulkDeleteByImport($filePath){
@@ -422,7 +422,7 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
-	public function updateQCScheduleDates($qcScheudleArr){
+	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -435,33 +435,24 @@ class QCScheduleMgr{
 			try {
 				$condition["seq"] = $seq;
 				$colValuePair = array();
-				if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipDate() == "") ){
-					$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
+				if($isUpdateLatestShipDate){
+					if(!($qc->getLatestShipDate() == null) or !($qc->getLatestShipdate() == ""))
+						$colValuePair['latestshipdate'] = $qc->getLatestShipDate();
 				}
-				if(!($qc->getShipDate() == null) or !($qc->getShipDate() == "") ){
-					$colValuePair['shipdate'] = $qc->getShipDate();
+				if($isUpdateShipDateAndScheduleDates){
+					if(!($qc->getShipDate() == null) or !($qc->getShipdate() == "")){
+						$colValuePair['shipdate'] = $qc->getShipDate();
+						$colValuePair['screadydate'] = $qc->getScReadyDate();
+						$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
+						$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
+						$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
+						$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
+						$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
+					}
 				}
-				if(!($qc->getScReadyDate() == null) or !($qc->getScReadyDate() == "")){
-					$colValuePair['screadydate'] = $qc->getScReadyDate();
-				}
-				if(!($qc->getScFinalInspectionDate() == null) or !($qc->getScFinalInspectionDate() == "")){
-					$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
-				}
-				if(!($qc->getScMiddleInspectionDate() == null) or !($qc->getScMiddleInspectionDate() == "")){
-					$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
-				}
-				if(!($qc->getScFirstInspectionDate() == null) or !($qc->getScFirstInspectionDate() == "")){
-					$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
-				}
-				if(!($qc->getScProductionStartDate() == null) or !($qc->getScProductionStartDate() == "")){
-					$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
-				}
-				if(!($qc->getSCGraphicsReceiveDate() == null) or !($qc->getSCGraphicsReceiveDate() == "")){
-					$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
-				}
-				if(!($qc->getLastModifiedOn() == null) or !($qc->getLastModifiedOn() == "")){
-					$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
-				}
+				//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
+				if($isCompletionStatus)
+					$colValuePair['iscompleted'] = $qc->getIsCompleted();
 				self::$dataStore->updateByAttributes($colValuePair, $condition);
 				$updatedItemCount++;
 			 }

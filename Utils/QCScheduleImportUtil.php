@@ -84,14 +84,14 @@ class QCScheduleImportUtil
         }
     }
     
-    public function updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate){
+    public function updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
         $sheet = $objPHPExcel->getActiveSheet();
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try{
-            return $this->validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
+            return $this->validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
         }catch(Exception $e){
             throw $e;
         }
@@ -244,7 +244,7 @@ class QCScheduleImportUtil
         }
         return $response;
     }
-    public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate){
+    public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
         $this->fieldNames = $sheetData[0];
         $success = 1;
         $messages = "";
@@ -265,7 +265,7 @@ class QCScheduleImportUtil
                     
                 }else{
                     try{
-                        $qcSchedule = $this->getUpdatingData($data,$labels,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate);
+                        $qcSchedule = $this->getUpdatingData($data,$labels);
                         array_push($qcScheduleArr, $qcSchedule);
                     }catch (Exception $e){
                         $messages .= "Error found on row " . $row ." - ". $e->getMessage() . "<br>";
@@ -284,7 +284,7 @@ class QCScheduleImportUtil
         $response["success"] = $success;
         if (empty($messages)) {
             $qcscheduleMgr = QCScheduleMgr::getInstance();
-            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr);
+            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
         }
         return $response;
     }
@@ -518,18 +518,23 @@ class QCScheduleImportUtil
         return $importedData;
     }
 
-    private function getUpdatingData($data,$labels,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate)
+    private function getUpdatingData($data,$labels)
     {
         $messages = array();
         $seq = $data[array_search("ID",$labels)];
         $seq = trim($seq);
+        if(strtolower($data[array_search("Completed",$labels)]) == "yes"){
+            $isCompleted = "1";
+        }else{
+            $isCompleted = null;
+        }
         if(empty($seq)){
             $messages[] = "ID is invalid,";
         }
         $latestShipDateStr = $data[array_search('Latest Ship Date',$labels)];
         $shipDateStr = $data[array_search('Ship Date', $labels)];
         $qcSchedule = new QCSchedule();
-        if($isUpdateLatestShipDate){
+        
             if(!empty($latestShipDateStr)){
                 $latestshipdate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
                 if($latestshipdate){
@@ -538,8 +543,8 @@ class QCScheduleImportUtil
                     $messages[] = " Invalid Latest Ship Date";
                 }
             }
-        }
-        if($isUpdateShipDateAndScheduleDates){
+        
+       
             if (! empty($shipDateStr)) {
 		       	$shipDate = $this->ConvertToDate($shipDateStr,"m/d/y");
                 if(!$shipDate){
@@ -570,9 +575,10 @@ class QCScheduleImportUtil
             }else{
                $messages[] = "Empty Ship Date Found";
             }
-        }
+        
         $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
         $qcSchedule->setSeq($seq);
+        $qcSchedule->setIsCompleted($isCompleted);
         if(!empty($messages)){
             throw new Exception(implode(",",$messages));
         }
