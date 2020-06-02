@@ -506,6 +506,8 @@ class QCScheduleImportUtil
         }
         if(!empty($isCompleted) and strtolower($isCompleted) == "yes"){
             $qcSchedule->setIsCompleted("1");
+        }else{
+            $qcSchedule->setIsCompleted("0");
         }
         $qcSchedule->setCreatedOn(DateUtil::getCurrentDate());
         $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
