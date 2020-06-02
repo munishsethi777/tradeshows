@@ -74,11 +74,8 @@ class QCScheduleImportUtil
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try {
-            if(empty($isCompleted)){
-                return $this->validateAndSaveFile($sheetData, $isUpdate, $updatingRowNumbers);
-            }else{
-                return $this->marksAsCompleted($sheetData);
-            }
+            return $this->validateAndSaveFile($sheetData, $isUpdate, $updatingRowNumbers);
+            //return $this->marksAsCompleted($sheetData);
         } catch (Exception $e) {
             throw $e;
         }

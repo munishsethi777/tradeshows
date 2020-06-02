@@ -667,7 +667,7 @@ function loadGrid(){
             var editButton = $("<div title='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var bulkEditButton = $("<div title='Bulk Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Bulk Edit</span></div>");
             var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
-            var importCompletedButton = $("<div title='Import Completed Data' alt='Import Completed Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
+            //var importCompletedButton = $("<div title='Import Completed Data' alt='Import Completed Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Template</span></div>");
@@ -693,7 +693,7 @@ function loadGrid(){
             
             <?php if($sessionUtil->isSessionAdmin()){?>
 	            container.append(importButton);
-	            container.append(importCompletedButton);
+	            //container.append(importCompletedButton);
 	            container.append(updateButton);
             <?php }?>
             <?php if($hasWeeklyReportButtonPermission){?>
@@ -709,7 +709,7 @@ function loadGrid(){
 
            	<?php if($sessionUtil->isSessionAdmin()){?>
 	            importButton.jqxButton({ width: 40, height: 18 });
-	            importCompletedButton.jqxButton({ width: 40, height: 18 });
+	            //importCompletedButton.jqxButton({ width: 40, height: 18 });
 	            updateButton.jqxButton({  width:40, height:18})
 			<?php }?>
             exportButton.jqxButton({width: 65, height: 18 });
@@ -807,9 +807,9 @@ function loadGrid(){
             importButton.click(function (event) {
                 location.href = ("adminImportQCSchedules.php");
             });
-            importCompletedButton.click(function (event) {
-            	importCompeleted();
-            });
+            // importCompletedButton.click(function (event) {
+            // 	importCompeleted();
+            // });
              exportButton.click(function (event) {
          	   filterQstr = getFilterString("qcscheduleGrid");
          	   exportItemsConfirm(filterQstr);

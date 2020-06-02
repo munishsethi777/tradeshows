@@ -405,7 +405,7 @@ class QCScheduleMgr{
 				}else{
 					$messages .= $e->getMessage();
 				}
-				$_SESSION["rowsToBeUpdate"] = $updatingRowNos;
+				$_SESSION["qcScheduleRowsToBeUpdate"] = $updatingRowNos;
 				$hasError = true;
 				$success = 0;
 			}

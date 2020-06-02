@@ -176,14 +176,14 @@ if($call == "importQCSchedules"){
 				throw new Exception(StringConstants::INCORRECT_PASSWORD);
 			}
 			$isUpdate = true;
-			$updatingRowNumbers = $_SESSION['rowsToBeUpdate'];
+			$updatingRowNumbers = $_SESSION['qcScheduleRowsToBeUpdate'];
 		}
 		$isCompleted = $_POST["iscompleted"];
 		if(isset($_FILES["file"])){
 			$response = $qcScheduleMgr->importQCSchedulesWithActualDates($_FILES["file"],$isUpdate,$updatingRowNumbers,$isCompleted);
 			echo json_encode($response);
 			if($response["success"] == 1){
-				unset($_SESSION['rowsToBeUpdate']);
+				unset($_SESSION['qcScheduleRowsToBeUpdate']);
 			}
 			return;
 		}
