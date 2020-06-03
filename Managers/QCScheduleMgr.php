@@ -161,30 +161,32 @@ class QCScheduleMgr{
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
 		$sessionUtil = SessionUtil::getInstance();
-		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
-		$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-		$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-		$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, poinchargeuser,qcschedules.* from qcschedules 
-		left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
-		left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
-		left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
-		if($isSessionGeneralUser){
-			if(count($myTeamMembersArr) == 0){
-				$query .= " where users.seq = $loggedInUserSeq ";
-			}else{
-				$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-				$query .= " where users.seq in($myTeamMembersCommaSeparated)";
-			}
-			if(!empty($qcscheduleSeqs)){
-			    $query .= " and qcschedules.seq in ($qcscheduleSeqs)";
-			}
-		}else{
-		    if(!empty($qcscheduleSeqs)){
-		        $query .= " where qcschedules.seq in ($qcscheduleSeqs)";
-		    }
-		}
 		$qcSchedules = array();
-		$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
+		if($_GET['exportOption'] != "template"){
+			$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+			$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+			$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
+			$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, poinchargeuser,qcschedules.* from qcschedules 
+			left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+			left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+			left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+			if($isSessionGeneralUser){
+				if(count($myTeamMembersArr) == 0){
+					$query .= " where users.seq = $loggedInUserSeq ";
+				}else{
+					$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+					$query .= " where users.seq in($myTeamMembersCommaSeparated)";
+				}
+				if(!empty($qcscheduleSeqs)){
+				    $query .= " and qcschedules.seq in ($qcscheduleSeqs)";
+				}
+			}else{
+			    if(!empty($qcscheduleSeqs)){
+			        $query .= " where qcschedules.seq in ($qcscheduleSeqs)";
+			    }
+			}
+			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
+		}
 		PHPExcelUtil::exportQCSchedules($qcSchedules);
 	}
 	

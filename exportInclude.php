@@ -19,11 +19,14 @@
                                 <div class="form-group">
                                     <div class="col-sm-10">
                                         <div class="row">
-                                            <div class="col-sm-5">
+                                            <div class="col-sm-4">
                                                 <input type="radio" value="selectedRows" checked="checked" name="exportOption" id="selected"> Selected Rows
                                             </div>
                                             <div class="col-sm-4">
                                                 <input type="radio" value="allRows" name="exportOption" id="all"> All Rows
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input type="radio" value="template" name="exportOption" id="all"> Empty Template
                                             </div>
                                         </div>
                                     </div>
