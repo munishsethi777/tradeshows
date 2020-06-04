@@ -375,6 +375,7 @@ class QCScheduleMgr{
 		$messages = "";
 		$itemNoAlreadyExists = 0;
 		$savedItemCount = 0;
+		$updateItemCount = 0;
 		$updatingRowNos = array();
 		$success = 1;
 		foreach ($qcScheudleArr as $key=>$qc){
@@ -395,6 +396,7 @@ class QCScheduleMgr{
 						}
 						$condition["shipdate"] = $shipDate;
 						$this->updateOject($conn, $qc, $condition);
+						$updateItemCount++;
 					}
 				}
 			 }
@@ -420,6 +422,10 @@ class QCScheduleMgr{
 		$response["success"] = $success;
 		$response["itemalreadyexists"] = $itemNoAlreadyExists;
 		$response["savedItemCount"] = $savedItemCount;
+		if(!$isUpdate){
+			$_SESSION['numberOfInsertedNewCases'] = $savedItemCount;
+		}
+		$response["updatedItemCount"] = $updateItemCount;
 		$response["existingItemIds"] = "";
 		return $response;
 	}

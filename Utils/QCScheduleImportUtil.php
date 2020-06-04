@@ -241,6 +241,10 @@ class QCScheduleImportUtil
             $logger->info("\n\n\n\n\n QCSchedules are about to be Inserted by import process");
             $response = $qcscheduleMgr->saveArr($qcScheudleArr, $isUpdate, $rowAndItemNo, $updatingRowNumbers);
         }
+        if($isUpdate){
+            $response["savedItemCount"] = $_SESSION['numberOfInsertedNewCases'];
+            unset($_SESSION['numberOfInsertedNewCases']);
+        }
         return $response;
     }
     public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
@@ -413,7 +417,7 @@ class QCScheduleImportUtil
         }
   
         if (! empty($shipDateStr)) {
-            $shipDate = $this->ConvertToDate($shipDateStr,"m/d/Y");
+            $shipDate = $this->ConvertToDate($shipDateStr,"m/d/y");
             if(!$shipDate){
                 $messages[] = " Invalid Ship date";
             }else{
@@ -453,7 +457,7 @@ class QCScheduleImportUtil
             }
         }   
         if (! empty($latestShipDateStr)) {
-        	$latestShipDate = $this->ConvertToDate($latestShipDateStr,"m/d/Y");
+        	$latestShipDate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
             if(!$latestShipDate){
                 $messages[] = " Invalid Latest Ship Date";
             }else{

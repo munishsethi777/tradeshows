@@ -69,7 +69,28 @@ if(isset($_REQUEST["isCompleted"])){
         </div>
      </div>   	
     </div>
-    </div>
+	</div>
+		<div id="resultModelForm" class="modal fade" data-backdrop="static" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Result Of Import</h4> 
+					</div>
+					<div class="modal-body mainDiv">
+						<div class="row">
+							<div class="col-sm-12">
+								<form role="form" class="form-horzontal">
+									<div class="responseOfResult" id="responseOfResult"></div>
+									<div class="modal-footer">
+										<button type="button" id="noBtn" class="btn btn-primary" onclick="no(this)" data-dismiss="modal">Ok</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
        <div id="createNewModalForm" class="modal fade" data-backdrop="static"  aria-hidden="true">
 	        <div class="modal-dialog" >
 	            <div class="modal-content">
@@ -150,9 +171,12 @@ function saveAction(){
 				   alert(jsonData.message);
 			   }else{
 				   $('#createNewModalForm').modal('hide');
+				   $('#resultModelForm').modal('show');
+				   message = jsonData.savedItemCount + " QC Schedules imported successfully.<br>" + jsonData.updatedItemCount + " QC Schedules updated successfully.";
+				   $("#responseOfResult").html(message);
 				   var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
 				   if(flag){
-					  window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
+					  //window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
 				   }   
 			   }
 		   }
