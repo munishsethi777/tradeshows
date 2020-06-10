@@ -670,7 +670,7 @@ function loadGrid(){
             //var importCompletedButton = $("<div title='Import Completed Data' alt='Import Completed Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'></span></div>");
             var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div title='Reload Data' alt='Reload Data' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-            var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Template</span></div>");
+            //var downloadButton = $("<div title='Download Template' alt='Download Template' style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Template</span></div>");
             // var deleteButton = $("<div title='Delete' alt='Delete'  style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var weeklyReportButton = $("<div title='Mail Weekly Report' alt='Mail Weekly Report' style='float: left; margin-left: 5px;'><i class='fa fa-send'></i><span style='margin-left: 4px; position: relative;'>Weekly Report</span></div>");
             var exportPlannerButton = $("<div title='Export Planner Report' alt='Export Planner Report' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export Planner</span></div>");
@@ -687,7 +687,7 @@ function loadGrid(){
             container.append(exportButton);
             container.append(reloadButton);
             <?php if(!$hasQCReadonly){?>
-    			container.append(downloadButton);
+    			//container.append(downloadButton);
     		<?php }?>
             
             
@@ -714,7 +714,7 @@ function loadGrid(){
 			<?php }?>
             exportButton.jqxButton({width: 65, height: 18 });
             reloadButton.jqxButton({width: 70, height: 18 });
-            downloadButton.jqxButton({width:70, height: 18 });
+            //downloadButton.jqxButton({width:70, height: 18 });
 			
           	//deleteButton.jqxButton({  width: 65, height: 18 });
              <?php if($hasWeeklyReportButtonPermission){?>
@@ -825,9 +825,9 @@ function loadGrid(){
             	$('#isCompleted').removeAttr('checked');
             	$(".taskCompleted").hide()
             });
-            downloadButton.click(function (event) {
-            	location.href = ("files/QCSchedules_template.xlsx");
-            });
+            //downloadButton.click(function (event) {
+            	//location.href = ("files/QCSchedules_template.xlsx");
+            //});
             $("#qcscheduleGrid").bind('rowselect', function (event) {
 				var selectedRowIndex = event.args.rowindex;
 				var pageSize = event.args.owner.rows.records.length - 1;
