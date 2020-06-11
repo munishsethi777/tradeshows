@@ -233,7 +233,7 @@ if(isset($_POST["customerSeq"])){
 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getStrategicPlanningMeetDate()?>" name="strategicplanningmeetdate" id="strategicplanningmeetdate" class="form-control dateControl">
 					                        	</div>
 					                        </div>
-					                        <div class="row m-b-xxs">
+					                        <div class="row m-t-sm">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have we invited them to xmas showroom?</label>
 					                        	<div class="col-lg-4">
 													<?php
@@ -254,7 +254,7 @@ if(isset($_POST["customerSeq"])){
 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedToxMasShowroomReminderDate()?>" name="invitedtoxmasshowroomreminderdate" id="invitedtoxmasshowroomreminderdate" class="form-control dateControl">
 					                        	</div>
 				                        	</div>
-				                        	<div class="row m-b-xxs">
+				                        	<div class="row m-b-xxs m-t-sm">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label>
 					                        	<div class="col-lg-4">
 													<?php
@@ -276,7 +276,7 @@ if(isset($_POST["customerSeq"])){
 					                    </div>
 					                    <div class="form-group">
 				                       		<div class="row m-b-xxs">
-					                       		<label class="col-lg-8 col-form-label bg-formLabel">When are you reviewing christmas 2020</label>
+					                       		<label class="col-lg-8 m-t-sm col-form-label bg-formLabel">When are you reviewing christmas 2020</label>
 					                        	<div class="col-lg-4">
 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristmas2020ReviewingDate()?>" name="christmas2020reviewingdate" id="christmas2020reviewingdate" class="form-control dateControl">
 					                        	</div>
@@ -304,7 +304,7 @@ if(isset($_POST["customerSeq"])){
 		 And my customers are vendor consolidating?</label>
 					                        	<div class="col-lg-4">
 													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("IsMainVendor", null, $customerChristmasQuestion->getIsMainVendor(),false,false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("ismainvendor", null, $customerChristmasQuestion->getIsMainVendor(),false,false);
     			                        				echo $select;
 	                             					?>
 					                        	</div>
@@ -321,15 +321,16 @@ if(isset($_POST["customerSeq"])){
 										<div class="form-group">
 						                     <div class="row m-b-xxs">
 						                     	<label class="col-lg-8 col-form-label bg-formLabel">Did they buy xmas last year?</label>
-					                        	<div class="col-lg-4">
-					                        	</div>
+					                        	<div class="col-lg-4 ">
+					                        	
 												<?php
  	                        		    			$select = DropDownUtils::getBooleanDropDown("isxmasbuylastyear", null, $customerChristmasQuestion->getIsXmasBuyLastYear(),false,false);
     			                        			echo $select;
 	                             				?>
+	                             				</div>
 					                        </div>
 					                        <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">If Yes, How Much?</label>
+					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">If Yes, How Much?</label>
 					                        	<div class="col-lg-4">
 					                        		<input type="text" name="xmasbuylastyearamount" value="<?php echo $customerChristmasQuestion->getXmasBuyLastYearAmount()?>" id="xmasbuylastyearamount" class="form-control">
 					                        	</div>
