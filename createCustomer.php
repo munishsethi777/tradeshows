@@ -158,48 +158,24 @@ if(isset($_POST["id"])){
 	                       <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label>
 	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
-	                            </div>
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname", null, $customer->getSalesPersonName(),false,true);
+    			                        echo $select;
+	                             	?>	
+								</div>
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="text"  maxLength="250" value="<?php echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
-	                            </div>
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid", null, $customer->getSalesPersonId(),false,true);
+    			                        echo $select;
+	                             	?>
+								</div>
 						   </div>
-						   
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Freight Forwarder Email</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="email"  maxLength="250" value="<?php echo $customer->getFreightForwarderEmail()?>" name="freightforwarderemail" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Freight Forwarder Name</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text"  maxLength="250" value="<?php echo $customer->getFreightForwarderName()?>" name="freightforwardername" class="form-control">
-	                            </div>
-	                       </div>
-						   
-						   
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Notify Party</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getNotifyParty()?>" name="notifyparty" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Has Shipping Mark</label>
-	                        	<div class="col-lg-4">
-	                        		<input class="i-checks" type="checkbox" value="<?php echo $customer->getHasShippingMark()?>" name="hasshipping">
-	                            </div>
-	                       </div>
-	                       
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Shipping Mark Name</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text"  maxLength="250" value="<?php echo $customer->getShippingMarkName()?>" name="shippingmarkname" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel"> Shipping Mark Template Path</label>
-	                        	<div class="col-lg-4">
-	                        		<input type="text"  maxLength="500" value="<?php echo $customer->getShippingMarkTemplatePath()?>" name="shippingmarktemplatepath" class="form-control">
-	                            </div>
-	                       </div>
-	                       
+
 	                       <div class="form-group row m-b-xs">
 	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers to the Customer</label>
 	                       </div>

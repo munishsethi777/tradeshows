@@ -21,11 +21,6 @@ if($call == "saveCustomer"){
         $customer = new Customer();
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
-        if(isset($_REQUEST['hasshipping'])){
-            $customer->setHasShippingMark("1");
-        }else{
-            $customer->setHasShippingMark("0");
-        }
         if(isset($_REQUEST["fullNameSelect"])){
             $existingCustomer = $customerMgr->findByCustomerSeq($_REQUEST["fullNameSelect"]);
             $customer->setFullName($existingCustomer->getFullName());

@@ -216,9 +216,10 @@ class CustomerChristmasQuestion{
                     $value = DateUtil::StringToDateByGivenFormat ( "m-d-Y h:i A", $array [$attrName] );
                 }
                 if($isBoolean == true) {
-                    if(!empty ($array [$attrName])){
+                    if($array[$attrName] == "yes"){
                         $value = 1;
-                    }else{
+                    }
+                    else{
                         $value = 0;
                     }
                 }

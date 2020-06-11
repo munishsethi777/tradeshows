@@ -10,4 +10,8 @@ class BuyerCategoryType extends BasicEnum{
     const christmas = "Christmas";
     const outdoor_decor = "Outdoor Decor";
     const patriotic = "Patriotic";
+    const birding = "Birding";
+    const lighted_stakes = "lighted_stakes";
+    const all_decor = "All Decor";
+    const indoor_decor = "Indoor Decor";
 }

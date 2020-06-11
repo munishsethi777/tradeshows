@@ -181,18 +181,24 @@ if(isset($_POST["customerSeq"])){
 				                       		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Are you Interested in Christmas?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isinterested" name="isinterested"  <?php echo !empty($customerChristmasQuestion->getIsInterested())? "checked" : ""?>/>
+													<?php 
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isinterested", null, $customerChristmasQuestion->getIsInterested(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
 						                    	<label class="col-lg-8 col-form-label bg-formLabel">Have you sent them xmas catalog link?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="iscataloglinksent" name="iscataloglinksent" <?php echo !empty($customerChristmasQuestion->getIsCatalogLinkSent())?"checked":"" ?>/>
+													<?php
+ 	                        						    $select = DropDownUtils::getBooleanDropDown("iscataloglinksent", null, $customerChristmasQuestion->getIsCatalogLinkSent(),false,false);
+    			                    				    echo $select;
+	                             					?>
 					                        	</div>
 					                        </div>
 				                        	<div class="row m-r-xxs">
 				                        		<div class="panel panel-primary m-b-none">
-													<div class="panel-heading">Notes</div>
+													<div class="panel-heading">Catalog Link to send</div>
 													<div class="panel-body">
 					                                   	<textarea class="form-control" maxLength="1000" name="cataloglinksentnotes" id="cataloglinksentnotes"><?php echo $customerChristmasQuestion->getCatalogLinkSentNotes()?></textarea>
 													</div>
@@ -204,7 +210,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we sent them Any xmas sample?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" va class="i-checks form-control" id="isxmassamplessent" name="isxmassamplessent" <?php echo !empty($customerChristmasQuestion->getIsXmasSamplesSent())?"checked":""?>//>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isxmassamplessent", null, $customerChristmasQuestion->getIsXmasSamplesSent(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 					                        </div>
 					                    </div>
@@ -212,7 +221,10 @@ if(isset($_POST["customerSeq"])){
 				                    		<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we made an appt for a stragetic planning meeting?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isstrategicplanningmeetingappointment" name="isstrategicplanningmeetingappointment" <?php echo !empty($customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment())?"checked":""?>//>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeetingappointment", null, $customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
@@ -224,7 +236,10 @@ if(isset($_POST["customerSeq"])){
 					                        <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have we invited them to xmas showroom?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isinvitedtoxmasshowroom" name="isinvitedtoxmasshowroom" <?php echo !empty($customerChristmasQuestion->getIsInvitedToXmasShowroom())?"checked":""?>/>
+													<?php
+ 	                        		  				  $select = DropDownUtils::getBooleanDropDown("isinvitedtoxmasshowroom", null,$customerChristmasQuestion->getIsInvitedToXmasShowroom(),false,false);
+    			                      				  echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
@@ -242,13 +257,20 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isholidayshopcompleted" name="isholidayshopcompleted" <?php echo !empty($customerChristmasQuestion->getIsHolidayShopCompleted())?"checked":"" ?>/>
+													<?php
+													
+				 	                        		    $select = DropDownUtils::getBooleanDropDown("isholidayshopcompleted", null, $customerChristmasQuestion->getIsHolidayShopCompleted(),false,false);
+				    			                        echo $select;
+					                             	?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Summary Email sent to SA Team and Robby?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="$isholidayshopcomsummaryemailsent" name="isholidayshopcomsummaryemailsent" <?php echo !empty($customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent())?"checked":""?>/>
+													<?php
+ 	                        		  				  	$select = DropDownUtils::getBooleanDropDown("isholidayshopcomsummaryemailsent", null, $customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent(),false,false);
+    			                       					echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 					                    </div>
@@ -281,7 +303,10 @@ if(isset($_POST["customerSeq"])){
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Did we pitch that we want to be your main vendor of Holiday and Décor?
 		 And my customers are vendor consolidating?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="ismainvendor" name="ismainvendor" <?php echo !empty($customerChristmasQuestion->getIsMainVendor())?"checked":"" ?> />
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("IsMainVendor", null, $customerChristmasQuestion->getIsMainVendor(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 				                        	<div class="row m-b-xxs">
@@ -297,8 +322,11 @@ if(isset($_POST["customerSeq"])){
 						                     <div class="row m-b-xxs">
 						                     	<label class="col-lg-8 col-form-label bg-formLabel">Did they buy xmas last year?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isxmasbuylastyear" name="isxmasbuylastyear" <?php echo !empty($customerChristmasQuestion->getIsXmasBuyLastYear())?"checked":""?>/>
 					                        	</div>
+												<?php
+ 	                        		    			$select = DropDownUtils::getBooleanDropDown("isxmasbuylastyear", null, $customerChristmasQuestion->getIsXmasBuyLastYear(),false,false);
+    			                        			echo $select;
+	                             				?>
 					                        </div>
 					                        <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">If Yes, How Much?</label>
@@ -311,13 +339,19 @@ if(isset($_POST["customerSeq"])){
 					                        <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Are we receiving sell thru if they bought last year?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isreceivingsellthru" name="isreceivingsellthru" <?php echo !empty($customerChristmasQuestion->getIsReceivingSellThru())?"checked":"" ?>/>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isreceivingsellthru", null, $customerChristmasQuestion->getIsReceivingSellThru(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 					                        </div>
 					                        <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have Robby Reviewed Sell through?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isrobbyreviewedsellthrough" name="isrobbyreviewedsellthrough" <?php echo !empty($customerChristmasQuestion->getIsRobbyReviewedSellThrough())?"checked":""?>/>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerChristmasQuestion->getIsRobbyReviewedSellThrough(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 										</div>
@@ -325,7 +359,10 @@ if(isset($_POST["customerSeq"])){
 											 <div class="row m-b-xxs">
 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Should i visit this customer during the 4th qtr to comp shop their xmas items?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isvisitcustomerin4qtr" name="isvisitcustomerin4qtr" <?php echo !empty($customerChristmasQuestion->getIsVisitCustomerIn4Qtr())?"checked":""?>/>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerin4qtr", null, $customerChristmasQuestion->getIsVisitCustomerIn4Qtr(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 				                        	</div>
 										</div>
@@ -389,7 +426,10 @@ if(isset($_POST["customerSeq"])){
 				                        	<div class="row m-b-xxs">
 						                    	<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelDark">Have you sent them xmas catalog link?</label>
 					                        	<div class="col-lg-4">
-					                        		<input type="checkbox" class="i-checks form-control" id="isxmascateloglinksent" name="isxmascateloglinksent" <?php echo !empty($customerOppurtunityBuy->getIsXmasCatelogLinkSent())?"checked":""?>/>
+													<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isxmascateloglinksent", null, $customerOppurtunityBuy->getIsXmasCatelogLinkSent(),false,false);
+    			                        				echo $select;
+	                             					?>
 					                        	</div>
 					                        </div>
 				                        </div>

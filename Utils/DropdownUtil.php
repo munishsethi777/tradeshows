@@ -1,29 +1,32 @@
 <?php
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/ReasonCodeType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TagType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/LabelType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicStatusType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/WareHouseType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TruckerType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/TerminalType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomExamStatusType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/FreightType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/DefectiveAllowanceDeductionsType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerBusinessType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BuyerCategoryType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/PriorityType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BusinessCategoryType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/XmasItemFromType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/SeasonShowNameType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/CustomerRegularTermsType.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Enums/GraphicsNAReasonType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/ReasonCodeType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/TagType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/LabelType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicStatusType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/WareHouseType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/TruckerType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/TerminalType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomExamStatusType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/FreightType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/DefectiveAllowanceDeductionsType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerBusinessType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/BuyerCategoryType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/PriorityType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/BusinessCategoryType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/XmasItemFromType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/SeasonShowNameType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRegularTermsType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicsNAReasonType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonName.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonId.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/BooleanType.php");
 
 
-require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Managers/ClassCodeMgr.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Managers/UserMgr.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Utils/TimeZone.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Utils/TimeZone.php");
 
 
 
@@ -233,4 +236,26 @@ class DropDownUtils {
 		return $str;
 	}
 
+	public static function getCustomerSalesPersonName($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false)
+	{
+		$enums = CustomerSalesPersonName::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
+	}
+
+	public static function getCustomerSalesPersonId($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false)
+	{
+		$enums = CustomerSalesPersonId::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
+	}
+
+	public static function getBooleanDropDown($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll)
+	{
+		$enums = BooleanType::getAll();
+		if (!empty($selectedValue)) {
+			$selectedValue = "yes";
+		} else {
+			$selectedValue = "no";
+		}
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
+	}
 }
