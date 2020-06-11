@@ -171,13 +171,16 @@ function saveAction(){
 				   alert(jsonData.message);
 			   }else{
 				   $('#createNewModalForm').modal('hide');
-				   $('#resultModelForm').modal('show');
-				   message = jsonData.savedItemCount + " QC Schedules imported successfully.<br>" + jsonData.updatedItemCount + " QC Schedules updated successfully.";
-				   $("#responseOfResult").html(message);
+				   if(jsonData.savedItemCount != undefined){
+    				   $('#resultModelForm').modal('show');
+    				   message = jsonData.savedItemCount + " QC Schedules imported successfully.<br>" + jsonData.updatedItemCount + " QC Schedules updated successfully.";
+    				   $("#responseOfResult").html(message);
+    				   //if(flag){
+    					  //window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
+    				   //}
+				   } 
 				   var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
-				   if(flag){
-					  //window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
-				   }   
+				   
 			   }
 		   }
 		   $("#isupdate").val(0); 

@@ -392,7 +392,7 @@ class QCScheduleImportUtil
         	if(!empty($poinchargeUserSeq)){
         		$qcSchedule->setPOInchargeUser($poinchargeUserSeq);
         	}else{
-        		$messagesp[] = " '$poincharge' PO Incharge not found in database!";
+        		$messages[] = " '$poincharge' PO Incharge not found in database!";
         	}
         }
         if (! empty($classCode)) {
@@ -401,7 +401,7 @@ class QCScheduleImportUtil
             if (! empty($classCodeObj)) {
                 $classCodeSeq = $classCodeObj->getSeq();
             } else {
-                $message[] = " '$classCode' class code not found in database!";
+                $messages[] = " '$classCode' class code not found in database!";
             }
             $qcSchedule->setClassCodeSeq($classCodeSeq);
         }
