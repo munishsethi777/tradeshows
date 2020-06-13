@@ -239,7 +239,7 @@ class DropDownUtils {
 	public static function getCustomerSalesPersonName($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false)
 	{
 		$enums = CustomerSalesPersonName::getAll();
-		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
+	return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
 	}
 
 	public static function getCustomerSalesPersonId($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false)
@@ -251,11 +251,15 @@ class DropDownUtils {
 	public static function getBooleanDropDown($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll)
 	{
 		$enums = BooleanType::getAll();
-		if (!empty($selectedValue)) {
-			$selectedValue = "yes";
-		} else {
-			$selectedValue = "no";
+		if($selectedValue != null ){
+			if ($selectedValue == 1) {
+				$selectedValue = "yes";
+			} else {
+				$selectedValue = "no";
+			}
+		}else{
+			$selectedValue = "";
 		}
-		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll);
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, true, "");
 	}
 }

@@ -19,6 +19,11 @@ if($call == "saveSpringQuestion"){
         $seq =  $_REQUEST["seq"];
         $customerSpringQuestion = new CustomerSpringQuestion();
         $customerSpringQuestion->from_array($_REQUEST);
+        if(isset($_REQUEST['isallcategoriesselected'])){
+            $customerSpringQuestion->setIsAllCategoriesSelected(1);
+        }else{
+            $customerSpringQuestion->setIsAllCategoriesSelected(0);
+        }        
         if($seq > 0){
             $message = StringConstants::UPDATED_SUCCESSFULLY;
         }

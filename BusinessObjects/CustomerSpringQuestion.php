@@ -255,13 +255,18 @@ class CustomerSpringQuestion
                     $value = DateUtil::StringToDateByGivenFormat ( "m-d-Y h:i A", $array [$attrName] );
                 }
                 if($isBoolean == true) {
-                    if(!empty ($array [$attrName])){
-                        $value = 1;
-                    }else{
-                        $value = 0;
+                    $value = null;
+                    if($array[$attrName] != null){
+                        if($array[$attrName] == "yes"){
+                            $value = 1;
+                        }elseif($array[$attrName] =="no"){
+                            $value = 0;
+                        }else{
+                            $value = null;
+                        }
                     }
                 }
-                if (! empty ( $value )) {
+                if (! empty ( $value ) || $isBoolean) {
                     if(is_array($value)){
                         $value = implode(",", $value);
                     }

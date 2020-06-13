@@ -23,6 +23,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>
+<?include "exportInclude.php"?>
    <div id="wrapper">
    		<?php include("adminmenuInclude.php")?>
    		 <div id="page-wrapper" class="gray-bg">
@@ -80,6 +81,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 
 </body>
 <script type="text/javascript">
+var selectedRows = [];
 function showItemDetails(seq){
 	$.getJSON("Actions/ItemAction.php?call=getItemDetails&seq="+seq, function(data){
 		item = data.item;
@@ -195,7 +197,23 @@ $(document).ready(function(){
     });
     $('#daterange').on('apply.daterangepicker', function(ev, picker){
     	applyFilter();
-    });
+	});
+	$("#exportBtnForGraphicsLog").click(function(e){
+		exportFinal(e,this);
+	});
+	$('#graphiclogGrid').on('rowselect', function (event) 
+			{
+			    var args = event.args;
+			    var rowBoundIndex = args.rowindex;
+			    var rowData = args.row;
+			    selectedRows[rowBoundIndex] = rowData;
+			});
+	$('#graphiclogGrid').on('rowunselect', function (event) 
+			{
+				var args = event.args;
+				var rowBoundIndex = args.rowindex;
+				delete selectedRows[rowBoundIndex];
+			});
  });
 
 	function getFilterQueryData(){
@@ -488,25 +506,63 @@ function loadGrid(){
         }
     });
 }
+function exportFinal(e,btn){
+	var exportOption = $('input[name=exportOptionForGraphicsLogs]:checked').val()
+	var rowscount = 0;
+	if(exportOption == "selectedRows"){
+		var selectedRowIndexes = $("#graphiclogGrid").jqxGrid('selectedrowindexes');
+		if(selectedRowIndexes.length > 0){
+		}else{
+			noRowSelectedAlert();
+			return;
+		}
+		rowscount = selectedRowIndexes.length;
+		var ids = [];
+		$.each(selectedRowIndexes, function(index , value){
+			if(value != -1){
+				var dataRow = selectedRows[value]//$("#qcscheduleGrid").jqxGrid('getrowdata', value);
+				ids.push(dataRow.seq);
+			}
+		});
+		$("#graphiclogseq").val(ids);
+		
+		
+	}else{
+		var datainformation = $('#graphiclogGrid').jqxGrid('getdatainformation');
+		rowscount = datainformation.rowscount;
+		$("#graphiclogseq").val("");
+	}
+	e.preventDefault();
+	var l = Ladda.create(btn);
+	l.start();
+	$('#exportFormForGraphicsLog').submit();
+	l.stop();
+	$('#exportModalFormForGraphicsLogs').modal('hide');
+	$('#graphiclogGrid').jqxGrid('clearselection');
+}
 function exportItemsConfirm(filterString){
-	bootbox.confirm({
-	    message: "Do you want to export items?",
-	    buttons: {
-	        confirm: {
-	            label: 'Yes',
-	            className: 'btn-success'
-	        },
-	        cancel: {
-	            label: 'No',
-	            className: 'btn-danger'
-	        }
-	    },
-	    callback: function (result) {
-		    if(result){
-				exportItems(filterString); 
-		    }
-	    }
-	});
+	var selectedRowIndexes = $("#graphiclogGrid").jqxGrid('selectedrowindexes');
+	$('#exportModalFormForGraphicsLogs').modal('show');
+	$("#queryStringForGraphicLog").val(filterString);
+
+	// bootbox.confirm({
+	//     message: "Do you want to export items?",
+	//     buttons: {
+	//         confirm: {
+	//             label: 'Yes',
+	//             className: 'btn-success'
+	//         },
+	//         cancel: {
+	//             label: 'No',
+	//             className: 'btn-danger'
+	//         }
+	//     },
+	//     callback: function (result) {
+	// 	    if(result){
+	// 			exportItems(filterString); 
+	// 	    }
+	//     }
+	// });
 }
 
 function exportItems(filterString){

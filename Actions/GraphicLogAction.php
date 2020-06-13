@@ -179,7 +179,8 @@ if($call == "getAllGraphicLogs"){
 if($call == "export"){
 	try{
 		$queryString = $_GET["queryString"];
-		$response = $graphicLogMgr->exportGraphicLog($queryString);
+		$graphicLogsSeqs = $_GET['graphiclogseq'];
+		$response = $graphicLogMgr->exportGraphicLog($queryString,$graphicLogsSeqs);
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();

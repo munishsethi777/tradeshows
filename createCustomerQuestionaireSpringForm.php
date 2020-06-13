@@ -108,9 +108,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							you sent them Spring catalog link?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="issentcataloglink" name="issentcataloglink"
-            								<?php echo !empty($customerSpringQuestion->getIsSentCatalogLink())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("issentcataloglink", null, $customerSpringQuestion->getIsSentCatalogLink(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             					<div class="row m-b-xxs m-r-xxs">
@@ -130,9 +132,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							we sent them any Spring sample?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="issentsample" name="issentsample"
-            								<?php echo !empty($customerSpringQuestion->getIsSentSample())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("issentsample", null, $customerSpringQuestion->getIsSentSample(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             				</div>
@@ -142,10 +146,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							we made an appointment for a stragetic planning meeting?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="isstrategicplanningmeeting"
-            								name="isstrategicplanningmeeting"
-            								<?php echo !empty($customerSpringQuestion->getIsStrategicPlanningMeeting())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeeting", null, $customerSpringQuestion->getIsStrategicPlanningMeeting(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             					<div class="row m-b-xxs">
@@ -167,9 +172,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							we invited them to Spring showroom?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="isinvitedtospringshowroom" name="isinvitedtospringshowroom"
-            								<?php echo !empty($customerSpringQuestion->getIsinvitedtospringshowroom())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isinvitedtospringshowroom", null, $customerSpringQuestion->getIsinvitedtospringshowroom(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             					<div class="row m-b-xxs">
@@ -207,9 +214,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Is
             							Spring 2020 Comp Shop Completed?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="iscomposhopcompleted" name="iscomposhopcompleted"
-            								<?php echo !empty($customerSpringQuestion->getIsCompoShopCompleted())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("iscomposhopcompleted", null, $customerSpringQuestion->getIsCompoShopCompleted(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             					<div class="row m-b-xxs">
@@ -217,10 +226,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Spring
             							2020 Comp Shop Summary Email sent to SA Team and Robby?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="iscompshopsummaryemailsent"
-            								name="iscompshopsummaryemailsent"
-            								<?php echo !empty($customerSpringQuestion->getIsCompShopSummaryEmailSent())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("iscompshopsummaryemailsent", null, $customerSpringQuestion->getIsCompShopSummaryEmailSent(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             				</div>
@@ -258,9 +268,10 @@ if(!empty($seq) && !$isadded){
             							Décor?<br>And my customers are vendor consolidating?
             						</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="ispitchmainvendor" name="ispitchmainvendor"
-            								<?php echo !empty($customerSpringQuestion->getIsPitchMainVendor())?"checked":""?> />
+											<?php
+													$select = DropDownUtils::getBooleanDropDown("ispitchmainvendor", null, $customerSpringQuestion->getIsPitchMainVendor(), false, false);
+													echo $select;
+	                             			?>
             						</div>
             					</div>
             					<div class="row m-b-xxs m-r-xxs">
@@ -304,9 +315,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Are
             							we receiving sell thru if they bought last year?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="issellthrough" name="issellthrough"
-            								<?php echo !empty($customerSpringQuestion->getIsSellThrough())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("issellthrough", null, $customerSpringQuestion->getIsSellThrough(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             					<div class="row m-b-xxs">
@@ -314,10 +327,11 @@ if(!empty($seq) && !$isadded){
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							Robby Reviewed Sell through?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="isrobbyreviewedsellthrough"
-            								name="isrobbyreviewedsellthrough"
-            								<?php echo !empty($customerSpringQuestion->getIsRobbyReviewedSellThrough())?"checked":""?> />
+            						
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerSpringQuestion->getIsRobbyReviewedSellThrough(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             				</div>
@@ -328,9 +342,11 @@ if(!empty($seq) && !$isadded){
             							I visit this customer during the 2ND qtr to comp shop their
             							spring items?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="isvisitcustomer2qtr" name="isvisitcustomer2qtr"
-            								<?php echo !empty($customerSpringQuestion->getIsvisitcustomer2qtr())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomer2qtr", null, $customerSpringQuestion->getIsvisitcustomer2qtr(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             				</div>
@@ -356,10 +372,11 @@ if(!empty($seq) && !$isadded){
             							I visit this customer during the 2ND qtr to comp shop their
             							spring items?</label>
             						<div class="col-lg-4">
-            							<input type="checkbox" class="i-checks form-control"
-            								id="isvisitcustomerduring2ndqtr"
-            								name="isvisitcustomerduring2ndqtr"
-            								<?php echo !empty($customerSpringQuestion->getIsVisitCustomerDuring2ndQtr())?"checked":""?> />
+            							
+											<?php
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr", null, $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, false);
+    			                        				echo $select;
+	                             					?>
             						</div>
             					</div>
             				</div>
@@ -379,7 +396,6 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            
             			</div>
             		</div>
             		<div class="form-group row buttonsDiv">

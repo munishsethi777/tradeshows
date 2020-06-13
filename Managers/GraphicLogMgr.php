@@ -51,14 +51,21 @@ class GraphicLogMgr{
 	}
 	
 	
-	public function exportGraphicLog($queryString){
+	public function exportGraphicLog($queryString,$graphicLogsSeqs){
 		$output = array();
 		parse_str($queryString, $output);
 		$_GET = array_merge($_GET,$output);
+		$graphicLogs = array();
+		$sessionUtil = SessionUtil::getInstance();
+		//if($_GET['exportOptionForGraphicsLogs'] != "template"){
+			$query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+				if(!empty($graphicLogsSeqs)){
+					$query .= " where graphicslogs.seq in ($graphicLogsSeqs)";
+				}
+			$graphicLogs = self::$dataStore->executeObjectQuery($query,true,true,true);
+		//}
 		
-		$graphicLogs = self::$dataStore->findAll(true);
-		$query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-		$graphicLogs = self::$dataStore->executeObjectQuery($query,true);
+		
 		ExportUtil::exportGraphicLogs($graphicLogs);
 	}
 	
