@@ -539,7 +539,7 @@ class GraphicLogMgr{
 	
 	public function getForProjectDueForToday(){
 	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
-	    $query = $this->select . "where finalgraphicsduedate = '$currentDate'";
+	    $query = $this->select . "where finalgraphicsduedate = '$currentDate' and graphiccompletiondate is null";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}
@@ -547,7 +547,7 @@ class GraphicLogMgr{
 	
 	
 	public function getForProjectDueLessThan20FromEntry(){
-	    $query = $this->select . "where datediff(finalgraphicsduedate,chinaofficeentrydate) < 20";
+	    $query = $this->select . "where datediff(finalgraphicsduedate,chinaofficeentrydate) < 20 and graphiccompletiondate is null";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}
@@ -555,7 +555,7 @@ class GraphicLogMgr{
 	public function getForProjectDueLessThan20FromToday(){
 	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 	    $lastDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
-	    $query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20";
+	    $query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20 and graphiccompletiondate is null";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}

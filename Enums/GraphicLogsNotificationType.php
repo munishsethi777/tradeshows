@@ -9,7 +9,7 @@ class GraphicLogsNotificationType extends BasicEnum{
     const projects_missing_info_from_china_weekly = "Projects Missing Info From China (Weekly)";
     const project_passed_due_with_missing_info_from_china_daily = "Project Passed Due with Missing Info From China (Daily)";
     const projects_due_for_today_daily = "Project Due for Today (Daily)";
-    const projects_due_less_than_20_days_from_entry_date_daily = "Proects Due less than 20 days from entry date (Daily)";
+    const projects_due_less_than_20_days_from_entry_date_daily = "Projects Due less than 20 days from entry date (Daily)";
     const projects_due_less_than_20_days_from_today_daily = "Projects Due Less than 20 days from today (Daily)";
     const projects_missing_info_from_china_daily = "Projects Missing Info from China (Daily)";
     const graphic_logs_status_change_instant = "Graphic Logs Status change (Instant)";
