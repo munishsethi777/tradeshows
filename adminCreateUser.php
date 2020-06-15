@@ -480,7 +480,7 @@ if (in_array(3, $departmentSeqArr)) {
 															<span class="m-l-xs">Projects Over Due till now (Weekly)</span>
 															<label class="fa fa-question-circle"
 															data-toggle="tooltip" data-placement="left"
-															title="Final Graphics Due Date is in past&#10;Graphic Completion Date is Empty"></label>
+															title="Final Graphics Due Date is in past&#10;Submitted to China Date is Empty"></label>
 														</li>
 														<li><input name="permissions[]" type="checkbox"
 															value="projects_in_buyer_review_weekly"
@@ -528,10 +528,10 @@ if (in_array(3, $departmentSeqArr)) {
 														<li><input name="permissions[]" type="checkbox"
 															value="projects_due_for_today_daily"
 															<?php echo in_array(GraphicLogsNotificationType::getName(GraphicLogsNotificationType::projects_due_for_today_daily), $userRoles) ?  "checked" : ""?> />
-															<span class="m-l-xs">Project Due for Today (Daily)</span>
+															<span class="m-l-xs">Projects Due for Today (Daily)</span>
 															<label class="fa fa-question-circle"
 															data-toggle="tooltip" data-placement="left"
-															title="Final Graphics Due Date is Today"></label>
+															title="Final Graphics Due Date is Today &#10;Submitted to China Date is empty"></label>
 														</li>
 														<li><input name="permissions[]" type="checkbox"
 															value="projects_due_less_than_20_days_from_entry_date_daily"
@@ -540,7 +540,7 @@ if (in_array(3, $departmentSeqArr)) {
 																entry date (Daily)</span> <label
 															class="fa fa-question-circle" data-toggle="tooltip"
 															data-placement="left"
-															title="Date difference between Final Graphic Due Date &#10;and China Office Entry Date is less than 20"></label>
+															title="Date difference between Final Graphic Due Date&#10;and Submitted to China Date is empty&#10;and China Office Entry Date is less than 20"></label>
 														</li>
 														<li><input name="permissions[]" type="checkbox"
 															value="projects_due_less_than_20_days_from_today_daily"
@@ -548,7 +548,7 @@ if (in_array(3, $departmentSeqArr)) {
 															<span class="m-l-xs">Project Due Less than 20 days from today (Daily)</span> <label
 															class="fa fa-question-circle" data-toggle="tooltip"
 															data-placement="left"
-															title="Graphic Logs created yesterday&#10;Final Graphic Due Date is within next 20 days"></label>
+															title="Graphic Logs created yesterday&#10;and Submitted to China Date is empty&#10;and Final Graphic Due Date is within next 20 days"></label>
 														</li>
 														<li><input name="permissions[]" type="checkbox"
 															value="projects_missing_info_from_china_daily"
