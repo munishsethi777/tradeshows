@@ -118,6 +118,15 @@ function initDateRanges(){//building date search module
 }
 $(document).ready(function(){
    	loadGrid();
+   	setInterval(function () {
+		$.post('Actions/UserAction.php?call=refreshSession',function(data){
+			//alert(data);
+			if(data == 0){
+				location.href = "userLogin.php";
+			}
+		});
+    },60000);
+    
    	initDateRanges();
    	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
@@ -339,6 +348,7 @@ function loadGrid(){
       { text: 'PO', datafield: 'po',width:"7%",filtercondition: 'STARTS_WITH'},
       { text: 'SKU', datafield: 'sku',width:"13%",filtercondition: 'STARTS_WITH'},
       { text: 'Customer', datafield: 'customername',width:"8%"},
+      { text: 'Tag', datafield: 'tagtype',width:"8%"},
       { text: 'Created By', datafield: 'fullname',width:"10%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"14%"}
 	]
@@ -369,6 +379,7 @@ function loadGrid(){
                     { name: 'customername', type: 'string' },
                     { name: 'fullname', type: 'fullname' },
                     { name: 'graphicstatus', type: 'string' },  
+                    { name: 'tagtype', type: 'string' }, 
                     { name: 'lastmodifiedon', type: 'date' } 
                     ],                          
         url: 'Actions/GraphicLogAction.php?call=getAllGraphicLogs',
