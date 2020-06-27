@@ -81,14 +81,14 @@ class QCScheduleImportUtil
         }
     }
     
-    public function updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
+    public function updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
         $sheet = $objPHPExcel->getActiveSheet();
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try{
-            return $this->validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
+            return $this->validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber);
         }catch(Exception $e){
             throw $e;
         }
@@ -247,7 +247,7 @@ class QCScheduleImportUtil
         }
         return $response;
     }
-    public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
+    public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
         $logger = Logger::getLogger("logger");
         $this->fieldNames = $sheetData[0];
         $success = 1;
@@ -289,7 +289,7 @@ class QCScheduleImportUtil
         if (empty($messages)) {
             $qcscheduleMgr = QCScheduleMgr::getInstance();
             $logger->info("\n\n\n\n\n QCSchedule is about to be updated by Import Process");
-            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
+            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber);
         }
         return $response;
     }
@@ -530,6 +530,7 @@ class QCScheduleImportUtil
         $messages = array();
         $seq = $data[array_search("ID",$labels)];
         $seq = trim($seq);
+        $poNumber = $data[array_search("PO#",$labels)];
         if(strtolower($data[array_search("Completed",$labels)]) == "yes"){
             $isCompleted = "1";
         }else{
@@ -585,6 +586,7 @@ class QCScheduleImportUtil
         
         $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
         $qcSchedule->setSeq($seq);
+        $qcSchedule->setPO($poNumber);
         $qcSchedule->setIsCompleted($isCompleted);
         if(!empty($messages)){
             throw new Exception(implode(",",$messages));

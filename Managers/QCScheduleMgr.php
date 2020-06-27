@@ -54,9 +54,9 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
     }
-    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
+    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus);
+		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber);
 	}
 
     public function bulkDeleteByImport($filePath){
@@ -430,7 +430,7 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
-	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus){
+	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -459,8 +459,12 @@ class QCScheduleMgr{
 					}
 				}
 				//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
-				if($isCompletionStatus)
+				if($isCompletionStatus){
 					$colValuePair['iscompleted'] = $qc->getIsCompleted();
+				}
+				if($isUpdatePONumber){
+					$colValuePair['po'] = $qc->getPO();
+				}
 				self::$dataStore->updateByAttributes($colValuePair, $condition);
 				$updatedItemCount++;
 			 }

@@ -51,7 +51,12 @@ if(isset($_REQUEST["isCompleted"])){
 									<div class="col-lg-offset-2 col-lg-6">
 										<input type="checkbox" id="updateCompetionStatus" name="updateCompetionStatus"> Update Completion Status (based on id)
 									</div>
-								</div
+								</div>
+								<div class="form-group row i-checksnormal">
+									<div class="col-lg-offset-2 col-lg-6">
+										<input type="checkbox" id="updatePONumbers" name="updatePONumbers"> Update PO Numbers (based on id)
+									</div>
+								</div>
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label">Select file to update</label>
 									<div class="col-lg-8">
