@@ -124,7 +124,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Date Entered :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $usaTabIndex?>" type="text" id="usaofficeentrydate" maxLength="250" value="<?php echo $graphicLog->getUSAOfficeEntryDate()?>" name="usaofficeentrydate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $usaTabIndex?>" type="text" id="usaofficeentrydate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $graphicLog->getUSAOfficeEntryDate()?>" name="usaofficeentrydate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
@@ -138,7 +138,7 @@ if(isset($_POST["id"])){
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Estimated PO Shipdate :</label>
 	                        	<div class="col-lg-4">
 	                        		<div class="input-group date">
-                                		<input tabindex="<?php echo $usaTabIndex?>" type="text" maxLength="250" onchange="setDates(this.value)" value="<?php echo $graphicLog->getEstimatedShipDate()?>" name="estimatedshipdate" id="estimatedshipdate" class="form-control  dateControl" <?php echo $readOnlyPO?>>
+                                		<input tabindex="<?php echo $usaTabIndex?>" type="text" maxLength="250"  value="<?php echo $graphicLog->getEstimatedShipDate()?>" onchange="poShipdateEnteredOnChange(this.value)" name="estimatedshipdate" id="estimatedshipdate" class="form-control  dateControl" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
 	                            </div>
@@ -657,23 +657,36 @@ function showGraphicFields(){
 		//$("#graphicheight").removeAttr("required");
 	}
 }
-function setDates(estimatedshipdateStr){
+
+function dateEnteredOnChange(estimatedshipdateStr){
 	if(estimatedshipdateStr == ""){
-		$("#estimatedgraphicsdate").val("");
-		$("#finalgraphicsduedate").val("");
+		$("#estimatedgraphicdate").val("");
 		return;
 	}
 	var estimatedshipdate = getDate(estimatedshipdateStr);
-	estimatedGraphicsDays = 30;
-	var estimatedgraphicsdate = subtractDays(estimatedshipdate,estimatedGraphicsDays);
-	estimatedgraphicsdateStr = dateToStr(estimatedgraphicsdate);
-	$("#estimatedgraphicsdate").val(estimatedgraphicsdateStr);
-	$("#finalgraphicsduedate").val(estimatedgraphicsdateStr);
-
+	estimatedGraphicsDays = 20;
+	var estimatedgraphicsdate = subtractDays(estimatedshipdate, estimatedGraphicsDays);
+	estimatedgraphicdateStr = dateToStr(estimatedgraphicsdate);
+	$("#estimatedgraphicsdate").val(estimatedgraphicdateStr);
 	if($("#chinaofficeentrydate").val() != ""){
 		callChinaEntryDate($("#chinaofficeentrydate").val());
 	}
 }
+function poShipdateEnteredOnChange(estimatedshipdateStr){
+	if(estimatedshipdateStr == ""){
+		$("#finalgraphicsduedate").val("");
+		return;
+	}
+	var estimatedshipdate = getDate(estimatedshipdateStr);
+	var estimatedGraphicsDays = 30;
+	var estimatedgraphicsdate = subtractDays(estimatedshipdate, estimatedGraphicsDays);
+	estimatedgraphicsdateStr = dateToStr(estimatedgraphicsdate);
+	$("#finalgraphicsduedate").val(estimatedgraphicsdateStr);
+	if($("#chinaofficeentrydate").val() != ""){
+		callChinaEntryDate($("#chinaofficeentrydate").val());
+	}
+}
+
 function callChinaEntryDate(chinaEntryDate){
 	if(chinaEntryDate == ""){
 		if($("#estimatedshipdate").val() != ""){
