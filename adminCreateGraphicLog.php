@@ -633,9 +633,9 @@ function showTagFields(){
 	value = $("#tagtype").val();
 	if(value == "custom"){
 		$("#tagFields").show();
-		$("#taglength").attr("required","required");
-		$("#tagwidth").attr("required","required");
-		$("#tagheight").attr("required","required");
+		//$("#taglength").attr("required","required");
+		//$("#tagwidth").attr("required","required");
+		//$("#tagheight").attr("required","required");
 	}else{
 		$("#tagFields").hide();
 		$("#taglength").removeAttr("required");
