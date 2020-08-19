@@ -502,3 +502,4 @@ $(document).ready(function() {
         	return filterQstr;
         }
 </script>
+<script src="scripts/vue.js"></script>

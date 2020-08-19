@@ -193,6 +193,31 @@ ul.nav-second-level{
 	color:black;
 	padding:9px 7px !important;
 }
+.bg-formLabelYellow{
+	background-color:#ffff00;
+	color:black;
+	padding:9px 7px !important;
+}
+.bg-formLabelBeige{
+	background-color:#fff2cb;
+	color:black;
+	padding:9px 7px !important;
+}
+.bg-formLabelRustic{
+	background-color:#f7caac;
+	color:black;
+	padding:9px 7px !important;
+}
+.bg-formLabelCyan{
+	background-color:#deeaf6;
+	color:black;
+	padding: 9px 7px !important;
+}
+.bg-formLabelGrey{
+	background-color: #bbbbbb;
+	color:black;
+	padding: 9px 7px !important;
+}
 .bg-mauve{
 	background-color:#A4C2F4 !important;
 }
@@ -271,3 +296,46 @@ body{
     opacity: 0;
   }
 }
+.panel-beige {
+	
+	border-color: #fbe294 !important;
+	border:10px;
+  }
+  .panel-beige > .panel-heading{
+	background-color: #fff2cb !important;
+	border-color: #fff2cb !important;
+	color: black !important;
+  }
+  .panel-rustic {
+	
+	border-color: #f7caac !important;
+	border:10px;
+  }
+  .panel-rustic > .panel-heading{
+	background-color: #f7caac !important;
+	border-color: #f7caac !important;
+	color: black !important;
+  }
+  .panel-grey{
+	  border-color: #bbbbbb !important;
+	  border:10px;
+  }
+  .panel-grey > .panel-heading{
+	  background-color: #bbbbbb !important;
+	  border-color: #bbbbbb !important;
+	  color: black !important;
+  }
+  .card-cyan:{
+	  border-color:#0000ff;
+	  border:10px;
+  }
+  .card-cyan > .card-heading{
+	  background-color: #0000ff !important;
+	  border-color: #0000ff !important;
+	  color: white !important;
+  }
+  .card-cyan > .card-body{
+	  background-color: #0000ff !important;
+	  border-color: #0000ff !important;
+	  color: black !important;
+  }
