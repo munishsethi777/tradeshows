@@ -62,34 +62,6 @@ if($call == "saveCustomer"){
                 $internalSupports[] = $arr;
             }
         }
-        try{
-        unset($_REQUEST["buyer_firstname"]);
-        unset($_REQUEST["buyer_lastname"]);
-        unset($_REQUEST["buyer_emailid"]);
-        unset($_REQUEST["buyer_phone"]);
-        unset($_REQUEST["buyer_cellphone"]);
-        unset($_REQUEST["buyer_category"]);
-        unset($_REQUEST["buyer_notes"]);
-        }catch(Exception $e){}
-        try{
-        unset($_REQUEST["salesRep_firstname"]);
-        unset($_REQUEST["salesRep_lastname"]);
-        unset($_REQUEST["salesRep_emailid"]);
-        unset($_REQUEST["salesRep_phone"]);
-        unset($_REQUEST["salesRep_cellphone"]);
-        unset($_REQUEST["salesRep_responsiblity"]);
-        unset($_REQUEST["salesRep_notes"]);
-        }catch(Exception $e){}
-        try{
-        unset($_REQUEST["internalSupport_firstname"]);
-        unset($_REQUEST["internalSupport_lastname"]);
-        unset($_REQUEST["internalSupport_emailid"]);
-        unset($_REQUEST["internalSupport_phone"]);
-        unset($_REQUEST["internalSupport_cellphone"]);
-        unset($_REQUEST["internalSupport_skypePersonId"]);
-        unset($_REQUEST["internalSupport_category"]);
-        unset($_REQUEST["internalSupport_notes"]);
-        }catch(Exception $e){}
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
         if(isset($_REQUEST["fullNameSelect"])){
@@ -128,7 +100,7 @@ if($call == "saveCustomer"){
             $buyerObjs[] = $buyerObj;
         }
         foreach($salesReps as $salesRep){
-            if(!(salesRep["firstname"] == "" && salesRep["lastname"] == "" && salesRep["emailid"] == "" && salesRep["phone"] == "" && salesRep["cellphone"] == "" && salesRep["notes"] == "" && salesRep["responsibility"] == "")){
+            if(!($salesRep["firstname"] == "" && $salesRep["lastname"] == "" && $salesRep["emailid"] == "" && $salesRep["phone"] == "" && $salesRep["cellphone"] == "" && $salesRep["notes"] == "" && $salesRep["responsibility"] == "")){
                 $buyerObj = new Buyer();
                 $buyerObj->setFirstName($salesRep["firstname"]);
                 $buyerObj->setLastName($salesRep["lastname"]);
