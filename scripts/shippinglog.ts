@@ -1,10 +1,10 @@
 var shippinglogs = this;
 $(document).ready(function () {
   var detailsofinternet = Vue.component("detailsofinternet", {
-    props: ["index", "key"],
+    props: ["index", "key","flag"],
     template: `<div class="accordion">
-    <div :class="'detailpanel' + index" class="panel panel-mauve">
-        <div class="panel-heading" :id="'headingOne' + index">
+    <div :class="'detailpanel' + index" :class="{'panel panel-mauve':flag == 'false'}">
+        <div class="panel-heading" :id="'headingOne' + index" v-if="this.flag == 'false'">
             <h4 class="panel-title">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" :href="'#collapseOne' + index" aria-expanded="false"><span>Main</span></a>
                 <a class="pull-right collapsed" data-toggle="collapse" data-parent="#accordion" :href="'#collapseOne' + index" aria-expanded="false">
@@ -12,8 +12,8 @@ $(document).ready(function () {
                 </a>
             </h4>
         </div>
-        <div :id="'collapseOne' + index" class="panel-collapse collapse" :aria-labelledby="'headingOne' + index" data-parent="#accordion">
-            <div class="panel-body" style="padding:30px">
+        <div :id="'collapseOne' + index" class="" v-bind:class="{'panel-collapse collapse':flag == 'false'}" :aria-labelledby="'headingOne' + index" data-parent="#accordion">
+            <div :class="{'panel-body':flag=='false'}" :style="{'padding:30px':flag=='false'}">
                 <div class="form-group row">
                     <label class="col-lg-2 col-form-label bg-formLabelCyan">Save Batch to Z:\\Cust\\Dot Com Orders :</label>
                     <div class="col-lg-4">
@@ -190,8 +190,285 @@ $(document).ready(function () {
         createASNInvoicedInLingo: "",
         dateBatchIsInvoiced: "",
       };
+    }
+  });
+  var domesticlogcomponent = Vue.component("domesticlogcomponent",{
+    props: ["index"],
+    template: `<div><div v-if="showdata">
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Order No/ Pick Ticket :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="orderNumber" id="orderNumber" class="form-control" v-model="orderNumber">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Allocated Full :</label>
+        <div class="col-lg-4">
+          <div class="i-checks isAllocatedFull">
+            <input type="checkbox" name="isAllocatedFull" id="isAllocatedFull" v-model="isAllocatedFull">
+          </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Pk No# :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="pkNumber" id="pkNumber" class="form-control" v-model="pkNumber">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Total So Qty :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="totalSoQty" id="totalSoQty" class="form-control" v-model="totalSoQty">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">PO # :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="poNumber" id="poNumber" class="form-control" v-model="poNumber">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Total Cases :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="totalCases" id="totalCases" class="form-control" v-model="totalCases">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Order Ship Date :</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input tabindex="" type="text" maxLength="250" value="" name="orderShipDate" id="orderShipDate" class="form-control currentdatepicker" v-model="orderShipDate">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Total Actual Open Order :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="totalActualOpenOrder" id="totalActualOpenOrder" class="form-control" v-model="totalActualOpenOrder">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Order Must Arrive By :</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input tabindex="" type="text" maxLength="250" value="" name="orderMustArriveBy" id="orderMustArriveBy" class="form-control currentdatepicker" v-model="orderMustArriveBy">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Total Actual Open Order :</label>
+        <div class="col-lg-4">
+            <input tabindex="" type="text" maxLength="250" value="" name="totalActualOpenOrder" id="totalActualOpenOrder" class="form-control" v-model="totalActualOpenOrder">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Cancel Date:</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input tabindex="" tabindex="" type="text" maxLength="250" value="" name="cancelDate" id="cancelDate" class="form-control currentdatepicker" v-model="cancelDate">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelMauve">Ship Service Level :</label>
+        <div class="col-lg-4">
+            <select class="form-control" v-model="ship_service_level_chosen" name="shipServiceLevel" id="shipServiceLevel">
+                <option v-for="option in ship_service_level" :value="option">{{option}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-6">
+            <div class="panel panel-mauve">
+                <div class="panel-heading">CS Notes:</div>
+                <div class="panel-body">
+                    <textarea name="csNotes" id="csNotes" class="form-control" v-model="csNotes"></textarea>
+                    <div class="row">
+                        <ul class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-beige">
+                <div class="panel-heading">Warehouse Notes:</div>
+                <div class="panel-body">
+                    <textarea name="warehouseNotes" id="warehouseNotes" class="form-control" v-model="warehouseNotes"></textarea>
+                    <div class="row">
+                        <ul class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Logistic Name :</label>
+        <div class="col-lg-4">
+            <input type="text" name="logisticName" id="logisticName" class="form-control" v-model="logisticName">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Status of Order :</label>
+        <div class="col-lg-4">
+            <select name="statusOfOrder" id="statusOfOrder" class="form-control" v-model="status_of_order_chosen">
+                <option v-for="option in status_of_order" :value="option">{{option}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Pick Up Type :</label>
+        <div class="col-lg-4">
+            <select name="pickUpType" id="pickUpType" class="form-control" v-model="pick_up_type_chosen">
+                <option v-for="option in pick_up_type" :value="option">{{option}}</option>
+            </select>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Carrier :</label>
+        <div class="col-lg-4">
+            <input type="text" name="carrier" id="carrier" class="form-control" v-model="carrier">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Pick Up Reference :</label>
+        <div class="col-lg-4">
+            <input type="text" name="pickUpReference" id="pickUpReference" class="form-control" v-model="pickUpReference">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Confirm Pickup Date :</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input type="text" name="confirmPickupDate" id="confirmPickupDate" class="form-control currentdatepicker" v-model="confirmPickupDate">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Confirm Pickup Time :</label>
+        <div class="col-lg-4">
+            <div class="input-group time">
+                <input type="text" name="confirmPickupTime" id="confirmPickupTime" class="form-control currenttimepicker" v-model="confirmPickupTime">
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Number of Pallets :</label>
+        <div class="col-lg-4">
+            <input type="text" name="numberOfPallets" id="numberOfPallets" class="form-control" v-model="numberOfPallets">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="panel panel-beige">
+            <div class="panel-heading">Logistic Team Internal Notes:</div>
+            <div class="panel-body">
+                <textarea name="logisticTeamInternalNotes" id="logisticTeamInternalNotes" class="form-control" v-model="logisticTeamInternalNotes"></textarea>
+                <div class="row">
+                    <ul class="list-group" style="padding: 10px 10px 0px 10px"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Date Logistical Handed PT to ALma :</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input type="text" name="dateLogisticalHandedPtToAlma" id="dateLogisticalHandedPtToAlma" class="form-control currentdatetimepicker" v-model="dateLogisticalHandedPtToAlma">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelBeige">Invoiced</label>
+        <div class="col-lg-4">
+          <div class="i-checks Invoiced">
+            <input type="checkbox" name="isInvoiced" id="isInvoiced" v-model="isInvoiced">
+          </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelRustic">Pick Date :</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input type="text" id="pickDate" name="pickDate" class="form-control currentdatepicker" v-model="pickDate">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelRustic">Frieght Location in Warehouse</label>
+        <div class="col-lg-4">
+            <input type="text" name="frieghtLocationInWarehouse" id="frieghtLocationInWarehouse" class="form-control" v-model="frieghtLocationInWarehouse">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-lg-2 col-form-label bg-formLabelRustic">Pro #:</label>
+        <div class="col-lg-4">
+            <input type="text" id="proNumber" name="proNumber" class="form-control" v-model="proNumber">
+        </div>
+        <label class="col-lg-2 col-form-label bg-formLabelRustic">Date Frieght Picked up:</label>
+        <div class="col-lg-4">
+            <div class="input-group date">
+                <input type="text" name="dateFrieghtPickedup" id="datefrieghtPickedup" class="form-control currentdatepicker" v-model="datefrieghtPickedup">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="panel panel-rustic">
+            <div class="panel-heading">Notes to Logistic Team from Warehouse:</div>
+            <div class="panel-body">
+                <textarea name="notesToLogisticTeamFromWarehouse" id="notesToLogisticTeamFromWarehouse" class="form-control" v-model="notesToLogisticTeamFromWarehouse"></textarea>
+                <div class="row">
+                    <ul class="list-group" style="padding: 10px 10px 0px 10px"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div></div>`,
+    data: function(){
+      return {
+        showdata:true,
+        orderNumber:"",
+        isAllocatedFull:false,
+        pkNumber:"",
+        totalSoQty:"",
+        poNumber:"",
+        totalCases:"",
+        orderShipDate:"",
+        totalActualOpenOrder:"",
+        orderMustArriveBy:"",
+        cancelDate:"",
+        ship_service_level:["Overnight","2nd Day", "3rd Day"], 
+        ship_service_level_chosen:"",
+        status_of_order: ["Order Shipped","Invoiced","Stagged","Routed","Waiting on Carrier"],
+        pick_up_type:["LTL","Parcel"],
+        pick_up_type_chosen:"",
+        status_of_order_chosen:"",
+        csNotes:"",
+        warehouseNotes:"",
+        logisticName:"",
+        carrier:"",
+        pickUpReference:"",
+        confirmPickupDate:"",
+        confirmPickupTime:"",
+        numberOfPallets:"",
+        logisticTeamInternalNotes:"",
+        dateLogisticalHandedPtToAlma:"",
+        datefrieghtPickedup: "",
+        isInvoiced:false,
+        pickDate:"",
+        frieghtLocationInWarehouse:"",
+        proNumber:"",
+        dateFrieghtPickedup:"",
+        notesToLogisticTeamFromWarehouse:"",
+      }
     },
-    methods: {},
+    mounted:() => {
+      $(".i-checks.isAllocatedFull").on("ifChanged",() => {
+        var ichecks = $(".i-checks.isAllocatedFull").iCheck({
+          checkboxClass:"icheckbox_square-green",
+          radioClass: "iradio_square-green",
+        });
+        if(ichecks[0].checked){
+          shippinglogs.$children[0]._data["isAllocatedFull"] = true;
+        }else{
+          shippinglogs.$children[0]._data["isAllocatedFull"] = false;
+        }
+      });
+      $(".i-checks.Invoiced").on("ifChanged",() => {
+        var ichecks = $(".i-checks.Invoiced").iCheck({
+          checkboxClass: "icheckbox_square-green",
+          radioClass: "iradio_square-green",
+        });
+        if(ichecks[0].checked){
+          shippinglogs.$children[0]._data["isInvoiced"] = true;
+        }else{
+          shippinglogs.$children[0]._data["isInvoiced"] = false;
+        }
+      })
+    }
   });
   let shippinglogs = new Vue({
     el: "#createShippingLogForm",
@@ -215,9 +492,13 @@ $(document).ready(function () {
       RMAReport: 0,
       OMSReport: 0,
       detailedUsers: 0,
+      orderShipDate2: "",
+      allocationTime:"",
+      whNumber:"",
     },
     components: {
       detailsofinternet: detailsofinternet,
+      domesticlogcomponent: domesticlogcomponent,
     },
     mounted: function () {
       $(".datepicker").attr("autocomplete", "off");
@@ -259,45 +540,107 @@ $(document).ready(function () {
         scrollMonth: false,
         scrollInput: false,
         minDate: 0,
-        onSelectDate: function (ct, $i) {
+        onSelectDate: function (ct, $i) {},
+        onClose: function (ct, $i) {
           ondateTimeChange($i[0].id, $i[0].value);
         },
       });
       $(".currenttimepicker").datetimepicker({
+        datepicker: false,
         timepicker: true,
         format: "H:i:s",
         scrollMonth: false,
         scrollInput: false,
         minDate: 0,
-        onSelectDate: function (ct, $i) {
+        onSelectTime: function (ct, $i) {},
+        onSelectDate: function (ct, $i) {},
+        onClose: function (ct, $i) {
           ondateTimeChange($i[0].id, $i[0].value);
         },
       });
-      function ondateTimeChange(
-        id_of_variable: string,
-        value_of_variable: string
-      ) {
-        var digit: number = 0;
-        let total_amount_of_indexes: number = Number(
-          this.$vm.$parent._data.detailedUsers
-        );
+       function ondateTimeChange(
+         id_of_variable: string,
+         value_of_variable: string
+       ) {
+      //   var digit: number = 0;
+      //   let total_amount_of_indexes: number = Number(
+      //     this.$vm.$parent._data.detailedUsers
+      //   );
+      //   var total_amount_of_indexes_clone: number = total_amount_of_indexes;
+      //   var id_of_variable_without_index: string = "";
+      //   while (total_amount_of_indexes_clone > 0) {
+      //     digit += 1;
+      //     total_amount_of_indexes_clone /= 10;
+      //   }
+      //   for (var i: number = digit; i > 0; i--) {
+      //     if (isNaN(id_of_variable.substring(id_of_variable.length - i))) {
+      //       id_of_variable_without_index = id_of_variable.substring(
+      //         0,
+      //         id_of_variable.length - i
+      //       );
+      //       break;
+      //     }
+      //   }
+      //   this.$vm0[digit]._data.id_of_variable_without_index = value_of_variable;
+      var digit: number = 0;
+        let total_amount_of_indexes: number = shippinglogs.$children.length;
         var total_amount_of_indexes_clone: number = total_amount_of_indexes;
+        var working_with_child_index: number = 0;
         var id_of_variable_without_index: string = "";
-        while (total_amount_of_indexes_clone > 0) {
-          digit += 1;
-          total_amount_of_indexes_clone /= 10;
+        if(id_of_variable == "orderShipDate" || id_of_variable == "orderIssueDate" ||id_of_variable == "orderMustArriveBy" || id_of_variable == "cancelDate" || id_of_variable == "confirmPickupDate" || id_of_variable == "confirmPickupTime" || id_of_variable == "numberOfPallets" || id_of_variable == "pickDate" || id_of_variable == "datefrieghtPickedup" || id_of_variable == "dateLogisticalHandedPtToAlma"){
+          shippinglogs.$children[0]._data[id_of_variable] = value_of_variable;
+        }else if(id_of_variable == "orderShipDate2" || id_of_variable == "allocationTime"){
+          shippinglogs._data[id_of_variable] = value_of_variable;
         }
-        for (var i: number = digit; i > 0; i--) {
-          if (isNaN(id_of_variable.substring(id_of_variable.length - i))) {
-            id_of_variable_without_index = id_of_variable.substring(
-              0,
-              id_of_variable.length - i
-            );
-            break;
+        else if (shippinglogs.$children.length != 0) {
+          while (total_amount_of_indexes_clone >= 1) {
+            digit += 1;
+            total_amount_of_indexes_clone /= 10;
+          }
+          for (var i: number = digit; i > 0; i--) {
+            if (!isNaN(id_of_variable.substring(id_of_variable.length - i))) {
+              id_of_variable_without_index = id_of_variable.substring(
+                0,
+                id_of_variable.length - i
+              );
+              working_with_child_index = parseInt(
+                id_of_variable.substring(id_of_variable.length - i)
+              );
+              break;
+            }
+          }
+          if (
+            id_of_variable_without_index == "saveBatchToZDotComOrders" ||
+            id_of_variable_without_index == "printSavePickListFromWMS" ||
+            id_of_variable_without_index == "createShipmentsInLingo" ||
+            id_of_variable_without_index ==
+              "openPickTicketPdfBatchToVerifyWeights" ||
+            id_of_variable_without_index == "printLabelsFromCustomerPortal" ||
+            id_of_variable_without_index == "printLabelsFromAlpineUPS" ||
+            id_of_variable_without_index == "sendASNThroughLingo" ||
+            id_of_variable_without_index == "addTrackingInCustomerPortal" ||
+            id_of_variable_without_index == "sendInvoiceThroughLingo" ||
+            id_of_variable_without_index == "sendInvoiceOnCustomerPortal" ||
+            id_of_variable_without_index == "verifyWithLeadBatch" ||
+            id_of_variable_without_index == "notesForLogisticInUSAOffice" ||
+            id_of_variable_without_index == "issuedToOrderLeadAlma" ||
+            id_of_variable_without_index == "orderLeadIssuedBatchToWarehouse" ||
+            id_of_variable_without_index ==
+              "warehouseLeadConfirmedPickTicketsReviewed" ||
+            id_of_variable_without_index == "invoiceDateInOMS" ||
+            id_of_variable_without_index == "numberOfInvoicesGenerate" ||
+            id_of_variable_without_index ==
+              "invoicedIssuesToReportToUSAOffice" ||
+            id_of_variable_without_index == "omsInvoicedUpdatedWithFrieght" ||
+            id_of_variable_without_index == "createASNInvoicedInLingo" ||
+            id_of_variable_without_index == "dateBatchIsInvoiced"
+          ) {
+            shippinglogs.$children[working_with_child_index]._data[
+              id_of_variable_without_index
+            ] = value_of_variable;
           }
         }
-        this.$vm0[digit]._data.id_of_variable_without_index = value_of_variable;
-      }
+       }
     },
     updated: function () {
       $(".i-checks").iCheck({
@@ -370,7 +713,12 @@ $(document).ready(function () {
         var total_amount_of_indexes_clone: number = total_amount_of_indexes;
         var working_with_child_index: number = 0;
         var id_of_variable_without_index: string = "";
-        if (shippinglogs.$children.length != 0) {
+        if(id_of_variable == "orderShipDate" || id_of_variable == "orderIssueDate" ||id_of_variable == "orderMustArriveBy" || id_of_variable == "cancelDate" || id_of_variable == "confirmPickupDate" || id_of_variable == "confirmPickupTime" || id_of_variable == "numberOfPallets" || id_of_variable == "pickDate" || id_of_variable == "datefrieghtPickedup" || id_of_variable == "dateLogisticalHandedPtToAlma"){
+          shippinglogs.$children[0]._data[id_of_variable] = value_of_variable;
+        }else if(id_of_variable == "orderShipDate2" || id_of_variable == "allocationTime"){
+          shippinglogs._data[id_of_variable] = value_of_variable;
+        }
+        else if (shippinglogs.$children.length != 0) {
           while (total_amount_of_indexes_clone >= 1) {
             digit += 1;
             total_amount_of_indexes_clone /= 10;
@@ -413,16 +761,32 @@ $(document).ready(function () {
             id_of_variable_without_index == "createASNInvoicedInLingo" ||
             id_of_variable_without_index == "dateBatchIsInvoiced"
           ) {
-            shippinglogs.$children[working_with_child_index - 1]._data[
+            shippinglogs.$children[working_with_child_index]._data[
               id_of_variable_without_index
             ] = value_of_variable;
           }
         }
       }
     },
+    methods: {
+      business_change: () => {
+        if(shippinglogs._data.business_chosen == "Domestic"){
+          shippinglogs.$children[0]._data.showdata = true;
+        }else{
+          shippinglogs.$children[0]._data.showdata = false;
+        }
+      }
+    }
   });
   $(".i-checks").iCheck({
     checkboxClass: "icheckbox_square-green",
     radioClass: "iradio_square-green",
   });
+  function business_change(){
+    if(shippinglogs._data.business_chosen == "Domestic"){
+      shippinglogs.$children[0]._data.showdata = true;
+    }else{
+      shippinglogs.$children[0]._data.showdata = false;
+    }
+  }
 });

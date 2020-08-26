@@ -53,7 +53,7 @@ require_once('IConstants.inc');?>
                                         </div>
                                         <label class="col-lg-2 col-form-label bg-formLabelYellow">Bussiness :</label>
                                         <div class="col-lg-4">
-                                            <select v-model="business_chosen" class="form-control">
+                                            <select v-model="business_chosen" class="form-control" v-on:change="business_change">
                                                 <option v-for="option in business" :value="option">{{option}}</option>
                                             </select>
                                         </div>

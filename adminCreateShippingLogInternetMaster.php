@@ -3,14 +3,14 @@
         <label class="col-lg-2 col-form-label bg-formLabelCyan">Order Ship Date :</label>
         <div class="col-lg-4">
             <div class="input-group date">
-                <input tabindex="" type="text" maxLength="250" value="" name="orderShipDate" id="orderShipDate" class="form-control currentdatepicker">
+                <input tabindex="" type="text" maxLength="250" value="" name="orderShipDate" id="orderShipDate2" class="form-control currentdatepicker" v-model="orderShipDate2">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
         </div>
         <label class="col-lg-2 col-form-label bg-formLabelCyan">Allocation Time :</label>
         <div class="col-lg-4">
             <div class="input-group time">
-                <input type="text" name="allocationTime" class="form-control currenttimepicker" id="allocationTime">
+                <input type="text" name="allocationTime" class="form-control currenttimepicker" id="allocationTime" v-model="allocationTime">
                 <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
             </div>
         </div>
@@ -18,7 +18,7 @@
     <div class="form-group row">
         <label class="col-lg-2 col-form-label bg-formLabelCyan">WH# :</label>
         <div class="col-lg-4">
-            <input type="text" value="" name="whNumber" id="whNumber" class="form-control">
+            <input type="text" value="" name="whNumber" id="whNumber" class="form-control" v-model="whNumber">
         </div>
         <label class="col-lg-2 col-form-label bg-formLabelCyan">Total Number of Pick Tickets for Batch from OMS Report :</label>
         <div class="col-lg-4">
@@ -44,7 +44,7 @@
 
     <?php $i = 1; include("adminCreateShippingLogInternetDetail.php");
     ?>
-
+    
 
 
 </div>
