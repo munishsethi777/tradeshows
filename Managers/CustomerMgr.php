@@ -36,8 +36,8 @@ class CustomerMgr{
     public function saveCustomerObject($customer,$isSaveBuyer = true){
         $id = self::$dataStore->save($customer);
         if(!empty($id) && $isSaveBuyer){
-            $buyer = BuyerMgr::getInstance();
-            $buyer->saveFromCustomer($id);
+            //$buyer = BuyerMgr::getInstance();
+            //$buyer->saveFromCustomer($id);
         }
         return $id;
     }

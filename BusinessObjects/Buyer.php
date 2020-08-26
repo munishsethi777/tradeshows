@@ -2,6 +2,7 @@
 class Buyer{
     private $seq,$firstname,$lastname,$email,$officephone,$cellphone,$notes,$customerseq,$createdby,$createdon,$lastmodifiedon,$category;
     private $imageextension;
+    private $responsibility,$skypeid,$buyertype;
     public static $className = "Buyer";
     public static $tableName = "buyers";
     
@@ -96,6 +97,51 @@ class Buyer{
     public function setImageExtension($imageExtention_){
         $this->imageextension = $imageExtention_;
     }
+
+    /**
+     * function to get Responsibility
+     */
+    public function getResponsibility(){
+        return $this->responsibility;
+    }
+    /**
+     * function to set Responsibility
+     * @param responsibility the text value of responsibility
+     */
+    public function setResponsibility($responsibility){
+        $this->responsibility = $responsibility;
+    }
+
+    /**
+     * function to get skypeid
+     */
+    public function getSkypeId(){
+        return $this->skypeid;
+    }
+
+    /**
+     * function to set skypeid
+     * @param skypeid text value of skypeid
+     */
+    public function setSkypeId($skypeid){
+        $this->skypeid = $skypeid;
+    }
+
+    /**
+     * function to get buyertype
+     */
+    public function getBuyerType(){
+        return $this->buyertype;
+    }
+
+    /**
+     * function to set buyertype
+     * @param buyertype enum value of buyertype
+     */
+    public function setBuyerType($buyertype){
+        $this->buyertype = $buyertype;
+    }
+
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );

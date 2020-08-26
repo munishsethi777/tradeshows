@@ -176,8 +176,71 @@ if(isset($_POST["id"])){
 								</div>
 						   </div>
 
+						   <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 2</label>
+	                        	<div class="col-lg-4">
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname2", null, $customer->getSalesPersonName2(),false,true);
+    			                        echo $select;
+	                             	?>	
+								</div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 2</label>
+	                        	<div class="col-lg-4">
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid2", null, $customer->getSalesPersonId2(),false,true);
+    			                        echo $select;
+	                             	?>
+								</div>
+						   </div>
+
+						   <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 3</label>
+	                        	<div class="col-lg-4">
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname3", null, $customer->getSalesPersonName3(),false,true);
+    			                        echo $select;
+	                             	?>	
+								</div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 3</label>
+	                        	<div class="col-lg-4">
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid3", null, $customer->getSalesPersonId3(),false,true);
+    			                        echo $select;
+	                             	?>
+								</div>
+						   </div>
+
+						   <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 4</label>
+	                        	<div class="col-lg-4">
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname4", null, $customer->getSalesPersonName4(),false,true);
+    			                        echo $select;
+	                             	?>	
+								</div>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 4</label>
+	                        	<div class="col-lg-4">
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+									 -->
+									<?php 
+ 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid4", null, $customer->getSalesPersonId4(),false,true);
+    			                        echo $select;
+	                             	?>
+								</div>
+						   </div>
+
 	                       <div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers to the Customer</label>
+	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers</label>
 	                       </div>
 	                       <div class="form-group row m-b-xs">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
@@ -196,6 +259,48 @@ if(isset($_POST["id"])){
 	                        	</div>
 	                        </div>
 	                       
+							
+							<div class="form-group row m-b-xs">
+	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Sales Rep</label>
+	                       	</div>
+	                       	<div class="form-group row m-b-xs">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
+	                       	</div>
+	                       	<div id="salesRep" class="salesRep">
+	                       	</div>
+	                        <div class="col-lg-12 pull-right">
+	                       		<div class="col-lg-1 pull-right">
+	                        		<button class="btn btn-xs btn-success" id="addSalesRepBtn" onclick="addSalesRep()" type="button">
+	                        		<i class="fa fa-plus"></i> Sales Rep</button>
+	                        	</div>
+	                        </div>
+
+							<div class="form-group row m-b-xs">
+	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Internal Support</label>
+	                       	</div>
+	                       	<div class="form-group row m-b-xs">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
+								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+	                       	</div>
+	                       	<div id="internalSupport" class="internalSupport">
+	                       	</div>
+	                        <div class="col-lg-12 pull-right">
+	                       		<div class="col-lg-1 pull-right">
+	                        		<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
+	                        		<i class="fa fa-plus"></i> Internal Support</button>
+	                        	</div>
+	                        </div>
+
 	                        <div class="form-group row">
 	                       		<div class="col-lg-2">
 		                        	<button class="btn btn-primary" onclick="saveCustomer()" type="button" style="width:85%">
@@ -297,28 +402,28 @@ function addBuyer(isDefaultRow,buyer){
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="firstname[]" class="form-control" placeholder="firstname">';
+		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="buyer_firstname[]" class="form-control" placeholder="firstname">';
 		html += '</div>'
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="lastname[]" class="form-control" placeholder="lastname">';
+		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="buyer_lastname[]" class="form-control" placeholder="lastname">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="buyer_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+phone+'" name="phone[]" class="form-control" placeholder="phone">';
+		html += '<input type="text"  maxLength="250" value="'+phone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="category[]" class="form-control">';
+		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		html += '<textarea name="notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+		html += '<textarea name="buyer_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
 		html +='</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
     		html += '<div class="col-lg-1 pull-right">';
@@ -332,6 +437,158 @@ function addBuyer(isDefaultRow,buyer){
 		populateBuyerCategories(category,ddId);
 }
 
+function addSalesRep(isDefaultRow,salesRep){
+	var firstName = "";
+	var lastName = "";
+	var phone = "";
+	var emailid = "";
+	var cellPhone = "";
+	var note = "";
+	var responsiblity = "";
+	index++;
+	var id = index;
+	if(typeof salesRep !== "undefined"){
+		if(salesRep.firstname != null){
+			firstName = salesRep.firstname;
+		}
+		if(salesRep.lastname != null){
+			lastName = salesRep.lastname;
+		}
+		if(salesRep.email != null){
+			emailid = salesRep.email;
+		}
+		if(salesRep.officephone != null){
+			phone = salesRep.officephone;
+		}
+		if(salesRep.cellphone != null){
+			cellPhone = salesRep.cellphone;
+		}
+		if(salesRep.notes != null){
+			note = salesRep.notes;
+		}
+		if(salesRep.responsibility != null){
+			console.log(salesRep.responsibility);
+			responsiblity = salesRep.responsibility;
+		}
+		id = salesRep.seq;
+	}
+	var ddId = 'responsibilitySelectDiv'+id;
+	var html = '<div class="salesRepDiv">';
+   		html += '<div class="form-group row m-b-xs">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="salesRep_firstname[]" class="form-control" placeholder="firstname">';
+		html += '</div>'
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="salesRep_lastname[]" class="form-control" placeholder="lastname">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text" maxLength="250" value="'+responsiblity+'" name="salesRep_responsiblity[]" class="form-control" placeholder="responsibility">';
+		//html += '</div>';
+		html += '</div>';
+		html += '</div>';
+		html += '<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">';
+		html += '<textarea name="salesRep_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+		html +='</div>';
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+    		html += '<div class="col-lg-1 pull-right">';
+    		html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+    		html += '</div>';
+		}
+		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>';
+		$("#salesRep").append(html);
+		
+		//populateSalesRepCategories(responsibility,ddId);
+}
+
+function addInternalSupport(isDefaultRow,internalSupport){
+	var firstName = "";
+	var lastName = "";
+	var phone = "";
+	var emailid = "";
+	var cellPhone = "";
+	var note = "";
+	var skypePersonId = "";
+	var category = "";
+	index++;
+	var id = index;
+	if(typeof internalSupport !== "undefined"){
+		if(internalSupport.firstname != null){
+			firstName = internalSupport.firstname;
+		}
+		if(internalSupport.lastname != null){
+			lastName = internalSupport.lastname;
+		}
+		if(internalSupport.email != null){
+			emailid = internalSupport.email;
+		}
+		if(internalSupport.officephone != null){
+			phone = internalSupport.officephone;
+		}
+		if(internalSupport.cellphone != null){
+			cellPhone = internalSupport.cellphone;
+		}
+		if(internalSupport.notes != null){
+			note = internalSupport.notes;
+		}
+		if(internalSupport.skypeid != null){
+			skypePersonId = internalSupport.skypeid;
+		}
+		category = internalSupport.category;
+		id = internalSupport.seq;
+	}
+	var ddId = 'categoryInternalSupportSelectDiv'+id;
+	var html = '<div class="internalSupportDiv">';
+   		html += '<div class="form-group row m-b-xs">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">';
+		html += '</div>'
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="internalSupport_lastname[]" class="form-control" placeholder="lastname">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control">';
+		html += '</select></div>';
+		html += '</div>';
+		html += '</div>';
+		html += '<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">';
+		html += '<textarea name="internalSupport_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+		html +='</div>';
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+    		html += '<div class="col-lg-1 pull-right">';
+    		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+    		html += '</div>';
+		}
+		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>';
+		$("#internalSupport").append(html);
+		
+		populateInternalSupportRepCategories(category,ddId);
+}
+
 function populateCustomerBuyers(){
 	if(customerSeq != 0){
     	$.get("Actions/CustomerAction.php?call=getCustomerBuyers&id=<?php echo $customerSeq ?>", function(data){
@@ -340,9 +597,22 @@ function populateCustomerBuyers(){
        		var i = 0;
        		$.each( buyers, function( index, buyer ){
            		if(i == 0){
-       				addBuyer(true,buyer);
+					  
+					if(buyer.buyertype == "buyer"){
+       					addBuyer(true,buyer);
+					}else if(buyer.buyertype == "salesrep"){
+						addSalesRep(true, buyer);
+					}else if(buyer.buyertype == "internalsupport"){
+						addInternalSupport(true,buyer);
+					}
            		}else{
-           			addBuyer(false,buyer);
+					if(buyer.buyertype == "buyer"){
+       					addBuyer(false,buyer);
+					}else if(buyer.buyertype == "salesrep"){
+						addSalesRep(false, buyer);
+					}else if(buyer.buyertype == "internalsupport"){
+						addInternalSupport(false,buyer);
+					}
            		} 
            		i++;
        		});
@@ -350,6 +620,8 @@ function populateCustomerBuyers(){
 		});
 	}else{
 		addBuyer(true)
+		addSalesRep(true);
+		addInternalSupport(true);
 	}
 }
 function setCustomerId(seq){
@@ -389,8 +661,27 @@ function loadCustomers(){
 function populateBuyerCategories(selected,selectDivId){
 	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, function(data){
    		var jsonData = $.parseJSON(data);
-   		var ddhtml = jsonData.categoryDD;	
+   		var ddhtml = jsonData.categoryDD;
+		ddhtml = ddhtml.replace("name='category[]'","name=\"buyer_category[]\"");	
    		$("#"+selectDivId).html(ddhtml);
+	});
+}
+
+function populateSalesRepCategories(selected, selectDivId){
+	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, (data) =>{
+		var jsonData = $.parseJSON(data);
+		var ddhtml = jsonData.categoryDD;
+		ddhtml = ddhtml.replace("name='category[]'","name=\"salesRep_category[]\"");
+		$("#"+selectDivId).html(ddhtml);
+	});
+}
+
+function populateInternalSupportRepCategories(selected, selectDivId){
+	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, (data) => {
+		var jsonData = $.parseJSON(data);
+		var ddhtml = jsonData.categoryDD;
+		ddhtml = ddhtml.replace("name='category[]'","name=\"internalSupport_category[]\"");
+		$("#"+selectDivId).html(ddhtml);
 	});
 }
 
@@ -399,6 +690,14 @@ function deleteBuyer(btn){
 // 	if(index > 0){
 // 		index--;
 // 	}
+}
+
+function deleteSalesRep(btn){
+	$(btn).closest('.salesRepDiv').remove();
+}
+
+function deleteInternalSupport(btn){
+	$(btn).closest('.internalSupportDiv').remove();
 }
 
 function saveCustomer(){

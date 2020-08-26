@@ -1,0 +1,1 @@
+ALTER TABLE `buyers` ADD `responsibility` VARCHAR(200) NULL AFTER `imageextension`, ADD `skypeid` VARCHAR(200) NULL AFTER `responsibility`, ADD `buyertype` ENUM('buyer','salesrep','internalsupport') NOT NULL AFTER `skypeid`;

@@ -19,6 +19,77 @@ if($call == "saveCustomer"){
     try{
         $message = StringConstants::CUSTOMER_SAVED_SUCCESSFULLY;
         $customer = new Customer();
+        $buyers = array();
+        $salesReps = array();
+        $internalSupports = array();
+        try{
+            for($i = 0;$i< count($_REQUEST["buyer_firstname"]);$i++){
+                $arr = array();
+                $arr["firstname"] = $_REQUEST["buyer_firstname"][$i];
+                $arr["lastname"] = $_REQUEST["buyer_lastname"][$i];
+                $arr["emailid"] = $_REQUEST["buyer_emailid"][$i];
+                $arr["phone"] = $_REQUEST["buyer_phone"][$i];
+                $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
+                $arr["category"] = $_REQUEST["buyer_category"][$i];
+                $arr["notes"] = $_REQUEST["buyer_notes"][$i];
+                $buyers[] = $arr;
+            }
+        }catch(Exception $e){}
+        if(isset($_REQUEST["salesRep_firstname"])){
+            for($i = 0;$i<count($_REQUEST["salesRep_firstname"]);$i++){
+                $arr = array();
+                $arr["firstname"] = $_REQUEST["salesRep_firstname"][$i];
+                $arr["lastname"] = $_REQUEST["salesRep_lastname"][$i];
+                $arr["emailid"] = $_REQUEST["salesRep_emailid"][$i];
+                $arr["phone"] = $_REQUEST["salesRep_phone"][$i];
+                $arr["cellphone"] = $_REQUEST["salesRep_cellphone"][$i];
+                $arr["responsiblity"] = $_REQUEST["salesRep_responsiblity"][$i];
+                $arr["notes"] = $_REQUEST["salesRep_notes"][$i];
+                $salesReps[] = $arr;
+            }
+        }
+        if(isset($_REQUEST["internalSupport_firstname"])){
+            for($i = 0;$i < count($_REQUEST["internalSupport_firstname"]);$i++){
+                $arr = array();
+                $arr["firstname"] = $_REQUEST["internalSupport_firstname"][$i];
+                $arr["lastname"] = $_REQUEST["internalSupport_lastname"][$i];
+                $arr["emailid"] = $_REQUEST["internalSupport_emailid"][$i];
+                $arr["phone"] = $_REQUEST["internalSupport_phone"][$i];
+                $arr["cellphone"] = $_REQUEST["internalSupport_cellphone"][$i];
+                $arr["skypepersonid"] = $_REQUEST["internalSupport_skypePersonId"][$i];
+                $arr["category"] = $_REQUEST["internalSupport_category"][$i];
+                $arr["notes"] = $_REQUEST["internalSupport_notes"][$i];
+                $internalSupports[] = $arr;
+            }
+        }
+        try{
+        unset($_REQUEST["buyer_firstname"]);
+        unset($_REQUEST["buyer_lastname"]);
+        unset($_REQUEST["buyer_emailid"]);
+        unset($_REQUEST["buyer_phone"]);
+        unset($_REQUEST["buyer_cellphone"]);
+        unset($_REQUEST["buyer_category"]);
+        unset($_REQUEST["buyer_notes"]);
+        }catch(Exception $e){}
+        try{
+        unset($_REQUEST["salesRep_firstname"]);
+        unset($_REQUEST["salesRep_lastname"]);
+        unset($_REQUEST["salesRep_emailid"]);
+        unset($_REQUEST["salesRep_phone"]);
+        unset($_REQUEST["salesRep_cellphone"]);
+        unset($_REQUEST["salesRep_responsiblity"]);
+        unset($_REQUEST["salesRep_notes"]);
+        }catch(Exception $e){}
+        try{
+        unset($_REQUEST["internalSupport_firstname"]);
+        unset($_REQUEST["internalSupport_lastname"]);
+        unset($_REQUEST["internalSupport_emailid"]);
+        unset($_REQUEST["internalSupport_phone"]);
+        unset($_REQUEST["internalSupport_cellphone"]);
+        unset($_REQUEST["internalSupport_skypePersonId"]);
+        unset($_REQUEST["internalSupport_category"]);
+        unset($_REQUEST["internalSupport_notes"]);
+        }catch(Exception $e){}
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
         if(isset($_REQUEST["fullNameSelect"])){
@@ -38,7 +109,64 @@ if($call == "saveCustomer"){
         if($seq > 0){
             $message = StringConstants::CUSTOMER_UPDATE_SUCCESSFULLY;
         }
-        $customerMgr->saveCustomerObject($customer);
+        $seq = $customerMgr->saveCustomerObject($customer);
+        $buyerObjs = array();
+        foreach($buyers as $buyer){
+            $buyerObj = new Buyer();
+            $buyerObj->setFirstName($buyer["firstname"]);
+            $buyerObj->setLastName($buyer["lastname"]);
+            $buyerObj->setEmail($buyer["emailid"]);
+            $buyerObj->setOfficePhone($buyer["phone"]);
+            $buyerObj->setCellPhone($buyer["cellphone"]);
+            $buyerObj->setNotes($buyer["notes"]);
+            $buyerObj->setCategory($buyer["category"]);
+            $buyerObj->setCreatedon(new DateTime());
+            $buyerObj->setLastmodifiedon(new DateTime());
+            $buyerObj->setCustomerSeq($seq);
+            $buyerObj->setBuyerType("buyer");
+            $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
+            $buyerObjs[] = $buyerObj;
+        }
+        foreach($salesReps as $salesRep){
+            if(!(salesRep["firstname"] == "" && salesRep["lastname"] == "" && salesRep["emailid"] == "" && salesRep["phone"] == "" && salesRep["cellphone"] == "" && salesRep["notes"] == "" && salesRep["responsibility"] == "")){
+                $buyerObj = new Buyer();
+                $buyerObj->setFirstName($salesRep["firstname"]);
+                $buyerObj->setLastName($salesRep["lastname"]);
+                $buyerObj->setEmail($salesRep["emailid"]);
+                $buyerObj->setOfficePhone($salesRep["phone"]);
+                $buyerObj->setCellPhone($salesRep["cellphone"]);
+                $buyerObj->setNotes($salesRep["notes"]);
+                $buyerObj->setResponsibility($salesRep["responsiblity"]);
+                $buyerObj->setCreatedon(new DateTime());
+                $buyerObj->setLastmodifiedon(new DateTime());
+                $buyerObj->setCustomerSeq($seq);
+                $buyerObj->setBuyerType("salesrep");
+                $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
+                $buyerObjs[] = $buyerObj;
+            }
+        }
+        foreach($internalSupports as $internalSupport){
+            $buyerObj = new Buyer();
+            $buyerObj->setFirstName($internalSupport["firstname"]);
+            $buyerObj->setLastName($internalSupport["lastname"]);
+            $buyerObj->setEmail($internalSupport["emailid"]);
+            $buyerObj->setOfficePhone($internalSupport["phone"]);
+            $buyerObj->setCellPhone($internalSupport["cellphone"]);
+            $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
+            $buyerObj->setCategory($internalSupport["category"]);
+            $buyerObj->setNotes($internalSupport["notes"]);
+            $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
+            $buyerObj->setCreatedon(new DateTime());
+            $buyerObj->setLastmodifiedon(new DateTime());
+            $buyerObj->setCustomerSeq($seq);
+            $buyerObj->setBuyerType("internalSupport");
+            $buyerObjs[] = $buyerObj;
+        }
+        $buyerMgr = BuyerMgr::getInstance();
+        $buyerMgr->deleteByCustomerSeq($seq);
+        foreach($buyerObjs as $buyerObj){
+            $buyerMgr->saveBuyer($buyerObj);
+        }
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();

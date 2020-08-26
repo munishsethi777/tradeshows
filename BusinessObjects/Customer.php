@@ -2,6 +2,7 @@
 class Customer{
     private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
     private $priority,$isstore,$storeid,$storename,$businesscategory;
+    private $salespersonid2,$salespersonname2,$salespersonid3,$salespersonname3,$salespersonid4,$salespersonname4;
     public static $className = "Customer";
     public static $tableName = "customers";
     public function setSeq($seq_){
@@ -45,6 +46,85 @@ class Customer{
     public function getSalesPersonId(){
         return $this->salespersonid;
     }
+    /**
+     * set the sales person name for second value
+     * @param salesPersonName_2 the value to set for sales person name 2 
+     */
+    public function setSalesPersonName2($salesPersonName_2){
+        $this->salespersonname2 = $salesPersonName_2;
+    }
+    /**
+     * get the sales person name for second value
+     */
+    public function getSalesPersonName2() {
+        return $this->salespersonname2;
+    }
+    /**
+     * set sales person id for second value
+     * @param salesPersonId_2 the value to set for sales person id 2
+     */
+    public function setSalesPersonId2($salesPersonId_2){
+        $this->salespersonid2 = $salesPersonId_2;
+    }
+    /** 
+     * get the sales person id for second value
+     */
+    public function getSalesPersonId2(){
+        return $this->salespersonid2;
+    }
+    /**
+     * set the sales person name for third value
+     * @param salesPersonName_3 the value to set for sales person name 3
+     */
+    public function setSalesPersonName3($salesPersonName_3){
+        $this->salespersonname3 = $salesPersonName_3;
+    }
+    /**
+     * get the sales person name for third value
+     */
+    public function getSalesPersonName3() {
+        return $this->salespersonname3;
+    }
+    /**
+     * set sales person id for third value
+     * @param salesPersonId_3 the value to set for sales person id 3
+     */
+    public function setSalesPersonId3($salesPersonId_3){
+        $this->salespersonid3 = $salesPersonId_3;
+    }
+     /** 
+     * get the sales person id for third value
+     */
+    public function getSalesPersonId3(){
+        return $this->salespersonid3;
+    }
+    /**
+     * set the sales person name for fourth value
+     * @param salesPersonName_4 the value to set for sales person name 4 
+     */
+    public function setSalesPersonName4($salesPersonName_4){
+        $this->salespersonname4 = $salesPersonName_4;
+    }
+    /**
+     * get the sales person name for fourth value
+     */
+    public function getSalesPersonName4() {
+        return $this->salespersonname4;
+    }
+    /**
+     * set sales person id for fourth value
+     * @param salesPersonId_4 the value to set for sales person id 4
+     */
+    public function setSalesPersonId4($salesPersonId_4){
+        $this->salespersonid4 = $salesPersonId_4;
+    }
+     /** 
+     * get the sales person id for fourth value
+     */
+    public function getSalesPersonId4(){
+        return $this->salespersonid4;
+    }
+
     public function setCreatedBy($createdBy_){
         $this->createdby = $createdBy_;
     }
