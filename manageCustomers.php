@@ -242,11 +242,23 @@ function showCustomerDetails(seq,rowId){
                     internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><td>" + notes + "</td><td>" + lastmodifiedon + "</td></tr>";
                     break;
             }
-		});
-        buyer_html += buyer_tablerows;
-        salesRep_html += salesRep_tablerows;
-        internalSupport_html += internalSupport_tablerows;
-        $(".buyers").html(buyer_html);
+        });
+        if(buyer_tablerows == ""){
+            buyer_html = "<label>No Buyers</label";
+        }else{
+            buyer_html += buyer_tablerows;
+        }
+        if(salesRep_tablerows == ""){
+            salesRep_html =  "<label>No Sales Rep</label>";
+        }else{
+            salesRep_html += salesRep_tablerows;
+        }
+        if(internalSupport_tablerows == ""){
+            internalSupport_html = "<label>No Internal Support</label>";
+        }else{
+            internalSupport_html += internalSupport_tablerows;
+        }
+            $(".buyers").html(buyer_html);
         $(".salesRep").html(salesRep_html);
         $(".internalSupport").html(internalSupport_html);
 	});
