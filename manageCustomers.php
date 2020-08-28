@@ -57,10 +57,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    		<input type="hidden" id="queryString" name="queryString"/>
    </form> 
      <!-- Modal Box for update comments and status -->  
-<div class="modal inmodal bs-example-modal-lg" id="customerDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal inmodal bs-example-modal-lg" id="customerDetailsModal" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" style="width:1100px">
     	<div class="modal-content animated fadeInRight">
-          <div class="modal-body itemDetailsModalDiv mainDiv">
+          <div class="modal-body itemDetailsModalDiv mainDiv" style="overflow:auto">
             <div class="ibox">
              <div class="ibox-content">
              	<?php include 'progress.php';?>
@@ -83,14 +83,32 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="form-group row">
                        		<label class="col-lg-2">Sales Person</label>
                            	<div class="col-lg-4"><label class="salespersonname lblDesc"></label></div>
-                            <label class="col-lg-2">Sales Person Id</label>
-                           	<div class="col-lg-4"><label class="salespersonid lblDesc"></label></div>
+                            <label class="col-lg-3">Sales Person Id</label>
+                           	<div class="col-lg-3"><label class="salespersonid lblDesc"></label></div>
+                        </div>
+                        <div class="form-group row">
+                       		<label class="col-lg-2">Sales Person 2</label>
+                           	<div class="col-lg-4"><label class="salespersonname2 lblDesc"></label></div>
+                            <label class="col-lg-3">Sales Person Id 2</label>
+                           	<div class="col-lg-3"><label class="salespersonid2 lblDesc"></label></div>
+                        </div>
+                        <div class="form-group row">
+                       		<label class="col-lg-2">Sales Person 3</label>
+                           	<div class="col-lg-4"><label class="salespersonname3 lblDesc"></label></div>
+                            <label class="col-lg-3">Sales Person Id 3</label>
+                           	<div class="col-lg-3"><label class="salespersonid3 lblDesc"></label></div>
+                        </div>
+                        <div class="form-group row">
+                       		<label class="col-lg-2">Sales Person 4</label>
+                           	<div class="col-lg-4"><label class="salespersonname4 lblDesc"></label></div>
+                            <label class="col-lg-3">Sales Person Id 4</label>
+                           	<div class="col-lg-3"><label class="salespersonid4 lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
                        		 <label class="col-lg-2">Business Type</label>
                            	<div class="col-lg-4"><label class="businesstype lblDesc"></label></div>
-                       		<label class="col-lg-2">Created On</label>
-                           	<div class="col-lg-4"><label class="createdon lblDesc"></label></div>
+                       		<label class="col-lg-3">Created On</label>
+                           	<div class="col-lg-3"><label class="createdon lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
                        		 <label class="col-lg-2">Business Category</label>
@@ -99,10 +117,12 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="form-group row">
                        		 <label class="col-lg-2">Store Id</label>
                            	<div class="col-lg-4"><label class="storeid lblDesc"></label></div>
-                       		<label class="col-lg-2">Store Name</label>
-                           	<div class="col-lg-4"><label class="storename lblDesc"></label></div>
+                       		<label class="col-lg-3">Store Name</label>
+                           	<div class="col-lg-3"><label class="storename lblDesc"></label></div>
                         </div><br>
                         <div class="buyers"></div>
+                        <div class="salesRep"></div>
+                        <div class="internalSupport"></div>
                     </div>
                 </div>
                 </div>
@@ -153,14 +173,18 @@ function showCustomerDetails(seq,rowId){
 	showHideProgress();
 	$.getJSON("Actions/CustomerAction.php?call=getCustomerDetails&seq="+seq, function(data){
 		showHideProgress();
-		var item = data.customer;
-		var buyer = data.buyers
+        var item = data.customer;
+        var buyer = data.buyers;
 		$('#customerDetailsModal').modal('show');
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-		var html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
-	    var tablerows = "";
+        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
+        var  salesRep_html = '<h3>SalesRep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Responsibility</th><th>Notes</th><th>Modified On</th></tr>';
+        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Skype Id</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
+        var buyer_tablerows = "";
+        var salesRep_tablerows = "";
+        var internalSupport_tablerows = "";
 	    $.each(buyer,function(key,buyer){
 		    var dppic = "";
             var firstname = "";
@@ -170,9 +194,13 @@ function showCustomerDetails(seq,rowId){
 			var cellPhone = "";
 			var category = "";
 			var notes = "";
-			lastmodifiedon = "";
+            var lastmodifiedon = "";
+            var responsibility = "";
+            var skypeid = "";
             if(buyer.imageextension != null){
                 dppic = "<?php echo $ConstantsArray['buyerImagePath'];?>" + buyer.imageextension;
+            }else{
+                dppic = "<?php echo $ConstantsArray['buyerImagePath'];?>" + "dummy.jpg";
             }
 			if(buyer.firstname  != null ){
 				firstname = buyer.firstname;
@@ -196,11 +224,31 @@ function showCustomerDetails(seq,rowId){
 			}
 			if(buyer.lastmodifiedon  != null ){
 				lastmodifiedon = buyer.lastmodifiedon;
-			}
-			tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
+            }
+            if(buyer.responsibility != null){
+                responsibility = buyer.responsibility;
+            }
+            if(buyer.skypeid != null){
+                skypeid = buyer.skypeid;
+            }
+            switch(buyer.buyertype){
+                case "buyer":
+                    buyer_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
+                    break;
+                case "salesrep":
+                    salesRep_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + responsibility + "</td><td>" + notes + "</td><td>" + lastmodifiedon + "</td></tr>";
+                    break;
+                case "internalsupport":
+                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><td>" + notes + "</td><td>" + lastmodifiedon + "</td></tr>";
+                    break;
+            }
 		});
-		html += tablerows;
-		$(".buyers").html(html);
+        buyer_html += buyer_tablerows;
+        salesRep_html += salesRep_tablerows;
+        internalSupport_html += internalSupport_tablerows;
+        $(".buyers").html(buyer_html);
+        $(".salesRep").html(salesRep_html);
+        $(".internalSupport").html(internalSupport_html);
 	});
 }
 function editShow(seq){
