@@ -947,7 +947,11 @@ $(document).ready(function () {
               }
               if(data.business == "domestic"){
                   shippinglogs.$children[0]._data.orderNumber = data.orderno;
-                  shippinglogs.$children[0]._data.isAllocatedFull = data.allocatedfull;
+                  if(data.allocatedfull == "1"){
+                    shippinglogs.$children[0]._data.isAllocatedFull = true;
+                  }else{
+                    shippinglogs.$children[0]._data.isAllocatedFull = false;
+                  }
                   shippinglogs.$children[0]._data.pkNumber = data.pkno;
                   shippinglogs.$children[0]._data.poNumber = data.pono;
                   shippinglogs.$children[0]._data.proNumber = data.prono;
@@ -959,7 +963,11 @@ $(document).ready(function () {
                   shippinglogs.$children[0]._data.csNotes = data.csnotes;
                   shippinglogs.$children[0]._data.datefrieghtPickedup = data.datefrieghtpickedup;
                   shippinglogs.$children[0]._data.frieghtLocationInWarehouse = data.frieghtlocationinwarehouse;
-                  shippinglogs.$children[0]._data.isInvoiced = data.invoiced;
+                  if(data.invoiced == "1"){
+                    shippinglogs.$children[0]._data.isInvoiced = true;
+                  }else{
+                    shippinglogs.$children[0]._data.isInvoiced = false;
+                  }
                   shippinglogs.$children[0]._data.logisticName = data.logisticname;
                   shippinglogs.$children[0]._data.logisticTeamInternalNotes = data.logisticteaminternalnotes;
                   shippinglogs.$children[0]._data.notesToLogisticTeamFromWarehouse = data.notesToLogisticTeamFromWarehouse;

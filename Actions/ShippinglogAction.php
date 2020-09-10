@@ -35,15 +35,16 @@ if($call == "saveShippinglog"){
         if($_REQUEST["business"] == "domestic"){
             $shippinglogdomestic = new Shippinglogdomestic();
             $shippinglogdomestic = $shippinglogdomestic->createFromRequest($_REQUEST);
-            if($_REQUEST["allocatefull"] == ""){
-                $shippinglogdomestic->setAllocatedFull(0);
+            $shippinglogdomestic->setSeq(null);
+            if(isset($_REQUEST["allocatefull"])){
+                $shippinglogdomestic->setAllocatedFull("1");
             }else{
-                $shippinglogdomestic->setAllocatedFull(1);
+                $shippinglogdomestic->setAllocatedFull("0");
             }
-            if($_REQUEST["invoiced"] == ""){
-                $shippinglogdomestic->setInvoiced(0);
+            if(isset($_REQUEST["invoiced"])){
+                $shippinglogdomestic->setInvoiced("1");
             }else{
-                $shippinglogdomestic->setInvoiced(1);
+                $shippinglogdomestic->setInvoiced("0");
             }
             $shippinglogdomestic->setCreatedOn(new DateTime());
             $shippinglogdomestic->setModifiedOn(new DateTime());
