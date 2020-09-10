@@ -41,6 +41,7 @@ $isEnabled = "";
 $isEnabledMobile = "";
 $isSendNotifications = "";
 $qcDepartmentChecked = "";
+$shippinglogDepartmentChecked = "";
 $containerDepartmentChecked = "";
 $graphicDepartmentChecked = "";
 $customerDepartmentChecked = "";
@@ -125,6 +126,9 @@ if (in_array(5, $departmentSeqArr)) {
 }
 if (in_array(8, $departmentSeqArr)) {
     $emailLogsChecked = "checked";
+}
+if (in_array(9, $departmentSeqArr)){
+	$shippinglogDepartmentChecked = "checked";
 }
 if (in_array(3, $departmentSeqArr)) {
     $itemSpecificsChecked = "checked";
@@ -768,6 +772,16 @@ if (in_array(3, $departmentSeqArr)) {
 														</li>
 													</ul>
 
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm">
+														<input type="checkbox" <?php echo $shippinglogDepartmentChecked?> value="9" id="shippinglogDepeartment" name = "departments[]">
+													</div>
+													Shipping Logs 
 												</div>
 											</div>
 										</div>

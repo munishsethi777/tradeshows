@@ -21,6 +21,7 @@ $isShowTasks = "";
 $manageItems = "";
 $manageItemSpecification = "";
 $manageCustomers = "";
+$manageShippinglogs = "";
 $adminManageOrders = "";
 $manageQCSchedules = "";
 $manageClassCodes = "";
@@ -54,6 +55,8 @@ if($file == "dashboardmain.php"){
 	$adminManageOrders = "active";
 }elseif($file=="adminManageQCSchedules.php" || $file== "adminCreateQCSchedule.php" || $file=="adminImportQCSchedules.php"){
 	$manageQCSchedules = "active";
+}elseif($file=="adminManageShippinglog.php" || $file=="adminCreateShippinglogs.php"){
+	$manageShippinglogs = "active";
 }elseif($file=="adminManageGraphicLogs.php" || $file== "adminCreateGraphicLog.php" || $file=="adminImportGraphicLogs.php"){
 	$manageGraphicLogs = "active";
 }elseif($file=="adminManageUsers.php" || $file== "adminCreateUser.php"){
@@ -132,7 +135,13 @@ if($file == "dashboardmain.php"){
                     <a href="manageEmailLogs.php"><i class="fa fa-envelope"></i> 
                     	<span class="nav-label">Email Logs</span>  
                     </a>
-                </li>
+				</li>
+				<li class="<?php echo $manageShippinglogs;?>">
+					<a href="adminManageShippinglog.php">
+						<i class="fa fa-ship"></i>
+						<span class="nav-label">Shipping Logs</span>
+					</a>
+				</li>
                  <!--
                 <li class="<?php echo $adminManageOrders;?>">
                    <a href="adminManageOrders.php"><i class="fa fa-truck"></i> 
@@ -265,7 +274,15 @@ if($file == "dashboardmain.php"){
                     	   	<span class="nav-label">Manage Customers</span>  
                        </a>
                 	</li>
-                	<?php }?>
+					<?php }?>
+					<?php if(in_array(DepartmentType::Shipping_Logs,$departments)){?>
+					<li>
+						<a href="adminManageShippinglog.php">
+							<i class="fa fa-ship"></i>
+							<span class="nav-label">Shipping Logs</span>
+						</a>
+					</li>
+					<?php }?>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  

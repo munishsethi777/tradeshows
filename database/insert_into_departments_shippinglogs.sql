@@ -1,0 +1,1 @@
+INSERT INTO departments(title,isenabled) VALUES("Shipping Logs",1)
