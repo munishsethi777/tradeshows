@@ -1,0 +1,2 @@
+ALTER TABLE `shippinglogdomestic` ADD INDEX(`shippinglogseq`);
+ALTER TABLE `shippinglogdomestic` ADD CONSTRAINT `Shippinglog` FOREIGN KEY (`shippinglogseq`) REFERENCES `alpine`.`shippinglog`(`seq`) ON DELETE CASCADE ON UPDATE RESTRICT;
