@@ -21,7 +21,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicsNAReasonType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonName.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonId.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/BooleanType.php");
-
+require_once($ConstantsArray['dbServerUrl'] . "Enums/FreightForwarder.php");
 
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
@@ -199,6 +199,10 @@ class DropDownUtils {
 	public static function getGraphicsNAReasonTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$enums = GraphicsNAReasonType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
+	}
+	public static function getFreightForwarder($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = FreightForwarder::getAll();
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Any");
 	}
 	
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false,$disabled = "") {

@@ -46,6 +46,8 @@ class ContainerSchedule {
 	private $hotnotes;
 	private $ishotcontainer;
 	private $requesteddeliverydatetime;
+	private $freightforwarder;
+	
 	public function setSeq($seq) {
 		$this->seq = $seq;
 	}
@@ -322,7 +324,12 @@ class ContainerSchedule {
 	public function getRequestedDeliveryDateTime() {
 		return $this->requesteddeliverydatetime;
 	}
-	
+	public function getFreightForwarder() {
+	    return $this->freightforwarder;
+	}
+	public function setFreightForwarder($freightforwarder) {
+	    $this->freightforwarder = $freightforwarder;
+	}
 	public function from_array($array) {
 		foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
 			$flag = property_exists ( self::$className, $attrName );

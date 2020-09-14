@@ -149,7 +149,7 @@ if(isset($_REQUEST["id"])){
                         <div class="bg-white1 p-xs outterDiv darkdiv" style="position:relative">
                         	<div class="overlay"></div>
                         	<div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">AWU Ref:</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Custom Brocker Ref#:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" id="awureference" 
                                 			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
@@ -165,7 +165,7 @@ if(isset($_REQUEST["id"])){
 	                            </div>
 	                        </div>
 	                        <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Trans:</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Freight Forwarder Ref#:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" id="trans" 
                                 			maxLength="25" tabindex="<?php echo $informationTabIndex?>" value="<?php echo $containerSchedule->getTrans()?>" 
@@ -199,6 +199,15 @@ if(isset($_REQUEST["id"])){
 	                           
 	                            
 	                        </div>
+	                        <div class="form-group row">
+	                        	<label class="col-lg-2 col-form-label bg-formLabelDark">Freight Forwarder:</label>
+	                            <div class="col-lg-4">
+                                	<?php 
+                                	    $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $containerSchedule->getFreightForwarder(),false);
+			                            echo $select;
+	                             	?>
+	                            </div>
+	                           </div>
 	                         
 							<div class="row">
 								<div class="col-lg-6">
