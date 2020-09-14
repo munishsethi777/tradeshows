@@ -111,13 +111,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        <div class="form-group row m-t-sm">
 		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Container#:</label>
 		                           	<div class="col-sm-2"><label class="containerno lblDesc text-primary"></label></div>
-		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">AWU#:</label>
+		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Custom Brocker Ref#:</label>
 		                           	<div class="col-sm-2"><label class="awureference lblDesc text-primary"></label></div>
 		                           	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trucker:</label>
 		                           	<div class="col-sm-2"><label class="truckername lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
-		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Trans:</label>
+		                       		<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Freight Forwarder Ref#:</label>
 		                           	<div class="col-sm-2"><label class="trans lblDesc text-primary"></label></div>
 		                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA:</label>
 		                           	<div class="col-sm-6"><label class="etadatetime lblDesc text-primary"></label></div>
@@ -147,6 +147,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 		                        <div class="form-group row m-t-sm">
 		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Requested Delivery Date:</label>
 		                           	<div class="col-sm-10"><label class="requesteddeliverydatetime lblDesc text-primary"></label></div>
+		                        </div>
+		                        <div class="form-group row m-t-sm">
+		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">Freight Forwarder:</label>
+		                           	<div class="col-sm-10"><label class="freightforwarder lblDesc text-primary"></label></div>
 		                        </div>
 		                        <div class="form-group row m-t-sm">
 		                        	<label class="col-sm-2 lblTitle bg-formLabelDarkSm">ETA Notes:</label>
