@@ -306,7 +306,7 @@ $(document).ready(function(){
 	});
     applyFilter = function () {
        var addedFilterFields = [];
-       var existingFilter = $('#containerScheduleGrid').jqxGrid('getfilterinformation')
+       var existingFilter = $('#containerScheduleGrid').jqxGrid('getfilterinformation');
        var datafield = $("#fieldNameDD").val();
        $("#containerScheduleGrid").jqxGrid('clearfilters');
       //if(datafield != ''){
@@ -493,9 +493,10 @@ function loadGrid(){
       { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
       { text: 'Trucker', datafield: 'truckername', width:"5%"},
       { text: 'Trans', datafield: 'trans', width:"7%"},
-      { text: 'Warehouse', datafield: 'warehouse',hidden:true,width:"8%"},
+      
 	  { text: 'Hot', datafield: 'ishotcontainer',columntype:"checkbox",width: "4%"},
 	  { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
+	 { text: 'Warehouse', datafield: 'warehouse',width:"8%"},
       { text: 'Terminal', datafield: 'terminal',hidden:true,width:"15%"},
       { text: 'Requested dlvry', datafield: 'requesteddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
       { text: 'Scheduled dlvry', datafield: 'scheduleddeliverydatetime' ,filtertype: 'date',cellsformat: 'MM-dd-yyyy',width:"12%" },
