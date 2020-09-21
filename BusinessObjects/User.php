@@ -4,7 +4,7 @@ class User{
 	public static $className = "user";
 	
 	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon,$usertimezone;
-	private $lastloggedindate,$isenabledmobile,$deviceid,$gcmid;
+	private $lastloggedindate,$isenabledmobile,$deviceid,$gcmid,$freightforwarder;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -111,7 +111,12 @@ class User{
 	public function getGCMId(){
 	    return $this->gcmid;
 	}
-	
+	public function setFreightForwarder($val){
+	    $this->freightforwarder = $val;
+	}
+	public function getFreightForwarder(){
+	    return $this->freightforwarder;
+	}
 	function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

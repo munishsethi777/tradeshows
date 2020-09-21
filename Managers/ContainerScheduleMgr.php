@@ -15,13 +15,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomExamStatusType.php");
 class ContainerScheduleMgr{
 	private static $containerScheduleMgr;
 	private static $dataStore;
+	private static $userDataStore;
 	public static function getInstance()
 	{
 		if (!self::$containerScheduleMgr)
 		{
 			self::$containerScheduleMgr = new ContainerScheduleMgr();
-			//self::$dataStore = ContainerScheduleDataStore::getInstance();//new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
 			self::$dataStore = new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
+			self::$userDataStore = new BeanDataStore(User::$className, User::$tableName);
 		}
 		return self::$containerScheduleMgr;
 	}
@@ -34,9 +35,14 @@ class ContainerScheduleMgr{
 	public function getContainerSchedulesForGrid(){
 	    $sessionUtil = SessionUtil::getInstance();
 	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+	    $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+	    $user = self::$userDataStore->findBySeq($loggedInUserSeq);
 		//$containerSchedules = $this->findAllArr(true);
 		$query = "select * from containerschedules";
 		$query = $this->applyDefaultCondition($query);
+		if(!empty($user->getFreightForwarder())){
+		    $query .= " and freightforwarder like '".$user->getFreightForwarder()."'";
+		}
 		$containerSchedules = self::$dataStore->executeQuery($query,true,true);
 		$mainArr = array();
 		foreach ($containerSchedules as $containerSchedule){
@@ -119,7 +125,13 @@ class ContainerScheduleMgr{
 	
 	public function getAllCount(){
 	    $query = "select count(*) from containerschedules";
+	    $sessionUtil = SessionUtil::getInstance();
+	    $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+	    $user = self::$userDataStore->findBySeq($loggedInUserSeq);
 	    $query = $this->applyDefaultCondition($query);
+	    if(!empty($user->getFreightForwarder())){
+	        $query .= " and freightforwarder like '".$user->getFreightForwarder()."'";
+	    }
 	    $count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}

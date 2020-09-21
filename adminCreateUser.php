@@ -621,7 +621,19 @@ if (in_array(3, $departmentSeqArr)) {
 														id="containerofficepermission" name="permissions[]" />
 														Office Information
 													</label>
-													<div class="col-lg-12 m-t-sm">
+													
+													<div class="form-group col-lg-12 row m-t-lg">
+                											<label class="col-lg-2 col-form-label">Freight Forwarder:</label>
+                                        					<div class="col-lg-4">
+                                        	                        		<?php
+                                                                
+                                                                $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), true);
+                                                                echo $select;
+                                                                // include('timezoneselect.php');
+                                                                ?>
+                                                                </div>
+                									</div>
+                									<div class="col-lg-12">
 														<h4>Select Notifications</h4>
 													</div>
 													<ul class="col-lg-6 todo-list ui-sortable p-h-xs">
