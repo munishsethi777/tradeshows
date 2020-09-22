@@ -41,7 +41,12 @@ class ContainerScheduleMgr{
 		$query = "select * from containerschedules";
 		$query = $this->applyDefaultCondition($query);
 		if(!empty($user->getFreightForwarder())){
-		    $query .= " and freightforwarder like '".$user->getFreightForwarder()."'";
+		    if(strpos($query, "where") == false){
+		        $query .= " WHERE";
+		    }else{
+		        $query .= " AND";
+		    }
+		    $query .= " freightforwarder like '".$user->getFreightForwarder()."'";
 		}
 		$containerSchedules = self::$dataStore->executeQuery($query,true,true);
 		$mainArr = array();
@@ -129,9 +134,14 @@ class ContainerScheduleMgr{
 	    $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 	    $user = self::$userDataStore->findBySeq($loggedInUserSeq);
 	    $query = $this->applyDefaultCondition($query);
-	    if(!empty($user->getFreightForwarder())){
-	        $query .= " and freightforwarder like '".$user->getFreightForwarder()."'";
-	    }
+	   if(!empty($user->getFreightForwarder())){
+		    if(strpos($query, "where") == false){
+		        $query .= " WHERE";
+		    }else{
+		        $query .= " AND";
+		    }
+		    $query .= " freightforwarder like '".$user->getFreightForwarder()."'";
+		}
 	    $count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
