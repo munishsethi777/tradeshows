@@ -17,10 +17,20 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	.form-group{
     		margin-bottom:5px;
     	}
+    	.reportDataCountRow .ibox-content{
+    	   background-color:white;
+    	}
+    	.peity{
+    	   margin-top:10px;
+    	}
     </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- Peity -->
+    <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
+    <script src="scripts/demo/peity-demo.js"></script>
+
 </head>
 <body>
 <?include "exportInclude.php"?>
@@ -28,47 +38,134 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    		<?php include("adminmenuInclude.php")?>
    		 <div id="page-wrapper" class="gray-bg">
 	        <div class="row border-bottom">
-	        	<div class="row">
-		            <div class="col-lg-12">
-		            	<div class="ibox">
-		                    <div class="ibox-title">
-		                    	 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox">
+							<div class="ibox-title">
+								<nav class="navbar navbar-static-top" role="navigation"
+									style="margin-bottom: 0">
 									<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 										href="#"><i class="fa fa-bars"></i> </a>
-										<h4 class="p-h-sm font-normal">Manage Graphic Logs</h4>
-								 </nav>
-		                     </div>
-		                     <div class="ibox-content">
-		                     		<div class="form-group row">
-			                       		<label class="col-lg-1 col-form-label">Search</label>
-			                        	<div class="col-lg-3">
-			                            	<select id="fieldNameDD" name="fieldNameDD" class="form-control">
-			                            		<option value=''>Select Field</option>
-			                            		<option value="approxgraphicschinasentdate">Approx Graphics China Sent Date</option>
-			                            		<option value="graphicartiststartdate">Artist Start Date</option>
-			                            		<option value="graphiccompletiondate">Artist Completion Date</option>
-			                            		<option value="chinaofficeentrydate">China Entry Date</option>
-			                            		<option value="estimatedshipdate">Estimated Ship Date</option>
-			                            		<option value="estimatedgraphicsdate">Estimated Graphics Date</option>
-			                            		<option value="finalgraphicsduedate">Final Graphics Due Date</option>
-			                            		<option value="confirmedposhipdate">PO Ship Date</option>
-			                            		<option value="usaofficeentrydate">US Entry Date</option>
-			                            	</select>
-			                            </div>
-			                            <div class="col-lg-4">
-				                            <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-											    <i class="fa fa-calendar"></i>&nbsp;
-											    <span></span> <i class="fa fa-caret-down"></i>
-											</div>
-			                            </div>
-			                        </div>
-		                     	
-		                     	<div id="graphiclogGrid"></div>
-		                     </div>
-	                    </div>	
-		            </div>
-	            </div>
-	        </div>
+									<h4 class="p-h-sm font-normal">Manage Graphic Logs</h4>
+								</nav>
+							</div>
+							<div class="ibox-content">
+								
+<!-- 								<div class="row reportDataCountRow"> -->
+<!-- 									<div class="col-lg-2"> -->
+<!-- 										<div class="ibox float-e-margins"> -->
+<!-- 											<div class="ibox-title"> -->
+<!-- 												<span class="label label-success pull-right">Daily</span> -->
+<!-- 												<h5>Completed</h5> -->
+<!-- 											</div> -->
+<!-- 											<div class="ibox-content"> -->
+<!-- 												<h1 class="no-margins">456</h1> -->
+<!-- 												<div class="stat-percent font-bold text-info"> -->
+<!-- 													45 (4%) <i class="fa fa-level-up"></i> -->
+<!-- 												</div> -->
+<!-- 												<small>Total projects</small> -->
+<!-- 												<span class="bar">100,230,32,302,343,123,554,556,312,344,100,230,32,302,343,123,554,556,312,344,100,230,32,302,343,123,554,556,312,344</span> -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+								<div class="row reportDataCountRow">
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                    <li class="list-group-item fist-item">
+                                                    	Projects overdue
+                                                        <span class="float-right label label-danger overDueCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects Due for Today
+                                                        <span class="float-right label label-danger dueForTodayCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects Due for Next Week
+                                                        <span class="float-right label label-danger dueForNextWeekCount">-</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+    												<li class="list-group-item fist-item">
+                                                    	Projects Due with Missing Information from China
+                                                        <span class="float-right label label-danger pastDueMissingInfoFromChinaCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects Due in less than 20 days from Entry
+                                                        <span class="float-right label label-danger dueLessThan20DaysFromEntryCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects Due in less than 20 days from Today
+                                                        <span class="float-right label label-danger dueLessThan20DaysFromTodayCount">-</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                    <li class="list-group-item fist-item">
+                                                    	Projects in Robby's Review
+                                                        <span class="float-right label label-danger robbysReviewCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects in Buyer's Review
+                                                        <span class="float-right label label-danger buyersReviewCount">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Projects in Manager's Review
+                                                        <span class="float-right label label-danger managersReviewCount">-</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="form-group row">
+									<label class="col-lg-1 col-form-label">Search</label>
+									<div class="col-lg-3">
+										<select id="fieldNameDD" name="fieldNameDD"
+											class="form-control">
+											<option value=''>Select Field</option>
+											<option value="approxgraphicschinasentdate">Approx Graphics
+												China Sent Date</option>
+											<option value="graphicartiststartdate">Artist Start Date</option>
+											<option value="graphiccompletiondate">Artist Completion Date</option>
+											<option value="chinaofficeentrydate">China Entry Date</option>
+											<option value="estimatedshipdate">Estimated Ship Date</option>
+											<option value="estimatedgraphicsdate">Estimated Graphics Date</option>
+											<option value="finalgraphicsduedate">Final Graphics Due Date</option>
+											<option value="confirmedposhipdate">PO Ship Date</option>
+											<option value="usaofficeentrydate">US Entry Date</option>
+										</select>
+									</div>
+									<div class="col-lg-4">
+										<div id="daterange"
+											style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+											<i class="fa fa-calendar"></i>&nbsp; <span></span> <i
+												class="fa fa-caret-down"></i>
+										</div>
+									</div>
+								</div>
+
+								<div id="graphiclogGrid"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 	     </div>
    </div>
    <form id="form1" name="form1" method="GET" action="Actions/GraphicLogAction.php">
@@ -118,6 +215,7 @@ function initDateRanges(){//building date search module
 }
 $(document).ready(function(){
    	loadGrid();
+   	loadDashCounts();
    	setInterval(function () {
 		$.post('Actions/UserAction.php?call=refreshSession',function(data){
 			//alert(data);
@@ -224,7 +322,21 @@ $(document).ready(function(){
 				delete selectedRows[rowBoundIndex];
 			});
  });
-
+function loadDashCounts(){
+	$.getJSON( "Actions/GraphicLogAction.php?call=getGraphicLogDashboardCounts",
+			function( response ){
+        	    $(".overDueCount").text(response.data.overDue);
+        	    $(".dueForTodayCount").text(response.data.dueForToday);
+        	    $(".dueForNextWeekCount").text(response.data.dueForNextWeek);
+        	    $(".pastDueMissingInfoFromChinaCount").text(response.data.pastDueMissingInfoFromChina);
+        	    $(".dueLessThan20DaysFromEntryCount").text(response.data.dueLessThan20DaysFromEntry);
+        	    $(".dueLessThan20DaysFromTodayCount").text(response.data.dueLessThan20DaysFromToday);
+        	    $(".robbysReviewCount").text(response.data.robbysReview);
+        	    $(".buyersReviewCount").text(response.data.buyersReview);
+        	    $(".managersReviewCount").text(response.data.managersReview);
+        	});
+}
+        
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
 		

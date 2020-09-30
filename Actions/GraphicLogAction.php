@@ -206,6 +206,30 @@ if($call == "deleteGraphicLog"){
 		$message = $e->getMessage();
 	}
 }
+if($call == "getGraphicLogDashboardCounts"){
+    $overDue = $graphicLogMgr->getForProjectOverDue();
+    $dueForToday = $graphicLogMgr->getForProjectDueForToday();
+    $dueForNextWeek = $graphicLogMgr->getForProjectDueForNextWeek();
+    $pastDueMissingInfoFromChina = $graphicLogMgr->getByPastDueWithMissingInfoFromChina();
+    $dueLessThan20DaysFromEntry = $graphicLogMgr->getForProjectDueLessThan20FromEntry();
+    $dueLessThan20DaysFromToday = $graphicLogMgr->getForProjectDueLessThan20FromToday();
+    $robbysReview = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::robby_reviewing);
+    $buyersReview = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::buyers_reviewing);
+    $managersReview = $graphicLogMgr->getByGraphicStatus(GraphicStatusType::manager_reviewing);
+    $arr = array();
+    $arr['overDue'] = count($overDue);
+    $arr['dueForToday'] = count($dueForToday);
+    $arr['dueForNextWeek'] = count($dueForNextWeek);
+    $arr['pastDueMissingInfoFromChina'] = count($pastDueMissingInfoFromChina);
+    $arr['dueLessThan20DaysFromEntry'] = count($dueLessThan20DaysFromEntry);
+    $arr['dueLessThan20DaysFromToday'] = count($dueLessThan20DaysFromToday);
+    $arr['robbysReview'] = count($robbysReview);
+    $arr['buyersReview'] = count($buyersReview);
+    $arr['managersReview'] = count($managersReview);
+    $response["data"] = $arr;
+    
+    
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
