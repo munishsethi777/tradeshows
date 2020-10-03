@@ -6,15 +6,17 @@ $(function() {
     $(".line").peity("line",{
         fill: '#1ab394',
         stroke:'#169c81',
+        width:"100%"
     })
 
     $(".bar").peity("bar", {
-        fill: ["#1ab394", "#d7d7d7"]
+        fill: ["#1ab394", "#d7d7d7"],
+        width:"100%"
     })
 
     $(".bar_dashboard").peity("bar", {
         fill: ["#1ab394", "#d7d7d7"],
-        width:100
+        width:"100%"
     })
 
     var updatingChart = $(".updating-chart").peity("line", { fill: '#1ab394',stroke:'#169c81', width: 64 })
