@@ -47,6 +47,73 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 										<h4 class="p-h-sm font-normal">Manage Container Schedules</h4>
 								 </nav>
 		                     </div>
+							 <div class="row reportDataCountRow">
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                    <li class="list-group-item fist-item">
+                                                    	ETA Report Count (next seven days)
+                                                        <span class="float-right label label-danger eta_report_count">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Empty Return Date Past Empty LFD (last seven days)
+                                                        <span class="float-right label label-danger empty_return_date_past_empty_lfd_report">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Pending Schedule Delivery Date For Today
+                                                        <span class="float-right label label-danger pending_schedule_delivery_date_for_today_report">-</span>
+													</li>
+													<li class="list-group-item">
+                                                    	Missing Terminal Appointment Date
+                                                        <span class="float-right label label-danger missing_terminal_appointment_date">-</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+    												<li class="list-group-item fist-item">
+                                                    	Empty Alpine Notification Pickup Date
+                                                        <span class="float-right label label-danger empty_alpine_notification_pickup_date">-</span>
+													</li>
+													<li class="list-group-item fist-item">
+                                                    	Missing Confirmed Delivery Date
+                                                        <span class="float-right label label-danger missing_confirmed_delivery_date">-</span>
+													</li>
+													<li class="list-group-item">
+                                                    	Missing ID 
+                                                        <span class="float-right label label-danger missing_id_report">-</span>
+													</li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                
+                                                    <li class="list-group-item">
+                                                    	Missing Received Dates In OMS
+                                                        <span class="float-right label label-danger missing_received_dates_in_oms">-</span>
+													</li>
+													<li class="list-group-item fist-item">
+                                                    	Missing Received Dates In WMS
+                                                        <span class="float-right label label-danger missing_received_dates_in_wms">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Missing Schedule Delivery Date
+                                                        <span class="float-right label label-danger missing_schedule_delivery_date">-</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+								</div>
 		                     <div class="ibox-content">
 		                     		<div class="form-group row">
 			                       		<label class="col-lg-1 col-form-label">Search</label>
@@ -373,7 +440,9 @@ $(document).ready(function(){
     });
     $('#daterange').on('apply.daterangepicker', function(ev, picker){
     	applyFilter();
-    });
+	});
+	
+	dashboardCounts();
  });
 
 	function getFilterQueryData(){
@@ -770,5 +839,27 @@ function deleteGraphicLog(gridId,deleteURL){
          bootbox.alert("No row selected.Please select row to delete!", function() {});
     }
 
+}
+function dashboardCounts(){
+	$.ajax({
+		url:"Actions/ContainerScheduleAction.php?call=getContainerScheduleActionDashboardCounts",
+		dataType: 'json',
+		success:function(data){
+			if(data.success == "1"){
+				$(".eta_report_count").text(data.data["eta_report_count"]);
+				$(".empty_return_date_past_empty_lfd_report").text(data.data["empty_return_date_past_empty_lfd_report"]);
+ 				$(".pending_schedule_delivery_date_for_today_report").text(data.data["pending_schedule_delivery_date_for_today_report"]);
+ 				$(".empty_alpine_notification_pickup_date").text(data.data["empty_alpine_notification_pickup_date"]);
+ 				$(".missing_id_report").text(data.data["missing_id_report"]);
+ 				$(".missing_terminal_appointment_date").text(data.data["missing_terminal_appointment_date"]);
+ 				$(".missing_schedule_delivery_date").text(data.data["missing_schedule_delivery_date"]);
+ 				$(".missing_confirmed_delivery_date").text(data.data["missing_confirmed_delivery_date"]);
+ 				$(".missing_received_dates_in_wms").text(data.data["missing_received_dates_in_wms"]);
+ 				$(".missing_received_dates_in_oms").text(data.data["missing_received_dates_in_oms"]);
+			}else{
+				toaster.error(data.message,'Failed');
+			}
+		}
+	});
 }
 </script>

@@ -170,6 +170,15 @@ if($call == "getContainerScheduleDetails"){
         $message  = $e->getMessage();
     }
 }
+if($call == "getContainerScheduleActionDashboardCounts"){
+	try{
+	$response["data"] = $containerScheduleMgr->getContainerScheduleNotificationDateCount();
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+		unset($response["data"]);
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

@@ -451,5 +451,30 @@ class ContainerScheduleMgr{
 		return $containerSchedule;
 	}
 	
+	public function getContainerScheduleNotificationDateCount(){
+		$container_schedule_datastore = ContainerScheduleDataStore::getInstance();
+		$eta_report_count = count($container_schedule_datastore->getETADatesPendingInNextSevenDays());
+		$empty_return_date_past_empty_lfd_report = count($container_schedule_datastore->getEmptyReturnDatePastEmptyLFD());
+ 		$pending_schedule_delivery_date_for_today_report = count($container_schedule_datastore->getPendingScheduleDeliveryDateForToday());
+ 		$empty_alpine_notification_pickup_date = count($container_schedule_datastore->getMissingAlpineNotificationDate());
+ 		$missing_id_report = count($container_schedule_datastore->getMissingIDReport());
+ 		$missing_terminal_appointment_date = count($container_schedule_datastore->getMissingTerminalAppointmentDate());
+ 		$missing_schedule_delivery_date = count($container_schedule_datastore->getMissingScheduleDeliveryDate());
+ 		$missing_confirmed_delivery_date = count($container_schedule_datastore->getMissingConfirmDeliveryDate());
+ 		$missing_received_dates_in_wms = count($container_schedule_datastore->getMissingReceivedDatesInWMS());
+ 		$missing_received_dates_in_oms = count($container_schedule_datastore->getMissingReceivedDatesInOMS());
+		return [
+			"eta_report_count" => $eta_report_count,
+			"empty_return_date_past_empty_lfd_report" => $empty_return_date_past_empty_lfd_report,
+			"pending_schedule_delivery_date_for_today_report" => $pending_schedule_delivery_date_for_today_report,
+			"empty_alpine_notification_pickup_date" => $empty_alpine_notification_pickup_date,
+			"missing_id_report" => $missing_id_report,
+			"missing_terminal_appointment_date" => $missing_terminal_appointment_date,
+			"missing_schedule_delivery_date" => $missing_schedule_delivery_date,
+			"missing_confirmed_delivery_date" => $missing_confirmed_delivery_date,
+			"missing_received_dates_in_wms" => $missing_received_dates_in_wms,
+			"missing_received_dates_in_oms" => $missing_received_dates_in_oms
+		];
+	}
 	
 }
