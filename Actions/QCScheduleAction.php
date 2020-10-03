@@ -278,6 +278,15 @@ if($call == "updateQCSchedules"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "getQCSchedulesDashboardCount"){
+	try{
+		$response["data"] = $qcScheduleMgr->getQCScheduleNotificationDateCount();
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = "0";
+		unset($response["data"]);
+	}
+}
 function utf8ize($d) {
     if (is_array($d)) {
         foreach ($d as $k => $v) {

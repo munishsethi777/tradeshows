@@ -1311,6 +1311,23 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 	    return $return;
 	}
 	
-	
+	public function getQCScheduleNotificationDateCount(){
+		$final_missing_appointments_report   =  count($this->getMissingAppoitmentForFinalInspectionDate());
+		$middle_missing_appointments_report  =  count($this->getMissingAppoitmentForMiddleInspectionDate());
+		$first_missing_appointments_report   =  count($this->getMissingAppoitmentForFirstInspectionDate());
+		$final_incompleted_schedules_report  =  count($this->getMissingActualFinalInspectionDate());
+		$middle_incompleted_schedules_report =  count($this->getMissingActualMiddleInspectionDate());
+		$first_incompleted_schedules_report  =  count($this->getMissingActualFirstInspectionDate());
+		$pending_qc_approval_report          =  count($this->getPendingQcForApprovals());
+		return [
+			"final_missing_appointments_report"  => $final_missing_appointments_report,
+			"middle_missing_appointments_report" => $middle_missing_appointments_report,
+			"first_missing_appointments_report"  => $first_missing_appointments_report,
+			"final_incompleted_schedules_report" => $final_incompleted_schedules_report,
+			"middle_incompleted_schedules_report"=> $middle_incompleted_schedules_report,
+			"first_incompleted_schedules_report" => $first_incompleted_schedules_report,
+			"pending_qc_approval_report"         => $pending_qc_approval_report
+		];
+	}
 	
 }

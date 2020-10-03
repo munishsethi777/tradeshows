@@ -59,7 +59,62 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 										href="#"><i class="fa fa-bars"></i> </a>
 										<h4 class="p-h-sm font-normal">Manage QC Schedules</h4>
 								 </nav>
-		                     </div>
+							 </div>
+							 <div class="row reportDataCountRow">
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                    <li class="list-group-item fist-item">
+                                                    	Final Missing Appointments (next 14 days)
+                                                        <span class="float-right label label-danger final_missing_appointments_report">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	Middle Missing Appointments (next 14 days)
+                                                        <span class="float-right label label-danger middle_missing_appointments_report">-</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    	First Missing Appointments (next 14 days)
+                                                        <span class="float-right label label-danger first_missing_appointments_report">-</span>
+													</li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+    												<li class="list-group-item fist-item">
+                                                    	Final Incompleted Schedules
+                                                        <span class="float-right label label-danger final_incompleted_schedules_report">-</span>
+													</li>
+													<li class="list-group-item fist-item">
+                                                    	Middle Incompleted Schedules
+                                                        <span class="float-right label label-danger middle_incompleted_schedules_report">-</span>
+													</li>
+													<li class="list-group-item">
+                                                    	First Incompleted Schedules  
+                                                        <span class="float-right label label-danger first_incompleted_schedules_report">-</span>
+													</li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="ibox float-e-margins">
+											<div class="ibox-content">
+    											<ul class="list-group clear-list no-margins">
+                                                
+                                                    <li class="list-group-item">
+                                                    	Pending QC Approval
+                                                        <span class="float-right label label-danger pending_qc_approval_report">-</span>
+													</li>
+                                                </ul>
+                                            </div>
+										</div>
+									</div>
+								</div>
 		                     <div class="ibox-content">
 		                     		<div class="form-group row">
 			                       		<div class="col-lg-3">
@@ -348,6 +403,7 @@ $(document).ready(function(){
     $("#exportBtn").click(function(e){
 		exportFinal(e,this);
 	});
+	getDashboardCount();
  });
 	function getFilterQueryData(){
 		var datafield = $("#fieldNameDD").val()
@@ -1008,5 +1064,23 @@ function subtractDays(date, days) {
     
 
 }*/
-
+function getDashboardCount(){
+	$.ajax({
+		url: "Actions/QCScheduleAction.php?call=getQCSchedulesDashboardCount",
+		dataType:"json",
+		success: (data) => {
+			if(data.success == "1"){
+				$(".final_missing_appointments_report"  ).text(data.data["final_missing_appointments_report"  ]);
+				$(".middle_missing_appointments_report" ).text(data.data["middle_missing_appointments_report" ]);
+				$(".first_missing_appointments_report"  ).text(data.data["first_missing_appointments_report"  ]);
+				$(".final_incompleted_schedules_report" ).text(data.data["final_incompleted_schedules_report" ]);
+				$(".middle_incompleted_schedules_report").text(data.data["middle_incompleted_schedules_report"]);
+				$(".first_incompleted_schedules_report" ).text(data.data["first_incompleted_schedules_report" ]);
+				$(".pending_qc_approval_report"         ).text(data.data["pending_qc_approval_report"         ]);
+			}else{
+				toaster.error(data.message,'Failed');
+			}
+		}
+	})
+}
 </script>
