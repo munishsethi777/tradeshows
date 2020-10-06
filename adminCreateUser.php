@@ -627,7 +627,7 @@ if (in_array(3, $departmentSeqArr)) {
                                         					<div class="col-lg-4">
                                         	                        		<?php
                                                                 
-                                                                $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), true);
+                                                                $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), false);
                                                                 echo $select;
                                                                 // include('timezoneselect.php');
                                                                 ?>
@@ -692,6 +692,13 @@ if (in_array(3, $departmentSeqArr)) {
 															<span class="m-l-xs">ETA Notes Updated (Instant)</span> <label
 															class="fa fa-question-circle" data-toggle="tooltip"
 															data-placement="left" title="Container Information sent when ETA notes are updated"></label>
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="eta_updated_instant"
+															<?php echo in_array(ContainerScheduleNotificationType::getName(ContainerScheduleNotificationType::eta_updated_instant), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">ETA Updated (Instant)</span> <label
+															class="fa fa-question-circle" data-toggle="tooltip"
+															data-placement="left" title="Container Information sent when ETA is updated"></label>
 														</li>
 														<li><input name="permissions[]" type="checkbox"
 															value="empty_return_notes_updated_instant"

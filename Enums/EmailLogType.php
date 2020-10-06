@@ -30,7 +30,8 @@ class EmailLogType extends BasicEnum{
     const CONTAINER_SCHEDULE_EMPTY_RETURN_NOTES_UPDATED = "ContainerScheduleEmtyReturnNotesUpdated";
     const CONTAINER_SCHEDULE_ALPINE_NOTES_UPDATED = "ContainerScheduleAlpineNotesUpdated";
     const CONTAINER_SCHEDULE_WAREHOUSE_UPDATED = "ContainerScheduleWarehouseUpdated";
-
+    const CONTAINER_SCHEDULE_ETA_DATE_UPDATED =  "ContainerScheduleETADateUpdated";
+    
     const GRAPHIC_LOG_NOTES_UPDATED = "GraphicLogNotesUpdated";
     const QC_APPROVED_REJECT_NOTIFICATION = "QCApprovedRejectNotification";
     const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "ContainerScheduleChangeTerminalAppointmentDate";

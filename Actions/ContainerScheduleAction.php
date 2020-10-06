@@ -68,6 +68,8 @@ if($call == "saveContainerSchedule"){
 			ContainerScheduleReportUtil::sendAlpinePickUpDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendTerminalAppointmentChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
 			ContainerScheduleReportUtil::sendRequestedDeliveryDateChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+			ContainerScheduleReportUtil::sendETAChangedNotification($containerSchedule, $existingContainerSchedule,$loggedInUserName);
+				
 			$isWarehouseUpdated = false;
 			$isEtaNotesUpdated = $containerSchedule->getETANotes() != $existingContainerSchedule->getETANotes();
 			$isEmptyReturnNotesUpdated = $containerSchedule->getEmptyNotes() != $existingContainerSchedule->getEmptyNotes();

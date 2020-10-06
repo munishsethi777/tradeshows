@@ -763,4 +763,60 @@ class ContainerScheduleReportUtil
             }
         }
     }
+    public static function sendETAChangedNotification($containerSchedule, $existingContainerSchedule,$userName)
+    {
+        $etaDateTime = $containerSchedule->getEtaDateTime();
+        $etaDateTimeExisting = $existingContainerSchedule->getEtaDateTime();
+    
+        $awuRef = $containerSchedule->getAWUReference();
+        $containerNum = $containerSchedule->getContainer();
+        $html = "User <b>$userName</b> has updated ETA for <b>Container#$containerNum</b> and <b>AWU#$awuRef</b> with following date:<br>";
+        $hasChangedDate = false;
+        if(!empty($etaDateTimeExisting)){
+            $etaDateTimeExisting = DateUtil::StringToDateByGivenFormat(DateUtil::$DB_FORMAT_WITH_TIME,$etaDateTimeExisting);
+        }
+        if ($etaDateTime != $etaDateTimeExisting){
+            if(!empty($etaDateTimeExisting)){
+                $etaDateTimeExisting = $etaDateTimeExisting->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $etaDateTimeExisting = "Empty";
+            }
+            if(!empty($etaDateTime)){
+                $etaDateTime = $etaDateTime->format(DateUtil::$APP_FORMAT_WITH_TIME);
+            }else{
+                $etaDateTime = "Empty";
+            }
+            $html .= "ETA Date from <b>$etaDateTimeExisting</b> to <b>$etaDateTime</b><br>";
+            $hasChangedDate = true;
+        }
+        if($hasChangedDate){
+            $phAnValues = array();
+            $phAnValues["DETAIL"] = $html;
+            $content = file_get_contents("../CSChangedAlpinePickupDateEmailTemplate.php");
+            $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $body = MailUtil::appendToEmailTemplateContainer($content);
+            //$toEmails = array("baljeetgaheer@gmail.com");
+            $subject = StringConstants::CONTAINER_SCHEDULE_CHANGE_ETA_DATE;
+            $userMgr = UserMgr::getInstance();
+            $users = $userMgr->getAllUsersWithRoles();
+            $users = self::getCSUsersByNotificationType($users,ContainerScheduleNotificationType::eta_updated_instant);
+            if(empty($users)){
+                return;
+            }
+            $toEmails = array();
+            foreach ($users as $user){
+                array_push($toEmails,$user->getEmail());
+            }
+            $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
+            if($bool){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                foreach ($users as $user){
+                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                }
+            }
+        }
+    
+    
+    
+    }
 }
