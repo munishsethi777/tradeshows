@@ -3,6 +3,7 @@ class Buyer{
     private $seq,$firstname,$lastname,$email,$officephone,$cellphone,$notes,$customerseq,$createdby,$createdon,$lastmodifiedon,$category;
     private $imageextension;
     private $responsibility,$skypeid,$buyertype;
+    private $officephoneext;
     public static $className = "Buyer";
     public static $tableName = "buyers";
     
@@ -141,6 +142,21 @@ class Buyer{
     public function setBuyerType($buyertype){
         $this->buyertype = $buyertype;
     }
+    /**
+     * function to get officephoneext
+     * @return VARCHAR(50)
+     */
+    public function getOfficePhoneExt(){
+        return $this->officephoneext;
+    }
+    /**
+     * function to set officephoneext
+     * @param officephoneext value of officephoneext VARCHAR(50)
+     */
+    public function setOfficePhoneExt($officephoneext){
+        $this->officephoneext = $officephoneext;
+    }
+
 
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {

@@ -1,0 +1,1 @@
+ALTER TABLE `buyers` ADD `officephoneext` VARCHAR(50) NULL AFTER `officephone`;

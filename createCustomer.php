@@ -265,8 +265,8 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Ext</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
 	                       	</div>
@@ -286,7 +286,8 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       </div>
@@ -307,7 +308,8 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
 								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
@@ -388,12 +390,13 @@ function showHideStoreFields(){
 var index = 0;
 function addBuyer(isDefaultRow,buyer){
 	var firstName = "";
-	var lastName = "";
-	var emailid = "";
-	var phone = "";
+	var lastName  = "";
+	var emailid   = "";
+	var phone     = "";
 	var cellPhone = "";
-	var note = "";
-	var category = "";
+	var note      = "";
+	var category  = "";
+	var ext       = "";
 	index++;
 	var id = index;
 	if (typeof buyer !== "undefined"){
@@ -408,6 +411,9 @@ function addBuyer(isDefaultRow,buyer){
 		}
 		if(buyer.officephone != null){
 			phone = buyer.officephone;
+		}
+		if(buyer.officephoneext != null){
+			ext = buyer.officephoneext;
 		}
 		if(buyer.cellphone != null){
 			cellPhone = buyer.cellphone;
@@ -430,26 +436,66 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="buyer_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_phoneext[]" class="form-control" placeholder="EXT.">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
+			html += `<a onclick="show_notes('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div><div class="col-sm-6">'
+    		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+    		html += '</div></div></div>';
+		}else{
+			html += '<div class="col-lg-1 pull-right">';
+			html += `<a onclick="show_notes('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div>';
+		}
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-// 		html += '<textarea name="buyer_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
-		html +='</div>';
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-    		html += '<div class="col-lg-1 pull-right">';
-    		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
-    		html += '</div>';
+		// modal
+		{
+			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="Buyer_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    						<div class="modal-dialog modal-lg">
+    							<div class="modal-content animated fadeInRight">
+									<div class="modal-body itemDetailsModalDiv mainDiv">
+    						        	<div class="ibox">
+    						          		<div class="ibox-content" style="height:115px;">
+												<div class="row">
+													<div class="col-sm-12">
+														<h3>Buyer Notes </h3>
+														<div class="form-group row m-t-sm">
+															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
+															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
+																<textarea id="buyer_notes_${id}" name="buyer_notes[]" placeholder="notes" class="form-control">${note}</textarea>
+															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
+														</div>
+													</div>        
+								                </div>
+							                </div>
+    						            </div>
+    						       	</div>
+    						        <div class="modal-footer">
+										<button type="button" onclick="setNote('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
+										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+    						        </div>
+    						    </div>
+							</div>
+						</div>`;		
+			$("body").append(htmlModal);
 		}
+ 		html += `<input type="hidden" name="buyer_notes[]" id="Buyer_notes_${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
+		html +='</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
 		$("#buyers").append(html);
@@ -458,13 +504,14 @@ function addBuyer(isDefaultRow,buyer){
 }
 
 function addSalesRep(isDefaultRow,salesRep){
-	var firstName = "";
-	var lastName = "";
-	var phone = "";
-	var emailid = "";
-	var cellPhone = "";
-	var note = "";
+	var firstName     = "";
+	var lastName      = "";
+	var phone         = "";
+	var emailid       = "";
+	var cellPhone     = "";
+	var note          = "";
 	var responsiblity = "";
+	var ext           = "";
 	index++;
 	var id = index;
 	if(typeof salesRep !== "undefined"){
@@ -479,6 +526,9 @@ function addSalesRep(isDefaultRow,salesRep){
 		}
 		if(salesRep.officephone != null){
 			phone = salesRep.officephone;
+		}
+		if(salesRep.officephoneext != null){
+			ext = salesRep.officephoneext;
 		}
 		if(salesRep.cellphone != null){
 			cellPhone = salesRep.cellphone;
@@ -504,26 +554,66 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="EXT.">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="'+responsiblity+'" name="salesRep_responsiblity[]" class="form-control" placeholder="responsibility">';
 		//html += '</div>';
 		html += '</div>';
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
+			html += `<a onclick="show_notes('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div><div class="col-sm-6">'
+			html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
+			html += '</div></div></div>';
+		}else{
+			html += '<div class="col-lg-1 pull-right">';
+			html += `<a onclick="show_notes('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div>';
+		}
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-// 		html += '<textarea name="salesRep_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
-		html +='</div>';
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-    		html += '<div class="col-lg-1 pull-right">';
-    		html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
-    		html += '</div>';
+		// modal
+		{
+			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="SalesRep_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    						<div class="modal-dialog modal-lg">
+    							<div class="modal-content animated fadeInRight">
+									<div class="modal-body itemDetailsModalDiv mainDiv">
+    						        	<div class="ibox">
+    						          		<div class="ibox-content" style="height:115px;">
+												<div class="row">
+													<div class="col-sm-12">
+														<h3>Sales Rep Notes </h3>
+														<div class="form-group row m-t-sm">
+															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
+															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
+																<textarea id="salesRep_notes_${id}" name="salesRep_notes[]" placeholder="notes" class="form-control">${note}</textarea>
+															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
+														</div>
+													</div>        
+								                </div>
+							                </div>
+    						            </div>
+    						       	</div>
+    						        <div class="modal-footer">
+										<button type="button" onclick="setNote('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
+										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+    						        </div>
+    						    </div>
+							</div>
+						</div>`;		
+			$("body").append(htmlModal);
 		}
+ 		html += `<input type="hidden" id="SalesRep_notes_${id}" name="salesRep_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
+		html += '</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
 		$("#salesRep").append(html);
@@ -532,14 +622,15 @@ function addSalesRep(isDefaultRow,salesRep){
 }
 
 function addInternalSupport(isDefaultRow,internalSupport){
-	var firstName = "";
-	var lastName = "";
-	var phone = "";
-	var emailid = "";
-	var cellPhone = "";
-	var note = "";
+	var firstName     = "";
+	var lastName      = "";
+	var phone         = "";
+	var emailid       = "";
+	var cellPhone     = "";
+	var note          = "";
 	var skypePersonId = "";
-	var category = "";
+	var category      = "";
+	var ext           = "";
 	index++;
 	var id = index;
 	if(typeof internalSupport !== "undefined"){
@@ -554,6 +645,9 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		}
 		if(internalSupport.officephone != null){
 			phone = internalSupport.officephone;
+		}
+		if(internalSupport.officephoneext != null){
+			ext = internalSupport.officephoneext;
 		}
 		if(internalSupport.cellphone != null){
 			cellPhone = internalSupport.cellphone;
@@ -579,8 +673,11 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="EXT.">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone">';
@@ -588,20 +685,59 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
+		
+		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
+			html += `<a onclick="show_notes('InternalSupport_${id}_Modal')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div><div class="col-sm-6">'
+    		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+    		html += '</div></div></div>';
+		}else{
+			html += '<div class="col-lg-1 pull-right">';
+			html += `<a onclick="show_notes('InternalSupport_${id}_Modal','InternalSupport_Notes_${id}','internalSupport_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += '</div>';
+		}
+		
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-// 		html += '<textarea name="internalSupport_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
-		html +='</div>';
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-    		html += '<div class="col-lg-1 pull-right">';
-    		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
-    		html += '</div>';
+		// modal
+		{
+			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="InternalSupport_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    						<div class="modal-dialog modal-lg">
+    							<div class="modal-content animated fadeInRight">
+									<div class="modal-body itemDetailsModalDiv mainDiv">
+    						        	<div class="ibox">
+    						          		<div class="ibox-content" style="height:115px;">
+												<div class="row">
+													<div class="col-sm-12">
+														<h3>Internal Support Notes </h3>
+														<div class="form-group row m-t-sm">
+															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
+															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
+																<textarea id="internalSupport_notes_${id}" name="internalSupport_notes_${id}" placeholder="notes" class="form-control">${note}</textarea>
+															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
+														</div>
+													</div>        
+								                </div>
+							                </div>
+    						            </div>
+    						       	</div>
+    						        <div class="modal-footer">
+										<button type="button" onclick="setNote('InternalSupport_${id}_Modal','InternalSupport_Notes_${id}','internalSupport_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
+										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+    						        </div>
+    						    </div>
+							</div>
+						</div>`;		
+			$("body").append(htmlModal);
 		}
+		html += `<input type="hidden" id="InternalSupport_Notes_${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
+		html +='</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
 		$("#internalSupport").append(html);
@@ -614,24 +750,45 @@ function populateCustomerBuyers(){
     	$.get("Actions/CustomerAction.php?call=getCustomerBuyers&id=<?php echo $customerSeq ?>", function(data){
        		var jsonData = $.parseJSON(data);
        		var buyers = jsonData.buyers;
-       		var i = 0;
+			   var i = 0;
+			   var buyerCount = false;
+			   var salesRepCount = false;
+			   var internalSupportCount = false;
        		$.each( buyers, function( index, buyer ){
            		if(i == 0){
 					  
 					if(buyer.buyertype == "buyer"){
-       					addBuyer(true,buyer);
+						   addBuyer(true,buyer);
+						   buyerCount = true;
 					}else if(buyer.buyertype == "salesrep"){
 						addSalesRep(true, buyer);
+						salesRepCount = true;
 					}else if(buyer.buyertype == "internalsupport"){
 						addInternalSupport(true,buyer);
+						internalSupportCount = true;
 					}
            		}else{
 					if(buyer.buyertype == "buyer"){
-       					addBuyer(false,buyer);
+						if(!buyerCount){
+							addBuyer(true, buyer);
+							buyerCount = true;
+						}else{
+						   addBuyer(false, buyer);
+						}
 					}else if(buyer.buyertype == "salesrep"){
-						addSalesRep(false, buyer);
+						if(!salesRepCount){
+							addSalesRep(true, buyer);
+							salesRepCount = true;
+						}else{
+							addSalesRep(false, buyer);
+						}
 					}else if(buyer.buyertype == "internalsupport"){
-						addInternalSupport(false,buyer);
+						if(!internalSupportCount){
+							addInternalSupport(true, buyer);
+							internalSupportCount = true;
+						}else{
+							addInternalSupport(false, buyer);
+						}
 					}
            		} 
            		i++;
@@ -733,5 +890,13 @@ function saveCustomer(){
 	}else{
 		$("#createCustomerForm")[0].reportValidity();
 	}
+}
+function show_notes(className,idName,textName){
+	$(`#${className}`).modal("show");
+	$(`#${textName}`).val($(`#${idName}`).val());
+}
+function setNote(className,idName,textName){
+	$(`#${idName}`).val($(`#${textName}`).val());
+	$(`#${className}`).modal("hide");
 }
 </script>

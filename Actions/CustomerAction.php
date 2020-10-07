@@ -29,6 +29,7 @@ if($call == "saveCustomer"){
                 $arr["lastname"] = $_REQUEST["buyer_lastname"][$i];
                 $arr["emailid"] = $_REQUEST["buyer_emailid"][$i];
                 $arr["phone"] = $_REQUEST["buyer_phone"][$i];
+                $arr["phoneext"] = $_REQUEST["buyer_phoneext"][$i];
                 $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
                 $arr["category"] = $_REQUEST["buyer_category"][$i];
                 $arr["notes"] = $_REQUEST["buyer_notes"][$i];
@@ -42,6 +43,7 @@ if($call == "saveCustomer"){
                 $arr["lastname"] = $_REQUEST["salesRep_lastname"][$i];
                 $arr["emailid"] = $_REQUEST["salesRep_emailid"][$i];
                 $arr["phone"] = $_REQUEST["salesRep_phone"][$i];
+                $arr["phoneext"] = $_REQUEST["salesRep_phoneext"][$i];
                 $arr["cellphone"] = $_REQUEST["salesRep_cellphone"][$i];
                 $arr["responsiblity"] = $_REQUEST["salesRep_responsiblity"][$i];
                 $arr["notes"] = $_REQUEST["salesRep_notes"][$i];
@@ -55,6 +57,7 @@ if($call == "saveCustomer"){
                 $arr["lastname"] = $_REQUEST["internalSupport_lastname"][$i];
                 $arr["emailid"] = $_REQUEST["internalSupport_emailid"][$i];
                 $arr["phone"] = $_REQUEST["internalSupport_phone"][$i];
+                $arr["phoneext"] = $_REQUEST["internalSupport_phoneext"][$i];
                 $arr["cellphone"] = $_REQUEST["internalSupport_cellphone"][$i];
                 $arr["skypepersonid"] = $_REQUEST["internalSupport_skypePersonId"][$i];
                 $arr["category"] = $_REQUEST["internalSupport_category"][$i];
@@ -93,6 +96,7 @@ if($call == "saveCustomer"){
             $buyerObj->setLastName($buyer["lastname"]);
             $buyerObj->setEmail($buyer["emailid"]);
             $buyerObj->setOfficePhone($buyer["phone"]);
+            $buyerObj->setOfficePhoneExt($buyer["phoneext"]);
             $buyerObj->setCellPhone($buyer["cellphone"]);
             $buyerObj->setNotes($buyer["notes"]);
             $buyerObj->setCategory($buyer["category"]);
@@ -110,6 +114,7 @@ if($call == "saveCustomer"){
                 $buyerObj->setLastName($salesRep["lastname"]);
                 $buyerObj->setEmail($salesRep["emailid"]);
                 $buyerObj->setOfficePhone($salesRep["phone"]);
+                $buyerObj->setOfficePhoneExt($salesRep["phoneext"]);
                 $buyerObj->setCellPhone($salesRep["cellphone"]);
                 $buyerObj->setNotes($salesRep["notes"]);
                 $buyerObj->setResponsibility($salesRep["responsiblity"]);
@@ -127,6 +132,7 @@ if($call == "saveCustomer"){
             $buyerObj->setLastName($internalSupport["lastname"]);
             $buyerObj->setEmail($internalSupport["emailid"]);
             $buyerObj->setOfficePhone($internalSupport["phone"]);
+            $buyerObj->setOfficePhoneExt($internalSupport["phoneext"]);
             $buyerObj->setCellPhone($internalSupport["cellphone"]);
             $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
             $buyerObj->setCategory($internalSupport["category"]);
