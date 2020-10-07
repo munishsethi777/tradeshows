@@ -1,6 +1,6 @@
 <?php
 class Customer{
-    private $seq,$fullname,$customerid,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
+    private $seq,$fullname,$customerid,$customertype,$insideaccountmanager,$salesadminlead,$chainstoresalesadmin,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
     private $priority,$isstore,$storeid,$storename,$businesscategory;
     private $salespersonid2,$salespersonname2,$salespersonid3,$salespersonname3,$salespersonid4,$salespersonname4;
     public static $className = "Customer";
@@ -25,7 +25,30 @@ class Customer{
     public function getCustomerId(){
         return $this->customerid;
     }
-    
+    public function getCustomerType(){
+        return $this->customertype;
+    }
+    public function setCustomerType($customertype){
+        $this->customertype = $customertype;
+    }
+    public function getInsideAccountManager(){
+        return $this->insideaccountmanager;
+    }
+    public function setInsideAccountManager($insideaccountmanager){
+        $this->insideaccountmanager = $insideaccountmanager;
+    }
+    public function getSalesAdminLead(){
+        return $this->salesadminlead;
+    }
+    public function setSalesAdminLead($salesadminlead){
+        $this->salesadminlead = $salesadminlead;
+    }
+    public function getChainStoreSalesAdmin(){
+        return $this->chainstoresalesadmin;
+    }
+    public function setChainStoreSalesAdmin($chainstoresalesadmin){
+        $this->chainstoresalesadmin = $chainstoresalesadmin;
+    }
     public function setBusinessType($businessType_){
         $this->businesstype = $businessType_;
     }

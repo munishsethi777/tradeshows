@@ -74,6 +74,10 @@ if($call == "saveCustomer"){
         }
         //$customer->setFreightForwarderEmail($_REQUEST['freightforwarderemail']);
         //$customer->setFreightForwarderName($_REQUEST['freightforwardername']);
+        $customer->setCustomerType($_REQUEST["customertype"]);
+        $customer->setInsideAccountManager($_REQUEST["insideaccountmanager"]);
+        $customer->setSalesAdminLead($_REQUEST["salesadminlead"]);
+        $customer->setChainStoreSalesAdmin($_REQUEST["chainstoresalesadmin"]);
         $customer->setIsStore($isStore);
         $customer->setCreatedby($sessionUtil->getUserLoggedInSeq());
         $customer->setCreatedon(new DateTime());

@@ -72,37 +72,47 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="form-group row m-t-sm">
                        		<label class="col-sm-2 lblTitle">Customer Id #</label>
                            	<div class="col-sm-4"><label class="customerid lblDesc text-primary"></label></div>
-                            <label class="col-sm-2 lblTitle">Priority</label>
-                           	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div>
+                           	<label class="col-lg-3">Customer Type</label>
+                            <div class="col-lg-3"><label class="customertype lblDesc"></label></div>
+<!--                             <label class="col-sm-2 lblTitle">Priority</label> -->
+<!--                            	<div class="col-sm-4"><label class="priority lblDesc text-primary"></label></div> -->
                         </div>
                         <div class="form-group row m-t-sm">
                         	<label class="col-sm-2">Customer Name</label>
                            	<div class="col-sm-4"><label class="fullname lblDesc"></label></div>
+                           	<label class="col-lg-3">Inside Account Manager</label>
+                          	<div class="col-lg-3"><label class="insideaccountmanager lblDesc"></label></div>
                         	
                         </div>
+<!--                         <div class="form-group row"> -->
+<!--                        		<label class="col-lg-2">Sales Person</label> -->
+<!--                            	<div class="col-lg-4"><label class="salespersonname lblDesc"></label></div> -->
+<!--                             <label class="col-lg-3">Sales Person Id</label> -->
+<!--                            	<div class="col-lg-3"><label class="salespersonid lblDesc"></label></div> -->
+<!--                         </div> -->
+<!--                         <div class="form-group row"> -->
+<!--                        		<label class="col-lg-2">Sales Person 2</label> -->
+<!--                            	<div class="col-lg-4"><label class="salespersonname2 lblDesc"></label></div> -->
+<!--                             <label class="col-lg-3">Sales Person Id 2</label> -->
+<!--                            	<div class="col-lg-3"><label class="salespersonid2 lblDesc"></label></div> -->
+<!--                         </div> -->
+<!--                         <div class="form-group row"> -->
+<!--                        		<label class="col-lg-2">Sales Person 3</label> -->
+<!--                            	<div class="col-lg-4"><label class="salespersonname3 lblDesc"></label></div> -->
+<!--                             <label class="col-lg-3">Sales Person Id 3</label> -->
+<!--                            	<div class="col-lg-3"><label class="salespersonid3 lblDesc"></label></div> -->
+<!--                         </div> -->
+<!--                         <div class="form-group row"> -->
+<!--                        		<label class="col-lg-2">Sales Person 4</label> -->
+<!--                            	<div class="col-lg-4"><label class="salespersonname4 lblDesc"></label></div> -->
+<!--                             <label class="col-lg-3">Sales Person Id 4</label> -->
+<!--                            	<div class="col-lg-3"><label class="salespersonid4 lblDesc"></label></div> -->
+<!--                         </div> -->
                         <div class="form-group row">
-                       		<label class="col-lg-2">Sales Person</label>
-                           	<div class="col-lg-4"><label class="salespersonname lblDesc"></label></div>
-                            <label class="col-lg-3">Sales Person Id</label>
-                           	<div class="col-lg-3"><label class="salespersonid lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Sales Person 2</label>
-                           	<div class="col-lg-4"><label class="salespersonname2 lblDesc"></label></div>
-                            <label class="col-lg-3">Sales Person Id 2</label>
-                           	<div class="col-lg-3"><label class="salespersonid2 lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Sales Person 3</label>
-                           	<div class="col-lg-4"><label class="salespersonname3 lblDesc"></label></div>
-                            <label class="col-lg-3">Sales Person Id 3</label>
-                           	<div class="col-lg-3"><label class="salespersonid3 lblDesc"></label></div>
-                        </div>
-                        <div class="form-group row">
-                       		<label class="col-lg-2">Sales Person 4</label>
-                           	<div class="col-lg-4"><label class="salespersonname4 lblDesc"></label></div>
-                            <label class="col-lg-3">Sales Person Id 4</label>
-                           	<div class="col-lg-3"><label class="salespersonid4 lblDesc"></label></div>
+                     		<label class="col-lg-2">Sales Admin Lead</label>
+                            	<div class="col-lg-4"><label class="salesadminlead lblDesc"></label></div>
+                            <label class="col-lg-3">Chain Store Sales Admin</label>
+                          	<div class="col-lg-3"><label class="chainstoresalesadmin lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
                        		 <label class="col-lg-2">Business Type</label>
@@ -113,15 +123,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         <div class="form-group row">
                        		 <label class="col-lg-2">Business Category</label>
                            	<div class="col-lg-4"><label class="businesscategory lblDesc"></label></div>
+                           	<label class="col-lg-3">Store Id</label>
+                           	<div class="col-lg-3"><label class="storeid lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
-                       		 <label class="col-lg-2">Store Id</label>
-                           	<div class="col-lg-4"><label class="storeid lblDesc"></label></div>
                        		<label class="col-lg-3">Store Name</label>
                            	<div class="col-lg-3"><label class="storename lblDesc"></label></div>
                         </div><br>
-                        <div class="buyers"></div>
                         <div class="salesRep"></div>
+                        <div class="buyers"></div>
                         <div class="internalSupport"></div>
                     </div>
                 </div>
@@ -179,9 +189,9 @@ function showCustomerDetails(seq,rowId){
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
-        var  salesRep_html = '<h3>SalesRep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Responsibility</th><th>Notes</th><th>Modified On</th></tr>';
-        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Skype Id</th><th>Category</th><th>Notes</th><th>Modified On</th></tr>';
+        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><!--<th>Notes</th>--><th>Modified On</th></tr>';
+        var  salesRep_html = '<h3>SalesRep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Responsibility</th><!--<th>Notes</th>--><th>Modified On</th></tr>';
+        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Skype Id</th><th>Category</th><!--<th>Notes</th>--><th>Modified On</th></tr>';
         var buyer_tablerows = "";
         var salesRep_tablerows = "";
         var internalSupport_tablerows = "";
@@ -233,13 +243,13 @@ function showCustomerDetails(seq,rowId){
             }
             switch(buyer.buyertype){
                 case "buyer":
-                    buyer_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><td>"+ notes +"</td><td>"+ lastmodifiedon +"</td></tr>";
+                    buyer_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><!--<td>"+ notes +"</td>--><td>"+ lastmodifiedon +"</td></tr>";
                     break;
                 case "salesrep":
-                    salesRep_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + responsibility + "</td><td>" + notes + "</td><td>" + lastmodifiedon + "</td></tr>";
+                    salesRep_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + responsibility + "</td><!--<td>" + notes + "</td>--><td>" + lastmodifiedon + "</td></tr>";
                     break;
                 case "internalsupport":
-                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><td>" + notes + "</td><td>" + lastmodifiedon + "</td></tr>";
+                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--><td>" + lastmodifiedon + "</td></tr>";
                     break;
             }
         });
@@ -300,6 +310,10 @@ function loadGrid(){
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Customer ID', datafield: 'customerid',width:"8%",cellsrenderer:showCustomerDetailAction},
+      { text: 'Customer Type', datafield: 'customertype', width:"8%"},
+      { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
+      { text: 'Sales Admin Lead', datafield:'salesadminlead', width:"8%"},
+      { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"8%"},
       { text: 'Name', datafield: 'fullname', width:"25%"},
       { text: 'Store Name', datafield: 'storename', width:"20%"},
       { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
@@ -316,7 +330,11 @@ function loadGrid(){
         sortcolumn: 'customerid',
         sortdirection: 'asc',
         datafields: [{ name: 'seq', type: 'integer' }, 
-                     { name: 'customerid', type: 'string' }, 
+                     { name: 'customerid', type: 'string' },
+                     { name: 'customertype', type: 'string'},
+                     { name: 'insideaccountmanager', type: 'string'},
+                     { name: 'salesadminlead', type: 'string'},
+                     { name: 'chainstoresalesadmin', type: 'string'}, 
                     { name: 'fullname', type: 'string' }, 
                     { name: 'storename', type: 'string' }, 
                     { name: 'businesstype', type: 'string' },

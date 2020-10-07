@@ -95,13 +95,13 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Priority </label>
+	                            <!-- <label class="col-lg-2 col-form-label bg-formLabel">Priority </label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-    										$select = DropDownUtils::getPriorityTypes("priority", null, $customer->getPriority(),false);
-    			                            echo $select;
+//     										$select = DropDownUtils::getPriorityTypes("priority", null, $customer->getPriority(),false);
+//     			                            echo $select;
 	                             	?>
-	                        	</div>
+	                        	</div>-->
 	                         </div>
 	                         <div class="row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
@@ -116,15 +116,7 @@ if(isset($_POST["id"])){
 	                             	?>
 	                            </div>
 	                       </div>
-	                       <div class="row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Business Category</label>
-	                        	<div class="col-lg-4">
- 	                        		<?php 
- 	                        		    $select = DropDownUtils::getBusinessCategoryTypes("businesscategory", null, $customer->getBusinessCategory(),false,true);
-    			                        echo $select;
-	                             	?>
-	                            </div>
-	                       </div>
+                        
 	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
 	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
@@ -154,119 +146,126 @@ if(isset($_POST["id"])){
 	                            </div>
 	                        </div>
 	                        
-	                        
-	                       <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label>
+	                        <div class="form-group row">
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Customer Type</label>
 	                        	<div class="col-lg-4">
-	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname", null, $customer->getSalesPersonName(),false,true);
-    			                        echo $select;
-	                             	?>	
-								</div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID</label>
-	                        	<div class="col-lg-4">
-	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid", null, $customer->getSalesPersonId(),false,true);
+ 	                        		<?php 
+	                        		    $select = DropDownUtils::getBusinessCategoryTypes("customertype", null, $customer->getCustomerType(),false,true);
     			                        echo $select;
 	                             	?>
-								</div>
-						   </div>
-
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 2</label>
-	                        	<div class="col-lg-4">
-	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname2", null, $customer->getSalesPersonName2(),false,true);
-    			                        echo $select;
-	                             	?>	
-								</div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 2</label>
-	                        	<div class="col-lg-4">
-	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid2", null, $customer->getSalesPersonId2(),false,true);
-    			                        echo $select;
-	                             	?>
-								</div>
-						   </div>
-
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 3</label>
-	                        	<div class="col-lg-4">
-	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname3", null, $customer->getSalesPersonName3(),false,true);
-    			                        echo $select;
-	                             	?>	
-								</div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 3</label>
-	                        	<div class="col-lg-4">
-	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid3", null, $customer->getSalesPersonId3(),false,true);
-    			                        echo $select;
-	                             	?>
-								</div>
-						   </div>
-
-						   <div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 4</label>
-	                        	<div class="col-lg-4">
-	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname4", null, $customer->getSalesPersonName4(),false,true);
-    			                        echo $select;
-	                             	?>	
-								</div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 4</label>
-	                        	<div class="col-lg-4">
-	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
-									 -->
-									<?php 
- 	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid4", null, $customer->getSalesPersonId4(),false,true);
-    			                        echo $select;
-	                             	?>
-								</div>
-						   </div>
-
-	                       <div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Buyers</label>
-	                       </div>
-	                       <div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
-	                       </div>
-	                       <div id="buyers" class="buyers">
-	                       </div>
-	                        <div class="col-lg-12 pull-right">
-	                       		<div class="col-lg-1 pull-right">
-	                        		<button class="btn btn-xs btn-success" id="addBuyerBtn" onclick="addBuyer()" type="button">
-	                        		<i class="fa fa-plus"></i> Buyer</button>
-	                        	</div>
+	                            </div>
+		                        <label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager</label>
+		                        <div class="col-lg-4">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
+		                        </div>
 	                        </div>
+	                        <div class="form-group row">
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead</label>
+		                        <div class="col-lg-4">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
+		                        </div>
+		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin</label>
+		                        <div class="col-lg-4">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
+		                        </div>
+	                        </div>
+	                        
+	                        
+<!-- 	                       <div class="form-group row"> -->
+<!-- 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname", null, $customer->getSalesPersonName(),false,true);
+//     			                        echo $select;
+	                             	?>	
+<!-- 								</div> -->
+<!-- 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid", null, $customer->getSalesPersonId(),false,true);
+//     			                        echo $select;
+// 	                             	?>
+<!-- 								</div> -->
+<!-- 						   </div> -->
+
+<!-- 						   <div class="form-group row"> -->
+<!-- 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 2</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname2", null, $customer->getSalesPersonName2(),false,true);
+//     			                        echo $select;
+	                             	?>	
+<!-- 								</div> -->
+<!-- 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 2</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid2", null, $customer->getSalesPersonId2(),false,true);
+//     			                        echo $select;
+// 	                             	?>
+<!-- 								</div> -->
+<!-- 						   </div> -->
+
+<!-- 						   <div class="form-group row"> -->
+<!-- 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 3</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname3", null, $customer->getSalesPersonName3(),false,true);
+//     			                        echo $select;
+	                             	?>	
+<!-- 								</div> -->
+<!-- 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 3</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid3", null, $customer->getSalesPersonId3(),false,true);
+//     			                        echo $select;
+// 	                             	?>
+<!-- 								</div> -->
+<!-- 						   </div> -->
+
+<!-- 						   <div class="form-group row"> -->
+<!-- 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name 4</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                            	<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonName()?>" name="salespersonname" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonName("salespersonname4", null, $customer->getSalesPersonName4(),false,true);
+//     			                        echo $select;
+	                             	?>	
+<!-- 								</div> -->
+<!-- 	                            <label class="col-lg-2 col-form-label bg-formLabel">Salesperson ID 4</label> -->
+<!-- 	                        	<div class="col-lg-4"> -->
+	                        		<!-- <input type="text"  maxLength="250" value="<?php //echo $customer->getSalesPersonId()?>" name="salespersonid" class="form-control">
+<!-- 									 -->
+									<?php 
+//  	                        		    $select = DropDownUtils::getCustomerSalesPersonId("salespersonid4", null, $customer->getSalesPersonId4(),false,true);
+//     			                        echo $select;
+// 	                             	?>
+<!-- 								</div> -->
+<!-- 						   </div> -->
+
+	                       
 	                       
 							
 							<div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Sales Rep</label>
+	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
 	                       	<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Ext</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
@@ -279,9 +278,30 @@ if(isset($_POST["id"])){
 	                        		<i class="fa fa-plus"></i> Sales Rep</button>
 	                        	</div>
 	                        </div>
-
+								
 							<div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Add Internal Support</label>
+    	                       	<label class="col-lg-12 m-xxs txt-primary" >Buyers</label>
+							</div>
+	                       <div class="form-group row m-b-xs">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+	                       </div>
+	                       <div id="buyers" class="buyers">
+	                       </div>
+	                       <div class="col-lg-12 pull-right">
+	                       		<div class="col-lg-1 pull-right">
+	                        		<button class="btn btn-xs btn-success" id="addBuyerBtn" onclick="addBuyer()" type="button">
+	                        		<i class="fa fa-plus"></i> Buyer</button>
+	                        	</div>
+	                       </div>
+							
+							
+							<div class="form-group row m-b-xs">
+	                       	<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 	                       	</div>
 	                       	<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
@@ -423,7 +443,7 @@ function addBuyer(isDefaultRow,buyer){
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		html += '<textarea name="buyer_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+// 		html += '<textarea name="buyer_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
 		html +='</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
     		html += '<div class="col-lg-1 pull-right">';
@@ -497,7 +517,7 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		html += '<textarea name="salesRep_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+// 		html += '<textarea name="salesRep_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
 		html +='</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
     		html += '<div class="col-lg-1 pull-right">';
@@ -575,7 +595,7 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		html += '<textarea name="internalSupport_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
+// 		html += '<textarea name="internalSupport_notes[]" placeholder="notes" class="form-control">'+note+'</textarea>';
 		html +='</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
     		html += '<div class="col-lg-1 pull-right">';
