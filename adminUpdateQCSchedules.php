@@ -57,6 +57,11 @@ if(isset($_REQUEST["isCompleted"])){
 										<input type="checkbox" id="updatePONumbers" name="updatePONumbers"> Update PO Numbers (based on id)
 									</div>
 								</div>
+								<div class="form-group row i-checksnormal">
+									<div class="col-lg-offset-2 col-lg-6">
+										<input type="checkbox" id="updatePOTypes" name="updatePOTypes"> Update PO Types (based on id)
+									</div>
+								</div>
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label">Select file to update</label>
 									<div class="col-lg-8">
@@ -130,9 +135,7 @@ if(isset($_REQUEST["isCompleted"])){
 				var jsonData = $.parseJSON(data);
 				if (jsonData.success == 1) {
 					var updatedItemsCount = jsonData.updatedItemCount;
-					if (updatedItemsCount > 0) {
-						var message = "<p>" + updatedItemsCount + " QC Schedules imported successfully.</p><br>";
-					}
+					var message = "<p>" + updatedItemsCount + " QC Schedules imported successfully.</p><br>";
 					$("#message").html(message);
 					$('#createNewModalForm').modal('show');
 				} else {

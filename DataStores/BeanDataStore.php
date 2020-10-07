@@ -528,7 +528,7 @@ class BeanDataStore {
 			throw  $e ;
 		}
 	}
-	public function updateByAttributes($colValuePair, $conditionPair = null) {
+	public function updateByAttributes($colValuePair, $conditionPair = null, $returnUpdatedCount = false) {
 		try {
 			foreach ( $conditionPair as $key => $value ) {
 				$query_array [] = $key . ' = ' . "'" . $value . "'";
@@ -546,9 +546,15 @@ class BeanDataStore {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$STH = $conn->prepare ( $query );
+			//$this->logger->info("Update By Attribute : " . $query);
 			$STH->execute ();
+			$updatedRowCount = $STH->rowCount();
 			$this->throwException ( $STH->errorInfo () );
-			return true;
+			if($returnUpdatedCount){
+				return $updatedRowCount;
+			}else{
+				return true;
+			}
 		} catch ( Exception $e ) {
 			$this->logger->error ( "Error occured :" . $e );
 			throw $e ;

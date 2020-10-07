@@ -54,9 +54,9 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
     }
-    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
+    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false,$isUpdatePoTypes = false){
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber);
+		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber,$isUpdatePoTypes);
 	}
 
     public function bulkDeleteByImport($filePath){
@@ -430,7 +430,7 @@ class QCScheduleMgr{
 		return $response;
 	}
 	
-	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false){
+	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false,$isUpdatePOTypes = false){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -465,8 +465,12 @@ class QCScheduleMgr{
 				if($isUpdatePONumber){
 					$colValuePair['po'] = $qc->getPO();
 				}
-				self::$dataStore->updateByAttributes($colValuePair, $condition);
-				$updatedItemCount++;
+				if($isUpdatePOTypes){
+					$colValuePair['potype'] = $qc->getPoType();
+				}
+				$resultCount = self::$dataStore->updateByAttributes($colValuePair, $condition,true);		
+				$updatedItemCount+= $resultCount;
+				
 			 }
 			catch ( Exception $e) {
 				$messages = $e->getMessage();

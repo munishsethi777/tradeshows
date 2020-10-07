@@ -1,0 +1,1 @@
+ALTER TABLE `customers` ADD `customertype` VARCHAR(50) NULL AFTER `lastmodifiedon`, ADD `insideaccountmanager` VARCHAR(100) NULL AFTER `customertype`, ADD `salesadminlead` VARCHAR(100) NULL AFTER `insideaccountmanager`, ADD `chainstoresalesadmin` VARCHAR(100) NULL AFTER `salesadminlead`;
