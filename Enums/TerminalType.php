@@ -8,10 +8,10 @@ class TerminalType extends BasicEnum{
     const lbct = "LBCT";
     const pct = "PCT";
     const shippers = "SHIPPERS";
+    const ssa_pier_a="SSA PIER A";
     const trapac = "TRAPAC";
     const tti = "TTI";
     const wbct = "WBCT";
     const yti = "YTI";
     const yusen = "YUSEN";
-    
 }

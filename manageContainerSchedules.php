@@ -21,7 +21,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     		padding:2px 4px !important;
     		font-size:9pt;
     	}
-    	
+    	.reportDataCountRow .ibox-content{
+    	   background-color:white;
+    	   padding:10px 20px 10px 30px !important;
+    	}
     	@media screen and (min-width: 992px) {
 	        .modal-lg {
 	          width: 1050px; /* New width for large modal */
@@ -80,7 +83,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                                                     	Empty Alpine Notification Pickup Date
                                                         <span class="float-right label label-danger empty_alpine_notification_pickup_date">-</span>
 													</li>
-													<li class="list-group-item fist-item">
+													<li class="list-group-item">
                                                     	Missing Confirmed Delivery Date
                                                         <span class="float-right label label-danger missing_confirmed_delivery_date">-</span>
 													</li>
@@ -97,11 +100,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 											<div class="ibox-content">
     											<ul class="list-group clear-list no-margins">
                                                 
-                                                    <li class="list-group-item">
+                                                    <li class="list-group-item fist-item">
                                                     	Missing Received Dates In OMS
                                                         <span class="float-right label label-danger missing_received_dates_in_oms">-</span>
 													</li>
-													<li class="list-group-item fist-item">
+													<li class="list-group-item">
                                                     	Missing Received Dates In WMS
                                                         <span class="float-right label label-danger missing_received_dates_in_wms">-</span>
                                                     </li>
