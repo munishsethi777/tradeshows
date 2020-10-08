@@ -342,6 +342,37 @@ if(isset($_POST["id"])){
      </div>   	
     </div>
     </div>
+	<div class="modal inmodal bs-example-modal-lg" id="NotesModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated fadeInRight">
+				<div class="modal-body itemDetailsModalDiv mainDiv">
+					<div class="ibox">
+						<div class="ibox-content" style="height:115px;">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group row m-t-sm">
+										<label class="col-sm-4 lblTitle bg-formLabel" id="NotesModalLabel">Enter Notes For ${firstName} ${lastName}</label>
+										<div class="col-sm-4">
+											<label class="containerreceivedinwmsdate lblDesc text-primary"></label>
+										</div>
+										<input type="hidden" id="NotesId" value="${id}">
+										<textarea id="NotesModalText" name="notes" placeholder="notes" class="form-control">${note}</textarea>
+										<div class="col-sm-4">
+											<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
+										</div>
+									</div>
+								</div>        
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" onclick="setNote()" id="setBtn" class="btn btn-white">Continue</button>
+					<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
@@ -427,12 +458,12 @@ function addBuyer(isDefaultRow,buyer){
 	var ddId =  'categorySelectDiv'+id;
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="buyer_firstname[]" class="form-control" placeholder="firstname">';
-		html += '</div>'
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="buyer_lastname[]" class="form-control" placeholder="lastname">';
-		html += '</div>';
+		html += `<div class="col-lg-2 p-xxs no-margins">
+					<input type="text" required maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
+				</div>
+				<div class="col-lg-2 p-xxs no-margins">
+					<input type="text"  maxLength="250" value="${lastName}" id="lastName${id}" name="buyer_lastname[]" class="form-control" placeholder="lastname">
+				</div>`;
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="buyer_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
@@ -440,7 +471,7 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_phoneext[]" class="form-control" placeholder="EXT.">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_phoneext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
@@ -451,50 +482,19 @@ function addBuyer(isDefaultRow,buyer){
 		html += '</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="show_notes('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div><div class="col-sm-6">'
     		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
     		html += '</div></div></div>';
 		}else{
 			html += '<div class="col-lg-1 pull-right">';
-			html += `<a onclick="show_notes('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div>';
 		}
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		// modal
-		{
-			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="Buyer_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
-    						<div class="modal-dialog modal-lg">
-    							<div class="modal-content animated fadeInRight">
-									<div class="modal-body itemDetailsModalDiv mainDiv">
-    						        	<div class="ibox">
-    						          		<div class="ibox-content" style="height:115px;">
-												<div class="row">
-													<div class="col-sm-12">
-														<h3>Buyer Notes </h3>
-														<div class="form-group row m-t-sm">
-															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
-															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
-																<textarea id="buyer_notes_${id}" name="buyer_notes[]" placeholder="notes" class="form-control">${note}</textarea>
-															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
-														</div>
-													</div>        
-								                </div>
-							                </div>
-    						            </div>
-    						       	</div>
-    						        <div class="modal-footer">
-										<button type="button" onclick="setNote('Buyer_${id}_Modal','Buyer_notes_${id}','buyer_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
-										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-    						        </div>
-    						    </div>
-							</div>
-						</div>`;		
-			$("body").append(htmlModal);
-		}
- 		html += `<input type="hidden" name="buyer_notes[]" id="Buyer_notes_${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
+ 		html += `<input type="hidden" name="buyer_notes[]" id="NotesText${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
 		html +='</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
@@ -545,12 +545,12 @@ function addSalesRep(isDefaultRow,salesRep){
 	var ddId = 'responsibilitySelectDiv'+id;
 	var html = '<div class="salesRepDiv">';
    		html += '<div class="form-group row m-b-xs">';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="salesRep_firstname[]" class="form-control" placeholder="firstname">';
-		html += '</div>'
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="salesRep_lastname[]" class="form-control" placeholder="lastname">';
-		html += '</div>';
+		html += `<div class="col-lg-2 p-xxs no-margins">
+					<input type="text" id="firstName${id}" required maxLength="250" value="${firstName}" name="salesRep_firstname[]" class="form-control" placeholder="firstname">
+				</div>
+				<div class="col-lg-2 p-xxs no-margins">
+					<input type="text" id="lastName${id}"  maxLength="250" value="${lastName}" name="salesRep_lastname[]" class="form-control" placeholder="lastname">
+				</div>`;
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
@@ -558,7 +558,7 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="EXT.">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
@@ -569,50 +569,19 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '</div>';
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="show_notes('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div><div class="col-sm-6">'
 			html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
 			html += '</div></div></div>';
 		}else{
 			html += '<div class="col-lg-1 pull-right">';
-			html += `<a onclick="show_notes('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div>';
 		}
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		// modal
-		{
-			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="SalesRep_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
-    						<div class="modal-dialog modal-lg">
-    							<div class="modal-content animated fadeInRight">
-									<div class="modal-body itemDetailsModalDiv mainDiv">
-    						        	<div class="ibox">
-    						          		<div class="ibox-content" style="height:115px;">
-												<div class="row">
-													<div class="col-sm-12">
-														<h3>Sales Rep Notes </h3>
-														<div class="form-group row m-t-sm">
-															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
-															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
-																<textarea id="salesRep_notes_${id}" name="salesRep_notes[]" placeholder="notes" class="form-control">${note}</textarea>
-															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
-														</div>
-													</div>        
-								                </div>
-							                </div>
-    						            </div>
-    						       	</div>
-    						        <div class="modal-footer">
-										<button type="button" onclick="setNote('SalesRep_${id}_Modal','SalesRep_notes_${id}','salesRep_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
-										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-    						        </div>
-    						    </div>
-							</div>
-						</div>`;		
-			$("body").append(htmlModal);
-		}
- 		html += `<input type="hidden" id="SalesRep_notes_${id}" name="salesRep_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
+ 		html += `<input type="hidden" id="NotesText${id}" name="salesRep_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
 		html += '</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
@@ -664,12 +633,12 @@ function addInternalSupport(isDefaultRow,internalSupport){
 	var ddId = 'categoryInternalSupportSelectDiv'+id;
 	var html = '<div class="internalSupportDiv">';
    		html += '<div class="form-group row m-b-xs">';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text" required maxLength="250" value="'+firstName+'" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">';
-		html += '</div>'
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+lastName+'" name="internalSupport_lastname[]" class="form-control" placeholder="lastname">';
-		html += '</div>';
+		html += `<div class="col-lg-2 p-xxs no-margins">
+					<input type="text" id="firstName${id}" required maxLength="250" value="${firstName}" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">
+				</div>
+				<div class="col-lg-2 p-xxs no-margins">
+					<input type="text" id="lastName${id}" maxLength="250" value="${lastName}" name="internalSupport_lastname[]" class="form-control" placeholder="lastname">
+				</div>`;
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
@@ -677,7 +646,7 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="EXT.">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone">';
@@ -692,51 +661,20 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="show_notes('InternalSupport_${id}_Modal')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes(${id})" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div><div class="col-sm-6">'
     		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
     		html += '</div></div></div>';
 		}else{
 			html += '<div class="col-lg-1 pull-right">';
-			html += `<a onclick="show_notes('InternalSupport_${id}_Modal','InternalSupport_Notes_${id}','internalSupport_notes_${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 			html += '</div>';
 		}
 		
 		html += '</div>';
 		html += '<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">';
-		// modal
-		{
-			htmlModal = `<div class="modal inmodal bs-example-modal-lg" id="InternalSupport_${id}_Modal" tabindex="-1" role="dialog" aria-hidden="true">
-    						<div class="modal-dialog modal-lg">
-    							<div class="modal-content animated fadeInRight">
-									<div class="modal-body itemDetailsModalDiv mainDiv">
-    						        	<div class="ibox">
-    						          		<div class="ibox-content" style="height:115px;">
-												<div class="row">
-													<div class="col-sm-12">
-														<h3>Internal Support Notes </h3>
-														<div class="form-group row m-t-sm">
-															<label class="col-sm-3 lblTitle bg-formLabel">Enter Notes:</label>
-															<div class="col-sm-4"><label class="containerreceivedinwmsdate lblDesc text-primary"></label></div>
-																<textarea id="internalSupport_notes_${id}" name="internalSupport_notes_${id}" placeholder="notes" class="form-control">${note}</textarea>
-															<div class="col-sm-4"><label class="samplesreceivedinwmsdate lblDesc text-primary"></label></div>
-														</div>
-													</div>        
-								                </div>
-							                </div>
-    						            </div>
-    						       	</div>
-    						        <div class="modal-footer">
-										<button type="button" onclick="setNote('InternalSupport_${id}_Modal','InternalSupport_Notes_${id}','internalSupport_notes_${id}')" id="nextBtn" class="btn btn-white">Continue</button>
-										<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-    						        </div>
-    						    </div>
-							</div>
-						</div>`;		
-			$("body").append(htmlModal);
-		}
-		html += `<input type="hidden" id="InternalSupport_Notes_${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
+		html += `<input type="hidden" id="NotesText${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
 		html +='</div>';
 		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>';
@@ -891,12 +829,23 @@ function saveCustomer(){
 		$("#createCustomerForm")[0].reportValidity();
 	}
 }
-function show_notes(className,idName,textName){
-	$(`#${className}`).modal("show");
-	$(`#${textName}`).val($(`#${idName}`).val());
+function showNotes(id){
+	// Set the TextArea
+	$(`#NotesModalText`).val($(`#NotesText${id}`).val());
+	// Set The Label
+	html = `Enter Notes For ` + $(`#firstName${id}`).val() + ` ` + $(`#lastName${id}`).val();
+	$(`#NotesModalLabel`).html(html);
+	// set id
+	$("#NotesId").val(id);
+	// Open the modal
+	$(`#NotesModal`).modal("show");
 }
-function setNote(className,idName,textName){
-	$(`#${idName}`).val($(`#${textName}`).val());
-	$(`#${className}`).modal("hide");
+function setNote(){
+	// get id
+	id = $("#NotesId").val();
+	// Set hidden Value from text area
+	$(`#NotesText${id}`).val($(`#NotesModalText`).val());
+	// Close Modal
+	$(`#NotesModal`).modal("hide");
 }
 </script>
