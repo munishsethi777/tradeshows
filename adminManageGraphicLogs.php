@@ -19,6 +19,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     	}
     	.reportDataCountRow .ibox-content{
     	   background-color:white;
+    	   padding:10px 20px 10px 30px !important;
     	}
     	.peity{
     	   margin-top:10px;
