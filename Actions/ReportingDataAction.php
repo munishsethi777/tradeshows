@@ -30,10 +30,14 @@
                    array_push($earlierCounts,$count['count']);
                }
                $earlierCounts = array_reverse($earlierCounts);
-               $arr[$value.'Percent'] = "50"."%";
+               $arr[$value.'Percent'] = "";
                $arr[$value.'ThirtyDays'] = implode(',',$earlierCounts);
                $arr[$value.'ChangeArrow'] = ($list[0]['count']>$list[1]['count'])?'fa-level-up':'fa-level-down';
-               $arr[$value.'ChangeColor'] = ($list[0]['count']>$list[1]['count'])?'skyblue':'red';
+               $arr[$value.'ChangeColor'] = ($list[0]['count']>$list[1]['count'])?'green':'red';
+               if($list[0]['count']==$list[1]['count']){
+                   $arr[$value.'ChangeArrow'] = "fa-arrows-h";
+                   $arr[$value.'ChangeColor'] = "grey";
+               }
            }          
            $response["data"] = $arr;
            
