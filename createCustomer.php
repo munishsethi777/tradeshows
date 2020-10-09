@@ -57,7 +57,7 @@ if(isset($_POST["id"])){
 .col-form-label{
 	line-height:1;
 }
-.buyers input,.buyers select{
+.buyers input,.buyers select,.internalSupport input,.internalSupport select,.salesRep input,.salesRep select{
 	font-size:12px;
 	padding:4px;
 	height:25px;
@@ -68,6 +68,13 @@ if(isset($_POST["id"])){
 }
 #category{
 	margin-bottom:0px !important;
+}
+.fa{
+    font-size:17px;
+}
+.addButtonDiv{
+    display: flex;
+    justify-content: flex-end;
 }
 </style>
 </head>
@@ -272,8 +279,8 @@ if(isset($_POST["id"])){
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
 	                       	</div>
-	                        <div class="col-lg-12 pull-right">
-	                       		<div class="col-lg-1 pull-right">
+	                        <div class="col-lg-12 pull-right ">
+	                       		<div class="col-lg-1 pull-right addButtonDiv">
 	                        		<button class="btn btn-xs btn-success" id="addSalesRepBtn" onclick="addSalesRep()" type="button">
 	                        		<i class="fa fa-plus"></i> Sales Rep</button>
 	                        	</div>
@@ -293,8 +300,8 @@ if(isset($_POST["id"])){
 	                       </div>
 	                       <div id="buyers" class="buyers">
 	                       </div>
-	                       <div class="col-lg-12 pull-right">
-	                       		<div class="col-lg-1 pull-right">
+	                       <div class="col-lg-12 pull-right ">
+	                       		<div class="col-lg-1 pull-right addButtonDiv">
 	                        		<button class="btn btn-xs btn-success" id="addBuyerBtn" onclick="addBuyer()" type="button">
 	                        		<i class="fa fa-plus"></i> Buyer</button>
 	                        	</div>
@@ -316,8 +323,8 @@ if(isset($_POST["id"])){
 	                       	</div>
 	                       	<div id="internalSupport" class="internalSupport">
 	                       	</div>
-	                        <div class="col-lg-12 pull-right">
-	                       		<div class="col-lg-1 pull-right">
+	                        <div class="col-lg-12 pull-right ">
+	                       		<div class="col-lg-1 pull-right addButtonDiv">
 	                        		<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
 	                        		<i class="fa fa-plus"></i> Internal Support</button>
 	                        	</div>
@@ -492,12 +499,12 @@ function addBuyer(isDefaultRow,buyer){
 			html += '</div>';
 		}
 		html += '</div>';
-		html += '<div class="form-group row">';
-		html += '<div class="col-lg-11 p-xxs">';
+		html += '<!--<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">-->';
  		html += `<input type="hidden" name="buyer_notes[]" id="NotesText${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html +='</div>';
-		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
-		html += '</div></div>';
+		html +='<!--</div>-->';
+		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>-->';
 		$("#buyers").append(html);
 		
 		populateBuyerCategories(category,ddId);
@@ -579,12 +586,12 @@ function addSalesRep(isDefaultRow,salesRep){
 			html += '</div>';
 		}
 		html += '</div>';
-		html += '<div class="form-group row">';
-		html += '<div class="col-lg-11 p-xxs">';
+		html += '<!--<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">-->';
  		html += `<input type="hidden" id="NotesText${id}" name="salesRep_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html += '</div>';
-		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
-		html += '</div></div>';
+		html += '<!--</div>-->';
+		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>-->';
 		$("#salesRep").append(html);
 		
 		//populateSalesRepCategories(responsibility,ddId);
@@ -672,12 +679,12 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		}
 		
 		html += '</div>';
-		html += '<div class="form-group row">';
-		html += '<div class="col-lg-11 p-xxs">';
+		html += '<!--<div class="form-group row">';
+		html += '<div class="col-lg-11 p-xxs">-->';
 		html += `<input type="hidden" id="NotesText${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html +='</div>';
-		html += '<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
-		html += '</div></div>';
+		html +='<!--</div>-->';
+		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
+		html += '</div></div>-->';
 		$("#internalSupport").append(html);
 		
 		populateInternalSupportRepCategories(category,ddId);
