@@ -174,21 +174,29 @@ class UserMgr{
 	}
 	
 	public function getQCUsersArrForDD(){//Deprecated
-		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'QC' and users.isenabled = 1";
+		//$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'QC' and users.isenabled = 1";
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'QC' order by isenabled desc";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		$arr = array();
 		foreach($users as $user){
 			$arr[$user->getSeq()] = $user->getQCCode();
+			if($user->getIsEnabled() == false){
+			    $arr[$user->getSeq()] = $user->getQCCode() ." - disabled";
+			}
 		}
 		return $arr;
 	}
 
 	public function getPOInchargeUsersArrForDD(){//Deprecated
-		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'po_incharge' and users.isenabled = 1";
+		//$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'po_incharge' and users.isenabled = 1";
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'po_incharge' order by isenabled desc";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		$arr = array();
 		foreach($users as $user){
 			$arr[$user->getSeq()] = $user->getQCCode();
+			if($user->getIsEnabled() == false){
+			    $arr[$user->getSeq()] = $user->getQCCode() ." - disabled";
+			}
 		}
 		return $arr;
 	}
@@ -203,11 +211,15 @@ class UserMgr{
 
 
 	public function getGraphicDesignersArrForDD(){//Deprecated
-		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' and users.isenabled = 1";
+		//$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' and users.isenabled = 1";
+		$sql = "SELECT users.* from users inner join userroles on userroles.userseq = users.seq and userroles.role = 'GRAPHIC_DESIGNER' order by isenabled desc";
 		$users = self::$userDataStore->executeObjectQuery($sql);
 		$arr = array();
 		foreach($users as $user){
 			$arr[$user->getSeq()] = $user->getFullName();
+			if($user->getIsEnabled() == false){
+			    $arr[$user->getSeq()] = $user->getFullName() ." - disabled";
+			}
 		}
 		return $arr;
 	}

@@ -379,8 +379,8 @@ class CustomerMgr{
 	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false);
 	    return $ddhtml;
 	}
-	function getCustomerSellerResponsibilitiesType(){
-	    $ddhtml = DropDownUtils::getSellerResponsibilitiesType("responsibility", $selected, false);
+	function getCustomerSellerResponsibilitiesType($selected){
+	    $ddhtml = DropDownUtils::getSellerResponsibilitiesType("responsibility[]","", $selected, false);
 	    return $ddhtml;
 	}
 	

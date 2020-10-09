@@ -293,12 +293,11 @@ if(isset($_POST["id"])){
 	                       	<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
 	                       	</div>
@@ -561,10 +560,10 @@ function addSalesRep(isDefaultRow,salesRep){
 				<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="lastName${id}"  maxLength="250" value="${lastName}" name="salesRep_lastname[]" class="form-control" placeholder="lastname">
 				</div>`;
-		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
@@ -573,7 +572,7 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
@@ -690,7 +689,6 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#internalSupport").append(html);
-		
 		populateInternalSupportRepCategories(category,ddId);
 }
 
@@ -803,9 +801,9 @@ function populateSalesRep(selected, selectDivId){
 }
 
 function populateSalesRepResponsibilities(selected, selectDivId){
-	$.get("Actions/CustomerAction.php?call=getSellerResponsibilitiesType&selected=abc", (data)=>{
+	$.get("Actions/CustomerAction.php?call=getSellerResponsibilitiesType&selected="+selected, (data)=>{
 		var jsonData = $.parseJSON(data);
-		var ddhtml = jsonData.categoryDD;
+		var ddhtml = jsonData.responsibilityDD;
 		ddhtml = ddhtml.replace("name='responsibility[]'","name=\"salesRep_responsibility[]\"");
 		$("#"+selectDivId).html(ddhtml);
 	});

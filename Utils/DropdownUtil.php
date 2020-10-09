@@ -22,6 +22,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonName.php
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonId.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/BooleanType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/FreightForwarder.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/SellerResponsibilityType.php");
 
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
@@ -186,8 +187,7 @@ class DropDownUtils {
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	public static function getSellerResponsibilitiesType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
-	    $enums = SellerResponsibilitiesType::getAll();
-	    //sort($enums);
+	    $enums = SellerResponsibilityType::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	
