@@ -198,5 +198,14 @@ class ReportingDataMgr{
         $projectDueLessThan20DaysFromTodayCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return $projectDueLessThan20DaysFromTodayCount;
     }
+    
+    
+    //fetch data from reportingdata table
+    public function getGraphicReportData($parameterType){
+        $query = "SELECT count FROM `reportingdata` where parameter like '".$parameterType."' ORDER BY dated desc limit 30";
+        $graphicReportData = self::$reportingDataDataStore->executeQuery($query,false,true);
+        return $graphicReportData;
+    }
+   
 }
 ?>
