@@ -230,6 +230,15 @@ if($call == "getBuyerCategories"){
         $message  = $e->getMessage();
     }
 }
+if($call == "getSellerResponsibilitiesType"){
+    try{
+        $ddhtml = $customerMgr->getCustomerSellerResponsibilitiesType($_GET["selected"]);
+        $response["responsibilityDD"] = $ddhtml;
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
 if($call == "searchCustomers"){
 	$searchString = $_GET["q"];
 	$customers  = $customerMgr->searchCustomers($searchString);

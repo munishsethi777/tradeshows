@@ -379,6 +379,10 @@ class CustomerMgr{
 	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false);
 	    return $ddhtml;
 	}
+	function getCustomerSellerResponsibilitiesType(){
+	    $ddhtml = DropDownUtils::getSellerResponsibilitiesType("responsibility", $selected, false);
+	    return $ddhtml;
+	}
 	
 	public function searchCustomers($searchString){
 		$sql = "select customername from graphicslogs";

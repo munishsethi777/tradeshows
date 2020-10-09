@@ -185,6 +185,11 @@ class DropDownUtils {
 	    //sort($enums);
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
+	public static function getSellerResponsibilitiesType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	    $enums = SellerResponsibilitiesType::getAll();
+	    //sort($enums);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	}
 	
 	public static function getTerminalTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = TerminalType::getAll();

@@ -98,7 +98,7 @@ if(isset($_POST["id"])){
                      		<input type="hidden" id ="call" name="call"  value="saveCustomer"/>
                         	<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
                         	<div class="row i-checks">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Store </label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Chain Store </label>
 	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
 	                            </div>
@@ -115,7 +115,7 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
 	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">BusinessType</label>
+	                            <label class="col-lg-2 col-form-label bg-formLabel">Business Type</label>
 	                        	<div class="col-lg-4">
  	                        		<?php 
     									$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false,true);
@@ -161,9 +161,16 @@ if(isset($_POST["id"])){
     			                        echo $select;
 	                             	?>
 	                            </div>
-		                        <label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager</label>
+		                        
+	                        </div>
+	                        <div class="form-group row">
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager</label>
 		                        <div class="col-lg-4">
 		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
+		                        </div>
+		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin</label>
+		                        <div class="col-lg-4">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
 		                        </div>
 	                        </div>
 	                        <div class="form-group row">
@@ -171,12 +178,7 @@ if(isset($_POST["id"])){
 		                        <div class="col-lg-4">
 		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
 		                        </div>
-		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin</label>
-		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
-		                        </div>
 	                        </div>
-	                        
 	                        
 <!-- 	                       <div class="form-group row"> -->
 <!-- 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Salesperson Name</label> -->
@@ -263,10 +265,8 @@ if(isset($_POST["id"])){
 <!-- 						   </div> -->
 
 	                       
-	                       
-							
-							<div class="form-group row m-b-xs">
-	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
+	                       	<div class="form-group row m-b-xs">
+	                       	<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 	                       	</div>
 	                       	<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
@@ -274,8 +274,31 @@ if(isset($_POST["id"])){
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
+								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+	                       	</div>
+	                       	<div id="internalSupport" class="internalSupport">
+	                       	</div>
+	                        <div class="col-lg-12 pull-right ">
+	                       		<div class="col-lg-1 pull-right addButtonDiv">
+	                        		<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
+	                        		<i class="fa fa-plus"></i> Internal Support</button>
+	                        	</div>
+	                        </div>
+							
+							<div class="form-group row m-b-xs">
+	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
+	                       	</div>
+	                       	<div class="form-group row m-b-xs">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">Email</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
 	                       	</div>
@@ -308,27 +331,7 @@ if(isset($_POST["id"])){
 	                       </div>
 							
 							
-							<div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
-	                       	</div>
-	                       	<div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
-	                       	</div>
-	                       	<div id="internalSupport" class="internalSupport">
-	                       	</div>
-	                        <div class="col-lg-12 pull-right ">
-	                       		<div class="col-lg-1 pull-right addButtonDiv">
-	                        		<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
-	                        		<i class="fa fa-plus"></i> Internal Support</button>
-	                        	</div>
-	                        </div>
+							
 
 	                        <div class="form-group row">
 	                       		<div class="col-lg-2">
@@ -558,10 +561,10 @@ function addSalesRep(isDefaultRow,salesRep){
 				<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="lastName${id}"  maxLength="250" value="${lastName}" name="salesRep_lastname[]" class="form-control" placeholder="lastname">
 				</div>`;
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
 		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
@@ -570,10 +573,11 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="'+responsiblity+'" name="salesRep_responsiblity[]" class="form-control" placeholder="responsibility">';
-		//html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
+		html += '</select></div>';
 		html += '</div>';
+		
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
 			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
@@ -593,7 +597,7 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#salesRep").append(html);
-		
+		populateSalesRepResponsibilities(responsiblity,ddId);
 		//populateSalesRepCategories(responsibility,ddId);
 }
 
@@ -789,11 +793,20 @@ function populateBuyerCategories(selected,selectDivId){
 	});
 }
 
-function populateSalesRepCategories(selected, selectDivId){
+function populateSalesRep(selected, selectDivId){
 	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, (data) =>{
 		var jsonData = $.parseJSON(data);
 		var ddhtml = jsonData.categoryDD;
 		ddhtml = ddhtml.replace("name='category[]'","name=\"salesRep_category[]\"");
+		$("#"+selectDivId).html(ddhtml);
+	});
+}
+
+function populateSalesRepResponsibilities(selected, selectDivId){
+	$.get("Actions/CustomerAction.php?call=getSellerResponsibilitiesType&selected=abc", (data)=>{
+		var jsonData = $.parseJSON(data);
+		var ddhtml = jsonData.categoryDD;
+		ddhtml = ddhtml.replace("name='responsibility[]'","name=\"salesRep_responsibility[]\"");
 		$("#"+selectDivId).html(ddhtml);
 	});
 }
