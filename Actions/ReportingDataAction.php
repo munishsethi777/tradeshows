@@ -22,7 +22,30 @@
            foreach ($reportingDataParameterTypeConstants as $key => $value ){
                $value = lcfirst(str_replace(" ","",$value));
                $list = $reportingDataMrg->getGraphicReportData($key);
-               $arr[$value.'Current'] = $list[0]['count'];
+               $current = $list[0]['count'];
+               if($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_project_due_for_today_count)){
+                   $current = $reportingDataMrg->getProjectsDueForTodayCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_project_due_less_than_20_days_from_entry_date_count)){
+                   $current = $reportingDataMrg->getProjectDueLessThan20DaysFromEntryDateCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_project_due_less_than_20_days_from_today_count)){
+                   $current = $reportingDataMrg->getProjectDueLessThan20DaysFromTodayCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_project_missing_info_from_china_count)){
+                   $current = $reportingDataMrg->getProjectMissingInfoFromChinaCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_project_passed_due_with_missing_info_from_china_count)){
+                   $current = $reportingDataMrg->getProjectPassedDueWithMissingInfoFromChinaCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_projects_completed_count)){
+                   $current = $reportingDataMrg->getProjectsCompletedCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_projects_in_buyer_review_count)){
+                   $current = $reportingDataMrg->getProjectsInBuyerReviewCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_projects_in_manager_review_count)){
+                   $current = $reportingDataMrg->getProjectsInManagerReviewCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_projects_in_robby_review_count)){
+                   $current = $reportingDataMrg->getProjectsInRobbyReviewCount();
+               }elseif($key == ReportingDataParameterType::getName(ReportingDataParameterType::graphiclog_projects_over_due_till_now_count)){
+                   $current = $reportingDataMrg->getProjectsOverDueTillNowCount();
+               }
+               
+               $arr[$value.'Current'] = $current;
                $arr[$value.'Previous'] = $list[1]['count'];
                $arr[$value.'Diff'] = $list[0]['count']-$list[1]['count'];
                $earlierCounts = array();

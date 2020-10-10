@@ -210,68 +210,68 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     										</div>
     									</div>
 									</div>
-								<div class="row reportDataCountRow">
-									<div class="col-lg-4">
-										<div class="ibox float-e-margins">
-											<div class="ibox-content">
-    											<ul class="list-group clear-list no-margins">
-                                                    <li class="list-group-item fist-item">
-                                                    	Projects overdue
-                                                        <span class="float-right label label-danger overDueCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects Due for Today
-                                                        <span class="float-right label label-danger dueForTodayCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects Due for Next Week
-                                                        <span class="float-right label label-danger dueForTillNowCount">-</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-										</div>
-									</div>
-									<div class="col-lg-4">
-										<div class="ibox float-e-margins">
-											<div class="ibox-content">
-    											<ul class="list-group clear-list no-margins">
-    												<li class="list-group-item fist-item">
-                                                    	Projects Due with Missing Information from China
-                                                        <span class="float-right label label-danger pastDueMissingInfoFromChinaCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects Due in less than 20 days from Entry
-                                                        <span class="float-right label label-danger dueLessThan20DaysFromEntryCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects Due in less than 20 days from Today
-                                                        <span class="float-right label label-danger dueLessThan20DaysFromTodayCount">-</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-										</div>
-									</div>
-									<div class="col-lg-4">
-										<div class="ibox float-e-margins">
-											<div class="ibox-content">
-    											<ul class="list-group clear-list no-margins">
-                                                    <li class="list-group-item fist-item">
-                                                    	Projects in Robby's Review
-                                                        <span class="float-right label label-danger robbysReviewCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects in Buyer's Review
-                                                        <span class="float-right label label-danger buyersReviewCount">-</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                    	Projects in Manager's Review
-                                                        <span class="float-right label label-danger managersReviewCount">-</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-										</div>
-									</div>
-								</div>
+<!-- 								<div class="row reportDataCountRow"> -->
+<!-- 									<div class="col-lg-4"> -->
+<!-- 										<div class="ibox float-e-margins"> -->
+<!-- 											<div class="ibox-content"> -->
+<!--     											<ul class="list-group clear-list no-margins"> -->
+<!--                                                     <li class="list-group-item fist-item"> -->
+<!--                                                     	Projects overdue -->
+<!--                                                         <span class="float-right label label-danger overDueCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects Due for Today -->
+<!--                                                         <span class="float-right label label-danger dueForTodayCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects Due for Next Week -->
+<!--                                                         <span class="float-right label label-danger dueForTillNowCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                 </ul> -->
+<!--                                             </div> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 									<div class="col-lg-4"> -->
+<!-- 										<div class="ibox float-e-margins"> -->
+<!-- 											<div class="ibox-content"> -->
+<!--     											<ul class="list-group clear-list no-margins"> -->
+<!--     												<li class="list-group-item fist-item"> -->
+<!--                                                     	Projects Due with Missing Information from China -->
+<!--                                                         <span class="float-right label label-danger pastDueMissingInfoFromChinaCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects Due in less than 20 days from Entry -->
+<!--                                                         <span class="float-right label label-danger dueLessThan20DaysFromEntryCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects Due in less than 20 days from Today -->
+<!--                                                         <span class="float-right label label-danger dueLessThan20DaysFromTodayCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                 </ul> -->
+<!--                                             </div> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 									<div class="col-lg-4"> -->
+<!-- 										<div class="ibox float-e-margins"> -->
+<!-- 											<div class="ibox-content"> -->
+<!--     											<ul class="list-group clear-list no-margins"> -->
+<!--                                                     <li class="list-group-item fist-item"> -->
+<!--                                                     	Projects in Robby's Review -->
+<!--                                                         <span class="float-right label label-danger robbysReviewCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects in Buyer's Review -->
+<!--                                                         <span class="float-right label label-danger buyersReviewCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                     <li class="list-group-item"> -->
+<!--                                                     	Projects in Manager's Review -->
+<!--                                                         <span class="float-right label label-danger managersReviewCount">-</span> -->
+<!--                                                     </li> -->
+<!--                                                 </ul> -->
+<!--                                             </div> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
 								</div>
 								</div>
 
