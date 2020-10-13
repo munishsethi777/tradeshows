@@ -3,7 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/ClassCodeImportUtil.php");
+// require_once($ConstantsArray['dbServerUrl'] ."Utils/ClassCodeImportUtil.php");
 
 
 class ClassCodeMgr{
@@ -78,10 +78,10 @@ class ClassCodeMgr{
 		}
 		return null;
 	}
-	public function importClassCode($file){
-		$classCodeImportUtil = ClassCodeImportUtil::getInstance();
-		return $classCodeImportUtil->importClassCodes($file);
-	}
+// 	public function importClassCode($file){
+// 		$classCodeImportUtil = ClassCodeImportUtil::getInstance();
+// 		return $classCodeImportUtil->importClassCodes($file);
+// 	}
 	
 	public function saveOrUpdateArr($colValuePair,$ommitFieldsWhileUpdateArr){
 		$sql = "INSERT INTO classcodes(";
