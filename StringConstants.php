@@ -14,6 +14,8 @@ class StringConstants{
 	const APPROVAL_RESPONSE_NOTIFICATION = "Alpine BI Quality | PO Approval Response Notification";
 	const CONTAINER_SCHEDULE_DATES_CHANGE_NOTIFICATION = "Alpine BI Containers | Container Schedule Dates Change Notification";
 	const CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE = "Alpine BI Containers | Container Schedule Change Terminal Appointment Date";
+	const CONTAINER_SCHEDULE_CHANGE_ETA_DATE = "Alpine BI Containers | Container Schedule Change ETA";
+	
 	const CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE = "Alpine BI Containers | Container Schedule Change Requested Delivery Date";
 	const ETA_REPORT = "Alpine BI Containers | ETA Report";
 	const EMPTY_RETURN = "Alpine BI Containers | Empty Return Date past Empty LFD Report";
@@ -38,7 +40,7 @@ class StringConstants{
 	const PROJECT_DUE_TODAY_REPORT = "Alpine BI Graphics | Projects Due for the Day";
 	const PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT = "Alpine BI Graphics | Projects Due in less than 20 days from China Entry Date";
 	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT = "Alpine BI Graphics | Projects Due in less than 20 days";
-	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "Alpine BI Graphics | Projects with Pending Info from China Team (Daily)";
+	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "Alpine BI Graphics | Projects with Missing Info from China Team";
 	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "Alpine BI Graphics | Projects Past Due with Pending Info from China Team";
 	
 	//REPORT NAMES STARTS HERE -----------------
