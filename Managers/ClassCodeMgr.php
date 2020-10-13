@@ -49,7 +49,8 @@ class ClassCodeMgr{
 	}
 	
 	public function getClassCodesForGrid(){
-		$query = "select users.fullname,classcodes.* from classcodes left join users on classcodes.userseq = users.seq";
+// 		$query = "select users.fullname,users.qccode,classcodes.* from classcodes left join users on classcodes.userseq = users.seq";
+		$query = "select userusers.fullname,qcusers.qccode as qccode,pousers.qccode as poqccode,classcodes.* from classcodes left join users userusers on classcodes.userseq = userusers.seq left join users qcusers on classcodes.qcuser=qcusers.seq left join users pousers on classcodes.poinchargeuser=pousers.seq";
 		$sessionUtil = SessionUtil::getInstance();
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$classCodes = self::$dataStore->executeQuery($query,true);
@@ -68,7 +69,7 @@ class ClassCodeMgr{
 		
 		return $mainArr;
 	}
-	
+    	
 	public function findByClassCode($classCode){
 		$colVal["classcode"] = $classCode;
 		$classCode = self::$dataStore->executeConditionQuery($colVal);
@@ -113,5 +114,21 @@ class ClassCodeMgr{
 		$classCode = self::$dataStore->executeQuery($sql);
 		return $classCode;
 
+	}
+	
+	public function getClassCodeSeqs($userSeq,$userRole){
+	    $query = null;
+	    if($userRole == Permissions::qc){
+	        $query = "SELECT seq FROM `classcodes` where qcuser = ".$userSeq;
+	    }else{
+	        $query = "SELECT seq FROM `classcodes` where poinchargeuser = ".$userSeq;
+	    }
+	      $classCodeSeqs = self::$dataStore->executeQuery($query,false,true);
+	      $seqs = array();
+	      foreach($classCodeSeqs as $seq){
+	          array_push($seqs,$seq['seq']);
+	      }
+	      $seqs = implode(",", $seqs);
+	      return $seqs; 
 	}
 }

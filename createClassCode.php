@@ -3,6 +3,8 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ClassCode.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+
 $classCode = new ClassCode();
 $isEnabled = "checked";
 $classCodeMgr = ClassCodeMgr::getInstance();
@@ -69,6 +71,30 @@ if(isset($_POST["id"])){
 	                            	<input type="text"  required maxLength="25" value="<?php echo $classCode->getClassCode()?>" name="classcode" class="form-control">
 	                            </div>
 							 </div>
+							 <div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">QC</label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+	                        		$select = DropDownUtils::getQCUsers("qcuser", null,$classCode->getQcUser(),false,true);
+		                        		echo $select;
+	                        			if($isSessionGeneralUser && !$isSessionSV){?>
+	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
+	                        			<?php }
+                             		?>
+	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $classCode->getQcUser()?>" name="qc" class="form-control">
+	                            </div>
+								<label class="col-lg-2 col-form-label bg-formLabel">PO Incharge</label>
+	                        	<div class="col-lg-4">
+	                        		<?php 
+	                        		$select = DropDownUtils::getPOUsers("poinchargeuser", null,$classCode->getPoInchargeUser(),false,true);
+		                        		echo $select;
+	                        			if($isSessionGeneralUser && !$isSessionSV){?>
+	                        				<input type="hidden" id="pouserhidden" value="<?php echo $poUser?>" name="pouser">
+	                        			<?php }
+                             		?>
+	                            	<input style="display: none" type="text" id="po" maxLength="250" value="<?php echo $classCode->getPoInchargeUser()?>" name="po" class="form-control">
+	                            </div>
+	                        </div>
 	                         <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Enabled :</label>
 	                        	<div class="col-lg-4">

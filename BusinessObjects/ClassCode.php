@@ -2,7 +2,7 @@
 class ClassCode{
 	public static $className = "ClassCode";
 	public static $tableName = "classcodes";
-	private $seq,$classcode,$userseq,$lastmodifiedon,$createdon,$isenabled;
+	private $seq,$classcode,$userseq,$lastmodifiedon,$createdon,$isenabled,$qcuser,$poinchargeuser;
 	public function setSeq($seq_){
 		$this->seq = $seq_;
 	}
@@ -46,6 +46,22 @@ class ClassCode{
 	
 	public function getLastModifiedOn(){
 		return $this->lastmodifiedon;
+	}
+	
+	public function setQcUser($qcUser){
+	    $this->qcuser = $qcUser;
+	}
+	
+	public function getQcUser(){
+	    return $this->qcuser;
+	}
+	
+	public function setPoInchargeUser($poInchargeUser){
+	    $this->poinchargeuser = $poInchargeUser;
+	}
+	
+	public function getPoInchargeUser(){
+	    return $this->poinchargeuser;
 	}
 	
 	public function createFromRequest($request){

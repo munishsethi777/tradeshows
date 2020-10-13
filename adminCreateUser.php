@@ -13,11 +13,16 @@ require_once ($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleNotificationType
 require_once ($ConstantsArray['dbServerUrl'] . "Enums/GraphicLogsNotificationType.php");
 require_once ($ConstantsArray['dbServerUrl'] . "Enums/ContainerScheduleNotificationType.php");
 require_once ($ConstantsArray['dbServerUrl'] . "Utils/DropdownUtil.php");
+require_once ($ConstantsArray['dbServerUrl'] . "BusinessObjects/ClassCode.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
+
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
 $departments = $departmentMgr->getAll();
 $user = new User();
 $userMgr = UserMgr::getInstance();
+$classCode = new ClassCode();
+$classCodeMgr = ClassCodeMgr::getInstance();
 $userSelected = "";
 $supervisorSelected = "";
 $qcChecked = "";
@@ -66,6 +71,9 @@ if (isset($_POST["id"])) {
     if ($user->getIsEnabledMobile() == 1) {
         $isEnabledMobile = "checked";
     }
+    $userAsQcClassCodeSeqs = $classCodeMgr->getClassCodeSeqs($user->getSeq(), Permissions::qc);
+    $userAsPoinchargeClassCodeSeqs = $classCodeMgr->getClassCodeSeqs($user->getSeq(),Permissions::po_incharge);
+    //print_r( "<script>console.log(".$userAsQcClassCodeSeqs.");</script>");
 }
 $userDepartments = $departmentMgr->getUserDepartments($user->getSeq());
 $departmentSeqArr = array_map(create_function('$o', 'return $o->getDepartmentSeq();'), $userDepartments);
@@ -353,6 +361,23 @@ if (in_array(3, $departmentSeqArr)) {
 														name="permissions[]" /> QC Readonly (<small>Removed
 															Add/Save/Import/Notifications/Approve buttons</small>)
 													</label>
+													
+													<div class="col-lg-12">
+														<label class="col-lg-2 col-form-label bg-formLabel"> QC User in Class Codes :</label>
+                    	                        		<div class="col-lg-4">
+                    	                            	<?php 
+                    	                            	$select = DropDownUtils::getClassCodes("classcodesforqcuser[]",'',$userAsQcClassCodeSeqs, $classCode->getClassCode(),false,true,false);
+                    			                            echo $select;
+                    	                             	?>
+                    	                            	</div>
+                    	                            	<label class="col-lg-2 col-form-label bg-formLabel"> PO Incharge User in Class Codes :</label>
+                    	                        		<div class="col-lg-4">
+                    	                            	<?php 
+                    	                            	$select = DropDownUtils::getClassCodes("classcodesforpoinchargeuser[]",'',$userAsPoinchargeClassCodeSeqs, $classCode->getClassCode(),false,true,false);
+                    			                            echo $select;
+                    	                             	?>
+                    	                            	</div>
+													</div>
 
 													<div class="col-lg-12 m-t-sm">
 														<h4>Select Notifications</h4>
@@ -886,7 +911,8 @@ if (in_array(3, $departmentSeqArr)) {
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
-	
+	$("#classcodesforqcuser").chosen({width:"100%"});
+	$("#classcodesforpoinchargeuser").chosen({width:"100%"});
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
