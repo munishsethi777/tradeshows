@@ -366,14 +366,14 @@ if (in_array(3, $departmentSeqArr)) {
 														<label class="col-lg-2 col-form-label bg-formLabel"> QC User in Class Codes :</label>
                     	                        		<div class="col-lg-4">
                     	                            	<?php 
-                    	                            	$select = DropDownUtils::getClassCodes("classcodesforqcuser[]",'',$userAsQcClassCodeSeqs, $classCode->getClassCode(),false,true,false);
+                    	                            	$select = DropDownUtils::getClassCodes("classcodesforqcuser[]",'',$userAsQcClassCodeSeqs, $classCode->getClassCode(),false,true,true);
                     			                            echo $select;
                     	                             	?>
                     	                            	</div>
                     	                            	<label class="col-lg-2 col-form-label bg-formLabel"> PO Incharge User in Class Codes :</label>
                     	                        		<div class="col-lg-4">
                     	                            	<?php 
-                    	                            	$select = DropDownUtils::getClassCodes("classcodesforpoinchargeuser[]",'',$userAsPoinchargeClassCodeSeqs, $classCode->getClassCode(),false,true,false);
+                    	                            	$select = DropDownUtils::getClassCodes("classcodesforpoinchargeuser[]",'',$userAsPoinchargeClassCodeSeqs, $classCode->getClassCode(),false,true,true);
                     			                            echo $select;
                     	                             	?>
                     	                            	</div>
