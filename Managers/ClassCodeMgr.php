@@ -49,7 +49,8 @@ class ClassCodeMgr{
 	}
 	
 	public function getClassCodesForGrid(){
-		$query = "select users.fullname,classcodes.* from classcodes left join users on classcodes.userseq = users.seq";
+// 		$query = "select users.fullname,users.qccode,classcodes.* from classcodes left join users on classcodes.userseq = users.seq";
+		$query = "select userusers.fullname,qcusers.qccode as qccode,pousers.qccode as poqccode,classcodes.* from classcodes left join users userusers on classcodes.userseq = userusers.seq left join users qcusers on classcodes.qcuserseq=qcusers.seq left join users pousers on classcodes.poinchargeuserseq=pousers.seq";
 		$sessionUtil = SessionUtil::getInstance();
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$classCodes = self::$dataStore->executeQuery($query,true);
@@ -68,7 +69,7 @@ class ClassCodeMgr{
 		
 		return $mainArr;
 	}
-	
+    	
 	public function findByClassCode($classCode){
 		$colVal["classcode"] = $classCode;
 		$classCode = self::$dataStore->executeConditionQuery($colVal);
@@ -113,5 +114,121 @@ class ClassCodeMgr{
 		$classCode = self::$dataStore->executeQuery($sql);
 		return $classCode;
 
+	}
+	
+	public function getClassCodeSeqs($userSeq,$userRole){
+	    $query = null;
+	    if($userRole == Permissions::qc){
+	        $query = "SELECT seq FROM `classcodes` where qcuserseq = ".$userSeq;
+	    }else{
+	        $query = "SELECT seq FROM `classcodes` where poinchargeuserseq = ".$userSeq;
+	    }
+	      $classCodeSeqs = self::$dataStore->executeQuery($query,false,true);
+	      $seqs = array();
+	      foreach($classCodeSeqs as $seq){
+	          array_push($seqs,$seq['seq']);
+	      }
+	      $seqs = implode(",", $seqs);
+	      return $seqs; 
+	}
+
+	/**
+	 * Method to Find class Codes from a particular Column in the database.
+	 * This method could be used for replacement of findBySeqs
+	 * @param String $columnName  of column name
+	 * @param Array<String> $columnValues  of column values
+	 * @return Array<ClassCode>
+	 */
+	public function findByColumnName($columnName, $columnValues){
+		$columnValuesArray = [
+			$columnName => implode(',',$columnValues)
+		];
+		$arrayOfClassCodeArray = self::$dataStore->executeInList($columnValuesArray);
+		$classCodes = array();
+		foreach($arrayOfClassCodeArray as $classCodeArray){
+			$classCode = new ClassCode();
+			$classCode->from_array($classCodeArray);
+			$classCodes[] = $classCode;
+		}
+		return $classCodes;
+	}
+	/**
+	 * Method to update an array of classcode's qcuser to a particular seq
+	 * @param Array<String> $classCodeSeqsArr classcodes seqs to update
+	 * @param Number $seq the seq to update the qcuser column too.
+	 * 
+	 */
+	public function updateQcUser($classCodeSeqsArr,$seq){
+		$columnName = "qcuserseq";
+		$columnValue = [$seq];
+		$classCodes = $this->findByColumnName($columnName,$columnValue);
+		$removingQCUserArray = array();
+		foreach($classCodes as $classCodes){
+			if(!in_array($classCodes->getSeq(),$classCodeSeqsArr)){
+				$removingQCUserArray[] = $classCodes->getSeq();
+			}
+		}
+		$columnValuePair = [
+			"qcuserseq" => $seq
+		];
+		$conditionValuePair = [
+			"seq" => implode(",",$classCodeSeqsArr)
+		];
+		$result = self::$dataStore->updateByAttributesWithBindParams(
+						$columnValuePair,
+				 		$conditionValuePair,
+						true);
+		if(!empty($removingQCUserArray)){
+			$columnValuePair = [
+				"qcuserseq" => 0
+			];
+			$conditionValuePair = [
+				"seq" => implode(",",$removingQCUserArray)
+			];
+			$result = self::$dataStore->updateByAttributesWithBindParams(
+							$columnValuePair,
+							$conditionValuePair,
+							true);
+		}
+		return $result;
+	}
+	/**
+	 * Method to update an array of classcode's poinchargeuser to a particular seq
+	 * @param Array<String> $classCodeSeqsArray classcodes seqs to update
+	 * @param Number $seq  the seq to update the poinchargeuser column too.
+	 */
+	public function updatePoInchargeUser($classCodeSeqsArr,$seq){
+		$columnName = "poinchargeuserseq";
+		$columnValue = [$seq];
+		$classCodes = $this->findByColumnName($columnName,$columnValue);
+		$removingPoInchargeUserArray = array();
+		foreach($classCodes as $classCodes){
+			if(!in_array($classCodes->getSeq(),$classCodeSeqsArr)){
+				$removingPoInchargeUserArray[] = $classCodes->getSeq();
+			}
+		}
+		$columnValuePair = [
+			"poinchargeuserseq" => $seq
+		];
+		$conditionValuePair = [
+			"seq" => implode(",",$classCodeSeqsArr)
+		];
+		$result = self::$dataStore->updateByAttributesWithBindParams(
+						$columnValuePair,
+				 		$conditionValuePair,
+						true);
+		if(!empty($removingPoInchargeUserArray)){
+			$columnValuePair = [
+				"poinchargeuserseq" => 0
+			];
+			$conditionValuePair = [
+				"seq" => implode(",",$removingPoInchargeUserArray)
+			];
+			$result = self::$dataStore->updateByAttributesWithBindParams(
+							$columnValuePair,
+							$conditionValuePair,
+							true);
+		}
+		return $result;
 	}
 }

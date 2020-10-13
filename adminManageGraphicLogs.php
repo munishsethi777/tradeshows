@@ -489,7 +489,8 @@ function loadReportingData(){
  					$("#"+key).css("color",value);
  				}else{
  					$("#"+key).text(value);					
- 				}									
+ 				}
+ 				console.log(key,value);									
 			});
 			$(".bar").peity("bar", {
                 fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],

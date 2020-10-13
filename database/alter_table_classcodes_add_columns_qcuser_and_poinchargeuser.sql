@@ -1,0 +1,1 @@
+ALTER TABLE `classcodes` ADD `qcuser` BIGINT NOT NULL AFTER `userseq`, ADD `poinchargeuser` BIGINT NOT NULL AFTER `qcuser`;

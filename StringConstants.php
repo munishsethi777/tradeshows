@@ -174,4 +174,6 @@ class StringConstants{
 	const NEW_PASSWORD_EMPTY = "New password can not be empty";
 	const SETTINGS_UPDATE_SUCCCESSFULLY = "Settings updated successfully.";
 	const SELECT_ANY = "Select Any";
+
+	const UPDATE_MESSAGE_FOR_QCSCHEDULES = "Clicking on the following button to update QCSchedules for these classcodes ({CLASS_CODES}) with {TYPE} as {USER}";
 }

@@ -560,7 +560,8 @@ class BeanDataStore {
 			throw $e ;
 		}
 	}
-	public function updateByAttributesWithBindParams($colValuePair, $condiationPair = null, $isSingleINCriteria =false) {
+	public function updateByAttributesWithBindParams($colValuePair,$condiationPair = null,$isSingleINCriteria =false,$returnUpdatedCount = false){
+		$updateRowCount = 0;
 		try {
 			$paramValueArr = array ();
 			$flag = false;
@@ -589,7 +590,9 @@ class BeanDataStore {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
 			$STH = $conn->prepare ( $query );
+			$this->logger->info("Update By Attributes With Bind Params : " . $query);
 			$STH->execute ( $paramValueArr );
+			$updatedRowCount = $STH->rowCount();
 			$this->throwException ( $STH->errorInfo () );
 			$flag =  true;
 		} catch ( Exception $e ) {
@@ -598,7 +601,11 @@ class BeanDataStore {
 		}
 		$logMsg = "Update Attributes - Query = ". $query . " Params - ". json_encode($paramValueArr) . ". logged in user - " . $this->loggedInUserSeq . " (".$this->loggedInUserName.")";
 		$this->dataStoreLogger->info($logMsg);
-		return $flag;
+		if($returnUpdatedCount){
+			return $updatedRowCount;
+		}else{
+			return $flag;
+		}
 	}
 	public function executeCountQuery($colValuePair = null, $isApplyFilter = false) {
 		try {

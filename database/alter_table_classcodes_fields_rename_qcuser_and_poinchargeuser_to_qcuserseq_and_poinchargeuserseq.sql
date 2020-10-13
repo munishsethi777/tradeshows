@@ -1,0 +1,1 @@
+ALTER TABLE `classcodes` CHANGE `qcuser` `qcuserseq` BIGINT(20) NULL, CHANGE `poinchargeuser` `poinchargeuserseq` BIGINT(20) NULL;

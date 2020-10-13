@@ -78,6 +78,49 @@ if($call == "importClassCode"){
 		return;
 	}
 }
+if($call == "getClassCodeForQcUser"){
+	try{
+		$seq = $_REQUEST["seq"];
+		$name = $_REQUEST["name"];
+		$classCodes = $classCodeMgr->findByColumnName("qcuserseq",[$seq]);
+		$classCodesSeqs = array();
+		$classCodesArray = array();
+		foreach($classCodes as $classCode){
+			$classCodesSeqs[] = $classCode->getSeq();
+			$classCodesArray[] = $classCode->getClassCode(); 
+		}
+		$response["data"] = $classCodesSeqs;
+		$response["response"] = str_replace(["{CLASS_CODES}","{USER}","{TYPE}"],
+								[implode(",",$classCodesArray),$name,"QC"],
+								StringConstants::UPDATE_MESSAGE_FOR_QCSCHEDULES);
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+		$response["data"] = array();
+	}				
+}
+if($call == "getClassCodeForPoIncharge"){
+	try{
+		$seq = $_REQUEST["seq"];
+		$name = $_REQUEST["name"];
+		$classCodes = $classCodeMgr->findByColumnName("poinchargeuserseq",[$seq]);
+		$classCodesSeqs = array();
+		$classCodesArray = array();
+		foreach($classCodes as $classCode){
+			$classCodesSeqs[] = $classCode->getSeq();
+			$classCodesArray[] = $classCode->getClassCode(); 
+		}
+		$response["data"] = $classCodesSeqs;
+		$response["response"] = str_replace(["{CLASS_CODES}","{USER}","{TYPE}"],
+								[implode(",",$classCodesArray),$name,"PoIncharge"],
+								StringConstants::UPDATE_MESSAGE_FOR_QCSCHEDULES);
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+		$response["data"] = array();
+		
+	}
+}
 $response["success"] = $success;
 
 $response["message"] = $message;

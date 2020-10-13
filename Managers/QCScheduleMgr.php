@@ -1333,5 +1333,47 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			"pending_qc_approval_report"         => $pending_qc_approval_report
 		];
 	}
+
+	/**
+	 * Method to update an array of classcode's qcuser to a particular seq
+	 * @param Array<Number> $classCodeSeqsArr  classcodes seqs to update
+	 * @param Number $userseq  the seq to update the qcuser column too.
+	 * @param String $type the type of value need to be changed
+	 * @return Number the result of how many rows have been updated
+	 */
+	public function correctQCOrPoIncharge($classCodeSeqsArr,$userseq,$type){
+		switch($type){
+			case "qc":{
+				$columnValuePair = [
+					"qcuser" => $userseq
+				];
+				$conditionValuePair = [
+					"classcodeseq" => implode(",",$classCodeSeqsArr)
+				];
+				$result = self::$dataStore->updateByAttributesWithBindParams(
+								$columnValuePair,
+						 		$conditionValuePair,
+								true,
+								true);
+
+				return $result;
+			}
+			case "poincharge":{
+				$columnValuePair = [
+					"poinchargeuser" => $userseq
+				];
+				$conditionValuePair = [
+					"classcodeseq" => implode(",", $classCodeSeqsArr)
+				];
+				$result = self::$dataStore->updateByAttributesWithBindParams(
+								$columnValuePair,
+								$conditionValuePair,
+								true,
+								true
+							);
+				return $result;
+			}	
+		}
+	}
 	
 }

@@ -140,7 +140,7 @@ class DropDownUtils {
 	public static function getClassCodes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled) {
 		$classCodeMgr = ClassCodeMgr::getInstance();
 		$classCodes = $classCodeMgr->findAllForDropDown();
-		return self::getDropDown1 ($classCodes, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Code",false,$disabled);
+		return self::getDropDown1 ($classCodes, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Code",true,$disabled);
 	}
 	
 	public static function getSupervisorsAndGraphicDesigners($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
