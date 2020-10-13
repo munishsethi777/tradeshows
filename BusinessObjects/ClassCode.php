@@ -2,7 +2,7 @@
 class ClassCode{
 	public static $className = "ClassCode";
 	public static $tableName = "classcodes";
-	private $seq,$classcode,$userseq,$lastmodifiedon,$createdon,$isenabled,$qcuser,$poinchargeuser;
+	private $seq,$classcode,$userseq,$lastmodifiedon,$createdon,$isenabled,$qcuserseq,$poinchargeuserseq;
 	public function setSeq($seq_){
 		$this->seq = $seq_;
 	}
@@ -47,21 +47,33 @@ class ClassCode{
 	public function getLastModifiedOn(){
 		return $this->lastmodifiedon;
 	}
-	
-	public function setQcUser($qcUser){
-	    $this->qcuser = $qcUser;
+	/**
+	 * Function to set the qcuserseq
+	 * @param Number $qcuserseq Number the seq of the qcuser
+	 */
+	public function setQcUserSeq($qcuserseq){
+	    $this->qcuserseq = $qcuserseq;
 	}
-	
-	public function getQcUser(){
-	    return $this->qcuser;
+	/**
+	 * Function to get the qcuserseq
+	 * @return $qcuserseq:Number the seq of the qcuser
+	 */
+	public function getQcUserSeq(){
+	    return $this->qcuserseq;
 	}
-	
-	public function setPoInchargeUser($poInchargeUser){
-	    $this->poinchargeuser = $poInchargeUser;
+	/**
+	 * Function to set the poinchargeuser
+	 * @param Number $poinchargeuserseq the seq of the poinchargeuser
+	 */
+	public function setPoInchargeUserSeq($poinchargeuserseq){
+	    $this->poinchargeuserseq = $poinchargeuserseq;
 	}
-	
-	public function getPoInchargeUser(){
-	    return $this->poinchargeuser;
+	/**
+	 * Function to get the poinchargeuser
+	 * @return $poinchargeuserseq:Number the seq of the poinchargeuser
+	 */
+	public function getPoInchargeUserSeq(){
+	    return $this->poinchargeuserseq;
 	}
 	
 	public function createFromRequest($request){

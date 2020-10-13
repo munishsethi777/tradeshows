@@ -15,6 +15,9 @@ if(isset($_GET["call"])){
 }else{
 	$call = $_POST["call"];
 }
+/**
+ * @var QCScheduleMgr $qcScheduleMgr
+ */
 $qcScheduleMgr = QCScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 if($call == "saveQCSchedule"){
@@ -296,6 +299,14 @@ if($call == "getQCSchedulesDashboardCount"){
 		$success = "0";
 		unset($response["data"]);
 	}
+}
+if($call == "correctQCOrPoIncharge"){
+	$seq = $_REQUEST["seq"];
+	$type = $_REQUEST["type"];
+	$classcodes = $_REQUEST["classcodes"];
+	$changedQCSchedules =$qcScheduleMgr->correctQCOrPoIncharge($classcodes, $seq, $type);
+	$message = "The Number of QCSchedules Updated are $changedQCSchedules";
+	
 }
 function utf8ize($d) {
     if (is_array($d)) {

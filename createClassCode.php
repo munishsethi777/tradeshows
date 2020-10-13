@@ -75,24 +75,24 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">QC</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-	                        		$select = DropDownUtils::getQCUsers("qcuser", null,$classCode->getQcUser(),false,true);
+	                        		$select = DropDownUtils::getQCUsers("qcuserseq", null,$classCode->getQcUserSeq(),false,true);
 		                        		echo $select;
 	                        			if($isSessionGeneralUser && !$isSessionSV){?>
 	                        				<input type="hidden" id="qcuserhidden" value="<?php echo $qcUser?>" name="qcuser">
 	                        			<?php }
                              		?>
-	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $classCode->getQcUser()?>" name="qc" class="form-control">
+	                            	<input style="display: none" type="text" id="qc" maxLength="250" value="<?php echo $classCode->getQcUserSeq()?>" name="qc" class="form-control">
 	                            </div>
 								<label class="col-lg-2 col-form-label bg-formLabel">PO Incharge</label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
-	                        		$select = DropDownUtils::getPOUsers("poinchargeuser", null,$classCode->getPoInchargeUser(),false,true);
+	                        		$select = DropDownUtils::getPOUsers("poinchargeuserseq", null,$classCode->getPoInchargeUserSeq(),false,true);
 		                        		echo $select;
 	                        			if($isSessionGeneralUser && !$isSessionSV){?>
 	                        				<input type="hidden" id="pouserhidden" value="<?php echo $poUser?>" name="pouser">
 	                        			<?php }
                              		?>
-	                            	<input style="display: none" type="text" id="po" maxLength="250" value="<?php echo $classCode->getPoInchargeUser()?>" name="po" class="form-control">
+	                            	<input style="display: none" type="text" id="po" maxLength="250" value="<?php echo $classCode->getPoInchargeUserSeq()?>" name="po" class="form-control">
 	                            </div>
 	                        </div>
 	                         <div class="form-group row i-checks">

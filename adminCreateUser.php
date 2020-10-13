@@ -362,7 +362,7 @@ if (in_array(3, $departmentSeqArr)) {
 															Add/Save/Import/Notifications/Approve buttons</small>)
 													</label>
 													
-													<div class="col-lg-12">
+													<div class="col-lg-12" style="margin: 15px 0px 15px 15px">
 														<label class="col-lg-2 col-form-label bg-formLabel"> QC User in Class Codes :</label>
                     	                        		<div class="col-lg-4">
                     	                            	<?php 
@@ -378,7 +378,15 @@ if (in_array(3, $departmentSeqArr)) {
                     	                             	?>
                     	                            	</div>
 													</div>
-
+													<div class="col-lg-12">
+														<div class="col-lg-2">
+															<button id="updateQcUserQcSchedulesButton" class="btn btn-success" onclick="updateQCSchedulesShow('qcuser')" type="button">Correct QCSchedules</button>
+														</div>
+														<div class="col-lg-4"></div>
+														<div class="col-lg-2">
+															<button id="updatePoInchargeUserQcSchedulesButton" class="btn btn-success" onclick="updateQCSchedulesShow('poinchargeuser')" type="button">Correct QCSchedules</button>
+														</div>
+													</div>
 													<div class="col-lg-12 m-t-sm">
 														<h4>Select Notifications</h4>
 													</div>
@@ -885,19 +893,23 @@ if (in_array(3, $departmentSeqArr)) {
 	                        -->
 
 
-													<div class="bg-white p-xs">
-														<div class="form-group row">
-															<label class="col-lg-2 col-form-label"></label>
-															<div class="col-lg-2">
-																<button class="btn btn-primary" onclick="saveUser()"
-																	type="button" style="width: 85%">Save</button>
-															</div>
-															<div class="col-lg-2">
-																<a class="btn btn-default" href="adminManageUsers.php"
-																	type="button" style="width: 85%"> Cancel </a>
-															</div>
-														</div>
-													</div>
+								<div class="bg-white p-xs">
+									<div class="form-group row">
+										<label class="col-lg-2 col-form-label"></label>
+										<div class="col-lg-2">
+											<button class="btn btn-primary" onclick="saveUser()"
+												type="button" style="width: 85%">Save</button>
+										</div>
+										<div class="col-lg-2">
+											<button class="btn btn-primary" onclick="saveUserAndContinue()"
+											type="button" style="width:85%">Save And Continue</button>
+										</div>
+										<div class="col-lg-2">
+											<a class="btn btn-default" href="adminManageUsers.php"
+												type="button" style="width: 85%"> Cancel </a>
+										</div>
+									</div>
+								</div>
 							
 							</form>
 						</div>
@@ -907,10 +919,43 @@ if (in_array(3, $departmentSeqArr)) {
 			</div>
 		</div>
 	</div>
+	<div id="QcScheduleUpdateModal" class="modal fade" data-backdrop="static"  aria-hidden="true">
+	        <div class="modal-dialog" >
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                	<h4 class="modal-title">Update QCScheule</h4>
+	                </div>
+	                <div class="modal-body mainDiv">
+	                    <div class="row" >
+	                        <div class="col-sm-12">
+	                            <form role="form" id="QcScheduleUpdateModalForm" class="form-horizontal">
+	                               <div id="message">
+									   <input type="hidden" id="QcScheduleUpdateModalType" name="type">
+									   <input type="hidden" id="QcScheduleUpdateModalClassCodes" name="classcodes[]">
+									   <label id="QcScheduleUpdateModalMessage"></label>
+								   </div>
+	                                <div class="modal-footer">
+	                                     <button class="btn btn-success ladda-button" onclick="updateQCSchedule()" data-style="expand-right" id="saveBtn" type="button">
+	                                        <span class="ladda-label">Yes</span>
+	                                    </button>
+	                                     <button type="button" id="noBtn" class="btn btn-danger" onclick="closeModal('QcScheduleUpdateModal')" data-dismiss="modal">No</button>
+	                                </div>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+        </div>
 </body>
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
+	var id = $("#seq").val();
+	if(id == null || id == 0){
+		$("#updateQcUserQcSchedulesButton").prop("disabled", true);
+		$("#updatePoInchargeUserQcSchedulesButton").prop("disabled", true);
+	}
 	$("#classcodesforqcuser").chosen({width:"100%"});
 	$("#classcodesforpoinchargeuser").chosen({width:"100%"});
 	$('.i-checks').iCheck({
@@ -1012,4 +1057,84 @@ function saveUser(){
 		$("#createUserForm")[0].reportValidity();
 	}
 }
+
+saveUserAndContinue = () => {
+	if($("#createUserForm")[0].checkValidity()){
+		showHideProgress()
+		$("#createUserForm").ajaxSubmit((data) => {
+			showHideProgress();
+			var flag = showResponseToastr(data, null, null, "ibox");
+			if(flag){
+				
+			}
+		})
+	}
+}
+
+function updateQCSchedulesShow(columnName){
+	
+	switch(columnName){
+		case "qcuser":{
+			// get all ClassCodes for updating QCSchedules
+			$.ajax({
+				url: "Actions/ClassCodeAction.php?call=getClassCodeForQcUser&seq=" + $("#seq").val() + "&name=" + $(`input[name="fullname"]`).val(),
+				dataType: "json", 
+				success: (response) => {
+					// set Model with all the values
+					$("#QcScheduleUpdateModalClassCodes").val(response.data);
+					$("#QcScheduleUpdateModalType").val("qc");
+					$("#QcScheduleUpdateModalMessage").html(response.response);
+					// disable button if there are no ClassCode
+					if(response.data.length == 0){
+						$("#updateQCSceduleBtn").prop("disabled", true);
+					}else{
+						$("#updateQCSchduleBtn").prop("disabled", false);
+					}
+					$("#QcScheduleUpdateModal").modal("show");
+				}
+			});
+			
+			break;
+		}
+		case "poinchargeuser":{
+			$.ajax({
+				url: "Actions/ClassCodeAction.php?call=getClassCodeForPoIncharge&seq=" + $("#seq").val() + "&name=" + $(`input[name="fullname"]`).val(),
+				dataType: "json",
+				success: (response) => {
+					// set Model with all the values
+					$("#QcScheduleUpdateModalClassCodes").val(response.data);
+					$("#QcScheduleUpdateModalType").val("poincharge");
+					$("#QcScheduleUpdateModalMessage").html(response.response);
+					// disable button if there are no ClassCode
+					if(response.data.length == 0){
+						$("#updateQCSceduleBtn").prop("disabled", true);
+					}else{
+						$("#updateQCSchduleBtn").prop("disabled", false);
+					}
+					$("#QcScheduleUpdateModal").modal("show");
+				}
+			});
+			break;
+		}
+	}
+}
+function updateQCSchedule(){
+	var data = $("#QcScheduleUpdateModalForm").serialize();
+	data += "&seq=" + $("#seq").val();
+	$.ajax({
+		url: "Actions/QCScheduleAction.php?call=correctQCOrPoIncharge",
+		data: data,
+		dataType: "json",
+		success: (response) => {
+			if(response.success == 1){
+				toastr.success(response.message);
+			}else{
+				toaster.error(response.message);
+			}
+		}
+	});
+	$("#QcScheduleUpdateModal").modal("hide");                             
+}
+	closeModal = () => $("#QcScheduleUpdateModal").modal("hide");
+
 </script>
