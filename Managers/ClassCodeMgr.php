@@ -174,10 +174,14 @@ class ClassCodeMgr{
 		$conditionValuePair = [
 			"seq" => implode(",",$classCodeSeqsArr)
 		];
-		$result = self::$dataStore->updateByAttributesWithBindParams(
-						$columnValuePair,
-				 		$conditionValuePair,
-						true);
+		
+		$result = false;
+		if(!empty($classCodeSeqsArr)){
+			$result = self::$dataStore->updateByAttributesWithBindParams(
+							$columnValuePair,
+					 		$conditionValuePair,
+							true);
+		}
 		if(!empty($removingQCUserArray)){
 			$columnValuePair = [
 				"qcuserseq" => 0
@@ -194,7 +198,7 @@ class ClassCodeMgr{
 	}
 	/**
 	 * Method to update an array of classcode's poinchargeuser to a particular seq
-	 * @param Array<String> $classCodeSeqsArray classcodes seqs to update
+	 * @param Array<String> $classCodeSeqsArr classcodes seqs to update
 	 * @param Number $seq  the seq to update the poinchargeuser column too.
 	 */
 	public function updatePoInchargeUser($classCodeSeqsArr,$seq){
@@ -213,10 +217,13 @@ class ClassCodeMgr{
 		$conditionValuePair = [
 			"seq" => implode(",",$classCodeSeqsArr)
 		];
-		$result = self::$dataStore->updateByAttributesWithBindParams(
-						$columnValuePair,
-				 		$conditionValuePair,
-						true);
+		$result = false;
+		if(!empty($classCodeSeqsArr)){
+			$result = self::$dataStore->updateByAttributesWithBindParams(
+							$columnValuePair,
+					 		$conditionValuePair,
+							true);
+		}
 		if(!empty($removingPoInchargeUserArray)){
 			$columnValuePair = [
 				"poinchargeuserseq" => 0
