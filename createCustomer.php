@@ -164,19 +164,19 @@ if(isset($_POST["id"])){
 		                        
 	                        </div>
 	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager Email</label>
 		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
+		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
 		                        </div>
-		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin</label>
+		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin Email</label>
 		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
+		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
 		                        </div>
 	                        </div>
 	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead Email</label>
 		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
+		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
 		                        </div>
 	                        </div>
 	                        
