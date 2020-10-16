@@ -28,7 +28,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Utils/TimeZone.php");
-
+require_once($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleUpdateOptions.php");
 
 
 class DropDownUtils {
@@ -209,7 +209,10 @@ class DropDownUtils {
 	    $enums = FreightForwarder::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Any");
 	}
-	
+	public static function getAllQcScheduleOptions($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$enums = QCScheduleUpdateOptions::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll,"",false);
+	}
 	public static function getDropDown1($values, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$firstOption = "Select Any",$isMultiSelect = false,$disabled = "") {
 		$id = $selectName;
 		if(strpos($selectName, "[]") !== false){

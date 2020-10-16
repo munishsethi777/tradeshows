@@ -1,6 +1,7 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $isCompleted = 0;
 if(isset($_REQUEST["isCompleted"])){
     $isCompleted  = $_REQUEST["isCompleted"];
@@ -38,6 +39,15 @@ if(isset($_REQUEST["isCompleted"])){
 								<input type="hidden" id="isupdate" name="isupdate" value="0" />
 								<input type="hidden" id="iscompleted" name="iscompleted" value="<?php echo $isCompleted ?>" />
 								<div class="form-group row i-checksnormal">
+									<label class="col-lg-2">Choose Your Option</label>
+									<div class="col-lg-8 row">
+										<?php 
+											$select = DropDownUtils::getAllQcScheduleOptions("selectedOption[]", null,"",false,true);
+											echo $select;
+										?>
+									</div>
+								</div>
+								<!-- <div class="form-group row i-checksnormal">
 									<div class="col-lg-offset-2 col-lg-6">
 										<input type="checkbox" id="updateShipDateAndScheduleDates" name="updateShipDateAndScheduleDates"> Update ShipDate and Schedule dates (based on id)
 									</div>
@@ -61,7 +71,7 @@ if(isset($_REQUEST["isCompleted"])){
 									<div class="col-lg-offset-2 col-lg-6">
 										<input type="checkbox" id="updatePOTypes" name="updatePOTypes"> Update PO Types (based on id)
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label">Select file to update</label>
 									<div class="col-lg-8">
@@ -149,10 +159,13 @@ if(isset($_REQUEST["isCompleted"])){
 			$("#updateQCScheduleForm")[0].reportValidity();
 		}
 	}
+	$("select[name='selectedOption[]'").addClass('col-6');
 	$(document).ready(function() {
 		$('.i-checksnormal').iCheck({
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green',
 		});
+		
+		$(".form-control").select2();
 	});
 </script>'

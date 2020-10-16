@@ -53,10 +53,36 @@ class QCScheduleMgr{
     public function importQCSchedulesWithActualDates($file,$isUpdate,$updatingRowNumbers,$isCompeted){
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
-    }
-    public function updateQCSchedulesWithActualDates($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false,$isUpdatePoTypes = false){
+	}
+	/**
+	 * Method to send variables to QCScheduleImportUtil
+	 * @param FILE $file the file contents need to update the database
+	 * 
+	 */
+	public function updateQCSchedulesWithActualDates(
+						$file,
+						$isUpdateShipDateAndScheduleDates,
+						$isUpdateLatestShipDate,
+						$isCompletionStatus,
+						$isUpdatePONumber = false,
+						$isUpdatePoTypes = false,
+						$isUpdateClassCode = false,
+						$isUpdateQC = false,
+						$isUpdateFirstInspectionDate = false
+					){
+		/**  @var QCScheduleImportUtil */ 
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
-		return $qcScheduleImportUtil->updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber,$isUpdatePoTypes);
+		return $qcScheduleImportUtil->updateQCSchedules(
+								$file,
+								$isUpdateShipDateAndScheduleDates,
+								$isUpdateLatestShipDate,
+								$isCompletionStatus,
+								$isUpdatePONumber,
+								$isUpdatePoTypes,
+								$isUpdateClassCode,
+								$isUpdateQC,
+								$isUpdateFirstInspectionDate
+							);
 	}
 
     public function bulkDeleteByImport($filePath){
@@ -429,8 +455,30 @@ class QCScheduleMgr{
 		$response["existingItemIds"] = "";
 		return $response;
 	}
-	
-	public function updateQCScheduleDates($qcScheudleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false,$isUpdatePOTypes = false){
+	/**
+	 * Method to update QCSchedules According to the parameters
+	 * @param QCSchedule[] $qcScheudleArr
+	 * @param bool $isUpdateShipDateAndScheduleDates
+	 * @param bool $isUpdateLatestShipDate
+	 * @param bool $isUpdateLatestShipDate
+	 * @param bool $isCompletionStatus
+	 * @param bool $isUpdatePONumber
+	 * @param bool $isUpdatePOTypes
+	 * @param bool $isUpdateQC
+	 * @param bool $isUpdateFirstInspectionDate
+	 */
+	public function updateQCScheduleDates(
+						$qcScheudleArr,
+						$isUpdateShipDateAndScheduleDates,
+						$isUpdateLatestShipDate,
+						$isCompletionStatus,
+						$isUpdatePONumber            = false,
+						$isUpdatePOTypes             = false,
+						$isUpdateClassCode           = false,
+						$isUpdateQC                  = false,
+						$isUpdateFirstInspectionDate = false
+					)
+	{
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
 		$conn->beginTransaction();
@@ -449,24 +497,34 @@ class QCScheduleMgr{
 				}
 				if($isUpdateShipDateAndScheduleDates){
 					if(!($qc->getShipDate() == null) or !($qc->getShipdate() == "")){
-						$colValuePair['shipdate'] = $qc->getShipDate();
-						$colValuePair['screadydate'] = $qc->getScReadyDate();
-						$colValuePair['scfinalinspectiondate'] = $qc->getScFinalInspectionDate();
+						$colValuePair['shipdate']               = $qc->getShipDate();
+						$colValuePair['screadydate']            = $qc->getScReadyDate();
+						$colValuePair['scfinalinspectiondate']  = $qc->getScFinalInspectionDate();
 						$colValuePair['scmiddleinspectiondate'] = $qc->getScMiddleInspectionDate();
-						$colValuePair['scfirstinspectiondate'] = $qc->getScFirstInspectionDate();
-						$colValuePair['scproductionstartdate'] = $qc->getScProductionStartDate();
-						$colValuePair['scgraphicsreceivedate'] = $qc->getSCGraphicsReceiveDate();
+						$colValuePair['scfirstinspectiondate']  = $qc->getScFirstInspectionDate();
+						$colValuePair['scproductionstartdate']  = $qc->getScProductionStartDate();
+						$colValuePair['scgraphicsreceivedate']  = $qc->getSCGraphicsReceiveDate();
 					}
 				}
 				//$colValuePair['lastmodifiedon'] = $qc->getLastModifiedOn();
 				if($isCompletionStatus){
-					$colValuePair['iscompleted'] = $qc->getIsCompleted();
+					$colValuePair['iscompleted']           = $qc->getIsCompleted();
 				}
 				if($isUpdatePONumber){
-					$colValuePair['po'] = $qc->getPO();
+					$colValuePair['po']                    = $qc->getPO();
 				}
 				if($isUpdatePOTypes){
-					$colValuePair['potype'] = $qc->getPoType();
+					$colValuePair['potype']                = $qc->getPoType();
+				}
+				if($isUpdateClassCode){
+					$colValuePair['classcodeseq']          = $qc->getClassCodeSeq();
+				}
+				if($isUpdateQC){
+					$colValuePair['qc']                    = $qc->getQC();
+					$colValuePair['qcuser']                = $qc->getQCUser();
+				}
+				if($isUpdateFirstInspectionDate){
+					$colValuePair['scfirstinspectiondate'] = $qc->getSCFirstInspectionDate();
 				}
 				$resultCount = self::$dataStore->updateByAttributes($colValuePair, $condition,true);		
 				$updatedItemCount+= $resultCount;

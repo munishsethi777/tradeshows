@@ -413,5 +413,19 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 	    $conditionPair['seq'] = $user["seq"];
 	    self::$userDataStore->updateByAttributesWithBindParams($colValPair,$conditionPair);
 	}
-
+	/**
+	 * Method to find user by his QC Code
+	 * @param string $qccode name of user
+	 * @return User
+	 */
+	public function getUserByQCCode($qccode){
+		$condition = [
+			"qccode" => $qccode
+		];
+	    $user = self::$userDataStore->executeConditionQuery($condition);
+	    if(!empty($user)){
+	        return $user[0];
+	    }
+	    return null;
+	}
 }

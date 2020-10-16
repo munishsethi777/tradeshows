@@ -80,15 +80,45 @@ class QCScheduleImportUtil
             throw $e;
         }
     }
-    
-    public function updateQCSchedules($file,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false, $isUpdatePoTypes = false){
+    /**
+     * Method to convert the $file to a datatype where php could use to update QCSchedule
+     * @param FILE $file the file need to be updated
+     * @param bool $isUpdateShipDateAndScheduleDates
+     * @param bool $isUpdateLatestShipDate
+     * @param bool $isCompletionStatus
+     * @param bool $isUpdatePONumber
+     * @param bool $isPoTypes
+     * @param bool $isUpdateClassCode
+     * @param bool $isUpdateQC
+     * @param bool $isUpdateFirstInspectionDate
+     */
+    public function updateQCSchedules($file,
+                        $isUpdateShipDateAndScheduleDates,
+                        $isUpdateLatestShipDate,
+                        $isCompletionStatus,
+                        $isUpdatePONumber = false,
+                        $isUpdatePoTypes = false,
+                        $isUpdateClassCode = false,
+                        $isUpdateQC = false,
+                        $isUpdateFirstInspectionDate = false
+                    ){
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
         $sheet = $objPHPExcel->getActiveSheet();
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
         try{
-            return $this->validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber,$isUpdatePoTypes);
+            return $this->validateAndUpdateFile(
+                $sheetData,
+                $isUpdateShipDateAndScheduleDates,
+                $isUpdateLatestShipDate,
+                $isCompletionStatus,
+                $isUpdatePONumber,
+                $isUpdatePoTypes,
+                $isUpdateClassCode,
+                $isUpdateQC,
+                $isUpdateFirstInspectionDate
+            );
         }catch(Exception $e){
             throw $e;
         }
@@ -247,7 +277,29 @@ class QCScheduleImportUtil
         }
         return $response;
     }
-    public function validateAndUpdateFile($sheetData,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber = false,$isUpdatePOTypes = false){
+    /**
+     * Method to Validate File And Convert it to a QCScedule BusinessObject.
+     * @param string[][] $sheetData
+     * @param bool $isUpdateShipDateAndScheduleDates
+     * @param bool $isUpdateLatestShipDate
+     * @param bool $isCompletionStatus
+     * @param bool $isUpdatePONumber
+     * @param bool $isUpdatePOTypes
+     * @param bool $isUpdateClassCode
+     * @param bool $isUpdateQC
+     * @param bool $isUpdateFirstInspectionDate
+     */
+    public function validateAndUpdateFile(
+                    $sheetData,
+                    $isUpdateShipDateAndScheduleDates,
+                    $isUpdateLatestShipDate,
+                    $isCompletionStatus,
+                    $isUpdatePONumber = false,
+                    $isUpdatePOTypes = false,
+                    $isUpdateClassCode = false,
+                    $isUpdateQC = false,
+                    $isUpdateFirstInspectionDate = false
+                ){
         $logger = Logger::getLogger("logger");
         $this->fieldNames = $sheetData[0];
         $success = 1;
@@ -269,7 +321,18 @@ class QCScheduleImportUtil
                     
                 }else{
                     try{
-                        $qcSchedule = $this->getUpdatingData($data,$labels);
+                        $qcSchedule = $this->getUpdatingData(
+                                        $data,
+                                        $labels,
+                                        $isUpdateShipDateAndScheduleDates,
+                                        $isUpdateLatestShipDate,
+                                        $isCompletionStatus,
+                                        $isUpdatePONumber,
+                                        $isUpdatePOTypes,
+                                        $isUpdateClassCode,
+                                        $isUpdateQC,
+                                        $isUpdateFirstInspectionDate
+                                    );
                         array_push($qcScheduleArr, $qcSchedule);
                     }catch (Exception $e){
                         $messages .= "Error found on row " . $row ." - ". $e->getMessage() . "<br>";
@@ -287,9 +350,20 @@ class QCScheduleImportUtil
         $response["message"] = $messages;
         $response["success"] = $success;
         if (empty($messages)) {
+            /** @var QCScheduleMgr */
             $qcscheduleMgr = QCScheduleMgr::getInstance();
             $logger->info("\n\n\n\n\n QCSchedule is about to be updated by Import Process");
-            $response = $qcscheduleMgr->updateQCScheduleDates($qcScheduleArr,$isUpdateShipDateAndScheduleDates,$isUpdateLatestShipDate,$isCompletionStatus,$isUpdatePONumber,$isUpdatePOTypes);
+            $response = $qcscheduleMgr->updateQCScheduleDates(
+                                    $qcScheduleArr,
+                                    $isUpdateShipDateAndScheduleDates,
+                                    $isUpdateLatestShipDate,
+                                    $isCompletionStatus,
+                                    $isUpdatePONumber,
+                                    $isUpdatePOTypes,
+                                    $isUpdateClassCode,
+                                    $isUpdateQC,
+                                    $isUpdateFirstInspectionDate
+                                );
         }
         return $response;
     }
@@ -524,41 +598,76 @@ class QCScheduleImportUtil
         $importedData["importingQCObj"] = $qcSchedule;
         return $importedData;
     }
-
-    private function getUpdatingData($data,$labels)
+    /**
+     * Method to convert data into BusinessObjects for QcSchedule
+     * @param string[] $data 
+     * @param string[] $labels 
+     * @param string $optionsToCheck
+     */
+    private function getUpdatingData(
+                        $data,
+                        $labels,
+                        $isUpdateShipDateAndScheduleDates = false,
+                        $isUpdateLatestShipDate           = false,
+                        $isCompletionStatus               = false,
+                        $isUpdatePONumber                 = false,
+                        $isUpdatePOTypes                  = false,
+                        $isUpdateClassCode                = false,
+                        $isUpdateQC                       = false,
+                        $isUpdateFirstInspectionDate      = false
+                    )
     {
         $messages = array();
         $seq = $data[array_search("ID",$labels)];
         $seq = trim($seq);
-        $poNumber = $data[array_search("PO#",$labels)];
-        if(strtolower($data[array_search("Completed",$labels)]) == "yes"){
-            $isCompleted = "1";
-        }else{
-            $isCompleted = "0";
-        }
-        if(empty($seq)){
-            $messages[] = "ID is invalid,";
-        }
-        $latestShipDateStr = $data[array_search('Latest Ship Date',$labels)];
-        $shipDateStr = $data[array_search('Ship Date', $labels)];
         $qcSchedule = new QCSchedule();
-        if(in_array("PO Type",$labels)){
-            $poType = $data[array_search("PO Type",$labels)];
-        }else{
-            $poType = $data[array_search("PO TYPE",$labels)];
-        }
-            if(!empty($latestShipDateStr)){
-                $latestshipdate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
-                if($latestshipdate){
-                    $qcSchedule->setLatestShipDate($latestshipdate);
-                }else{
-                    $messages[] = " Invalid Latest Ship Date";
-                }
+
+        if($isCompletionStatus){
+            if(strtolower($data[array_search("Completed",$labels)]) == "yes"){
+                $isCompleted = "1";
+            }else{
+                $isCompleted = "0";
             }
-        
-       
+            $qcSchedule->setIsCompleted($isCompleted);
+        }else if($isUpdateClassCode){
+            try{
+                $classCodeName        = $data[array_search('Class Code', $labels)];
+                $classCodeMgr         = ClassCodeMgr::getInstance();
+                $classCode            = $classCodeMgr->findByClassCode($classCodeName);
+                if($classCode == null){
+                    throw new Exception("$classCodeName Classcode does not exist");
+                }
+                $qcSchedule->setClassCodeSeq($classCode->getSeq());
+            }catch(Exception $e){
+                $messages[] = $e->getMessage();
+            }
+        }else if($isUpdateQC){
+            try{
+                $qc = $data[array_search('QC', $labels)];
+                $userMgr = UserMgr::getInstance();
+                $qcuser = $userMgr->getUserByQCCode($qc);
+                if($qcuser == null){
+                    throw new Exception("$qc does not Exist");
+                }
+                $qcSchedule->setQC($qc);
+                $qcSchedule->setQCUser($qcuser->getSeq());
+            }catch(Exception $e){
+                $messages[] = $e->getMessage();
+            }
+        }else if($isUpdatePOTypes){
+            if(in_array("PO Type",$labels)){
+                $poType = $data[array_search("PO Type",$labels)];
+            }else{
+                $poType = $data[array_search("PO TYPE",$labels)];
+            }
+            $qcSchedule->setPoType($poType);
+        }else if($isUpdatePONumber){
+            $poNumber = $data[array_search("PO#",$labels)];
+            $qcSchedule->setPO($poNumber);
+        }else if($isUpdateShipDateAndScheduleDates){
+            $shipDateStr = $data[array_search('Ship Date', $labels)];
             if (! empty($shipDateStr)) {
-		       	$shipDate = $this->ConvertToDate($shipDateStr,"m/d/y");
+                $shipDate = $this->ConvertToDate($shipDateStr,"m/d/y");
                 if(!$shipDate){
                     $messages[] = "Invalid Ship date";
                 }else{
@@ -585,12 +694,33 @@ class QCScheduleImportUtil
                     $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
                 }
             }
-            
-        $qcSchedule->setPoType($poType);
+        }else if($isUpdateLatestShipDate){
+            $latestShipDateStr     = $data[array_search('Latest Ship Date',$labels)];
+            if(!empty($latestShipDateStr)){
+                $latestshipdate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
+                if($latestshipdate){
+                    $qcSchedule->setLatestShipDate($latestshipdate);
+                }else{
+                    $messages[] = " Invalid Latest Ship Date";
+                }
+            }
+        }else if($isUpdateFirstInspectionDate){
+            try{
+                $scFirstInspectionDateStr = $data[array_search("First \nInspection Date", $labels)];
+                $scFirstInspectionDate = $this->ConvertToDate($scFirstInspectionDateStr,"m/d/y");
+                if(!$scFirstInspectionDateStr){
+                    throw new Exception("Sc First Inspection Date $scFirstInspectionDateStr is invalid");
+                }
+                $qcSchedule->setSCFirstInspectionDate($scFirstInspectionDate);
+            }catch(Exception $e){
+                $messages[] = $e->getMessage();
+            }
+        }
+        if(empty($seq)){
+            $messages[] = "ID is invalid,";
+        }
         $qcSchedule->setLastModifiedOn(DateUtil::getCurrentDate());
         $qcSchedule->setSeq($seq);
-        $qcSchedule->setPO($poNumber);
-        $qcSchedule->setIsCompleted($isCompleted);
         if(!empty($messages)){
             throw new Exception(implode(",",$messages));
         }

@@ -69,7 +69,11 @@ class ClassCodeMgr{
 		
 		return $mainArr;
 	}
-    	
+    /**
+	 * function to find Class Code when given the $classCode String
+	 * @param string $classCode the string name of the class code
+	 * @return ClassCode
+	*/	
 	public function findByClassCode($classCode){
 		$colVal["classcode"] = $classCode;
 		$classCode = self::$dataStore->executeConditionQuery($colVal);
