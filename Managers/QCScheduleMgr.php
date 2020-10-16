@@ -68,7 +68,8 @@ class QCScheduleMgr{
 						$isUpdatePoTypes = false,
 						$isUpdateClassCode = false,
 						$isUpdateQC = false,
-						$isUpdateFirstInspectionDate = false
+						$isUpdateFirstInspectionDate = false,
+						$isUpdatePoInchargeUser = false
 					){
 		/**  @var QCScheduleImportUtil */ 
 		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
@@ -81,7 +82,8 @@ class QCScheduleMgr{
 								$isUpdatePoTypes,
 								$isUpdateClassCode,
 								$isUpdateQC,
-								$isUpdateFirstInspectionDate
+								$isUpdateFirstInspectionDate,
+								$isUpdatePoInchargeUser
 							);
 	}
 
@@ -476,7 +478,8 @@ class QCScheduleMgr{
 						$isUpdatePOTypes             = false,
 						$isUpdateClassCode           = false,
 						$isUpdateQC                  = false,
-						$isUpdateFirstInspectionDate = false
+						$isUpdateFirstInspectionDate = false,
+						$isPoInchargeUser            = false
 					)
 	{
 		$db_New = MainDB::getInstance();
@@ -525,6 +528,9 @@ class QCScheduleMgr{
 				}
 				if($isUpdateFirstInspectionDate){
 					$colValuePair['scfirstinspectiondate'] = $qc->getSCFirstInspectionDate();
+				}
+				if($isPoInchargeUser){
+					$colValuePair['poinchargeuser']        = $qc->getPoInchargeUser();
 				}
 				$resultCount = self::$dataStore->updateByAttributes($colValuePair, $condition,true);		
 				$updatedItemCount+= $resultCount;

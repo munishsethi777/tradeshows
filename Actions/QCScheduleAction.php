@@ -262,6 +262,7 @@ if($call == "updateQCSchedules"){
 			$isUpdateClassCode                = false;
 			$isUpdateQC                       = false;
 			$isUpdateFirstInspectionDate      = false;
+			$isUpdatePoInchargeUser           = false;
 			switch($_REQUEST['selectedOption'][0]){
 				case "updateShipDateAndScheduleDates":{
 					$isUpdateShipDateAndScheduleDates = true;
@@ -295,6 +296,10 @@ if($call == "updateQCSchedules"){
 					$isUpdateFirstInspectionDate = true;
 					break;
 				}
+				case "updatePOInchargeUser":{
+					$isUpdatePoInchargeUser = true;
+					break;
+				}
 			}
 			if($_REQUEST["selectedOption"][0] == ""){
 				throw new Exception("No Option selected. You need to select atleast one option");
@@ -308,7 +313,8 @@ if($call == "updateQCSchedules"){
 							$isUpdatePoTypes,
 							$isUpdateClassCode,
 							$isUpdateQC,
-							$isUpdateFirstInspectionDate
+							$isUpdateFirstInspectionDate,
+							$isUpdatePoInchargeUser
 						);
 			echo json_encode($response);
 			return;

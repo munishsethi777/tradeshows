@@ -100,7 +100,8 @@ class QCScheduleImportUtil
                         $isUpdatePoTypes = false,
                         $isUpdateClassCode = false,
                         $isUpdateQC = false,
-                        $isUpdateFirstInspectionDate = false
+                        $isUpdateFirstInspectionDate = false,
+                        $isUpdatePoInchargeUser = false
                     ){
         $inputFileName = $file['tmp_name'];
         $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
@@ -117,7 +118,8 @@ class QCScheduleImportUtil
                 $isUpdatePoTypes,
                 $isUpdateClassCode,
                 $isUpdateQC,
-                $isUpdateFirstInspectionDate
+                $isUpdateFirstInspectionDate,
+                $isUpdatePoInchargeUser
             );
         }catch(Exception $e){
             throw $e;
@@ -298,7 +300,8 @@ class QCScheduleImportUtil
                     $isUpdatePOTypes = false,
                     $isUpdateClassCode = false,
                     $isUpdateQC = false,
-                    $isUpdateFirstInspectionDate = false
+                    $isUpdateFirstInspectionDate = false,
+                    $isUpdatePoInchargeUser = false
                 ){
         $logger = Logger::getLogger("logger");
         $this->fieldNames = $sheetData[0];
@@ -331,7 +334,8 @@ class QCScheduleImportUtil
                                         $isUpdatePOTypes,
                                         $isUpdateClassCode,
                                         $isUpdateQC,
-                                        $isUpdateFirstInspectionDate
+                                        $isUpdateFirstInspectionDate,
+                                        $isUpdatePoInchargeUser
                                     );
                         array_push($qcScheduleArr, $qcSchedule);
                     }catch (Exception $e){
@@ -362,7 +366,8 @@ class QCScheduleImportUtil
                                     $isUpdatePOTypes,
                                     $isUpdateClassCode,
                                     $isUpdateQC,
-                                    $isUpdateFirstInspectionDate
+                                    $isUpdateFirstInspectionDate,
+                                    $isUpdatePoInchargeUser
                                 );
         }
         return $response;
@@ -614,7 +619,8 @@ class QCScheduleImportUtil
                         $isUpdatePOTypes                  = false,
                         $isUpdateClassCode                = false,
                         $isUpdateQC                       = false,
-                        $isUpdateFirstInspectionDate      = false
+                        $isUpdateFirstInspectionDate      = false,
+                        $isUpdatePoInchargeUser           = false
                     )
     {
         $messages = array();
@@ -712,6 +718,18 @@ class QCScheduleImportUtil
                     throw new Exception("Sc First Inspection Date $scFirstInspectionDateStr is invalid");
                 }
                 $qcSchedule->setSCFirstInspectionDate($scFirstInspectionDate);
+            }catch(Exception $e){
+                $messages[] = $e->getMessage();
+            }
+        }else if($isUpdatePoInchargeUser){
+            try{
+                $poincharge = $data[array_search('PoIncharge', $labels)];
+                $userMgr = UserMgr::getInstance();
+                $poinchargeuser = $userMgr->getUserByQCCode($poincharge);
+                if($poinchargeuser == null){
+                    throw new Exception("$poincharge does not Exist");
+                }
+                $qcSchedule->setPoInchargeUser($poinchargeuser->getSeq());
             }catch(Exception $e){
                 $messages[] = $e->getMessage();
             }
