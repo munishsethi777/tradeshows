@@ -39,8 +39,8 @@ if(isset($_REQUEST["isCompleted"])){
 								<input type="hidden" id="isupdate" name="isupdate" value="0" />
 								<input type="hidden" id="iscompleted" name="iscompleted" value="<?php echo $isCompleted ?>" />
 								<div class="form-group row i-checksnormal">
-									<label class="col-lg-2">Choose Your Option</label>
-									<div class="col-lg-8 row">
+									<label class="col-lg-2 col-form-label">Choose Your Option</label>
+									<div class="col-lg-8">
 										<?php 
 											$select = DropDownUtils::getAllQcScheduleOptions("selectedOption[]", null,"",false,true);
 											echo $select;
@@ -165,7 +165,6 @@ if(isset($_REQUEST["isCompleted"])){
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green',
 		});
-		
-		$(".form-control").select2();
+		//$(".form-control").select2();
 	});
 </script>'
