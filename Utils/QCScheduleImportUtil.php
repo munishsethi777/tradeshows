@@ -7,6 +7,7 @@ class QCScheduleImportUtil
     private $fieldNames;
     private static $qcImportUtil;
     private $BULK_DELETE_COUNT = "100";
+    private static $qcUserCodeSeqArr = [];
     private static $ACTUAL_FIELDS_NAMES = array(
         "qc",
     	"poperson",
@@ -63,6 +64,8 @@ class QCScheduleImportUtil
         if (! self::$qcImportUtil) {
             self::$qcImportUtil = new QCScheduleImportUtil();
         }
+        $userMgr = UserMgr::getInstance();
+        self::$qcUserCodeSeqArr = array_flip($userMgr->getPOInchargeUsersArrForDD());
         return self::$qcImportUtil;
     }
 
@@ -310,9 +313,6 @@ class QCScheduleImportUtil
         $labels = array();
         $row = 0;
         $qcScheduleArr = array();
-        $userMgr = UserMgr::getInstance();
-        $qcUserCodeSeqArr = $userMgr->getPOInchargeUsersArrForDD();
-        $qcUserCodeSeqArr = array_flip($qcUserCodeSeqArr);
         try{
             foreach ($sheetData as $key => $data) {
                 $row = $key+2;
@@ -330,7 +330,6 @@ class QCScheduleImportUtil
                         $qcSchedule = $this->getUpdatingData(
                                         $data,
                                         $labels,
-                                        $qcUserCodeSeqArr,
                                         $isUpdateShipDateAndScheduleDates,
                                         $isUpdateLatestShipDate,
                                         $isCompletionStatus,
@@ -625,7 +624,6 @@ class QCScheduleImportUtil
     private function getUpdatingData(
                         $data,
                         $labels,
-                        $qcUserCodeSeqArr                     = [],
                         $isUpdateShipDateAndScheduleDates = false,
                         $isUpdateLatestShipDate           = false,
                         $isCompletionStatus               = false,
@@ -664,11 +662,7 @@ class QCScheduleImportUtil
         }else if($isUpdateQC){
             try{
                 $qc = $data[array_search('QC', $labels)];
-                $qcuser =   $qcUserCodeSeqArr[strtoupper($qc)] == null ? 
-                            ($qcUserCodeSeqArr[ucfirst($qc)] == null ?
-                            $qcUserCodeSeqArr[$qc]:
-                            $qcUserCodeSeqArr[ucfirst($qc)]):
-                            $qcUserCodeSeqArr[strtoupper($qc)];
+                $qcuser =   self::$qcUserCodeSeqArr[$qc];
                 if($qcuser == null){
                     throw new Exception("$qc does not Exist");
                     
@@ -742,11 +736,7 @@ class QCScheduleImportUtil
         }else if($isUpdatePoInchargeUser){
             try{
                 $poincharge = $data[array_search('PoIncharge', $labels)];
-                $poinchargeuser =   $qcUserCodeSeqArr[strtoupper($poincharge)] == null?
-                                    ($qcUserCodeSeqArr[ucfirst($poincharge)] == null?
-                                    $qcUserCodeSeqArr[$poincharge]:
-                                    $qcUserCodeSeqArr[ucfirst($poincharge)]):
-                                    $qcUserCodeSeqArr[strtoupper($poincharge)];
+                $poinchargeuser =   self::$qcUserCodeSeqArr[$poincharge];
                 if($poinchargeuser == null){
                     throw new Exception("$poincharge does not Exist");
                 }
