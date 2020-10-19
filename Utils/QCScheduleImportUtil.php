@@ -664,7 +664,7 @@ class QCScheduleImportUtil
                 $qc = $data[array_search('QC', $labels)];
                 $qcuser =   self::$qcUserCodeSeqArr[$qc];
                 if($qcuser == null){
-                    throw new Exception("$qc does not Exist");
+                    throw new Exception("QC - $qc does not Exist");
                     
                 }
                 $qcSchedule->setQC($qc);
@@ -738,7 +738,7 @@ class QCScheduleImportUtil
                 $poincharge = $data[array_search('PoIncharge', $labels)];
                 $poinchargeuser =   self::$qcUserCodeSeqArr[$poincharge];
                 if($poinchargeuser == null){
-                    throw new Exception("$poincharge does not Exist");
+                    throw new Exception("PoInchage $poincharge does not Exist");
                 }
                 $qcSchedule->setPoInchargeUser($poinchargeuser);
             }catch(Exception $e){
