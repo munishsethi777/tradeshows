@@ -50,7 +50,7 @@ h5.pageTitle{
 .jqx-widget .jqx-grid-cell{
 	border-right:none;
 	border-color: #f0f0f0 !important;
-	color: #676a6c;
+	color: rgb(58, 58, 58);
 	font-size:12px;
 	font-family:verdana !important;
 }
@@ -90,14 +90,14 @@ h5.pageTitle{
 
 /** left meny styling **/
 ul#side-menu.nav{
-	background-color:whitesmoke;
+	background-color:white;
 }
 .nav-header{
 	background-image:none !important;
 	background-color:#eaeaeb !important;
 }
 #side-menu > li > a{
-	color: #6d747f !important;
+	color: RGB(58,58,58) !important;
 }
 #side-menu > li.active, #side-menu > li > a:hover{
 	background: #e5e5e5 !important;	
@@ -338,4 +338,7 @@ body{
 	  background-color: #0000ff !important;
 	  border-color: #0000ff !important;
 	  color: black !important;
+  }
+  .list-group.clear-list .list-group-item{
+  color:rgb(54, 54, 54);
   }
