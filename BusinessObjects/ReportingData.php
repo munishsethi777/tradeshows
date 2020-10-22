@@ -7,31 +7,31 @@ class ReportingData{
     public function setSeq($seq){
         $this->seq = $seq;
     }
-    public function getSeq($seq){
+    public function getSeq(){
         return $this->seq;
     }
     public function setDated($dated){
         $this->dated = $dated;
     }
-    public function getDated($dated){
+    public function getDated(){
         return $this->dated;
     }
     public function setParameter($parameter){
         $this->parameter = $parameter;
     }
-    public function getParameter($parameter){
+    public function getParameter(){
         return $this->parameter;
     }
     public function setCount($count){
         $this->count = $count;
     }
-    public function getCount($count){
+    public function getCount(){
         return $this->count;
     }
     public function setDepartment($department){
         $this->department = $department;
     }
-    public function getDepartment($department){
+    public function getDepartment(){
         return $this->department;
     }
     public function createFromRequest($request){
