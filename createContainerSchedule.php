@@ -203,8 +203,9 @@ if(isset($_REQUEST["id"])){
 	                        	<label class="col-lg-2 col-form-label bg-formLabelDark">Freight Forwarder:</label>
 	                            <div class="col-lg-4">
                                 	<?php 
-                                	    $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $containerSchedule->getFreightForwarder(),false);
-			                            echo $select;
+                                	   $userFreightForwarder = $permissionUtil->userFreightForwarder();
+                                	   $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $containerSchedule->getFreightForwarder(),false,true,$userFreightForwarder);
+			                           echo $select;
 	                             	?>
 	                            </div>
 	                           </div>

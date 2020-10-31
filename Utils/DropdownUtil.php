@@ -29,10 +29,9 @@ require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Utils/TimeZone.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleUpdateOptions.php");
-
+require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
 
 class DropDownUtils {
-	
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
    		$id = $selectName;
    		if(strpos($selectName, "[]") !== false){
@@ -71,6 +70,7 @@ class DropDownUtils {
 	
 	public static function getFreightTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = FreightType::getAll();
+	    
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	public static function getCustomerRegularTermsDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -205,8 +205,13 @@ class DropDownUtils {
 		$enums = GraphicsNAReasonType::getAll();
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Reason");
 	}
-	public static function getFreightForwarder($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+	public static function getFreightForwarder($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$userFreightForwarder=null) {
 	    $enums = FreightForwarder::getAll();
+	    if($userFreightForwarder != null){
+	        $ffVal = FreightForwarder::getValue($userFreightForwarder);
+	        $ffKey = $userFreightForwarder;
+	        $enums = [$ffKey=>$ffVal];
+	    }
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Any");
 	}
 	public static function getAllQcScheduleOptions($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){

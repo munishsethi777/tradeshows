@@ -2,22 +2,28 @@
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/DepartmentType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 class PermissionUtil{
 	private static $permissionUtil;
 	private static $sessionUtil;
 	private static $permissions;
 	private static $departments;
 	private static $DEPARTMENTS = "departments";
+	private static $user;
 	public static function getInstance(){
 		if(empty(self::$permissionUtil)){
 			self::$permissionUtil = new PermissionUtil();
 			self::$sessionUtil = SessionUtil::getInstance();
 			self::$permissions = self::$sessionUtil->getUserLoggedInPermissions(); 
 			self::$departments = self::$sessionUtil->getUserDepartments();
+			$userMgr = UserMgr::getInstance();
+			self::$user = $userMgr->findBySeq(self::$sessionUtil->getUserLoggedInSeq());
 		}
 		return self::$permissionUtil;
 	}
-	
+	public function userFreightForwarder(){//containers module
+	    return self::$user->getFreightForwarder();
+	}
 	public function hasChinaOfficePermission(){
 		return in_array(Permissions::getName(Permissions::china_team),self::$permissions);
 	}
