@@ -712,7 +712,6 @@ function loadGrid(){
 		columnsreorder: true,
 		selectionmode: 'checkbox',
 		showstatusbar: true,
-		showtoolbar: true,
 		virtualmode: true,
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     

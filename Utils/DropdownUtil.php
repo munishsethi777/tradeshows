@@ -173,7 +173,7 @@ class DropDownUtils {
 	
 	public static function getCustomExampStatusTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = CustomExamStatusType::getAll();
-	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
 	}
 	
 	public static function getTruckerTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -193,7 +193,7 @@ class DropDownUtils {
 	
 	public static function getTerminalTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = TerminalType::getAll();
-	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll,"Select Any");
 	}
 	
 	public static function getPriorityTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {

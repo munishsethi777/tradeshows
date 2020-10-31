@@ -149,7 +149,7 @@ if(isset($_REQUEST["id"])){
                         <div class="bg-white1 p-xs outterDiv darkdiv" style="position:relative">
                         	<div class="overlay"></div>
                         	<div class="form-group row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Custom Brocker Ref#:</label>
+	                       		<label class="col-lg-2 col-form-label bg-formLabelDark">Customs Broker Ref#:</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="text" tabindex="<?php echo $informationTabIndex?>" id="awureference" 
                                 			maxLength="25" value="<?php echo $containerSchedule->getAWUReference()?>" 
@@ -215,7 +215,7 @@ if(isset($_REQUEST["id"])){
 			                       		<label class="col-lg-4 col-form-label bg-formLabelDark">Terminal:</label>
 			                        	<div class="col-lg-8">
 			                        		<?php 
-		                                	    $select = DropDownUtils::getTerminalTypes("terminal", "", $containerSchedule->getTerminal(),false);
+		                                	    $select = DropDownUtils::getTerminalTypes("terminal", "", $containerSchedule->getTerminal(),false,true);
 					                            echo $select;
 			                             	?>
 			                            </div>

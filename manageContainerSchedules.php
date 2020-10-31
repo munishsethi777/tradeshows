@@ -2,6 +2,13 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+
+$sessionUtil = SessionUtil::getInstance();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
+$userMgr = UserMgr::getInstance();
+$user = $userMgr->findBySeq($userSeq);
+$isAllFF = ($user->getFreightForwarder() == null) ? 1:0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,6 +57,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 										<h4 class="p-h-sm font-normal">Manage Container Schedules</h4>
 								 </nav>
 		                     </div>
+		                     <?php if($isAllFF){?>
 							 <div class="row reportDataCountRow">
 									<div class="col-lg-4">
 										<div class="ibox float-e-margins">
@@ -117,6 +125,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 										</div>
 									</div>
 								</div>
+								<?php }?>
 		                     <div class="ibox-content">
 		                     		<div class="form-group row">
 			                       		<label class="col-lg-1 col-form-label">Search</label>
@@ -564,7 +573,7 @@ function loadGrid(){
       { text: 'Container', datafield: 'container',width:"10%",cellsrenderer:showitemdetail},
       { text: 'AWU Ref', datafield: 'awureference', width:"10%"},
       { text: 'Trucker', datafield: 'truckername', width:"5%"},
-      { text: 'Trans', datafield: 'trans', width:"7%"},
+      { text: 'FF Ref#', datafield: 'trans', width:"7%"},
       
 	  { text: 'Hot', datafield: 'ishotcontainer',columntype:"checkbox",width: "4%"},
 	  { text: 'ETA', datafield: 'etadatetime',width:"14%",cellsformat: 'M-dd-yyyy hh:mm tt'},
