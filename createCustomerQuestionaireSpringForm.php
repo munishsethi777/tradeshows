@@ -257,7 +257,7 @@ if(!empty($seq) && !$isadded){
             				<div class="form-group">
             					<div class="row m-b-xxs">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-            							Have a made a appt for a strategic planning meeting?
+            							Have you made an appointment for a strategic planning meeting?
             						</label>
             						<div class="col-lg-4">
             							
@@ -286,8 +286,7 @@ if(!empty($seq) && !$isadded){
             					<div class="row m-b-xxs">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What
-            							categories have they not bought That I should sell them?<br>
-            						<small>Example Bistro Sets</small>
+            							categories have they not bought That I should sell them?
             						</label>
             						<div class="col-lg-4">
             							<select class="categoriesshouldsellthem form-control"
@@ -383,7 +382,7 @@ if(!empty($seq) && !$isadded){
             				<div class="form-group">
             					<div class="row m-b-xxs">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-            							If they bought Christmas spring last year, have you reviewed the sell thru?
+            							If they bought Spring last year, have you reviewed the sell thru?
             						</label>
             						<div class="col-lg-4">
 											<?php
@@ -412,13 +411,13 @@ if(!empty($seq) && !$isadded){
             					<div class="row m-b-xxs">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Where
-            							is the customer going to select the Spring items?<br>
-            							example - Is he going to select from catalog and circle items, am I going there to make a presentation and take samples, is he coming to our showroom, is he meeting me in Atlanta
+            							is the customer going to select the Spring items?
            							</label>
             						<div class="col-lg-4">
-            							<input type="text" name="customerselectingspringitemsfrom"
-            								value="<?php echo $customerSpringQuestion->getCustomerSelectingSpringItemsFrom()?>"
-            								id="customerselectingspringitemsfrom" class="form-control">
+            							<?php 
+		                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectingspringitemsfrom", null, $customerSpringQuestion->getCustomerSelectingSpringItemsFrom(),false,true);
+         			                        echo $select;
+     	                             	?>
             						</div>
             					</div>
             				</div>
@@ -444,7 +443,7 @@ if(!empty($seq) && !$isadded){
             					<div class="row m-b-xxs">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Spring
-            							2020 Comp Shop Summary Email sent to SA Team and Robby?</label>
+            							2021 Comp Shop Summary Email sent to SA Team and Robby?</label>
             						<div class="col-lg-4">
             							
 											<?php

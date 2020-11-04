@@ -270,7 +270,7 @@ if(isset($_POST["customerSeq"])){
                         				<div class="form-group">
                         					<div class="row m-b-xxs">
                         						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-                        							Are there more buyers in other categories? Or does this buyer handle all of Holiday categories?  If there are more, who are they and start all questions to each buyer.
+                        							Are there more buyers in other categories? Or does this buyer handle all of Holiday categories?  If there are more buyers, who are they and ask all questions to each buyer.
                         						</label>
                         						<div class="col-lg-4">
             											<?php
@@ -311,7 +311,7 @@ if(isset($_POST["customerSeq"])){
                         				<div class="form-group">
                         					<div class="row m-b-xxs">
                         						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-                        							Have a made a appt for a strategic planning meeting?
+                        							Have we made an appointment for a strategic planning meeting?
                         						</label>
                         						<div class="col-lg-4">
                         							
@@ -340,8 +340,7 @@ if(isset($_POST["customerSeq"])){
                         					<div class="row m-b-xxs">
                         						<label
                         							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What
-                        							categories have they not bought That we should sell them?<br>
-                        						<small>Example  Holiday Wall Decor</small>
+                        							categories have they not bought That we should sell them?
                         						</label>
                         						<div class="col-lg-4">
                         							<select class="categoriesshouldsellthem form-control"
@@ -436,8 +435,7 @@ if(isset($_POST["customerSeq"])){
                         				<div class="form-group">
                         					<div class="row m-b-xxs">
  						                    	<label class="col-lg-8 col-form-label bg-formLabel">Where
-                        							is the customer going to select the Xmas items?<br>
-                        							example - Is he going to select from catalog and circle items, am I going there to make a presentation and take samples, is he coming to our showroom, is he meeting me in Atlanta</label>
+                        							is the customer going to select the Xmas items?</label>
  					                        	<div class="col-lg-4">
 					                        		<?php 
  					                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectxmasitemsfrom", null, $customerChristmasQuestion->getCustomerSelectXmasItemsFrom(),false,true);
@@ -449,7 +447,7 @@ if(isset($_POST["customerSeq"])){
                         				<div class="form-group">
             					
                         					<div class="row m-b-xxs">
-                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label>
+                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2020 Comp Shop Completed?</label>
  					                        	<div class="col-lg-4">
 													<?php
 													
@@ -462,7 +460,7 @@ if(isset($_POST["customerSeq"])){
                         				<div class="form-group">
             					
                         					<div class="row m-b-xxs">
-                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Summary Email sent to SA Team and Robby?</label>
+                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2020 Comp Shop Summary Email sent to SA Team and Robby?</label>
  					                        	<div class="col-lg-4">
 													<?php
   	                        		  				  	$select = DropDownUtils::getBooleanDropDown("isholidayshopcomsummaryemailsent", null, $customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent(),false,false);
