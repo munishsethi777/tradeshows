@@ -16,4 +16,5 @@ ALTER TABLE `customerchristmasquestions` ADD `expectingpodate` DATE NULL;
 ALTER TABLE `customerchristmasquestions` ADD `opportunitiessentdate` DATE NULL;
 ALTER TABLE `customerchristmasquestions` ADD `istheremorebuyers` TINYINT NULL;
 ALTER TABLE `customerchristmasquestions` CHANGE `ispoexpecting` `arepoexpecting` VARCHAR(50) NULL DEFAULT NULL;
+Alter Table `customerchristmasquestions` ADD `isopportunitiessent` TINYINT(1) NULL;
 ALTER TABLE `customerchristmasquestions` ADD `dinnerapptplace` VARCHAR(500) NULL;
