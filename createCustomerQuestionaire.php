@@ -980,8 +980,9 @@ function addSpringQuestionForm(seq,isAdded,isLast){
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq)
     	 	});
-    	 	$("#isallcategoriesselected" + seq).on('ifChanged', function(event){
-    	 		handleCategorySelect(seq);
+    	 	$(".isallcategoriesselected").on('ifChanged', function(event){
+				id = this.id.replace('isallcategoriesselected','');
+				handleCategorySelect(id);
   			});
     		if(!isAdded){
     			var selectedValues = $('#springCategory' + seq).select2('data');
