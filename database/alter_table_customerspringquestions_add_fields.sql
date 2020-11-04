@@ -33,3 +33,7 @@ ALTER TABLE `customerspringquestions` ADD `compshopsummeryemailsentdate` DATE NO
 ALTER TABLE `customerspringquestions` CHANGE `compshopsummeryemailsentdate` `compshopsummeryemailsentdate` DATE NULL;
 ALTER TABLE `customerspringquestions` CHANGE `ispoexpecting` `arepoexpecting` VARCHAR(50) NULL DEFAULT NULL;
 ALTER TABLE `customerspringquestions` ADD `dinnerapptplace` TEXT NULL AFTER `isdinnerappt`;
+ALTER TABLE `customerspringquestions` ADD `springcataloglinkdate` DATE NOT NULL AFTER `isallcategoriesselected`;
+ALTER TABLE `customerspringquestions` CHANGE `springcataloglinkdate` `springcataloglinkdate` DATE NULL;
+ALTER TABLE `customerspringquestions` ADD `tradeshowsaregoingto` VARCHAR(1000) NOT NULL AFTER `springcateloglinkdate`;
+ALTER TABLE `customerspringquestions` CHANGE `tradeshowsaregoingto` `tradeshowsaregoingto` VARCHAR(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;

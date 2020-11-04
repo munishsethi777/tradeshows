@@ -18,3 +18,4 @@ ALTER TABLE `customerchristmasquestions` ADD `opportunitiessentdate` DATE NULL A
 ALTER TABLE `customerchristmasquestions` ADD `istheremorebuyers` TINYINT NULL AFTER `ispitchmainvendor`;
 ALTER TABLE `customerchristmasquestions` CHANGE `ispoexpecting` `arepoexpecting` VARCHAR(50) NULL DEFAULT NULL;
 ALTER TABLE `customerchristmasquestions` ADD `dinnerapptplace` VARCHAR(500) NULL AFTER `opportunitiessentdate`;
+ALTER TABLE `customerchristmasquestions` ADD `tradeshowsaregoingto` VARCHAR(1000) NULL AFTER `cataloglinkdate`;
