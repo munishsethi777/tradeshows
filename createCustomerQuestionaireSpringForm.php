@@ -72,7 +72,7 @@ if(!empty($seq) && !$isadded){
             						<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
             						<div class="col-lg-4">
             							<div>
-	            							<input type="checkbox" class="i-checks form-control pull-left"
+	            							<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselected"
 	            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
 	            								<?php echo $isAllChecked?> /> <label>All</label>
 	            						</div>
@@ -485,7 +485,7 @@ if(!empty($seq) && !$isadded){
             							Have they finalized their selections, if so how many items?
            							</label>
             						<div class="col-lg-4">
-            							<input type="text" name="itemselectionfinalized"
+            							<input type="number" name="itemselectionfinalized"
             								value="<?php echo $customerSpringQuestion->getItemSelectionFinalized()?>"
             								id="itemselectionfinalized" class="form-control">
             						</div>
@@ -497,7 +497,7 @@ if(!empty($seq) && !$isadded){
             							How many items did they purchase last year?
            							</label>
             						<div class="col-lg-4">
-            							<input type="text" name="itemspurchasedlastyear"
+            							<input type="number" name="itemspurchasedlastyear"
             								value="<?php echo $customerSpringQuestion->getItemsPurchasedLastYear()?>"
             								id="itemspurchasedlastyear" class="form-control">
             						</div>
@@ -509,7 +509,7 @@ if(!empty($seq) && !$isadded){
             							If they finalized, how many were TY vs LY?
            							</label>
             						<div class="col-lg-4">
-            							<input type="text" name="finalizedtyvsly"
+            							<input type="number" name="finalizedtyvsly"
             								value="<?php echo $customerSpringQuestion->getFinalizedTyVsLy()?>"
             								id="finalizedtyvsly" class="form-control">
             						</div>

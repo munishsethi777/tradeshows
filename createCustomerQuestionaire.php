@@ -500,7 +500,7 @@ if(isset($_POST["customerSeq"])){
                         							Have they finalized their selections, if so how many items?
                        							</label>
                         						<div class="col-lg-4">
-                        							<input type="text" name="itemselectionfinalized"
+                        							<input type="number" name="itemselectionfinalized"
                         								value="<?php echo $customerChristmasQuestion->getItemSelectionFinalized()?>"
                         								id="itemselectionfinalized" class="form-control">
                         						</div>
@@ -512,7 +512,7 @@ if(isset($_POST["customerSeq"])){
                         							How many xmas items did they purchase last year?
                        							</label>
                         						<div class="col-lg-4">
-                        							<input type="text" name="itemspurchasedlastyear"
+                        							<input type="number" name="itemspurchasedlastyear"
                         								value="<?php echo $customerChristmasQuestion->getItemsPurchasedLastYear()?>"
                         								id="itemspurchasedlastyear" class="form-control">
                         						</div>
@@ -524,7 +524,7 @@ if(isset($_POST["customerSeq"])){
                         							If they finalized, how many were TY vs LY?
                        							</label>
                         						<div class="col-lg-4">
-                        							<input type="text" name="finalizedtyvsly"
+                        							<input type="number" name="finalizedtyvsly"
                         								value="<?php echo $customerChristmasQuestion->getFinalizedTyVsLy()?>"
                         								id="finalizedtyvsly" class="form-control">
                         						</div>
@@ -978,8 +978,9 @@ function addSpringQuestionForm(seq,isAdded,isLast){
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq)
     	 	});
-    	 	$("#isallcategoriesselected" + seq).on('ifChanged', function(event){
-    	 		handleCategorySelect(seq);
+    	 	$(".isallcategoriesselected").on('ifChanged', function(event){
+				id = this.id.replace('isallcategoriesselected','');
+				handleCategorySelect(id);
   			});
     		if(!isAdded){
     			var selectedValues = $('#springCategory' + seq).select2('data');
