@@ -23,6 +23,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesPersonId.php")
 require_once($ConstantsArray['dbServerUrl'] . "Enums/BooleanType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/FreightForwarder.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/SellerResponsibilityType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerQuestionaireArePoExpecting.php");
 
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
@@ -232,7 +233,7 @@ class DropDownUtils {
 			$multiple = "multiple";
 			$selectedValue = explode(",",$selectedValue);
 		}
-		$str = "<select ".$required." class='form-control m-b' name='" . $selectName . "' id='" . $id . "' onchange='" . $onChangeMethod . "' $multiple>";
+		$str = "<select ".$required." class='form-control' name='" . $selectName . "' id='" . $id . "' onchange='" . $onChangeMethod . "' $multiple>";
 		if($isAll){
 			$str .= "<option value=''>".$firstOption."</option>";
 		}
@@ -278,5 +279,13 @@ class DropDownUtils {
 			$selectedValue = "";
 		}
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, true, "");
+	}
+	public static function getIsPoExpecting($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll){
+	    $enums = CustomerQuestionaireArePoExpecting::getAll();
+	    if($selectedValue != null){
+	    } else {
+	        $selectedValue = "";
+	    }
+	    return self::getDropDown1($enums, $selectName,$onChangeMethod, $selectedValue, $isRequired, true, "");
 	}
 }

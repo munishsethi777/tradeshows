@@ -6,7 +6,9 @@ class CustomerChristmasQuestion{
     private $isxmassamplessent,$isstrategicplanningmeetingappointment,$strategicplanningmeetdate,$isinvitedtoxmasshowroom,$invitedtoxmasshowroomdate,$invitedtoxmasshowroomreminderdate;
     private $isholidayshopcompleted,$isholidayshopcomsummaryemailsent,$christmas2020reviewingdate,$customerselectxmasitemsfrom;
     private $isxmasbuylastyear,$xmasbuylastyearamount,$isreceivingsellthru,$isrobbyreviewedsellthrough,$isvisitcustomerin4qtr,$christmasquotebydate;
-    private $year;
+    private $cataloglinkdate,$tradeshowsaregoingto,$isdinnerappt,$dinnerapptdate,$ispitchmainvendor,$istheremorebuyers,$xmassamplesentdate,$categoriesshouldsellthem;
+    private $isreviewedsellthru,$compshopsummaryemailsentdate,$isquotedforxmas,$itemselectionfinalized,$itemspurchasedlastyear,$finalizedtyvsly,$arepoexpecting,$expectingpodate,$isopportunitiessent,$opportunitiessentdate;
+    private $year,$dinnerapptplace;
     
     public function getSeq(){
         return $this->seq;
@@ -198,6 +200,123 @@ class CustomerChristmasQuestion{
     public function getYear(){
         return $this->year;
     }
+    public function getCataloglinkDate(){
+        return $this->cataloglinkdate;
+    }
+    public function setCatalogLinkDate($catalogLinkDate){
+        $this->cataloglinkdate = $catalogLinkDate;
+    }
+    public function getTradeshowsAreGoingTo(){
+        return $this->tradeshowsaregoingto;
+    }
+    public function setTradeshowsAreGoingTo($tradeshowsAreGoingTo){
+        $this->tradeshowsaregoingto = $tradeshowsAreGoingTo;
+    }
+    public function getIsDinnerAppt(){
+        return $this->isdinnerappt;
+    }
+    public function setIsDinnerAppt($isDinnerAppt){
+        $this->isdinnerappt = $isDinnerAppt;
+    }
+    public function getDinnerApptDate(){
+        return $this->dinnerapptdate;
+    }
+    public function setDinnerApptDate($dinnerApptDate){
+        $this->dinnerapptdate = $dinnerApptDate;
+    }
+    
+    public function getIsPitchMainVendor(){
+        return $this->ispitchmainvendor;
+    }
+    public function setIsPitchMainVendor($isPitchMainVendor){
+        $this->ispitchmainvendor = $isPitchMainVendor;  
+    }
+    public function getIsThereMoreBuyers(){
+        return $this->istheremorebuyers;
+    }
+    public function setIsThereMoreBuyers($isThereMoreBuyers){
+        $this->istheremorebuyers = $isThereMoreBuyers;
+    }
+    public function getXmasSampleSentDate(){
+        return $this->xmassamplesentdate;
+    }
+    public function setXmasSampleSentDate($xmasSampleSentDate){
+        $this->xmassamplesentdate = $xmasSampleSentDate;
+    }
+    public function getCategoriesShouldSellThem(){
+        return $this->categoriesshouldsellthem;
+    }
+    public function setCategoriesShouldSellThem($categoriesShouldSellThem){
+        $this->categoriesshouldsellthem = $categoriesShouldSellThem;
+    }
+    public function getIsReviewedSellThru(){
+        return $this->isreviewedsellthru;
+    }
+    public function setIsReviewedSellThru($isReviewedSellThru){
+        $this->isreviewedsellthru = $isReviewedSellThru;
+    }
+    public function getCompShopSummaryEmailSentDate(){
+        return $this->compshopsummaryemailsentdate;
+    }
+    public function setCompShopSummaryEmailSentDate($compShopSummaryEmailSentDate){
+        $this->compshopsummaryemailsentdate = $compShopSummaryEmailSentDate;
+    }
+    public function getIsQuotedForXmas(){
+        return $this->isquotedforxmas;
+    }
+    public function setIsQuotedForXmas($isQuotedForXmas){
+        $this->isquotedforxmas = $isQuotedForXmas;
+    }
+    public function getItemSelectionFinalized(){
+        return $this->itemselectionfinalized;
+    }
+    public function setItemSelectionFinalized($itemSelectionFinalized){
+        $this->itemselectionfinalized = $itemSelectionFinalized;
+    }
+    public function getItemsPurchasedLastYear(){
+        return $this->itemspurchasedlastyear;
+    }
+    public function setItemsPurchasedLastYear($itemsPurchasedLastYear){
+        $this->itemspurchasedlastyear = $itemsPurchasedLastYear;
+    }
+    public function getFinalizedTyVsLy(){
+        return $this->finalizedtyvsly;
+    }
+    public function setFinalizedTyVsLy($finalizedTyVsLy){
+        $this->finalizedtyvsly = $finalizedTyVsLy;
+    }
+    public function getArePoExpecting(){
+        return $this->arepoexpecting;
+    }
+    public function setArePoExpecting($arePoExpecting){
+        $this->arepoexpecting = $arePoExpecting;
+    }
+    public function getExpectingPoDate(){
+        return $this->expectingpodate;
+    }
+    public function setExpectingPoDate($expectingPoDate){
+        $this->expectingpodate = $expectingPoDate;
+    }
+    public function getIsOpportunitiesSent(){
+        return $this->isopportunitiessent;
+    }
+    public function setIsOpportunitiesSent($isOpportunitiesSent){
+        $this->isopportunitiessent = $isOpportunitiesSent;
+    }
+    public function getOpportunitiesSentDate(){
+        return $this->opportunitiessentdate;
+    }
+    public function setOpportunitiesSentDate($opportunitiesSentDate){
+        $this->opportunitiessentdate = $opportunitiesSentDate;
+    }
+    public function getDinnerApptPlace(){
+        return $this->dinnerapptplace;
+    }
+    public function setDinnerApptPlace($dinnerApptPlace){
+        $this->dinnerapptplace = $dinnerApptPlace;
+    }
+        
+    
     
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {

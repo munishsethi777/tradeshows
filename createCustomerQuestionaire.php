@@ -24,6 +24,8 @@ $buyerCategoriesSpringQues = BuyerCategoryType::getAll();
 $tradeShowsTypeOppBuy = SeasonShowNameType::getAll();
 $selectedCategoriesSpringQues = array();
 $selectedTradeShowsTypeOppBuy = array();
+$categoriesShouldSellThem = array();
+$tradeshowsaregoingto = array();
 if(isset($_POST["customerSeq"])){
     $customerSeq = $_POST["customerSeq"];
     $customerChristmasQuestion = $customerChristmasQuestionMgr->findByCustomerSeq($customerSeq);
@@ -45,6 +47,12 @@ if(isset($_POST["customerSeq"])){
     if(!empty($customerSpringQuestion->getCategoriesShouldSellThem())){
         $selectedCategoriesSpringQues = explode(",", 
             $customerSpringQuestion->getCategoriesShouldSellThem());
+    }
+    if(!empty($customerChristmasQuestion->getTradeshowsAreGoingTo())){
+        $tradeshowsaregoingto = explode(",",$customerChristmasQuestion->getTradeshowsAreGoingTo());
+    }
+    if(!empty($customerChristmasQuestion->getCategoriesShouldSellThem())){
+        $categoriesShouldSellThem = explode(",",$customerChristmasQuestion->getCategoriesShouldSellThem());
     }
 }
 ?>
@@ -150,7 +158,7 @@ if(isset($_POST["customerSeq"])){
                  	<?include "progress.php"?>
                  	<ul class="nav nav-tabs" role="tablist">
 		            	<li class="primaryLI active"><a class="nav-link" data-toggle="tab" href="#tab-1"> CHRISTMAS QUESTIONS</a></li>
-						<li class="darkLI"><a class="nav-link" data-toggle="tab" href="#tab-2">OPPURTUNITY BUYS</a></li>
+<!-- 						<li class="darkLI"><a class="nav-link" data-toggle="tab" href="#tab-2">OPPURTUNITY BUYS</a></li> -->
 						<li class="mauveLI"><a class="nav-link" data-toggle="tab" href="#tab-3">SPRING QUESTIONS</a></li>
 					</ul>
 					<div class="tab-content">
@@ -167,18 +175,7 @@ if(isset($_POST["customerSeq"])){
 		                        <div class="row">
 									<div class="col-lg-10">
 										<div class="form-group">
-				                        	<div class="row m-b-xxs">
-					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label>
-					                        	<div class="col-lg-4">
-					                        		<?php 
-					                        		    $select = DropDownUtils::getYearDD("year", null, $customerChristmasQuestion->getYear(),false,false);
-                    			                        echo $select;
-                	                             	?>
-					                        	</div>
-					                        </div>
-					                    </div>
-				                       <div class="form-group">
-				                       		<div class="row m-b-xxs">
+											<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Are you Interested in Christmas?</label>
 					                        	<div class="col-lg-4">
 													<?php 
@@ -187,194 +184,608 @@ if(isset($_POST["customerSeq"])){
 	                             					?>
 					                        	</div>
 				                        	</div>
-				                        	<div class="row m-b-xxs">
-						                    	<label class="col-lg-8 col-form-label bg-formLabel">Have you sent them xmas catalog link?</label>
-					                        	<div class="col-lg-4">
+										</div>
+										<div class="form-group">
+											<div class="row m-b-xxs">
+ 						                    	<label class="col-lg-8 col-form-label bg-formLabel">Date you sent them xmas catalog link?</label>
+ 					                        	<div class="col-lg-4">
 													<?php
- 	                        						    $select = DropDownUtils::getBooleanDropDown("iscataloglinksent", null, $customerChristmasQuestion->getIsCatalogLinkSent(),false,false);
-    			                    				    echo $select;
-	                             					?>
+  	                        						    $select = DropDownUtils::getBooleanDropDown("iscataloglinksent", null, $customerChristmasQuestion->getIsCatalogLinkSent(),false,false);
+     			                    				    echo $select;
+ 	                             					?>
+ 					                        	</div>
+ 					                        </div>
+											<div class="row m-b-xxs">
+					                        	<label class="col-lg-8 col-form-label bg-formLabel">If Yes, Date</label>
+					                        	<div class="col-lg-4">
+					                        		<div class="input-group date">
+    					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getCataloglinkDate()?>" name="cataloglinkdate" id="cataloglinkdate" class="form-control dateControl">
+    					                        		<span class="input-group-addon">
+    					                        			<i class="fa fa-calendar"></i>
+                            							</span>
+                            						</div>
 					                        	</div>
 					                        </div>
-				                        	<div class="row m-r-xxs">
-				                        		<div class="panel panel-primary m-b-none">
-													<div class="panel-heading">Catalog Link to send</div>
-													<div class="panel-body">
-					                                   	<textarea class="form-control" maxLength="1000" name="cataloglinksentnotes" id="cataloglinksentnotes"><?php echo $customerChristmasQuestion->getCatalogLinkSentNotes()?></textarea>
-													</div>
-						                     	</div>
-				                        	</div>
-				                        </div>
-				                        
-				                        <div class="form-group">
-				                        	<div class="row m-b-xxs">
-					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we sent them Any xmas sample?</label>
-					                        	<div class="col-lg-4">
-													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isxmassamplessent", null, $customerChristmasQuestion->getIsXmasSamplesSent(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-					                        </div>
-					                    </div>
-				                    	<div class="form-group">
-				                    		<div class="row m-b-xxs">
-					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we made an appt for a stragetic planning meeting?</label>
-					                        	<div class="col-lg-4">
-													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeetingappointment", null, $customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">If Yes, Date?</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getStrategicPlanningMeetDate()?>" name="strategicplanningmeetdate" id="strategicplanningmeetdate" class="form-control dateControl">
-					                        	</div>
-					                        </div>
-					                        <div class="row m-t-sm">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have we invited them to xmas showroom?</label>
-					                        	<div class="col-lg-4">
-													<?php
- 	                        		  				  $select = DropDownUtils::getBooleanDropDown("isinvitedtoxmasshowroom", null,$customerChristmasQuestion->getIsInvitedToXmasShowroom(),false,false);
-    			                      				  echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs">
-				                        		<label class="col-lg-8 col-form-label bg-formLabel text-right">Yes, Date?</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedtoXmasShowRoomDate()?>" name="invitedtoxmasshowroomdate" id="invitedtoxmasshowroomdate" class="form-control dateControl" />
-					                        	</div>
-					                        </div>
-					                        <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">No, Reminder Date?</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedToxMasShowroomReminderDate()?>" name="invitedtoxmasshowroomreminderdate" id="invitedtoxmasshowroomreminderdate" class="form-control dateControl">
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs m-t-sm">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label>
-					                        	<div class="col-lg-4">
+										</div>
+										<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							What trade shows are they going to in 2021?
+            									</label>
+                        						<div class="col-lg-4">
+                        							<select id="tradeshowsaregoingto<?echo $seq?>" class="formCategories form-control"
+                        								name="tradeshowsaregoingto[]" multiple>
+                        							<?php
+                        								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
+                        									$selected = "";
+                        									if (in_array ( $key, $tradeshowsaregoingto )) {
+                        										$selected = "selected";
+                        									}
+                        									echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
+                        								}
+                        							?>
+                            					    </select>
+                            					</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have you made an appointment or dinner appt with them?
+                        						</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isdinnerappt", null, $customerChristmasQuestion->getIsDinnerAppt(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
+                        							Yes, Place?</label>
+                        						<div class="col-lg-4">
+                        							
+                        								<input type="text" name="dinnerapptplace"
+                        									value="<?php echo $customerChristmasQuestion->getDinnerApptPlace()?>"
+                        									id="dinnerapptplace" class="form-control">
+                        							
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have you told them that you want to be their main vendor of Holiday and Decor? And your customers are vendor consolidating?
+                        						</label>
+                        						<div class="col-lg-4">
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("ispitchmainvendor", null, $customerChristmasQuestion->getIsPitchMainVendor(), false, false);
+            													echo $select;
+            	                             			?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Are there more buyers in other categories? Or does this buyer handle all of Holiday categories?  If there are more, who are they and start all questions to each buyer.
+                        						</label>
+                        						<div class="col-lg-4">
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("istheremorebuyers", null, $customerChristmasQuestion->getIsThereMoreBuyers(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
+                        							we sent them any 1 Xmas sample?</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isxmassamplessent", null, $customerChristmasQuestion->getIsXmasSamplesSent(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                         					<div class="row m-b-xxs"> 
+                       						<label 
+                         							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If 
+                         							Yes, Date?</label> 
+                         						<div class="col-lg-4"> 
+                         							<div class="input-group date"> 
+                         								<input type="text" name="xmassamplesentdate" 
+                         									value="<?php echo $customerChristmasQuestion->getXmasSampleSentDate()?>"
+                         									id="xmassamplesentdate"
+                         									class="form-control  dateControl"> <span
+                         									class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+                         							</div> 
+                         						</div> 
+                        					</div> 
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have a made a appt for a strategic planning meeting?
+                        						</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeetingappointment", null, $customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment(),false,false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                         					<div class="row m-b-xxs"> 
+                         						<label
+                         							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If 
+                         							Yes, Date?</label> 
+                         						<div class="col-lg-4"> 
+                         							<div class="input-group date"> 
+                         								<input type="text" name="strategicplanningmeetdate" 
+                        									 value="<?php echo $customerChristmasQuestion->getStrategicPlanningMeetDate()?>" 
+                         									id="strategicplanningmeetdate"
+                        									class="form-control  dateControl"> <span 
+                         									class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+                         							</div> 
+                         						</div> 
+                         					</div> 
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What
+                        							categories have they not bought That we should sell them?<br>
+                        						<small>Example  Holiday Wall Decor</small>
+                        						</label>
+                        						<div class="col-lg-4">
+                        							<select class="categoriesshouldsellthem form-control"
+                        								name="categoriesshouldsellthem[]" multiple>
+                        							<?php
+                        								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
+                        									$selected = "";
+                        									if (in_array ( $key, $categoriesShouldSellThem )) {
+                        										$selected = "selected";
+                        									}
+                        										echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
+                        									}
+                        							?>
+                            					    </select>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
+                        							you invited them to Alpine's xmas showroom?</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isinvitedtoxmasshowroom", null,$customerChristmasQuestion->getIsInvitedToXmasShowroom(),false,false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">When
+                        							are they reviewing xmas 2021?</label>
+                        						<div class="col-lg-4">
+                        							<div class="input-group date">
+                        								<input type="text" name="christmas2020reviewingdate"
+                        									value="<?php echo $customerChristmasQuestion->getChristmas2020ReviewingDate()?>"
+                        									id="christmas2020reviewingdate"
+                        									class="form-control  dateControl"> <span
+                        									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        							</div>
+                        						</div>
+                        					</div>
+                        					
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Are we receiving sell thrus if they bought last year?
+                        						</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isreceivingsellthru", null, $customerChristmasQuestion->getIsReceivingSellThru(),false,false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							If they bought Xmas last year, have you reviewed the sell thru?
+                        						</label>
+                        						<div class="col-lg-4">
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isreviewedsellthru", null, $customerChristmasQuestion->getIsReviewedSellThru(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Should
+                        							we visit this customer during the 4th qtr to comp shop their
+                        							Xmas items?</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isvisitcustomerin4qtr", null, $customerChristmasQuestion->getIsVisitCustomerIn4Qtr(),false,false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+ 						                    	<label class="col-lg-8 col-form-label bg-formLabel">Where
+                        							is the customer going to select the Xmas items?<br>
+                        							example - Is he going to select from catalog and circle items, am I going there to make a presentation and take samples, is he coming to our showroom, is he meeting me in Atlanta</label>
+ 					                        	<div class="col-lg-4">
+					                        		<?php 
+ 					                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectxmasitemsfrom", null, $customerChristmasQuestion->getCustomerSelectXmasItemsFrom(),false,true);
+                     			                        echo $select;
+                 	                             	?>
+ 					                        	</div>
+ 					                        </div>
+                        				</div>
+                        				<div class="form-group">
+            					
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label>
+ 					                        	<div class="col-lg-4">
 													<?php
 													
-				 	                        		    $select = DropDownUtils::getBooleanDropDown("isholidayshopcompleted", null, $customerChristmasQuestion->getIsHolidayShopCompleted(),false,false);
-				    			                        echo $select;
-					                             	?>
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Summary Email sent to SA Team and Robby?</label>
-					                        	<div class="col-lg-4">
+ 				 	                        		    $select = DropDownUtils::getBooleanDropDown("isholidayshopcompleted", null, $customerChristmasQuestion->getIsHolidayShopCompleted(),false,false);
+ 				    			                        echo $select;
+ 					                             	?>
+ 					                        	</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+            					
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Summary Email sent to SA Team and Robby?</label>
+ 					                        	<div class="col-lg-4">
 													<?php
- 	                        		  				  	$select = DropDownUtils::getBooleanDropDown("isholidayshopcomsummaryemailsent", null, $customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent(),false,false);
-    			                       					echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-					                    </div>
-					                    <div class="form-group">
-				                       		<div class="row m-b-xxs">
-					                       		<label class="col-lg-8 m-t-sm col-form-label bg-formLabel">When are you reviewing christmas 2020</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristmas2020ReviewingDate()?>" name="christmas2020reviewingdate" id="christmas2020reviewingdate" class="form-control dateControl">
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs">
-						                    	<label class="col-lg-8 col-form-label bg-formLabel">Where is the customer going to select the xmas items?</label>
-					                        	<div class="col-lg-4">
+  	                        		  				  	$select = DropDownUtils::getBooleanDropDown("isholidayshopcomsummaryemailsent", null, $customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent(),false,false);
+     			                       					echo $select;
+ 	                             					?>
+ 					                        	</div>
+                        						<label
+                        							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
+                        							Yes, Date?</label>
+                        						<div class="col-lg-4">
+                        							<div class="input-group date">
+                        								<input type="text" name="compshopsummaryemailsentdate"
+                        									value="<?php echo $customerChristmasQuestion->getCompShopSummaryEmailSentDate()?>"
+                        									id="compshopsummaryemailsentdate"
+                        									class="form-control  dateControl"> <span
+                        									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        							</div>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have we quoted for Xmas 2021?
+                        						</label>
+                        						<div class="col-lg-4">
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isquotedforxmas", null, $customerChristmasQuestion->getIsQuotedForXmas(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have they finalized their selections, if so how many items?
+                       							</label>
+                        						<div class="col-lg-4">
+                        							<input type="text" name="itemselectionfinalized"
+                        								value="<?php echo $customerChristmasQuestion->getItemSelectionFinalized()?>"
+                        								id="itemselectionfinalized" class="form-control">
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							How many xmas items did they purchase last year?
+                       							</label>
+                        						<div class="col-lg-4">
+                        							<input type="text" name="itemspurchasedlastyear"
+                        								value="<?php echo $customerChristmasQuestion->getItemsPurchasedLastYear()?>"
+                        								id="itemspurchasedlastyear" class="form-control">
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							If they finalized, how many were TY vs LY?
+                       							</label>
+                        						<div class="col-lg-4">
+                        							<input type="text" name="finalizedtyvsly"
+                        								value="<?php echo $customerChristmasQuestion->getFinalizedTyVsLy()?>"
+                        								id="finalizedtyvsly" class="form-control">
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        						Are we expecting a PO ?
+                        							</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getIsPoExpecting("arepoexpecting", null, $customerChristmasQuestion->getArePoExpecting(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							When are we expecting PO?
+                        						</label>
+                        						<div class="col-lg-4">
+                        							<div class="input-group date">
+                        								<input type="text" name="expectingpodate"
+                        									value="<?php echo $customerChristmasQuestion->getExpectingPoDate()?>"
+                        									id="expectingpodate"
+                        									class="form-control  dateControl"> <span
+                        									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        							</div>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				<div class="form-group">
+                        					<div class="row m-b-xxs">
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							Have we sent them opportunities buys?
+                        						</label>
+                        						<div class="col-lg-4">
+                        							
+            											<?php
+            											$select = DropDownUtils::getBooleanDropDown("isopportunitiessent", null, $customerChristmasQuestion->getIsOpportunitiesSent(), false, false);
+                			                        				echo $select;
+            	                             					?>
+                        						</div>
+                        						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+                        							If so, what is the last date you sent to them.
+                        						</label>
+                        						<div class="col-lg-4">
+                        							<div class="input-group date">
+                        								<input type="text" name="opportunitiessentdate"
+                        									value="<?php echo $customerChristmasQuestion->getOpportunitiesSentDate()?>"
+                        									id="opportunitiessentdate"
+                        									class="form-control  dateControl"> <span
+                        									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        							</div>
+                        						</div>
+                        					</div>
+                        				</div>
+                        				
+<!--             							<div class="form-group"> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Data Saving for Year</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
 					                        		<?php 
-					                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectxmasitemsfrom", null, $customerChristmasQuestion->getCustomerSelectXmasItemsFrom(),false,true);
-                    			                        echo $select;
-                	                             	?>
-					                        	</div>
-					                        </div>
-				                        </div>
-				                   </div> 
-				                    
-				                    
-				                    
-				                    
-				                    
-				                    <div class="col-lg-10">
-				                    	<div class="form-group">
-					                    	<div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Did we pitch that we want to be your main vendor of Holiday and Décor?
-		 And my customers are vendor consolidating?</label>
-					                        	<div class="col-lg-4">
+// 					                        		    $select = DropDownUtils::getYearDD("year", null, $customerChristmasQuestion->getYear(),false,false);
+//                     			                        echo $select;
+//                 	                             	?>
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 					                    </div> -->
+<!-- 				                       <div class="form-group"> -->
+				                       		
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 						                    	<label class="col-lg-8 col-form-label bg-formLabel">Have you sent them xmas catalog link?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
 													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("ismainvendor", null, $customerChristmasQuestion->getIsMainVendor(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-				                        	<div class="row m-b-xxs">
-					                        	<div class="panel panel-primary m-b-none">
-													<div class="panel-heading">Notes</div>
-													<div class="panel-body">
-					                                   	<textarea class="form-control" maxLength="1000" name="mainvendornotes"><?php echo $customerChristmasQuestion->getMainVendorNotes()?></textarea>
-													</div>
-						                     	</div>
-						                     </div>
-										</div>
-										<div class="form-group">
-						                     <div class="row m-b-xxs">
-						                     	<label class="col-lg-8 col-form-label bg-formLabel">Did they buy xmas last year?</label>
-					                        	<div class="col-lg-4 ">
+//  	                        						    $select = DropDownUtils::getBooleanDropDown("iscataloglinksent", null, $customerChristmasQuestion->getIsCatalogLinkSent(),false,false);
+//     			                    				    echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 				                        	<div class="row m-r-xxs"> -->
+<!-- 				                        		<div class="panel panel-primary m-b-none"> -->
+<!-- 													<div class="panel-heading">Catalog Link to send</div> -->
+<!-- 													<div class="panel-body"> -->
+<!-- 					                                   	<textarea class="form-control" maxLength="1000" name="cataloglinksentnotes" id="cataloglinksentnotes"><?php echo $customerChristmasQuestion->getCatalogLinkSentNotes()?></textarea> -->
+<!-- 													</div> -->
+<!-- 						                     	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        </div> -->
+				                        
+<!-- 				                        <div class="form-group"> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we sent them Any xmas sample?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isxmassamplessent", null, $customerChristmasQuestion->getIsXmasSamplesSent(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 					                    </div> -->
+<!-- 				                    	<div class="form-group"> -->
+<!-- 				                    		<div class="row m-b-xxs"> -->
+<!-- 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Have we made an appt for a stragetic planning meeting?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeetingappointment", null, $customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">If Yes, Date?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getStrategicPlanningMeetDate()?>" name="strategicplanningmeetdate" id="strategicplanningmeetdate" class="form-control dateControl">-->
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 					                        <div class="row m-t-sm"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have we invited them to xmas showroom?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+//  	                        		  				  $select = DropDownUtils::getBooleanDropDown("isinvitedtoxmasshowroom", null,$customerChristmasQuestion->getIsInvitedToXmasShowroom(),false,false);
+//     			                      				  echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 				                        		<label class="col-lg-8 col-form-label bg-formLabel text-right">Yes, Date?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedtoXmasShowRoomDate()?>" name="invitedtoxmasshowroomdate" id="invitedtoxmasshowroomdate" class="form-control dateControl" />-->
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 					                        <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">No, Reminder Date?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getInvitedToxMasShowroomReminderDate()?>" name="invitedtoxmasshowroomreminderdate" id="invitedtoxmasshowroomreminderdate" class="form-control dateControl">-->
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs m-t-sm"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Completed?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+													
+// 				 	                        		    $select = DropDownUtils::getBooleanDropDown("isholidayshopcompleted", null, $customerChristmasQuestion->getIsHolidayShopCompleted(),false,false);
+// 				    			                        echo $select;
+// 					                             	?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2019 Comp Shop Summary Email sent to SA Team and Robby?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+//  	                        		  				  	$select = DropDownUtils::getBooleanDropDown("isholidayshopcomsummaryemailsent", null, $customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent(),false,false);
+//     			                       					echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 					                    </div> -->
+<!-- 					                    <div class="form-group"> -->
+<!-- 				                       		<div class="row m-b-xxs"> -->
+<!-- 					                       		<label class="col-lg-8 m-t-sm col-form-label bg-formLabel">When are you reviewing christmas 2020</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristmas2020ReviewingDate()?>" name="christmas2020reviewingdate" id="christmas2020reviewingdate" class="form-control dateControl">-->
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 						                    	<label class="col-lg-8 col-form-label bg-formLabel">Where is the customer going to select the xmas items?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+					                        		<?php 
+// 					                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectxmasitemsfrom", null, $customerChristmasQuestion->getCustomerSelectXmasItemsFrom(),false,true);
+//                     			                        echo $select;
+//                 	                             	?>
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 				                        </div> -->
+<!-- 				                   </div>  -->
+				                    
+				                    
+				                    
+				                    
+				                    
+<!-- 				                    <div class="col-lg-10"> -->
+<!-- 				                    	<div class="form-group"> -->
+<!-- 					                    	<div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Did we pitch that we want to be your main vendor of Holiday and Décor? -->
+<!-- 		 And my customers are vendor consolidating?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+													<?php
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("ismainvendor", null, $customerChristmasQuestion->getIsMainVendor(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 				                        	<div class="row m-b-xxs"> -->
+<!-- 					                        	<div class="panel panel-primary m-b-none"> -->
+<!-- 													<div class="panel-heading">Notes</div> -->
+<!-- 													<div class="panel-body"> -->
+<!-- 					                                   	<textarea class="form-control" maxLength="1000" name="mainvendornotes"><?php echo $customerChristmasQuestion->getMainVendorNotes()?></textarea>-->
+<!-- 													</div> -->
+<!-- 						                     	</div> -->
+<!-- 						                     </div> -->
+<!-- 										</div> -->
+<!-- 										<div class="form-group"> -->
+<!-- 						                     <div class="row m-b-xxs"> -->
+<!-- 						                     	<label class="col-lg-8 col-form-label bg-formLabel">Did they buy xmas last year?</label> -->
+<!-- 					                        	<div class="col-lg-4 "> -->
 					                        	
 												<?php
- 	                        		    			$select = DropDownUtils::getBooleanDropDown("isxmasbuylastyear", null, $customerChristmasQuestion->getIsXmasBuyLastYear(),false,false);
-    			                        			echo $select;
-	                             				?>
-	                             				</div>
-					                        </div>
-					                        <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">If Yes, How Much?</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" name="xmasbuylastyearamount" value="<?php echo $customerChristmasQuestion->getXmasBuyLastYearAmount()?>" id="xmasbuylastyearamount" class="form-control">
-					                        	</div>
-					                        </div>
-										</div>
-										<div class="form-group">
-					                        <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Are we receiving sell thru if they bought last year?</label>
-					                        	<div class="col-lg-4">
+//  	                        		    			$select = DropDownUtils::getBooleanDropDown("isxmasbuylastyear", null, $customerChristmasQuestion->getIsXmasBuyLastYear(),false,false);
+//     			                        			echo $select;
+// 	                             				?>
+<!-- 	                             				</div> -->
+<!-- 					                        </div> -->
+<!-- 					                        <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel text-right">If Yes, How Much?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" name="xmasbuylastyearamount" value="<?php echo $customerChristmasQuestion->getXmasBuyLastYearAmount()?>" id="xmasbuylastyearamount" class="form-control">-->
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 										</div> -->
+<!-- 										<div class="form-group"> -->
+<!-- 					                        <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Are we receiving sell thru if they bought last year?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
 													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isreceivingsellthru", null, $customerChristmasQuestion->getIsReceivingSellThru(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-					                        </div>
-					                        <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have Robby Reviewed Sell through?</label>
-					                        	<div class="col-lg-4">
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isreceivingsellthru", null, $customerChristmasQuestion->getIsReceivingSellThru(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 					                        </div> -->
+<!-- 					                        <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Have Robby Reviewed Sell through?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
 													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerChristmasQuestion->getIsRobbyReviewedSellThrough(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-										</div>
-										<div class="form-group">
-											 <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">Should i visit this customer during the 4th qtr to comp shop their xmas items?</label>
-					                        	<div class="col-lg-4">
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerChristmasQuestion->getIsRobbyReviewedSellThrough(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 										</div> -->
+<!-- 										<div class="form-group"> -->
+<!-- 											 <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">Should i visit this customer during the 4th qtr to comp shop their xmas items?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
 													<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerin4qtr", null, $customerChristmasQuestion->getIsVisitCustomerIn4Qtr(),false,false);
-    			                        				echo $select;
-	                             					?>
-					                        	</div>
-				                        	</div>
-										</div>
-		                        		<div class="form-group">
-											 <div class="row m-b-xxs">
-					                        	<label class="col-lg-8 col-form-label bg-formLabel">When do we need to quote you christmas by?</label>
-					                        	<div class="col-lg-4">
-					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristMasquoteByDate()?>" name="christmasquotebydate" id="christmasquotebydate" class="form-control dateControl">
-					                        	</div>
-				                        	</div>
-										</div>
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerin4qtr", null, $customerChristmasQuestion->getIsVisitCustomerIn4Qtr(),false,false);
+//     			                        				echo $select;
+// 	                             					?>
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 										</div> -->
+<!-- 		                        		<div class="form-group"> -->
+<!-- 											 <div class="row m-b-xxs"> -->
+<!-- 					                        	<label class="col-lg-8 col-form-label bg-formLabel">When do we need to quote you christmas by?</label> -->
+<!-- 					                        	<div class="col-lg-4"> -->
+<!-- 					                        		<input type="text" value="<?php echo $customerChristmasQuestion->getChristMasquoteByDate()?>" name="christmasquotebydate" id="christmasquotebydate" class="form-control dateControl">-->
+<!-- 					                        	</div> -->
+<!-- 				                        	</div> -->
+<!-- 										</div> -->
 		                        	
 				                    	</div>
 				                	</div>

@@ -158,6 +158,29 @@ class CustomerSpringQuestionMgr
         $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
         $customerSpringQuestion->setQuoteSpringByDate($dateStr);
         
+        $dateStr = $customerSpringQuestion->getSpringCatalogLinkDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setSpringCatalogLinkDate($dateStr);
+        
+        $dateStr = $customerSpringQuestion->getSpringSampleDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setSpringSampleDate($dateStr);
+        
+        $dateStr = $customerSpringQuestion->getCompShopCompletionDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setCompShopCompletionDate($dateStr);
+        
+        $dateStr = $customerSpringQuestion->getCompShopSummeryEmailSentDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setCompShopSummeryEmailSentDate($dateStr);
+        
+        $dateStr = $customerSpringQuestion->getExpectingPoDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setExpectingPoDate($dateStr);
+        
+        $dateStr = $customerSpringQuestion->getOpportunitiesSentDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerSpringQuestion->setOpportunitiesSentDate($dateStr);
         
         return $customerSpringQuestion;
     }

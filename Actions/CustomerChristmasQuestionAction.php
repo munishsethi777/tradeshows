@@ -19,6 +19,11 @@ if($call == "savechristmasQuestion"){
         //$seq =  $_REQUEST["seq"];
         $christmasQuestion = new CustomerChristmasQuestion();
         $christmasQuestion->from_array($_REQUEST);
+        $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
+        $categoriesShouldSellThem = implode(",",$_REQUEST['categoriesshouldsellthem']);
+        $christmasQuestion->setTradeShowsAreGoingTo($tradeShowsAreGoingTo);
+        $christmasQuestion->setCategoriesShouldSellThem($categoriesShouldSellThem);
+        
         //if($seq > 0){
         //    $message = StringConstants::UPDATED_SUCCESSFULLY;
        // }

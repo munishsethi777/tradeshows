@@ -28,6 +28,22 @@ class CustomerSpringQuestion
     private $quotespringbydate;
     private $year;
     private $isallcategoriesselected;
+    private $springcataloglinkdate;
+    private $springsampledate;
+    private $compshopcompletiondate;
+    private $compshopsummeryemailsentdate;
+    private $isreviewedsellthru;
+    private $isquotedforspring;
+    private $itemselectionfinalized;
+    private $finalizedtyvsly;
+    private $arepoexpecting;
+    private $expectingpodate;
+    private $isopportunitiessent;
+    private $opportunitiessentdate;
+    private $tradeshowsaregoingto;
+    private $itemspurchasedlastyear;
+    private $isdinnerappt;
+    private $dinnerapptplace;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -236,6 +252,102 @@ class CustomerSpringQuestion
     }
     public function getIsAllCategoriesSelected(){
         return $this->isallcategoriesselected;
+    }
+    public function getSpringCatalogLinkDate(){
+        return $this->springcataloglinkdate;
+    }
+    public function setSpringCatalogLinkDate($springCatalogLinkDate){
+        $this->springcataloglinkdate = $springCatalogLinkDate;
+    }
+    public function getSpringSampleDate(){
+        return $this->springsampledate;
+    }
+    public function setSpringSampleDate($springSampleDate){
+        $this->springsampledate = $springSampleDate;
+    }
+    public function getCompShopCompletionDate(){
+        return $this->compshopcompletiondate;
+    }
+    public function setCompShopCompletionDate($compShopCompletionDate){
+        $this->compshopcompletiondate = $compShopCompletionDate;
+    }
+    public function getCompShopSummeryEmailSentDate(){
+        return $this->compshopsummeryemailsentdate;
+    }
+    public function setCompShopSummeryEmailSentDate($compShopSummeryEmailSentDate){
+        $this->compshopsummeryemailsentdate = $compShopSummeryEmailSentDate;
+    }
+    public function getIsReviewedSellThru(){
+        return $this->isreviewedsellthru;
+    }
+    public function setIsReviewedSellThru($isReviewedSellThru){
+        $this->isreviewedsellthru = $isReviewedSellThru;
+    }
+    public function getIsQuotedForSpring(){
+        return $this->isquotedforspring;
+    }
+    public function setIsQuotedForSpring($isQuotedForSpring){
+        $this->isquotedforspring = $isQuotedForSpring;
+    }
+    public function getItemSelectionFinalized(){
+        return $this->itemselectionfinalized;
+    }
+    public function setItemSelectionFinalized($itemSelectionFinalized){
+        $this->itemselectionfinalized = $itemSelectionFinalized;
+    }
+    public function getFinalizedTyVsLy(){
+        return $this->finalizedtyvsly;
+    }
+    public function setFinalizedTyVsLy($finalizedTyVsLy){
+        $this->finalizedtyvsly = $finalizedTyVsLy;
+    }
+    public function getArePoExpecting(){
+        return $this->arepoexpecting;
+    }
+    public function setArePoExpecting($arePoExpecting){
+        $this->arepoexpecting = $arePoExpecting;
+    }
+    public function getExpectingPoDate(){
+        return $this->expectingpodate;
+    }
+    public function setExpectingPoDate($expectingPoDate){
+        $this->expectingpodate = $expectingPoDate;
+    }
+    public function getIsOpportunitiesSent(){
+        return $this->isopportunitiessent;
+    }
+    public function setIsOpportunitiesSent($isOpportunitiesSent){
+        $this->isopportunitiessent = $isOpportunitiesSent;
+    }
+    public function getOpportunitiesSentDate(){
+        return $this->opportunitiessentdate;
+    }
+    public function setOpportunitiesSentDate($opportunitiesSentDate){
+        $this->opportunitiessentdate = $opportunitiesSentDate;
+    }
+    public function getTradeshowsAreGoingTo(){
+        return $this->tradeshowsaregoingto;
+    }
+    public function setTradeShowsAreGoingTo($tradeShowsAreGoingTo){
+        $this->tradeshowsaregoingto = $tradeShowsAreGoingTo;
+    }
+    public function getItemsPurchasedLastYear(){
+        return $this->itemspurchasedlastyear;
+    }
+    public function setItemsPurchasedLastYear($itemsPurchasedLastYear){
+        $this->itemspurchasedlastyear = $itemsPurchasedLastYear;
+    }
+    public function getIsDinnerAppt(){
+        return $this->isdinnerappt;
+    }
+    public function setIsDinnerAppt($isDinnerAppt){
+        $this->isdinnerappt = $isDinnerAppt;
+    }
+    public function getDinnerApptPlace(){
+        return $this->dinnerapptplace;
+    }
+    public function setDinnerApptPlace($dinnerApptPlace){
+        $this->dinnerapptplace = $dinnerApptPlace;
     }
     
     public function from_array($array) {

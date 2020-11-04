@@ -89,6 +89,32 @@ class CustomerChristmasQuestionMgr{
         $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
         $customerChritmasQuestion->setChristMasquoteByDate($dateStr);
         
+        $dateStr = $customerChritmasQuestion->getCataloglinkDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setCataloglinkDate($dateStr);
+        
+        $dateStr = $customerChritmasQuestion->getDinnerApptDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setDinnerApptDate($dateStr);
+        
+        $dateStr = $customerChritmasQuestion->getXmasSampleSentDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setXmasSampleSentDate($dateStr);
+        
+        $dateStr = $customerChritmasQuestion->getCompShopSummaryEmailSentDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setCompShopSummaryEmailSentDate($dateStr);
+        
+        $dateStr = $customerChritmasQuestion->getExpectingPoDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setExpectingPoDate($dateStr);
+        
+        $dateStr = $customerChritmasQuestion->getOpportunitiesSentDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setOpportunitiesSentDate($dateStr);
+        
+        
+        
         return $customerChritmasQuestion;
     }
 }
