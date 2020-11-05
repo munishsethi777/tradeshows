@@ -54,6 +54,10 @@ class QCScheduleMgr{
         $qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
         return $qcScheduleImportUtil->importQCSchedules($file,$isUpdate,$updatingRowNumbers,$isCompeted);
 	}
+	public function newUpdateQCSchedulesWithActualDates($file){
+		$qcScheduleImportUtil = QCScheduleImportUtil::getInstance();
+        return $qcScheduleImportUtil->newUpdateQCSchedules($file);
+	}
 	/**
 	 * Method to send variables to QCScheduleImportUtil
 	 * @param FILE $file the file contents need to update the database
@@ -453,6 +457,88 @@ class QCScheduleMgr{
 		if(!$isUpdate){
 			$_SESSION['numberOfInsertedNewCases'] = $savedItemCount;
 		}
+		$response["updatedItemCount"] = $updateItemCount;
+		$response["existingItemIds"] = "";
+		return $response;
+	}
+	public function saveOrUpdateArr($qcScheudleArr, $rowAndItemNo, $labels){
+		$db_New = MainDB::getInstance();
+		$conn = $db_New->getConnection();
+		$conn->beginTransaction();
+		$hasError = false;
+		$messages = "";
+		$itemNoAlreadyExists = 0;
+		$savedItemCount = 0;
+		$updateItemCount = 0;
+		$updatingRowNos = array();
+		$success = 1;
+		$refqc = new ReflectionClass(new QCSchedule());
+		$qc_properties = $refqc->getProperties(ReflectionProperty::IS_PRIVATE);
+		$qc_methods = $refqc->getMethods();
+		$temp = [];
+		foreach($qc_methods as $qc_method){
+			if(substr($qc_method->getName(),0,3) === "get"){
+				$temp[] = $qc_method;
+			}
+		}
+		$qc_methods = $temp;
+		foreach ($qcScheudleArr as $key=>$qc){
+			$itemNo = $qc->getItemNumbers();
+			$po =  $qc->getPo();
+			$shipDate = $qc->getShipdate();
+			$seq = $qc->getSeq();
+			try {
+				if(isset($seq)){
+					//update case
+					$condition = [];
+					$columnValuePair = [];
+					foreach((array)$qc_properties as $index => $qcschedule){
+						if($qcschedule->getName() == "seq"){
+							$condition["seq"] = $seq;
+						}elseif($qcschedule->getName() == "createdon" || $qcschedule->getName() == "lastmodifiedon"){
+							continue;
+						}else{
+							$val = $qc_methods[$index]->invoke($qc);
+							if(isset($val)){
+								$columnValuePair[$qcschedule->getName()] = $val;
+							}
+						}
+					}
+					$count = self::$dataStore->updateByAttributes($columnValuePair, $condition, true);
+					if($count){
+						$updateItemCount = $updateItemCount + 1;
+					}
+				}else{
+					// insert case
+					$count = $this->save($qc);
+					if($count){
+						$savedItemCount = $savedItemCount + 1;
+					}
+				}
+			 }
+			catch ( Exception $e) {
+				$trace = $e->getTrace();
+				if($trace[0]["args"][0][1] == "1062"){
+					$itemNoAlreadyExists++;
+					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
+					$updatingRowNos[$rowNo] = $rowNo;
+				}else{
+					$messages .= $e->getMessage();
+				}
+				$_SESSION["qcScheduleRowsToBeUpdate"] = $updatingRowNos;
+				$hasError = true;
+				$success = 0;
+			}
+		}
+		if(!$hasError){
+			$messages = StringConstants::QC_SCHEDULES_IMPORTED_SUCCESSFULLY;
+			$conn->commit(); 
+		}
+		$response["message"] = $messages;
+		$response["success"] = $success;
+		$response["itemalreadyexists"] = $itemNoAlreadyExists;
+		$response["savedItemCount"] = $savedItemCount;
+		$_SESSION['numberOfInsertedNewCases'] = $savedItemCount;
 		$response["updatedItemCount"] = $updateItemCount;
 		$response["existingItemIds"] = "";
 		return $response;

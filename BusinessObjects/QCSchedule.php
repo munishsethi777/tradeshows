@@ -5,7 +5,7 @@ class QCSchedule{
 	$screadydate, $scfinalinspectiondate, $scmiddleinspectiondate, $scfirstinspectiondate, $scproductionstartdate, $scgraphicsreceivedate, 
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
-	$notes,$status, $userseq, $createdon, $lastmodifiedon,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,$classcodeseq,
+	$notes,$status, $userseq, $createdon, $lastmodifiedon,$classcodeseq,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,
 	$acmiddleinspectionnotes,$acfirstinspectionnotes,$iscompleted,$apgraphicsreceivedatenareason,$poinchargeuser;
 	
 	public static $className = "QCSchedule";

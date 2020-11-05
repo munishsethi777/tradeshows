@@ -196,7 +196,23 @@ if($call == "importQCSchedules"){
 	}
 	$response["incorrectPassword"] = $incorrectPassword;
 }
-
+if($call == "newOrUpdateQcSchedule"){
+	try{
+		if(isset($_FILES["file"])){
+			$response = $qcScheduleMgr->newUpdateQCSchedulesWithActualDates($_FILES["file"]);
+			//echo json_encode($response);
+			if($response["success"] == 1){
+				unset($_SESSION['qcScheduleRowsToBeUpdate']);
+				$message = $response["message"] . "\n No of Imported Entry: " . $response["savedItemCount"] . "\n No of Updated Entry: " . $response["updatedItemCount"];
+			}else{
+				throw new Exception($response["message"]);
+			}
+		}
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
 if($call == "bulkDelete"){
     try{
         $filePath = "/Users/baljeetgaheer/Downloads/QCSchedules-RURALKING to delete_copy1.xlsx";
