@@ -91,7 +91,7 @@ if(isset($_REQUEST["isCompleted"])){
 				</div>
 			</div>
 		</div>
-       <div id="createNewModalForm" class="modal fade" data-backdrop="static"  aria-hidden="true">
+       <!-- <div id="createNewModalForm" class="modal fade" data-backdrop="static"  aria-hidden="true">
 	        <div class="modal-dialog" >
 	            <div class="modal-content">
 	                <div class="modal-header">
@@ -119,7 +119,7 @@ if(isset($_REQUEST["isCompleted"])){
 	                </div>
 	            </div>
 	        </div>
-        </div>
+        </div> -->
 </body>
 </html>
 <script type="text/javascript">
@@ -155,36 +155,20 @@ function saveAction(){
 		   $("#isupdate").val(0);
 		   $("#updateIds").val("");
 		   var jsonData = $.parseJSON(data);
-		   if(jsonData.itemalreadyexists > 0){
-			   var jsonString = JSON.stringify(jsonData.existingItemIds)
-			   $("#updateIds").val(jsonString);
-			   var importedItemsCount = jsonData.savedItemCount;
-			   var message = jsonData.itemalreadyexists + " QC Schedules already exists in database! Do you want to update these items with new values?";
-			   message += "<br>If you want to update please enter the password :- <br>";
-			   if(importedItemsCount > 0){
-				   message = importedItemsCount + " QC Schedules imported successfully.<br>" + message;		
-			   }
-			   $("#message").html(message);
-			   $('#createNewModalForm').modal('show');
-		   }else{
-			   if(jsonData.incorrectPassword == 1){
-				   alert(jsonData.message);
-			   }else{
-				   $('#createNewModalForm').modal('hide');
-				   if(jsonData.savedItemCount != undefined){
-    				   $('#resultModelForm').modal('show');
-    				   message = jsonData.savedItemCount + " QC Schedules imported successfully.<br>" + jsonData.updatedItemCount + " QC Schedules updated successfully.";
-    				   $("#responseOfResult").html(message);
-    				   //if(flag){
-    					  //window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
-    				   //}
-				   } 
-				   var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
+			$('#createNewModalForm').modal('hide');
+			if(jsonData.success == 1){
+				$('#resultModelForm').modal('show');
+				message = jsonData.savedItemCount + " QC Schedules imported successfully.<br>" + jsonData.updatedItemCount + " QC Schedules updated successfully.";
+				
+				$("#responseOfResult").html(message);
+				//if(flag){
+					//window.setTimeout(function(){window.location.href = "adminManageQCSchedules.php"},500);
+				//}
+			} 
+			var flag = showResponseToastr(data,null,"importQCScheduleForm","ibox");
 				   
-			   }
-		   }
-		   $("#isupdate").val(0); 
-		});
+		}
+	);
 			
 	}else{
 		$("#importQCScheduleForm")[0].reportValidity();

@@ -344,15 +344,15 @@ class QCScheduleImportUtil
                 $qc->setItemNumbers($itemId);
                 $qc->setUserSeq($userSeq);
                 array_push($qcScheudleArr, $qc);
-                array_push($itemNoArr, $itemId . $qc->getPO() . $qc->getShipDate()->format("m/d/y"));
+                // array_push($itemNoArr, $itemId . $qc->getPO() . $qc->getShipDate()->format("m/d/y"));
             }
             $rowAndItemNo[$row] = $itemNoArr;
         }
         $response = array();
         $response["message"] = $messages;
         $response["success"] = $success;
-        $response["itemalreadyexists"] = $itemNoAlreadyExists;
         if (empty($messages)) {
+            /**@var QCScheduleMgr */
             $qcscheduleMgr = QCScheduleMgr::getInstance();
             $logger->info("\n\n\n\n\n QCSchedules are about to be Inserted by import process");
             $response = $qcscheduleMgr->saveOrUpdateArr($qcScheudleArr ,$rowAndItemNo, $labels);
@@ -690,7 +690,7 @@ class QCScheduleImportUtil
 
     private function getImportedUpdatedData($data)
     {
-             
+        $qcSchedule = new QCSchedule();
         $userMgr = UserMgr::getInstance();
         $qcUsers = $userMgr->getQCUsersArrForDD();
         $qcUsers = array_flip($qcUsers);
@@ -709,10 +709,46 @@ class QCScheduleImportUtil
         $id = $data[$startingIndex++];
         $qc = $data[$startingIndex++];
         $qc = strtoupper(trim($qc));
-        $qcUserSeq = $qcUsers[$qc];
+        $qcUserSeq = self::$qcUserCodeSeqArr[$qc];
         $poincharge = $data[$startingIndex++];
-        if($poincharge != null){
-        $poinchargeUserSeq = $poinchargeUsers[strtoupper(trim($poincharge))];
+        $poinchargeUserSeq = self::$qcUserCodeSeqArr[$poincharge];
+        if(!empty($id)){
+            $qcSchedule->setSeq($id);
+        }
+        if(empty($id)){
+            if(empty($qc)){
+                //$messages[] = "QC - $qc can not be empty for insert case,\t";
+            }else{
+                if($qcUserSeq == null){
+                    $messages[] = "QC - $qc does not exist,\t";
+                }else{
+                    $qcSchedule->setQC($qc);
+                    $qcSchedule->setQCUser($qcUserSeq);
+                }
+            }
+            if(!empty($poincharge)){
+                if($poinchargeUserSeq == null){
+                    $messages[] = "PoIncharge - $poincharge does not exist";
+                }else{
+                    $qcSchedule->setPOInchargeUser($poinchargeUserSeq);
+                }
+            }
+        }else{
+            if(!empty($qc)){
+                if($qcUserSeq == null){
+                    $messages[] = "QC - $qc does not exist,\t";
+                }else{
+                    $qcSchedule->setQC($qc);
+                    $qcSchedule->setQCUser($qcUserSeq);
+                }
+            }
+            if(!empty($poincharge)){
+                if($poinchargeUserSeq == null){
+                    $messages[] = "PoIncharge - $poincharge does not exist";
+                }else{
+                    $qcSchedule->setPOInchargeUser($poinchargeUserSeq);
+                }
+            }
         }
         $classCode = $data[$startingIndex++];
         $po = $data[$startingIndex++];
@@ -743,26 +779,10 @@ class QCScheduleImportUtil
         $finalStatus = $data[$startingIndex++];
         $isCompleted = $data[++$startingIndex];
         $this->dataTypeErrors = "";
-        $qcSchedule = new QCSchedule();
+        
 
-        if(!empty($id)){
-            $qcSchedule->setSeq($id);
-        }
-
-        if (! empty($qc) && ! empty($qcUserSeq)) {
-            $qcSchedule->setQC($qc);
-            $qcSchedule->setQCUser($qcUserSeq);
-        }else{
-        	//we are now letting empty QC also
-        	//throw new Exception("'$qc' QC not found in database!");
-        }
-        if (! empty($poincharge)) {
-        	if(!empty($poinchargeUserSeq)){
-        		$qcSchedule->setPOInchargeUser($poinchargeUserSeq);
-        	}else{
-        		$messages[] = " '$poincharge' PO Incharge not found in database!";
-        	}
-        }
+        
+        
         if (! empty($classCode)) {
             $classCodeObj = $classCodeMgr->findByClassCode($classCode);
             $classCodeSeq = 0;
@@ -823,6 +843,8 @@ class QCScheduleImportUtil
                 $graphicReceiveDate->modify('-30 day');
                 $qcSchedule->setSCGraphicsReceiveDate($graphicReceiveDate);
             }
+        }else{
+            //$messages[] = "Ship Date - $shipDateStr can not be empty";
         }   
         if (! empty($latestShipDateStr)) {
         	$latestShipDate = $this->ConvertToDate($latestShipDateStr,"m/d/y");

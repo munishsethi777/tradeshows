@@ -461,6 +461,10 @@ class QCScheduleMgr{
 		$response["existingItemIds"] = "";
 		return $response;
 	}
+	/**
+	 * @param QCSchedule[] $qcScheudleArr
+	 * 
+	 */
 	public function saveOrUpdateArr($qcScheudleArr, $rowAndItemNo, $labels){
 		$db_New = MainDB::getInstance();
 		$conn = $db_New->getConnection();
@@ -476,6 +480,7 @@ class QCScheduleMgr{
 		$qc_properties = $refqc->getProperties(ReflectionProperty::IS_PRIVATE);
 		$qc_methods = $refqc->getMethods();
 		$temp = [];
+		$rowNos = 3;
 		foreach($qc_methods as $qc_method){
 			if(substr($qc_method->getName(),0,3) === "get"){
 				$temp[] = $qc_method;
@@ -508,26 +513,21 @@ class QCScheduleMgr{
 					if($count){
 						$updateItemCount = $updateItemCount + 1;
 					}
+					$rowNos++;
 				}else{
 					// insert case
 					$count = $this->save($qc);
 					if($count){
 						$savedItemCount = $savedItemCount + 1;
 					}
+					$rowNos++;
 				}
 			 }
 			catch ( Exception $e) {
-				$trace = $e->getTrace();
-				if($trace[0]["args"][0][1] == "1062"){
-					$itemNoAlreadyExists++;
-					$rowNo = $this->getRowNumberByItemIdAndShipDate($rowAndItemNo,$itemNo,$po,$shipDate->format("m/d/y"));
-					$updatingRowNos[$rowNo] = $rowNo;
-				}else{
-					$messages .= $e->getMessage();
-				}
-				$_SESSION["qcScheduleRowsToBeUpdate"] = $updatingRowNos;
 				$hasError = true;
 				$success = 0;
+				$messages .= "Error in Row No - $rowNos : " . $e->getMessage() . "<br>";
+				$rowNos++;
 			}
 		}
 		if(!$hasError){
