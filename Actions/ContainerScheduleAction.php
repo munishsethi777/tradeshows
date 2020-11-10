@@ -93,7 +93,8 @@ if($call == "saveContainerSchedule"){
 		            ContainerScheduleNotificationType::alpine_pickup_notes_updated_instant);
 			}
 			if($isWarehouseUpdated){
-				ContainerScheduleReportUtil::sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,$existingContainerSchedule,ContainerScheduleNotificationType::update_warehouse_from_alpine_instant);
+				ContainerScheduleReportUtil::sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,
+				    $existingContainerSchedule,ContainerScheduleNotificationType::update_warehouse_from_alpine_instant);
 			}
 		}
 	}catch(Exception $e){

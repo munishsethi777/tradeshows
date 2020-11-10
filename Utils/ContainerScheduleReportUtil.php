@@ -440,7 +440,7 @@ class ContainerScheduleReportUtil
     }
     
     public static function sendAlpinePickUpDateChangedNotification($containerSchedule, 
-        $existingContainerSchedule,$userName){
+        $existingContainerSchedule,$userName){//Instant
         $userMgr = UserMgr::getInstance();
         $users = $userMgr->getAllUsersWithRoles();
         $users = self::getCSUsersByNotificationType($users,
@@ -504,7 +504,13 @@ class ContainerScheduleReportUtil
             //$users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
             $toEmails = array();
             foreach ($users as $user){
-                array_push($toEmails,$user->getEmail());
+                if(empty($user->getFreightForwarder())){
+                    array_push($toEmails,$user->getEmail());
+                }else{
+                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                        array_push($toEmails,$user->getEmail());
+                    }
+                }
             }
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
@@ -518,7 +524,7 @@ class ContainerScheduleReportUtil
     }
     
     public static function sendRequestedDeliveryDateChangedNotification($containerSchedule,
-        $existingContainerSchedule,$userName)
+        $existingContainerSchedule,$userName)//Instant
     {
         $requestedDeliveryDateTime = $containerSchedule->getRequestedDeliveryDateTime();
         
@@ -561,7 +567,13 @@ class ContainerScheduleReportUtil
             }
             $toEmails = array();
             foreach ($users as $user){
-                array_push($toEmails,$user->getEmail());
+                if(empty($user->getFreightForwarder())){
+                    array_push($toEmails,$user->getEmail());
+                }else{
+                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                        array_push($toEmails,$user->getEmail());
+                    }
+                }
             }
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
@@ -573,7 +585,7 @@ class ContainerScheduleReportUtil
         }
     }
     public static function sendTerminalAppointmentChangedNotification($containerSchedule,
-        $existingContainerSchedule,$userName)
+        $existingContainerSchedule,$userName)//Instant
     {
         $terminalAppointmentDateTime = $containerSchedule->getTerminalAppointmentDatetime();
         
@@ -618,7 +630,13 @@ class ContainerScheduleReportUtil
             }
             $toEmails = array();
             foreach ($users as $user){
-                array_push($toEmails,$user->getEmail());
+                if(empty($user->getFreightForwarder())){
+                    array_push($toEmails,$user->getEmail());
+                }else{
+                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                        array_push($toEmails,$user->getEmail());
+                    }
+                }
             }
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
@@ -680,7 +698,7 @@ class ContainerScheduleReportUtil
     }
     
     //Instant when notes updated from graphic log
-    public static function sendContainerScheduleNotesUpdatedNotification($containerSchedule,$notificationType){
+    public static function sendContainerScheduleNotesUpdatedNotification($containerSchedule,$notificationType){//Instant
         $userMgr = UserMgr::getInstance();
         $users = $userMgr->getAllUsersWithRoles();
         $users = self::getCSUsersByNotificationType($users,$notificationType);
@@ -715,7 +733,13 @@ class ContainerScheduleReportUtil
         $toEmails = array();
         $phAnValues = array();
         foreach ($users as $user){
-            array_push($toEmails,$user->getEmail());
+            if(empty($user->getFreightForwarder())){
+                array_push($toEmails,$user->getEmail());
+            }else{
+                if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                    array_push($toEmails,$user->getEmail());
+                }
+            }
         }
         if(!empty($toEmails)){
             $subject = "ALPINE BI Containers | Updated " . $noteType . " Notes";
@@ -728,7 +752,7 @@ class ContainerScheduleReportUtil
             }
         }
     }
-    public static function sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,$previousContainerSchedule,$notificationType){
+    public static function sendContainerSchedulesWarehouseUpdateNotification($containerSchedule,$previousContainerSchedule,$notificationType){//Instant
         $userMgr = UserMgr::getInstance();
         $users = $userMgr->getAllUsersWithRoles();
         $users = self::getCSUsersByNotificationType($users,$notificationType);
@@ -750,7 +774,13 @@ class ContainerScheduleReportUtil
         $toEmails = array();
         $phAnValues = array();
         foreach ($users as $user){
-            array_push($toEmails,$user->getEmail());
+            if(empty($user->getFreightForwarder())){
+                    array_push($toEmails,$user->getEmail());
+            }else{
+                if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                    array_push($toEmails,$user->getEmail());
+                }
+            }
         }
         if(!empty($toEmails)){
             $subject = "ALPINE BI Containers | Updated " .$noteType . " Updated";
@@ -763,7 +793,7 @@ class ContainerScheduleReportUtil
             }
         }
     }
-    public static function sendETAChangedNotification($containerSchedule, $existingContainerSchedule,$userName)
+    public static function sendETAChangedNotification($containerSchedule, $existingContainerSchedule,$userName)//Instant
     {
         $etaDateTime = $containerSchedule->getEtaDateTime();
         $etaDateTimeExisting = $existingContainerSchedule->getEtaDateTime();
@@ -805,7 +835,13 @@ class ContainerScheduleReportUtil
             }
             $toEmails = array();
             foreach ($users as $user){
-                array_push($toEmails,$user->getEmail());
+                if(empty($user->getFreightForwarder())){
+                    array_push($toEmails,$user->getEmail());
+                }else{
+                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
+                        array_push($toEmails,$user->getEmail());
+                    }
+                }
             }
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
