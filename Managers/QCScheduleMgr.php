@@ -488,9 +488,9 @@ class QCScheduleMgr{
 		}
 		$qc_methods = $temp;
 		foreach ($qcScheudleArr as $key=>$qc){
-			$itemNo = $qc->getItemNumbers();
-			$po =  $qc->getPo();
-			$shipDate = $qc->getShipdate();
+			//$itemNo = $qc->getItemNumbers();
+			//$po =  $qc->getPo();
+			//$shipDate = $qc->getShipdate();
 			$seq = $qc->getSeq();
 			try {
 				if(isset($seq)){
@@ -504,14 +504,20 @@ class QCScheduleMgr{
 							continue;
 						}else{
 							$val = $qc_methods[$index]->invoke($qc);
-							if(isset($val)){
-								$columnValuePair[$qcschedule->getName()] = $val;
+							if ($val instanceof DateTime) {
+                                $columnValuePair[$qcschedule->getName()] = $val;
+							}else{
+							    if(!empty(trim($val))){
+                                    $columnValuePair[$qcschedule->getName()] = addslashes($val);
+                                }
 							}
 						}
 					}
-					$count = self::$dataStore->updateByAttributes($columnValuePair, $condition, true);
-					if($count){
-						$updateItemCount = $updateItemCount + 1;
+					if(count($columnValuePair)){
+    					$count = self::$dataStore->updateByAttributes($columnValuePair, $condition, true);
+    					if($count){
+    						$updateItemCount = $updateItemCount + 1;
+    					}
 					}
 					$rowNos++;
 				}else{

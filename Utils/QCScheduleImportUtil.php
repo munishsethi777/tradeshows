@@ -313,9 +313,6 @@ class QCScheduleImportUtil
             if (! array_filter($data)) {
                 continue;
             }
-            
-            
-            
             if($key == 0){
                 $i = 0;
                 foreach($data as $index => $value){
@@ -325,7 +322,7 @@ class QCScheduleImportUtil
             }
             $importedData = array();
             try {
-                    $importedData = $this->getImportedUpdatedData($data);
+                $importedData = $this->getImportedUpdatedData($data);
             } catch (Exception $e) {
                 $messages .= "Error on row no $row - " . $e->getMessage() . "<br>";
                 $success = 0;
@@ -334,19 +331,23 @@ class QCScheduleImportUtil
                 continue;
             }
             $qcschedule = $importedData["importingQCObj"];
-            $itemIdsArr = $importedData["items"];
-            $itemNoArr = array();
-            foreach ($itemIdsArr as $itemId) {
-                if (empty($itemId)) {
-                    continue;
+            if(empty($qcschedule->getSeq())){//new case
+                $itemIdsArr = $importedData["items"];
+                $itemNoArr = array();
+                foreach ($itemIdsArr as $itemId) {
+                    if (empty($itemId)) {
+                        continue;
+                    }
+                    $qc = clone $qcschedule;
+                    $qc->setItemNumbers($itemId);
+                    $qc->setUserSeq($userSeq);
+                    array_push($qcScheudleArr, $qc);
+                    // array_push($itemNoArr, $itemId . $qc->getPO() . $qc->getShipDate()->format("m/d/y"));
                 }
-                $qc = clone $qcschedule;
-                $qc->setItemNumbers($itemId);
-                $qc->setUserSeq($userSeq);
-                array_push($qcScheudleArr, $qc);
-                // array_push($itemNoArr, $itemId . $qc->getPO() . $qc->getShipDate()->format("m/d/y"));
+                $rowAndItemNo[$row] = $itemNoArr;
+            }else{//update case
+                array_push($qcScheudleArr, $qcschedule);
             }
-            $rowAndItemNo[$row] = $itemNoArr;
         }
         $response = array();
         $response["message"] = $messages;
@@ -692,17 +693,6 @@ class QCScheduleImportUtil
     {
         $qcSchedule = new QCSchedule();
         $userMgr = UserMgr::getInstance();
-        $qcUsers = $userMgr->getQCUsersArrForDD();
-        $qcUsers = array_flip($qcUsers);
-        $poinchargeUsers = $userMgr->getPOInchargeUsersArrForDD();
-        foreach($poinchargeUsers as $index => $poincharge){
-            if($poincharge == null){
-                unset($poinchargeUsers[$index]);
-            }else{
-                $poinchargeUsers[$index] = strtoupper($poincharge);
-            }
-        }
-        $poinchargeUsers = array_flip($poinchargeUsers);
         $classCodeMgr = ClassCodeMgr::getInstance();
         $messages = array();
         $startingIndex = 0;
@@ -767,20 +757,33 @@ class QCScheduleImportUtil
         $productionStartDate = $data[$startingIndex++];
         $graphicReceiveDate = $data[$startingIndex++];
 
-        $startingIndex = $startingIndex + 9;//actual dates are in third block
+        $ap_readyDate = $data[$startingIndex++];
+        $ap_finalInspectionDate = $data[$startingIndex++];
+        $ap_middleInspectionDate = $data[$startingIndex++];
+        $ap_firstInpectionDate = $data[$startingIndex++];
+        $ap_productionStartDate = $data[$startingIndex++];
+        $ap_graphicDateReceive = $data[$startingIndex++];
+        
+        $ap_firstInspectionNaReason = $data[$startingIndex++];
+        $ap_middleInspectionNaReason = $data[$startingIndex++];
+        $ap_graphicDateNaReason = $data[$startingIndex++];
+        
         $ac_readyDate = $data[$startingIndex++];
         $ac_finalInspectionDate = $data[$startingIndex++];
         $ac_middleInspectionDate = $data[$startingIndex++];
         $ac_firstInpectionDate = $data[$startingIndex++];
         $ac_productionStartDate = $data[$startingIndex++];
         $ac_graphicDateReceive = $data[$startingIndex++];
-        $note = $data[++$startingIndex + 1];
-        $startingIndex = $startingIndex + 2;//actual dates are in third block
+        
+        $ac_firstInspectionNotes = $data[$startingIndex++];
+        $ac_middleInspectionNotes = $data[$startingIndex++];
+        $ac_finalInspectionNotes = $data[$startingIndex++];
+        
+        //$note = $data[++$startingIndex + 1];
+        //$startingIndex = $startingIndex + 2;//actual dates are in third block
         $finalStatus = $data[$startingIndex++];
         $isCompleted = $data[++$startingIndex];
         $this->dataTypeErrors = "";
-        
-
         
         
         if (! empty($classCode)) {
@@ -855,6 +858,40 @@ class QCScheduleImportUtil
             }
         }
         
+        if (! empty($ap_readyDate)) {
+            $ap_readyDate = $this->convertStrToDate($ap_readyDate);
+            $qcSchedule->setAPReadyDate($ap_readyDate);
+        }
+        if (! empty($ap_finalInspectionDate)) {
+            $ap_finalInspectionDate = $this->convertStrToDate($ap_finalInspectionDate);
+            $qcSchedule->setAPFinalInspectionDate($ap_finalInspectionDate);
+        }
+        if (! empty($ap_middleInspectionDate)){
+           $ap_middleInspectionDate = $this->convertStrToDate($ap_middleInspectionDate);
+           $qcSchedule->setAPMiddleInspectionDate($ap_middleInspectionDate);
+        }
+        if (! empty($ap_firstInpectionDate)) {
+           $ap_firstInpectionDate = $this->convertStrToDate($ap_firstInpectionDate);
+           $qcSchedule->setAPFirstInspectionDate($ap_firstInpectionDate);
+        }
+        if (! empty($ap_productionStartDate)) {
+            $ap_productionStartDate = $this->convertStrToDate($ap_productionStartDate);
+            $qcSchedule->setAPProductionStartDate($ap_productionStartDate);
+        }
+        if (! empty($ap_graphicDateReceive)) {
+            $ap_graphicDateReceive = $this->convertStrToDate($ap_graphicDateReceive);
+            $qcSchedule->setAPGraphicsReceiveDate($ap_graphicDateReceive);
+        }
+        if (! empty($ap_firstInspectionNaReason)) {
+            $qcSchedule->setApFirstInspectionDateNaReason($ap_firstInspectionNaReason);
+        }
+        if (! empty($ap_middleInspectionNaReason)) {
+            $qcSchedule->setApMiddleInspectionDateNaReason($ap_middleInspectionNaReason);
+        }
+        if (! empty($ap_graphicDateNaReason)) {
+            $qcSchedule->setAPGraphicsReceiveDateNAReason($ap_graphicDateNaReason);
+        }
+        
         if (! empty($ac_readyDate)) {
             $ac_readyDate = $this->convertStrToDate($ac_readyDate);
             $qcSchedule->setACReadyDate($ac_readyDate);
@@ -864,26 +901,26 @@ class QCScheduleImportUtil
             $qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
         }
         if (! empty($ac_middleInspectionDate)){
-            if(is_string($ac_middleInspectionDate)){
-                $ac_middleInspectionDate = strtolower(str_replace(" ", "", $ac_middleInspectionDate));
-            }
-            if($ac_middleInspectionDate != "n/a"){
+//             if(is_string($ac_middleInspectionDate)){
+//                 $ac_middleInspectionDate = strtolower(str_replace(" ", "", $ac_middleInspectionDate));
+//             }
+//             if($ac_middleInspectionDate != "n/a"){
                 $ac_middleInspectionDate = $this->convertStrToDate($ac_middleInspectionDate);
                 $qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
-            }else{
-                $qcSchedule->setApMiddleInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
-            }
+            //}else{
+                //$qcSchedule->setApMiddleInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
+           // }
         }
         if (! empty($ac_firstInpectionDate)) {
-            if(is_string($ac_firstInpectionDate)){
-                $ac_firstInpectionDate = strtolower(str_replace(" ", "", $ac_firstInpectionDate));
-            }
-            if($ac_firstInpectionDate != "n/a"){
+//             if(is_string($ac_firstInpectionDate)){
+//                 $ac_firstInpectionDate = strtolower(str_replace(" ", "", $ac_firstInpectionDate));
+//             }
+//             if($ac_firstInpectionDate != "n/a"){
                 $ac_firstInpectionDate = $this->convertStrToDate($ac_firstInpectionDate);
                 $qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
-            }else{
-                $qcSchedule->setApFirstInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
-            }
+            //}else{
+                //$qcSchedule->setApFirstInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
+            //}
         }
         if (! empty($ac_productionStartDate)) {
             $ac_productionStartDate = $this->convertStrToDate($ac_productionStartDate);
@@ -893,6 +930,18 @@ class QCScheduleImportUtil
             $ac_graphicDateReceive = $this->convertStrToDate($ac_graphicDateReceive);
             $qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
         }
+
+        if (! empty($ac_firstInspectionNotes)) {
+            $qcSchedule->setAcFirstInspectionNotes($ac_firstInspectionNotes);
+        }
+        if (! empty($ac_middleInspectionNotes)) {
+            $qcSchedule->setAcMiddleInspectionNotes($ac_middleInspectionNotes);
+        }
+        if (! empty($ac_finalInspectionNotes)) {
+            $qcSchedule->setNotes($ac_finalInspectionNotes);
+        }
+        
+        
         if (! empty($note)) {
             $qcSchedule->setNotes($note);
         }

@@ -860,7 +860,7 @@ function loadGrid(){
                 deleteQCSchedule(gridId,deleteUrl);
             }); */
             importButton.click(function (event) {
-                location.href = ("adminImportQCSchedules.php");
+                location.href = ("adminNewOrUpdateQCSchedules.php");
             });
             // importCompletedButton.click(function (event) {
             // 	importCompeleted();

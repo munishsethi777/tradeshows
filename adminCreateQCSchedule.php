@@ -172,6 +172,8 @@ if($isSessionGeneralUser && !$isSessionSV){
                              		?>
 	                            	<input style="display: none" type="text" id="po" maxLength="250" value="" name="po" class="form-control">
 	                            </div>
+	                       </div>
+	                       <div class="form-group row">
 	                            <label class="col-lg-2 col-form-label bg-formLabel">Class Code</label>
 	                        	<div class="col-lg-4">
  	                            	<input type="hidden" name="classcode" id="classcode">
