@@ -153,7 +153,7 @@ class DropDownUtils {
 	public static function getChinaTeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 		$userMgr = UserMgr::getInstance();
 		$enums = $userMgr->getChinaTeamUsersForDD();
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select User");
 	}
 	
 	public static function getTimezone($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) { 

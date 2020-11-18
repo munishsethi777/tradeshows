@@ -362,7 +362,7 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 	
 	public function getChinaTeamUsersForDD(){
 		$china_permission = Permissions::getName(Permissions::china_team);
-		$query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 and userroles.role = '$china_permission'";
+		$query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 and userroles.role = '$china_permission' order by users.fullname";
 		$users = self::$userDataStore->executeObjectQuery($query);
 		$arr = array();
 		foreach ($users as $user){

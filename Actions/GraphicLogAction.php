@@ -63,7 +63,7 @@ if($call == "saveGraphicLog"){
 		}
 		$graphicLog->setSeq($seq);
 		if(empty($graphicLog->getUserSeq())){
-			$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
+			//$graphicLog->setUserSeq($sessionUtil->getUserLoggedInSeq());
 		}
 		$graphicLog->setCreatedOn(new DateTime());
 		$graphicLog->setLastModifiedOn(new DateTime());
