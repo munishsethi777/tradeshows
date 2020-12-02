@@ -176,4 +176,8 @@ class StringConstants{
 	const SELECT_ANY = "Select Any";
 
 	const UPDATE_MESSAGE_FOR_QCSCHEDULES = "Clicking on the following button to update QCSchedules for these classcodes ({CLASS_CODES}) with {TYPE} as {USER}";
+
+	// Instruction Manaul Logs Constants
+	const INSTRUCTION_MANUAL_LOG_SAVED_SUCCESSFULLY   = "Instruction Manual Log saved successfully!";
+	const INSTRUCTION_MANUAL_LOG_UPDATED_SUCCESSFULLY   = "Instruction Manual Log updated successfully!";
 }
