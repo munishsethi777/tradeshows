@@ -190,7 +190,7 @@ ul.nav-second-level{
 }
 .bg-formLabelMauve{
 	background-color:#A4C2F4;
-	color:black;
+	color:White;
 	padding:9px 7px !important;
 }
 .bg-formLabelYellow{
@@ -244,6 +244,11 @@ ul.nav-second-level{
 	padding:4px !important;
 	font-weight:400;
 }
+.bg-formLabelPeach{
+	background-color:#F8CBAD;
+	color:black;
+	padding:9px 7px !important;
+}
 
 .list-group-item{
 	font-size:12px;
@@ -272,7 +277,14 @@ ul.nav-second-level{
 body{
 	background-color:white !important;
 }
-
+.panel-yellow{
+	border-color:yellow !important;
+}
+.panel-yellow > .panel-heading {
+	background-color:yellow !important;
+	border-color: yellow !important;
+	color:black;
+}
 
 .ripple {
   width: 0;
