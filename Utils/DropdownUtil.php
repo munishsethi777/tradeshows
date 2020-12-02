@@ -1,4 +1,7 @@
 <?php
+
+use Aws\S3\Enum\Permission;
+
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReasonCodeType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/TagType.php");
@@ -24,13 +27,19 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/BooleanType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/FreightForwarder.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/SellerResponsibilityType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerQuestionaireArePoExpecting.php");
-
+require_once($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualNewOrRevised.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerNameType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualRequestedChanges.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualLogStatus.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Utils/TimeZone.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleUpdateOptions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/Permissions.php");
+
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -181,11 +190,10 @@ class DropDownUtils {
 	    $enums = TruckerType::getAll();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
 	}
-	
 	public static function getBuyerCategories($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = BuyerCategoryType::getAll();
 	    //sort($enums);
-	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	public static function getSellerResponsibilitiesType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
 	    $enums = SellerResponsibilityType::getAll();
@@ -287,5 +295,35 @@ class DropDownUtils {
 	        $selectedValue = "";
 	    }
 	    return self::getDropDown1($enums, $selectName,$onChangeMethod, $selectedValue, $isRequired, true, "");
+	}
+	public static function getInstructionManualType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$enums =  InstructionManualType::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, true);
+	}
+	public static function getInstructionManualNewOrRevised($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$enums =  InstructionManualNewOrRevised::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, true);
+	}
+	public static function getCustomerNameType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled,$isMultiSelect=false) {
+		$enums =  CustomerNameType::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Customer",$isMultiSelect,$disabled);
+	}
+	public static function getInstructionManualRequestedChanges($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled,$isMultiSelect=false){
+		$enums =  InstructionManualRequestedChanges::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Requested Changes",$isMultiSelect,$disabled);
+	}
+	public static function getInstructionManualTechnicalWriterUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_technical_team);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
+	}
+	public static function getInstructionManualLogStatus($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$enums =  InstructionManualLogStatus::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, true);
+	}
+	public static function getInstructionManualChinaTeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_china_team);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
 	}
 }

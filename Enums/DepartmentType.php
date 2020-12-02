@@ -10,4 +10,5 @@ class DepartmentType extends BasicEnum{
 	const Manage_Customers = "Manage Customers";
 	const Email_Logs = "Email Logs";
 	const Shipping_Logs = "Shipping Logs";
+	const Instruction_Manual = "Instruction Manual";
 }

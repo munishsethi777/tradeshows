@@ -15,4 +15,7 @@ class Permissions extends BasicEnum{
 	const manage_customers = "Manage Customers";
 	const po_incharge = "PO Incharge";
 	const qc_isreadonly = "Readonly";
+	const instruction_manual_usa_team = "Instruction Manual USA Team";
+	const instruction_manual_china_team = "Instruction Manual China Team";
+	const instruction_manual_technical_team = "Instruction Manual Technical Team";
 }

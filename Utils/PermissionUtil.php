@@ -59,6 +59,17 @@ class PermissionUtil{
 	public function hasQCReadonly(){
 		return in_array(Permissions::getName(Permissions::qc_isreadonly),self::$permissions);
 	}
+	public function hasInstructionManualUsaTeamPermission(){
+		return in_array(Permissions::getName(Permissions::instruction_manual_usa_team),self::$permissions);
+	}
+	public function hasInstructionManualChinaTeamPermission(){
+		return in_array(Permissions::getName(Permissions::instruction_manual_china_team),self::$permissions);
+	}
+	public function hasInstructionManualTechnicalTeamPermission(){
+		return in_array(Permissions::getName(Permissions::instruction_manual_technical_team),self::$permissions);
+	}
+
+
 	
 	public function hasQCDepartment(){
 		return in_array(DepartmentType::QC_Schedules,self::$departments);

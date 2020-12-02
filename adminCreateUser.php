@@ -15,6 +15,7 @@ require_once ($ConstantsArray['dbServerUrl'] . "Enums/ContainerScheduleNotificat
 require_once ($ConstantsArray['dbServerUrl'] . "Utils/DropdownUtil.php");
 require_once ($ConstantsArray['dbServerUrl'] . "BusinessObjects/ClassCode.php");
 require_once ($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualNotificationType.php");
 
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
@@ -54,6 +55,11 @@ $userDepartmentChecked = "";
 $emailLogsChecked = "";
 $itemSpecificsChecked = "";
 $qcReadOnlyChecked = "";
+$instructionManualDepartmentChecked = "";
+$instructionManualUsaTeamChecked = "";
+$instructionManualChinaTeamChecked = "";
+$instructionManualTechnicalTeamChecked = "";
+
 if (isset($_POST["id"])) {
     $seq = $_POST["id"];
     $user = $userMgr->findBySeq($seq);
@@ -117,6 +123,15 @@ if (in_array(Permissions::qc_planner_button, $userRoles)) {
 if (in_array(Permissions::approved_reject_notification, $userRoles)) {
     $qcApprovedRejectNotification = "checked";
 }
+if (in_array(Permissions::instruction_manual_usa_team, $userRoles)) {
+    $instructionManualUsaTeamChecked = "checked";
+}
+if (in_array(Permissions::instruction_manual_china_team, $userRoles)) {
+    $instructionManualChinaTeamChecked = "checked";
+}
+if (in_array(Permissions::instruction_manual_technical_team, $userRoles)) {
+    $instructionManualTechnicalTeamChecked = "checked";
+}
 if (in_array(1, $departmentSeqArr)) {
     $qcDepartmentChecked = "checked";
 }
@@ -140,6 +155,9 @@ if (in_array(9, $departmentSeqArr)){
 }
 if (in_array(3, $departmentSeqArr)) {
     $itemSpecificsChecked = "checked";
+}
+if (in_array(10, $departmentSeqArr)) {
+    $instructionManualDepartmentChecked = "checked";
 }
 /*
  * echo $optiondata = array('<script type="text/javascript">
@@ -831,6 +849,92 @@ if (in_array(3, $departmentSeqArr)) {
 											<div class="panel panel-primary">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
+														<input type="checkbox"
+															<?php echo $instructionManualDepartmentChecked?> value="10"
+															id="instructionManualDepartment" name="departments[]" />
+													</div>
+													Instruction Manual Logs
+												</div>
+												<div id='instructionManualPermissionsDiv'
+													class="panel-body i-checks">
+													<label
+														class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"> <input
+														type="checkbox" <?php echo $instructionManualUsaTeamChecked?>
+														value="instruction_manual_usa_team" id="instructionmanualusateampermission"
+														name="permissions[]" /> USA Team
+													</label> <label
+														class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm">
+														<input type="checkbox"
+														<?php echo $instructionManualChinaTeamChecked?>
+														value="instruction_manual_china_team"
+														id="instructionmanualchinateampermission" name="permissions[]" />
+														China Team
+													</label> <label
+														class="col-lg-3 col-form-label bg-formLabelMauve"> <input
+														type="checkbox" <?php echo $instructionManualTechnicalTeamChecked?>
+														value="instruction_manual_technical_team"
+														id="instructionmanualtechnicalteampermission" name="permissions[]" />
+														Technical Team
+													</label>
+                									<div class="col-lg-12">
+														<h4>Select Notifications</h4>
+													</div>
+													<ul class="col-lg-6 todo-list ui-sortable p-h-xs">
+														<li><input name="permissions[]" type="checkbox"
+															value="<?php echo InstructionManualNotificationType::getName(InstructionManualNotificationType::date_diagram_saved_instant); ?>"
+															<?php echo in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::date_diagram_saved_instant), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">
+																<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::date_diagram_saved_instant) ?>
+															</span> 
+															<label class="fa fa-question-circle"
+																data-toggle="tooltip" data-placement="left"
+																title="<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::date_diagram_saved_instant) ?>">
+															</label>
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="<?php echo InstructionManualNotificationType::getName(InstructionManualNotificationType::diagram_saved_by_instant); ?>"
+															<?php echo in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::diagram_saved_by_instant), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">
+																<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::diagram_saved_by_instant) ?>
+															</span> 
+															<label class="fa fa-question-circle"
+																data-toggle="tooltip" data-placement="left"
+																title="<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::diagram_saved_by_instant) ?>">
+															</label>
+														</li>
+													</ul>
+
+													<ul class="col-lg-6 todo-list ui-sortable p-xs">
+														<li><input name="permissions[]" type="checkbox"
+															value="<?php echo InstructionManualNotificationType::getName(InstructionManualNotificationType::notes_to_usa_office_saved_instant); ?>"
+															<?php echo in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::notes_to_usa_office_saved_instant), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">
+																<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::notes_to_usa_office_saved_instant) ?>
+															</span> 
+															<label class="fa fa-question-circle"
+																data-toggle="tooltip" data-placement="left"
+																title="<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::notes_to_usa_office_saved_instant) ?>">
+															</label>
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="<?php echo InstructionManualNotificationType::getName(InstructionManualNotificationType::entered_by_instant); ?>"
+															<?php echo in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::entered_by_instant), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">
+																<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::entered_by_instant) ?>
+															</span> 
+															<label class="fa fa-question-circle"
+																data-toggle="tooltip" data-placement="left"
+																title="<?php echo InstructionManualNotificationType::getValue(InstructionManualNotificationType::entered_by_instant) ?>">
+															</label>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm">
 														<input type="checkbox" <?php echo $shippinglogDepartmentChecked?> value="9" id="shippinglogDepeartment" name = "departments[]">
 													</div>
 													Shipping Logs 
@@ -902,7 +1006,7 @@ if (in_array(3, $departmentSeqArr)) {
 										</div>
 										<div class="col-lg-2">
 											<button class="btn btn-primary" onclick="saveUserAndContinue()"
-											type="button" style="width:85%">Save And Continue</button>
+											type="button">Save And Continue</button>
 										</div>
 										<div class="col-lg-2">
 											<a class="btn btn-default" href="adminManageUsers.php"

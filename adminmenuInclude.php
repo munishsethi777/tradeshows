@@ -73,6 +73,8 @@ if($file == "dashboardmain.php"){
     $manageEmailLogs ="active";
 }elseif($file == "manageTeams.php" || $file == "createTeam.php"){
     $manageTeams = "active";
+}elseif($file == "adminManageInstructionManualLogs.php" || $file == "adminCreateInstructionManualLogs.php"){
+    $manageInstructionManualLog = "active";
 }
 
 
@@ -140,6 +142,12 @@ if($file == "dashboardmain.php"){
 					<a href="adminManageShippinglog.php">
 						<i class="fa fa-ship"></i>
 						<span class="nav-label">Shipping Logs</span>
+					</a>
+				</li>
+				<li class="<?php echo $manageInstructionManualLog;?>">
+					<a href="adminManageInstructionManualLogs.php">
+						<i class="fa fa-file-text"></i>
+						<span class="nav-label">Instruction Manual Logs</span>
 					</a>
 				</li>
                  <!--
@@ -280,6 +288,14 @@ if($file == "dashboardmain.php"){
 						<a href="adminManageShippinglog.php">
 							<i class="fa fa-ship"></i>
 							<span class="nav-label">Shipping Logs</span>
+						</a>
+					</li>
+					<?php }?>
+					<?php if(in_array(DepartmentType::Instruction_Manual,$departments)){?>
+					<li class="<?php echo $manageInstructionManualLog?>">
+						<a href="adminManageInstructionManualLogs.php">
+							<i class="fa fa-ship"></i>
+							<span class="nav-label">Instruction Manual Logs</span>
 						</a>
 					</li>
 					<?php }?>

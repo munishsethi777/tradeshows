@@ -428,4 +428,15 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 	    }
 	    return null;
 	}
+	public function getUsersForDDByPermission($permissionType){
+		$permissionName = Permissions::getName($permissionType);
+		// $query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq inner join userroles on users.seq = userroles.userseq where userdepartments.departmentseq = 2 and userroles.role = '$permissionName'";
+		$query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq inner join userroles on users.seq = userroles.userseq where userroles.role = '$permissionName'";
+		$users = self::$userDataStore->executeObjectQuery($query);
+		$arr = array();
+		foreach ($users as $user){
+			$arr[$user->getSeq()] = $user->getFullName();
+		}
+		return $arr;
+	}
 }
