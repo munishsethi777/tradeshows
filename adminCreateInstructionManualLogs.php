@@ -53,7 +53,28 @@
         <title>Admin | Instruction Manual Log</title>
         <?include "ScriptsInclude.php"?>
         <style type="text/css">
-        </style>
+            .col-form-label{
+                font-weight:400 !important;
+                line-height: 1.2 !important;
+            }
+            .areaTitle{
+                margin:0px 0px 0px 15px !important;
+                color:#1ab394;
+                font-size:15px;
+            }
+            .bg-white{
+                background-color:rgb(252,252,252);
+            }
+            .bg-muted{
+            }
+            .outterDiv{
+                border-bottom:1px silver dashed;
+                padding:20px 10px;
+            }
+            #graphicstatus{
+                margin-bottom:0px !important;
+            }
+            </style>
     </head>
     <body>
         <div id="wrapper">
@@ -104,7 +125,7 @@
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print by :</label>
+                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
                                                     <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control dateControl" <?php echo $readOnlyPO?>>

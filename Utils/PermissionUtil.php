@@ -83,7 +83,9 @@ class PermissionUtil{
 	public function hasManageCustomerDepartment(){
 	    return in_array(DepartmentType::Manage_Customers,self::$departments);
 	}
-	
+	public function hasInstructionManualLogsDepartment(){
+	    return in_array(DepartmentType::Instruction_Manual,self::$departments);
+	}
 	public static function isAuthenticate($page){
 			self::$sessionUtil = SessionUtil::getInstance();
 			self::$departments = self::$sessionUtil->getUserDepartments();

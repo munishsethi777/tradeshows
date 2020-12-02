@@ -1,6 +1,5 @@
 <?php
 
-use Aws\S3\Enum\Permission;
 
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReasonCodeType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/GraphicType.php");
@@ -306,11 +305,11 @@ class DropDownUtils {
 	}
 	public static function getCustomerNameType($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled,$isMultiSelect=false) {
 		$enums =  CustomerNameType::getAll();
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Customer",$isMultiSelect,$disabled);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Customer",$isMultiSelect,$disabled);
 	}
 	public static function getInstructionManualRequestedChanges($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$disabled,$isMultiSelect=false){
 		$enums =  InstructionManualRequestedChanges::getAll();
-		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true,"Select Requested Changes",$isMultiSelect,$disabled);
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Requested Changes",$isMultiSelect,$disabled);
 	}
 	public static function getInstructionManualTechnicalWriterUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
 		$userMgr = UserMgr::getInstance();

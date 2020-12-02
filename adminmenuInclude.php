@@ -30,6 +30,7 @@ $isManageUsers = "";
 $manageContainerSchedules = "";
 $manageEmailLogs = "";
 $manageTeams ="";
+$manageInstructionManualLog = "";
 //echo  $file;
 if($file == "dashboardmain.php"){
 	$isDashboard = "active";
@@ -146,8 +147,8 @@ if($file == "dashboardmain.php"){
 				</li>
 				<li class="<?php echo $manageInstructionManualLog;?>">
 					<a href="adminManageInstructionManualLogs.php">
-						<i class="fa fa-file-text"></i>
-						<span class="nav-label">Instruction Manual Logs</span>
+						<i class="fa fa-wrench"></i>
+						<span class="nav-label">Instruction Manuals</span>
 					</a>
 				</li>
                  <!--
@@ -294,8 +295,8 @@ if($file == "dashboardmain.php"){
 					<?php if(in_array(DepartmentType::Instruction_Manual,$departments)){?>
 					<li class="<?php echo $manageInstructionManualLog?>">
 						<a href="adminManageInstructionManualLogs.php">
-							<i class="fa fa-ship"></i>
-							<span class="nav-label">Instruction Manual Logs</span>
+							<i class="fa fa-wrench"></i>
+							<span class="nav-label">Instruction Manuals</span>
 						</a>
 					</li>
 					<?php }?>

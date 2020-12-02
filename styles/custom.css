@@ -194,7 +194,7 @@ ul.nav-second-level{
 	padding:9px 7px !important;
 }
 .bg-formLabelYellow{
-	background-color:#ffff00;
+	background-color:#ffffb9;
 	color:black;
 	padding:9px 7px !important;
 }
@@ -281,7 +281,7 @@ body{
 	border-color:yellow !important;
 }
 .panel-yellow > .panel-heading {
-	background-color:yellow !important;
+	background-color:#ffffb9 !important;
 	border-color: yellow !important;
 	color:black;
 }

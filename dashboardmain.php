@@ -78,6 +78,17 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
     									</div>
     		                        </div>
 		                        <?php }?>
+							<?php if($isSessionAdmin || $permissionUtil->hasInstructionManualLogsDepartment()){?>
+								<div class="col-lg-3">
+									<div class="widget bg-success text-center  p-h-xl">
+										<div class="row">
+											<a href="adminManageInstructionManualLogs.php">
+											<h1 class="m-t-xs font-bold"><i class="fa fa-wrench"></i></h1>
+											<span>Instruction Manuals</span></a>
+										</div>
+									</div>
+								</div>
+							<?php }?>
 		                    <?php if(empty( 
 		                        ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || 
 		                        ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || 

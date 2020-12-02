@@ -8,7 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Manage Graphic Logs</title>
+    <title>Admin | Manage Instruction Manual Logs</title>
     <?include "ScriptsInclude.php"?>
     <style type="text/css">
     	.itemDetailsModalDiv .lblDesc{
@@ -47,7 +47,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 									style="margin-bottom: 0">
 									<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 										href="#"><i class="fa fa-bars"></i> </a>
-									<h4 class="p-h-sm font-normal">Manage Graphic Logs</h4>
+									<h4 class="p-h-sm font-normal">Manage Instruction Manual Logs</h4>
 								</nav>
 							</div>
 							<div class="ibox-content" >
