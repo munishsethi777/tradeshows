@@ -1,1 +1,1 @@
-Insert into departments('title','isenabled','createdon','lastmodifiedon') VALUES('Instruction Manual','1','2020-11-26 00:00:00','2020-11-26 00:00:00')
+Insert into departments(`title`,`isenabled`,`createdon`,`lastmodifiedon`) VALUES('Instruction Manual','1','2020-11-26 00:00:00','2020-11-26 00:00:00')
