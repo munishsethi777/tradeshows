@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl']. "Enums/GraphicStatusType.php");
 require_once($ConstantsArray['dbServerUrl']. "Managers/ContainerScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl']. "DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl']. "Managers/QCScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl']. "Managers/InstructionManualLogsMgr.php");
 class ReportingDataMgr{
     private static $reportingDataMgr;
     private static $reportingDataDataStore;
@@ -27,26 +28,34 @@ class ReportingDataMgr{
         $departmentType = null;
         foreach ($methodNames as $key => $value){
             try{
-                if(strpos($key,'qc_') !== false){
-                    $object = QCScheduleMgr::getInstance();
-                    $departmentType = DepartmentType::getName(DepartmentType::QC_Schedules);
-                    $count = count(call_user_func(array($object,$value),""));
-                }elseif(strpos($key,'container_') !== false){
-                    $object = ContainerScheduleDataStore::getInstance();
-                    $departmentType = DepartmentType::getName(DepartmentType::Container_Schedules);
-                    $count = count(call_user_func(array($object,$value),""));
-                }elseif(strpos($key,'graphiclog_') !== false){
-                    $object = $this->getInstance();
-                    $departmentType = DepartmentType::getName(DepartmentType::Graphics_Logs);
-                    $count = call_user_func(array($object,$value),"");
+                if(strpos($key,'qc_') !== false || strpos($key,'container_') !== false ||
+                strpos($key,'graphiclog_') !== false || strpos($key,'instruction_manual') !== false
+                ){
+                    if(strpos($key,'qc_') !== false){
+                        $object = QCScheduleMgr::getInstance();
+                        $departmentType = DepartmentType::getName(DepartmentType::QC_Schedules);
+                        $count = count(call_user_func(array($object,$value),""));
+                    }elseif(strpos($key,'container_') !== false){
+                        $object = ContainerScheduleDataStore::getInstance();
+                        $departmentType = DepartmentType::getName(DepartmentType::Container_Schedules);
+                        $count = count(call_user_func(array($object,$value),""));
+                    }elseif(strpos($key,'graphiclog_') !== false){
+                        $object = $this->getInstance();
+                        $departmentType = DepartmentType::getName(DepartmentType::Graphics_Logs);
+                        $count = call_user_func(array($object,$value),"");
+                    }elseif(strpos($key,'instruction_manual_') !== false){
+                        $object = InstructionManualLogsMgr::getInstance();
+                        $departmentType = DepartmentType::getName(DepartmentType::Instruction_Manual);
+                        $count = call_user_func(array($object,$value),"");
+                    }
+                    
+                    $reportingData = new ReportingData();
+                    $reportingData->setCount($count);
+                    $reportingData->setDated(new DateTime());
+                    $reportingData->setDepartment($departmentType);
+                    $reportingData->setParameter($key);
+                    self::$reportingDataDataStore->save($reportingData);
                 }
-                
-                $reportingData = new ReportingData();
-                $reportingData->setCount($count);
-                $reportingData->setDated(new DateTime());
-                $reportingData->setDepartment($departmentType);
-                $reportingData->setParameter($key);
-                self::$reportingDataDataStore->save($reportingData);
             }catch(Exception $e){
                 array_push($msg,$e->getMessage());
             }             
@@ -110,7 +119,7 @@ class ReportingDataMgr{
     
     
     //fetch data from reportingdata table
-    public function getGraphicReportData($parameterType){
+    public function getReportingData($parameterType){
         $query = "SELECT count FROM `reportingdata` where parameter like '".$parameterType."' ORDER BY dated desc limit 30";
         $graphicReportData = self::$reportingDataDataStore->executeQuery($query,false,true);
         return $graphicReportData;

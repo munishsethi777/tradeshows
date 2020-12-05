@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/InstructionManualCustomersMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualNotificationType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
 
 class InstructionManualLogReportUtil
 { 
@@ -110,6 +111,33 @@ class InstructionManualLogReportUtil
                 foreach ($users as $user){
                     $emaillogMgr->saveEmailLog(EmailLogType::INSTRUCTION_MANUAL_NOTES_TO_USA_CHANGED ,$user->getEmail(), null,$user->getSeq());
                 }
+            }
+        }
+    }
+    public static function sendInstructionManualLogStatusUpdatedNotification($instructionManual,$sendEmailTo){
+        $userMgr = UserMgr::getInstance();
+        $user = $userMgr->findBySeq($sendEmailTo);
+        if(empty($user)){
+            return;
+        }
+        $sendEmailTo = $user->getEmail();
+        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $phAnValues = array();
+        $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+        $phAnValues["SEND_EMAIL_TO"] = $user->getFullName();
+        $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = InstructionManualLogStatus::getValue($instructionManual->getInstructionManualLogStatus());
+        // $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = "Awaiting Information From China";
+        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualStatusChangedTemplate.php";
+        $content = file_get_contents($emailTemplatePath);
+        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+        $html = MailUtil::appendToEmailTemplateContainer($content);
+        $toEmails = array($sendEmailTo);
+        if(!empty($toEmails)){
+            $subject = "Alpine BI Instruction Manual | Diagram Saved Date Changed on Alpinebi";
+            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+            if($flag){
+                $emaillogMgr = EmailLogMgr::getInstance();
+                $emaillogMgr->saveEmailLog(EmailLogType::INSTRUCTION_MANUAL_DIAGRAM_SAVED_DATE_CHANGED ,$user->getEmail(), null,$user->getSeq());
             }
         }
     }

@@ -84,5 +84,56 @@
             }
             return $date;
         }
+        //-----------------------------Cron Functions-------------------------------------------------
+        public function getInstructionManualProjectsOpenCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where iscompleted IS NULL OR iscompleted = false";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsCompletedCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where iscompleted IS TRUE";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsOverdueCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsInSupervisorReviewCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsInManagerReviewCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsInBuyerReviewCount(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsDueToday(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where (iscompleted IS NULL OR iscompleted = false) AND graphicduedate like '".date('Y-m-d')."'";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsDueInNext14Days(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where graphicduedate > '".date('Y-m-d')."' AND graphicduedate <= '".date('Y-m-d',strtotime('14 days'))."'";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsDueLessThan14DaysFromEntry(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where DATEDIFF(graphicduedate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
+        public function getInstructionManualProjectsNotStarted(){
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where starteddate IS NULL";
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;
+        }
     }
 ?>

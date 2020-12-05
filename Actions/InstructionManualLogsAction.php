@@ -8,6 +8,7 @@
     require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/InstructionManualRequests.php");
     require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");    
     require_once($ConstantsArray['dbServerUrl'] ."Utils/InstructionManualLogReportUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
     
     $success=1;
     $message='';
@@ -16,7 +17,6 @@
     $instructionManualLogMgr = InstructionManualLogsMgr::getInstance();
     $instructionManualCustomersMgr = InstructionManualCustomersMgr::getInstance();
     $instructionManualRequestsMgr = InstructionManualRequestsMgr::getInstance();
-
     $arr = array();  
     if(isset($_GET['call'])){
         $call = $_GET['call'];
@@ -41,6 +41,7 @@
             $existingInstructionManualLog = null;
             $isDiagramSavedDateUpdated = false;
             $isNotesToUsaUpdated = false;
+            $isDiagramSavedByUpdate = false;
             if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
                 $seq = $_REQUEST['seq'];
                 $message = StringConstants::INSTRUCTION_MANUAL_LOG_UPDATED_SUCCESSFULLY;
@@ -50,6 +51,7 @@
                     $isDiagramSavedDateUpdated = $newDiagramSavedDate != $existingInstructionManualLog->getDiagramSavedDate();    
                 }
                 $isNotesToUsaUpdated = $instructionManualLog->getNotesToUsa() != $existingInstructionManualLog->getNotesToUsa();
+                $isDiagramSavedByUpdate = $instructionManualLog->getInstructionManualLogStatus() != $existingInstructionManualLog->getInstructionManualLogStatus();
             }
 
             $id = $instructionManualLogMgr->save($instructionManualLog);
@@ -71,6 +73,16 @@
                 }
                 if($isNotesToUsaUpdated){
                     InstructionManualLogReportUtil::sendInstructionManualNotesToUsaUpdatedNotification($instructionManualLog,"USA");
+                }
+                if($isDiagramSavedByUpdate){
+                    if($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_from_china)){
+                        $sendEmailToSeq = $instructionManualLog->getDiagramSavedByUserSeq();
+                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$sendEmailToSeq);
+                    }
+                    if($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_form_buyers)){
+                        $sendEmailToSeq = $instructionManualLog->getCreatedBy();
+                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$sendEmailToSeq);
+                    }
                 }
             }
         }catch(Exception $e){

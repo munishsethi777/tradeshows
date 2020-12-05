@@ -2,6 +2,9 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
+
+$allReportingDataParameters = ReportingDataParameterType :: getAll(); 
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,221 +61,39 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                                             <a class="collapse-link">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
-<!--                                             <a class="close-link"> -->
-<!--                                                 <i class="fa fa-times"></i> -->
-<!--                                             </a> -->
+											<!--<a class="close-link"> -->
+											<!--<i class="fa fa-times"></i> -->
+											<!--</a> -->
                                         </div>
                                     </div>
-        							<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-        								<div class="row reportDataCountRow">
-        									<div class="col-lg-2 col-lg-offset-1">
-        										<div class="ibox float-e-margins">
-        											<div class="ibox-content text-center">
-        												<h1 class="no-margins" id='graphicLogProjectsCompletedCountCurrent'></h1>
-        												<div class="col-lg-12 stat-percent font-bold text-info" id='graphicLogProjectsCompletedCountChangeColor'>
-        													<i class="fa" id='graphicLogProjectsCompletedCountChangeArrow'></i>
-        													<span class="text-center" id='graphicLogProjectsCompletedCountDiff'></span>
-        													<span id='graphicLogProjectsCompletedCountPercent'></span>
-        												</div>
-        												<small class="dataName">Completed</small>
-        												<span class="bar" id='graphicLogProjectsCompletedCountThirtyDays'></span>
-        											</div>
-        										</div>
-        									</div>
-        									<div class="col-lg-2">
-        										<div class="ibox float-e-margins">
-        											<div class="ibox-content text-center">
-        												<h1 class="no-margins" id='graphicLogProjectsOverDueTillNowCountCurrent'></h1>
-        												<div class="col-lg-12 stat-percent font-bold text-info" id='graphicLogProjectsOverDueTillNowCountChangeColor' >
-        													<i class="fa" id='graphicLogProjectsOverDueTillNowCountChangeArrow'></i>
-        													<span id='graphicLogProjectsOverDueTillNowCountDiff'></span>
-        													<span id='graphicLogProjectsOverDueTillNowCountPercent'></span>
-        												</div>
-        												<small class="dataName">Overdue</small>
-        												<div class="bar" id='graphicLogProjectsOverDueTillNowCountThirtyDays'></div>
-        											</div>
-        										</div>
-        									</div>
-        									<div class="col-lg-2">
-        										<div class="ibox float-e-margins">
-        											<div class="ibox-content text-center">
-        												<h1 class="no-margins" id='graphicLogProjectsInRobbyReviewCountCurrent'></h1>
-        												<div class="col-lg-12 stat-percent font-bold text-info" id='graphicLogProjectsInRobbyReviewCountChangeColor' >
-        													<i class="fa" id='graphicLogProjectsInRobbyReviewCountChangeArrow'></i>
-        													<span id='graphicLogProjectsInRobbyReviewCountDiff'></span>
-        													<span id='graphicLogProjectsInRobbyReviewCountPercent'></span>
-        												</div>
-        												<small class="dataName">Robby's Review</small>
-        												<span class="bar" id='graphicLogProjectsInRobbyReviewCountThirtyDays'></span>
-        											</div>
-        										</div>
-        									</div>
-        									<div class="col-lg-2">
-        										<div class="ibox float-e-margins">
-        											<div class="ibox-content text-center">
-        												<h1 class="no-margins" id='graphicLogProjectsInBuyerReviewCountCurrent'></h1>
-        												<div class="col-lg-12 stat-percent font-bold text-info" id='graphicLogProjectsInBuyerReviewCountChangeColor' >
-        													<i class="fa" id='graphicLogProjectsInBuyerReviewCountChangeArrow'></i>
-        													<span id='graphicLogProjectsInBuyerReviewCountDiff'></span>
-        													<span id='graphicLogProjectsInBuyerReviewCountPercent'></span>
-        												</div>
-        												<small class="dataName">Buyer's Review</small>
-        												<span class="bar" id='graphicLogProjectsInBuyerReviewCountThirtyDays'></span>
-        											</div>
-        										</div>
-        									</div>
-        									<div class="col-lg-2">
-        										<div class="ibox float-e-margins">
-        											<div class="ibox-content text-center">
-        												<h1 class="no-margins" id='graphicLogProjectsInManagerReviewCountCurrent'></h1>
-        												<div class="col-lg-12 stat-percent font-bold text-info" id='graphicLogProjectsInManagerReviewCountChangeColor' >
-        													<i class="fa" id="graphicLogProjectsInManagerReviewCountChangeArrow"></i>
-        													<span id='graphicLogProjectsInManagerReviewCountDiff'></span>
-        													<span id='graphicLogProjectsInManagerReviewCountPercent'></span>
-        												</div>
-        												<small class="dataName">Manager's Review</small>
-        												<span class="bar" id='graphicLogProjectsInManagerReviewCountThirtyDays'></span>
-        											</div>
-        										</div>
-        									</div>
-        									
-        								</div>
-        							<div class="row reportDataCountRow">
-									
-    									<div class="col-lg-2 col-lg-offset-1">
-    										<div class="ibox float-e-margins">
-    											<div class="ibox-content text-center">
-    												<h1 class="no-margins" id='graphicLogProjectMissingInfoFromChinaCountCurrent'></h1>
-    												<div class="col-lg-12 stat-percent font-bold text-info" id="graphicLogProjectMissingInfoFromChinaCountChangeColor" >
-    													<i class="fa" id="graphicLogProjectMissingInfoFromChinaCountChangeArrow"></i>
-    													<span id='graphicLogProjectMissingInfoFromChinaCountDiff'></span>
-    													<span id='graphicLogProjectMissingInfoFromChinaCountPercent'></span>
-    												</div>
-    												<small class="dataName">Missing info from China</small>
-    												<span class="bar" id='graphicLogProjectMissingInfoFromChinaCountThirtyDays'></span>
-    											</div>
-    										</div>
-    									</div>
-    									<div class="col-lg-2">
-    										<div class="ibox float-e-margins">
-    											<div class="ibox-content text-center">
-    												<h1 class="no-margins" id='graphicLogProjectPassedDueWithMissingInfoFromChinaCountCurrent'></h1>
-    												<div class="col-lg-12 stat-percent font-bold text-info" id="graphicLogProjectPassedDueWithMissingInfoFromChinaCountChangeColor">
-    													<i class="fa" id="graphicLogProjectPassedDueWithMissingInfoFromChinaCountChangeArrow"></i>
-    													<span id='graphicLogProjectPassedDueWithMissingInfoFromChinaCountDiff'></span>
-    													<span id='graphicLogProjectPassedDueWithMissingInfoFromChinaCountPercent'></span>
-    												</div>
-    												<small class="dataName">Passed due with M I F China</small>
-    												<span class="bar" id='graphicLogProjectPassedDueWithMissingInfoFromChinaCountThirtyDays'></span>
-    											</div>
-    										</div>
-    									</div>
-    									<div class="col-lg-2">
-    										<div class="ibox float-e-margins">
-    											<div class="ibox-content text-center">
-    												<h1 class="no-margins" id='graphicLogProjectDueLessThan20DaysFromEntryDateCountCurrent'></h1>
-    												<div class="col-lg-12 stat-percent font-bold text-info" id="graphicLogProjectDueLessThan20DaysFromEntryDateCountChangeColor">
-    													<i class="fa" id="graphicLogProjectDueLessThan20DaysFromEntryDateCountChangeArrow"></i>
-    													<span id='graphicLogProjectDueLessThan20DaysFromEntryDateCountDiff'></span>
-    													<span id='graphicLogProjectDueLessThan20DaysFromEntryDateCountPercent'></span>
-    												</div>
-    												<small class="dataName">Due < 20 days from entry</small>
-    												<span class="bar" id='graphicLogProjectDueLessThan20DaysFromEntryDateCountThirtyDays'></span>
-    											</div>
-    										</div>
-    									</div>
-    									<div class="col-lg-2">
-    										<div class="ibox float-e-margins">
-    											<div class="ibox-content text-center">
-    												<h1 class="no-margins" id='graphicLogProjectDuelessThan20DaysFromTodayCountCurrent'></h1>
-    												<div class="col-lg-12 stat-percent font-bold text-info" id="graphicLogProjectDuelessThan20DaysFromTodayCountChangeColor">
-    													<i class="fa" id="graphicLogProjectDuelessThan20DaysFromTodayCountChangeArrow"></i>
-    													<span id='graphicLogProjectDuelessThan20DaysFromTodayCountDiff'></span>
-    													<span id='graphicLogProjectDuelessThan20DaysFromTodayCountPercent'></span>
-    												</div>
-    												<small class="dataName">Due < 20 days from Today</small>
-    												<span class="bar" id='graphicLogProjectDuelessThan20DaysFromTodayCountThirtyDays'></span>
-    											</div>
-    										</div>
-    									</div>
-    									<div class="col-lg-2">
-    										<div class="ibox float-e-margins">
-    											<div class="ibox-content text-center">
-    												<h1 class="no-margins" id='graphicLogProjectDueForTodayCountCurrent'></h1>
-    												<div class="col-lg-12 stat-percent font-bold text-info" id="graphicLogProjectDueForTodayCountChangeColor">
-    													<i class="fa" id="graphicLogProjectDueForTodayCountChangeArrow"></i>
-    													<span id='graphicLogProjectDueForTodayCountDiff'></span>
-    													<span id='graphicLogProjectDueForTodayCountPercent'></span>
-    												</div>
-    												<small class="dataName">Due for Today</small>
-    												<span class="bar" id='graphicLogProjectDueForTodayCountThirtyDays'></span>
-    											</div>
-    										</div>
-    									</div>
-									</div>
-<!-- 								<div class="row reportDataCountRow"> -->
-<!-- 									<div class="col-lg-4"> -->
-<!-- 										<div class="ibox float-e-margins"> -->
-<!-- 											<div class="ibox-content"> -->
-<!--     											<ul class="list-group clear-list no-margins"> -->
-<!--                                                     <li class="list-group-item fist-item"> -->
-<!--                                                     	Projects overdue -->
-<!--                                                         <span class="float-right label label-danger overDueCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects Due for Today -->
-<!--                                                         <span class="float-right label label-danger dueForTodayCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects Due for Next Week -->
-<!--                                                         <span class="float-right label label-danger dueForTillNowCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                 </ul> -->
-<!--                                             </div> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 									<div class="col-lg-4"> -->
-<!-- 										<div class="ibox float-e-margins"> -->
-<!-- 											<div class="ibox-content"> -->
-<!--     											<ul class="list-group clear-list no-margins"> -->
-<!--     												<li class="list-group-item fist-item"> -->
-<!--                                                     	Projects Due with Missing Information from China -->
-<!--                                                         <span class="float-right label label-danger pastDueMissingInfoFromChinaCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects Due in less than 20 days from Entry -->
-<!--                                                         <span class="float-right label label-danger dueLessThan20DaysFromEntryCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects Due in less than 20 days from Today -->
-<!--                                                         <span class="float-right label label-danger dueLessThan20DaysFromTodayCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                 </ul> -->
-<!--                                             </div> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 									<div class="col-lg-4"> -->
-<!-- 										<div class="ibox float-e-margins"> -->
-<!-- 											<div class="ibox-content"> -->
-<!--     											<ul class="list-group clear-list no-margins"> -->
-<!--                                                     <li class="list-group-item fist-item"> -->
-<!--                                                     	Projects in Robby's Review -->
-<!--                                                         <span class="float-right label label-danger robbysReviewCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects in Buyer's Review -->
-<!--                                                         <span class="float-right label label-danger buyersReviewCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                     <li class="list-group-item"> -->
-<!--                                                     	Projects in Manager's Review -->
-<!--                                                         <span class="float-right label label-danger managersReviewCount">-</span> -->
-<!--                                                     </li> -->
-<!--                                                 </ul> -->
-<!--                                             </div> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-								</div>
+									<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
+                                        <div class="row reportDataCountRow">
+                                            <?php 
+                                                foreach($allReportingDataParameters as $key => $value){
+                                                    if(strpos($key,'graphiclog_') !== false){
+                                                        ?>
+                                                        
+                                                        <div class="col-lg-2">
+                                                            <div class="ibox float-e-margins">
+                                                                <div class="ibox-content text-center">
+                                                                    <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
+                                                                    <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
+                                                                        <i class="fa" id='<?php echo $key ?>_change_arrow'></i>
+                                                                        <span class="text-center" id='<?php echo $key ?>_diff'></span>
+                                                                        <span id='<?php echo $key ?>_percent'></span>
+                                                                    </div>
+                                                                    <small class="dataName"><?php echo $value ?></small>
+                                                                    <span class="bar" id='<?php echo $key ?>_thirty_days'></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <?php 
+                                                    }
+                                                } 
+                                            ?>
+                                        </div>
+                                    </div>
 								</div>
 
 								<div class="form-group row">
@@ -480,17 +301,17 @@ function loadDashCounts(){
         	});
 }
 function loadReportingData(){
-	$.getJSON("Actions/ReportingDataAction.php?call=getReportingData",
+	$.getJSON("Actions/ReportingDataAction.php?call=getReportingData&for=graphiclog_",
 		function( response ){
 			$.each(response.data,function(key,value){
-				if(key.includes("ChangeArrow")){
-					$("#"+key).addClass(value);	
- 				}else if(key.includes("ChangeColor")){
- 					$("#"+key).css("color",value);
- 				}else{
- 					$("#"+key).text(value);					
- 				}
- 				console.log(key,value);									
+				if (key.includes("change_arrow")) {
+						$("#" + key).addClass(value);
+				} else if (key.includes("change_color")) {
+					$("#" + key).css("color", value);
+				} else {
+					$("#" + key).text(value);
+				}
+					//console.log(key,value);									
 			});
 			$(".bar").peity("bar", {
                 fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],

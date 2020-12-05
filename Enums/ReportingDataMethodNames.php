@@ -27,6 +27,17 @@ class ReportingDataMethodNames extends BasicEnum{
     const container_schedules_missing_id_count = "getMissingIDReport";
     const container_schedules_missing_received_dates_in_oms_count = "getMissingReceivedDatesInOMS";
     const container_schedules_missing_received_dates_in_wms_count = "getMissingReceivedDatesInWMS";
-    const container_schedules_missing_schedule_delivery_date_count = "getMissingScheduleDeliveryDate";    
+    const container_schedules_missing_schedule_delivery_date_count = "getMissingScheduleDeliveryDate";
+    // Instruction Manual Cron Methods
+    const instruction_manual_total_projects_open = "getInstructionManualProjectsOpenCount";
+    const instruction_manual_total_projects_completed = "getInstructionManualProjectsCompletedCount";
+    const instruction_manual_total_projects_overdue = "getInstructionManualProjectsOverdueCount";
+    const instruction_manual_total_projects_in_supervisor_review = "getInstructionManualProjectsInSupervisorReviewCount";
+    const instruction_manual_total_projects_in_manager_review = "getInstructionManualProjectsInManagerReviewCount";
+    const instruction_manual_total_projects_in_buyer_review = "getInstructionManualProjectsInBuyerReviewCount";
+    const instruction_manual_total_projects_due_today = "getInstructionManualProjectsDueToday";
+    const instruction_manual_total_projects_due_in_next_14_days = "getInstructionManualProjectsDueInNext14Days";
+    const instruction_manual_total_projects_due_less_than_14_days_from_entry = "getInstructionManualProjectsDueLessThan14DaysFromEntry";
+    const instruction_manual_total_projects_not_started = "getInstructionManualProjectsNotStarted";    
 }
 ?>
