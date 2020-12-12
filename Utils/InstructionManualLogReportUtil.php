@@ -45,7 +45,7 @@ class InstructionManualLogReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = "Alpine BI Instruction Manual | Diagram Saved Date Changed on Alpinebi";
+            $subject = "Alpine BI Instruction Manual | Diagram Saved Date Changed";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -99,7 +99,7 @@ class InstructionManualLogReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = "Alpine BI Instruction Manual | ". $noteType . " Notes To USA Updated For Instruction Manual Logs on Alpinebi";
+            $subject = "Alpine BI Instruction Manual | ". $noteType . " Notes To USA updated";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();

@@ -325,4 +325,9 @@ class DropDownUtils {
 		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_china_team);
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
 	}
+	public static function getInstructionManualUSATeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_usa_team);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
+	}
 }

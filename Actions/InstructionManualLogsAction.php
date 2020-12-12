@@ -46,8 +46,8 @@
             }
             $seq = 0;
             $existingInstructionManualLog = null;
-            $isDiagramSavedDateUpdated = false;
-            $isNotesToUsaUpdated = false;
+            $isDiagramSavedDateUpdated = true;
+            $isNotesToUsaUpdated = true;
             $isStatusChange = true;
             if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
                 $seq = $_REQUEST['seq'];

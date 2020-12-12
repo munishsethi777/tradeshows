@@ -117,7 +117,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
         <input type="hidden" id="call" name="call" value="export" />
         <input type="hidden" id="queryString" name="queryString" />
     </form>
-    <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_blank'>
+    <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_self'>
         <input type="hidden" id="id" name="id" />
     </form>
 
@@ -127,36 +127,17 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
-        $(".get-grid-data-by-reporting-data").click(function (){
-            var reportingParameter = $(this).attr("id");
-            var gridId = $("#gridId").val();
-            AddReportingFilter(reportingParameter,gridId);
-            // if(reportingParameter.includes('entry')){
-            //     getProjectsDueLessThan14DaysFromEntry();
-            // }else{
-            //     AddReportingFilter(reportingParameter,gridId);
-            // }
-        });
+        // $(".get-grid-data-by-reporting-data").click(function (){
+        //     var reportingParameter = $(this).attr("id");
+        //     var gridId = $("#gridId").val();
+        //     AddReportingFilter(reportingParameter,gridId);
+        // });
     });
     
     function editButtonClick(seq) {
         $("#id").val(seq);
         $("#form2").submit();
     }
-
-    function AddStatusDefaultFilter() {
-        var filtergroup = new $.jqx.filter();
-        var filter_or_operator = 1;
-
-        // var filterNullShow = filtergroup.createfilter('stringfilter', '', 'NULL');
-        // filtergroup.addfilter(filter_or_operator, filterNullShow);
-
-        // var filterHideSentToPrint = filtergroup.createfilter('stringfilter', 'Sent to Print', 'not_equal');
-        // filtergroup.addfilter(filter_or_operator, filterHideSentToPrint);
-
-        $("#instructionManualLogGrid").jqxGrid('addfilter', 'instructionmanuallogstatus', filtergroup);
-        $("#instructionManualLogGrid").jqxGrid('applyfilters');
-    };
 
     function loadGrid() {
         var actions = function(row, columnfield, value, defaulthtml, columnproperties) {
@@ -165,17 +146,6 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
             html += "<a href='javascript:editButtonClick(" + data['seq'] + ")' ><i class='fa fa-edit' title='Edit Instruction Manual Log'></i></a>";
             html += "</div>";
             return html;
-        }
-        var calculatedDueDateRenderer = function(row, columnfield, value, defaulthtml, columnproperties) {
-            data = $('#instructionManualLogGrid').jqxGrid('getrowdata', row);
-            //     if(data['finalgraphicsduedate'] == null && data['estimatedgraphicsdate'] != null){
-            //     	//return "<font style='color:rgba(26, 179, 148)'>"+ data['estimatedgraphicsdate'] +"</font>";
-            //     	html = '<div style="overflow: hidden; text-overflow: ellipsis; padding-bottom: 2px; text-align: left; margin-right: 2px; margin-left: 4px; margin-top: 4px;color:rgba(26, 179, 148)">';
-            //     	html += dataAdapter.formatDate(data['estimatedgraphicsdate'], 'M-dd-yyyy');
-            // 		html += '</div>';
-            // 		return html;
-            //     }
-            return defaulthtml;
         }
         var statusTypes = ["", "Not Started", "In Progress", "Awaiting Information From China", "Awaiting Information From Buyers", "In Review - Supervisor", "In Review - Manager", "In Review - Buyer", "Sent To China", "Cancelled", "Duplicate"];
         var columns = [{
@@ -190,56 +160,53 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 datafield: 'seq',
                 hidden: true
             },
+            {
+                text: 'Completed',
+                datafield: 'iscompleted',
+                columntype: 'checkbox',
+                width: "6%"
+            },
             { text: 'Entered By', datafield: 'fullname',width:"10%"},
             {
                 text: 'Item No',
                 datafield: 'itemnumber',
-                filtertype: 'date',
-                width: "20%",
-                cellsformat: 'M-dd-yyyy',
-                hidden: false,
-                cellsrenderer: calculatedDueDateRenderer
+                width: "12%",
+                hidden: false
             },
             {
                 text: 'Class',
                 datafield: 'classcode',
-                width: "12%",
+                width: "7%",
                 filtercondition: 'STARTS_WITH'
             },
             {
                 text: 'Entry Date',
                 datafield: 'entrydate',
                 filtertype: 'date',
-                width: "20%",
+                width: "10%",
                 cellsformat: 'M-dd-yyyy'
             },
             {
                 text: 'Graphic Due Date',
                 datafield: 'graphicduedate',
                 filtertype: 'date',
-                width: "20%",
+                width: "10%",
                 cellsformat: 'M-dd-yyyy'
             },
             {
                 text: 'Status',
                 datafield: 'instructionmanuallogstatus',
-                width: "30%",
+                width: "24%",
                 hidden: false,
                 filtertype: 'checkedlist',
                 filteritems: statusTypes,
                 filtercondition: 'equal'
             },
             {
-                text: 'Is Completed',
-                datafield: 'iscompleted',
-                columntype: 'checkbox',
-                width: "10%"
-            },
-            {
                 text: 'Modified On',
                 datafield: 'instructionmanuallogs.lastmodifiedon',
                 filtertype: 'date',
-                width: "20%",
+                width: "14%",
                 cellsformat: 'M-dd-yyyy hh:mm tt'
             }
         ]
@@ -376,19 +343,6 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 addButton.click(function(event) {
                     location.href = ("adminCreateInstructionManualLogs.php");
                 });
-                // editButton.click(function (event){
-                // 	var selectedrowindex = $("#graphiclogGrid").jqxGrid('selectedrowindexes');
-                // 	var value = -1;
-                // 	indexes = selectedrowindex.filter(function(item) { 
-                // 		return item !== value
-                // 	})
-                // 	if(indexes.length != 1){
-                // 		bootbox.alert("Please Select single row for edit.", function() {});
-                // 		return;    
-                // 	}
-                // 	var row = $('#graphiclogGrid').jqxGrid('getrowdata', indexes);
-                // 	editButtonClick(row.seq);
-                // });
                 deleteButton.click(function(event) {
                     gridId = "instructionManualLogGrid";
                     deleteUrl = "Actions/InstructionManualLogsAction.php?call=deleteInstructionManualLog";
@@ -403,8 +357,6 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 });
                 reloadButton.click(function(event) {
                     $("#instructionManualLogGrid").jqxGrid("clearfilters");
-                    initDateRanges();
-                    //$("#instructionManualLogGrid").jqxGrid({ source: dataAdapter });
                 });
                 $("#instructionManualLogGrid").bind('rowselect', function(event) {
                     var selectedRowIndex = event.args.rowindex;

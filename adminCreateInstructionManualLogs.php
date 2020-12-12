@@ -102,12 +102,10 @@
                                         <div class="form-group row">
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">Entered By:</label>
                                             <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <?php 
-                                                        $select = DropDownUtils::getChinaTeamUsers("createdby", "", $instructionManualLog->getCreatedBy(),false,true);
+                                                <?php 
+                                                        $select = DropDownUtils::getInstructionManualUSATeamUsers("createdby", "", $instructionManualLog->getCreatedBy(),false,true);
                                                         echo $select;
-                                                    ?>
-                                                </div>
+                                                ?>
                                             </div>
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">Entry Date :</label>
                                             <div class="col-lg-4">
