@@ -22,7 +22,7 @@
     }
     if($call == "getReportingData"){
         foreach ($reportingDataParameterTypeConstants as $key => $value ){
-            if(isset($_REQUEST['for'])){
+                if(isset($_REQUEST['for'])){
                 if(strpos($key,$_REQUEST['for']) !== false){
                     // $value = lcfirst(str_replace(" ","",$value));
                     $list = $reportingDataMrg->getReportingData($key);
@@ -42,7 +42,7 @@
                     }
                     $arr[$key.'_current'] = $current;
                     $arr[$key.'_previous'] = $list[1]['count'];
-                    $arr[$key.'_diff'] = $list[0]['count']-$list[1]['count'];
+                    $arr[$key.'_diff'] = abs($list[0]['count']-$list[1]['count']);
                     $earlierCounts = array();
                     foreach ($list as $count){
                         array_push($earlierCounts,$count['count']);
@@ -50,13 +50,28 @@
                     $earlierCounts = array_reverse($earlierCounts);
                     $arr[$key.'_percent'] = "";
                     $arr[$key.'_thirty_days'] = implode(',',$earlierCounts);
-                    $arr[$key.'_change_arrow'] = (isset($list[1]))?(($list[0]['count']>$list[1]['count'])?'fa-level-up':'fa-level-down'):'fa-level-down';
-                    $arr[$key.'_change_color'] = (isset($list[1]))?(($list[0]['count']>$list[1]['count'])?'green':'red'):'green';
+                    // $arr[$key.'_change_arrow'] = ($list[0]['count']>$list[1]['count'])?'fa-level-up':'fa-level-down';
+                    // $arr[$key.'_change_color'] = ($list[0]['count']>$list[1]['count'])?'green':'red';
+                    // if(isset($list[1])){
+                    //     if($list[0]['count']==$list[1]['count']){
+                    //         $arr[$key.'_change_arrow'] = "fa-arrows-h";
+                    //         $arr[$key.'_change_color'] = "grey";
+                    //     }
+                    // }
                     if(isset($list[1])){
-                        if($list[0]['count']==$list[1]['count']){
+                        if($list[0]['count']>$list[1]['count']){
+                            $arr[$key.'_change_arrow'] = 'fa-level-up';
+                            $arr[$key.'_change_color'] = 'green';
+                        }elseif($list[0]['count']==$list[1]['count']){
                             $arr[$key.'_change_arrow'] = "fa-arrows-h";
                             $arr[$key.'_change_color'] = "grey";
+                        }else{
+                            $arr[$key.'_change_arrow'] = 'fa-level-down';
+                            $arr[$key.'_change_color'] = 'red';
                         }
+                    }else{
+                        $arr[$key.'_change_arrow'] = "fa-arrows-h";
+                            $arr[$key.'_change_color'] = "grey";
                     }
                     
                 }

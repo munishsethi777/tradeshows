@@ -262,6 +262,12 @@ class DateUtil {
 	    }
 	    return $dateStr;
 	}
+	public static function getCurrentDateStrWithTimeZone($timeZone){
+		$date = new DateTime();
+		$timeZone = new DateTimeZone($timeZone);
+		$date->setTimeZone($timeZone);
+		return $date->format("m-d-Y");
+	}
 
 }
 ?>

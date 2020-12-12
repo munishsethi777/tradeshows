@@ -22,14 +22,20 @@
             $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
             $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-            // $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
-            $query = "select classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq";
+            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
+            // $query = "select users.fullname as createdby,classcodes.classcode,instructionmanuallogs.seq,instructionmanuallogs.itemnumber,
+            //             instructionmanuallogs.graphicduedate,instructionmanuallogs.instructionmanuallogstatus,
+            //             instructionmanuallogs.iscompleted,instructionmanuallogs.lastmodifiedon 
+            //             from instructionmanuallogs 
+            //             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq 
+            //             left join users on instructionmanuallogs.createdby = users.seq";        
             
             $rows = self::$dataStore->executeQuery($query,true);
             $arr = array();
             foreach($rows as $row){
                 $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);	
                 $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
                 array_push($arr,$row);		    
             }
             $mainArr["Rows"] = $arr;
@@ -40,7 +46,9 @@
             $sessionUtil = SessionUtil::getInstance();
             $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
             $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-            $query = "select count(*) from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq";
+            $query = "select count(*) from instructionmanuallogs left join classcodes on 
+                    instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
+                    instructionmanuallogs.createdby = users.seq";
             //We
     // 	    if($isSessionQc){ 
     // 	        if(count($myTeamMembersArr) == 0){
@@ -83,6 +91,20 @@
                 $date = DateUtil::convertDateToFormatWithTimeZone($date, "Y-m-d H:i:s", "m-d-Y h:i a",$timeZone);
             }
             return $date;
+        }
+        public function getProjectsDueLessThan14DaysFromEntry(){
+            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
+                    left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
+                    instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
+                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14";
+            $instructionManualLog = self::$dataStore->executeQuery($query);
+            return $instructionManualLog;
+        }
+        public function findByItemNo($itemNo,$instructionManualLogSeq = ""){
+            $query = "SELECT COUNT(seq) FROM `instructionmanuallogs` Where itemnumber like '".$itemNo."' AND iscompleted=FALSE";
+            $query = $instructionManualLogSeq != "" ? $query . " AND seq!=".$instructionManualLogSeq : $query;
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;        
         }
         //-----------------------------Cron Functions-------------------------------------------------
         public function getInstructionManualProjectsOpenCount(){

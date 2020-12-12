@@ -34,13 +34,10 @@ class InstructionManualLogReportUtil
         $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
         $phAnValues = array();
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
-        // $phAnValues["ITEM_ID"] = $graphicLog->getSKU();
-        // $phAnValues["PO_NUMBER"] = $graphicLog->getPO();
         $phAnValues["DATE_STR"] = date_format(new DateTime(), "m-d-Y");
         $phAnValues['DIAGRAM_SAVED_DATE'] = date_format($instructionManual->getDiagramSavedDate(), "m-d-Y") ;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualDiagramSavedDateChangedTemplate.php";
         $content = file_get_contents($emailTemplatePath);
-        
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         $toEmails = array();
@@ -77,8 +74,6 @@ class InstructionManualLogReportUtil
         $phAnValues = array();
         $phAnValues["NOTES_NAME"] = $noteType;
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
-        // $phAnValues["ITEM_ID"] = $instructionManualLog->getSKU();
-        // $phAnValues["PO_NUMBER"] = $instructionManualLog->getPO();
         $noteDetail = "";
         $roleName = "";
         if($noteType == "USA"){
@@ -120,25 +115,27 @@ class InstructionManualLogReportUtil
         if(empty($user)){
             return;
         }
-        $sendEmailTo = $user->getEmail();
-        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
-        $phAnValues = array();
-        $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
-        $phAnValues["SEND_EMAIL_TO"] = $user->getFullName();
-        $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = InstructionManualLogStatus::getValue($instructionManual->getInstructionManualLogStatus());
-        // $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = "Awaiting Information From China";
-        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualStatusChangedTemplate.php";
-        $content = file_get_contents($emailTemplatePath);
-        $content = MailUtil::replacePlaceHolders($phAnValues, $content);
-        $html = MailUtil::appendToEmailTemplateContainer($content);
-        $toEmails = array($sendEmailTo);
-        if(!empty($toEmails)){
-            $subject = "Alpine BI Instruction Manual | Diagram Saved Date Changed on Alpinebi";
-            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
-            if($flag){
-                $emaillogMgr = EmailLogMgr::getInstance();
-                $emaillogMgr->saveEmailLog(EmailLogType::INSTRUCTION_MANUAL_DIAGRAM_SAVED_DATE_CHANGED ,$user->getEmail(), null,$user->getSeq());
+        $userRoles = $userMgr->getUserRolesValuesArr($sendEmailTo);
+        if(in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::diagram_saved_by_instant),$userRoles)){
+            $sendEmailTo = $user->getEmail();
+            $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+            $phAnValues = array();
+            $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+            $phAnValues["SEND_EMAIL_TO"] = $user->getFullName();
+            $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = InstructionManualLogStatus::getValue($instructionManual->getInstructionManualLogStatus());
+            $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualStatusChangedTemplate.php";
+            $content = file_get_contents($emailTemplatePath);
+            $content = MailUtil::replacePlaceHolders($phAnValues, $content);
+            $html = MailUtil::appendToEmailTemplateContainer($content);
+            $toEmails = array($sendEmailTo);
+            if(!empty($toEmails)){
+                $subject = "Alpine BI Instruction Manual | Status Changed on Alpinebi";
+                $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+                if($flag){
+                    $emaillogMgr = EmailLogMgr::getInstance();
+                    $emaillogMgr->saveEmailLog(EmailLogType::INSTRUCTION_MANUAL_STATUS_CHANGED ,$user->getEmail(), null,$user->getSeq());
+                }
             }
-        }
+        }  
     }
 }

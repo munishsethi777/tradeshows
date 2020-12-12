@@ -9,6 +9,7 @@
     require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");    
     require_once($ConstantsArray['dbServerUrl'] ."Utils/InstructionManualLogReportUtil.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     
     $success=1;
     $message='';
@@ -30,8 +31,14 @@
             $instructionManualCustomers = new InstructionManualCustomers();
             $instructionManualRequests = new InstructionManualRequests();
             $instructionManualLog->createFromRequest($_REQUEST);
+            $instructionManualLogSeq = $instructionManualLog->getSeq();
+            $itemAlreadyExistsCount = $instructionManualLogMgr->findByItemNo($instructionManualLog->getItemNumber(),
+                                        $instructionManualLogSeq);
+            if($itemAlreadyExistsCount>0){
+                throw new Exception("Item number '".$instructionManualLog->getItemNumber()."' already exists");
+            }
             $instructionManualLog->setCreatedDate(new DateTime());
-            $instructionManualLog->setLastModifiedDate(new DateTime());
+            $instructionManualLog->setLastModifiedOn(new DateTime());
             if(isset($_REQUEST['iscompleted'])){
                 $instructionManualLog->setIsCompleted(1);
             }else{
@@ -41,7 +48,7 @@
             $existingInstructionManualLog = null;
             $isDiagramSavedDateUpdated = false;
             $isNotesToUsaUpdated = false;
-            $isDiagramSavedByUpdate = false;
+            $isStatusChange = true;
             if(isset($_REQUEST["seq"]) && !empty($_REQUEST["seq"])){
                 $seq = $_REQUEST['seq'];
                 $message = StringConstants::INSTRUCTION_MANUAL_LOG_UPDATED_SUCCESSFULLY;
@@ -51,7 +58,17 @@
                     $isDiagramSavedDateUpdated = $newDiagramSavedDate != $existingInstructionManualLog->getDiagramSavedDate();    
                 }
                 $isNotesToUsaUpdated = $instructionManualLog->getNotesToUsa() != $existingInstructionManualLog->getNotesToUsa();
-                $isDiagramSavedByUpdate = $instructionManualLog->getInstructionManualLogStatus() != $existingInstructionManualLog->getInstructionManualLogStatus();
+                $isStatusChange = $instructionManualLog->getInstructionManualLogStatus() != $existingInstructionManualLog->getInstructionManualLogStatus();
+            }else{// new case
+               if($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::in_progress)){
+                    $instructionManualLog->setSentToChinaDate(null);
+                }elseif($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::sent_to_china)){
+                    $instructionManualLog->setStartedDate(null);
+                }else{
+                    $instructionManualLog->setStartedDate(null);
+                    $instructionManualLog->setSentToChinaDate(null);
+                }
+
             }
 
             $id = $instructionManualLogMgr->save($instructionManualLog);
@@ -74,15 +91,19 @@
                 if($isNotesToUsaUpdated){
                     InstructionManualLogReportUtil::sendInstructionManualNotesToUsaUpdatedNotification($instructionManualLog,"USA");
                 }
-                if($isDiagramSavedByUpdate){
-                    if($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_from_china)){
-                        $sendEmailToSeq = $instructionManualLog->getDiagramSavedByUserSeq();
-                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$sendEmailToSeq);
+                if($isStatusChange){
+                    $diagramSavedBySeq = $instructionManualLog->getDiagramSavedByUserSeq();
+                    $createdBySeq = $instructionManualLog->getCreatedBy();
+                    if($instructionManualLog->getInstructionManualLogStatus() == 
+                        InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_from_china)
+                        && $diagramSavedBySeq != null){
+                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$diagramSavedBySeq);
                     }
-                    if($instructionManualLog->getInstructionManualLogStatus() == InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_form_buyers)){
-                        $sendEmailToSeq = $instructionManualLog->getCreatedBy();
-                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$sendEmailToSeq);
-                    }
+                    if($instructionManualLog->getInstructionManualLogStatus() == 
+                        InstructionManualLogStatus::getName(InstructionManualLogStatus::awaiting_information_form_buyers)
+                        && $createdBySeq != null){   
+                        InstructionManualLogReportUtil::sendInstructionManualLogStatusUpdatedNotification($instructionManualLog,$createdBySeq);
+                    } 
                 }
             }
         }catch(Exception $e){
@@ -91,13 +112,25 @@
         }
     }
     if($call == 'getAllInstructionManualLogs'){
-            $instructionManualLogsJson = $instructionManualLogMgr->getInstructionManualLogsForGrid();
+        $instructionManualLogsJson = $instructionManualLogMgr->getInstructionManualLogsForGrid();
         echo json_encode($instructionManualLogsJson);
+        return;
+    }
+    if($call == 'getProjectsDueLessThan14DaysFromEntry'){
+        $projectsDueLess14DaysThanFromEntry = $instructionManualLogMgr->getProjectsDueLessThan14DaysFromEntry();
+        echo json_encode($projectsDueLess14DaysThanFromEntry);
         return;
     }
     if($call == 'export'){
     }
     if($call == 'find'){
+    }
+    if($call == "getloggedInUserTime"){
+        $sessionUtil = SessionUtil::getInstance();
+        $timeZone = $sessionUtil->getUserLoggedInTimeZone();
+        $date = DateUtil::getCurrentDateStrWithTimeZone($timeZone);
+        echo json_encode($date);
+        return;
     }
     $response['success'] = $success;
     $response['message'] = $message;

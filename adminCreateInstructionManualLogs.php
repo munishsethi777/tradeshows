@@ -112,7 +112,7 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">Entry Date :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate"  maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -121,14 +121,14 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">PO Ship Date :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="poDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control" readonly>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -151,7 +151,7 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelPeach">Diagram due date :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="graphicduedate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getGraphicDueDate()?>" name="graphicduedate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="graphicduedate"  maxLength="250" value="<?php echo $instructionManualLog->getGraphicDueDate()?>" name="graphicduedate" class="form-control" readonly>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -197,7 +197,7 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelYellow">Date diagram saved :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -243,7 +243,7 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Status : </label>
                                             <div class="col-lg-4">
                                                 <?php 
-                                                        $select = DropDownUtils::getInstructionManualLogStatus("instructionmanuallogstatus","",$instructionManualLog->getInstructionManualLogStatus(),false,false,false);
+                                                        $select = DropDownUtils::getInstructionManualLogStatus("instructionmanuallogstatus","statusChange(this.value)",$instructionManualLog->getInstructionManualLogStatus(),false,false,false);
                                                         echo $select;
                                                     ?>
                                             </div>
@@ -252,14 +252,14 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Start date :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="starteddate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getStartedDate()?>" name="starteddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="starteddate"  maxLength="250" value="<?php echo $instructionManualLog->getStartedDate()?>" name="starteddate" class="form-control" readonly>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Supervisor return : </label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -268,14 +268,14 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Manager Return :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Buyer return : </label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -284,7 +284,7 @@
                                             <label class="col-lg-2 col-form-label bg-formLabelMauve">Sent to china :</label>
                                             <div class="col-lg-4">
                                                 <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="senttochinadate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getSentToChinaDate()?>" name="senttochinadate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="senttochinadate"  maxLength="250" value="<?php echo $instructionManualLog->getSentToChinaDate()?>" name="senttochinadate" class="form-control" readonly>
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -305,7 +305,7 @@
                                                 </button>
                                             </div>
                                             <div class="col-lg-2">
-                                                <a class="btn btn-default" href="adminCreateInstructionManualLogs.php" type="button" style="width:85%">
+                                                <a class="btn btn-default" href="adminManageInstructionManualLogs.php" type="button" style="width:85%">
                                                     Cancel
                                                 </a>
                                             </div>
@@ -371,5 +371,64 @@ function saveInstructionManualLog(){
 	}else{
 		$("#createInstructionManualLogsForm")[0].reportValidity();
 	}
+}
+function poDateOnChange(poShipDateStr){
+	if(poShipDateStr == ""){
+        $("#approvedmanualdueprintdate").val("");
+        $("#graphicduedate").val("");
+		return;
+	}
+	var poShipDate = getDate(poShipDateStr);
+	var approvedManualDueDays = 21;
+	var approvedManualDueDate = subtractDays(poShipDate, approvedManualDueDays);
+    var approvedManualDueDateStr  = dateToStr(approvedManualDueDate);
+    var diagramDueDays = 14;
+    var diagramDueDate = subtractDays(approvedManualDueDate,diagramDueDays);
+    var diagramDueDateStr = dateToStr(diagramDueDate);
+    $("#approvedmanualdueprintdate").val(approvedManualDueDateStr);
+    $("#graphicduedate").val(diagramDueDateStr);
+}
+function getDate(dateString) {
+    var parts = dateString.split('-');
+    var month = parts[0] - 1;
+    var day = parts[1];
+    var year = parts[2]
+    var dateObj = new Date(year,month,day);
+    return dateObj;
+}
+function dateToStr(date){
+	var dd = date.getDate();
+	var mm = date.getMonth() + 1; //January is 0!
+
+	var yyyy = date.getFullYear();
+	if (dd < 10) {
+	  dd = '0' + dd;
+	} 
+	if (mm < 10) {
+	  mm = '0' + mm;
+	} 
+	var dateStr = mm + '-' +  dd + '-' + yyyy;
+	return dateStr;
+}
+function subtractDays(date, days) {
+    var sDate = date;
+    sDate.setDate(sDate.getDate() - days);
+    return sDate;
+}
+function statusChange(selectedStatus){
+    var startDate = $("#starteddate").val();
+    var sentToChinaDate = $("#senttochinadate").val();
+    if((selectedStatus == "in_progress" && startDate =="") || (selectedStatus == "sent_to_china" && sentToChinaDate =="")){
+        $.getJSON("Actions/InstructionManualLogsAction.php?call=getloggedInUserTime", 
+            (response) => {
+                if(selectedStatus == "in_progress"){
+                    $("#starteddate").val(response);
+                }else{
+                    $("#senttochinadate").val(response);
+                }
+                
+            }
+        );
+    }
 }
 </script>

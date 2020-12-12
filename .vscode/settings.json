@@ -1,0 +1,18 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 250,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "m",
+            "group": "s",
+            "database": "alpine",
+            "username": "root",
+            "password": ""
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 <div>
 	<p>Hi,<br>
-	<p>{SEND_EMAIL_TO} Instruciton Manual Log Status changed to {INSTRUCTION_MANUAL_LOG_STATUS}.</p>
+	<p>Instruciton Manual Log Diagram Saved Date changed By {LOGGED_IN_USER_NAME} to {DIAGRAM_SAVED_DATE} .</p>
 	<br>
 	<p>Regards,<br>Alpinebi
 </div>

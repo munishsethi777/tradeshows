@@ -4,7 +4,7 @@ class InstructionManualLogs{
     private $seq,$entrydate,$poshipdate,$approvedmanualdueprintdate,$itemnumber,$classcodeseq,$graphicduedate,
     $neworrevised,$instructionmanualtype,$diagramsavedbyuserseq,$diagramsaveddate,$notestousa,
     $assignedtouser,$instructionmanuallogstatus,$starteddate,$supervisorreturndate,$managerreturndate,$buyerreturndate,
-    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifieddate;
+    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifiedon;
 	
 	
 	public static $className = "InstructionManualLogs";
@@ -142,11 +142,11 @@ class InstructionManualLogs{
     public function getCreatedDate(){
         return $this->createddate;
     }
-    public function setLastModifiedDate($lastModifiedDate){
-        $this->lastmodifieddate = $lastModifiedDate;
+    public function setLastModifiedOn($lastModifiedOn){
+        $this->lastmodifiedon = $lastModifiedOn;
     }
-    public function getLastModifiedDate(){
-        return $this->lastmodifieddate;
+    public function getLastModifiedOn(){
+        return $this->lastmodifiedon;
     }
     public function createFromRequest($request){
 		if (is_array($request)){

@@ -54,5 +54,6 @@ class EmailLogType extends BasicEnum{
     const GRAPHIC_LOG_FINAL_GRAPHIC_DUE_DATE_CHANGED = "GraphicLogFinalGraphicDueDateChanged";
     const INSTRUCTION_MANUAL_DIAGRAM_SAVED_DATE_CHANGED = "InstructionManualDiagramSavedDateChanged";
     const INSTRUCTION_MANUAL_NOTES_TO_USA_CHANGED = "InstructionManualNotesToUsaChanged";
+    const INSTRUCTION_MANUAL_STATUS_CHANGED = "InstructionManualStatusChanged";
     
 }

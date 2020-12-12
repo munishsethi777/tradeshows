@@ -203,7 +203,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     			}
                     			
                     		}
-                    	}elseif($_GET['call'] == "instructionmanuallogstatus"){
+                    	}elseif($filterdatafield == "instructionmanuallogstatus"){
                             $filtervalue = InstructionManualLogStatus::getName($filtervalue);
                             $where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
                             break;

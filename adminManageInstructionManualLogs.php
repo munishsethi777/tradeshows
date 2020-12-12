@@ -39,6 +39,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <!-- Peity -->
     <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
+    <script src="scripts/InstructionManualGridDataByReportingParameter.js"></script>
     <!--     <script src="scripts/demo/peity-demo.js"></script> -->
 
 </head>
@@ -71,15 +72,18 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                                             <!--</a> -->
                                         </div>
                                     </div>
+                                    
                                     <div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
+                                        
                                         <div class="row reportDataCountRow">
+                                            <input id="gridId" type="hidden" name="gridId" value="instructionManualLogGrid"/>
                                             <?php 
                                                 foreach($allReportingDataParameters as $key => $value){
                                                     if(strpos($key,'instruction_manual_') !== false){
                                                         ?>
-                                                        
                                                         <div class="col-lg-2">
-                                                            <div class="ibox float-e-margins">
+                                                            <div class="ibox float-e-margins get-grid-data-by-reporting-data" 
+                                                                id="<?php echo $key?>" >
                                                                 <div class="ibox-content text-center">
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
@@ -92,7 +96,6 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
                                                         <?php 
                                                     }
                                                 } 
@@ -120,11 +123,22 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
 
 </body>
 <script type="text/javascript">
+    var source ;
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
+        $(".get-grid-data-by-reporting-data").click(function (){
+            var reportingParameter = $(this).attr("id");
+            var gridId = $("#gridId").val();
+            AddReportingFilter(reportingParameter,gridId);
+            // if(reportingParameter.includes('entry')){
+            //     getProjectsDueLessThan14DaysFromEntry();
+            // }else{
+            //     AddReportingFilter(reportingParameter,gridId);
+            // }
+        });
     });
-
+    
     function editButtonClick(seq) {
         $("#id").val(seq);
         $("#form2").submit();
@@ -134,11 +148,11 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
         var filtergroup = new $.jqx.filter();
         var filter_or_operator = 1;
 
-        var filterNullShow = filtergroup.createfilter('stringfilter', '', 'NULL');
-        filtergroup.addfilter(filter_or_operator, filterNullShow);
+        // var filterNullShow = filtergroup.createfilter('stringfilter', '', 'NULL');
+        // filtergroup.addfilter(filter_or_operator, filterNullShow);
 
-        var filterHideSentToPrint = filtergroup.createfilter('stringfilter', 'Sent to Print', 'not_equal');
-        filtergroup.addfilter(filter_or_operator, filterHideSentToPrint);
+        // var filterHideSentToPrint = filtergroup.createfilter('stringfilter', 'Sent to Print', 'not_equal');
+        // filtergroup.addfilter(filter_or_operator, filterHideSentToPrint);
 
         $("#instructionManualLogGrid").jqxGrid('addfilter', 'instructionmanuallogstatus', filtergroup);
         $("#instructionManualLogGrid").jqxGrid('applyfilters');
@@ -176,6 +190,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 datafield: 'seq',
                 hidden: true
             },
+            { text: 'Entered By', datafield: 'fullname',width:"10%"},
             {
                 text: 'Item No',
                 datafield: 'itemnumber',
@@ -192,6 +207,13 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 filtercondition: 'STARTS_WITH'
             },
             {
+                text: 'Entry Date',
+                datafield: 'entrydate',
+                filtertype: 'date',
+                width: "20%",
+                cellsformat: 'M-dd-yyyy'
+            },
+            {
                 text: 'Graphic Due Date',
                 datafield: 'graphicduedate',
                 filtertype: 'date',
@@ -204,7 +226,8 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 width: "30%",
                 hidden: false,
                 filtertype: 'checkedlist',
-                filteritems: statusTypes
+                filteritems: statusTypes,
+                filtercondition: 'equal'
             },
             {
                 text: 'Is Completed',
@@ -212,18 +235,26 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 columntype: 'checkbox',
                 width: "10%"
             },
+            {
+                text: 'Modified On',
+                datafield: 'instructionmanuallogs.lastmodifiedon',
+                filtertype: 'date',
+                width: "20%",
+                cellsformat: 'M-dd-yyyy hh:mm tt'
+            }
         ]
 
-        var source = {
+        source = {
             datatype: "json",
             id: 'id',
             pagesize: 20,
-            sortcolumn: 'lastmodifiedon',
+            sortcolumn: 'instructionmanuallogs.lastmodifiedon',
             sortdirection: 'desc',
             datafields: [{
                     name: 'seq',
                     type: 'integer'
                 },
+                { name: 'fullname', type: 'string' },
                 {
                     name: 'itemnumber',
                     type: 'string'
@@ -231,6 +262,10 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 {
                     name: 'classcode',
                     type: 'string'
+                },
+                {
+                    name: 'entrydate',
+                    type: 'date'
                 },
                 {
                     name: 'graphicduedate',
@@ -243,6 +278,10 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 {
                     name: 'iscompleted',
                     type: 'boolean'
+                },
+                {
+                    name: 'instructionmanuallogs.lastmodifiedon',
+                    type: 'date'
                 },
             ],
             url: 'Actions/instructionManualLogsAction.php?call=getAllInstructionManualLogs',
@@ -293,7 +332,6 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 return dataAdapter.records;
             },
             ready: function() {
-                AddStatusDefaultFilter();
             },
             renderstatusbar: function(statusbar) {
                 var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
@@ -420,7 +458,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
 					} else {
 						$("#" + key).text(value);
 					}
-					 	console.log(key,value);									
+					 	// console.log(key,value);									
 				});
 				$(".bar").peity("bar", {
 					fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],
@@ -429,5 +467,5 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
 
 			}
 		);
-	}
+    }
 </script>
