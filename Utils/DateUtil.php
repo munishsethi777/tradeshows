@@ -266,7 +266,7 @@ class DateUtil {
 		$date = new DateTime();
 		$timeZone = new DateTimeZone($timeZone);
 		$date->setTimeZone($timeZone);
-		return $date->format("m-d-Y");
+		return $date->format("m-d-Y h:i:s T");
 	}
 
 }

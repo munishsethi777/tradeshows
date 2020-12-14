@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/InstructionManualCustomersMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualNotificationType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
+require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/InstructionManualLogs.php");
 
 class InstructionManualLogReportUtil
 { 
@@ -31,10 +32,14 @@ class InstructionManualLogReportUtil
         if(empty($users)){
             return;
         }
-        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserName = $sessionUtil->getUserLoggedInName();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+        $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
         $phAnValues = array();
+        $phAnValues["ITEM_NUMBER"] = $instructionManual->getItemNumber() != "" ? $instructionManual->getItemNumber() : "-" ;
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
-        $phAnValues["DATE_STR"] = date_format(new DateTime(), "m-d-Y");
+        $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
         $phAnValues['DIAGRAM_SAVED_DATE'] = date_format($instructionManual->getDiagramSavedDate(), "m-d-Y") ;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualDiagramSavedDateChangedTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -70,14 +75,19 @@ class InstructionManualLogReportUtil
         if(empty($users)){
             return;
         }
-        $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserName = $sessionUtil->getUserLoggedInName();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+        $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
         $phAnValues = array();
+        $phAnValues["ITEM_NUMBER"] = $instructionManualLog->getItemNumber() != "" ? $instructionManualLog->getItemNumber() : "-" ;
         $phAnValues["NOTES_NAME"] = $noteType;
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
+        $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
         $noteDetail = "";
         $roleName = "";
         if($noteType == "USA"){
-            $noteDetail = $instructionManualLog->getNotesToUsa();
+            $noteDetail = $instructionManualLog->getNotesToUsa() != "" ? $instructionManualLog->getNotesToUsa() : "-" ;
             $roleName  = Permissions::instruction_manual_usa_team;
         }else if($noteType == "CHINA"){
             $roleName  = Permissions::instruction_manual_china_team;
@@ -88,7 +98,8 @@ class InstructionManualLogReportUtil
         }
         $roleName = Permissions::getName($roleName);
         $phAnValues["NOTES_DETAIL"] = $noteDetail;
-        $content = file_get_contents("../InstructionManualNotesToUsaUpdatedTemplate.php");
+        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/InstructionManualNotesToUsaUpdatedTemplate.php";
+        $content = file_get_contents($emailTemplatePath);
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         $toEmails = array();
@@ -118,8 +129,14 @@ class InstructionManualLogReportUtil
         $userRoles = $userMgr->getUserRolesValuesArr($sendEmailTo);
         if(in_array(InstructionManualNotificationType::getName(InstructionManualNotificationType::diagram_saved_by_instant),$userRoles)){
             $sendEmailTo = $user->getEmail();
-            $loggedInUserName = SessionUtil::getInstance()->getUserLoggedInName();
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedInUserName = $sessionUtil->getUserLoggedInName();
+            $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+            $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
             $phAnValues = array();
+            $phAnValues["ITEM_NUMBER"] = $instructionManual->getItemNumber();
+            $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
+            $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = $instructionManual->getInstructionManualLogStatus();
             $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
             $phAnValues["SEND_EMAIL_TO"] = $user->getFullName();
             $phAnValues["INSTRUCTION_MANUAL_LOG_STATUS"] = InstructionManualLogStatus::getValue($instructionManual->getInstructionManualLogStatus());
