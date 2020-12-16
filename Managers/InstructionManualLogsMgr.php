@@ -96,7 +96,8 @@
             $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
                     left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
                     instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
-                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14";
+                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 
+                    AND DATEDIFF(graphicduedate,entrydate) >=0";
             $instructionManualLog = self::$dataStore->executeQuery($query);
             return $instructionManualLog;
         }
@@ -148,12 +149,12 @@
             return $count;
         }
         public function getInstructionManualProjectsDueLessThan14DaysFromEntry(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where DATEDIFF(graphicduedate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where DATEDIFF(graphicduedate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 AND DATEDIFF(graphicduedate,entrydate) >=0";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }
         public function getInstructionManualProjectsNotStarted(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where starteddate IS NULL";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }

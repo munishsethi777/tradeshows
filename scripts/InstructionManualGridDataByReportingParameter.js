@@ -46,19 +46,20 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
         $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
-    }
-    else if(reportingDataParameter == "instruction_manual_total_projects_not_started"){
+    }else if(reportingDataParameter == "instruction_manual_total_projects_open_overdue"){
         if(isSourceChange){
-            changeSourceUrl();
+            changeSourceUrl();    
         }
-        filterValue = "Not Started";
-        filterType = "stringfilter";
-        filterFieldName = "instructionmanuallogstatus";
+        filterValue = "0";
+        filterType = "numericfilter";
+        filterFieldName = "iscompleted";
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
         $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
-    }else if(reportingDataParameter == "instruction_manual_total_projects_in_supervisor_review"){
+        
+    }
+    else if(reportingDataParameter == "instruction_manual_total_projects_in_supervisor_review"){
         if(isSourceChange){
             changeSourceUrl();
         }
@@ -95,16 +96,12 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         if(isSourceChange){
             changeSourceUrl();
         }
-        filterCondition1 = "GREATER_THAN_OR_EQUAL";
-        filterCondition2 = "LESS_THAN_OR_EQUAL";
+        filterCondition = "EQUAL";
         filterValue1 = new Date();
         filterValue2 = new Date();
         filterType = "datefilter";
         filterFieldName = "graphicduedate";
-        
-        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue1, filterCondition1); 
-        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue2, filterCondition2);
-        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue2, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
         $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
@@ -122,9 +119,9 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         filterFieldName = "graphicduedate";
         
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue1, filterCondition1); 
-        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue2, filterCondition2);
+        var filterGetGridDataByReportingParameter1 = filtergroup.createfilter(filterType, filterValue2, filterCondition2);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter1);
         $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
@@ -132,8 +129,20 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         // source.async = true;
         var dataAdapter2 = new $.jqx.dataAdapter(source);
         $("#instructionManualLogGrid").jqxGrid({source: dataAdapter2});
-        $("#instructionManualLogGrid").jqxGrid("updatebounddata","cells");
+        //$("#instructionManualLogGrid").jqxGrid("updatebounddata","cells");
+		 dataAdapter2.dataBind();
         isSourceChange = 1;
+    }else if(reportingDataParameter == "instruction_manual_total_projects_not_started"){
+        if(isSourceChange){
+            changeSourceUrl();
+        }
+        filterValue = "Not Started";
+        filterType = "stringfilter";
+        filterFieldName = "instructionmanuallogstatus";
+        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
+        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('applyfilters');
     }
 }
 function getProjectsDueLessThan14DaysFromEntry(){

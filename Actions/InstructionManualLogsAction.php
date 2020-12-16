@@ -34,7 +34,7 @@
             $instructionManualLogSeq = $instructionManualLog->getSeq();
             $itemAlreadyExistsCount = $instructionManualLogMgr->findByItemNo($instructionManualLog->getItemNumber(),
                                         $instructionManualLogSeq);
-            if($itemAlreadyExistsCount>0){
+            if($itemAlreadyExistsCount>0 && $instructionManualLog->getIsCompleted() != true){
                 throw new Exception("Item number '".$instructionManualLog->getItemNumber()."' already exists");
             }
             $instructionManualLog->setCreatedDate(new DateTime());
