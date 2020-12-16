@@ -251,7 +251,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                     type: 'date'
                 },
             ],
-            url: 'Actions/instructionManualLogsAction.php?call=getAllInstructionManualLogs',
+            url: 'Actions/InstructionManualLogsAction.php?call=getAllInstructionManualLogs',
             root: 'Rows',
             cache: false,
             beforeprocessing: function(data) {
