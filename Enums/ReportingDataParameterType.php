@@ -29,15 +29,15 @@ class ReportingDataParameterType extends BasicEnum{
     const container_schedules_missing_received_dates_in_wms_count = "Missing Received Dates In WMS";
     const container_schedules_missing_schedule_delivery_date_count = "Missing Schedule Delivery Date";
     // Instruction Manual Parameters
-    const instruction_manual_total_projects_open = "Instruction Manual Total Projects Open";
-    const instruction_manual_total_projects_completed = "Instruction Manual Total Projects Completed";
-    const instruction_manual_total_projects_overdue = "Instruction Manual Total Projects Overdue";
-    const instruction_manual_total_projects_in_supervisor_review = "Instruction Manual Total Project In Supervisor Review";
-    const instruction_manual_total_projects_in_manager_review = "Instruction Manual Total Projects In Manager Review";
-    const instruction_manual_total_projects_in_buyer_review = "Instruction Manual Total Projects In Buyer Review";
-    const instruction_manual_total_projects_due_today = "Instruction Manual Total Projects Due Today";
-    const instruction_manual_total_projects_due_in_next_14_days = "Instruction Manual Total Projects Due In Next 14 Days";
-    const instruction_manual_total_projects_due_less_than_14_days_from_entry = "Instruction Manual Total Projects Due Less Than 14 Days from Entry";
-    const instruction_manual_total_projects_not_started = "Instruction Manual Total Projects Not Started";
+    const instruction_manual_total_projects_open = "Logs Open";
+    const instruction_manual_total_projects_completed = "Logs Completed";
+    const instruction_manual_total_projects_overdue = "Logs Overdue";
+    const instruction_manual_total_projects_in_supervisor_review = "Logs In Supervisor Review";
+    const instruction_manual_total_projects_in_manager_review = "Logs In Manager Review";
+    const instruction_manual_total_projects_in_buyer_review = "Logs In Buyer Review";
+    const instruction_manual_total_projects_due_today = "Logs Due Today";
+    const instruction_manual_total_projects_due_in_next_14_days = "Logs due In Next 14 Days";
+    const instruction_manual_total_projects_due_less_than_14_days_from_entry = "Due < 14 Days from Entry";
+    const instruction_manual_total_projects_not_started = "Logs Not Started";
 }
 ?>

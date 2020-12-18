@@ -3,14 +3,10 @@ var filterFieldName = "";
 var isSourceChange = 0;
 
 function clearFilters(gridId){
-        $("#"+gridId).jqxGrid('removefilter',filterFieldName,false);
+    $("#"+gridId).jqxGrid('removefilter',filterFieldName,false);
 }
 function changeSourceUrl(){
     source.url = "Actions/instructionManualLogsAction.php?call=getAllInstructionManualLogs";
-    // source.async = false;
-    var dataAdapter1 = new $.jqx.dataAdapter(source);
-    $("#instructionManualLogGrid").jqxGrid({source: dataAdapter1});
-    dataAdapter.dataBind();
     isSourceChange = 0;
 }
 function AddReportingFilter(reportingDataParameter, gridId) {
@@ -126,11 +122,7 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
         source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntry";
-        // source.async = true;
-        var dataAdapter2 = new $.jqx.dataAdapter(source);
-        $("#instructionManualLogGrid").jqxGrid({source: dataAdapter2});
-        //$("#instructionManualLogGrid").jqxGrid("updatebounddata","cells");
-		 dataAdapter2.dataBind();
+        $("#" + gridId).jqxGrid('applyfilters');
         isSourceChange = 1;
     }else if(reportingDataParameter == "instruction_manual_total_projects_not_started"){
         if(isSourceChange){

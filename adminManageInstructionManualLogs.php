@@ -26,12 +26,15 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
         }
 
         .reportDataCountRow .ibox-content {
-            background-color: white;
+            ./*background-color: white;*/
             padding: 10px 10px 0px 20px !important;
         }
 
         .peity {
             margin-top: 10px;
+        }
+        .bg-white{
+            background-color: white
         }
     </style>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -67,23 +70,19 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                                             <a class="collapse-link">
                                                 <i class="fa fa-chevron-up"></i>
                                             </a>
-                                            <!--<a class="close-link"> -->
-                                            <!--<i class="fa fa-times"></i> -->
-                                            <!--</a> -->
                                         </div>
                                     </div>
-                                    
                                     <div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-                                        
                                         <div class="row reportDataCountRow">
                                             <input id="gridId" type="hidden" name="gridId" value="instructionManualLogGrid"/>
                                             <?php 
                                                 foreach($allReportingDataParameters as $key => $value){
                                                     if(strpos($key,'instruction_manual_') !== false){
                                                         ?>
-                                                        <div class="col-lg-2">
-                                                            <div class="ibox float-e-margins get-grid-data-by-reporting-data" 
-                                                                id="<?php echo $key?>" >
+                                                        
+                                                        <div class="col-lg-2" >
+                                                            <div class="ibox float-e-margins get-grid-data-by-reporting-data bg-white" 
+                                                                id="<?php echo $key?>" style="cursor: pointer;">
                                                                 <div class="ibox-content text-center">
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
@@ -127,11 +126,14 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
-        // $(".get-grid-data-by-reporting-data").click(function (){
-        //     var reportingParameter = $(this).attr("id");
-        //     var gridId = $("#gridId").val();
-        //     AddReportingFilter(reportingParameter,gridId);
-        // });
+        $(".get-grid-data-by-reporting-data").click(function (){
+            var reportingParameter = $(this).attr("id");
+            var gridId = $("#gridId").val();
+            AddReportingFilter(reportingParameter,gridId);
+            $(".get-grid-data-by-reporting-data").removeClass("bg-primary");
+            $("#"+reportingParameter).removeClass("bg-white");
+            $("#"+reportingParameter).addClass("bg-primary");
+        });
     });
     
     function editButtonClick(seq) {
