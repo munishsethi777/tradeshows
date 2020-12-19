@@ -110,7 +110,7 @@ class InstructionManualLogReportUtil
             array_push($toEmails,$user->getEmail());
         }
         if(!empty($toEmails)){
-            $subject = "Alpine BI Instruction Manual | ". $noteType . " Notes To USA updated";
+            $subject = "Alpine BI Instruction Manual | Notes To USA updated";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
