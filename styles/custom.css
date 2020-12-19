@@ -249,7 +249,14 @@ ul.nav-second-level{
 	color:black;
 	padding:9px 7px !important;
 }
-
+.panel-peach{
+	border-color:#F8CBAD !important;
+}
+.panel-peach > .panel-heading {
+	background-color:#F8CBAD !important;
+	border-color: #F8CBAD !important;
+	color:black;
+}
 .list-group-item{
 	font-size:12px;
 	padding:6px !important;

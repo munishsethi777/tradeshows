@@ -49,15 +49,6 @@
             $query = "select count(*) from instructionmanuallogs left join classcodes on 
                     instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
                     instructionmanuallogs.createdby = users.seq";
-            //We
-    // 	    if($isSessionQc){ 
-    // 	        if(count($myTeamMembersArr) == 0){
-    // 			    $query .= " where users.seq = $loggedinUserSeq"; 
-    // 		    }else{
-    // 		        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-    // 		        $query .=" where users.seq in($myTeamMembersCommaSeparated)";
-    // 	       	}
-    // 	    }
            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
            return $count;
         }
@@ -98,8 +89,29 @@
                     instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
                     AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 
                     AND DATEDIFF(graphicduedate,entrydate) >=0";
-            $instructionManualLog = self::$dataStore->executeQuery($query);
-            return $instructionManualLog;
+            $rows = self::$dataStore->executeQuery($query,true);
+            $arr = array();
+            foreach($rows as $row){
+                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
+                $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
+                array_push($arr,$row);
+            }
+            $mainArr["Rows"] = $arr;
+            $mainArr["TotalRows"] = $this->getProjectsDueLessThan14DaysFromEntryCount(true);
+            return $mainArr;
+        }
+        public function getProjectsDueLessThan14DaysFromEntryCount($isApplyFilter){
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
+            $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
+                    left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
+                    instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
+                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 
+                    AND DATEDIFF(graphicduedate,entrydate) >=0";
+            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
+            return $count;
         }
         public function findByItemNo($itemNo,$instructionManualLogSeq = ""){
             $query = "SELECT COUNT(seq) FROM `instructionmanuallogs` Where itemnumber like '".$itemNo."' AND iscompleted=FALSE";

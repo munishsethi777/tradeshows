@@ -2,9 +2,9 @@
 class InstructionManualLogs{
 
     private $seq,$entrydate,$poshipdate,$approvedmanualdueprintdate,$itemnumber,$classcodeseq,$graphicduedate,
-    $neworrevised,$instructionmanualtype,$diagramsavedbyuserseq,$diagramsaveddate,$notestousa,
+    $neworrevised,$instructionmanualtype,$diagramsavedbyuserseq,$diagramsaveddate,$notestousa,$notestochina,
     $assignedtouser,$instructionmanuallogstatus,$starteddate,$supervisorreturndate,$managerreturndate,$buyerreturndate,
-    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifiedon;
+    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifiedon,$isprivatelabel;
 	
 	
 	public static $className = "InstructionManualLogs";
@@ -82,6 +82,12 @@ class InstructionManualLogs{
     public function getNotesToUsa(){
         return $this->notestousa;
     }
+    public function setNotesToChina($val){
+        $this->notestochina = $val;
+    }
+    public function getNotesToChina(){
+        return $this->notestochina;
+    }
     public function setAssignedToUser($assignedToUser){
         $this->assignedtouser = $assignedToUser;
     }
@@ -147,6 +153,12 @@ class InstructionManualLogs{
     }
     public function getLastModifiedOn(){
         return $this->lastmodifiedon;
+    }
+    public function setIsPrivateLabel($isPrivateLabel){
+        $this->isprivatelabel = $isPrivateLabel;
+    }
+    public function getIsPrivateLabel(){
+        return $this->isprivatelabel;
     }
     public function createFromRequest($request){
 		if (is_array($request)){

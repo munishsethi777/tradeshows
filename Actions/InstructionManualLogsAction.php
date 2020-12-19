@@ -44,6 +44,11 @@
             }else{
                 $instructionManualLog->setIsCompleted(0);
             }
+            if(isset($_REQUEST['isprivatelabel'])){
+                $instructionManualLog->setIsPrivateLabel(1);
+            }else{
+                $instructionManualLog->setIsPrivateLabel(0);
+            }
             $seq = 0;
             $existingInstructionManualLog = null;
             $isDiagramSavedDateUpdated = true;
@@ -56,6 +61,8 @@
                 if(!empty($instructionManualLog->getDiagramSavedDate())){
                     $newDiagramSavedDate = $instructionManualLog->getDiagramSavedDate()->format("m-d-Y");
                     $isDiagramSavedDateUpdated = $newDiagramSavedDate != $existingInstructionManualLog->getDiagramSavedDate();    
+                }else{
+                    $isDiagramSavedDateUpdated = $newDiagramSavedDate != $existingInstructionManualLog->getDiagramSavedDate();
                 }
                 $isNotesToUsaUpdated = $instructionManualLog->getNotesToUsa() != $existingInstructionManualLog->getNotesToUsa();
                 $isStatusChange = $instructionManualLog->getInstructionManualLogStatus() != $existingInstructionManualLog->getInstructionManualLogStatus();
@@ -67,6 +74,9 @@
                 }else{
                     $instructionManualLog->setStartedDate(null);
                     $instructionManualLog->setSentToChinaDate(null);
+                }
+                if(empty($instructionManualLog->getDiagramSavedDate())){
+                    $isDiagramSavedDateUpdated = false;
                 }
 
             }

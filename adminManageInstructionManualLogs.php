@@ -149,6 +149,20 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
             html += "</div>";
             return html;
         }
+        var newRevisedCellRenderer = function(row, columnfield, value, defaulthtml, columnproperties) {
+            data = $('#instructionManualLogGrid').jqxGrid('getrowdata', row);
+            var html = "<div style='text-align: left; margin-top:4px;padding-left:4px'>"
+			if(data['neworrevised'] == "newInstructionManual"){
+				html += "New"; 
+			}else if(data['neworrevised'] == "revisedInstructionManual"){
+				html += "Revised"
+			}else{
+				html += "";
+			}
+//             html += "<a href='javascript:editButtonClick(" + data['seq'] + ")' ><i class='fa fa-edit' title='Edit Instruction Manual Log'></i></a>";
+           html += "</div>";
+           return html;
+        }
         var statusTypes = ["", "Not Started", "In Progress", "Awaiting Information From China", "Awaiting Information From Buyers", "In Review - Supervisor", "In Review - Manager", "In Review - Buyer", "Sent To China", "Cancelled", "Duplicate"];
         var columns = [{
                 text: 'Actions',
@@ -168,17 +182,23 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 columntype: 'checkbox',
                 width: "6%"
             },
+            {
+                text: 'New/Revised',
+                datafield: 'neworrevised',
+                cellsrenderer: newRevisedCellRenderer,
+                width: "6%"
+            },
             { text: 'Entered By', datafield: 'fullname',width:"10%"},
             {
                 text: 'Item No',
                 datafield: 'itemnumber',
-                width: "12%",
+                width: "10%",
                 hidden: false
             },
             {
                 text: 'Class',
                 datafield: 'classcode',
-                width: "7%",
+                width: "5%",
                 filtercondition: 'STARTS_WITH'
             },
             {
@@ -189,7 +209,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 cellsformat: 'M-dd-yyyy'
             },
             {
-                text: 'Graphic Due Date',
+                text: 'IM Due Date',
                 datafield: 'graphicduedate',
                 filtertype: 'date',
                 width: "10%",
@@ -208,7 +228,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 text: 'Modified On',
                 datafield: 'instructionmanuallogs.lastmodifiedon',
                 filtertype: 'date',
-                width: "14%",
+                width: "12%",
                 cellsformat: 'M-dd-yyyy hh:mm tt'
             }
         ]
@@ -247,6 +267,10 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                 {
                     name: 'iscompleted',
                     type: 'boolean'
+                },
+                {
+                    name: 'neworrevised',
+                    type: 'string'
                 },
                 {
                     name: 'instructionmanuallogs.lastmodifiedon',

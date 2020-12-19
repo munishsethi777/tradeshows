@@ -16,6 +16,7 @@
     $instructionManualCustomersMgr = InstructionManualCustomersMgr::getInstance();
     $instructionManualRequestsMgr = InstructionManualRequestsMgr::getInstance();
     $iscompleted = "";
+    $isPrivateLabel="";
     if(isset($_POST['id'])){
         $seq = $_POST['id'];
         $instructionManualLog = $instructionManualLogsMgr->findBySeq($seq);
@@ -25,6 +26,11 @@
             $iscompleted = "checked";
         }else{
             $iscompleted = "";
+        }
+        if($instructionManualLog->getIsPrivateLabel() ==  1){
+            $isPrivateLabel = "checked";
+        }else{
+            $isPrivateLabel = "";
         }
     }
     $instructionManualUsaTeamTabIndex = "";
@@ -77,246 +83,259 @@
             </style>
     </head>
     <body>
-        <div id="wrapper">
-            <?php include("adminmenuInclude.php")?>
-            <div id="page-wrapper" class="gray-bg">
-                <div class="row border-bottom">
-                    <div class="col-lg-12">
-                        <div class="ibox">
-                            <div class="ibox-title">
-                                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-                                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
-                                        href="#"><i class="fa fa-bars"></i> </a>
-                                        <h5 class="pageTitle">Create/Edit Instruction Manual Log</h5>
-                                </nav>
+<div id="wrapper">
+    <?php include("adminmenuInclude.php")?>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
+                                href="#"><i class="fa fa-bars"></i> </a>
+                                <h5 class="pageTitle">Create/Edit Instruction Manual Log</h5>
+                        </nav>
+                    </div>
+                    <div class="ibox-content">
+                        <?include "progress.php"?>  
+                        <form id="createInstructionManualLogsForm" method="post" action="Actions/InstructionManualLogsAction.php" class="m-t-lg">
+                            <input type="hidden" id ="call" name="call"  value="saveInstructionManualLog"/>
+                            <input type="hidden" id ="seq" name="seq"  value="<?php echo $instructionManualLog->getSeq()?>"/>
+                            <div class="bg-white1 p-xs outterDiv usadiv" style="position:relative">
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label bg-formLabelPeach">To be Filled by USA Team</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Entered By:</label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualUSATeamUsers("createdby", "", $instructionManualLog->getCreatedBy(),false,true);
+                                                echo $select;
+                                        ?>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Entry Date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate" onchange="entryDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">PO Ship Date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="poDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control" readonly>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Item no. :</label>
+                                    <div class="col-lg-4">
+                                        <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text"  maxLength="25" value="<?php echo $instructionManualLog->getItemNumber()?>" id="itemnumber" name="itemnumber" class="form-control" <?php echo $readOnlyPO?>>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Class Code</label>
+                                    <div class="col-lg-4">
+                                        <input type="hidden" name="classcode" id="classcode">
+                                        <?php 
+                                                $select = DropDownUtils::getClassCodes("classcodeseq","",$instructionManualLog->getClassCodeSeq(),false,true,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Diagram due date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="graphicduedate"  maxLength="250" value="<?php echo $instructionManualLog->getGraphicDueDate()?>" name="graphicduedate" class="form-control" readonly>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">New or Revised : </label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualNewOrRevised("neworrevised","",$instructionManualLog->getNewOrRevised(),false,false,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Instruction Manual Type :</label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualType("instructionmanualtype","",$instructionManualLog->getInstructionManualType(),false,false,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Customers : </label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getCustomerNameType("usacustomers[]",'',$instructionManaulSelectedCustomerNames,$instructionManualCustomers->getCustomerName(),false,true,true);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                </div>
+                                <div class="form-group row i-checks">
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Requested changes :</label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualRequestedChanges("requestedchanges[]",'',$instructionManualSelectedRequests,$instructionManualRequests->getRequestType(),false,true,true);
+                                                echo $select;
+                                        ?>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach"> Is Private Label :</label>
+                                    <div class="col-lg-4 ">
+                                        <input type="checkbox" <?php echo $isPrivateLabel ?> name="isprivatelabel"/>
+                                    </div>  
+                                </div>
+                                <div class="form-group row">
+                                    <div class="panel panel-peach">
+                                        <div class="panel-heading">Notes to China Office</div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control" maxLength="1000" name="notestochina" ><?php echo $instructionManualLog->getNotesToChina()?></textarea>
+                                        </div>    
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="ibox-content">
-                                <?include "progress.php"?>  
-                                <form id="createInstructionManualLogsForm" method="post" action="Actions/InstructionManualLogsAction.php" class="m-t-lg">
-                                    <input type="hidden" id ="call" name="call"  value="saveInstructionManualLog"/>
-                                    <input type="hidden" id ="seq" name="seq"  value="<?php echo $instructionManualLog->getSeq()?>"/>
-                                    <div class="bg-white1 p-xs outterDiv usadiv" style="position:relative">
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label bg-formLabelPeach">To be Filled by USA Team</label>
+                            <div class="bg-white1 p-xs outterDiv chinadiv" style="position:relative">
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label bg-formLabelYellow">To be Filled by China Team</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Date diagram saved :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Entered By:</label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualUSATeamUsers("createdby", "", $instructionManualLog->getCreatedBy(),false,true);
-                                                        echo $select;
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Diagram saved by : </label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualChinaTeamUsers("diagramsavedbyuserseq","",$instructionManualLog->getDiagramSavedByUserSeq(),false,false,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="panel panel-yellow">
+                                        <div class="panel-heading">Notes to USA Office</div>
+                                        <div class="panel-body">
+                                            <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" ><?php echo $instructionManualLog->getNotesToUsa()?></textarea>
+                                            <div class="row">
+                                                <ul class="list-group" style="padding:10px 10px 0px 10px">
+                                                    <?php foreach ($notesToUsa as $note){
                                                 ?>
+                                                    <li class="list-group-item">
+                                                        <i class="fa fa-clock-o"></i> <?php echo $instructionManualLog->getNotesToUsa()?> <a class="text-info" href="#"><?php //echo $note->email ?></a> <?php echo $note->getNotes()?>.
+                                                    </li>
+                                                <?php }?>
+                                                </ul>
                                             </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Entry Date :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate"  maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">PO Ship Date :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="poDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control" readonly>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Item no. :</label>
-                                            <div class="col-lg-4">
-                                                <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text"  maxLength="25" value="<?php echo $instructionManualLog->getItemNumber()?>" id="itemnumber" name="itemnumber" class="form-control" <?php echo $readOnlyPO?>>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Class Code</label>
-                                            <div class="col-lg-4">
-                                                <input type="hidden" name="classcode" id="classcode">
-                                                <?php 
-                                                        $select = DropDownUtils::getClassCodes("classcodeseq","",$instructionManualLog->getClassCodeSeq(),false,true,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Diagram due date :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="graphicduedate"  maxLength="250" value="<?php echo $instructionManualLog->getGraphicDueDate()?>" name="graphicduedate" class="form-control" readonly>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">New or Revised : </label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualNewOrRevised("neworrevised","",$instructionManualLog->getNewOrRevised(),false,false,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Instruction Manual Type :</label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualType("instructionmanualtype","",$instructionManualLog->getInstructionManualType(),false,false,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Customers : </label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getCustomerNameType("usacustomers[]",'',$instructionManaulSelectedCustomerNames,$instructionManualCustomers->getCustomerName(),false,true,true);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelPeach">Requested changes :</label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualRequestedChanges("requestedchanges[]",'',$instructionManualSelectedRequests,$instructionManualRequests->getRequestType(),false,true,true);
-                                                        echo $select;
-                                                ?>
-                                            </div>
-                                        </div>
+                                        </div>    
                                     </div>
-                                    <div class="bg-white1 p-xs outterDiv chinadiv" style="position:relative">
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label bg-formLabelYellow">To be Filled by China Team</label>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelYellow">Date diagram saved :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelYellow">Diagram saved by : </label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualChinaTeamUsers("diagramsavedbyuserseq","",$instructionManualLog->getDiagramSavedByUserSeq(),false,false,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="panel panel-yellow">
-                                                <div class="panel-heading">Notes to USA Office</div>
-                                                <div class="panel-body">
-                                                    <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" ><?php echo $instructionManualLog->getNotesToUsa()?></textarea>
-                                                    <div class="row">
-                                                        <ul class="list-group" style="padding:10px 10px 0px 10px">
-                                                            <?php foreach ($notesToUsa as $note){
-                                                        ?>
-                                                            <li class="list-group-item">
-                                                                <i class="fa fa-clock-o"></i> <?php echo $instructionManualLog->getNotesToUsa()?> <a class="text-info" href="#"><?php //echo $note->email ?></a> <?php echo $note->getNotes()?>.
-                                                            </li>
-                                                        <?php }?>
-                                                        </ul>
-                                                    </div>
-                                                </div>    
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-white1 p-xs outterDiv technicaldiv" style="position:relative">
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label bg-formLabelMauve">To be Filled by Technical Writer</label>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Assigned to :</label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualTechnicalWriterUsers("assignedtouser","",$instructionManualLog->getAssignedToUser(),false,false,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Status : </label>
-                                            <div class="col-lg-4">
-                                                <?php 
-                                                        $select = DropDownUtils::getInstructionManualLogStatus("instructionmanuallogstatus","statusChange(this.value)",$instructionManualLog->getInstructionManualLogStatus(),false,false,false);
-                                                        echo $select;
-                                                    ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Start date :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="starteddate"  maxLength="250" value="<?php echo $instructionManualLog->getStartedDate()?>" name="starteddate" class="form-control" readonly>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Supervisor return : </label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>   
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Manager Return :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Buyer return : </label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>     
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve">Sent to china :</label>
-                                            <div class="col-lg-4">
-                                                <div class="input-group date">
-                                                    <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="senttochinadate"  maxLength="250" value="<?php echo $instructionManualLog->getSentToChinaDate()?>" name="senttochinadate" class="form-control" readonly>
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row i-checks">
-                                            <label class="col-lg-2 col-form-label bg-formLabelMauve"> Is Completed :</label>
-                                            <div class="col-lg-4">
-                                                <input type="checkbox" <?php echo $iscompleted ?> name="iscompleted"/>
-                                            </div>
-                                        </div>                         
-                                    </div>
-                                    <div class="bg-white p-xs">
-                                        <div class="form-group row">
-                                            <label class="col-lg-2 col-form-label"></label>
-                                            <div class="col-lg-2">
-                                                <button class="btn btn-primary" onclick="saveInstructionManualLog()" type="button" style="width:85%">
-                                                    Save
-                                                </button>
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <a class="btn btn-default" href="adminManageInstructionManualLogs.php" type="button" style="width:85%">
-                                                    Cancel
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+                            <div class="bg-white1 p-xs outterDiv technicaldiv" style="position:relative">
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label bg-formLabelMauve">To be Filled by Technical Writer</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Assigned to :</label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualTechnicalWriterUsers("assignedtouser","",$instructionManualLog->getAssignedToUser(),false,false,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Status : </label>
+                                    <div class="col-lg-4">
+                                        <?php 
+                                                $select = DropDownUtils::getInstructionManualLogStatus("instructionmanuallogstatus","statusChange(this.value)",$instructionManualLog->getInstructionManualLogStatus(),false,false,false);
+                                                echo $select;
+                                            ?>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Start date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="starteddate"  maxLength="250" value="<?php echo $instructionManualLog->getStartedDate()?>" name="starteddate" class="form-control" readonly>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Supervisor return : </label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>   
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Manager Return :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Buyer return : </label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>     
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve">Sent to china :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="senttochinadate"  maxLength="250" value="<?php echo $instructionManualLog->getSentToChinaDate()?>" name="senttochinadate" class="form-control" readonly>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row i-checks">
+                                    <label class="col-lg-2 col-form-label bg-formLabelMauve"> Is Completed :</label>
+                                    <div class="col-lg-4">
+                                        <input type="checkbox" <?php echo $iscompleted ?> name="iscompleted"/>
+                                    </div>
+                                </div>                         
+                            </div>
+                            <div class="bg-white p-xs">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label"></label>
+                                    <div class="col-lg-2">
+                                        <button class="btn btn-primary" onclick="saveInstructionManualLog()" type="button" style="width:85%">
+                                            Save
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-default" href="adminManageInstructionManualLogs.php" type="button" style="width:85%">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</div>
+</body>
 </html>
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
@@ -373,17 +392,23 @@ function saveInstructionManualLog(){
 function poDateOnChange(poShipDateStr){
 	if(poShipDateStr == ""){
         $("#approvedmanualdueprintdate").val("");
-        $("#graphicduedate").val("");
-		return;
+        return;
 	}
 	var poShipDate = getDate(poShipDateStr);
 	var approvedManualDueDays = 21;
 	var approvedManualDueDate = subtractDays(poShipDate, approvedManualDueDays);
     var approvedManualDueDateStr  = dateToStr(approvedManualDueDate);
-    var diagramDueDays = 14;
-    var diagramDueDate = subtractDays(approvedManualDueDate,diagramDueDays);
-    var diagramDueDateStr = dateToStr(diagramDueDate);
     $("#approvedmanualdueprintdate").val(approvedManualDueDateStr);
+}
+function entryDateOnChange(entryDateStr){
+	if(entryDateStr == ""){
+        $("#graphicduedate").val("");
+		return;
+	}
+	var entryDate = getDate(entryDateStr);
+	var diagramDueDays = 14;
+    var diagramDueDate = addDays(entryDate,diagramDueDays);
+    var diagramDueDateStr = dateToStr(diagramDueDate);
     $("#graphicduedate").val(diagramDueDateStr);
 }
 function getDate(dateString) {
@@ -411,6 +436,11 @@ function dateToStr(date){
 function subtractDays(date, days) {
     var sDate = date;
     sDate.setDate(sDate.getDate() - days);
+    return sDate;
+}
+function addDays(date, days) {
+    var sDate = date;
+    sDate.setDate(sDate.getDate() + days);
     return sDate;
 }
 function statusChange(selectedStatus){
