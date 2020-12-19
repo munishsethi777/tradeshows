@@ -1,0 +1,1 @@
+ALTER TABLE `instructionmanuallogs` ADD `isprivatelabel` TINYINT NOT NULL DEFAULT '0' AFTER `iscompleted`;
