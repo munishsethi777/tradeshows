@@ -6,27 +6,26 @@ require_once($ConstantsArray['dbServerUrl'] . "Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/QcscheduleApproval.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/QcscheduleApprovalMgr.php");
-require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/QcscheduleApproval.php");
 require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
 
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
-
 $sessionUtil = SessionUtil::getInstance();
 $isSessionAdmin = $sessionUtil->isSessionAdmin();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
 $permissionUtil = PermissionUtil::getInstance();
 $hasQcPlannerButtonPermission = $permissionUtil->hasQCPlannerButtonPermission() || $isSessionAdmin;
 $hasWeeklyReportButtonPermission = $permissionUtil->hasWeeklyMailButtonPermission() || $isSessionAdmin;
 $hasQCReadonly = $permissionUtil->hasQCReadonly();
 $exportLimit = ExportUtil::$EXPORT_ROW_LIMIT;
-//$qcscheduleseq = "";
-
-/*$QcscheduleApprovals = "";
-$QcQcscheduleApprovalMgr= QcscheduleApprovalMgr::getInstance();
-$QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
-
-
-
+$userConfigurationMgr = UserConfigurationMgr::getInstance();
+$userConfigKey = "AnalyticsQCDivExpanded";
+$isAnalyticsQCDivExpanded = $userConfigurationMgr->getConfigurationValue($userSeq,$userConfigKey);
+$analyticsDivState = "collapsed";
+if($isAnalyticsQCDivExpanded){
+	$analyticsDivState = "";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,7 +51,9 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 	</style>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<script src="scripts/StickyAnalyticsDivs.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	
 </head>
 
 <body>
@@ -71,12 +72,13 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 								</nav>
 							</div>
 							<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-                                <div class="ibox" style="border:1px #e7eaec solid">
+                                <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
                                     <div class="ibox-title">
                                         <h5>QC Schedules Analytics</h5>
                                         <div class="ibox-tools">
+										<input id="isAnalyticsQCDivExpanded" class="isAnalyticsDivExpanded" type="hidden" name="isAnalyticsQCDivExpanded" value="<?php echo $isAnalyticsQCDivExpanded;?>" />
                                             <a class="collapse-link">
-                                                <i class="fa fa-chevron-up"></i>
+                                                <i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>')"></i>
                                             </a>
                                             <!--<a class="close-link"> -->
                                             <!--<i class="fa fa-times"></i> -->
@@ -253,6 +255,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 		</div>
 </body>
 <script type="text/javascript">
+
 	function initDateRanges() {
 		var start = moment().subtract(29, 'days');
 		var end = moment();
@@ -281,6 +284,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 		cb(start, end);
 	}
 	$(document).ready(function() {
+		
 		function updateApprovalStatus() {
 			if ($("#updateQCScheduleApprovalForm")[0].checkValidity()) {
 				showHideProgress()
@@ -1458,7 +1462,7 @@ $QcscheduleApprovals = $QcQcscheduleApprovalMgr->getQcScheduleApproval(5800);*/
 					} else {
 						$("#" + key).text(value);
 					}
-					 				console.log(key,value);									
+					 	console.log(key,value);									
 				});
 				$(".bar").peity("bar", {
 					fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],
