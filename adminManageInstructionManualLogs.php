@@ -3,10 +3,18 @@ include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
 
+$sessionUtil = SessionUtil::getInstance();
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
-
-
+$userConfigurationMgr = UserConfigurationMgr::getInstance();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
+$userConfigKey = "AnalyticsIMDivExpanded";
+$isAnalyticsIMDivExpanded = $userConfigurationMgr->getConfigurationValue($userSeq,$userConfigKey);
+$analyticsDivState = "collapsed";
+if($isAnalyticsIMDivExpanded){
+	$analyticsDivState = "";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +34,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
         }
 
         .reportDataCountRow .ibox-content {
-            ./*background-color: white;*/
+            background-color: #ffffff;
             padding: 10px 10px 0px 20px !important;
         }
 
@@ -43,6 +51,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
     <!-- Peity -->
     <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
     <script src="scripts/InstructionManualGridDataByReportingParameter.js"></script>
+    <script src="scripts/StickyAnalyticsDivs.js"></script>
     <!--     <script src="scripts/demo/peity-demo.js"></script> -->
 
 </head>
@@ -63,12 +72,13 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
                                 </nav>
                             </div>
                             <div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-                                <div class="ibox" style="border:1px #e7eaec solid">
+                                <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
                                     <div class="ibox-title">
                                         <h5>Instruction Manual Logs Analytics</h5>
                                         <div class="ibox-tools">
+                                            <input id="isAnalyticsIMDivExpanded" class="isAnalyticsIMDivExpanded" type="hidden" name="isAnalyticsIMDivExpanded" value="<?php echo $isAnalyticsIMDivExpanded;?>" />
                                             <a class="collapse-link">
-                                                <i class="fa fa-chevron-up"></i>
+                                                <i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>','<?php echo $isAnalyticsIMDivExpanded;?>')"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -126,14 +136,16 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
-        $(".get-grid-data-by-reporting-data").click(function (){
-            var reportingParameter = $(this).attr("id");
-            var gridId = $("#gridId").val();
-            AddReportingFilter(reportingParameter,gridId);
-            $(".get-grid-data-by-reporting-data").removeClass("bg-primary");
-            $("#"+reportingParameter).removeClass("bg-white");
-            $("#"+reportingParameter).addClass("bg-primary");
-        });
+        // $(".get-grid-data-by-reporting-data").click(function (){
+        //     var reportingParameter = $(this).attr("id");
+        //     var gridId = $("#gridId").val();
+        //     AddReportingFilter(reportingParameter,gridId);
+
+        //     $(".get-grid-data-by-reporting-data").removeClass("bg-primary");
+        //     $("#"+reportingParameter).removeClass("bg-white");
+        //     $("#"+reportingParameter).addClass("bg-primary");
+
+        // });
     });
     
     function editButtonClick(seq) {

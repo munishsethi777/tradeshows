@@ -4,14 +4,23 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
-
-$allReportingDataParameters = ReportingDataParameterType::getAll();
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
 
 $sessionUtil = SessionUtil::getInstance();
 $userSeq = $sessionUtil->getUserLoggedInSeq();
 $userMgr = UserMgr::getInstance();
 $user = $userMgr->findBySeq($userSeq);
 $isAllFF = ($user->getFreightForwarder() == null) ? 1 : 0;
+$allReportingDataParameters = ReportingDataParameterType :: getAll(); 
+$sessionUtil = SessionUtil::getInstance();
+$userConfigurationMgr = UserConfigurationMgr::getInstance();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
+$userConfigKey = "AnalyticsContainersDivExpanded";
+$isAnalyticsContainersDivExpanded = $userConfigurationMgr->getConfigurationValue($userSeq,$userConfigKey);
+$analyticsDivState = "collapsed";
+if($isAnalyticsContainersDivExpanded){
+	$analyticsDivState = "";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,6 +61,7 @@ $isAllFF = ($user->getFreightForwarder() == null) ? 1 : 0;
 	<!-- Peity -->
 	<script src="scripts/plugins/peity/jquery.peity.min.js"></script>
 	<!--     <script src="scripts/demo/peity-demo.js"></script> -->
+	<script src="scripts/StickyAnalyticsDivs.js"></script>
 </head>
 
 <body>
@@ -71,32 +81,50 @@ $isAllFF = ($user->getFreightForwarder() == null) ? 1 : 0;
 
 							<?php if ($isAllFF) { ?>
 								<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-									<div class="row reportDataCountRow">
-										<?php 
-											foreach($allReportingDataParameters as $key => $value){
-												if(strpos($key,'container_') !== false){
-													?>
-													
-													<div class="col-lg-2">
-														<div class="ibox float-e-margins">
-															<div class="ibox-content text-center">
-																<h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
-																<div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
-																	<i class="fa" id='<?php echo $key ?>_change_arrow'></i>
-																	<span class="text-center" id='<?php echo $key ?>_diff'></span>
-																	<span id='<?php echo $key ?>_percent'></span>
+									<div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
+										<div class="ibox-title">
+											<h5>Container Schedule Analytics</h5>
+											<div class="ibox-tools">
+												<input id="isAnalyticsContainersDivExpanded" class="isAnalyticsContainersDivExpanded" type="hidden" name="isAnalyticsContainersDivExpanded" value="<?php echo $isAnalyticsContainersDivExpanded;?>" />
+												<a class="collapse-link">
+													<i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>','<?php echo $isAnalyticsContainersDivExpanded;?>')"></i>
+												</a>
+												<!--<a class="close-link"> -->
+												<!--<i class="fa fa-times"></i> -->
+												<!--</a> -->
+											</div>
+										</div>
+										<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
+											<div class="row reportDataCountRow">
+												<?php 
+													foreach($allReportingDataParameters as $key => $value){
+														if(strpos($key,'container_') !== false){
+															?>
+															
+															<div class="col-lg-2">
+																<div class="ibox float-e-margins">
+																	<div class="ibox-content text-center">
+																		<h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
+																		<div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
+																			<i class="fa" id='<?php echo $key ?>_change_arrow'></i>
+																			<span class="text-center" id='<?php echo $key ?>_diff'></span>
+																			<span id='<?php echo $key ?>_percent'></span>
+																		</div>
+																		<small class="dataName"><?php echo $value ?></small>
+																		<span class="bar" id='<?php echo $key ?>_thirty_days'></span>
+																	</div>
 																</div>
-																<small class="dataName"><?php echo $value ?></small>
-																<span class="bar" id='<?php echo $key ?>_thirty_days'></span>
 															</div>
-														</div>
-													</div>
-													
-													<?php 
-												}
-											} 
-										?>
+															
+															<?php 
+														}
+													} 
+												?>
+											</div>
+										</div>
 									</div>
+									
+									
 								</div>
 							<?php } ?>
 							<div class="ibox-content">

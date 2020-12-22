@@ -3,8 +3,18 @@ include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
 
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
+$sessionUtil = SessionUtil::getInstance();
+$userConfigurationMgr = UserConfigurationMgr::getInstance();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
+$userConfigKey = "AnalyticsGraphicsDivExpanded";
+$isAnalyticsGraphicsDivExpanded = $userConfigurationMgr->getConfigurationValue($userSeq,$userConfigKey);
+$analyticsDivState = "collapsed";
+if($isAnalyticsGraphicsDivExpanded){
+	$analyticsDivState = "";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,6 +41,7 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="scripts/StickyAnalyticsDivs.js"></script>
 <!-- Peity -->
     <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
 <!--     <script src="scripts/demo/peity-demo.js"></script> -->
@@ -54,12 +65,13 @@ $allReportingDataParameters = ReportingDataParameterType :: getAll();
 								</nav>
 							</div>
 							<div class="ibox-content" >
-								<div class="ibox" style="border:1px #e7eaec solid">
+								<div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
 									<div class="ibox-title">
                                         <h5>Graphic Logs Analytics</h5>
                                         <div class="ibox-tools">
+											<input id="isAnalyticsGraphicsDivExpanded" class="isAnalyticsGraphicsDivExpanded" type="hidden" name="isAnalyticsGraphicsDivExpanded" value="<?php echo $isAnalyticsGraphicsDivExpanded;?>" />
                                             <a class="collapse-link">
-                                                <i class="fa fa-chevron-up"></i>
+                                                <i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>','<?php echo $isAnalyticsGraphicsDivExpanded;?>')"></i>
                                             </a>
 											<!--<a class="close-link"> -->
 											<!--<i class="fa fa-times"></i> -->
