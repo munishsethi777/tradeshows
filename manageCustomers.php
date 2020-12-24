@@ -120,14 +120,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                        		<label class="col-lg-3">Created On</label>
                            	<div class="col-lg-3"><label class="createdon lblDesc"></label></div>
                         </div>
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                        		 <label class="col-lg-2">Business Category</label>
                            	<div class="col-lg-4"><label class="businesscategory lblDesc"></label></div>
                            	<label class="col-lg-3">Store Id</label>
                            	<div class="col-lg-3"><label class="storeid lblDesc"></label></div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
-                       		<label class="col-lg-3">Store Name</label>
+                       		<label class="col-lg-2">Store Name</label>
                            	<div class="col-lg-3"><label class="storename lblDesc"></label></div>
                         </div><br>
                         <div class="salesRep"></div>
@@ -302,24 +302,24 @@ function loadGrid(){
         ids[row] = data["seq"];
         var html = "<div style='margin-left:9px;margin-top:1px;font-size:18px;'>"
             	html +="<a title='Add Questionnaire ' href='javascript:addQuestionnaire("+ data['seq'] + ")'></i><i class='fa fa-question' title='Add Questionnaire'></i></a>";
-            	html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-calendar' title='Add Special Prog.'></i></a></span>"
+            	// html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-calendar' title='Add Special Prog.'></i></a></span>"
             html += "</div>";
         return html;
     }
     
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Customer ID', datafield: 'customerid',width:"8%",cellsrenderer:showCustomerDetailAction},
-      { text: 'Customer Type', datafield: 'customertype', width:"8%"},
-      { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
-      { text: 'Sales Admin Lead', datafield:'salesadminlead', width:"8%"},
-      { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"8%"},
-      { text: 'Name', datafield: 'fullname', width:"25%"},
-      { text: 'Store Name', datafield: 'storename', width:"20%"},
-      { text: 'BusinessType', datafield: 'businesstype',width:"12%"},
-      { text: 'Category', datafield: 'businesscategory',width:"12%"},
-      { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
-      { text: 'Actions', datafield: 'action',width:"8%",cellsrenderer:actions},
+      { text: 'Customer ID', datafield: 'customerid',width:"10%",cellsrenderer:showCustomerDetailAction},
+      { text: 'Customer Name', datafield: 'fullname', width:"30%"},
+      { text: 'Customer Type', datafield: 'customertype', width:"30%"},
+      { text: 'BusinessType', datafield: 'businesstype',width:"22%"},
+    //   { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
+    //   { text: 'Sales Admin Lead', datafield:'salesadminlead', width:"8%"},
+    //   { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"8%"},
+    //   { text: 'Store Name', datafield: 'storename', width:"20%"},
+    //   { text: 'Category', datafield: 'businesscategory',width:"12%"},
+    //   { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
+      { text: 'Actions', datafield: 'action',width:"7%",cellsrenderer:actions},
     ]
    
     var source =
@@ -329,18 +329,19 @@ function loadGrid(){
         pagesize: 20,
         sortcolumn: 'customerid',
         sortdirection: 'asc',
-        datafields: [{ name: 'seq', type: 'integer' }, 
-                     { name: 'customerid', type: 'string' },
-                     { name: 'customertype', type: 'string'},
-                     { name: 'insideaccountmanager', type: 'string'},
-                     { name: 'salesadminlead', type: 'string'},
-                     { name: 'chainstoresalesadmin', type: 'string'}, 
-                    { name: 'fullname', type: 'string' }, 
-                    { name: 'storename', type: 'string' }, 
+        datafields: [
+                    { name: 'seq', type: 'integer' }, 
+                    { name: 'customerid', type: 'string' },
+                    { name: 'fullname', type: 'string' },
+                    { name: 'customertype', type: 'string'},
                     { name: 'businesstype', type: 'string' },
-                    { name: 'businesscategory', type: 'string' },
-                    { name: 'salespersonname', type: 'string' },
-                    { name: 'lastmodifiedon', type: 'date' },
+                    // { name: 'insideaccountmanager', type: 'string'},
+                    // { name: 'salesadminlead', type: 'string'},
+                    // { name: 'chainstoresalesadmin', type: 'string'},  
+                    // { name: 'storename', type: 'string' }, 
+                    // { name: 'businesscategory', type: 'string' },
+                    // { name: 'salespersonname', type: 'string' },
+                    // { name: 'lastmodifiedon', type: 'date' },
                     { name: 'action', type: 'string' }
                     ],                          
         url: 'Actions/CustomerAction.php?call=getAllCustomers',

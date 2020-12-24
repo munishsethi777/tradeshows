@@ -220,17 +220,25 @@ if(!empty($seq) && !$isadded){
             						</label>
             						<div class="col-lg-4">
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr", null, $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr","notesShowHide()", $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, false);
     			                        				echo $select;
 	                             					?>
             						</div>
             					</div>
             				</div>
+							<div class="form-group" id="springNotesDiv">
+	                        	<div class="panel panel-primary">
+									<div class="panel-heading">Notes</div>
+									<div class="panel-body">
+	                                   		<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="notes" ><?php echo $customerSpringQuestion->getNotes() ?></textarea>
+									</div>
+		                     	</div>
+	                        </div>
             				<div class="form-group">
             					<div class="row m-b-xxs">
             						<label
-            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
-            							you sent them any Spring sample?</label>
+            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+										Have you sent them a Spring sample?</label>
             						<div class="col-lg-4">
             							
 											<?php
@@ -285,8 +293,8 @@ if(!empty($seq) && !$isadded){
             				<div class="form-group">
             					<div class="row m-b-xxs">
             						<label
-            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What
-            							categories have they not bought That I should sell them?
+            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+										What categories have they not bought that We should sell them?
             						</label>
             						<div class="col-lg-4">
             							<select class="categoriesshouldsellthem form-control"
@@ -351,7 +359,7 @@ if(!empty($seq) && !$isadded){
             					<div class="row m-b-xxs">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">When
-            							are they reviewing spring 2022?</label>
+            							are they reviewing Spring 2022?</label>
             						<div class="col-lg-4">
             							<div class="input-group date">
             								<input type="text" name="springreviewingdate"
@@ -397,7 +405,7 @@ if(!empty($seq) && !$isadded){
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Should
             							we visit this customer during the 2ND qtr to comp shop their
-            							spring items?</label>
+            							Spring items?</label>
             						<div class="col-lg-4">
             							
 											<?php
@@ -544,7 +552,7 @@ if(!empty($seq) && !$isadded){
             				<div class="form-group">
             					<div class="row m-b-xxs">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-            							Have we sent them opportunities buys? If so, what is the last date you sent to them.
+            							Have we sent them opportunities buys?
             						</label>
             						<div class="col-lg-4">
             							
