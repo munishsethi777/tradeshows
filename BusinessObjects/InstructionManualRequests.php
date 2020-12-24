@@ -17,10 +17,10 @@ class InstructionManualRequests{
         return $this->instructionmanualseq;
     }
     public function setRequestType($requestType){
-        $this->requestType = $requestType;
+        $this->requesttype = $requestType;
     }
     public function getRequestType(){
-        return $this->requestType;
+        return $this->requesttype;
     }
     public function createFromRequest($request){
 		if (is_array($request)){

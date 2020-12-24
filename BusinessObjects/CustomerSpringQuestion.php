@@ -44,6 +44,7 @@ class CustomerSpringQuestion
     private $itemspurchasedlastyear;
     private $isdinnerappt;
     private $dinnerapptplace;
+    private $notes;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -348,6 +349,12 @@ class CustomerSpringQuestion
     }
     public function setDinnerApptPlace($dinnerApptPlace){
         $this->dinnerapptplace = $dinnerApptPlace;
+    }
+    public function getNotes(){
+        return $this->notes;
+    }
+    public function setNotes($notes){
+        $this->notes = $notes;
     }
     
     public function from_array($array) {

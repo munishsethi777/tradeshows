@@ -2,13 +2,13 @@
 class CustomerChristmasQuestion{
     public static $className = "CustomerChristmasQuestion";
     public static $tableName = "customerchristmasquestions";
-    private $seq,$customerseq,$isinterested,$iscataloglinksent,$cataloglinksentnotes,$ismainvendor,$mainvendornotes;
+    private $seq,$customerseq,$isallcategoriesselected,$category,$isinterested,$iscataloglinksent,$cataloglinksentnotes,$ismainvendor,$mainvendornotes;
     private $isxmassamplessent,$isstrategicplanningmeetingappointment,$strategicplanningmeetdate,$isinvitedtoxmasshowroom,$invitedtoxmasshowroomdate,$invitedtoxmasshowroomreminderdate;
-    private $isholidayshopcompleted,$isholidayshopcomsummaryemailsent,$christmas2020reviewingdate,$customerselectxmasitemsfrom;
+    private $compshopcompleteddate,$isholidayshopcomsummaryemailsent,$christmas2020reviewingdate,$customerselectxmasitemsfrom;
     private $isxmasbuylastyear,$xmasbuylastyearamount,$isreceivingsellthru,$isrobbyreviewedsellthrough,$isvisitcustomerin4qtr,$christmasquotebydate;
     private $cataloglinkdate,$tradeshowsaregoingto,$isdinnerappt,$dinnerapptdate,$ispitchmainvendor,$istheremorebuyers,$xmassamplesentdate,$categoriesshouldsellthem;
     private $isreviewedsellthru,$compshopsummaryemailsentdate,$isquotedforxmas,$itemselectionfinalized,$itemspurchasedlastyear,$finalizedtyvsly,$arepoexpecting,$expectingpodate,$isopportunitiessent,$opportunitiessentdate;
-    private $year,$dinnerapptplace;
+    private $year,$dinnerapptplace,$notes;
     
     public function getSeq(){
         return $this->seq;
@@ -146,12 +146,12 @@ class CustomerChristmasQuestion{
         $this->invitedtoxmasshowroomreminderdate = $invitedtoxmasshowroomreminderdate;
     }
     
-    public function getIsHolidayShopCompleted(){
-        return $this->isholidayshopcompleted;
+    public function getCompShopCompletedDate(){
+        return $this->compshopcompleteddate;
     }
     
-    public function setIsHolidayShopCompleted($isholidayshopcompleted){
-        $this->isholidayshopcompleted = $isholidayshopcompleted;
+    public function setCompShopCompletedDate($compshopcompleteddate){
+        $this->compshopcompleteddate = $compshopcompleteddate;
     }
     
     public function getIsHolidayShopComSummaryEmailSent(){
@@ -315,9 +315,24 @@ class CustomerChristmasQuestion{
     public function setDinnerApptPlace($dinnerApptPlace){
         $this->dinnerapptplace = $dinnerApptPlace;
     }
-        
-    
-    
+    public function getIsAllCategoriesSelected(){
+        return $this->isallcategoriesselected;
+    }
+    public function setIsAllCategoriesSelected($isAllCategoriesSelected){
+        $this->isallcategoriesselected = $isAllCategoriesSelected;
+    }
+    public function getCategory(){
+        return $this->category;
+    }
+    public function setCategory($category){
+        $this->category = $category;
+    }
+    public function getNotes(){
+        return $this->notes;
+    }
+    public function setNotes($notes){
+        $this->notes = $notes;
+    }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );
