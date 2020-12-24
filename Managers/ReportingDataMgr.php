@@ -116,6 +116,11 @@ class ReportingDataMgr{
         $projectDueLessThan20DaysFromTodayCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
         return $projectDueLessThan20DaysFromTodayCount;
     }
+    public function getGraphiclogAllCount(){
+        $query = "SELECT COUNT(seq) from graphicslogs";
+        $count = self::$reportingDataDataStore->executeCountQueryWithSql($query);
+        return $count;
+    }
     
     
     //fetch data from reportingdata table

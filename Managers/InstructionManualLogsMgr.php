@@ -18,18 +18,7 @@
             return self::$dataStore->save($instructionManualLog);
         }
         public function getInstructionManualLogsForGrid(){
-            $sessionUtil = SessionUtil::getInstance();
-            $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
-            $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-            $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
-            // $query = "select users.fullname as createdby,classcodes.classcode,instructionmanuallogs.seq,instructionmanuallogs.itemnumber,
-            //             instructionmanuallogs.graphicduedate,instructionmanuallogs.instructionmanuallogstatus,
-            //             instructionmanuallogs.iscompleted,instructionmanuallogs.lastmodifiedon 
-            //             from instructionmanuallogs 
-            //             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq 
-            //             left join users on instructionmanuallogs.createdby = users.seq";        
-            
+            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";        
             $rows = self::$dataStore->executeQuery($query,true);
             $arr = array();
             foreach($rows as $row){
@@ -43,9 +32,6 @@
             return $mainArr;
         }
         public function getAllCount($isApplyFilter){
-            $sessionUtil = SessionUtil::getInstance();
-            $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-            $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
             $query = "select count(*) from instructionmanuallogs left join classcodes on 
                     instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
                     instructionmanuallogs.createdby = users.seq";
@@ -64,7 +50,6 @@
             $instructionManualLog->setManagerReturnDate($this->getDateStr($instructionManualLog->getManagerReturnDate()));
             $instructionManualLog->setBuyerReturnDate($this->getDateStr($instructionManualLog->getBuyerReturnDate()));
             $instructionManualLog->setSentToChinaDate($this->getDateStr($instructionManualLog->getSentToChinaDate()));
-            
             return $instructionManualLog;
         }
         private function getDateStr($date){
@@ -102,9 +87,6 @@
             return $mainArr;
         }
         public function getProjectsDueLessThan14DaysFromEntryCount($isApplyFilter){
-            $sessionUtil = SessionUtil::getInstance();
-            $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
-            $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
             $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
                     left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
                     instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
@@ -118,6 +100,29 @@
             $query = $instructionManualLogSeq != "" ? $query . " AND seq!=".$instructionManualLogSeq : $query;
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;        
+        }
+        public function getProjectsOverdue(){
+            $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
+            left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
+            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            $rows = self::$dataStore->executeQuery($query,true);
+            $arr = array();
+            foreach($rows as $row){
+                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
+                $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
+                array_push($arr,$row);
+            }
+            $mainArr["Rows"] = $arr;
+            $mainArr["TotalRows"] = $this->getProjectsOverdueCount(true);
+            return $mainArr;
+        }
+        public function getProjectsOverdueCount($isApplyFilter){
+            $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
+            left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
+            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
+            return $count;
         }
         //-----------------------------Cron Functions-------------------------------------------------
         public function getInstructionManualProjectsOpenCount(){
@@ -170,5 +175,12 @@
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }
+        public function getInstructionManualAllCount(){
+            $query = "SELECT COUNT(seq) from " . InstructionManualLogs::$tableName;
+            $count = self::$dataStore->executeCountQueryWithSql($query);
+            return $count;   
+        }
+        //-----------------------------/Cron Functions ends here-------------------------------------------------
+        
     }
 ?>
