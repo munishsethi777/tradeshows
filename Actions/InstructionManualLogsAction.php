@@ -131,6 +131,11 @@
         echo json_encode($projectsDueLess14DaysThanFromEntry);
         return;
     }
+    if($call == 'getProjectsOverdue'){
+        $projectsOverdue = $instructionManualLogMgr->getProjectsOverdue();
+        echo json_encode($projectsOverdue);
+        return;
+    }
     if($call == 'export'){
     }
     if($call == 'find'){
