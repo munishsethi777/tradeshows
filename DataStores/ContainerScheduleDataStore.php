@@ -155,7 +155,11 @@ WHERE YEAR(terminalappointmentdatetime ) = YEAR(CURRENT_DATE()) and scheduleddel
         $containerSchedules = self::$containerScheduleDataStore->executeCountQueryWithSql($query);
         return $containerSchedules;
     }
-    
+    public function getAllContainerSchedules(){
+        $query = "SELECT * from containerschedules";
+        $containerSchedules = self::$containerScheduleDataStore->executeQuery($query);
+        return $containerSchedules;
+    }
     
     
     //-------******************* -------

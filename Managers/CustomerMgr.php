@@ -317,7 +317,9 @@ class CustomerMgr{
 		$loggedInUserTimeZone = $sessoinUtil->getUserLoggedInTimeZone();
 		$mainArr = array();
 		foreach ($customerArr as $customer){
-		    $businessType = CustomerBusinessType::getValue($customer["businesstype"]);
+			$businessType = CustomerBusinessType::getValue($customer["businesstype"]);
+			$customerType = BusinessCategoryType::getValue($customer["customertype"]);
+			$customer["customertype"] = $customerType;
 		    $customer["businesstype"] = $businessType;
 		    $lastModifiedOn = $customer["lastmodifiedon"];
 		    $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
@@ -350,6 +352,8 @@ class CustomerMgr{
 		$customer["businesstype"] = $businessType;
 		$businessCategory = BusinessCategoryType::getValue($customer["businesscategory"]);
 		$customer["businesscategory"] = $businessCategory;
+		$customerType = BusinessCategoryType::getValue($customer["customertype"]);
+		$customer["customertype"] = $customerType;
 		return $customer;
 	}
 	
@@ -376,7 +380,7 @@ class CustomerMgr{
 	}
 	
 	function getCustomerBuyerCategories($selected){
-	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false);
+	    $ddhtml = DropDownUtils::getBuyerCategories("category[]", "", $selected, false,true);
 	    return $ddhtml;
 	}
 	function getCustomerSellerResponsibilitiesType($selected){

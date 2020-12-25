@@ -15,6 +15,9 @@ class BuyerCategoryType extends BasicEnum{
     const pond = "Pond";
     const solar = "Solar";
     const statuary = "Statuary";
+    const lawn_garden = "Lawn & Garden";
+    const holiday = "Holiday";
+    const holiday_lighting = "Holiday Lighting";
     
     
 //     const bird_bath = "Bird Bath";

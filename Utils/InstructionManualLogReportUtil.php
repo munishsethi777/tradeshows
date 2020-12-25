@@ -35,7 +35,7 @@ class InstructionManualLogReportUtil
         $sessionUtil = SessionUtil::getInstance();
         $loggedInUserName = $sessionUtil->getUserLoggedInName();
         $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
-        $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
+        $loggedInUserDateTime = DateUtil::getCurrentDateTimeStrWithTimeZone($loggedInUserTimeZone);
         $phAnValues = array();
         $phAnValues["ITEM_NUMBER"] = $instructionManual->getItemNumber() != "" ? $instructionManual->getItemNumber() : "-" ;
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
@@ -78,7 +78,7 @@ class InstructionManualLogReportUtil
         $sessionUtil = SessionUtil::getInstance();
         $loggedInUserName = $sessionUtil->getUserLoggedInName();
         $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
-        $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
+        $loggedInUserDateTime = DateUtil::getCurrentDateTimeStrWithTimeZone($loggedInUserTimeZone);
         $phAnValues = array();
         $phAnValues["ITEM_NUMBER"] = $instructionManualLog->getItemNumber() != "" ? $instructionManualLog->getItemNumber() : "-" ;
         $phAnValues["NOTES_NAME"] = $noteType;
@@ -132,7 +132,7 @@ class InstructionManualLogReportUtil
             $sessionUtil = SessionUtil::getInstance();
             $loggedInUserName = $sessionUtil->getUserLoggedInName();
             $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
-            $loggedInUserDateTime = DateUtil::getCurrentDateStrWithTimeZone($loggedInUserTimeZone);
+            $loggedInUserDateTime = DateUtil::getCurrentDateTimeStrWithTimeZone($loggedInUserTimeZone);
             $phAnValues = array();
             $phAnValues["ITEM_NUMBER"] = $instructionManual->getItemNumber();
             $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;

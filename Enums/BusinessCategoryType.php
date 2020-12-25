@@ -1,8 +1,8 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class BusinessCategoryType extends BasicEnum{
-    //const chain_store = "Chain Store";
-    const top_150 = "Top 150";
-    const leads = "Leads";
-    //const customer_151_3000 = "151-3000 Customer";
+    const top_120 = "Top 120";
+    const ecomm = "eComm";
+    const other = "Other";
+    const previous_customer = "Previous Customer";
 }

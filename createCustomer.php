@@ -96,12 +96,57 @@ if(isset($_POST["id"])){
                  	<?include "progress.php"?>
                  	 <form id="createCustomerForm" method="post" action="Actions/CustomerAction.php" class="m-t-sm">
                      		<input type="hidden" id ="call" name="call"  value="saveCustomer"/>
-                        	<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
-                        	<div class="row i-checks">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Chain Store </label>
+							<input type="hidden" id ="seq" name="seq"  value="<?php echo $customerSeq?>"/>
+							<div class="form-group row">
+								<div class="col-lg-8">
+								</div>
+	                       		<div class="col-lg-2">
+		                        	<button class="btn btn-primary" onclick="saveCustomer()" type="button" style="width:85%">
+	                                	Save
+		                          	</button>
+		                        </div>
+		                        <div class="col-lg-2">
+		                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">
+	                                	Cancel
+		                          	</a>
+		                        </div>
+		                    </div>	   
+							<div class="row form-group">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
 	                        	<div class="col-lg-4">
-	                        		<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
+	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
 	                            </div>
+	                            
+							</div>                       
+	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
+		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
+		                        	<div class="col-lg-4">
+		                        		<select name="fullNameSelect" <?php echo $customerSelectDisabled?> onchange="setCustomerId(this.value)" id="customerSelect" class="fullNameSelect form-control" required>
+		                        			<?php if($seq > 0){
+		                        			    echo ('<option selected value="'.$seq.'">'.$customer->getFullName().'</option>');
+		                        			}?>
+		                        		</select>
+		                            </div>
+	                       	</div>
+                        	<div class="form-group row customerNameTextDiv" style="display:<?php echo $customerTextDisplay?>">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
+	                        	<div class="col-lg-4">
+	                        		<input type="text" maxLength="250" value="<?php echo $customer->getFullName()?>" id="fullname" name="fullname" class="form-control" required>
+	                            </div>
+	                        </div>
+	                        <div class="form-group row">
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Customer Type</label>
+	                        	<div class="col-lg-4">
+ 	                        		<?php 
+	                        		    $select = DropDownUtils::getBusinessCategoryTypes("customertype", null, $customer->getCustomerType(),true,true);
+    			                        echo $select;
+	                             	?>
+								</div>
+								<div class="row i-checks">
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store </label>
+									<div class="col-lg-4">
+										<input type="checkbox" name="isstore" <?php echo $storeChecked?> class="isstore"/>
+									</div>
 	                            <!-- <label class="col-lg-2 col-form-label bg-formLabel">Priority </label>
 	                        	<div class="col-lg-4">
 	                        		<?php 
@@ -109,74 +154,48 @@ if(isset($_POST["id"])){
 //     			                            echo $select;
 	                             	?>
 	                        	</div>-->
-	                         </div>
-	                         <div class="row">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer ID</label>
-	                        	<div class="col-lg-4">
-	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
-	                            </div>
-	                            <label class="col-lg-2 col-form-label bg-formLabel">Business Type</label>
+								</div>
+	                        </div>
+							<div class="form-group row ">
+								<label class="col-lg-2 col-form-label bg-formLabel">Business Type</label>
 	                        	<div class="col-lg-4">
  	                        		<?php 
-    									$select = DropDownUtils::getBusinessTypes("businesstype", null, $customer->getBusinessType(),false,true);
+    									$select = DropDownUtils::getBusinessTypes("businesstype","showInternalSupportFields()", $customer->getBusinessType(),true,true);
     			                        echo $select;
 	                             	?>
-	                            </div>
-	                       </div>
-                        
-	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
-	                         	<div class="form-group row no-margins" style="margin-bottom:15px !important">
-		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
-		                        	<div class="col-lg-10">
-		                        		<select name="fullNameSelect" <?php echo $customerSelectDisabled?> onchange="setCustomerId(this.value)" id="customerSelect" class="fullNameSelect form-control">
-		                        			<?php if($seq > 0){
-		                        			    echo ('<option selected value="'.$seq.'">'.$customer->getFullName().'</option>');
-		                        			}?>
-		                        		</select>
-		                            </div>
-	                            </div>
-	                            <div class="form-group row no-margins">
-			                       	<label class="col-lg-2 col-form-label bg-formLabel">Store Name</label>
-			                        <div class="col-lg-4">
-			                        	<input type="text"  maxLength="250" value="<?php echo $customer->getStoreName()?>" name="storename" class="form-control">
-			                        </div>
-			                        <label class="col-lg-2 col-form-label bg-formLabel">Store ID</label>
-			                        <div class="col-lg-4">
-			                        	<input type="text"  maxLength="250" value="<?php echo $customer->getStoreId()?>" name="storeid" class="form-control">
-			                        </div>
-			                    </div>
-	                       	</div>
-                        	<div class="form-group row customerNameTextDiv" style="display:<?php echo $customerTextDisplay?>">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>
-	                        	<div class="col-lg-10">
-	                        		<input type="text" required maxLength="250" value="<?php echo $customer->getFullName()?>" id="fullname" name="fullname" class="form-control">
-	                            </div>
-	                        </div>
-	                        
-	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Customer Type</label>
-	                        	<div class="col-lg-4">
- 	                        		<?php 
-	                        		    $select = DropDownUtils::getBusinessCategoryTypes("customertype", null, $customer->getCustomerType(),false,true);
-    			                        echo $select;
-	                             	?>
-	                            </div>
-		                        
-	                        </div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
+									<label class="col-lg-4 col-form-label bg-formLabelMauve">Store ID</label>
+										<div class="col-lg-8">
+											<input id="storeId" type="text"  maxLength="250" value="<?php echo $customer->getStoreId()?>" name="storeid" class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
 	                        <div class="form-group row">
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager Email</label>
 		                        <div class="col-lg-4">
 		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
-		                        </div>
-		                        <label class="col-lg-2 col-form-label bg-formLabel">Chain Store Sales Admin Email</label>
-		                        <div class="col-lg-4">
-		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
-		                        </div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
+										<label class="col-lg-4 col-form-label bg-formLabelMauve">Store Name</label>
+										<div class="col-lg-8">
+											<input id="storeName" type="text"  maxLength="250" value="<?php echo $customer->getStoreName()?>" name="storename" class="form-control">
+										</div>
+									</div>
+								</div>
+								
 	                        </div>
 	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead</label>
 		                        <div class="col-lg-4">
-		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
+								</div>
+								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin</label>
+		                        <div class="col-lg-4">
+		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
 		                        </div>
 	                        </div>
 	                        
@@ -264,12 +283,11 @@ if(isset($_POST["id"])){
 <!-- 								</div> -->
 <!-- 						   </div> -->
 
-	                       
-	                       	<div class="form-group row m-b-xs">
-	                       	<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
+							<div class="form-group row m-b-xs">
+	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
 	                       	<div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+							   <label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
@@ -277,27 +295,6 @@ if(isset($_POST["id"])){
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
 								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
-	                       	</div>
-	                       	<div id="internalSupport" class="internalSupport">
-	                       	</div>
-	                        <div class="col-lg-12 pull-right ">
-	                       		<div class="col-lg-1 pull-right addButtonDiv">
-	                        		<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
-	                        		<i class="fa fa-plus"></i> Internal Support</button>
-	                        	</div>
-	                        </div>
-							
-							<div class="form-group row m-b-xs">
-	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
-	                       	</div>
-	                       	<div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Responsibility</label>
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
 	                       	</div>
@@ -307,17 +304,40 @@ if(isset($_POST["id"])){
 	                        		<i class="fa fa-plus"></i> Sales Rep</button>
 	                        	</div>
 	                        </div>
-								
+							<div id="internalSupportMainDiv">
+								<div class="form-group row m-b-xs">
+									<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
+								</div>
+								<div class="form-group row m-b-xs">
+									<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
+									<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
+									<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
+									<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
+									<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+								</div>
+								<div id="internalSupport" class="internalSupport">
+								</div>
+								<div class="col-lg-12 pull-right ">
+									<div class="col-lg-1 pull-right addButtonDiv">
+										<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
+										<i class="fa fa-plus"></i> Internal Support</button>
+									</div>
+								</div>
+							</div>
 							<div class="form-group row m-b-xs">
     	                       	<label class="col-lg-12 m-xxs txt-primary" >Buyers</label>
 							</div>
 	                       <div class="form-group row m-b-xs">
-	                       		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
+						  		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
+								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       </div>
 	                       <div id="buyers" class="buyers">
@@ -328,22 +348,6 @@ if(isset($_POST["id"])){
 	                        		<i class="fa fa-plus"></i> Buyer</button>
 	                        	</div>
 	                       </div>
-							
-							
-							
-
-	                        <div class="form-group row">
-	                       		<div class="col-lg-2">
-		                        	<button class="btn btn-primary" onclick="saveCustomer()" type="button" style="width:85%">
-	                                	Save
-		                          	</button>
-		                        </div>
-		                        <div class="col-lg-2">
-		                          	<a class="btn btn-default" href="manageCustomers.php" type="button" style="width:85%">
-	                                	Cancel
-		                          	</a>
-		                        </div>
-		                    </div>
 	                   </form>      
 	         	</div>
 	    	</div>
@@ -388,6 +392,7 @@ if(isset($_POST["id"])){
 var customerSeq = "<?php echo $customerSeq ?>";
 $(document).ready(function(){
 	//$(".fullNameSelect").chosen({ width: '100%' });
+	showInternalSupportFields();
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -414,17 +419,18 @@ $(document).ready(function(){
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
 	if(flag){
-		$("#customerid").attr("readonly","readonly");
+		// $("#customerid").attr("readonly","readonly");
 		$(".storeDetailsDiv").slideDown();
 		$(".customerNameTextDiv").hide();
 		$("#fullname").attr("disabled","disabled");
 		$("#customerSelect").removeAttr("disabled");
 	}else{
-		$("#customerid").removeAttr("readonly");
+		// $("#customerid").removeAttr("readonly");
 		$(".storeDetailsDiv").slideUp();
 		$(".customerNameTextDiv").show();
 		$("#customerSelect").attr("disabled","disabled");
-		$("#fullname").removeAttr("disabled");	
+		$("#fullname").removeAttr("disabled");
+		$("#storeId,#storeName,#fullname").val("");
 	}
 }
 var index = 0;
@@ -435,6 +441,7 @@ function addBuyer(isDefaultRow,buyer){
 	var phone     = "";
 	var cellPhone = "";
 	var note      = "";
+	var skypePersonId = "";
 	var category  = "";
 	var ext       = "";
 	index++;
@@ -461,6 +468,9 @@ function addBuyer(isDefaultRow,buyer){
 		if(buyer.notes != null){
 			note = buyer.notes;
 		}
+		if(buyer.skypeid != null){
+			skypePersonId = buyer.skypeid;
+		}
 		category = buyer.category;
 		id = buyer.seq
 	}
@@ -468,7 +478,7 @@ function addBuyer(isDefaultRow,buyer){
 	var html = '<div class="buyerDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" required maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
+					<input type="text"  maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
 				</div>
 				<div class="col-lg-2 p-xxs no-margins">
 					<input type="text"  maxLength="250" value="${lastName}" id="lastName${id}" name="buyer_lastname[]" class="form-control" placeholder="lastname">
@@ -482,8 +492,11 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_phoneext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="buyer_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
@@ -520,6 +533,8 @@ function addSalesRep(isDefaultRow,salesRep){
 	var cellPhone     = "";
 	var note          = "";
 	var responsiblity = "";
+	var skypePersonId = "";
+	var category      = "";
 	var ext           = "";
 	index++;
 	var id = index;
@@ -549,13 +564,18 @@ function addSalesRep(isDefaultRow,salesRep){
 			console.log(salesRep.responsibility);
 			responsiblity = salesRep.responsibility;
 		}
+		if(salesRep.skypeid != null){
+			skypePersonId = salesRep.skypeid;
+		}
+		category = salesRep.category;
 		id = salesRep.seq;
 	}
-	var ddId = 'responsibilitySelectDiv'+id;
+	var ddId = 'categorySalesRepSelectDiv'+id;
+	// var ddId = 'responsibilitySelectDiv'+id;
 	var html = '<div class="salesRepDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="firstName${id}" required maxLength="250" value="${firstName}" name="salesRep_firstname[]" class="form-control" placeholder="firstname">
+					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="salesRep_firstname[]" class="form-control" placeholder="firstname">
 				</div>
 				<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="lastName${id}"  maxLength="250" value="${lastName}" name="salesRep_lastname[]" class="form-control" placeholder="lastname">
@@ -569,13 +589,20 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
+		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<div id="'+ddId+'"><select name="salesRep_category[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
+		// html += '<div class="col-lg-1 p-xxs no-margins">';
+		// html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
+		// html += '</select></div>';
+		// html += '</div>';
 		
 		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
@@ -596,7 +623,8 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#salesRep").append(html);
-		populateSalesRepResponsibilities(responsiblity,ddId);
+		populateSalesRepCategories(category,ddId);
+		// populateSalesRepResponsibilities(responsiblity,ddId);
 		//populateSalesRepCategories(responsibility,ddId);
 }
 
@@ -644,7 +672,7 @@ function addInternalSupport(isDefaultRow,internalSupport){
 	var html = '<div class="internalSupportDiv">';
    		html += '<div class="form-group row m-b-xs">';
 		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="firstName${id}" required maxLength="250" value="${firstName}" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">
+					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">
 				</div>
 				<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="lastName${id}" maxLength="250" value="${lastName}" name="internalSupport_lastname[]" class="form-control" placeholder="lastname">
@@ -791,7 +819,7 @@ function populateBuyerCategories(selected,selectDivId){
 	});
 }
 
-function populateSalesRep(selected, selectDivId){
+function populateSalesRepCategories(selected, selectDivId){
 	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, (data) =>{
 		var jsonData = $.parseJSON(data);
 		var ddhtml = jsonData.categoryDD;
@@ -865,5 +893,16 @@ function setNote(){
 	$(`#NotesText${id}`).val($(`#NotesModalText`).val());
 	// Close Modal
 	$(`#NotesModal`).modal("hide");
+}
+function showInternalSupportFields(){
+	var businessTypeSelectedValue = $("#businesstype :selected").val();
+	if(businessTypeSelectedValue == 'ecomm'){
+		$("#internalSupportMainDiv").slideDown();
+		$("#internalSupportMainDiv").show();
+	}else{
+		$("#internalSupportMainDiv").slideUp();
+		$("#internalSupportMainDiv input,#internalSupportMainDiv select").val("");
+		$("#internalSupportMainDiv").hide();
+	}
 }
 </script>

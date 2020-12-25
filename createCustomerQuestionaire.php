@@ -9,6 +9,11 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerSpringQuestionMgr
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/SeasonShowNameType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Customer.php");
+
+$customerMgr = CustomerMgr::getInstance();
+$customer = new Customer();
 
 $customerChristmasQuestionMgr = CustomerChristmasQuestionMgr::getInstance();
 $customerChristmasQuestion = new CustomerChristmasQuestion();
@@ -19,16 +24,21 @@ $customerOppurtunityBuy = new CustomerOppurtunityBuy();
 $customerSpringQuestionMgr= CustomerSpringQuestionMgr::getInstance();
 $customerSpringQuestion = new CustomerSpringQuestion();
 
+$customerFullName = "";
 $customerSeq = 0;
+$isAllChecked = "checked";
 $buyerCategoriesSpringQues = BuyerCategoryType::getAll();
 $tradeShowsTypeOppBuy = SeasonShowNameType::getAll();
 $selectedCategoriesSpringQues = array();
 $selectedTradeShowsTypeOppBuy = array();
 $categoriesShouldSellThem = array();
+$christmasCategories = array();
 $tradeshowsaregoingto = array();
 if(isset($_POST["customerSeq"])){
-    $customerSeq = $_POST["customerSeq"];
-    $customerChristmasQuestion = $customerChristmasQuestionMgr->findByCustomerSeq($customerSeq);
+	$customerSeq = $_POST["customerSeq"];
+	$customer = $customerMgr->findByCustomerSeq($customerSeq);
+	$customerFullName = $customer->getFullName();
+	$customerChristmasQuestion = $customerChristmasQuestionMgr->findByCustomerSeq($customerSeq);
     if(empty($customerChristmasQuestion)){
         $customerChristmasQuestion = new CustomerChristmasQuestion();
     }
@@ -53,6 +63,12 @@ if(isset($_POST["customerSeq"])){
     }
     if(!empty($customerChristmasQuestion->getCategoriesShouldSellThem())){
         $categoriesShouldSellThem = explode(",",$customerChristmasQuestion->getCategoriesShouldSellThem());
+	}
+	if(!empty($customerChristmasQuestion->getCategory())){
+        $christmasCategories = explode(",",$customerChristmasQuestion->getCategory());
+	}
+	if(empty($customerChristmasQuestion->getIsAllCategoriesSelected())){
+    	$isAllChecked = "";
     }
 }
 ?>
@@ -80,7 +96,7 @@ if(isset($_POST["customerSeq"])){
 }
 
 .form-control{
-	height:30px !important;
+	height:30px;
 }
 .icheckbox_square-green{
 	margin-top:4px;
@@ -138,6 +154,9 @@ if(isset($_POST["customerSeq"])){
 .nav > li.active a{
 	color:white !important;
 }
+textarea .form-control{
+	height:auto !important;
+}
 </style>
 </head>
 <body>
@@ -156,8 +175,14 @@ if(isset($_POST["customerSeq"])){
                  </div>
                  <div class="ibox-content">
                  	<?include "progress.php"?>
+					<div class="form-group row">
+						<div class="col-lg-12">
+							<span class="d-flex bg-formLabelCyan
+							 "><?php echo $customerFullName; ?></span>
+						</div>
+					</div>
                  	<ul class="nav nav-tabs" role="tablist">
-		            	<li class="primaryLI active"><a class="nav-link" data-toggle="tab" href="#tab-1"> CHRISTMAS QUESTIONS</a></li>
+		            	<li class="primaryLI active"><a class="nav-link" data-toggle="tab" href="#tab-1"> HOLIDAYS QUESTIONS</a></li>
 <!-- 						<li class="darkLI"><a class="nav-link" data-toggle="tab" href="#tab-2">OPPURTUNITY BUYS</a></li> -->
 						<li class="mauveLI"><a class="nav-link" data-toggle="tab" href="#tab-3">SPRING QUESTIONS</a></li>
 					</ul>
@@ -174,6 +199,46 @@ if(isset($_POST["customerSeq"])){
 		                        
 		                        <div class="row">
 									<div class="col-lg-10">
+									
+										<div class="form-group">
+											<div class="row m-b-xxs">
+												<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
+												<div class="col-lg-4">
+													<div>
+														<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselected"
+															id="isallcategoriesselected<?echo $customerSeq?>" name="isallcategoriesselected"
+															<?php echo $isAllChecked?> /> <label>All</label>
+													</div>
+													<div class="m-t-sm">
+														<select id="christmasCategory<?echo $customerSeq?>" class="formCategories form-control"
+															name="category[]" multiple>
+														<?php
+															foreach ( $buyerCategoriesSpringQues as $key => $value ) {
+																$selected = "";
+																if (in_array ( $key, $christmasCategories )) {
+																	$selected = "selected";
+																}
+																echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
+															}
+														?>
+														</select>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="row m-b-xxs">
+												<label class="col-lg-8 col-form-label bg-formLabel">Data Saving
+													for Year</label>
+												<div class="col-lg-4">
+													<?php
+														$select = DropDownUtils::getYearDD ( "year", null, $customerChristmasQuestion->getYear (), false, false );
+														echo $select;
+													?>
+												</div>
+											</div>
+										</div>
 										<div class="form-group">
 											<div class="row m-b-xxs">
 					                       		<label class="col-lg-8 col-form-label bg-formLabel">Are you Interested in Christmas?</label>
@@ -213,7 +278,7 @@ if(isset($_POST["customerSeq"])){
                         							What trade shows are they going to in 2021?
             									</label>
                         						<div class="col-lg-4">
-                        							<select id="tradeshowsaregoingto<?echo $seq?>" class="formCategories form-control"
+                        							<select id="tradeshowsaregoingto" class="formCategories form-control"
                         								name="tradeshowsaregoingto[]" multiple>
                         							<?php
                         								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
@@ -274,12 +339,20 @@ if(isset($_POST["customerSeq"])){
                         						</label>
                         						<div class="col-lg-4">
             											<?php
-            											$select = DropDownUtils::getBooleanDropDown("istheremorebuyers", null, $customerChristmasQuestion->getIsThereMoreBuyers(), false, false);
+            											$select = DropDownUtils::getBooleanDropDown("istheremorebuyers", "notesShowHide()", $customerChristmasQuestion->getIsThereMoreBuyers(), false, false);
                 			                        				echo $select;
             	                             					?>
                         						</div>
                         					</div>
                         				</div>
+										<div class="form-group" id="christmasNotesDiv">
+											<div class="panel panel-primary">
+												<div class="panel-heading">Notes</div>
+												<div class="panel-body">
+													<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="notes" ><?php echo $customerChristmasQuestion->getNotes() ?></textarea>
+												</div>												
+											</div>
+										</div>
                         				<div class="form-group">
                         					<div class="row m-b-xxs">
                         						<label
@@ -340,7 +413,7 @@ if(isset($_POST["customerSeq"])){
                         					<div class="row m-b-xxs">
                         						<label
                         							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">What
-                        							categories have they not bought That we should sell them?
+                        							categories have they not bought that we should sell them?
                         						</label>
                         						<div class="col-lg-4">
                         							<select class="categoriesshouldsellthem form-control"
@@ -449,11 +522,13 @@ if(isset($_POST["customerSeq"])){
                         					<div class="row m-b-xxs">
                         						<label class="col-lg-8 col-form-label bg-formLabel">Holiday 2020 Comp Shop Completed?</label>
  					                        	<div class="col-lg-4">
-													<?php
-													
- 				 	                        		    $select = DropDownUtils::getBooleanDropDown("isholidayshopcompleted", null, $customerChristmasQuestion->getIsHolidayShopCompleted(),false,false);
- 				    			                        echo $select;
- 					                             	?>
+												 	<div class="input-group date">
+                        								<input type="text" name="compshopcompleteddate"
+                        									value="<?php echo $customerChristmasQuestion->getCompShopCompletedDate()?>"
+                        									id="compshopcompleteddate"
+                        									class="form-control  dateControl"> <span
+                        									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        							</div>
  					                        	</div>
                         					</div>
                         				</div>
@@ -889,6 +964,7 @@ if(isset($_POST["customerSeq"])){
 var customerSeq = "<?php echo $customerSeq ?>";
 var index = 0;
 $(document).ready(function(){
+	
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
@@ -902,6 +978,7 @@ $(document).ready(function(){
 			//setDuration();
 		}
 	});
+	$('#christmasCategory' + customerSeq).select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.tradeshowsgoingto').select2({companies: true,width:245,placeholder: "Select Shows",});
@@ -912,7 +989,8 @@ $(document).ready(function(){
 // 	    $(".springQuestionsPanelHeading1").append(data.text);
 // 	});
 	loadSpringQuesForms();
-	
+	handleChristmasCategorySelect(customerSeq);
+	notesShowHide();
 });
 function loadSpringQuesForms(){
 	$.get("Actions/CustomerSpringQuestionAction.php?call=getByCustoimerSeq&customerseq="+customerSeq, function(data){
@@ -933,7 +1011,7 @@ function loadSpringQuesForms(){
    		}else{
    			addSpringQuestionForm(0,true,true);
    		}
-	});
+	});	
 }
 
 function addSpringQuestionDiv(selectedSpringQuesSeq){
@@ -978,9 +1056,15 @@ function addSpringQuestionForm(seq,isAdded,isLast){
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq)
     	 	});
+			$('#christmasCategory' + seq).on('change', function (e) {
+        		var selectedValues = $(this).select2('data');
+        		setCategoriesOnHeader(selectedValues,seq)
+    	 	});
     	 	$(".isallcategoriesselected").on('ifChanged', function(event){
 				id = this.id.replace('isallcategoriesselected','');
 				handleCategorySelect(id);
+				handleChristmasCategorySelect(id);
+
   			});
     		if(!isAdded){
     			var selectedValues = $('#springCategory' + seq).select2('data');
@@ -995,6 +1079,7 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     		});
     	});	
 	}
+	
 }
 
 function handleCategorySelect(seq){
@@ -1006,7 +1091,7 @@ function handleCategorySelect(seq){
 	}else{
 		$('#springCategory' + seq).removeAttr("disabled")
 		$('#springCategory' + seq).next(".select2-container").show();
-		selectedValues = $('#springCategory' + seq).select2('data');	
+		selectedValues = $('#springCategory' + seq).select2('data');
 	}
 	setCategoriesOnHeader(selectedValues,seq)
 }
@@ -1072,5 +1157,34 @@ function SomethingChanged(control){
     else
          control.IsDirty = false;
     alert(control.IsDirty);
+}
+function handleChristmasCategorySelect(customerSeq){
+	var flag  = $("#isallcategoriesselected" + customerSeq).is(':checked');
+	var selectedValues = [{text:"All"}];
+	if(flag){
+		$('#christmasCategory' + customerSeq).attr("disabled","disabled");
+		$('#christmasCategory' + customerSeq).next(".select2-container").hide();
+	}else{
+		$('#christmasCategory' + customerSeq).removeAttr("disabled")
+		$('#christmasCategory' + customerSeq).next(".select2-container").show();
+		selectedValues = $('#christmasCategory' + customerSeq).select2('data');	
+	}
+	setCategoriesOnHeader(selectedValues,customerSeq)
+}
+function notesShowHide(){
+	isYes = $("#istheremorebuyers :selected").val();
+	if( isYes == "yes"){
+		$("#christmasNotesDiv").slideDown();
+	}else{
+		$("#christmasNotesDiv").slideUp();
+		$("#christmasNotesDiv textarea").val("");
+	}
+	isYes = $("#isvisitcustomerduring2ndqtr :selected").val();
+	if( isYes == "yes"){
+		$("#springNotesDiv").slideDown();
+	}else{
+		$("#springNotesDiv").slideUp();
+		$("#springNotesDiv textarea").val("");
+	}
 }
 </script>

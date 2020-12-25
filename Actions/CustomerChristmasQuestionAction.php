@@ -16,19 +16,27 @@ $customerChristmassQuesMgr = CustomerChristmasQuestionMgr::getInstance();
 if($call == "savechristmasQuestion"){
     try{
         $message = StringConstants::SAVED_SUCCESSFULLY;
-        //$seq =  $_REQUEST["seq"];
+        $seq =  $_REQUEST["customerseq"];
         $christmasQuestion = new CustomerChristmasQuestion();
         $christmasQuestion->from_array($_REQUEST);
+        if(isset($_REQUEST['isallcategoriesselected'])){
+            $christmasQuestion->setIsAllCategoriesSelected(1);
+        }else{
+            $christmasQuestion->setIsAllCategoriesSelected(0);
+        }
+        $category = implode(",",$_REQUEST['category']);
         $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
         $categoriesShouldSellThem = implode(",",$_REQUEST['categoriesshouldsellthem']);
+        $christmasQuestion->setCategory($category);
         $christmasQuestion->setTradeShowsAreGoingTo($tradeShowsAreGoingTo);
         $christmasQuestion->setCategoriesShouldSellThem($categoriesShouldSellThem);
         
-        //if($seq > 0){
-        //    $message = StringConstants::UPDATED_SUCCESSFULLY;
-       // }
-      // var_dump($_REQUEST);
-        $customerChristmassQuesMgr->saveCustomerSpecialProgram($christmasQuestion);
+        if($seq > 0){
+           $message = StringConstants::UPDATED_SUCCESSFULLY;
+       }
+    //   var_dump($_REQUEST);
+        $id = $customerChristmassQuesMgr->saveCustomerSpecialProgram($christmasQuestion);
+        $response["seq"] = $id;
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();

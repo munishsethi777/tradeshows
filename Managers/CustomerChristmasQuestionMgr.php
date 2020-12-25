@@ -113,7 +113,9 @@ class CustomerChristmasQuestionMgr{
         $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
         $customerChritmasQuestion->setOpportunitiesSentDate($dateStr);
         
-        
+        $dateStr = $customerChritmasQuestion->getCompShopCompletedDate();
+        $dateStr = DateUtil::convertDateToFormat($dateStr, $fromFormat, $toFormat);
+        $customerChritmasQuestion->setCompShopCompletedDate($dateStr);
         
         return $customerChritmasQuestion;
     }
