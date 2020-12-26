@@ -48,15 +48,51 @@ if($call == "importimlogs"){
         $sheet = $objPHPExcel->getActiveSheet();
         $maxCell = $sheet->getHighestRowAndColumn();
         $sheetData = $sheet->rangeToArray('A2:' . $maxCell['column'] . $maxCell['row'],null,true,false,false);
+        
+        //DataValidation
+        $enteredByErrorMessages = array();
+        $classCodeErrorMessages = array();
+        try{
+            for($i=1;$i<=$maxCell["row"];$i++){
+                $data = $sheetData[$i];
+                $enteredBy = trim($data[1]);
+                $classCode = trim($data[5]);
+                $assignee = trim($data[14]);
+                if(!empty($enteredBy)){
+                    if(empty($userFullNameToSeqArr[$enteredBy])){
+                        $enteredByErrorMessages[$enteredBy] = $enteredBy;
+                    }
+                }
+                if(!empty($classCode)){
+                    if(empty($classCodesToSeqArr[$classCode])){
+                        $classCodeErrorMessages[$classCode] = $classCode;
+                    }
+                }
+                if(!empty($assignee)){
+                    if(empty($userFullNameToSeqArr[$assignee])){
+                        $enteredByErrorMessages[$assignee] = $assignee;
+                    }
+                }
+                
+            }
+        }catch(Exception $e){
+            
+        }
+        if(count($enteredByErrorMessages) > 0 
+            || count($classCodeErrorMessages) > 0){
+            var_dump($enteredByErrorMessages);
+            var_dump($classCodeErrorMessages);
+            die;
+        }
         try {
             for($i=1;$i<=$maxCell["row"];$i++){
                 $data = $sheetData[$i];
                 $entryDate = $data[0];
-                $enteredBy = $data[1];
+                $enteredBy = trim($data[1]);
                 $poShipDate  = $data[2];
                 //$approvedManualDueDate = $data[3]; --- Calculated date following
                 $itemNumber = $data[4];
-                $classCode = $data[5];
+                $classCode = trim($data[5]);
                 //$dueDateDiagram = $data[6]; --- Calculated date following
                 $newOrRevised = $data[7];
                 $imType = $data[8];
@@ -64,7 +100,7 @@ if($call == "importimlogs"){
                 $requestedChanges = $data[10];
                 $diagramSavedBy = $data[11];
                 $diagramSavedDate = $data[12];
-                $assignee = $data[14];
+                $assignee = trim($data[14]);
                 
                 $instructionManualLog = new InstructionManualLogs();
                 $entryDateObj = DateUtil::StringToDateByGivenFormat("m/d/y", $entryDate);
@@ -74,7 +110,7 @@ if($call == "importimlogs"){
                     $diagramDueDateObj = $diagramDueDateObj->add(new DateInterval('P14D'));
                     $instructionManualLog->setGraphicDueDate($diagramDueDateObj);
                 }
-                $enteredBySeq = $userFullNameToSeqArr[$enteredBy];
+                $enteredBySeq = $userFullNameToSeqArr[trim($enteredBy)];
                 if(!empty($enteredBySeq)){
                     $instructionManualLog->setCreatedBy($enteredBySeq);
                 }
@@ -82,7 +118,7 @@ if($call == "importimlogs"){
                 if($poShipDateObj){
                     $instructionManualLog->setPoShipDate($poShipDateObj);
                     $approvedManuaDueDate = clone $poShipDateObj;
-                    $approvedManuaDueDate = $entryDateObj->sub(new DateInterval('P21D'));
+                    $approvedManuaDueDate = $approvedManuaDueDate->sub(new DateInterval('P21D'));
                     $instructionManualLog->setApprovedManualDuePrintDate($approvedManuaDueDate);
                 }
                 $instructionManualLog->setItemNumber($itemNumber);
@@ -97,8 +133,10 @@ if($call == "importimlogs"){
                         $newOrRevisedVar = "newInstructionManual";
                     }elseif(strtoupper($newOrRevised) == "REVISED"){
                         $newOrRevisedVar = "revisedInstructionManual";
-                    }elseif(strtoupper($newOrRevised) == "REVISED -INTERNATION"){
+                    }elseif(strtoupper($newOrRevised) == "REVISED -INTERNATIONAL"){
                         $newOrRevisedVar = "revisedInternationInstructionManual";
+                    }elseif(strtoupper($newOrRevised) == "New -INTERNATIONAL"){
+                        $newOrRevisedVar = "newInternationInstructionManual";
                     }
                     $instructionManualLog->setNewOrRevised($newOrRevisedVar);
                 }
@@ -117,7 +155,7 @@ if($call == "importimlogs"){
                 if($diagramSavedDateObj){
                     $instructionManualLog->setDiagramSavedDate($diagramSavedDateObj);
                 }
-                
+                $instructionManualLog->setNotesToUsa($requestedChanges);
                 $assignedToUser = $userFullNameToSeqArr[$assignee];
                 $instructionManualLog->setAssignedToUser($assignedToUser);
                 $instructionManualLog->setCreatedDate(new DateTime());
@@ -125,7 +163,6 @@ if($call == "importimlogs"){
                 $instructionManualLog->setIsPrivateLabel(0);
                 $instructionManualLog->setIsCompleted(0);
                 $instructionManualLogMgr->save($instructionManualLog);
-                //exit;
             }
         } catch (Exception $e) {
             throw $e;

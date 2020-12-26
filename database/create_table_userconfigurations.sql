@@ -6,8 +6,6 @@ CREATE TABLE `userconfigurations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ALTER TABLE `userconfigurations`
   ADD PRIMARY KEY (`seq`),
-  ADD UNIQUE KEY `configkey` (`configkey`),
-  ADD UNIQUE KEY `userseq` (`userseq`);
+  ADD UNIQUE KEY `userseq` (`userseq`,`configkey`);
 ALTER TABLE `userconfigurations`
   MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT;
-COMMIT;
