@@ -84,16 +84,20 @@
             $id = $instructionManualLogMgr->save($instructionManualLog);
             if($id>0){
                 $instructionManualCustomersMgr->deleteByInstructionManualSeq($id);
-                foreach($_REQUEST['usacustomers'] as $usaCustomer){
-                    $instructionManualCustomers->setInstructionManualSeq($id);
-                    $instructionManualCustomers->setCustomerName($usaCustomer);
-                    $instructionManualCustomersMgr->save($instructionManualCustomers);
+                if($_REQUEST['usacustomers'] != ''){
+                    foreach($_REQUEST['usacustomers'] as $usaCustomer){
+                        $instructionManualCustomers->setInstructionManualSeq($id);
+                        $instructionManualCustomers->setCustomerName($usaCustomer);
+                        $instructionManualCustomersMgr->save($instructionManualCustomers);
+                    }
                 }
                 $instructionManualRequestsMgr->deleteByInstructionManualSeq($id);
-                foreach($_REQUEST['requestedchanges'] as $requestedChange){
-                    $instructionManualRequests->setInstructionManualSeq($id);
-                    $instructionManualRequests->setRequestType($requestedChange); 
-                    $instructionManualRequestsMgr->save($instructionManualRequests);
+                if($_REQUEST['requestedchanges'] != ''){
+                    foreach($_REQUEST['requestedchanges'] as $requestedChange){
+                        $instructionManualRequests->setInstructionManualSeq($id);
+                        $instructionManualRequests->setRequestType($requestedChange); 
+                        $instructionManualRequestsMgr->save($instructionManualRequests);
+                    }
                 }
                 if($isDiagramSavedDateUpdated){
                     InstructionManualLogReportUtil::sendInstructionManualDiagramSavedDateUpdatedNotification($instructionManualLog);

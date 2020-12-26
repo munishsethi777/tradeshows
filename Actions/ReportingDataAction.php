@@ -13,7 +13,7 @@
     $response = new ArrayObject();
     $reportingDataMrg = ReportingDataMgr::getInstance();
     $arr = array();  
-    $reportingDataParameterTypeClass = new ReflectionClass (ReportingDataParameterType);
+    $reportingDataParameterTypeClass = new ReflectionClass ("ReportingDataParameterType");
     $reportingDataParameterTypeConstants = $reportingDataParameterTypeClass->getConstants();
     if(isset($_GET['call'])){
         $call = $_GET['call'];
@@ -26,11 +26,12 @@
                 if(strpos($key,$_REQUEST['for']) !== false){
                     // $value = lcfirst(str_replace(" ","",$value));
                     $list = $reportingDataMrg->getReportingData($key);
-                    $current = $list[0]['count'];
+                    $current = "";
                     if(strpos($key,'qc_') !== false){
                         $object = QCScheduleMgr::getInstance();
                         $current = count(call_user_func(array($object,ReportingDataMethodNames::getValue($key)),""));
-                    }elseif(strpos($key,'container_') !== false){
+                    }
+                    elseif(strpos($key,'container_') !== false){
                         $object = ContainerScheduleDataStore::getInstance();
                         $current = count(call_user_func(array($object,ReportingDataMethodNames::getValue($key)),""));
                     }elseif(strpos($key,'graphiclog_') !== false){
@@ -41,8 +42,8 @@
                         $current = call_user_func(array($object,ReportingDataMethodNames::getValue($key)),"");
                     }
                     $arr[$key.'_current'] = $current;
-                    $arr[$key.'_previous'] = $list[1]['count'];
-                    $arr[$key.'_diff'] = abs($list[0]['count']-$list[1]['count']);
+                    $arr[$key.'_previous'] = sizeof($list) >= 2 ? $list[1]['count'] : "0";
+                    $arr[$key.'_diff'] = sizeof($list) >= 2 ? abs($list[0]['count']-$list[1]['count']) : "0";
                     $earlierCounts = array();
                     foreach ($list as $count){
                         array_push($earlierCounts,$count['count']);

@@ -23,15 +23,16 @@
                     configValue = '$configValue'";
             self::$dataStore->executeQuery($query);
         }
-        public function getConfigurationValue($userSeq,$configKey){
+        public function getConfigurationValue($userSeq,$configKey,$defaultValue = null){
             $colValuePair = array();
             $colValuePair['userseq'] = $userSeq;
             $colValuePair['configkey'] = $configKey; 
             $userConfigurationArray = self::$dataStore->executeConditionQuery($colValuePair);
             if(count($userConfigurationArray) > 0){
                 return $userConfigurationArray[0]->getConfigValue();
+            }else{
+                return $defaultValue;
             }
-            return null;
         }
     }
 ?>

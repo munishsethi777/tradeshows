@@ -61,7 +61,7 @@ if($isAnalyticsContainersDivExpanded){
 	<!-- Peity -->
 	<script src="scripts/plugins/peity/jquery.peity.min.js"></script>
 	<!--     <script src="scripts/demo/peity-demo.js"></script> -->
-	<script src="scripts/StickyAnalyticsDivs.js"></script>
+	<script src="scripts/UserConfigurations.js"></script>
 </head>
 
 <body>
@@ -85,9 +85,9 @@ if($isAnalyticsContainersDivExpanded){
 										<div class="ibox-title">
 											<h5>Container Schedule Analytics</h5>
 											<div class="ibox-tools">
-												<input id="isAnalyticsContainersDivExpanded" class="isAnalyticsContainersDivExpanded" type="hidden" name="isAnalyticsContainersDivExpanded" value="<?php echo $isAnalyticsContainersDivExpanded;?>" />
+												<input id="isAnalyticsDivExpanded" class="isAnalyticsDivExpanded" type="hidden" name="isAnalyticsContainersDivExpanded" value="<?php echo $isAnalyticsContainersDivExpanded;?>" />
 												<a class="collapse-link">
-													<i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>','<?php echo $isAnalyticsContainersDivExpanded;?>')"></i>
+													<i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
 												</a>
 												<!--<a class="close-link"> -->
 												<!--<i class="fa fa-times"></i> -->
@@ -309,6 +309,7 @@ if($isAnalyticsContainersDivExpanded){
 	</div>
 </body>
 <script type="text/javascript">
+	var analyticsDivExpandedKey = "<?php echo $userConfigKey;?>";
 	var hasNext = true;
 	var currentRowId = 0;
 

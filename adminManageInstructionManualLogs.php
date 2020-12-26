@@ -4,17 +4,21 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/UserConfigurationType.php");
 
 $sessionUtil = SessionUtil::getInstance();
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
 $userConfigurationMgr = UserConfigurationMgr::getInstance();
 $userSeq = $sessionUtil->getUserLoggedInSeq();
-$userConfigKey = "AnalyticsIMDivExpanded";
-$isAnalyticsIMDivExpanded = $userConfigurationMgr->getConfigurationValue($userSeq,$userConfigKey);
+$analyticsDivExpandedUserConfigKey = "AnalyticsIMDivExpanded";
+$isAnalyticsDivExpandedUserConfigValue = $userConfigurationMgr->getConfigurationValue($userSeq,$analyticsDivExpandedUserConfigKey,"1");
 $analyticsDivState = "collapsed";
-if($isAnalyticsIMDivExpanded){
+if($isAnalyticsDivExpandedUserConfigValue){
 	$analyticsDivState = "";
 }
+$defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("IMDefaultFilterSelection");
+$defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,
+    $defaultFilterSelectionUserConfigKey,"instruction_manual_all_count");
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,7 +38,7 @@ if($isAnalyticsIMDivExpanded){
         }
 
         .reportDataCountRow .ibox-content {
-            background-color: #ffffff;
+            /* background-color: #ffffff; */
             padding: 10px 10px 0px 20px !important;
         }
 
@@ -50,14 +54,18 @@ if($isAnalyticsIMDivExpanded){
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <!-- Peity -->
     <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
-    <script src="scripts/InstructionManualGridDataByReportingParameter.js"></script>
-    <script src="scripts/StickyAnalyticsDivs.js"></script>
+    <script src="scripts/GridDataByReportingParameter.js"></script>
+    <script src="scripts/UserConfigurations.js"></script>
     <!--     <script src="scripts/demo/peity-demo.js"></script> -->
 
 </head>
 
 <body>
     <?include "exportInclude.php"?>
+    <input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsDivExpandedUserConfigValue;?>" />
+    <input id="analyticsDivExpandedUserConfigKey" class="analyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $analyticsDivExpandedUserConfigKey; ?>" />
+    <input id="defaultFilterSelectionUserConfigKey" class="defaultFilterSelectionUserConfigKey" type="hidden" value="<?php echo $defaultFilterSelectionUserConfigKey; ?>" />
+    <input id="defaultFilterSelectionReportDataType" class="defaultFilterSelectionReportDataType" type="hidden" value="<?php echo $defaultFilterSelectionReportDataType; ?>" />
     <div id="wrapper">
         <?php include("adminmenuInclude.php") ?>
         <div id="page-wrapper" class="gray-bg">
@@ -75,10 +83,10 @@ if($isAnalyticsIMDivExpanded){
                                 <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
                                     <div class="ibox-title">
                                         <h5>Instruction Manual Logs Analytics</h5>
+                                        <span id="currentAnalyticName" style="margin-left : 7px;"></span>
                                         <div class="ibox-tools">
-                                            <input id="isAnalyticsIMDivExpanded" class="isAnalyticsIMDivExpanded" type="hidden" name="isAnalyticsIMDivExpanded" value="<?php echo $isAnalyticsIMDivExpanded;?>" />
                                             <a class="collapse-link">
-                                                <i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>','<?php echo $isAnalyticsIMDivExpanded;?>')"></i>
+                                                <i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -133,19 +141,25 @@ if($isAnalyticsIMDivExpanded){
 </body>
 <script type="text/javascript">
     var source ;
+    var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
+    var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
-        // $(".get-grid-data-by-reporting-data").click(function (){
-        //     var reportingParameter = $(this).attr("id");
-        //     var gridId = $("#gridId").val();
-        //     AddReportingFilter(reportingParameter,gridId);
-
-        //     $(".get-grid-data-by-reporting-data").removeClass("bg-primary");
-        //     $("#"+reportingParameter).removeClass("bg-white");
-        //     $("#"+reportingParameter).addClass("bg-primary");
-
-        // });
+        var gridId = $("#gridId").val();
+        $(".get-grid-data-by-reporting-data").click(function (){
+            // alert("clicked");
+            var reportingParameter = $(this).attr("id");
+            var dataName = $(this).find("dataName").html();
+            applyReportingFilter(reportingParameter,gridId,dataName,defaultFilterSelectionUserConfigKey);
+            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("bg-primary");
+            $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
+            $("#"+reportingParameter + " .ibox-content").addClass("bg-primary");
+        });
+        if(defaultFilterSelectionReportDataType != ''){
+            $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("bg-primary");
+            $("#" + defaultFilterSelectionReportDataType).click();
+        } 
     });
     
     function editButtonClick(seq) {
@@ -222,7 +236,7 @@ if($isAnalyticsIMDivExpanded){
             },
             {
                 text: 'IM Due Date',
-                datafield: 'graphicduedate',
+                datafield: 'approvedmanualdueprintdate',
                 filtertype: 'date',
                 width: "10%",
                 cellsformat: 'M-dd-yyyy'
@@ -269,7 +283,7 @@ if($isAnalyticsIMDivExpanded){
                     type: 'date'
                 },
                 {
-                    name: 'graphicduedate',
+                    name: 'approvedmanualdueprintdate',
                     type: 'date'
                 },
                 {
@@ -289,7 +303,7 @@ if($isAnalyticsIMDivExpanded){
                     type: 'date'
                 },
             ],
-            url: 'Actions/InstructionManualLogsAction.php?call=getAllInstructionManualLogs',
+            url: '',
             root: 'Rows',
             cache: false,
             beforeprocessing: function(data) {

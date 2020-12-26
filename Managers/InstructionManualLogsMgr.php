@@ -23,7 +23,7 @@
             $arr = array();
             foreach($rows as $row){
                 $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);	
-                $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
                 array_push($arr,$row);		    
             }
@@ -71,14 +71,14 @@
         public function getProjectsDueLessThan14DaysFromEntry(){
             $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
                     left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-                    instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
-                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 
-                    AND DATEDIFF(graphicduedate,entrydate) >=0";
+                    instructionmanuallogs.createdby = users.seq where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL 
+                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 
+                    AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
             $rows = self::$dataStore->executeQuery($query,true);
             $arr = array();
             foreach($rows as $row){
                 $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
-                $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
                 array_push($arr,$row);
             }
@@ -89,9 +89,9 @@
         public function getProjectsDueLessThan14DaysFromEntryCount($isApplyFilter){
             $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
                     left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-                    instructionmanuallogs.createdby = users.seq where DATEDIFF(graphicduedate,entrydate) IS NOT NULL 
-                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 
-                    AND DATEDIFF(graphicduedate,entrydate) >=0";
+                    instructionmanuallogs.createdby = users.seq where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL 
+                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 
+                    AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
             $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
             return $count;
         }
@@ -104,12 +104,12 @@
         public function getProjectsOverdue(){
             $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > approvedmanualdueprintdate AND (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate IS NOT NULL";
             $rows = self::$dataStore->executeQuery($query,true);
             $arr = array();
             foreach($rows as $row){
                 $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
-                $row["graphicduedate"] = DateUtil::convertDateToFormat($row["graphicduedate"], "Y-m-d", "Y-m-d H:i:s");
+                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
                 array_push($arr,$row);
             }
@@ -120,7 +120,7 @@
         public function getProjectsOverdueCount($isApplyFilter){
             $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            instructionmanuallogs.createdby = users.seq WHERE '".date('Y-m-d')."' > approvedmanualdueprintdate AND (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate IS NOT NULL";
             $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
             return $count;
         }
@@ -136,7 +136,7 @@
             return $count;
         }
         public function getInstructionManualProjectsOverdueCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where '".date('Y-m-d')."' > graphicduedate AND (iscompleted IS NULL OR iscompleted = false) AND graphicduedate IS NOT NULL";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where '".date('Y-m-d')."' > approvedmanualdueprintdate AND (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate IS NOT NULL";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }
@@ -156,17 +156,17 @@
             return $count;
         }
         public function getInstructionManualProjectsDueToday(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where (iscompleted IS NULL OR iscompleted = false) AND graphicduedate like '".date('Y-m-d')."'";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }
         public function getInstructionManualProjectsDueInNext14Days(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where graphicduedate > '".date('Y-m-d')."' AND graphicduedate <= '".date('Y-m-d',strtotime('14 days'))."'";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }
         public function getInstructionManualProjectsDueLessThan14DaysFromEntry(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where DATEDIFF(graphicduedate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(graphicduedate,entrydate) < 14 AND DATEDIFF(graphicduedate,entrydate) >=0";
+            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;
         }

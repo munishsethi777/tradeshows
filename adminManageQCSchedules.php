@@ -51,12 +51,14 @@ if($isAnalyticsQCDivExpanded){
 	</style>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-	<script src="scripts/StickyAnalyticsDivs.js"></script>
+	<script src="scripts/UserConfigurations.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	
 </head>
 
 <body>
+	<input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsIMDivExpandedUserConfigValue;?>" />
+    <input id="isAnalyticsDivExpandedUserConfigKey" class="isAnalyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $analyticsDivExpandedUserConfigKey; ?>" />
 	<div id="wrapper">
 		<?php
 		include("adminmenuInclude.php"); ?>
@@ -76,9 +78,8 @@ if($isAnalyticsQCDivExpanded){
                                     <div class="ibox-title">
                                         <h5>QC Schedules Analytics</h5>
                                         <div class="ibox-tools">
-										<input id="isAnalyticsQCDivExpanded" class="isAnalyticsDivExpanded" type="hidden" name="isAnalyticsQCDivExpanded" value="<?php echo $isAnalyticsQCDivExpanded;?>" />
                                             <a class="collapse-link">
-                                                <i class="fa fa-chevron-up" onclick="setUserConfigForStickyAnalyticsDiv('<?php echo $userConfigKey;?>')"></i>
+                                                <i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
                                             </a>
                                             <!--<a class="close-link"> -->
                                             <!--<i class="fa fa-times"></i> -->
@@ -255,7 +256,7 @@ if($isAnalyticsQCDivExpanded){
 		</div>
 </body>
 <script type="text/javascript">
-
+	var analyticsDivExpandedKey = "<?php echo $userConfigKey;?>";
 	function initDateRanges() {
 		var start = moment().subtract(29, 'days');
 		var end = moment();

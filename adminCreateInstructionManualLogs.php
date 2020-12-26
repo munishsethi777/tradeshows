@@ -15,6 +15,9 @@
     $instructionManualLogsMgr = InstructionManualLogsMgr::getInstance();
     $instructionManualCustomersMgr = InstructionManualCustomersMgr::getInstance();
     $instructionManualRequestsMgr = InstructionManualRequestsMgr::getInstance();
+    $instructionManaulSelectedCustomerNames = "";
+    $instructionManualSelectedRequests = "";
+    $notesToUsa = "";
     $iscompleted = "";
     $isPrivateLabel="";
     if(isset($_POST['id'])){
@@ -116,7 +119,7 @@
                                     <label class="col-lg-2 col-form-label bg-formLabelPeach">Entry Date :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate" onchange="entryDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="entrydate" onchange="entryDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getEntryDate()?>" name="entrydate" class="form-control dateControl currentdatepicker datepicker" >
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
@@ -125,7 +128,7 @@
                                     <label class="col-lg-2 col-form-label bg-formLabelPeach">PO Ship Date :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="poDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="poshipdate" onchange="poDateOnChange(this.value)" maxLength="250" value="<?php echo $instructionManualLog->getPoShipDate()?>" name="poshipdate" class="form-control dateControl" >
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
@@ -134,13 +137,14 @@
                                         <div class="input-group date">
                                             <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control" readonly>
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label bg-formLabelPeach">Item no. :</label>
                                     <div class="col-lg-4">
-                                        <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text"  maxLength="25" value="<?php echo $instructionManualLog->getItemNumber()?>" id="itemnumber" name="itemnumber" class="form-control" <?php echo $readOnlyPO?>>
+                                        <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text"  maxLength="25" value="<?php echo $instructionManualLog->getItemNumber()?>" id="itemnumber" name="itemnumber" class="form-control">
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabelPeach">Class Code</label>
                                     <div class="col-lg-4">
@@ -214,7 +218,7 @@
                                     <label class="col-lg-2 col-form-label bg-formLabelYellow">Date diagram saved :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
@@ -230,17 +234,9 @@
                                     <div class="panel panel-yellow">
                                         <div class="panel-heading">Notes to USA Office</div>
                                         <div class="panel-body">
-                                            <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" ><?php echo $instructionManualLog->getNotesToUsa()?></textarea>
-                                            <div class="row">
-                                                <ul class="list-group" style="padding:10px 10px 0px 10px">
-                                                    <?php foreach ($notesToUsa as $note){
-                                                ?>
-                                                    <li class="list-group-item">
-                                                        <i class="fa fa-clock-o"></i> <?php echo $instructionManualLog->getNotesToUsa()?> <a class="text-info" href="#"><?php //echo $note->email ?></a> <?php echo $note->getNotes()?>.
-                                                    </li>
-                                                <?php }?>
-                                                </ul>
-                                            </div>
+                                            <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" >
+                                                <?php echo $instructionManualLog->getNotesToUsa()?>
+                                            </textarea>
                                         </div>    
                                     </div>
                                 </div>
@@ -271,12 +267,13 @@
                                         <div class="input-group date">
                                             <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="starteddate"  maxLength="250" value="<?php echo $instructionManualLog->getStartedDate()?>" name="starteddate" class="form-control" readonly>
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
                                         </div>
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabelMauve">Supervisor return : </label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="supervisorreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getSupervisorReturnDate()?>" name="supervisorreturndate" class="form-control dateControl">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
@@ -285,14 +282,14 @@
                                     <label class="col-lg-2 col-form-label bg-formLabelMauve">Manager Return :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="managerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getManagerReturnDate()?>" name="managerreturndate" class="form-control dateControl">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabelMauve">Buyer return : </label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" <?php echo $readOnlyPO?>>
+                                            <input tabindex="<?php //echo $usaTabIndex?>" type="text" id="buyerreturndate"  maxLength="250" value="<?php echo $instructionManualLog->getBuyerReturnDate()?>" name="buyerreturndate" class="form-control dateControl" >
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
@@ -338,7 +335,6 @@
 </body>
 </html>
 <script type="text/javascript">
-var customerSeq = "<?php echo $customerSeq ?>";
 var index = 0;
 $(document).ready(function(){
 	$('.dateControl').datetimepicker({
