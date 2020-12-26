@@ -1,15 +1,15 @@
-var filterFieldName = "";
-// var oldSource = source.url;
-var isSourceChange = 0;
-
+var filterFieldNameArr = new Array();
+var isSourceChange = 1;
 function clearFilters(gridId){
-    $("#"+gridId).jqxGrid('removefilter',filterFieldName,false);
+    for(var i=0; i<=filterFieldNameArr.length; i++){
+        $("#"+gridId).jqxGrid('removefilter',filterFieldNameArr[i],false);
+    }
 }
 function changeSourceUrl(){
     source.url = "Actions/instructionManualLogsAction.php?call=getAllInstructionManualLogs";
     isSourceChange = 0;
 }
-function AddReportingFilter(reportingDataParameter, gridId) {
+function applyReportingFilter(reportingDataParameter, gridId, dataName = "", defaultFilterSelectionUserConfigKey) {
     var filtergroup = new $.jqx.filter();
     var filterGetGridDataByReportingParameter = "";
     var filter_or_operator = 0;
@@ -17,17 +17,23 @@ function AddReportingFilter(reportingDataParameter, gridId) {
     var filterType = "";
     var filterValue = "";
     
+    $("#currentAnalyticName").html(dataName);
     clearFilters(gridId);
-    if(reportingDataParameter == "instruction_manual_total_projects_open"){
+    if(reportingDataParameter == "instruction_manual_all_count"){
+        if(isSourceChange){
+            changeSourceUrl();
+        }
+        $("#" + gridId).jqxGrid('applyfilters');
+    }else if(reportingDataParameter == "instruction_manual_total_projects_open"){
         if(isSourceChange){
             changeSourceUrl();    
         }
         filterValue = "0";
         filterType = "numericfilter";
-        filterFieldName = "iscompleted";
+        filterFieldNameArr.push("iscompleted");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"iscompleted", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
         
     }
@@ -37,22 +43,15 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         }
         filterValue = "1";
         filterType = "numericfilter";
-        filterFieldName = "iscompleted";
+        filterFieldNameArr.push("iscompleted");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"iscompleted", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
-    }else if(reportingDataParameter == "instruction_manual_total_projects_open_overdue"){
-        if(isSourceChange){
-            changeSourceUrl();    
-        }
-        filterValue = "0";
-        filterType = "numericfilter";
-        filterFieldName = "iscompleted";
-        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
-        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+    }else if(reportingDataParameter == "instruction_manual_total_projects_overdue"){
+        source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsOverdue";
         $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
         
     }
     else if(reportingDataParameter == "instruction_manual_total_projects_in_supervisor_review"){
@@ -61,10 +60,10 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         }
         filterValue = "In Review - Supervisor";
         filterType = "stringfilter";
-        filterFieldName = "instructionmanuallogstatus";
+        filterFieldNameArr.push("instructionmanuallogstatus");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"instructionmanuallogstatus", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_in_manager_review"){
         if(isSourceChange){
@@ -72,10 +71,10 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         }
         filterValue = "In Review - Manager";
         filterType = "stringfilter";
-        filterFieldName = "instructionmanuallogstatus";
+        filterFieldNameArr.push("instructionmanuallogstatus");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"instructionmanuallogstatus", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_in_buyer_review"){
         if(isSourceChange){
@@ -83,23 +82,28 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         }
         filterValue = "In Review - Buyer";
         filterType = "stringfilter";
-        filterFieldName = "instructionmanuallogstatus";
+        filterFieldNameArr.push("instructionmanuallogstatus");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"instructionmanuallogstatus", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_due_today"){
         if(isSourceChange){
             changeSourceUrl();
         }
-        filterCondition = "EQUAL";
-        filterValue1 = new Date();
-        filterValue2 = new Date();
-        filterType = "datefilter";
-        filterFieldName = "graphicduedate";
-        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue2, filterCondition);
-        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        filterFieldNameArr.push("approvedmanualdueprintdate");
+        filterFieldNameArr.push("iscompleted");
+        var filtergroupDate = new $.jqx.filter();
+        var filtergroupIsCompleted = new $.jqx.filter();
+        filterGetGridDataByReportingParameter1 = filtergroupDate.createfilter("datefilter", new Date(), "GREATER_THAN_OR_EQUAL");
+		filterGetGridDataByReportingParameter2 = filtergroupDate.createfilter("datefilter", new Date(), "LESS_THAN_OR_EQUAL");
+		filterGetGridDataByReportingParameter3 = filtergroupIsCompleted.createfilter("numericfilter", 0, "EQUAL");
+		filtergroupDate.addfilter(filter_or_operator, filterGetGridDataByReportingParameter1);
+        filtergroupDate.addfilter(filter_or_operator, filterGetGridDataByReportingParameter2);
+		filtergroupIsCompleted.addfilter(filter_or_operator, filterGetGridDataByReportingParameter3);
+		
+        $("#" + gridId).jqxGrid('addfilter',"approvedmanualdueprintdate", filtergroupDate);
+		$("#" + gridId).jqxGrid('addfilter',"iscompleted", filtergroupIsCompleted);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_due_in_next_14_days"){
         if(isSourceChange){
@@ -112,13 +116,12 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         filterValue2 = new Date();
         filterValue2.setDate(filterValue2.getDate() + 14);
         filterType = "datefilter";
-        filterFieldName = "graphicduedate";
-        
+        filterFieldNameArr.push("approvedmanualdueprintdate");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue1, filterCondition1); 
         var filterGetGridDataByReportingParameter1 = filtergroup.createfilter(filterType, filterValue2, filterCondition2);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter1);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"approvedmanualdueprintdate", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }else if(reportingDataParameter == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
         source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntry";
@@ -130,12 +133,13 @@ function AddReportingFilter(reportingDataParameter, gridId) {
         }
         filterValue = "Not Started";
         filterType = "stringfilter";
-        filterFieldName = "instructionmanuallogstatus";
+        filterFieldNameArr.push("instructionmanuallogstatus");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter',filterFieldName, filtergroup);
+        $("#" + gridId).jqxGrid('addfilter',"instructionmanuallogstatus", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }
+    setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey,reportingDataParameter);
 }
 function getProjectsDueLessThan14DaysFromEntry(){
     $.getJSON("Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntry",
