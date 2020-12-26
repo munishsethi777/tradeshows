@@ -1,6 +1,7 @@
 <?php 
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class ReportingDataParameterType extends BasicEnum{
+    const graphiclog_all_count = "Graphic Log All Count";
     const graphiclog_projects_completed_count = "Graphic Log Projects Completed Count";
     const graphiclog_projects_over_due_till_now_count = "Graphic Log Projects Over Due Till Now Count";
     const graphiclog_projects_in_buyer_review_count = "Graphic Log Projects In Buyer Review Count";
@@ -11,6 +12,7 @@ class ReportingDataParameterType extends BasicEnum{
     const graphiclog_project_due_for_today_count = "Graphic Log Project Due For Today Count";
     const graphiclog_project_due_less_than_20_days_from_entry_date_count = "Graphic Log Project Due Less Than 20 Days From Entry Date Count";
     const graphiclog_project_due_less_than_20_days_from_today_count = "Graphic Log Project Due less Than 20 Days From Today Count";
+    const qc_schedules_all_count = "QC Schedules All Count";
     const qc_schedules_final_missing_appointments = "Final Missing Appointments";
     const qc_schedules_middle_missing_appointments = "Middle Missing Appointments";
     const qc_schedules_first_missing_appointments = "First Missing Appointments";
@@ -18,6 +20,7 @@ class ReportingDataParameterType extends BasicEnum{
     const qc_schedules_middle_incompleted_schedules = "Middle Incompleted Schedules";
     const qc_schedules_first_incompleted_schedules = "First Incompleted Schedules";
     const qc_schedules_pending_qc_approvals = "Pending QC Approvals";
+    const container_schedules_all_count = "Container Schedule All Count";
     const container_schedules_eta_report_count = "ETA Report";
     const container_schedules_empty_return_date_past_empty_lfd_count = "Empty Return Date Past Empty LFD";
     const container_schedules_pending_schedule_delivery_date_count = "Pending Schedule Delivery Date";
@@ -29,6 +32,7 @@ class ReportingDataParameterType extends BasicEnum{
     const container_schedules_missing_received_dates_in_wms_count = "Missing Received Dates In WMS";
     const container_schedules_missing_schedule_delivery_date_count = "Missing Schedule Delivery Date";
     // Instruction Manual Parameters
+    const instruction_manual_all_count = "All Logs";
     const instruction_manual_total_projects_open = "Logs Open";
     const instruction_manual_total_projects_completed = "Logs Completed";
     const instruction_manual_total_projects_overdue = "Logs Overdue";
@@ -38,6 +42,6 @@ class ReportingDataParameterType extends BasicEnum{
     const instruction_manual_total_projects_due_today = "Logs Due Today";
     const instruction_manual_total_projects_due_in_next_14_days = "Logs due In Next 14 Days";
     const instruction_manual_total_projects_due_less_than_14_days_from_entry = "Due < 14 Days from Entry";
-    const instruction_manual_total_projects_not_started = "Logs Not Started";
+    const instruction_manual_total_projects_not_started = "Logs Not Started"; 
 }
 ?>

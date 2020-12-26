@@ -20,14 +20,10 @@
     }
     if($call == 'setConfiguration'){
         try{
-            $arr = array();
             $userSeq = $sessionUtil->getUserLoggedInSeq();
             $configKey = $_REQUEST['userConfigKey'];
-            $configValue = $_REQUEST['userConfigValue'] == null || 
-                            $_REQUEST['userConfigValue'] == '0' ? '1' : '0';
+            $configValue = $_REQUEST['userConfigValue'];
             $userConfigurationMgr->setConfiguration($userSeq, $configKey, $configValue);
-            $arr['configvalue'] = $configValue;
-            $response['data'] = $arr;
         }catch(Exception $e){
             $success = 0;
 		    $message  = $e->getMessage();
