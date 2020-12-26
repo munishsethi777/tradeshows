@@ -358,6 +358,15 @@ body{
 	  border-color: #0000ff !important;
 	  color: black !important;
   }
-  .list-group.clear-list .list-group-item{
-  color:rgb(54, 54, 54);
-  }
+.list-group.clear-list .list-group-item{
+	color:rgb(54, 54, 54);
+}
+.dataFilterBlockSelected{
+	border-color:black !important;	
+	background-color: #1ab394;
+	color: #ffffff !important;
+}
+.get-grid-data-by-reporting-data{
+	margin-bottom:10px !important;
+}  
+  

@@ -83,7 +83,7 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                                 <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
                                     <div class="ibox-title">
                                         <h5>Instruction Manual Logs Analytics</h5>
-                                        <span id="currentAnalyticName" style="margin-left : 7px;"></span>
+                                        <span id="currentAnalyticName"></span>
                                         <div class="ibox-tools">
                                             <a class="collapse-link">
                                                 <i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
@@ -148,16 +148,15 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
         loadReportingData();
         var gridId = $("#gridId").val();
         $(".get-grid-data-by-reporting-data").click(function (){
-            // alert("clicked");
             var reportingParameter = $(this).attr("id");
             var dataName = $(this).find("dataName").html();
             applyReportingFilter(reportingParameter,gridId,dataName,defaultFilterSelectionUserConfigKey);
-            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("bg-primary");
+            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
             $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
-            $("#"+reportingParameter + " .ibox-content").addClass("bg-primary");
+            $("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
         });
         if(defaultFilterSelectionReportDataType != ''){
-            $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("bg-primary");
+            $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("dataFilterBlockSelected");
             $("#" + defaultFilterSelectionReportDataType).click();
         } 
     });
@@ -182,6 +181,10 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				html += "New"; 
 			}else if(data['neworrevised'] == "revisedInstructionManual"){
 				html += "Revised"
+			}else if(data['neworrevised'] == "revisedInternationInstructionManual"){
+				html += "Revised-International"
+			}else if(data['neworrevised'] == "newInternationInstructionManual"){
+				html += "New-International"
 			}else{
 				html += "";
 			}
