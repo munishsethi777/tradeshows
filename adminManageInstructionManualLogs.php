@@ -39,25 +39,26 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 
         .reportDataCountRow .ibox-content {
             /* background-color: #ffffff; */
-            padding: 10px 10px 0px 20px !important;
+            padding: 10px 0px 0px 0px !important;
         }
 
-        .peity {
-            margin-top: 10px;
-        }
-        .bg-white{
-            background-color: white
-        }
+        
+        
     </style>
+    
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <!-- Peity -->
-    <script src="scripts/plugins/peity/jquery.peity.min.js"></script>
+<!--     <script src="scripts/plugins/peity/jquery.peity.min.js"></script> -->
+    
+    <script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
+    <script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
+
+    
     <script src="scripts/GridDataByReportingParameter.js"></script>
     <script src="scripts/UserConfigurations.js"></script>
     <!--     <script src="scripts/demo/peity-demo.js"></script> -->
-
 </head>
 
 <body>
@@ -98,10 +99,16 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                                                     if(strpos($key,'instruction_manual_') !== false){
                                                         ?>
                                                         
-                                                        <div class="col-lg-2" >
-                                                            <div class="ibox float-e-margins get-grid-data-by-reporting-data bg-white" 
-                                                                id="<?php echo $key?>" style="cursor: pointer;">
+                                                        <div class="col-lg-2 reportBlock" >
+                                                            <div class="ibox float-e-margins reportFilterBlock bg-white" 
+                                                                id="<?php echo $key?>">
                                                                 <div class="ibox-content text-center">
+                                                                	<div class='reportFilterBlockTools floatRightTools'>
+                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key?>" ></i>
+                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key?>" ></i>
+                                                                    	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o" id="<?php echo $key?>" ></i>
+                                                                	</div>
+                                                                	
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
                                                                         <i class="fa" id='<?php echo $key ?>_change_arrow'></i>
@@ -147,17 +154,17 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
         loadGrid();
         loadReportingData();
         var gridId = $("#gridId").val();
-        $(".get-grid-data-by-reporting-data").click(function (){
+        $(".fa-filter").click(function (){
             var reportingParameter = $(this).attr("id");
             var dataName = $(this).find("dataName").html();
             applyReportingFilter(reportingParameter,gridId,dataName,defaultFilterSelectionUserConfigKey);
-            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
+            $(".reportFilterBlock, .ibox-content").removeClass("dataFilterBlockSelected");
             $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
             $("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
         });
         if(defaultFilterSelectionReportDataType != ''){
             $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("dataFilterBlockSelected");
-            $("#" + defaultFilterSelectionReportDataType).click();
+            $("#" + defaultFilterSelectionReportDataType +" .fa-filter").click();
         } 
     });
     
@@ -462,16 +469,32 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 						$("#" + key).addClass(value);
 					} else if (key.includes("change_color")) {
 						$("#" + key).css("color", value);
+					} else if (key.includes("thirty_days")) {//graph case
+						if(value != ""){
+    						var graph = new Rickshaw.Graph( {
+    					        element: document.querySelector("#"+key),
+    					        height:'50',
+    					        width:'180',
+    					        series: [{
+    						        color: '#1ab394',
+    					            data: value,
+    					        }]
+    					    });
+    						var barElement = document.getElementById(key); 
+    						var resize = function () {
+        						graph.configure({
+            						width: barElement.clientWidth, //html is "auto-magically" rendering size
+            						height: barElement.clientHeight //leverage this for precise re-size scalling
+        						});
+        						graph.render();
+    						}
+    						window.addEventListener('resize', resize);
+    						resize();
+						}
 					} else {
 						$("#" + key).text(value);
 					}
-					 	// console.log(key,value);									
 				});
-				$(".bar").peity("bar", {
-					fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],
-					width: "100%"
-				})
-
 			}
 		);
     }

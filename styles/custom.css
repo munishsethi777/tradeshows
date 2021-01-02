@@ -361,12 +361,39 @@ body{
 .list-group.clear-list .list-group-item{
 	color:rgb(54, 54, 54);
 }
-.dataFilterBlockSelected{
-	border-color:black !important;	
-	background-color: #1ab394;
-	color: #ffffff !important;
+
+.reportFilterBlock .dataFilterBlockSelected{
+	border-color:rgb(134, 134, 134) !important;	
+	background-color: white;
+	color:#1ab394 !important;
 }
-.get-grid-data-by-reporting-data{
+.reportFilterBlock .dataFilterBlockSelected svg{
+	fill:white;
+}
+.reportFilterBlock{
 	margin-bottom:10px !important;
-}  
+} 
+.reportFilterBlock .bg-white{
+    background-color: white
+}
+.reportFilterBlock .reportFilterBlockTools{
+    display:none;
+}
+.reportFilterBlock .floatRightTools{
+    position: absolute;
+    right: 20px;
+    top: 5px;
+}
+.reportFilterBlock .fa:hover{
+    color:red;
+    cursor:pointer;
+}
+.reportFilterBlock .rickshaw_graph{
+    display:block;
+    width:100%;
+} 
+.reportFilterBlock .ibox-content{
+	border-top-width:3px;
+	border-color:#eeeeee;
+}
   

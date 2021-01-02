@@ -24,8 +24,11 @@
         foreach ($reportingDataParameterTypeConstants as $key => $value ){
                 if(isset($_REQUEST['for'])){
                 if(strpos($key,$_REQUEST['for']) !== false){
-                    // $value = lcfirst(str_replace(" ","",$value));
-                    $list = $reportingDataMrg->getReportingData($key);
+                    // $earlierCounts = array();
+                    // for($ec=0;$ec<10;$ec++){
+                    //     array_push($earlierCounts, rand(40,70));
+                    // }
+                    $earlierCounts = $reportingDataMrg->getReportingData($key);
                     $current = "";
                     if(strpos($key,'qc_') !== false){
                         $object = QCScheduleMgr::getInstance();
@@ -42,23 +45,23 @@
                         $current = call_user_func(array($object,ReportingDataMethodNames::getValue($key)),"");
                     }
                     $arr[$key.'_current'] = $current;
-                    $arr[$key.'_previous'] = sizeof($list) >= 2 ? $list[1]['count'] : "0";
-                    $arr[$key.'_diff'] = sizeof($list) >= 2 ? abs($list[0]['count']-$list[1]['count']) : "0";
-                    $earlierCounts = array();
-                    foreach ($list as $count){
-                        array_push($earlierCounts,$count['count']);
-                    }
-                    $earlierCounts = array_reverse($earlierCounts);
+                    $arr[$key.'_previous'] = sizeof($earlierCounts) >= 2 ? $earlierCounts[1]['count'] : "0";
+                    $arr[$key.'_diff'] = sizeof($earlierCounts) >= 2 ? abs($earlierCounts[0]['count']-$earlierCounts[1]['count']) : "0";
                     $arr[$key.'_percent'] = "";
-                    $arr[$key.'_thirty_days'] = implode(',',$earlierCounts);
-                    // $arr[$key.'_change_arrow'] = ($list[0]['count']>$list[1]['count'])?'fa-level-up':'fa-level-down';
-                    // $arr[$key.'_change_color'] = ($list[0]['count']>$list[1]['count'])?'green':'red';
-                    // if(isset($list[1])){
-                    //     if($list[0]['count']==$list[1]['count']){
-                    //         $arr[$key.'_change_arrow'] = "fa-arrows-h";
-                    //         $arr[$key.'_change_color'] = "grey";
-                    //     }
-                    // }
+                    
+                    $i=0;
+                    $earlierCountsNewArray = array();
+                    if(count($earlierCounts) == 0){
+                        $tmpArr = array('x'=> 0,'y'=>0);
+                        array_push($earlierCountsNewArray,$tmpArr);
+                    }else{
+                        foreach ($earlierCounts as $count){
+                            $tmpArr = array('x'=> $i++,'y'=>(int)$count);
+                            array_push($earlierCountsNewArray,$tmpArr);
+                        }
+                    }
+                    //$earlierCountsNewArray = array_reverse($earlierCountsNewArray);
+                    $arr[$key.'_thirty_days'] = $earlierCountsNewArray;
                     if(isset($list[1])){
                         if($list[0]['count']>$list[1]['count']){
                             $arr[$key.'_change_arrow'] = 'fa-level-up';

@@ -1,5 +1,14 @@
 var filterFieldNameArr = new Array();
 var isSourceChange = 1;
+
+$(document).ready(function(){
+    $(".reportFilterBlock").hover(function(event) {
+        $(this).find(".reportFilterBlockTools" ).fadeIn(500); 
+    }, function() {
+        $( ".reportFilterBlockTools" ).fadeOut(100); 
+    });
+});
+
 function clearFilters(gridId){
     for(var i=0; i<=filterFieldNameArr.length; i++){
         $("#"+gridId).jqxGrid('removefilter',filterFieldNameArr[i],false);
