@@ -19,6 +19,7 @@ if($isAnalyticsDivExpandedUserConfigValue){
 $defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("IMDefaultFilterSelection");
 $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,
     $defaultFilterSelectionUserConfigKey,"instruction_manual_all_count");
+// $defaultFilterSelectionName = ReportingDataParameterType::getValue($defaultFilterSelectionReportDataType);
 ?>
 <!DOCTYPE html>
 <html>
@@ -83,8 +84,11 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                             <div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
                                 <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
                                     <div class="ibox-title">
-                                        <h5>Instruction Manual Logs Analytics</h5>
-                                        <span id="currentAnalyticName"></span>
+                                        <h5>Instruction Manual Logs Analytics</h5>&nbsp;
+                                        <div id="currentFiterAppliedNameDiv" style="display:inline;">
+                                            &nbsp;Current Filter Applied : 
+                                            <span id="currentFiterAppliedName"></span>
+                                        </div>
                                         <div class="ibox-tools">
                                             <a class="collapse-link">
                                                 <i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
@@ -115,7 +119,7 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                                                                         <span class="text-center" id='<?php echo $key ?>_diff'></span>
                                                                         <span id='<?php echo $key ?>_percent'></span>
                                                                     </div>
-                                                                    <small class="dataName"><?php echo $value ?></small>
+                                                                    <small id="analyticName" class="analyticName"><?php echo $value ?></small>
                                                                     <span class="bar" id='<?php echo $key ?>_thirty_days'></span>
                                                                 </div>
                                                             </div>
@@ -157,8 +161,11 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
         $(".fa-filter").click(function (){
             var reportingParameter = $(this).attr("id");
             var dataName = $(this).find("dataName").html();
-            applyReportingFilter(reportingParameter,gridId,dataName,defaultFilterSelectionUserConfigKey);
-            $(".reportFilterBlock, .ibox-content").removeClass("dataFilterBlockSelected");
+
+            var currentFiterAppliedName = $(this).find("#analyticName").html();
+            applyReportingFilter(reportingParameter,gridId,currentFiterAppliedName,defaultFilterSelectionUserConfigKey);
+            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
+
             $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
             $("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
         });

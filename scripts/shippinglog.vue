@@ -2,7 +2,8 @@ var shippinglogs;
 var seq;
 $(document).ready(function () {
     var detailsofinternet = Vue.component("detailsofinternet", {
-        props: ["index", "key", "flag", "isdomestic"],
+        // props: ["index", "key", "flag", "isdomestic"],
+        props: ["index", "flag", "isdomestic"],
         template: `<div class="accordion" v-bind:class="{'invisible_block':isdomestic}">
       <div v-if="this.flag == 'false'" :class="'detailpanel' + index" class="panel panel-mauve">
       <div class="panel-heading" :id="'headingOne' + index" v-if="this.flag == 'false'">
