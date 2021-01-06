@@ -28,7 +28,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
     var filterType = "";
     var filterValue = "";
 
-    $("#currentFiterAppliedName").html(currentFiterAppliedName);
+    $("#currentFiterAppliedNameDiv #currentFiterAppliedName").html(currentFiterAppliedName);
     clearFilters(gridId);
     if (reportingDataParameter == "instruction_manual_all_count") {
         if (isSourceChange) {
@@ -60,7 +60,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('addfilter', "iscompleted", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_overdue") {
-        source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsOverdue";
+        source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsOverdueForGrid";
         $("#" + gridId).jqxGrid('applyfilters');
         isSourceChange = 1;
 
@@ -135,7 +135,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('addfilter', "approvedmanualdueprintdate", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_due_less_than_14_days_from_entry") {
-        source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntry";
+        source.url = "Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntryForGrid";
         $("#" + gridId).jqxGrid('applyfilters');
         isSourceChange = 1;
     } else if (reportingDataParameter == "instruction_manual_total_projects_not_started") {

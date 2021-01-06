@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/UserConfigurationType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Utils/ExportUtil.php");
 
 $sessionUtil = SessionUtil::getInstance();
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
@@ -20,6 +21,7 @@ $defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("IMDefault
 $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,
     $defaultFilterSelectionUserConfigKey,"instruction_manual_all_count");
 // $defaultFilterSelectionName = ReportingDataParameterType::getValue($defaultFilterSelectionReportDataType);
+$exportLimit =5000;
 ?>
 <!DOCTYPE html>
 <html>
@@ -104,13 +106,12 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                                                         ?>
                                                         
                                                         <div class="col-lg-2 reportBlock" >
-                                                            <div class="ibox float-e-margins reportFilterBlock bg-white" 
-                                                                id="<?php echo $key?>">
-                                                                <div class="ibox-content text-center">
+                                                            <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
+                                                                <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
                                                                 	<div class='reportFilterBlockTools floatRightTools'>
-                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key?>" ></i>
-                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key?>" ></i>
-                                                                    	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o" id="<?php echo $key?>" ></i>
+                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
+                                                                    	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
                                                                 	</div>
                                                                 	
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
@@ -141,9 +142,9 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
             </div>
         </div>
     </div>
-    <form id="form1" name="form1" method="GET" action="Actions/InstructionManualLogsAction.php">
-        <input type="hidden" id="call" name="call" value="export" />
-        <input type="hidden" id="queryString" name="queryString" />
+    <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/InstructionManualLogsAction.php" target='new'>
+    	<input type="hidden" name="call" value="exportFilterData" />
+    	<input type="hidden" name="filterId" id="filterId" />
     </form>
     <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_self'>
         <input type="hidden" id="id" name="id" />
@@ -154,6 +155,7 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
     var source ;
     var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
     var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
+    var selectedRows = [];
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
@@ -161,18 +163,25 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
         $(".fa-filter").click(function (){
             var reportingParameter = $(this).attr("id");
             var dataName = $(this).find("dataName").html();
-
-            var currentFiterAppliedName = $(this).find("#analyticName").html();
+            var currentFiterAppliedName = $("#" + reportingParameter).find("#analyticName").html();
             applyReportingFilter(reportingParameter,gridId,currentFiterAppliedName,defaultFilterSelectionUserConfigKey);
             $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
-
             $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
             $("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
+            $("#exportFormForInstructionManualLog input[name=filterId").val(reportingParameter);
         });
         if(defaultFilterSelectionReportDataType != ''){
             $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("dataFilterBlockSelected");
             $("#" + defaultFilterSelectionReportDataType +" .fa-filter").click();
         } 
+        $("#exportBtnForInstructionManualLog").click(function(e) {
+			exportFinal(e, this);
+        });
+        $(".filterExportDataIcon").click(function(){
+            var filterId = $(this).attr('id');
+			$("#exportLogsForm #filterId").val(filterId);
+			$("#exportLogsForm").submit();
+        });
     });
     
     function editButtonClick(seq) {
@@ -183,7 +192,7 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
     function loadGrid() {
         var actions = function(row, columnfield, value, defaulthtml, columnproperties) {
             data = $('#instructionManualLogGrid').jqxGrid('getrowdata', row);
-            var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>"
+            var html = "<div style='text-align: center; margin-top:1px;font-size:18px'>";
             html += "<a href='javascript:editButtonClick(" + data['seq'] + ")' ><i class='fa fa-edit' title='Edit Instruction Manual Log'></i></a>";
             html += "</div>";
             return html;
@@ -252,6 +261,13 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                 cellsformat: 'M-dd-yyyy'
             },
             {
+                text: 'PO Ship Date',
+                datafield: 'poshipdate',
+                filtertype: 'date',
+                width: "10%",
+                cellsformat: 'M-dd-yyyy'
+            },
+            {
                 text: 'IM Due Date',
                 datafield: 'approvedmanualdueprintdate',
                 filtertype: 'date',
@@ -278,11 +294,15 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 
         source = {
             datatype: "json",
-            id: 'id',
+            id: 'seq',
             pagesize: 20,
             sortcolumn: 'instructionmanuallogs.lastmodifiedon',
             sortdirection: 'desc',
             datafields: [{
+					name: 'id',
+					type: 'integer'
+				},
+                {
                     name: 'seq',
                     type: 'integer'
                 },
@@ -297,6 +317,10 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
                 },
                 {
                     name: 'entrydate',
+                    type: 'date'
+                },
+                {
+                    name: 'poshipdate',
                     type: 'date'
                 },
                 {
@@ -448,6 +472,64 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 
             }
         });
+        $('#instructionManualLogGrid').on('rowselect', function(event) {
+			var args = event.args;
+			var rowBoundIndex = args.rowindex;
+			var rowData = args.row;
+			selectedRows[rowBoundIndex] = rowData;
+        });
+        $('#instructionManualLogGrid').on('rowunselect', function(event) {
+			var args = event.args;
+			var rowBoundIndex = args.rowindex;
+			delete selectedRows[rowBoundIndex];
+		});
+    }
+    function exportItemsConfirm(filterString) {
+		var selectedRowIndexes = $("#instructionManualLogGrid").jqxGrid('selectedrowindexes');
+		$('#exportModalFormForInstructionManualLogs').modal('show');
+		$("#queryStringForInstructionManualLog").val(filterString);
+	}
+    function exportFinal(e, btn) {
+		var exportOption = $('input[name=exportOptionForInstructionManualLogs]:checked').val()
+		var rowscount = 0;
+		var limit = <?php echo $exportLimit ?>;
+		if (exportOption == "selectedRows") {
+			var selectedRowIndexes = $("#instructionManualLogGrid").jqxGrid('selectedrowindexes');
+			if (selectedRowIndexes.length > 0) {} else {
+				noRowSelectedAlert();
+				return;
+			}
+			rowscount = selectedRowIndexes.length;
+			if (rowscount > limit) {
+				bootbox.alert("Cannot export more than <?php echo $exportLimit ?> rows!", function() {});
+				return;
+			}
+			var ids = [];
+			$.each(selectedRowIndexes, function(index, value) {
+				if (value != -1) {
+					var dataRow = selectedRows[value] //$("#instructionManualLogGrid").jqxGrid('getrowdata', value);
+					ids.push(dataRow.seq);
+				}
+			});
+			$("#instructionmanuallogseq").val(ids);
+
+
+		} else {
+			var datainformation = $('#instructionManualLogGrid').jqxGrid('getdatainformation');
+			rowscount = datainformation.rowscount;
+			$("#instructionmanuallogseq").val("");
+			// if (rowscount > limit) {
+			// 	bootbox.alert("Cannot export more than <?php echo $exportLimit ?> rows!", function() {});
+			// 	return;
+			// }
+		}
+		e.preventDefault();
+		var l = Ladda.create(btn);
+		l.start();
+		$('#exportFormForInstructionManualLog').submit();
+		l.stop();
+		$('#exportFormForInstructionManualLog').modal('hide');
+		$('#instructionManualLogGrid').jqxGrid('clearselection');
     }
     function getDashboardCount() {
 		$.ajax({
@@ -504,5 +586,8 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				});
 			}
 		);
+    }
+    function exportFilterData(){
+
     }
 </script>

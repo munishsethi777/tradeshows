@@ -132,10 +132,10 @@
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                     </div>
-                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved manual due for print :</label>
+                                    <label class="col-lg-2 col-form-label bg-formLabelPeach">Approved IM due for print :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
-                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control" readonly>
+                                            <input tabindex="<?php echo $instructionManualUsaTeamTabIndex?>" type="text" id="approvedmanualdueprintdate"  maxLength="250" value="<?php echo $instructionManualLog->getApprovedManualDuePrintDate()?>" name="approvedmanualdueprintdate" class="form-control dateControl" >
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
                                         </div>

@@ -56,7 +56,7 @@
                         array_push($earlierCountsNewArray,$tmpArr);
                     }else{
                         foreach ($earlierCounts as $count){
-                            $tmpArr = array('x'=> $i++,'y'=>(int)$count);
+                            $tmpArr = array('x'=> $i++,'y'=>(int)$count['count']);
                             array_push($earlierCountsNewArray,$tmpArr);
                         }
                     }

@@ -130,17 +130,15 @@
         echo json_encode($instructionManualLogsJson);
         return;
     }
-    if($call == 'getProjectsDueLessThan14DaysFromEntry'){
-        $projectsDueLess14DaysThanFromEntry = $instructionManualLogMgr->getProjectsDueLessThan14DaysFromEntry();
+    if($call == 'getProjectsDueLessThan14DaysFromEntryForGrid'){
+        $projectsDueLess14DaysThanFromEntry = $instructionManualLogMgr->getProjectsDueLessThan14DaysFromEntryForGrid();
         echo json_encode($projectsDueLess14DaysThanFromEntry);
         return;
     }
-    if($call == 'getProjectsOverdue'){
-        $projectsOverdue = $instructionManualLogMgr->getProjectsOverdue();
+    if($call == 'getProjectsOverdueForGrid'){
+        $projectsOverdue = $instructionManualLogMgr->getProjectsOverdueForGrid();
         echo json_encode($projectsOverdue);
         return;
-    }
-    if($call == 'export'){
     }
     if($call == 'find'){
     }
@@ -150,6 +148,63 @@
         $date = DateUtil::getCurrentDateStrWithTimeZone($timeZone);
         echo json_encode($date);
         return;
+    }
+    if($call == "export"){
+        try{
+            $queryString = $_GET["queryStringForInstructionManualLog"];
+            $qcscheduleSeqs = $_GET["instructionmanuallogseq"];
+            $filterId = $_GET["filterId"];
+            $instructionManualLogMgr->exportInstructionManuals($queryString,$qcscheduleSeqs,$filterId);
+        }catch(Exception $e){
+            $success = 0;
+            $message = $e->getMessage();
+        }
+    }
+    if($call == "exportFilterData"){
+        try{
+            $filterId = $_POST['filterId'];
+            $instructionManualLogs = null;
+            $fileName = "InstructionManual";
+            if($filterId == "instruction_manual_total_projects_open_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllOpenLogsFullData();
+                $fileName = "InstructionManualTotalProjectsOpen";
+            }elseif($filterId == "instruction_manual_total_projects_completed_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllCompletedLogsFullData();
+                $fileName = "InstructionManualTotalProjectsCompleted";
+            }elseif($filterId == "instruction_manual_total_projects_overdue_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllOverDueLogsFullData();
+                $fileName = "InstructionManualTotalProjectsOverDue";
+            }elseif($filterId == "instruction_manual_total_projects_in_supervisor_review_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllSupervisorReviewLogsFullData();
+                $fileName = "InstructionManualTotalProjectsInSupervisorsReview";
+            }elseif($filterId == "instruction_manual_total_projects_in_manager_review_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllManagerReviewLogsFullData();
+                $fileName = "InstructionManualTotalProjectsInManagersReview";
+            }elseif($filterId == "instruction_manual_total_projects_in_buyer_review_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllBuyerReviewLogsFullData();
+                $fileName = "InstructionManualTotalProjectsInBuyersReview";
+            }elseif($filterId == "instruction_manual_total_projects_due_today_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllDueTodayLogsFullData();
+                $fileName = "InstructionManualTotalProjectsDueToday";
+            }elseif($filterId == "instruction_manual_total_projects_due_in_next_14_days_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllDueInNext14DaysLogsFullData();
+                $fileName = "InstructionManualTotalProjectsDueInNext14Days";
+            }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllDueLessThan14DaysFromEntryLogsFullData();
+                $fileName = "InstructionManualTotalProjectDueLessThan14DaysFromEntry";
+            }elseif($filterId == "instruction_manual_total_projects_not_started_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllNotStartedLogsFullData();
+                $fileName = "InstructionManualTotalProjectsNotStarted";
+            }elseif($filterId == "instruction_manual_all_count_export_date"){
+                $instructionManualLogs = $instructionManualLogMgr->getAllFullData();
+            }
+            if($instructionManualLogs){
+                PHPExcelUtil::exportInstructionManuals($instructionManualLogs,false,$fileName);
+            }
+        }catch(Exception $e){
+            $success = 0;
+            $message = $e->getMessage();
+        }
     }
     $response['success'] = $success;
     $response['message'] = $message;
