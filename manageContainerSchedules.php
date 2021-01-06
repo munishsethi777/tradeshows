@@ -44,9 +44,9 @@ if($isAnalyticsContainersDivExpanded){
 		}
 
 		.reportDataCountRow .ibox-content {
-			background-color: white;
-			padding: 10px 20px 10px 30px !important;
-		}
+            /* background-color: #ffffff; */
+            padding: 10px 0px 0px 0px !important;
+        }
 
 		@media screen and (min-width: 992px) {
 			.modal-lg {
@@ -58,13 +58,16 @@ if($isAnalyticsContainersDivExpanded){
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	<!-- Peity -->
-	<script src="scripts/plugins/peity/jquery.peity.min.js"></script>
-	<!--     <script src="scripts/demo/peity-demo.js"></script> -->
+
 	<script src="scripts/UserConfigurations.js"></script>
+	<script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
+    <script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
 </head>
 
 <body>
+	<input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsContainersDivExpanded;?>" />
+    <input id="analyticsDivExpandedUserConfigKey" class="analyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $userConfigKey; ?>" />
+	
 	<div id="wrapper">
 		<?php include("adminmenuInclude.php") ?>
 		<div id="page-wrapper" class="gray-bg">
@@ -101,20 +104,26 @@ if($isAnalyticsContainersDivExpanded){
 														if(strpos($key,'container_') !== false){
 															?>
 															
-															<div class="col-lg-2">
-																<div class="ibox float-e-margins">
-																	<div class="ibox-content text-center">
-																		<h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
-																		<div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
-																			<i class="fa" id='<?php echo $key ?>_change_arrow'></i>
-																			<span class="text-center" id='<?php echo $key ?>_diff'></span>
-																			<span id='<?php echo $key ?>_percent'></span>
-																		</div>
-																		<small class="dataName"><?php echo $value ?></small>
-																		<span class="bar" id='<?php echo $key ?>_thirty_days'></span>
-																	</div>
-																</div>
-															</div>
+															<div class="col-lg-2 reportBlock" >
+                                                            <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
+                                                                <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
+                                                                	<div class='reportFilterBlockTools floatRightTools'>
+                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
+                                                                    	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
+                                                                	</div>
+                                                                	
+                                                                    <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
+                                                                    <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
+                                                                        <i class="fa" id='<?php echo $key ?>_change_arrow'></i>
+                                                                        <span class="text-center" id='<?php echo $key ?>_diff'></span>
+                                                                        <span id='<?php echo $key ?>_percent'></span>
+                                                                    </div>
+                                                                    <small id="analyticName" class="analyticName"><?php echo $value ?></small>
+                                                                    <span class="bar" id='<?php echo $key ?>_thirty_days'></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 															
 															<?php 
 														}
@@ -340,25 +349,41 @@ if($isAnalyticsContainersDivExpanded){
 	function loadReportingData() {
 		$.getJSON("Actions/ReportingDataAction.php?call=getReportingData&for=container_",
 			function(response) {
-				$.each(response.data, function(key, value) {
-					if (key.includes("change_arrow")) {
-						$("#" + key).addClass(value);
-					} else if (key.includes("change_color")) {
-						$("#" + key).css("color", value);
-					} else {
-						$("#" + key).text(value);
-					}
-					//console.log(key,value);									
-				});
-				$(".bar").peity("bar", {
-					fill: ["rgba(26, 178, 147, 0.3)", "rgba(26, 178, 147, 0.3)"],
-					width: "100%"
-				})
+    			$.each(response.data, function(key, value) {
+    				if (key.includes("change_arrow")) {
+    					$("#" + key).addClass(value);
+    				} else if (key.includes("change_color")) {
+    					$("#" + key).css("color", value);
+    				} else if (key.includes("thirty_days")) {//graph case
+    					if(value != ""){
+    						var graph = new Rickshaw.Graph( {
+    					        element: document.querySelector("#"+key),
+    					        height:'50',
+    					        width:'180',
+    					        series: [{
+    						        color: '#1ab394',
+    					            data: value,
+    					        }]
+    					    });
+    						var barElement = document.getElementById(key); 
+    						var resize = function () {
+        						graph.configure({
+            						width: barElement.clientWidth, //html is "auto-magically" rendering size
+            						height: barElement.clientHeight //leverage this for precise re-size scalling
+        						});
+        						graph.render();
+    						}
+    						window.addEventListener('resize', resize);
+    						resize();
+    					}
+    				} else {
+    					$("#" + key).text(value);
+    				}
+    			});
 
 			}
 		);
 	}
-
 	function showItemDetails(seq, rowId) {
 		currentRowId = rowId;
 		showHideProgress();
