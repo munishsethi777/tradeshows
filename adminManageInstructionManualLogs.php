@@ -109,9 +109,9 @@ $exportLimit =5000;
                                                             <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
                                                                 	<div class='reportFilterBlockTools floatRightTools'>
-                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
-                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
-                                                                    	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
+                                                                    	<i title="Apply Filter" alt="Apply Filter" style="font-size:14px" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+                                                                    	<!-- <i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i> -->
+                                                                    	<i title="Export Data" alt="Export Data" style="font-size:14px" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
                                                                 	</div>
                                                                 	
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
