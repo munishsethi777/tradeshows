@@ -19,9 +19,9 @@
                                                     left join users as assignedto on  assignedto.seq = instructionmanuallogs.assignedtouser
                                                     left join instructionmanualcustomers on instructionmanualcustomers.instructionmanualseq = instructionmanuallogs.seq
                                                     left join instructionmanualrequests on instructionmanualrequests.instructionmanualseq = instructionmanuallogs.seq";
-        private static $logsOpenWhereClause = " where iscompleted IS NULL OR iscompleted = false";
+        private static $logsOpenWhereClause = " where iscompleted IS false";
         private static $logsCompletedWhereClause = " where iscompleted IS TRUE";
-        private static $logsOverDueWhereClause = " where NOW() > approvedmanualdueprintdate AND (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate IS NOT NULL";
+        private static $logsOverDueWhereClause = " where NOW() > approvedmanualdueprintdate AND iscompleted = false AND approvedmanualdueprintdate IS NOT NULL";
 //         private static $logsInSupervisorReviewWhereClause = " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
         private static $logsOverDueTodayWhereClause = " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like NOW()";
         private static $logsDueLessThan14DaysFromEntryWhereClause = " where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
@@ -126,7 +126,7 @@
         public function getProjectsOverdueForGrid(){
             $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq" . self::$logsCompletedWhereClause;
+            instructionmanuallogs.createdby = users.seq" . self::$logsOverDueWhereClause;
             $rows = self::$dataStore->executeQuery($query,true);
             $arr = array();
             foreach($rows as $row){
@@ -142,7 +142,7 @@
         public function getProjectsOverdueCountForGrid($isApplyFilter){
             $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq" .  self::$logsCompletedWhereClause;
+            instructionmanuallogs.createdby = users.seq" .  self::$logsOverDueWhereClause;
             $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
             return $count;
         }
