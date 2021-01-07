@@ -2,6 +2,8 @@
     require_once($ConstantsArray['dbServerUrl']. "BusinessObjects/InstructionManualLogs.php");
     require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
     class InstructionManualLogsMgr{
         private static $instructionManualLogsMgr;
         private static $dataStore;
@@ -172,8 +174,8 @@
                 $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
                 if($filterId == "instruction_manual_total_projects_overdue"){
                     $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
-                }elseif($filterId == "instruction_manual_total_projects_overdue"){
-
+                }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
+                    $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
                 }
                 
                 $instructionManuals = self::$dataStore->executeQuery($query,true,true);

@@ -26,7 +26,8 @@ $analyticsDivState = "collapsed";
 if($isAnalyticsQCDivExpanded){
 	$analyticsDivState = "";
 }
-
+$analyticsDivExpandedUserConfigKey = "";
+$isAnalyticsIMDivExpandedUserConfigValue = "";
 ?>
 <!DOCTYPE html>
 <html>
