@@ -17,7 +17,7 @@ function clearFilters(gridId){
     }
 }
 function changeSourceUrl() {
-    source.url = "Actions/instructionManualLogsAction.php?call=getAllInstructionManualLogs";
+    source.url = "Actions/InstructionManualLogsAction.php?call=getAllInstructionManualLogs";
     isSourceChange = 0;
 }
 function applyReportingFilter(reportingDataParameter, gridId, currentFiterAppliedName = "", defaultFilterSelectionUserConfigKey) {
