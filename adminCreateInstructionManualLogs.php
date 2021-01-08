@@ -215,7 +215,7 @@
                                     <label class="col-lg-3 col-form-label bg-formLabelYellow">To be Filled by China Team</label>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Date diagram saved :</label>
+                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Date Diagram saved :</label>
                                     <div class="col-lg-4">
                                         <div class="input-group date">
                                             <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="diagramsaveddate"  maxLength="250" value="<?php echo $instructionManualLog->getDiagramSavedDate()?>" name="diagramsaveddate" class="form-control dateControl">
@@ -231,12 +231,26 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Final Due Date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="finalduedate"  maxLength="250" value="<?php echo $instructionManualLog->getFinalDueDate()?>" name="finalduedate" class="form-control dateControl">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-2 col-form-label bg-formLabelYellow">Confirmed Ship Date :</label>
+                                    <div class="col-lg-4">
+                                        <div class="input-group date">
+                                            <input tabindex="<?php echo $instructionManualChinaTeamTabIndex?>" type="text" id="confirmedshipdate"  maxLength="250" value="<?php echo $instructionManualLog->getConfirmedShipDate()?>" name="confirmedshipdate" class="form-control dateControl">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <div class="panel panel-yellow">
                                         <div class="panel-heading">Notes to USA Office</div>
                                         <div class="panel-body">
-                                            <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" >
-                                                <?php echo $instructionManualLog->getNotesToUsa()?>
-                                            </textarea>
+                                            <textarea tabindex="instructionManualChinaTeamTabIndex" class="form-control" maxLength="1000" name="notestousa" ><?php echo $instructionManualLog->getNotesToUsa()?></textarea>
                                         </div>    
                                     </div>
                                 </div>

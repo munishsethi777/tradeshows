@@ -4,7 +4,7 @@ class InstructionManualLogs{
     private $seq,$entrydate,$poshipdate,$approvedmanualdueprintdate,$itemnumber,$classcodeseq,$graphicduedate,
     $neworrevised,$instructionmanualtype,$diagramsavedbyuserseq,$diagramsaveddate,$notestousa,$notestochina,
     $assignedtouser,$instructionmanuallogstatus,$starteddate,$supervisorreturndate,$managerreturndate,$buyerreturndate,
-    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifiedon,$isprivatelabel;
+    $senttochinadate,$iscompleted,$createdby,$createddate,$lastmodifiedon,$isprivatelabel,$confirmedshipdate,$finalduedate;
 	
 	
 	public static $className = "InstructionManualLogs";
@@ -160,6 +160,19 @@ class InstructionManualLogs{
     public function getIsPrivateLabel(){
         return $this->isprivatelabel;
     }
+    public function setConfirmedShipDate($confirmedShipDate){
+        $this->confirmedshipdate = $confirmedShipDate;
+    }
+    public function getConfirmedShipDate(){
+        return $this->confirmedshipdate;
+    }
+    public function setFinalDueDate($finalDueDate){
+        $this->finalduedate = $finalDueDate;
+    }
+    public function getFinalDueDate(){
+        return $this->finalduedate;
+    }
+    
     public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

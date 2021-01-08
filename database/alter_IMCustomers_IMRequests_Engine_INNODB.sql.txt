@@ -1,0 +1,2 @@
+ALTER TABLE instructionmanualrequests ENGINE = InnoDB;
+ALTER TABLE instructionmanualcustomers ENGINE = InnoDB

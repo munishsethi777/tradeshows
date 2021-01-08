@@ -211,85 +211,23 @@ $exportLimit =5000;
 			}else{
 				html += "";
 			}
-//             html += "<a href='javascript:editButtonClick(" + data['seq'] + ")' ><i class='fa fa-edit' title='Edit Instruction Manual Log'></i></a>";
            html += "</div>";
            return html;
         }
         var statusTypes = ["", "Not Started", "In Progress", "Awaiting Information From China", "Awaiting Information From Buyers", "In Review - Supervisor", "In Review - Manager", "In Review - Buyer", "Sent To China", "Cancelled", "Duplicate"];
-        var columns = [{
-                text: 'Actions',
-                datafield: 'Actions',
-                cellsrenderer: actions,
-                width: '5%',
-                filterable: false
-            },
-            {
-                text: 'id',
-                datafield: 'seq',
-                hidden: true
-            },
-            {
-                text: 'Completed',
-                datafield: 'iscompleted',
-                columntype: 'checkbox',
-                width: "6%"
-            },
-            {
-                text: 'New/Revised',
-                datafield: 'neworrevised',
-                cellsrenderer: newRevisedCellRenderer,
-                width: "6%"
-            },
-            { text: 'Entered By', datafield: 'fullname',width:"10%"},
-            {
-                text: 'Item No',
-                datafield: 'itemnumber',
-                width: "10%",
-                hidden: false
-            },
-            {
-                text: 'Class',
-                datafield: 'classcode',
-                width: "5%",
-                filtercondition: 'STARTS_WITH'
-            },
-            {
-                text: 'Entry Date',
-                datafield: 'entrydate',
-                filtertype: 'date',
-                width: "10%",
-                cellsformat: 'M-dd-yyyy'
-            },
-            {
-                text: 'PO Ship Date',
-                datafield: 'poshipdate',
-                filtertype: 'date',
-                width: "10%",
-                cellsformat: 'M-dd-yyyy'
-            },
-            {
-                text: 'IM Due Date',
-                datafield: 'approvedmanualdueprintdate',
-                filtertype: 'date',
-                width: "10%",
-                cellsformat: 'M-dd-yyyy'
-            },
-            {
-                text: 'Status',
-                datafield: 'instructionmanuallogstatus',
-                width: "24%",
-                hidden: false,
-                filtertype: 'checkedlist',
-                filteritems: statusTypes,
-                filtercondition: 'equal'
-            },
-            {
-                text: 'Modified On',
-                datafield: 'instructionmanuallogs.lastmodifiedon',
-                filtertype: 'date',
-                width: "12%",
-                cellsformat: 'M-dd-yyyy hh:mm tt'
-            }
+        var columns = [
+			{text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
+            {text: 'id',datafield: 'seq',hidden: true},
+            {text: 'Completed',datafield: 'iscompleted',columntype: 'checkbox',width: "5%"},
+            {text: 'New/Revised',datafield: 'neworrevised',cellsrenderer: newRevisedCellRenderer,width: "6%"},
+            {text: 'Entered By', datafield: 'fullname',width:"10%"},
+            {text: 'Item datafield',datafield: 'itemnumber',width: "10%"},
+            {text: 'Class',datafield: 'classcode',width: "5%",filtercondition: 'STARTS_WITH'},
+            {text: 'Entry Date',datafield: 'entrydate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
+            {text: 'PO Ship Date',datafield: 'poshipdate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
+            {text: 'IM Due Date',datafield: 'approvedmanualdueprintdate',filtertype: 'date',width: "10%",cellsformat: 'M-dd-yyyy'},
+            {text: 'Status',datafield: 'instructionmanuallogstatus',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: statusTypes,filtercondition: 'equal'},
+            {text: 'Modified On',datafield: 'instructionmanuallogs.lastmodifiedon',filtertype: 'date',width: "12%",cellsformat: 'M-dd-yyyy hh:mm tt'}
         ]
 
         source = {
@@ -298,51 +236,19 @@ $exportLimit =5000;
             pagesize: 20,
             sortcolumn: 'instructionmanuallogs.lastmodifiedon',
             sortdirection: 'desc',
-            datafields: [{
-					name: 'id',
-					type: 'integer'
-				},
-                {
-                    name: 'seq',
-                    type: 'integer'
-                },
-                { name: 'fullname', type: 'string' },
-                {
-                    name: 'itemnumber',
-                    type: 'string'
-                },
-                {
-                    name: 'classcode',
-                    type: 'string'
-                },
-                {
-                    name: 'entrydate',
-                    type: 'date'
-                },
-                {
-                    name: 'poshipdate',
-                    type: 'date'
-                },
-                {
-                    name: 'approvedmanualdueprintdate',
-                    type: 'date'
-                },
-                {
-                    name: 'instructionmanuallogstatus',
-                    type: 'string'
-                },
-                {
-                    name: 'iscompleted',
-                    type: 'boolean'
-                },
-                {
-                    name: 'neworrevised',
-                    type: 'string'
-                },
-                {
-                    name: 'instructionmanuallogs.lastmodifiedon',
-                    type: 'date'
-                },
+            datafields: [
+				{name: 'id',type: 'integer'},
+                {name: 'seq',type: 'integer'},
+                {name: 'fullname', type: 'string' },
+                {name: 'itemnumber',type: 'string'},
+                {name: 'classcode',type: 'string'},
+                {name: 'entrydate',type: 'date'},
+                {name: 'poshipdate',type: 'date'},
+                {name: 'approvedmanualdueprintdate',type: 'date'},
+                {name: 'instructionmanuallogstatus',type: 'string'},
+                {name: 'iscompleted',type: 'boolean'},
+                {name: 'neworrevised',type: 'string'},
+                {name: 'instructionmanuallogs.lastmodifiedon',type: 'date'},
             ],
             url: '',
             root: 'Rows',
@@ -351,11 +257,9 @@ $exportLimit =5000;
                 source.totalrecords = data.TotalRows;
             },
             filter: function() {
-                // update the grid and send a request to the server.
                 $("#instructionManualLogGrid").jqxGrid('updatebounddata', 'filter');
             },
             sort: function() {
-                // update the grid and send a request to the server.
                 $("#instructionManualLogGrid").jqxGrid('updatebounddata', 'sort');
             },
             addrow: function(rowid, rowdata, position, commit) {
@@ -396,26 +300,21 @@ $exportLimit =5000;
             renderstatusbar: function(statusbar) {
                 var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
                 var addButton = $("<div title='Add' alt='Add' style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-                //var editButton = $("<div title='Edit' alt='Edit' style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
                 var importButton = $("<div title='Import Data' alt='Import Data' style='float: left; margin-left: 5px;'><i class='fa fa-upload'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
                 var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
                 var reloadButton = $("<div title='Reload' alt='Reload' style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-                //var downloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Download Template</span></div>");
                 var deleteButton = $("<div title='Delete' alt='Delete' style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
 
                 container.append(addButton);
-                //container.append(editButton);
                 container.append(importButton);
                 container.append(exportButton);
                 container.append(reloadButton);
-                //container.append(downloadButton);
                 container.append(deleteButton);
                 statusbar.append(container);
                 addButton.jqxButton({
                     width: 65,
                     height: 18
                 });
-                //editButton.jqxButton({  width: 65, height: 18 });
                 importButton.jqxButton({
                     width: 65,
                     height: 18
@@ -428,7 +327,6 @@ $exportLimit =5000;
                     width: 70,
                     height: 18
                 });
-                //downloadButton.jqxButton({  width: 140, height: 18 });
                 deleteButton.jqxButton({
                     width: 65,
                     height: 18
@@ -437,9 +335,7 @@ $exportLimit =5000;
                     location.href = ("adminCreateInstructionManualLogs.php");
                 });
                 deleteButton.click(function(event) {
-                    gridId = "instructionManualLogGrid";
-                    deleteUrl = "Actions/InstructionManualLogsAction.php?call=deleteInstructionManualLog";
-                    deleteGraphicLog(gridId, deleteUrl);
+                	deleteRows("instructionManualLogGrid","Actions/InstructionManualLogsAction.php?call=deleteInstructionManualLog");
                 });
                 importButton.click(function(event) {
                     location.href = ("adminImportInstructionManualLogs.php");

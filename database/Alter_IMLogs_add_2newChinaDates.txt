@@ -1,0 +1,1 @@
+ALTER TABLE `instructionmanuallogs` ADD `confirmedshipdate` DATE NULL AFTER `createdby`, ADD `finalduedate` DATE NULL AFTER `confirmedshipdate`;

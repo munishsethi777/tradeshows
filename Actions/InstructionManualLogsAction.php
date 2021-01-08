@@ -206,6 +206,16 @@
             $message = $e->getMessage();
         }
     }
+    if($call == "deleteInstructionManualLog"){
+        $ids = $_GET["ids"];
+        try{
+            $flag = $instructionManualLogMgr->deleteBySeqs($ids);
+            $message = "Deleted Successfully";
+        }catch(Exception $e){
+            $success = 0;
+            $message = $e->getMessage();
+        }
+    }
     $response['success'] = $success;
     $response['message'] = $message;
     echo json_encode($response);

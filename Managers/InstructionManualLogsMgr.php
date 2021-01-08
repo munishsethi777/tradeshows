@@ -38,27 +38,6 @@
         public function save($instructionManualLog){
             return self::$dataStore->save($instructionManualLog);
         }
-        public function getInstructionManualLogsForGrid(){
-            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";        
-            $rows = self::$dataStore->executeQuery($query,true);
-            $arr = array();
-            foreach($rows as $row){
-                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);	
-                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
-                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
-                array_push($arr,$row);		    
-            }
-            $mainArr["Rows"] = $arr;
-            $mainArr["TotalRows"] = $this->getAllCount(true);
-            return $mainArr;
-        }
-        public function getAllCount($isApplyFilter){
-            $query = "select count(*) from instructionmanuallogs left join classcodes on 
-                    instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-                    instructionmanuallogs.createdby = users.seq";
-           $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
-           return $count;
-        }
         public function findBySeq($seq){
             $instructionManualLog = self::$dataStore->findBySeq($seq);
             $instructionManualLog->setEntryDate($this->getDateStr($instructionManualLog->getEntryDate()));
@@ -71,8 +50,17 @@
             $instructionManualLog->setManagerReturnDate($this->getDateStr($instructionManualLog->getManagerReturnDate()));
             $instructionManualLog->setBuyerReturnDate($this->getDateStr($instructionManualLog->getBuyerReturnDate()));
             $instructionManualLog->setSentToChinaDate($this->getDateStr($instructionManualLog->getSentToChinaDate()));
+            $instructionManualLog->setConfirmedShipDate($this->getDateStr($instructionManualLog->getConfirmedShipDate()));
+            $instructionManualLog->setFinalDueDate($this->getDateStr($instructionManualLog->getFinalDueDate()));
+            
             return $instructionManualLog;
         }
+        public function deleteBySeqs($ids) {
+            $flag = self::$dataStore->deleteInList ( $ids );
+            return $flag;
+        }
+        
+        
         private function getDateStr($date){
             $format = 'Y-m-d';
             if(!empty($date)){
@@ -89,7 +77,38 @@
             }
             return $date;
         }
+        
         // --------------------------------------Grid Functions------------------------------------------------------------>
+        private function processRowsForGrid($rows){
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+            $arr = array();
+            foreach($rows as $row){
+                $row["entrydate"] = DateUtil::convertDateToFormat($row["entrydate"],"Y-m-d","Y-m-d H:i:s");
+                $row["poshipdate"] = DateUtil::convertDateToFormat($row["poshipdate"],"Y-m-d","Y-m-d H:i:s");
+                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
+                
+                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
+                $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+                $row["instructionmanuallogs.lastmodifiedon"] = $lastModifiedOn;
+                array_push($arr,$row);
+            }
+            return $arr;
+        }
+        public function getInstructionManualLogsForGrid(){
+                $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
+            $rows = self::$dataStore->executeQuery($query,true);
+            $mainArr["Rows"] = $this->processRowsForGrid($rows);
+            $mainArr["TotalRows"] = $this->getAllCount(true);
+            return $mainArr;
+        }
+        public function getAllCount($isApplyFilter){
+            $query = "select count(*) from instructionmanuallogs left join classcodes on
+                    instructionmanuallogs.classcodeseq = classcodes.seq left join users on
+                    instructionmanuallogs.createdby = users.seq";
+            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
+            return $count;
+        }
         public function getProjectsDueLessThan14DaysFromEntryForGrid(){
             $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
                     left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
@@ -97,14 +116,7 @@
                     AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 
                     AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
             $rows = self::$dataStore->executeQuery($query,true);
-            $arr = array();
-            foreach($rows as $row){
-                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
-                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
-                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
-                array_push($arr,$row);
-            }
-            $mainArr["Rows"] = $arr;
+            $mainArr["Rows"] = $this->processRowsForGrid($rows);
             $mainArr["TotalRows"] = $this->getProjectsDueLessThan14DaysFromEntryCountForGrid(true);
             return $mainArr;
         }
@@ -117,25 +129,20 @@
             $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
             return $count;
         }
+        
         public function findByItemNo($itemNo,$instructionManualLogSeq = ""){
             $query = "SELECT COUNT(seq) FROM `instructionmanuallogs` Where itemnumber like '".$itemNo."' AND iscompleted=FALSE";
             $query = $instructionManualLogSeq != "" ? $query . " AND seq!=".$instructionManualLogSeq : $query;
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;        
         }
+        
         public function getProjectsOverdueForGrid(){
             $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
             left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
             instructionmanuallogs.createdby = users.seq" . self::$logsOverDueWhereClause;
             $rows = self::$dataStore->executeQuery($query,true);
-            $arr = array();
-            foreach($rows as $row){
-                $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
-                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
-                $row["instructionmanuallogs.lastmodifiedon"] = $row["lastmodifiedon"];
-                array_push($arr,$row);
-            }
-            $mainArr["Rows"] = $arr;
+            $mainArr["Rows"] = $this->processRowsForGrid($rows);
             $mainArr["TotalRows"] = $this->getProjectsOverdueCountForGrid(true);
             return $mainArr;
         }
@@ -183,6 +190,7 @@
             PHPExcelUtil::exportInstructionManuals($instructionManuals,false,"InstructionManuals");
         }
         // ---------------------------Grid Functions Ends Here---------------------------------------------------------------->
+        
         // ----------------------------Filter Export Functions----------------------------------------------------------------->
         public function getAllOpenLogsFullData(){
             $query = self::$filterExportSelectSql . self::$logsOpenWhereClause . self::$groupByInstructionManualLogSeq;

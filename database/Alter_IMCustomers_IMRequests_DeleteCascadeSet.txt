@@ -1,0 +1,3 @@
+ALTER TABLE `instructionmanualcustomers` ADD CONSTRAINT `DeleteCascadeIMCustomers` FOREIGN KEY (`instructionmanualseq`) REFERENCES `instructionmanuallogs`(`seq`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `instructionmanualrequests` ADD  CONSTRAINT `DeleteCascadeIMRequests` FOREIGN KEY (`instructionmanualseq`) REFERENCES `instructionmanuallogs`(`seq`) ON DELETE CASCADE ON UPDATE NO ACTION;

@@ -18,7 +18,7 @@ class InstructionManualRequestedChanges extends BasicEnum{
 	const fold_format_update_update_alpine_logo = "Fold Format Update : Update Alpine Logo";
 	const booklet_to_fold = "Booklet to Fold";
 	const booklet_update_update_rating_box = "Booklet Update : Update Rating Box";
-	const booklet_update_update_trading_hours_box = "Booklet Update : Update Trading Hourse Box";
+	const booklet_update_update_trading_hours_box = "Booklet Update : Update Trading Hours Box";
 	const other_in = "Other In";
 }
 
