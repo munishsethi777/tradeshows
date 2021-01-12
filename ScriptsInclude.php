@@ -102,7 +102,7 @@
 <script src="scripts/demo/sparkline-demo.js"></script>
 
 <!-- ChartJS-->
-<script src="scripts/plugins/chartJs/Chart.min.js"></script>
+<script src="scripts/plugins/chartJs/ChartUpdated.min.js"></script>
 
 
 

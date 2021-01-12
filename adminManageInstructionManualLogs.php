@@ -49,7 +49,6 @@ $exportLimit =5000;
     <script src="scripts/GridDataByReportingParameter.js"></script>
     <script src="scripts/UserConfigurations.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
-    <script src="scripts/plugins/chartJs/Chart.min.js"></script>
 </head>
 <body>
     <?include "exportInclude.php"?>
