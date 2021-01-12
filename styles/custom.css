@@ -1,3 +1,6 @@
+:root {
+	--filterGraphColor : #18a689;
+}
 h5.pageTitle{
 	padding-top:18px !important;
 }

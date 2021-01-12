@@ -22,7 +22,7 @@
     }
     if($call == "getReportingData"){
         foreach ($reportingDataParameterTypeConstants as $key => $value ){
-                if(isset($_REQUEST['for'])){
+            if(isset($_REQUEST['for'])){
                 if(strpos($key,$_REQUEST['for']) !== false){
                     // $earlierCounts = array();
                     // for($ec=0;$ec<10;$ec++){
@@ -59,6 +59,7 @@
                             $tmpArr = array('x'=> $i++,'y'=>(int)$count['count']);
                             array_push($earlierCountsNewArray,$tmpArr);
                         }
+                        array_push($earlierCountsNewArray,array('x'=> $i++,'y'=>(int)$current));
                     }
                     //$earlierCountsNewArray = array_reverse($earlierCountsNewArray);
                     $arr[$key.'_thirty_days'] = $earlierCountsNewArray;

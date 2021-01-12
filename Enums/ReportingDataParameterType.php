@@ -32,16 +32,16 @@ class ReportingDataParameterType extends BasicEnum{
     const container_schedules_missing_received_dates_in_wms_count = "Missing Received Dates In WMS";
     const container_schedules_missing_schedule_delivery_date_count = "Missing Schedule Delivery Date";
     // Instruction Manual Parameters
-    const instruction_manual_all_count = "All Logs";
-    const instruction_manual_total_projects_open = "Logs Open";
-    const instruction_manual_total_projects_completed = "Logs Completed";
-    const instruction_manual_total_projects_overdue = "Logs Overdue";
-    const instruction_manual_total_projects_in_supervisor_review = "Logs In Supervisor Review";
-    const instruction_manual_total_projects_in_manager_review = "Logs In Manager Review";
-    const instruction_manual_total_projects_in_buyer_review = "Logs In Buyer Review";
-    const instruction_manual_total_projects_due_today = "Logs Due Today";
-    const instruction_manual_total_projects_due_in_next_14_days = "Logs due In Next 14 Days";
+    const instruction_manual_all_count = "All IMs";
+    const instruction_manual_total_projects_open = "IMs Open";
+    const instruction_manual_total_projects_completed = "IMs Completed";
+    const instruction_manual_total_projects_overdue = "IMs Overdue";
+    const instruction_manual_total_projects_in_supervisor_review = "IMs In Supervisor Review";
+    const instruction_manual_total_projects_in_manager_review = "IMs In Manager Review";
+    const instruction_manual_total_projects_in_buyer_review = "IMs In Buyer Review";
+    const instruction_manual_total_projects_due_today = "IMs Due Today";
+    const instruction_manual_total_projects_due_in_next_14_days = "Due In Next 14 Days";
     const instruction_manual_total_projects_due_less_than_14_days_from_entry = "Due < 14 Days from Entry";
-    const instruction_manual_total_projects_not_started = "Logs Not Started"; 
+    const instruction_manual_total_projects_not_started = "IMs Not Started"; 
 }
 ?>

@@ -125,10 +125,37 @@ class ReportingDataMgr{
     
     //fetch data from reportingdata table
     public function getReportingData($parameterType){
-        $query = "SELECT count FROM `reportingdata` where parameter like '".$parameterType."' ORDER BY dated desc limit 30";
+        $query = "SELECT count FROM `reportingdata` where parameter like '".$parameterType."' AND dated < '".date("Y-m-d")."' order by dated asc limit 30";
         $graphicReportData = self::$reportingDataDataStore->executeQuery($query,false,true);
         return $graphicReportData;
     }
-   
+    // API used to display reporting grid on dashboards
+    public function getReportingDataForJsCharts($parameterType){
+        $query = "SELECT dated,count FROM `reportingdata` where parameter like '".$parameterType."' AND dated < '".date("Y-m-d")."' order by dated asc limit 30";
+        $graphicReportData = self::$reportingDataDataStore->executeQuery($query,false,true);
+        $object = null;
+        if(strpos($parameterType,"instruction_manual_") !== false){
+            $object = InstructionManualLogsMgr::getInstance();
+        }elseif(strpos($parameterType,"container_") !== false){
+            $object = ContainerScheduleDataStore::getInstance();
+        }elseif(strpos($parameterType,"graphiclog_") !== false){
+            $object = self::getInstance();
+        }elseif(strpos($parameterType,"qc_") !== false){
+            $object = self::getInstance();
+        }
+        $todayReportData = call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),"");
+        $todayDate = date("Y-m-d");
+        $labelsArr = array();
+        $dataArr = array();
+        foreach($graphicReportData as $data){
+            array_push($labelsArr,$data['dated']);
+            array_push($dataArr,$data['count']);
+        }
+        array_push($labelsArr,$todayDate);
+        array_push($dataArr,$todayReportData);
+        
+        $mainArr = array('labels' => implode(",",$labelsArr),'data' => implode(",",$dataArr));
+        return $mainArr;
+    }
 }
 ?>

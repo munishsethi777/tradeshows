@@ -10,6 +10,8 @@
     require_once($ConstantsArray['dbServerUrl'] ."Utils/InstructionManualLogReportUtil.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.php");
     require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] . "Managers/ReportingDataMgr.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Enums/ReportingDataParameterType.php");
     
     $success=1;
     $message='';
@@ -18,6 +20,7 @@
     $instructionManualLogMgr = InstructionManualLogsMgr::getInstance();
     $instructionManualCustomersMgr = InstructionManualCustomersMgr::getInstance();
     $instructionManualRequestsMgr = InstructionManualRequestsMgr::getInstance();
+    $reportingDataMgr = ReportingDataMgr::getInstance();
     $arr = array();  
     if(isset($_GET['call'])){
         $call = $_GET['call'];
@@ -211,6 +214,19 @@
         try{
             $flag = $instructionManualLogMgr->deleteBySeqs($ids);
             $message = "Deleted Successfully";
+        }catch(Exception $e){
+            $success = 0;
+            $message = $e->getMessage();
+        }
+    }
+    if($call= "showFilterGraph"){
+        try{
+            $graphIconId = $_GET['graphIconId'];
+            $reportingParameter = str_replace("_show_graph","",$graphIconId);
+            $filterGraphData = $reportingDataMgr->getReportingDataForJsCharts($reportingParameter);
+            $graphTitle = ReportingDataParameterType::getValue($reportingParameter);
+            $response['data'] = $filterGraphData;
+            $response['data']['graphTitle'] = $graphTitle;
         }catch(Exception $e){
             $success = 0;
             $message = $e->getMessage();

@@ -18,9 +18,7 @@ if($isAnalyticsDivExpandedUserConfigValue){
 	$analyticsDivState = "";
 }
 $defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("IMDefaultFilterSelection");
-$defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,
-    $defaultFilterSelectionUserConfigKey,"instruction_manual_all_count");
-// $defaultFilterSelectionName = ReportingDataParameterType::getValue($defaultFilterSelectionReportDataType);
+$defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,$defaultFilterSelectionUserConfigKey,"instruction_manual_all_count");
 $exportLimit =5000;
 ?>
 <!DOCTYPE html>
@@ -35,35 +33,24 @@ $exportLimit =5000;
         .itemDetailsModalDiv .lblDesc {
             font-weight: 500 !important;
         }
-
         .form-group {
             margin-bottom: 5px;
         }
-
         .reportDataCountRow .ibox-content {
             /* background-color: #ffffff; */
             padding: 10px 0px 0px 0px !important;
         }
-
-        
-        
     </style>
-    
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <!-- Peity -->
-<!--     <script src="scripts/plugins/peity/jquery.peity.min.js"></script> -->
-    
     <script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
     <script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
-
-    
     <script src="scripts/GridDataByReportingParameter.js"></script>
     <script src="scripts/UserConfigurations.js"></script>
-    <!--     <script src="scripts/demo/peity-demo.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
+    <script src="scripts/plugins/chartJs/Chart.min.js"></script>
 </head>
-
 <body>
     <?include "exportInclude.php"?>
     <input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsDivExpandedUserConfigValue;?>" />
@@ -110,7 +97,7 @@ $exportLimit =5000;
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
                                                                 	<div class='reportFilterBlockTools floatRightTools'>
                                                                     	<i title="Apply Filter" alt="Apply Filter" style="font-size:14px" class="fa fa-filter" id="<?php echo $key;?>" ></i>
-                                                                    	<!-- <i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i> -->
+                                                                    	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
                                                                     	<i title="Export Data" alt="Export Data" style="font-size:14px" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
                                                                 	</div>
                                                                 	
@@ -136,6 +123,23 @@ $exportLimit =5000;
                             <div class="ibox-content">
                                 <div id="instructionManualLogGrid"></div>
                             </div>
+                            <div class="modal fade" aria-hidden="true" id="instructionManualFilterGraphModal">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" style="width:70%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 id="graphTitle"></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-12" id="graphContainer">
+                                                    <canvas id="instructionManualFilterGraph"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -156,6 +160,8 @@ $exportLimit =5000;
     var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
     var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
     var selectedRows = [];
+    var style = getComputedStyle(document.body);
+    var filterGraphColor = style.getPropertyValue("--filterGraphColor");
     $(document).ready(function() {
         loadGrid();
         loadReportingData();
@@ -181,6 +187,55 @@ $exportLimit =5000;
             var filterId = $(this).attr('id');
 			$("#exportLogsForm #filterId").val(filterId);
 			$("#exportLogsForm").submit();
+        });
+        $(".fa-bar-chart").click(function(){
+            $("#graphContainer").html("");
+            $("#graphContainer").html("<canvas id='instructionManualFilterGraph'></canvas>");
+            var graphIconId = $(this).attr("id");
+            $.getJSON("Actions/InstructionManualLogsAction.php?call=showFilterGraph&graphIconId=" + graphIconId, (response)=>{
+                var graphTitle = response.data.graphTitle;
+                $("#instructionManualFilterGraphModal").modal('show');
+                $("#graphTitle").text(graphTitle);
+                $("#instructionManualFilterGraph").html("");
+                var ctx = null;
+                ctx = document.getElementById("instructionManualFilterGraph").getContext("2d");
+                var chart = null;
+                chart = new Chart(ctx,{
+                    type:"line",
+                    data: {
+                        labels: response.data.labels.split(','),
+                        datasets: [{
+                            label: graphTitle,
+                            backgroundColor: filterGraphColor,
+                            borderColor: filterGraphColor,
+                            data: response.data.data.split(',')
+                        }]
+                    },
+                    options:{
+                        scales:{
+                            xAxes:[{
+                                ticks: {
+                                    // to tilt the xaxes labels
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    // to skip axces labels 
+                                    callback: function(tick, index, array){
+                                        return (index % 3) ? "" : tick;
+                                    },
+                                } 
+                            }],
+                            yAxes:[{
+                                ticks: {
+                                    beginAtZero : true,
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+        });
+        $("#instructionManualFilterGraphModal").on("hide",function(){
+            alert();
         });
     });
     
@@ -414,10 +469,6 @@ $exportLimit =5000;
 			var datainformation = $('#instructionManualLogGrid').jqxGrid('getdatainformation');
 			rowscount = datainformation.rowscount;
 			$("#instructionmanuallogseq").val("");
-			// if (rowscount > limit) {
-			// 	bootbox.alert("Cannot export more than <?php echo $exportLimit ?> rows!", function() {});
-			// 	return;
-			// }
 		}
 		e.preventDefault();
 		var l = Ladda.create(btn);
@@ -482,8 +533,5 @@ $exportLimit =5000;
 				});
 			}
 		);
-    }
-    function exportFilterData(){
-
     }
 </script>
