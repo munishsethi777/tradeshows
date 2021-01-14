@@ -391,7 +391,15 @@ if(isset($_POST["id"])){
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
 $(document).ready(function(){
-	//$(".fullNameSelect").chosen({ width: '100%' });
+	setInterval(function () {
+		$.post('Actions/UserAction.php?call=refreshSession',function(data){
+			//alert(data);
+			if(data == 0){
+				location.href = "userLogin.php";
+			}
+		});
+    },6000);
+    
 	showInternalSupportFields();
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
