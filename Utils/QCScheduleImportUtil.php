@@ -8,6 +8,7 @@ class QCScheduleImportUtil
     private static $qcImportUtil;
     private $BULK_DELETE_COUNT = "100";
     private static $qcUserCodeSeqArr = [];
+    private static $poInchargeUserCodeSeqArr = [];
     private static $ACTUAL_FIELDS_NAMES = array(
         "qc",
     	"poperson",
@@ -65,7 +66,8 @@ class QCScheduleImportUtil
             self::$qcImportUtil = new QCScheduleImportUtil();
         }
         $userMgr = UserMgr::getInstance();
-        self::$qcUserCodeSeqArr = array_flip($userMgr->getPOInchargeUsersArrForDD());
+        self::$qcUserCodeSeqArr = array_flip($userMgr->getQCUsersArrForDD());
+        self::$poInchargeUserCodeSeqArr = array_flip($userMgr->getPOInchargeUsersArrForDD());
         return self::$qcImportUtil;
     }
 
@@ -701,7 +703,7 @@ class QCScheduleImportUtil
         $qc = strtoupper(trim($qc));
         $qcUserSeq = self::$qcUserCodeSeqArr[$qc];
         $poincharge = $data[$startingIndex++];
-        $poinchargeUserSeq = self::$qcUserCodeSeqArr[$poincharge];
+        $poinchargeUserSeq = self::$poInchargeUserCodeSeqArr[$poincharge];
         if(!empty($id)){
             $qcSchedule->setSeq($id);
         }
@@ -1094,9 +1096,9 @@ class QCScheduleImportUtil
         }else if($isUpdatePoInchargeUser){
             try{
                 $poincharge = $data[array_search('PoIncharge', $labels)];
-                $poinchargeuser =   self::$qcUserCodeSeqArr[$poincharge];
+                $poinchargeuser =   self::$poInchargeUserCodeSeqArr[$poincharge];
                 if($poinchargeuser == null){
-                    throw new Exception("PoInchage $poincharge does not Exist");
+                    throw new Exception("POInchage $poincharge does not Exist");
                 }
                 $qcSchedule->setPoInchargeUser($poinchargeuser);
             }catch(Exception $e){
