@@ -703,7 +703,10 @@ class QCScheduleImportUtil
         $qc = strtoupper(trim($qc));
         $qcUserSeq = self::$qcUserCodeSeqArr[$qc];
         $poincharge = $data[$startingIndex++];
-        $poinchargeUserSeq = self::$poInchargeUserCodeSeqArr[$poincharge];
+        $poinchargeUserSeq = 0;
+        if(!empty($poincharge)){
+            $poinchargeUserSeq = self::$poInchargeUserCodeSeqArr[strtoupper($poincharge)];
+        }
         if(!empty($id)){
             $qcSchedule->setSeq($id);
         }
