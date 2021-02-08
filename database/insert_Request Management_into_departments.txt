@@ -1,0 +1,1 @@
+INSERT INTO `departments` (`seq`, `title`, `isenabled`, `createdby`, `createdon`, `lastmodifiedon`) VALUES (NULL, 'Request Management ', '1', '0', '2021-02-08 11:50:43', '2021-02-08 11:50:43');

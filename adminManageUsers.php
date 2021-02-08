@@ -38,6 +38,234 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
    <form id="form1" name="form1" method="post" action="adminCreateUser.php">
      	<input type="hidden" id="id" name="id"/>
    	</form> 
+    <div class="modal inmodal bs-example-modal-lg" id="containerDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated fadeInRight">
+				<div class="modal-body itemDetailsModalDiv mainDiv">
+					<div class="ibox">
+						<div class="ibox-content">  
+							<div class="row">
+								<div class="col-sm-12">
+                                        <h3>User Details</h3>
+                                        <div class="form-group row m-t-sm">
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Email:</label>
+                                            <div class="col-sm-3"><label class="email text-primary "></label></div>
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Password:</label>
+                                            <div class="col-sm-3"><label class="password text-primary"></label></div>
+                                        </div>
+                                        <div class="form-group row m-t-sm">    
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Full Name:</label>
+                                            <div class="col-sm-3"><label class="fullname text-primary"></label></div> 
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Mobile:</label>
+                                            <div class="col-sm-3"><label class="mobile text-primary"></label></div>
+                                        </div>   
+                                        <div class="form-group row m-t-sm">
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">Time Zone:</label>
+                                            <div class="col-sm-3"><label class="usertimezone text-primary"></label></div>
+                                            <label class="col-sm-2 lblTitle bg-formLabelDarkSm">User Type:</label>
+                                            <div class="col-sm-3"><label class="usertype text-primary"></label></div>
+                                        </div>
+                                </div>
+                               
+                                <div class="form-group row i-checks m-t-xl" id="checkboxes">
+										<div class="col-lg-12"><h3>Departments</h3>
+											<div class="panel panel-primary">
+                                                <div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" class="i-checks"
+															 value="1"
+															id="qcDepartment" name="departments[]" />
+													</div>
+													QC Schedules
+												</div>
+
+												<div id="qcPermissionsDiv" class="panel-body i-checks" style="pointer-events: none;"    >
+													<label class="col-lg-3 col-form-label"> <input
+														type="checkbox"  value="qc"
+														id="qcpermission" name="permissions[]" /> Quality
+														Controller
+													</label> 
+                                                    <label class="col-lg-3 col-form-label"> <input
+														type="checkbox" value="po_incharge" id="poinchargepermission"
+														name="permissions[]" /> PO Incharge
+													</label> 
+                                                    <label class="col-lg-3 col-form-label "> <input
+														type="checkbox" value="class_code" id="classcodepermission"
+														name="permissions[]" /> Class Code
+													</label> 
+                                                    <label class="col-lg-3 col-form-label"> <input
+														type="checkbox" 
+														value="weekly_mail_button" id="weeklymailbuttonpermission"
+														name="permissions[]" /> Weekly Mail Button
+													</label> 
+                                                    <label class="col-lg-3 col-form-label"> <input
+														type="checkbox" value="qc_planner_button" id="qcplannerbuttonpermission"
+														name="permissions[]" /> Qc Planner Button
+													</label> 
+                                                    <label class="col-lg-3 col-form-label"> <input
+														type="checkbox" value="approved_reject_notification"
+														id="qcapprovalrejectpermission" name="permissions[]" />
+														Approved/Reject Notification
+													</label>
+                                                    <label class="col-lg-3 col-form-label">QC/PO Incharge Code :</label>
+													    <div class="col-lg-2 col-form-label"><b><span style="text-transform:uppercase" class="qccode">
+                                                        </span></b></div>
+													<label class="col-lg-12 col-form-label"> <input
+														type="checkbox" value="qc_isreadonly" id="qcreadonlypermission"
+														name="permissions[]" /> QC Readonly (<small>Removed
+															Add/Save/Import/Notifications/Approve buttons</small>)
+													</label>
+					                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+                                                            <input type="checkbox" value="2" id="graphicDepartment" name="departments[]" />
+                                                    </div>
+                                                    Graphic Logs
+                                                </div>
+                                                    <div id="graphicPermissionsDiv" class="panel-body i-checks" style="pointer-events: none;"   >
+                                                        <label class="col-lg-3 col-form-label"> <input type="checkbox" value="usa_team" id="usaTeamPermission"
+                                                            name="permissions[]" /> USA Team
+                                                                    </label> 
+                                                        <label class="col-lg-3 col-form-label"> <input type="checkbox" value="china_team" id="chinaTeamPermission"
+                                                            name="permissions[]" /> China Team
+                                                                    </label> 
+                                                        <label class="col-lg-3 col-form-label"> <input type="checkbox" value="graphic_designer" id="graphicDesignerPermission"
+                                                            name="permissions[]" /> Graphic Designer
+                                                                    </label>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">     
+                                            <div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" value="4" id="containerDepartment" name="departments[]"/>
+													</div>
+													Container Schedule
+												</div>
+												<div id='containerPermissionsDiv' class="panel-body i-checks" style="pointer-events: none;" >
+													<label class="col-lg-3 col-form-label bg-formLabelDark m-r-sm"><input type="checkbox" value="container_information" id="containerpermission"
+														name="permissions[]" /> Container Information
+													    </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelMauve m-r-sm"><input type="checkbox" value="container_delivery_information" id="containerdevilerypermission" 
+                                                        name="permissions[]" />  Delivery Information 
+                                                        </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelBrown"><input type="checkbox" value="container_office_information" id="containerofficepermission" 
+                                                        name="permissions[]" /> Office Information
+													    </label>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" value="10" id="instructionManualDepartment" name="departments[]" />
+													</div>
+													Instruction Manual Logs
+												</div>
+												<div id='instructionManualPermissionsDiv'
+													class="panel-body i-checks" style="pointer-events: none;"   >
+													<label class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"><input type="checkbox" value="instruction_manual_usa_team" id="instructionmanualusateampermission"
+														name="permissions[]" /> USA Team
+													        </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input type="checkbox" value="instruction_manual_china_team" id="instructionmanualchinateampermission" 
+                                                        name="permissions[]" />	China Team
+													        </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelMauve"><input type="checkbox" value="instruction_manual_technical_team" id="instructionmanualtechnicalteampermission" 
+                                                        name="permissions[]" readonly="readonly" />	Technical Team
+													    </label> 
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" value="10" id="requestManagementDepartment" name="departments[]" />
+													</div>
+													Request Management
+												</div>
+												<div id='requestManagementPermissionsDiv'
+													class="panel-body i-checks" style="pointer-events: none;"   >
+													<label class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"><input type="checkbox" value="request_management_manager" id="requestmanagerpermission"
+														name="permissions[]" /> Manager
+													        </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input type="checkbox" value="request_management_assignee" id="requestassigneepermission" 
+                                                        name="permissions[]" />	Assignee
+													        </label> 
+                                                    <label class="col-lg-3 col-form-label bg-formLabelMauve"><input type="checkbox" value="request_management_requester" id="requestrequesterpermission" 
+                                                        name="permissions[]" readonly="readonly" />	Requester
+													    </label> 
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" value="9" id="shippingDepartment" name = "departments[]">
+													</div>
+													Shipping Logs 
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-12">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<div class="pull-left m-r-sm" style="pointer-events: none;">
+														<input type="checkbox" value="7" id="customerDepartment" name="departments[]" />
+													</div>
+													Customer Management
+												</div>
+											</div>
+                                        </div>
+											<div class="col-lg-12">
+												<div class="panel panel-primary">
+													<div class="panel-heading">
+														<div class="pull-left m-r-sm" style="pointer-events: none;">
+															<input type="checkbox" value="5" id="userDepartment" name="departments[]" />
+														</div>
+														User Management
+													</div>
+												</div>
+                                            </div>
+												<div class="col-lg-12">
+													<div class="panel panel-primary">
+														<div class="panel-heading">
+															<div class="pull-left m-r-sm" style="pointer-events: none;">
+																<input type="checkbox" id="emailDepartment" name="departments[]" />
+															</div>
+															Email Logs Management
+														</div>
+													</div>
+                                                </div>
+													<div class="col-lg-12">
+														<div class="panel panel-primary">
+															<div class="panel-heading">
+																<div class="pull-left m-r-sm" style="pointer-events: none;">
+																	<input type="checkbox" value="3" id="itemSpecificsDepartment" name="departments[]" />
+																</div>
+																Item Specifications
+															</div>
+														</div>   
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>      
+                                </div>                           
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>     
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -50,18 +278,131 @@ function editShow(seq){
 	$("#id").val(seq);                        
     $("#form1").submit();
 }
-isSelectAll = false;    
+isSelectAll = false;  
+function showUserDetails(seq, rowId){
+    currentRowId = rowId;
+    showHideProgress();
+    $.getJSON("Actions/UserAction.php?call=getUserDetails&seq=" + seq ,function(data){
+        showHideProgress();
+        var item = data.user;  
+        var dept = data.userDepartments;    
+        var userRoles = data.userRoles;
+        var Qcdept = dept.includes("QC Schedules");
+        var Graphicsdept = dept.includes("Graphics Logs");
+        var Containerdept = dept.includes("Container Schedules");
+        var InstructionManualdept = dept.includes("Instruction Manual");
+        var RequestManagementdept = dept.includes("Request Management "); 
+        var ShippingLogsdept = dept.includes("Shipping Logs");
+        var CustomerMagmtdept = dept.includes("Manage Customers");
+        var UserMgmtdept = dept.includes("Users");
+        var EmailLogsMgmtdept = dept.includes("Email Logs");
+        var ItemSpecdept = dept.includes("Item Specs");
+
+        $('#containerDetailModal').modal('show'); 
+            $.each(item, function(key, val){
+
+                    $("." + key).html(val);
+                });   
+        $('#qcPermissionsDiv').iCheck('uncheck')
+        $('#qcDepartment').iCheck('uncheck') 
+        $('#graphicPermissionsDiv').iCheck('uncheck')
+        $('#graphicDepartment').iCheck('uncheck') 
+        $('#containerPermissionsDiv').iCheck('uncheck')
+        $('#containerDepartment').iCheck('uncheck') 
+        $('#instructionManualPermissionsDiv').iCheck('uncheck')
+        $('#instructionManualDepartment').iCheck('uncheck')   
+        $('#requestManagementPermissionsDiv').iCheck('uncheck')
+        $('#requestManagementDepartment').iCheck('uncheck')   
+        $('#shippingDepartment').iCheck('uncheck')  
+        $('#customerDepartment').iCheck('uncheck')  
+        $('#userDepartment').iCheck('uncheck')  
+        $('#emailDepartment').iCheck('uncheck')  
+        $('#itemSpecificsDepartment').iCheck('uncheck')            
+        if(Qcdept){
+            $('#qcDepartment').prop('checked', true);
+        }if(userRoles.includes("QC")){
+            $("#qcpermission").prop('checked', true);
+        }if(userRoles.includes("PO Incharge")){
+            $("#poinchargepermission").prop('checked', true);
+        }if(userRoles.includes("Class Code")){
+            $("#classcodepermission").prop('checked', true);  
+        }if(userRoles.includes("Weekly Mail Button")){
+            $("#weeklymailbuttonpermission").prop('checked', true);
+        }if(userRoles.includes("Qc Planner Button")){
+            $("#qcplannerbuttonpermission").prop('checked', true);
+        }if(userRoles.includes("Approved/Reject Notification")){
+            $("#qcapprovalrejectpermission").prop('checked', true);
+        }if(userRoles.includes("Readonly")){
+            $("#qcreadonlypermission").prop('checked', true);
+        }if(Graphicsdept){
+            $("#graphicDepartment").prop('checked', true);
+        }if(userRoles.includes("USA Team")){    
+            $("#usaTeamPermission").prop('checked', true);
+        }if(userRoles.includes("China Team")){  
+            $("#chinaTeamPermission").prop('checked', true);  
+        }if(userRoles.includes("Graphic Designer")){
+            $("#graphicDesignerPermission").prop('checked', true);
+        }if(Containerdept){
+            $('#containerDepartment').prop('checked', true);
+        }if(userRoles.includes("Container Information")){ 
+            $("#containerpermission").prop('checked', true);
+        }if(userRoles.includes("Container Delivery Information")){    
+            $("#containerdevilerypermission").prop('checked', true);
+        }if(userRoles.includes("Container Office Information")){
+		    $("#containerofficepermission").prop('checked', true);
+        }if(InstructionManualdept){
+            $("#instructionManualDepartment").prop('checked', true);   
+        }if(userRoles.includes("Instruction Manual USA Team")){    
+            $("#instructionmanualusateampermission").prop('checked', true);
+        }if(userRoles.includes("Instruction Manual China Team")){    
+            $("#instructionmanualchinateampermission").prop('checked', true);
+        }if(userRoles.includes("Instruction Manual Technical Team")){    
+            $("#instructionmanualtechnicalteampermission").prop('checked', true);  
+        }if(RequestManagementdept){
+            $("#requestManagementDepartment").prop('checked', true);   
+        }if(userRoles.includes("Manager")){    
+            $("#requestmanagerpermission").prop('checked', true);
+        }if(userRoles.includes("Assignee")){    
+            $("#requestassigneepermission").prop('checked', true);
+        }if(userRoles.includes("Requester")){    
+            $("#requestrequesterpermission").prop('checked', true);  
+        }if(ShippingLogsdept){
+            $("#shippingDepartment").prop('checked',true);
+        }if(CustomerMagmtdept){
+            $("#customerDepartment").prop('checked',true);
+        }if(UserMgmtdept){
+            $("#userDepartment").prop('checked',true);
+        }if(EmailLogsMgmtdept){
+            $("#emailDepartment").prop('checked',true);
+        }if(ItemSpecdept){
+            $("#itemSpecificsDepartment").prop('checked',true);
+        }
+        $('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+	   	radioClass: 'iradio_square-green',
+        });
+        
+    });           
+}; 
+
+
+
 function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#usersGrid').jqxGrid('getrowdata', row);
-        if(data["usertype"] == "SUPERVISOR"){
-        	var html = "<div style='margin-top:5px;'>";
-	    	html += data["email"] + " <i class='fa fa-asterisk' title='Supervisor'></i>";
-	    	html += '</div>';
-	       	return html;
-	    }
-        
+        var html = "<div style='margin-top:5px;'><a href='javascript:showUserDetails(" + data['seq'] + ")'>";
+            if(data["usertype"] == "SUPERVISOR"){
+                html +=data["email"] + " <i class='fa fa-asterisk' title='Supervisor'></i>";
+                html += "</div></a>";  
+            }
+                else{
+                    html += data["email"];
+                    html += "</div></a>";   
+                }
+	    return html;
     }
+         
+
     var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Email', datafield: 'email', width:"19%", cellsrenderer:actions},

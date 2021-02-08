@@ -575,10 +575,15 @@ class PHPExcelUtil {
 		
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["diagramsavedbyname"] );
-		
-			$colName = self::getColName($i ++, $count);
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["notestousa"] );
 			
+			//my changes....
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["finalduedate"] );
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["confirmedshipdate"] );
+			$colName = self::getColName($i ++, $count);
+
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["notestousa"] );
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["assignedtoname"] );
 		
@@ -619,7 +624,7 @@ class PHPExcelUtil {
 			}
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $sentToChinaDate );
-
+			
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $instructionManual ["iscompleted"] == "1" ? "Yes" : "No" );
 		
@@ -628,18 +633,18 @@ class PHPExcelUtil {
 		}
 		$objPHPExcel->setActiveSheetIndex ( 0 );
 		$objPHPExcel->getActiveSheet()->setTitle ( "InstructionManual" );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'A1:M1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'A2:M2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'N1:P1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffffb9' );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'N2:P2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffffb9' );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'Q1:X1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'a4c2f4' );
-		$objPHPExcel->getActiveSheet()->getStyle ( 'Q2:X2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'a4c2f4' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'A1:M2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
+		//$objPHPExcel->getActiveSheet()->getStyle ( 'A2:M2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'N1:R2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffffb9' );
+		//$objPHPExcel->getActiveSheet()->getStyle ( 'N2:P2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffffb9' );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'S1:Z2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'a4c2f4' );
+		//$objPHPExcel->getActiveSheet()->getStyle ( 'Q2:X2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'a4c2f4' );
 		$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:M1' );
-		$objPHPExcel->getActiveSheet()->mergeCells ( 'N1:P1' );
-		$objPHPExcel->getActiveSheet()->mergeCells ( 'Q1:X1' );
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'N1:R1' );
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'S1:Z1' );
+		//$objPHPExcel->getActiveSheet()->mergeCells ( 'Q1:X1' );
 		$objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getFont()->setBold(true);
 		$objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getFont()->setSize(16);
-		
 		return $objPHPExcel;
 	}
 	private static function cookInstructionManualsPHPExcelHeader(){
@@ -661,8 +666,8 @@ class PHPExcelUtil {
 		) );
 		
 		
-		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "Q1", "To be Filled by Technical Writer" );
-		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "Q1" )->getAlignment ()->applyFromArray ( array (
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "S1", "To be Filled by Technical Writer" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "S1" )->getAlignment ()->applyFromArray ( array (
 				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 		) );
 		//$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "S1", "Review" );
@@ -717,6 +722,13 @@ class PHPExcelUtil {
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Diagram saved by" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		//my changes from here...
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Final Due Date" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Confirmed Ship Date" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Notes to USA Office" );
