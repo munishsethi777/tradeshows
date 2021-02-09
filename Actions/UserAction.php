@@ -11,6 +11,7 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $call = "";
 $redirect = "";
+$message="";
 $response = new ArrayObject();
 $userMgr = UserMgr::getInstance();
 $departmentMgr = DepartmentMgr::getInstance();
@@ -152,6 +153,22 @@ if($call == "getAllUsers"){
 	$json = $userMgr->getUsersForGrid();
 	echo json_encode($json);
 	return;
+}
+if($call == "getUserDetails"){
+	try{
+		$user= $userMgr->findArrBySeq($_GET["seq"]);
+		$userDepartments = $departmentMgr->getUserAssignedDepartments($user['seq']);
+		$userRoles = $userMgr->getUserRolesValuesArr($user['seq']);
+		$response["user"] = $user;
+		$response["userDepartments"] = $userDepartments;
+		$response["userRoles"] = $userRoles;
+		
+	}
+	catch(Exception $e){
+		$success=0;
+		$message = $e->getMessage();
+	}	
+
 }
 if($call == "deleteUser"){
 	$ids = $_GET["ids"];

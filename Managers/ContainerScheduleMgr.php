@@ -296,23 +296,28 @@ class ContainerScheduleMgr{
         
         $dateStr = $containerSchedule["requesteddeliverydatetime"];
         $containerSchedule["requesteddeliverydatetime"] =
-        DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
-        $reqDDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery];
-        array_shift($reqDDatesArr);
-        if(!empty($etaDatesArr)){
-        	$containerSchedule["requesteddeliverydatetime"] = $containerSchedule["requesteddeliverydatetime"] . " (Earlier Date : ".$reqDDatesArr[0].")";
-        }
+		DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+		if(isset($containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery])){
+			$reqDDatesArr = $containerScheduleDatesArr[ContainerScheduleDateType::requested_delivery];
+			array_shift($reqDDatesArr);	
+        	if(!empty($etaDatesArr)){
+        		$containerSchedule["requesteddeliverydatetime"] = $containerSchedule["requesteddeliverydatetime"] . " (Earlier Date : ".$reqDDatesArr[0].")";
+			}
+		}	
         
         
 	    
-	    $dateStr = $containerSchedule["terminalappointmentdatetime"];
-	    $containerSchedule["terminalappointmentdatetime"] =  
-	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+	    if(!empty($containerSchedule["terminalappointmentdatetime"])){
+			$dateStr = $containerSchedule["terminalappointmentdatetime"];
+	    	$containerSchedule["terminalappointmentdatetime"] =  
+			   DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
+		}
 	    
-	    $dateStr = $containerSchedule["ldfpickupdate"];
-	    $containerSchedule["ldfpickupdate"] = 
-	           DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
-	    
+		if(!empty($containerSchedule["ldfpickupdate"])){	
+			$dateStr = $containerSchedule["ldfpickupdate"];
+			$containerSchedule["ldfpickupdate"] = 
+					DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);			
+		}
 	    $dateStr = $containerSchedule["scheduleddeliverydatetime"];
 	    $containerSchedule["scheduleddeliverydatetime"] = 
 	           DateUtil::convertDateToFormat($dateStr,$fromFormatWithTime,$toFormatWithTime);
@@ -358,10 +363,12 @@ class ContainerScheduleMgr{
 	    $containerSchedule["containerreceivedinwmsdate"] = 
 	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
 	    
-	    $dateStr = $containerSchedule["samplesReceivedinWMSDate"];
-	    $containerSchedule["samplesReceivedinWMSDate"] = 
-	        DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
-	    $containerSchedule["issamplesreceived"] = $this->getYesNo($containerSchedule["issamplesreceived"]);
+		if(!empty($containerSchedule["samplesReceivedinWMSDate"])){
+			$dateStr = $containerSchedule["samplesReceivedinWMSDate"];
+	    	$containerSchedule["samplesReceivedinWMSDate"] = 
+	        	DateUtil::convertDateToFormat($dateStr,$fromformat,$toFormat);
+		}
+				$containerSchedule["issamplesreceived"] = $this->getYesNo($containerSchedule["issamplesreceived"]);
 	    $containerSchedule["isidscomplete"] = $this->getYesNo($containerSchedule["isidscomplete"]);
 	    $containerSchedule["containerno"] = $containerSchedule["container"];
 	    if(!empty($containerSchedule["customexamstatus"])){
