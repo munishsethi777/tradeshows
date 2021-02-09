@@ -1,5 +1,5 @@
 <?php
-//require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
+require_once($ConstantsArray['dbServerUrl'] ."DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
@@ -12,10 +12,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/TruckerType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/WareHouseType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/TerminalType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomExamStatusType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
 class ContainerScheduleMgr{
 	private static $containerScheduleMgr;
 	private static $dataStore;
 	private static $userDataStore;
+	private static $select = "select * from containerschedules";
+	private static $selectCountSql = "SELECT COUNT(seq) from containerschedules";
+	private static $timeZone = "America/Los_Angeles";
+	private static $currentDateInDBFormat;
 	public static function getInstance()
 	{
 		if (!self::$containerScheduleMgr)
@@ -23,6 +28,7 @@ class ContainerScheduleMgr{
 			self::$containerScheduleMgr = new ContainerScheduleMgr();
 			self::$dataStore = new BeanDataStore(ContainerSchedule::$className, ContainerSchedule::$tableName);
 			self::$userDataStore = new BeanDataStore(User::$className, User::$tableName);
+			self::$currentDateInDBFormat = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 		}
 		return self::$containerScheduleMgr;
 	}
@@ -166,7 +172,8 @@ class ContainerScheduleMgr{
 		$_GET = array_merge($_GET,$output);
 		$containerSchedules = self::$dataStore->findAll(true);
 		$containerSchedulesArr = $this->setNotesAndDates($containerSchedules);
-		ExportUtil::exportContainerSchedules($containerSchedulesArr);
+		$fileName = "ContainerSchedules";
+		ExportUtil::exportContainerSchedules($containerSchedulesArr,$fileName);
 	}
 	
 	
@@ -476,5 +483,180 @@ class ContainerScheduleMgr{
 			"missing_received_dates_in_oms" => $missing_received_dates_in_oms
 		];
 	}
-	
+	public function getAllContainerSchedules($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql;
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+            $query = self::$select;
+            $containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getETADatesPendingInNextSevenDays($beanReturnDataType){
+		$currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+        $currentDateWithInterval = DateUtil::getDateInDBFormat(6,null,self::$timeZone);
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where etadatetime >= '$currentDate' and etadatetime < '$currentDateWithInterval'";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+            $query = $query = self::$select . " where etadatetime >= '$currentDate' and etadatetime < '$currentDateWithInterval'";;
+            $containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getEmptyReturnDatePastEmptyLFD($beanReturnDataType){
+		$currentDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
+        $currentDateInterval7Days = DateUtil::getDateInDBFormatWithInterval(7,null,true,self::$timeZone);
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate > emptylfddate";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where emptyreturndate >= '$currentDateInterval7Days' and emptyreturndate <= '$currentDate' and emptyreturndate > emptylfddate";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getPendingScheduleDeliveryDateForToday($beanReturnDataType){
+		$currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where Date_format(scheduleddeliverydatetime, '%Y-%m-%d') = '$currentDate'";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where Date_format(scheduleddeliverydatetime, '%Y-%m-%d') = '$currentDate'";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingTerminalAppointmentDate($beanReturnDataType)
+    {
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where lfdpickupdate is not NULL and terminalappointmentdatetime is NULL";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where lfdpickupdate is not NULL and terminalappointmentdatetime is NULL";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingAlpineNotificationDate($beanReturnDataType)
+    {
+		$currentDate = self::$currentDateInDBFormat;
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where scheduleddeliverydatetime < '$currentDate' and alpinenotificatinpickupdatetime is NULL";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where scheduleddeliverydatetime < '$currentDate' and alpinenotificatinpickupdatetime is NULL";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingConfirmDeliveryDate($beanReturnDataType)
+    {	
+		$currentDate = self::$currentDateInDBFormat;
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where Date_format(scheduleddeliverydatetime, '%Y-%m-%d') = '$currentDate' and confirmeddeliverydatetime is NULL";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where Date_format(scheduleddeliverydatetime, '%Y-%m-%d') = '$currentDate' and confirmeddeliverydatetime is NULL";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingIDReport($beanReturnDataType){
+		$dateIntervalWith2Days = DateUtil::getDateInDBFormatWithInterval(2,null,true,self::$timeZone);
+        $currentDate = self::$currentDateInDBFormat;
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where etadatetime > '$dateIntervalWith2Days' AND etadatetime < '$currentDate' and (isidscomplete is null or isidscomplete = 0)";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where etadatetime > '$dateIntervalWith2Days' AND etadatetime < '$currentDate' and (isidscomplete is null or isidscomplete = 0)";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingReceivedDatesInOMS($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where containerreceivedinwmsdate is not NULL and (containerreceivedinomsdate is NULL or (issamplesreceived = 1 and samplesreceivedinomsdate is NULL))";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where containerreceivedinwmsdate is not NULL and (containerreceivedinomsdate is NULL or (issamplesreceived = 1 and samplesreceivedinomsdate is NULL))";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingReceivedDatesInWMS($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where confirmeddeliverydatetime is not NULL and (containerreceivedinwmsdate is NULL or (issamplesreceived = 1 and samplesreceivedinwmsdate is NULL))";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules; 
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where confirmeddeliverydatetime is not NULL and (containerreceivedinwmsdate is NULL or (issamplesreceived = 1 and samplesreceivedinwmsdate is NULL))";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function getMissingScheduleDeliveryDate($beanReturnDataType)
+    {
+        if($beanReturnDataType == BeanReturnDataType::count){
+            $query = self::$selectCountSql . " where terminalappointmentdatetime is not NULL and scheduleddeliverydatetime is NULL";
+            $containerSchedules = self::$dataStore->executeCountQueryWithSql($query);
+            return $containerSchedules;
+        }elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$select . " where terminalappointmentdatetime is not NULL and scheduleddeliverydatetime is NULL";
+			$containerSchedules = self::$dataStore->executeObjectQuery($query);
+            return $containerSchedules;
+        }
+    }
+    public function exportFilterData($filterId){
+        $containerSchedules = null;
+        $ContainerExportSchedulesAndFileName = array();
+        $fileName = "ContainerSchedules";
+        if($filterId == "container_schedules_all_count_export_date"){
+            $containerSchedules = $this->getAllContainerSchedules(BeanReturnDataType::getValue("export"));
+        }elseif($filterId == "container_schedules_eta_report_count_export_date"){
+            $containerSchedules = $this->getETADatesPendingInNextSevenDays(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesETADatesPendingInNextSevenDays";
+        }elseif($filterId == "container_schedules_empty_return_date_past_empty_lfd_count_export_date"){
+            $containerSchedules = $this->getEmptyReturnDatePastEmptyLFD(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesEmptyReturnDatePastEmptyLFD";
+        }elseif($filterId == "container_schedules_pending_schedule_delivery_date_count_export_date"){
+            $containerSchedules = $this->getPendingScheduleDeliveryDateForToday(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesPendingScheduleDeliveryDateForToday";
+        }elseif($filterId == "container_schedules_missing_terminal_appointment_date_count_export_date"){
+            $containerSchedules = $this->getMissingTerminalAppointmentDate(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingTerminalAppointmentDate";
+        }elseif($filterId == "container_schedules_empty_alpine_notification_pickup_date_count_export_date"){
+            $containerSchedules = $this->getMissingAlpineNotificationDate(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingAlpineNotificationDate";
+        }elseif($filterId == "container_schedules_missing_confirmed_delivery_date_count_export_date"){
+            $containerSchedules = $this->getMissingConfirmDeliveryDate(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingConfirmDeliveryDate";
+        }elseif($filterId == "container_schedules_missing_id_count_export_date"){
+            $containerSchedules = $this->getMissingIDReport(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingIDReport";
+        }elseif($filterId == "container_schedules_missing_received_dates_in_oms_count_export_date"){
+            $containerSchedules = $this->getMissingReceivedDatesInOMS(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingReceivedDatesInOMS";
+        }elseif($filterId == "container_schedules_missing_received_dates_in_wms_count_export_date"){
+            $containerSchedules = $this->getMissingReceivedDatesInWMS(BeanReturnDataType::getValue("export"));
+            $fileName = "ContainerSchedulesMissingReceivedDatesInWMS";
+        }elseif($filterId == "container_schedules_missing_schedule_delivery_date_count_export_date"){
+			$containerSchedules = $this->getMissingScheduleDeliveryDate(BeanReturnDataType::getValue("export"));
+			$fileName = "ContainerScheduleMissingScheduleDeliveryDate";
+        }
+        $containerSchedulesArr = $this->setNotesAndDates($containerSchedules);
+        $ContainerExportSchedulesAndFileName['containerSchedulesArr'] = $containerSchedulesArr;
+        $ContainerExportSchedulesAndFileName['fileName'] = $fileName;
+        return $ContainerExportSchedulesAndFileName;
+    }
 }

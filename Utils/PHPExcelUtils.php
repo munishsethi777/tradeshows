@@ -7,7 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/InstructionManualLogStatus.p
 
 class PHPExcelUtil {
 	
-	public static function exportQCSchedules($qcSchedules,$isEmail = false){
+	public static function exportQCSchedules($qcSchedules,$isEmail = false,$fileName){
 		$objPHPExcel = self::cookQCScheduledPHPExcelHeader();
 		$objPHPExcel = self::loadQCSchedulesInExcel($qcSchedules, $objPHPExcel, 3);
 		
@@ -20,7 +20,7 @@ class PHPExcelUtil {
 			return $excelOutput;
 		}
 		// der ( 'Content-Type: application/vnd.ms-excel' );
-		header ( 'Content-Disposition: attachment;filename="QCSchedules.xls"' );
+		header ( "Content-Disposition: attachment;filename=".$fileName.".xls" );
 		header ( 'Cache-Control: max-age=0' );
 		header ( 'Cache-Control: max-age=1' );
 		header ( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' ); // Date in the past
@@ -464,7 +464,7 @@ class PHPExcelUtil {
 		}
 		return $colName;
 	}
-	public static function exportInstructionManuals($instructionManuals,$isEmail = false,$fileName){
+	public static function exportInstructionManuals($instructionManuals,$fileName,$isEmail = false){
 		$objPHPExcel = self::cookInstructionManualsPHPExcelHeader();
 		$objPHPExcel = self::loadInstructionManualsInExcel($instructionManuals, $objPHPExcel, 3);
 		
