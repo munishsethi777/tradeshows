@@ -71,7 +71,7 @@ class ContainerScheduleDatesMgr{
     	
     	$requestedDDateTime = $containerSchedule->getRequestedDeliveryDateTime();
     	$existingRequestedDDateTimeStr = $existingContainerSchedle->getRequestedDeliveryDateTime();
-    	$existingRequestedDDateTime = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $requestedDDateTime);
+    	$existingRequestedDDateTime = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $existingRequestedDDateTimeStr);
     	if($requestedDDateTime !=null && $requestedDDateTime !=  $existingRequestedDDateTime){
     		$containerScheduleDate = $this->getContainerScheduleDateObj(
     				$containerSchedule, ContainerScheduleDateType::requested_delivery);
