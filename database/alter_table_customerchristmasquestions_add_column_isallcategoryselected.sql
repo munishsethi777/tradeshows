@@ -1,0 +1,1 @@
+ALTER TABLE `customerchristmasquestions` ADD `isallcategoriesselected` TINYINT NULL AFTER `compshopcompleteddate`; 

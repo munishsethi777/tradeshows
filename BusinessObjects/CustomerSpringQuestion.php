@@ -44,7 +44,8 @@ class CustomerSpringQuestion
     private $itemspurchasedlastyear;
     private $isdinnerappt;
     private $dinnerapptplace;
-    private $notes;
+    private $buyerhasmorecategorynotes;
+    private $wherecustomerselectspringitems;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -217,11 +218,11 @@ class CustomerSpringQuestion
         $this->springreviewingdate = $springreviewingdate;
     }
     
-    public function getCustomerselectingspringitemsfrom(){
+    public function getCustomerSelectingSpringItemsFrom(){
         return $this->customerselectingspringitemsfrom;
     }
     
-    public function setCustomerselectingspringitemsfrom($customerselectingspringitemsfrom){
+    public function setCustomerSelectingSpringItemsFrom($customerselectingspringitemsfrom){
         $this->customerselectingspringitemsfrom = $customerselectingspringitemsfrom;
     }
     
@@ -350,11 +351,17 @@ class CustomerSpringQuestion
     public function setDinnerApptPlace($dinnerApptPlace){
         $this->dinnerapptplace = $dinnerApptPlace;
     }
-    public function getNotes(){
-        return $this->notes;
+    public function getBuyerHasMoreCategoryNotes(){
+        return $this->buyerhasmorecategorynotes;
     }
-    public function setNotes($notes){
-        $this->notes = $notes;
+    public function setBuyerHasMoreCategoryNotes($buyerHasMoreCategoryNotes){
+        $this->buyerhasmorecategorynotes = $buyerHasMoreCategoryNotes;
+    }
+    public function getWhereCustomerSelectSpringItems(){
+        return $this->wherecustomerselectspringitems;
+    }
+    public function setWhereCustomerSelectSpringItems($whereCustomerSelectSpringItems){
+        $this->wherecustomerselectspringitems = $whereCustomerSelectSpringItems;
     }
     
     public function from_array($array) {

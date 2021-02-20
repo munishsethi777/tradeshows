@@ -1,0 +1,1 @@
+ALTER TABLE `customerspringquestions` ADD `buyerhasmorecategorynotes` VARCHAR(2000) NULL AFTER `springsampledate`; 

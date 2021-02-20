@@ -9,15 +9,19 @@ class BuyerCategoryType extends BasicEnum{
     const gazing_globes = "Gazing Globes";
     const halloween = "Halloween";
     const harvest = "Harvest";
+    const holiday = "Holiday - All";
+    const holiday_decor = "Holiday Décor";
+    const holiday_string_lights = "Holiday String Lights";
+    const holiday_lighting = "Holiday Lighting";
+    const lawn_garden = "Lawn & Garden";
     const outdoor_decor = "Outdoor Decor";
     const patriotic = "Patriotic";
     const planters = "Planters";
     const pond = "Pond";
     const solar = "Solar";
     const statuary = "Statuary";
-    const lawn_garden = "Lawn & Garden";
-    const holiday = "Holiday";
-    const holiday_lighting = "Holiday Lighting";
+    
+    
     
     
 //     const bird_bath = "Bird Bath";

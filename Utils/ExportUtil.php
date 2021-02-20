@@ -1,4 +1,5 @@
 <?php
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BusinessCategoryType.php");
 class ExportUtil{
 	private static $VERTICAL = "vertical";
 	private static $HORIZONTAL = "horizontal";
@@ -19,23 +20,27 @@ class ExportUtil{
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CUS_ID_NUM");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "STORE_ID");
-		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CUS_NAME");
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "STORE_ID");
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CHAIN_STORE_NAME");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Priority");
+		// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Priority");
+		// $colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Customer Type");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SALES_REP_ID");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Inside Account Manager");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SALES_REP");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "SALES Admin Lead");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Type");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Chain Store Sales Admin Lead");
 		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Category");
-		$colName = $alphas[$i++]. $count;
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Key");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Business Type");
+		// $colName = $alphas[$i++]. $count;
+		// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Category");
+		// $colName = $alphas[$i++]. $count;
+		// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "Key");
 		$count = 2;
 		$i = 0;
 		$customers = $data["customers"];
@@ -56,22 +61,31 @@ class ExportUtil{
 			
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storeid"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["fullname"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["fullname"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storeid"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["storename"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customer["priority"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, BusinessCategoryType::getValue($customer["customertype"]));
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonid"]);
+			// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["fullname"]);
+			// $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			// $colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["insideaccountmanagername"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salespersonname"]);
+			// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName,$customer["priority"]);
+			// $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			// $colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salesadminleadname"]);
+			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["chainstoresalesadmin"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$businessType = $customer["businesstype"];
 			if(!empty($businessType)){
@@ -80,13 +94,13 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessType);
-			$businessCategory = $customer["businesscategory"];
-			if(!empty($businessCategory)){
-			    $businessCategory = BusinessCategoryType::getValue($businessCategory);
-			}
-			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
-			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessCategory);
+			// $businessCategory = $customer["businesscategory"];
+			// if(!empty($businessCategory)){
+			//     $businessCategory = BusinessCategoryType::getValue($businessCategory);
+			// }
+			// $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+			// $colName = $alphas[$i++]. $count;
+			// $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $businessCategory);
 			$hColIndex = 10;
 			$colIndex = 10;
 			$cusBuyers = $buyers[$customer["seq"]];
@@ -611,7 +625,7 @@ class ExportUtil{
 	}
 	
 	
-	public static function exportGraphicLogs($graphicLogs,$isEmail = false){
+	public static function exportGraphicLogs($graphicLogs,$fileName,$isEmail = false){
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()->setCreator("Admin")
 		->setLastModifiedBy("Admin")
@@ -1002,7 +1016,7 @@ class ExportUtil{
 			
 		// Redirect output to a client’s web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename="GraphicLogs.xls"');
+		header("Content-Disposition: attachment;filename=".$fileName.".xls");
 		header('Cache-Control: max-age=0');
 		// If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
@@ -1965,7 +1979,7 @@ public static function exportEmailLogs($emailLogs){
         
 }
 
- public static function exportContainerSchedules($containerSchedules,$isEmail = false){
+ public static function exportContainerSchedules($containerSchedules,$fileName,$isEmail = false){
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator("Admin")
 	->setLastModifiedBy("Admin")
@@ -2391,7 +2405,7 @@ public static function exportEmailLogs($emailLogs){
 	}
 	// Redirect output to a client’s web browser (Excel5)
 	header('Content-Type: application/vnd.ms-excel');
-	header('Content-Disposition: attachment;filename="ContainerSchedules.xls"');
+	header("Content-Disposition: attachment;filename=" . $fileName . ".xls");
 	header('Cache-Control: max-age=0');
 	// If you're serving to IE 9, then the following may be needed
 	header('Cache-Control: max-age=1');

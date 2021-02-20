@@ -174,9 +174,13 @@ if(isset($_POST["id"])){
 								</div>
 							</div>
 	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager Email</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Inside Account Manager Name</label>
 		                        <div class="col-lg-4">
-		                        	<input type="email"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control">
+		                        	<!-- <input type="email"  maxLength="250" value="<?php echo $customer->getInsideAccountManager()?>" name="insideaccountmanager" class="form-control"> -->
+									<?php 
+    									$select = DropDownUtils::getCustomerInsideAccountManagerNameTypes("insideaccountmanager","", $customer->getInsideAccountManager(),true,true);
+    			                        echo $select;
+	                             	?>
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
@@ -191,7 +195,11 @@ if(isset($_POST["id"])){
 	                        <div class="form-group row">
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead</label>
 		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control">
+		                        	<!-- <input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control"> -->
+									<?php 
+    									$select = DropDownUtils::getCustomerSalesAdminNameTypes("salesadminlead","", $customer->getSalesAdminLead(),true,true);
+    			                        echo $select;
+	                             	?>
 								</div>
 								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin</label>
 		                        <div class="col-lg-4">
@@ -293,7 +301,7 @@ if(isset($_POST["id"])){
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+								<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
@@ -315,7 +323,7 @@ if(isset($_POST["id"])){
 									<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-									<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+									<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
 									<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 								</div>
 								<div id="internalSupport" class="internalSupport">
@@ -337,7 +345,7 @@ if(isset($_POST["id"])){
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-1 col-form-label bg-formLabel">Skype Id</label>
+								<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       </div>
 	                       <div id="buyers" class="buyers">
@@ -450,8 +458,9 @@ function addBuyer(isDefaultRow,buyer){
 	var cellPhone = "";
 	var note      = "";
 	var skypePersonId = "";
-	var category  = "";
-	var ext       = "";
+	var position = "";
+	var category = "";
+	var ext      = "";
 	index++;
 	var id = index;
 	if (typeof buyer !== "undefined"){
@@ -479,12 +488,15 @@ function addBuyer(isDefaultRow,buyer){
 		if(buyer.skypeid != null){
 			skypePersonId = buyer.skypeid;
 		}
+		if(buyer.position != null){
+			position = buyer.position;
+		}
 		category = buyer.category;
 		id = buyer.seq
 	}
 	var ddId =  'categorySelectDiv'+id;
 	var html = '<div class="buyerDiv">';
-   		html += '<div class="form-group row m-b-xs">';
+   		html += "<div class='form-group row m-b-xs salesRepRow' id='buyerRep" + id +"'>";
 		html += `<div class="col-lg-2 p-xxs no-margins">
 					<input type="text"  maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
 				</div>
@@ -503,8 +515,11 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
+		// html += '<div class="col-lg-1 p-xxs no-margins">';
+		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="buyer_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		// html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="buyer_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		html += "<?php $select = DropDownUtils::getCustomerPostions('buyer_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
@@ -529,6 +544,7 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#buyers").append(html);
+		$("#buyerRep"+ id +" #buyer_position").val(position);
 		
 		populateBuyerCategories(category,ddId);
 }
@@ -542,6 +558,7 @@ function addSalesRep(isDefaultRow,salesRep){
 	var note          = "";
 	var responsiblity = "";
 	var skypePersonId = "";
+	var position = "";
 	var category      = "";
 	var ext           = "";
 	index++;
@@ -575,13 +592,16 @@ function addSalesRep(isDefaultRow,salesRep){
 		if(salesRep.skypeid != null){
 			skypePersonId = salesRep.skypeid;
 		}
+		if(salesRep.position != null){
+			position = salesRep.position;
+		}
 		category = salesRep.category;
 		id = salesRep.seq;
 	}
 	var ddId = 'categorySalesRepSelectDiv'+id;
 	// var ddId = 'responsibilitySelectDiv'+id;
 	var html = '<div class="salesRepDiv">';
-   		html += '<div class="form-group row m-b-xs">';
+   		html += "<div class='form-group row m-b-xs salesRepRow' id='salesRep" + id + "'>";
 		html += `<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="salesRep_firstname[]" class="form-control" placeholder="firstname">
 				</div>
@@ -600,8 +620,11 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
+		// html += '<div class="col-lg-1 p-xxs no-margins">';
+		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		// html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		html += "<?php $select = DropDownUtils::getCustomerPostions('salesRep_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="salesRep_category[]" class="form-control">';
@@ -631,6 +654,7 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#salesRep").append(html);
+		$("#salesRep" + id + " #salesRep_position").val(position);
 		populateSalesRepCategories(category,ddId);
 		// populateSalesRepResponsibilities(responsiblity,ddId);
 		//populateSalesRepCategories(responsibility,ddId);
@@ -644,6 +668,7 @@ function addInternalSupport(isDefaultRow,internalSupport){
 	var cellPhone     = "";
 	var note          = "";
 	var skypePersonId = "";
+	var position = "";
 	var category      = "";
 	var ext           = "";
 	index++;
@@ -673,12 +698,15 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		if(internalSupport.skypeid != null){
 			skypePersonId = internalSupport.skypeid;
 		}
+		if(internalSupport.position != null){
+			position = internalSupport.position;
+		}
 		category = internalSupport.category;
 		id = internalSupport.seq;
 	}
 	var ddId = 'categoryInternalSupportSelectDiv'+id;
 	var html = '<div class="internalSupportDiv">';
-   		html += '<div class="form-group row m-b-xs">';
+   		html += "<div class='form-group row m-b-xs internalSupportRow' id='internalSupportRow" + id + "'>";
 		html += `<div class="col-lg-2 p-xxs no-margins">
 					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">
 				</div>
@@ -697,8 +725,11 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
+		// html += '<div class="col-lg-1 p-xxs no-margins">';
+		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		// html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		html += "<?php $select = DropDownUtils::getCustomerPostions('internalSupport_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control">';
@@ -725,6 +756,7 @@ function addInternalSupport(isDefaultRow,internalSupport){
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#internalSupport").append(html);
+		$("#internalSupportRow" + id + "#internal_position").val(position);
 		populateInternalSupportRepCategories(category,ddId);
 }
 

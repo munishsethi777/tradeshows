@@ -439,4 +439,9 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 		}
 		return $arr;
 	}
+	public function getUsersSeqsAndFullnamesBySeqs($seqs){
+		$query = "SELECT seq,fullname FROM `users` where seq IN($seqs) ORDER BY fullname asc";
+		$users = self::$userDataStore->executeQuery($query,false,true);
+		return $users;
+	}
 }

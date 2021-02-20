@@ -5,4 +5,5 @@ class XmasItemFromType extends BasicEnum{
     const need_to_make_presentation = "Need to make Presentation";
     const alpine_showroom_visit = "Alpine Showroom Visit";
     const meet_in_atlanta = "Meeting in Atlanta";
+    const other = "Other";
 }

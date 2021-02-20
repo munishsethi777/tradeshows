@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerChristmasQuestionMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 $success = 1;
 $message ="";
@@ -24,12 +25,18 @@ if($call == "savechristmasQuestion"){
         }else{
             $christmasQuestion->setIsAllCategoriesSelected(0);
         }
-        $category = implode(",",$_REQUEST['category']);
-        $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
-        $categoriesShouldSellThem = implode(",",$_REQUEST['categoriesshouldsellthem']);
+        if(isset($_REQUEST['category'])){
+            $category = implode(",",$_REQUEST['category']);
+        }
+        // $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
+        if(isset($_REQUEST['categoriesshouldsellthem'])){
+            $categoriesShouldSellThem = implode(",",$_REQUEST['categoriesshouldsellthem']);
+        }
         $christmasQuestion->setCategory($category);
-        $christmasQuestion->setTradeShowsAreGoingTo($tradeShowsAreGoingTo);
+        $christmasQuestion->setTradeShowsAreGoingTo($_REQUEST['tradeshowsaregoingto']);
         $christmasQuestion->setCategoriesShouldSellThem($categoriesShouldSellThem);
+
+        $christmasQuestion->setXmasSampleSentDate(DateUtil::convertDateToFormat($_REQUEST['xmassamplesentdate'],'m-d-Y','Y-m-d'));
         
         if($seq > 0){
            $message = StringConstants::UPDATED_SUCCESSFULLY;

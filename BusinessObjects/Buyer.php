@@ -2,7 +2,7 @@
 class Buyer{
     private $seq,$firstname,$lastname,$email,$officephone,$cellphone,$notes,$customerseq,$createdby,$createdon,$lastmodifiedon,$category;
     private $imageextension;
-    private $responsibility,$skypeid,$buyertype;
+    private $responsibility,$skypeid,$position,$buyertype;
     private $officephoneext;
     public static $className = "Buyer";
     public static $tableName = "buyers";
@@ -155,6 +155,12 @@ class Buyer{
      */
     public function setOfficePhoneExt($officephoneext){
         $this->officephoneext = $officephoneext;
+    }
+    public function getPosition(){
+        return $this->position;
+    }
+    public function setPosition($position){ 
+        $this->position = $position;
     }
 
 

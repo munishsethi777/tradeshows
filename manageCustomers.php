@@ -81,7 +81,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                         	<label class="col-sm-2">Customer Name</label>
                            	<div class="col-sm-4"><label class="fullname lblDesc"></label></div>
                            	<label class="col-lg-3">Inside Account Manager</label>
-                          	<div class="col-lg-3"><label class="insideaccountmanager lblDesc"></label></div>
+                          	<div class="col-lg-3"><label class="insideaccountmanagername lblDesc"></label></div>
                         	
                         </div>
 <!--                         <div class="form-group row"> -->
@@ -110,7 +110,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 <!--                         </div> -->
                         <div class="form-group row">
                      		<label class="col-lg-2">Sales Admin Lead</label>
-                            	<div class="col-lg-4"><label class="salesadminlead lblDesc"></label></div>
+                            	<div class="col-lg-4"><label class="salesadminleadname lblDesc"></label></div>
                             <label class="col-lg-3">Chain Store Sales Admin</label>
                           	<div class="col-lg-3"><label class="chainstoresalesadmin lblDesc"></label></div>
                         </div>
@@ -310,16 +310,19 @@ function loadGrid(){
 	var columns = [
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'Customer ID', datafield: 'customerid',width:"10%",cellsrenderer:showCustomerDetailAction},
-      { text: 'Customer Name', datafield: 'fullname', width:"30%"},
-      { text: 'Customer Type', datafield: 'customertype', width:"30%"},
-      { text: 'BusinessType', datafield: 'businesstype',width:"22%"},
+      { text: 'Customer Name', datafield: 'fullname', width:"10%"},
+      { text: 'Store ID', datafield: 'storeid', width:"10%"},
+      { text: 'Chain Store Name', datafield: 'storename', width:"10%"},
+    //   { text: 'Sales Rep', datafield: 'salesrep', width:"10%"},
+      { text: 'Customer Type', datafield: 'customertype', width:"10%"},
+      { text: 'Inside Account Manager', datafield: 'insideaccountmanagername', width:"15%"},
+    //   { text: 'BusinessType', datafield: 'businesstype',width:"10%"},
+      { text: 'Sales Admin Lead', datafield:'salesadminleadname', width:"10%"},
+      { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"18%"},
     //   { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
-    //   { text: 'Sales Admin Lead', datafield:'salesadminlead', width:"8%"},
-    //   { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"8%"},
-    //   { text: 'Store Name', datafield: 'storename', width:"20%"},
     //   { text: 'Category', datafield: 'businesscategory',width:"12%"},
     //   { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
-      { text: 'Actions', datafield: 'action',width:"7%",cellsrenderer:actions},
+      { text: 'Actions', datafield: 'action',width:"5%",cellsrenderer:actions},
     ]
    
     var source =
@@ -334,14 +337,15 @@ function loadGrid(){
                     { name: 'customerid', type: 'string' },
                     { name: 'fullname', type: 'string' },
                     { name: 'customertype', type: 'string'},
-                    { name: 'businesstype', type: 'string' },
-                    // { name: 'insideaccountmanager', type: 'string'},
-                    // { name: 'salesadminlead', type: 'string'},
-                    // { name: 'chainstoresalesadmin', type: 'string'},  
-                    // { name: 'storename', type: 'string' }, 
+                    // { name: 'businesstype', type: 'string' },
+                    { name: 'insideaccountmanagername', type: 'string'},
+                    { name: 'salesadminleadname', type: 'string'},
+                    { name: 'chainstoresalesadmin', type: 'string'},  
+                    { name: 'storeid', type: 'string' },
+                    { name: 'storename', type: 'string' }, 
                     // { name: 'businesscategory', type: 'string' },
-                    // { name: 'salespersonname', type: 'string' },
-                    // { name: 'lastmodifiedon', type: 'date' },
+                    { name: 'salespersonname', type: 'string' },
+                    { name: 'lastmodifiedon', type: 'date' },
                     { name: 'action', type: 'string' }
                     ],                          
         url: 'Actions/CustomerAction.php?call=getAllCustomers',
@@ -400,7 +404,7 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var importButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa fa-download'></i><span style='margin-left: 4px; position: relative;'>Import</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-            var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-download'><span style='margin-left: 4px; position: relative;'>Export</span></div>");
+            var templateButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-upload'><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var addSpecialProgButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-squar'></i><span style='margin-left: 4px; position: relative;'>Add Special Prog.</span></div>");

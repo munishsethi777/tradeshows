@@ -8,7 +8,7 @@ class CustomerChristmasQuestion{
     private $isxmasbuylastyear,$xmasbuylastyearamount,$isreceivingsellthru,$isrobbyreviewedsellthrough,$isvisitcustomerin4qtr,$christmasquotebydate;
     private $cataloglinkdate,$tradeshowsaregoingto,$isdinnerappt,$dinnerapptdate,$ispitchmainvendor,$istheremorebuyers,$xmassamplesentdate,$categoriesshouldsellthem;
     private $isreviewedsellthru,$compshopsummaryemailsentdate,$isquotedforxmas,$itemselectionfinalized,$itemspurchasedlastyear,$finalizedtyvsly,$arepoexpecting,$expectingpodate,$isopportunitiessent,$opportunitiessentdate;
-    private $year,$dinnerapptplace,$notes;
+    private $year,$dinnerapptplace,$buyerhasmorecategorynotes,$wherecustomerselectholidayitems;
     
     public function getSeq(){
         return $this->seq;
@@ -327,11 +327,17 @@ class CustomerChristmasQuestion{
     public function setCategory($category){
         $this->category = $category;
     }
-    public function getNotes(){
-        return $this->notes;
+    public function getBuyerHasMoreCategoryNotes(){
+        return $this->buyerhasmorecategorynotes;
     }
-    public function setNotes($notes){
-        $this->notes = $notes;
+    public function setBuyerHasMoreCategoryNotes($buyerHasMoreCategoryNotes){
+        $this->buyerhasmorecategorynotes = $buyerHasMoreCategoryNotes;
+    }
+    public function getWhereCustomerSelectHolidayItems(){
+        return $this->wherecustomerselectholidayitems;
+    }
+    public function setWhereCustomerSelectHolidayItems($whereCustomerSelectHolidayItems){
+        $this->wherecustomerselectholidayitems = $whereCustomerSelectHolidayItems;
     }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {

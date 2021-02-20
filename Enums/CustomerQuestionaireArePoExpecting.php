@@ -2,8 +2,8 @@
 require_once($ConstantsArray['dbServerUrl'] . "Enums/BasicEnum.php");
 class CustomerQuestionaireArePoExpecting extends BasicEnum
 {
-    const no = "No";
     const yes = "Yes";
-    const received = "Received";
+    const no = "No";
     const forecast = "Forecast";
+    const received = "Received";
 }

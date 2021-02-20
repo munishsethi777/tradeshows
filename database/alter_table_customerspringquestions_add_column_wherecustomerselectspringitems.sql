@@ -1,0 +1,1 @@
+ALTER TABLE `customerspringquestions` ADD `wherecustomerselectspringitems` VARCHAR(1000) NULL AFTER `customerselectingspringitemsfrom`; 
