@@ -9,6 +9,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/TagType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/GraphicLogReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/ReportingDataMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -20,6 +22,7 @@ if(isset($_GET["call"])){
 }
 $graphicLogMgr = GraphicLogMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
+$reportingDataMgr = ReportingDataMgr::getInstance();
 if($call == "saveGraphicLog"){
 	try{
 	    $message = StringConstants::GRAPHIC_LOG_SAVED_SUCCESSFULLY;
@@ -227,8 +230,31 @@ if($call == "getGraphicLogDashboardCounts"){
     $arr['buyersReview'] = count($buyersReview);
     $arr['managersReview'] = count($managersReview);
     $response["data"] = $arr;
-    
-    
+}
+if($call == "showFilterGraph"){
+	try{
+		$graphIconId = $_GET['graphIconId'];
+		$reportingParameter = str_replace("_show_graph","",$graphIconId);
+		$filterGraphData = $reportingDataMgr->getReportingDataForJsCharts($reportingParameter);
+		$graphTitle = ReportingDataParameterType::getValue($reportingParameter);
+		$response['data'] = $filterGraphData;
+		$response['data']['graphTitle'] = $graphTitle;
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
+if($call == "exportFilterData"){
+	try{
+		$filterId = $_POST['filterId'];
+		$GraphicExportLogsAndFileName = $graphicLogMgr->exportFilterData($filterId);
+		if($GraphicExportLogsAndFileName['graphicLogs']){
+			ExportUtil::exportGraphicLogs($GraphicExportLogsAndFileName['graphicLogs'],$GraphicExportLogsAndFileName['fileName']);
+		}
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
 }
 $response["success"] = $success;
 $response["message"] = $message;

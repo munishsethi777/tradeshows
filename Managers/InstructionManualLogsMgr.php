@@ -26,7 +26,7 @@
         private static $logsOverDueTodayWhereClause = " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like NOW()";
         private static $logsDueLessThan14DaysFromEntryWhereClause = " where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
         private static $groupByInstructionManualLogSeq = " GROUP by instructionmanuallogs.seq";
-        
+        private static $gridSelectSql = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
         
         public static function getInstance(){
             if (!self::$instructionManualLogsMgr){
@@ -59,8 +59,6 @@
             $flag = self::$dataStore->deleteInList ( $ids );
             return $flag;
         }
-        
-        
         private function getDateStr($date){
             $format = 'Y-m-d';
             if(!empty($date)){
@@ -77,7 +75,6 @@
             }
             return $date;
         }
-        
         // --------------------------------------Grid Functions------------------------------------------------------------>
         private function processRowsForGrid($rows){
             $sessionUtil = SessionUtil::getInstance();
@@ -95,205 +92,204 @@
             }
             return $arr;
         }
-        public function getInstructionManualLogsForGrid(){
-                $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
-            $rows = self::$dataStore->executeQuery($query,true);
-            $mainArr["Rows"] = $this->processRowsForGrid($rows);
-            $mainArr["TotalRows"] = $this->getAllCount(true);
-            return $mainArr;
-        }
-        public function getAllCount($isApplyFilter){
-            $query = "select count(*) from instructionmanuallogs left join classcodes on
-                    instructionmanuallogs.classcodeseq = classcodes.seq left join users on
-                    instructionmanuallogs.createdby = users.seq";
-            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
-            return $count;
-        }
-        public function getProjectsDueLessThan14DaysFromEntryForGrid(){
-            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
-                    left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-                    instructionmanuallogs.createdby = users.seq where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL 
-                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 
-                    AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
-            $rows = self::$dataStore->executeQuery($query,true);
-            $mainArr["Rows"] = $this->processRowsForGrid($rows);
-            $mainArr["TotalRows"] = $this->getProjectsDueLessThan14DaysFromEntryCountForGrid(true);
-            return $mainArr;
-        }
-        public function getProjectsDueLessThan14DaysFromEntryCountForGrid($isApplyFilter){
-            $query = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
-                    left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-                    instructionmanuallogs.createdby = users.seq where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL 
-                    AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 
-                    AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
-            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
-            return $count;
-        }
-        
         public function findByItemNo($itemNo,$instructionManualLogSeq = ""){
             $query = "SELECT COUNT(seq) FROM `instructionmanuallogs` Where itemnumber like '".$itemNo."' AND iscompleted=FALSE";
             $query = $instructionManualLogSeq != "" ? $query . " AND seq!=".$instructionManualLogSeq : $query;
             $count = self::$dataStore->executeCountQueryWithSql($query);
             return $count;        
         }
-        
-        public function getProjectsOverdueForGrid(){
-            $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
-            left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq" . self::$logsOverDueWhereClause;
-            $rows = self::$dataStore->executeQuery($query,true);
-            $mainArr["Rows"] = $this->processRowsForGrid($rows);
-            $mainArr["TotalRows"] = $this->getProjectsOverdueCountForGrid(true);
-            return $mainArr;
-        }
-        public function getProjectsOverdueCountForGrid($isApplyFilter){
-            $query = "SELECT users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs 
-            left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on 
-            instructionmanuallogs.createdby = users.seq" .  self::$logsOverDueWhereClause;
-            $count = self::$dataStore->executeCountQueryWithSql($query,$isApplyFilter);
-            return $count;
-        }
+        //// Grid status bar export button
         public function exportInstructionManuals($queryString,$instructionManualSeqs,$filterId){
             $output = array();
             parse_str($queryString, $output);
             $_GET = array_merge($_GET,$output);
-            $sessionUtil = SessionUtil::getInstance();
-            $instructionManuals = array();
-            if($_GET['exportOptionForInstructionManualLogs'] != "template"){
-                $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
-                $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-                $isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-                if($isSessionGeneralUser){
-                    if(count($myTeamMembersArr) == 0){
-                        self::$filterExportSelectSql .= " where users.seq = $loggedInUserSeq ";
-                    }else{
-                        $myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
-                        self::$filterExportSelectSql .= " where users.seq in($myTeamMembersCommaSeparated)";
-                    }
-                    if(!empty($instructionManualSeqs)){
-                        self::$filterExportSelectSql .= " and instructionmanuallogs.seq in ($instructionManualSeqs)";
-                    }
-                }else{
-                    if(!empty($instructionManualSeqs)){
-                        self::$filterExportSelectSql .= " where instructionmanuallogs.seq in ($instructionManualSeqs)";
-                    }
-                }
-                $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
-                if($filterId == "instruction_manual_total_projects_overdue"){
-                    $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
-                }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
-                    $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
-                }
-                
-                $instructionManuals = self::$dataStore->executeQuery($query,true,true);
+            if(!empty($instructionManualSeqs)){// selected row export clause
+                self::$filterExportSelectSql .= " where instructionmanuallogs.seq in ($instructionManualSeqs)";
             }
+            $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
+            if($filterId == "instruction_manual_total_projects_overdue"){
+                $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
+            }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
+                $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
+            }
+            $instructionManuals = self::$dataStore->executeQuery($query,true,true);
             PHPExcelUtil::exportInstructionManuals($instructionManuals,false,"InstructionManuals");
         }
         // ---------------------------Grid Functions Ends Here---------------------------------------------------------------->
-        
-        // ----------------------------Filter Export Functions----------------------------------------------------------------->
-        public function getAllOpenLogsFullData(){
-            $query = self::$filterExportSelectSql . self::$logsOpenWhereClause . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllCompletedLogsFullData(){
-            $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllOverDueLogsFullData(){
-            $query = self::$filterExportSelectSql . self::$logsOverDueWhereClause . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllSupervisorReviewLogsFullData(){
-            $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'" . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllManagerReviewLogsFullData(){
-            $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'" . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllBuyerReviewLogsFullData(){
-            $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'" . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllDueTodayLogsFullData(){
-            $query = self::$filterExportSelectSql . " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllDueInNext14DaysLogsFullData(){
-            $query = self::$filterExportSelectSql . " where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'" . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllDueLessThan14DaysFromEntryLogsFullData(){
-            $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllNotStartedLogsFullData(){
-            $query = self::$filterExportSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'" . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        public function getAllFullData(){
-            $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
-            return self::$dataStore->executeQuery($query,false,true);
-        }
-        // ------------------------Filter Export Functions----------------------------------------------------------->
-        //-----------------------------Cron Functions--------------------------------------------------------------->
-        public function getInstructionManualProjectsOpenCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsOpenWhereClause;
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsCompletedCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsCompletedWhereClause;
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsOverdueCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName . self::$logsOverDueWhereClause;
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsInSupervisorReviewCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsInManagerReviewCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsInBuyerReviewCount(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsDueToday(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsDueInNext14Days(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsDueLessThan14DaysFromEntry(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName . self::$logsDueLessThan14DaysFromEntryWhereClause;
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualProjectsNotStarted(){
-            $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'";
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;
-        }
-        public function getInstructionManualAllCount(){
-            $query = "SELECT COUNT(seq) from " . InstructionManualLogs::$tableName;
-            $count = self::$dataStore->executeCountQueryWithSql($query);
-            return $count;   
-        }
         //-----------------------------/Cron Functions ends here-------------------------------------------------
         
+        public function getAllOpenLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . self::$logsOpenWhereClause . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsOpenWhereClause;
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllCompleteLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsCompletedWhereClause;
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllOverDueLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . self::$logsOverDueWhereClause . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsOverDueWhereClause;
+                $count = self::$dataStore->executeCountQueryWithSql($query,true);
+                return $count;
+            }elseif($beanReturnDataType == BeanReturnDataType::grid){
+                $count = $this->getAllOverDueLogs(BeanReturnDataType::count);
+                $query = self::$gridSelectSql . self::$logsOverDueWhereClause;
+                $rows = self::$dataStore->executeQuery($query,true);
+                $mainArr["Rows"] = $this->processRowsForGrid($rows);
+                $mainArr["TotalRows"] = $count;
+                return $mainArr;
+            }
+        }
+        public function getAllSupervisorReviewLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'" . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllManagerReviewLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'" . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllBuyerReviewLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'" . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllDueTodayLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllDueInNext14DaysLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . " where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'" . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllDueLessThan14DaysFromEntryLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName . self::$logsDueLessThan14DaysFromEntryWhereClause;
+                $count = self::$dataStore->executeCountQueryWithSql($query,true);
+                return $count;
+            }elseif($beanReturnDataType == BeanReturnDataType::grid){
+                $count = $this->getAllDueLessThan14DaysFromEntryLogs(BeanReturnDataType::count);
+                $query = self::$gridSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause;
+                $rows = self::$dataStore->executeQuery($query,true);
+                $mainArr["Rows"] = $this->processRowsForGrid($rows);
+                $mainArr["TotalRows"] = $count;
+                return $mainArr;
+            }
+        }
+        public function getAllNotStartedLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'" . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true);
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'";
+                $count = self::$dataStore->executeCountQueryWithSql($query);
+                return $count;
+            }
+        }
+        public function getAllLogs($beanReturnDataType){
+            if($beanReturnDataType == BeanReturnDataType::export){
+                $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
+                return self::$dataStore->executeQuery($query,false,true); 
+            }elseif($beanReturnDataType == BeanReturnDataType::count){
+                $query = "SELECT COUNT(seq) from " . InstructionManualLogs::$tableName;
+                $count = self::$dataStore->executeCountQueryWithSql($query,true);
+                return $count; 
+            }elseif($beanReturnDataType == BeanReturnDataType::grid){
+                $count = $this->getAllLogs(BeanReturnDataType::count);
+                $query = self::$gridSelectSql;
+                $rows = self::$dataStore->executeQuery($query,true);
+                $mainArr["Rows"] = $this->processRowsForGrid($rows);
+                $mainArr["TotalRows"] = $count;
+                return $mainArr;
+            }
+        }
+
+        // export functions calling, when user click on analytic filter export icon---------------------------------------
+        public function exportFilterData($filterId){
+            $containerSchedules = null;
+            $ContainerExportSchedulesAndFileName = array();
+            $fileName = "ContainerSchedule";
+            if($filterId == "container_schedules_all_count_export_date"){
+                $containerSchedules = $this->getAllOpenLogs(BeanReturnDataType::getValue("export"));
+            }elseif($filterId == "container_schedules_eta_report_count_export_date"){
+                $containerSchedules = $this->getAllCompleteLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "ContainerScheduleETAReports";
+            }elseif($filterId == "container_schedules_empty_return_date_past_empty_lfd_count_export_date"){
+                $containerSchedules = $this->getAllOverDueLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "ConstainerSchedule";
+            }elseif($filterId == "container_schedules_pending_schedule_delivery_date_count_export_date"){
+                $containerSchedules = $this->getAllSupervisorReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsInSupervisorsReview";
+            }elseif($filterId == "container_schedules_missing_terminal_appointment_date_count_export_date"){
+                $containerSchedules = $this->getAllManagerReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsInManagersReview";
+            }elseif($filterId == "container_schedules_empty_alpine_notification_pickup_date_count_export_date"){
+                $containerSchedules = $this->getAllBuyerReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsInBuyersReview";
+            }elseif($filterId == "container_schedules_missing_confirmed_delivery_date_count_export_date"){
+                $containerSchedules = $this->getAllDueTodayLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsDueToday";
+            }elseif($filterId == "container_schedules_missing_id_count_export_date"){
+                $containerSchedules = $this->getAllDueInNext14DaysLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsDueInNext14Days";
+            }elseif($filterId == "container_schedules_missing_received_dates_in_oms_count_export_date"){
+                $containerSchedules = $this->getAllDueLessThan14DaysFromEntryLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectDueLessThan14DaysFromEntry";
+            }elseif($filterId == "container_schedules_missing_received_dates_in_wms_count_export_date"){
+                $containerSchedules = $this->getAllNotStartedLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "InstructionManualTotalProjectsNotStarted";
+            }elseif($filterId == "container_schedules_missing_schedule_delivery_date_count_export_date"){
+                $containerSchedules = $this->getAllLogs(BeanReturnDataType::getValue("export"));
+            }
+            $ContainerExportSchedulesAndFileName['containerSchedules'] = $containerSchedules;
+            $ContainerExportSchedulesAndFileName['fileName'] = $fileName;
+            return $ContainerExportSchedulesAndFileName;
+        }    
     }
 ?>

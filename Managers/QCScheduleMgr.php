@@ -12,7 +12,8 @@ require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Utils/QCScheduleImportUtil.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PHPExcelUtils.php");
-
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
 
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
@@ -25,6 +26,20 @@ class QCScheduleMgr{
 	private static $currentDate;
 	private static $currentDateWith14daysInterval;
 	private static $currentDateWith10daysInterval;
+	private static $gridSelectSql = "select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.* from qcschedules 
+					left join users on qcschedules.qcuser = users.seq 
+					left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq 
+					left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+					left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 
+					and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) 
+					from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+	private static $filterExportSelectSql = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, qcschedules.poinchargeuser,qcschedules.* from qcschedules 
+					left join users on qcschedules.qcuser = users.seq 
+					left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+					left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
+					left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+	private static $countSql = "select count(seq) from qcschedules";
+	private static $finalMissingAppointmentWhereClause = " where scfinalinspectiondate >= '2021-01-16' and scfinalinspectiondate < '2021-01-30' and apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
 	public static function getInstance()
 	{
 		if (!self::$qcScheduleMgr)
@@ -198,10 +213,7 @@ class QCScheduleMgr{
 			$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 			$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
 			$isSessionGeneralUser = $sessionUtil->isSessionGeneralUser();
-			$query = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, qcschedules.poinchargeuser,qcschedules.* from qcschedules 
-			left join users on qcschedules.qcuser = users.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq 
-			left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq
-			left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+			$query = self::$filterExportSelectSql;
 			if($isSessionGeneralUser){
 				if(count($myTeamMembersArr) == 0){
 					$query .= " where users.seq = $loggedInUserSeq ";
@@ -219,7 +231,8 @@ class QCScheduleMgr{
 			}
 			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
 		}
-		PHPExcelUtil::exportQCSchedules($qcSchedules);
+		$fileName = "QCSchedules";
+		PHPExcelUtil::exportQCSchedules($qcSchedules,false,$fileName);
 	}
 	
 	private function groupByPO($qcSchedules){
@@ -787,7 +800,7 @@ class QCScheduleMgr{
 // left join classcodes on qcschedules.classcodeseq = classcodes.seq
 // left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
 		
-		$query ="select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.* from qcschedules left join users on qcschedules.qcuser = users.seq left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq left join classcodes on qcschedules.classcodeseq = classcodes.seq left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+		$query = self::$gridSelectSql;
 		
 		$sessionUtil = SessionUtil::getInstance();
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
@@ -1526,10 +1539,337 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			}	
 		}
 	}
-	public function getAllQcSchedules(){
-		$query = "SELECT * from qcschedules";
-		$qcSchedules = self::$dataStore->executeQuery($query);
-    	return $qcSchedules;
+	// public function getAllQcSchedules(){
+		// $query = "SELECT * from qcschedules";
+		// $qcSchedules = self::$dataStore->executeQuery($query);
+    	// return $qcSchedules;
+	// }
+	// Multi purpose methods -----------------------------------------------------------------------------------------------------------------------
+	public function getAllQcSchedules($beanReturnDataType){
+		if($beanReturnDataType == BeanReturnDataType::grid){
+			$query = self::$gridSelectSql;
+			$sessionUtil = SessionUtil::getInstance();
+			$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+			$isSessionSV = $sessionUtil->isSessionSupervisor();
+			$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
+			$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+			$isGeneralUser = $sessionUtil->isSessionGeneralUser();
+			if($isGeneralUser && !($isSessionSV)){
+				if(count($myTeamMembersArr) == 0){
+					$query .= " where qcschedules.qcuser = $qcLoggedInSeq ";
+				}else{
+					$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+					$query .= " where qcschedules.qcuser in($myTeamMembersCommaSeparated)";
+				}
+			}	
+			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
+			$arr = array();
+			foreach ($qcSchedules as $qcSchedule){
+				$approval = $qcSchedule["responsetype"];
+				if(!empty($approval)){
+					$approval = QCScheduleApprovalType::getValue($approval);
+				}
+				$qcSchedule["responsetype"] = $approval;
+				$qcSchedule["id"] = $qcSchedule["seq"];
+				$qcSchedule["isSv"] = $isSessionSV;
+				$qcSchedule["shipdate"] = DateUtil::convertDateToFormat($qcSchedule["shipdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["latestshipdate"] = DateUtil::convertDateToFormat($qcSchedule["latestshipdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["screadydate"] = DateUtil::convertDateToFormat($qcSchedule["screadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scproductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["scproductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["scgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acreadydate"] = DateUtil::convertDateToFormat($qcSchedule["acreadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acproductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["acproductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["acgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apreadydate"] = DateUtil::convertDateToFormat($qcSchedule["apreadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["approductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["approductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["apgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$lastModifiedOn = $qcSchedule["lastmodifiedon"];
+				$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+				$qcSchedule["lastmodifiedon"] = $lastModifiedOn;
+				$qcSchedule["users.qccode"] = $qcSchedule["qccode"];
+				$qcSchedule["poinchargeusers.qccode"] = $qcSchedule["poqccode"];
+				array_push($arr,$qcSchedule);
+			}
+			$mainArr["Rows"] = $arr;
+			$mainArr["TotalRows"] = $this->getAllCount(true,$isGeneralUser,$qcLoggedInSeq,$isSessionSV);
+			return $mainArr;
+		}elseif($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$gridSelectSql . " group by po";
+			$qcSchedules = self::$dataStore->executeQuery($query);
+			return $qcSchedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$filterExportSelectSql . " group by po";
+			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
+			return $qcSchedules;
+		}
 	}
-	
+	public function getAllMissingAppoitmentForFinalInspectionDate($beanReturnDataType,$QCUser= null){
+	    if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where scfinalinspectiondate >= '$currentDate' and scfinalinspectiondate < '$currentDateWith14daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
+			// $query = self::$countSql . self::$finalMissingAppointmentWhereClause . " group by po";
+			if(!empty($QCUser)){
+				$query .=  " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scfinalinspectiondate asc";
+			$query .= " order by qccode asc , scfinalinspectiondate asc";
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where scfinalinspectiondate >= '$currentDate' and scfinalinspectiondate < '$currentDateWith14daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .=  " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scfinalinspectiondate asc";
+			$query .= " group by po order by qccode asc , scfinalinspectiondate asc";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::grid){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			
+			$query = self::$gridSelectSql . "where scfinalinspectiondate >= '$currentDate' and scfinalinspectiondate < '$currentDateWith14daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
+			$sessionUtil = SessionUtil::getInstance();
+			$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
+			$isSessionSV = $sessionUtil->isSessionSupervisor();
+			$qcLoggedInSeq = $sessionUtil->getUserLoggedInSeq();
+			$myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
+			$isGeneralUser = $sessionUtil->isSessionGeneralUser();
+			if($isGeneralUser && !($isSessionSV)){
+				if(count($myTeamMembersArr) == 0){
+					$query .= " where qcschedules.qcuser = $qcLoggedInSeq ";
+				}else{
+					$myTeamMembersCommaSeparated = implode(',', $myTeamMembersArr);
+					$query .= " where qcschedules.qcuser in($myTeamMembersCommaSeparated)";
+				}
+			}	
+			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
+			$arr = array();
+			foreach ($qcSchedules as $qcSchedule){
+				$approval = $qcSchedule["responsetype"];
+				if(!empty($approval)){
+					$approval = QCScheduleApprovalType::getValue($approval);
+				}
+				$qcSchedule["responsetype"] = $approval;
+				$qcSchedule["id"] = $qcSchedule["seq"];
+				$qcSchedule["isSv"] = $isSessionSV;
+				$qcSchedule["shipdate"] = DateUtil::convertDateToFormat($qcSchedule["shipdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["latestshipdate"] = DateUtil::convertDateToFormat($qcSchedule["latestshipdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["screadydate"] = DateUtil::convertDateToFormat($qcSchedule["screadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["scfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scproductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["scproductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["scgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["scgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acreadydate"] = DateUtil::convertDateToFormat($qcSchedule["acreadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["acfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acproductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["acproductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["acgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["acgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apreadydate"] = DateUtil::convertDateToFormat($qcSchedule["apreadydate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apfinalinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apfinalinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apmiddleinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apmiddleinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apfirstinspectiondate"] = DateUtil::convertDateToFormat($qcSchedule["apfirstinspectiondate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["approductionstartdate"] = DateUtil::convertDateToFormat($qcSchedule["approductionstartdate"],"Y-m-d","Y-m-d H:i:s");
+				$qcSchedule["apgraphicsreceivedate"] = DateUtil::convertDateToFormat($qcSchedule["apgraphicsreceivedate"],"Y-m-d","Y-m-d H:i:s");
+				$lastModifiedOn = $qcSchedule["lastmodifiedon"];
+				$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($lastModifiedOn, "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+				$qcSchedule["lastmodifiedon"] = $lastModifiedOn;
+				$qcSchedule["users.qccode"] = $qcSchedule["qccode"];
+				$qcSchedule["poinchargeusers.qccode"] = $qcSchedule["poqccode"];
+				array_push($arr,$qcSchedule);
+			}
+			$mainArr["Rows"] = $arr;
+			$mainArr["TotalRows"] = count($this->getAllMissingAppoitmentForFinalInspectionDate(BeanReturnDataType::count));
+			return $mainArr;
+		}
+	}
+	public function getAllMissingAppoitmentForMiddleInspectionDate($beanReturnDataType,$QCUser = null){
+		if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where scmiddleinspectiondate >= '$currentDate' and scmiddleinspectiondate < '$currentDateWith14daysInterval' and apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL  and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scmiddleinspectiondate asc";
+			$query .= " order by qccode asc , scmiddleinspectiondate asc";
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where scmiddleinspectiondate >= '$currentDate' and scmiddleinspectiondate < '$currentDateWith14daysInterval' and apmiddleinspectiondate is NULL and acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL  and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scmiddleinspectiondate asc";
+			$query .= " group by po order by qccode asc , scmiddleinspectiondate asc";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	    
+	}
+	public function getAllMissingAppoitmentForFirstInspectionDate($beanReturnDataType,$QCUser = null){
+		if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where scfirstinspectiondate >= '$currentDate' and scfirstinspectiondate < '$currentDateWith14daysInterval' and apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL  and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scfirstinspectiondate asc";
+			$query .= " order by qccode asc , scfirstinspectiondate asc";
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where scfirstinspectiondate >= '$currentDate' and scfirstinspectiondate < '$currentDateWith14daysInterval' and apfirstinspectiondate is NULL and acfirstinspectiondate is NULL and apfirstinspectiondatenareason is NULL  and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			//$query .= " order by QC ASC, classcodes.classcode ASC,scfirstinspectiondate asc";
+			$query .= " group by po order by qccode asc , scfirstinspectiondate asc";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	    
+	}
+	public function getAllMissingActualFinalInspectionDate($beanReturnDataType,$QCUser = null){
+	    if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where scfinalinspectiondate <= '$currentDate' and (apfinalinspectiondate <= '$currentDate' or apfinalinspectiondate is NULL) and acfinalinspectiondate is NULL and iscompleted = 0 ";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " order by qccode ASC, apfinalinspectiondate ASC,scfinalinspectiondate asc";
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where scfinalinspectiondate <= '$currentDate' and (apfinalinspectiondate <= '$currentDate' or apfinalinspectiondate is NULL) and acfinalinspectiondate is NULL and iscompleted = 0 ";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " group by po order by qccode ASC, apfinalinspectiondate ASC,scfinalinspectiondate asc";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	}
+	public function getAllMissingActualMiddleInspectionDate($beanReturnDataType,$QCUser = null){
+	    if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scmiddleinspectiondate <= '$currentDate' and (apmiddleinspectiondate <= '$currentDate' or apmiddleinspectiondate is NULL) and  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " order by qccode ASC, apmiddleinspectiondate ASC,scmiddleinspectiondate asc";
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where acfinalinspectiondate is NULL and scmiddleinspectiondate <= '$currentDate' and (apmiddleinspectiondate <= '$currentDate' or apmiddleinspectiondate is NULL) and  acmiddleinspectiondate is NULL and apmiddleinspectiondatenareason is NULL and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " group by po order by qccode ASC, apmiddleinspectiondate ASC,scmiddleinspectiondate asc";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	}
+	public function getAllMissingActualFirstInspectionDate($beanReturnDataType,$QCUser = null){
+	    if($beanReturnDataType == BeanReturnDataType::count){
+			$currentDate = self::$currentDate;
+			$query = $this->find_qc_sql . "where acfinalinspectiondate is NULL and scfirstinspectiondate  <= '$currentDate' and (apfirstinspectiondatenareason  <= '$currentDate' or apfirstinspectiondatenareason is NULL) and acfirstinspectiondate is NULL and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " order by qccode ASC, apfirstinspectiondatenareason ASC,scfirstinspectiondate asc"; 
+			$qcschedules = self::$dataStore->executeObjectQuery($query);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$currentDate = self::$currentDate;
+			$query = self::$filterExportSelectSql . "where acfinalinspectiondate is NULL and scfirstinspectiondate  <= '$currentDate' and (apfirstinspectiondatenareason  <= '$currentDate' or apfirstinspectiondatenareason is NULL) and acfirstinspectiondate is NULL and iscompleted = 0";
+			if(!empty($QCUser)){
+				$query .= " and qcuser = $QCUser";
+			}
+			$query .= " group by po order by qccode ASC, apfirstinspectiondatenareason ASC,scfirstinspectiondate asc"; 
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	}
+	public function getAllPendingQcForApprovals($beanReturnDataType){
+		if($beanReturnDataType == BeanReturnDataType::count){
+			$query = "select  qccode,classcodes.classcode, qcschedulesapproval.responsetype,qcschedulesapproval.appliedon,qcschedules.* from qcschedules 
+			left join users on qcschedules.qcuser = users.seq
+			left join classcodes on qcschedules.classcodeseq = classcodes.seq
+			left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval  GROUP by qcschedulesapproval.qcscheduleseq) where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
+			$qcschedules = self::$dataStore->executeObjectQuery($query,false,true);
+			$qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$filterExportSelectSql . "where qcschedulesapproval.responsetype = 'Pending' group by po order by appliedon";
+			$qcschedules = self::$dataStore->executeQuery($query,false,true);
+			// $qcschedules = $this->groupByPO($qcschedules);
+			return $qcschedules;
+		}
+	}
+	public function exportFilterData($filterId){
+		$qcSchedules = null;
+		$QCExportSchedulesAndFileName = array();
+		$fileName = "QCSchedules";
+		if($filterId == "qc_schedules_all_count_export_date"){
+			$qcSchedules = $this->getAllQcSchedules(BeanReturnDataType::export);
+		}elseif($filterId == "qc_schedules_final_missing_appointments_export_date"){
+			$qcSchedules = $this->getAllMissingAppoitmentForFinalInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllMissingAppointmentForFinalInspectionDate";
+		}elseif($filterId == "qc_schedules_middle_missing_appointments_export_date"){
+			$qcSchedules = $this->getAllMissingAppoitmentForMiddleInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllMissingAppointmentForMiddleInspectionDate";
+		}elseif($filterId == "qc_schedules_first_missing_appointments_export_date"){
+			$qcSchedules = $this->getAllMissingAppoitmentForFirstInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllMissingAppointmentForFirstInspectionDate";
+		}elseif($filterId == "qc_schedules_final_incompleted_schedules_export_date"){
+			$qcSchedules = $this->getAllMissingActualFinalInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllFinalIncomplete";
+		}elseif($filterId == "qc_schedules_middle_incompleted_schedules_export_date"){
+			$qcSchedules = $this->getAllMissingActualMiddleInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllMiddleIncomplete";
+		}elseif($filterId == "qc_schedules_first_incompleted_schedules_export_date"){
+			$qcSchedules = $this->getAllMissingActualFirstInspectionDate(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllFirstIncomplete";
+		}elseif($filterId == "qc_schedules_pending_qc_approvals_export_date"){
+			$qcSchedules = $this->getAllPendingQcForApprovals(BeanReturnDataType::export);
+			$fileName = "QCScheduleAllPendingApprovals";
+		}
+		$QCExportSchedulesAndFileName['qcSchedules'] = $qcSchedules;
+		$QCExportSchedulesAndFileName['fileName'] = $fileName;
+		return $QCExportSchedulesAndFileName;
+	}
 }

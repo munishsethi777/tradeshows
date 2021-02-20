@@ -6,6 +6,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QcscheduleApprovalMgr.php
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/ReportingDataMgr.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -20,6 +22,7 @@ if(isset($_GET["call"])){
  */
 $qcScheduleMgr = QCScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
+$reportingDataMgr = ReportingDataMgr::getInstance();
 if($call == "saveQCSchedule"){
 	try{
 	    $seq = $_REQUEST["seq"];
@@ -225,7 +228,7 @@ if($call == "bulkDelete"){
 }
 
 if($call == "getAllQCSchedules"){
-	$qcSchedulesJson = $qcScheduleMgr->getQCScheudlesForGrid();
+	$qcSchedulesJson = $qcScheduleMgr->getAllQcSchedules(BeanReturnDataType::grid);
 	echo json_encode(utf8ize($qcSchedulesJson));
 	return;
 }
@@ -356,6 +359,41 @@ if($call == "correctQCOrPoIncharge"){
 	$changedQCSchedules =$qcScheduleMgr->correctQCOrPoIncharge($classcodes, $seq, $type);
 	$message = "The Number of QCSchedules Updated are $changedQCSchedules";
 	
+}
+if($call == "exportFilterData"){
+	try{
+		$filterId = $_POST['filterId'];
+		$QCExportSchedulesAndFileName = $qcScheduleMgr->exportFilterData($filterId);
+		if($QCExportSchedulesAndFileName['qcSchedules']){
+			PHPExcelUtil::exportQCSchedules($QCExportSchedulesAndFileName['qcSchedules'],false,$QCExportSchedulesAndFileName['fileName']);
+		}
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = "0";
+	}
+}
+if($call == "getAllMissingAppoitmentForFinalInspectionDate"){
+	try{
+		$allMissingAppointmentForFinalInspectionDate = $qcScheduleMgr->getAllMissingAppoitmentForFinalInspectionDate(BeanReturnDataType::grid);
+        echo json_encode($allMissingAppointmentForFinalInspectionDate);
+        return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = "0";
+	}
+}
+if($call == "showFilterGraph"){
+	try{
+		$graphIconId = $_GET['graphIconId'];
+		$reportingParameter = str_replace("_show_graph","",$graphIconId);
+		$filterGraphData = $reportingDataMgr->getReportingDataForJsCharts($reportingParameter);
+		$graphTitle = ReportingDataParameterType::getValue($reportingParameter);
+		$response['data'] = $filterGraphData;
+		$response['data']['graphTitle'] = $graphTitle;
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
 }
 function utf8ize($d) {
     if (is_array($d)) {

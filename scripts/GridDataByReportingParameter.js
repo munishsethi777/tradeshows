@@ -16,9 +16,14 @@ function clearFilters(gridId){
 
     }
 }
-function changeSourceUrl() {
-    source.url = "Actions/InstructionManualLogsAction.php?call=getAllInstructionManualLogs";
-    isSourceChange = 0;
+function changeSourceUrl(gridId) {
+    if(gridId == "instructionManualLogGrid"){
+        source.url = "Actions/InstructionManualLogsAction.php?call=getAllInstructionManualLogs";
+        isSourceChange = 0; 
+    }else if(gridId == "qcscheduleGrid"){
+        source.url = "Actions/QCScheduleAction.php?call=getAllQCSchedules";
+        isSourceChange = 0;
+    }
 }
 function applyReportingFilter(reportingDataParameter, gridId, currentFiterAppliedName = "", defaultFilterSelectionUserConfigKey) {
     var filtergroup = new $.jqx.filter();
@@ -29,15 +34,18 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
     var filterValue = "";
 
     $("#currentFiterAppliedNameDiv #currentFiterAppliedName").html(currentFiterAppliedName);
-    clearFilters(gridId);
+    if(gridId == "instructionManualLogGrid"){
+        clearFilters(gridId);
+    }
+    // ********************************* instruction manual filters starts here *********************************************************
     if (reportingDataParameter == "instruction_manual_all_count") {
-        if (isSourceChange) {
-            changeSourceUrl();
-        }
+        // if (isSourceChange) {
+            changeSourceUrl(gridId);
+        // }
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_open") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "0";
         filterType = "numericfilter";
@@ -50,7 +58,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
     }
     else if (reportingDataParameter == "instruction_manual_total_projects_completed") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "1";
         filterType = "numericfilter";
@@ -67,7 +75,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
     }
     else if (reportingDataParameter == "instruction_manual_total_projects_in_supervisor_review") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "In Review - Supervisor";
         filterType = "stringfilter";
@@ -78,7 +86,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_in_manager_review") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "In Review - Manager";
         filterType = "stringfilter";
@@ -89,7 +97,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_in_buyer_review") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "In Review - Buyer";
         filterType = "stringfilter";
@@ -100,7 +108,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_due_today") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterFieldNameArr.push("approvedmanualdueprintdate");
         filterFieldNameArr.push("iscompleted");
@@ -118,7 +126,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "instruction_manual_total_projects_due_in_next_14_days") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterCondition1 = "GREATER_THAN_OR_EQUAL";
         filterCondition2 = "LESS_THAN_OR_EQUAL";
@@ -140,7 +148,7 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         isSourceChange = 1;
     } else if (reportingDataParameter == "instruction_manual_total_projects_not_started") {
         if (isSourceChange) {
-            changeSourceUrl();
+            changeSourceUrl(gridId);
         }
         filterValue = "Not Started";
         filterType = "stringfilter";
@@ -150,12 +158,15 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         $("#" + gridId).jqxGrid('addfilter', "instructionmanuallogstatus", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     }
+    // ************************************** IM filters ends here ***************************************************************
+
+    // ************************************** QC filters starts here **************************************************************
+    else if(reportingDataParameter == "qc_schedules_final_missing_appointments"){
+        // alert();
+        // source.url = "Actions/QCScheduleAction.php?call=getAllMissingAppoitmentForFinalInspectionDate";
+        // $("#" + gridId).jqxGrid('applyfilters');
+        // isSourceChange = 1;
+    }
+    // ************************************** QC filters ends here ***************************************************************
     setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey, reportingDataParameter);
-}
-function getProjectsDueLessThan14DaysFromEntry() {
-    $.getJSON("Actions/InstructionManualLogsAction.php?call=getProjectsDueLessThan14DaysFromEntry",
-        function (response) {
-            console.log(response);
-        }
-    );
 }

@@ -4,6 +4,7 @@ class UserConfigurationType extends BasicEnum{
     const AnalyticsIMDivExpanded = "AnalyticsIMDivExpanded";
     const IMDefaultFilterSelection = "IMDefaultFilterSelection";
     const AnalyticsQCDivExpanded = "AnalyticsQCDivExpanded";
+    const QCDefaultFilterSelection = "QCDefaultFilterSelection";
     const AnalyticsGraphicsDivExpanded = "AnalyticsGraphicsDivExpanded";
     const AnalyticsContainersDivExpanded = "AnalyticsContainersDivExpanded";
 }
