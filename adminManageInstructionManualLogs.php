@@ -90,14 +90,16 @@ $exportLimit =5000;
                                                 foreach($allReportingDataParameters as $key => $value){
                                                     if(strpos($key,'instruction_manual_') !== false){
                                                         ?>
+                                                        
                                                         <div class="col-lg-2 reportBlock" >
                                                             <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
-                                                                	<div class='reportFilterBlockTools Tools floatRightTools'>
+                                                                	<div class='reportFilterBlockTools floatRightTools'>
                                                                     	<i title="Apply Filter" alt="Apply Filter" style="font-size:14px" class="fa fa-filter" id="<?php echo $key;?>" ></i>
                                                                     	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
                                                                     	<i title="Export Data" alt="Export Data" style="font-size:14px" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
                                                                 	</div>
+                                                                	
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
                                                                         <i class="fa" id='<?php echo $key ?>_change_arrow'></i>
@@ -153,7 +155,19 @@ $exportLimit =5000;
 
 </body>
 <script type="text/javascript">
-    var source;
+var coll = document.getElementsByClassName("collapsible");
+        var i;
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.maxHeight){
+        content.style.maxHeight = null;
+        } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        } 
+    });
+    var source ;
     var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
     var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
     var selectedRows = [];
@@ -161,7 +175,7 @@ $exportLimit =5000;
     var filterGraphColor = style.getPropertyValue("--filterGraphColor");
     $(document).ready(function() {
         loadGrid();
-        loadReportingData("instruction_manual_");
+        loadReportingData();
         var gridId = $("#gridId").val();
         $(".fa-filter").click(function (){
             var reportingParameter = $(this).attr("id");
@@ -494,4 +508,43 @@ $exportLimit =5000;
 			}
 		})
     }
+    function loadReportingData() {
+		$.getJSON("Actions/ReportingDataAction.php?call=getReportingData&for=instruction_manual_",
+			function(response) {
+				$.each(response.data, function(key, value) {
+					if (key.includes("change_arrow")) {
+						$("#" + key).addClass(value);
+					} else if (key.includes("change_color")) {
+						$("#" + key).css("color", value);
+					} else if (key.includes("thirty_days")) {//graph case
+						if(value != ""){
+    						var graph = new Rickshaw.Graph( {
+    					        element: document.querySelector("#"+key),
+    					        height:'50',
+    					        width:'180',
+    					        series: [{
+    						        color: '#1ab394',
+    					            data: value,
+    					        }]
+    					    });
+    						var barElement = document.getElementById(key); 
+    						var resize = function () {
+        						graph.configure({
+            						width: barElement.clientWidth, //html is "auto-magically" rendering size
+            						height: barElement.clientHeight //leverage this for precise re-size scalling
+        						});
+        						graph.render();
+    						}
+    						window.addEventListener('resize', resize);
+    						resize();
+						}
+					} else {
+						$("#" + key).text(value);
+					}
+				});
+			}
+		);
+        
+    }
+        
 </script>
