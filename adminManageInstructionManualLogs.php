@@ -145,7 +145,7 @@ $exportLimit =5000;
             </div>
         </div>
     </div>
-    <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/InstructionManualLogsAction.php" target='new'>
+    <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/InstructionManualLogsAction.php">
     	<input type="hidden" name="call" value="exportFilterData" />
     	<input type="hidden" name="filterId" id="filterId" />
     </form>
@@ -155,18 +155,19 @@ $exportLimit =5000;
 
 </body>
 <script type="text/javascript">
-var coll = document.getElementsByClassName("collapsible");
-        var i;
+	var coll = document.getElementsByClassName("collapsible");
+    var i;
     for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.maxHeight){
-        content.style.maxHeight = null;
-        } else {
-        content.style.maxHeight = content.scrollHeight + "px";
-        } 
-    });
+    	coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+            	content.style.maxHeight = null;
+            } else {
+            	content.style.maxHeight = content.scrollHeight + "px";
+            } 
+        });
+    }
     var source ;
     var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
     var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
@@ -542,9 +543,7 @@ var coll = document.getElementsByClassName("collapsible");
 						$("#" + key).text(value);
 					}
 				});
-			}
-		);
-        
+			});
     }
         
 </script>

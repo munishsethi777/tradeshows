@@ -88,7 +88,7 @@ if($isAnalyticsGraphicsDivExpanded){
                                                             <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
                                                                 	<div class='reportFilterBlockTools floatRightTools'>
-                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+                                                                    	<!--<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i> -->
                                                                     	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
                                                                     	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
                                                                 	</div>
@@ -165,7 +165,7 @@ if($isAnalyticsGraphicsDivExpanded){
 			</div>
 	     </div>
    </div>
-   <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/GraphicLogAction.php" target='new'>
+   <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/GraphicLogAction.php">
     	<input type="hidden" name="call" value="exportFilterData" />
     	<input type="hidden" name="filterId" id="filterId" />
     </form>

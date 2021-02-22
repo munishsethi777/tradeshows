@@ -191,7 +191,7 @@ if($isAnalyticsContainersDivExpanded){
                                     </div>
                                 </div>
                             </div>
-							<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/ContainerScheduleAction.php" target='new'>
+							<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/ContainerScheduleAction.php">
 								<input type="hidden" name="call" value="exportFilterData" />
 								<input type="hidden" name="filterId" id="filterId" />
 							</form>
