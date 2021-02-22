@@ -68,7 +68,7 @@ if(!empty($seq) && !$isadded){
             		<div class="row">
             			<div class="col-lg-10">
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
             						<div class="col-lg-4">
             							<div>
@@ -95,7 +95,7 @@ if(!empty($seq) && !$isadded){
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel">Data Saving
             							for Year</label>
             						<div class="col-lg-4">
@@ -107,14 +107,14 @@ if(!empty($seq) && !$isadded){
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Date you sent them Spring catalog link?
             						</label>
             						<div class="col-lg-4">
             							
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("issentcataloglink", null, $customerSpringQuestion->getIsSentCatalogLink(), false, false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("issentcataloglink", null, $customerSpringQuestion->getIsSentCatalogLink(), false, true,"N/A");
     			                        				echo $select;
 	                             			?>
             						</div>
@@ -131,7 +131,7 @@ if(!empty($seq) && !$isadded){
             							</div>
             						</div>
             					</div>
-<!--             					<div class="row m-b-xxs m-r-xxs"> -->
+<!--             					<div class="row  m-r-xxs"> -->
 <!--             						<div class="panel panel-mauve m-b-none"> -->
 <!--             							<div class="panel-heading">Notes</div> -->
 <!--             							<div class="panel-body"> -->
@@ -143,40 +143,41 @@ if(!empty($seq) && !$isadded){
 <!--             					</div> -->
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							What trade shows are they going to in 2021?
 									</label>
             						<div class="col-lg-4">
-            							<select id="tradeshowsaregoingto<?echo $seq?>" class="formCategories form-control"
-            								name="tradeshowsaregoingto[]" multiple>
+            							<!-- <select id="tradeshowsaregoingto<?echo $seq?>" class="formCategories form-control"
+            								name="tradeshowsaregoingto[]" multiple> -->
             							<?php
-            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
-            									$selected = "";
-            									if (in_array ( $key, $tradeshowsaregoingto )) {
-            										$selected = "selected";
-            									}
-            									echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-            								}
+            								// foreach ( $buyerCategoriesSpringQues as $key => $value ) {
+            								// 	$selected = "";
+            								// 	if (in_array ( $key, $tradeshowsaregoingto )) {
+            								// 		$selected = "selected";
+            								// 	}
+            								// 	echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
+            								// }
             							?>
-                					    </select>
+                					    <!-- </select> -->
+										<input class="form-control" id="tradeshowsaregoingto" type="text" name="tradeshowsaregoingto" value=""/>
                 					</div>
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have you made an appointment or dinner appt with them?
             						</label>
             						<div class="col-lg-4">
             							
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isdinnerappt", null, $customerSpringQuestion->getIsDinnerAppt(), false, false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isdinnerappt", null, $customerSpringQuestion->getIsDinnerAppt(), false, true,"N/A");
     			                        				echo $select;
 	                             					?>
             						</div>
             					</div>
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Place?</label>
@@ -191,18 +192,18 @@ if(!empty($seq) && !$isadded){
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have you told them that you want to be their main vendor of Holiday and Decor? And your customers are vendor consolidating?
             						</label>
             						<div class="col-lg-4">
 											<?php
-													$select = DropDownUtils::getBooleanDropDown("ispitchmainvendor", null, $customerSpringQuestion->getIsPitchMainVendor(), false, false);
+													$select = DropDownUtils::getBooleanDropDown("ispitchmainvendor", null, $customerSpringQuestion->getIsPitchMainVendor(), false, true,"N/A");
 													echo $select;
 	                             			?>
             						</div>
             					</div>
-<!--             					<div class="row m-b-xxs m-r-xxs"> -->
+<!--             					<div class="row  m-r-xxs"> -->
 <!--             						<div class="panel panel-mauve m-b-none"> -->
 <!--             							<div class="panel-heading">Notes</div> -->
 <!--             							<div class="panel-body"> -->
@@ -213,88 +214,86 @@ if(!empty($seq) && !$isadded){
 <!--             						</div> -->
 <!--             					</div> -->
             				</div>
-            				<div class="form-group">
-            					<div class="row m-b-xxs">
+            				<div class="form-group" id="isVisitCustomerDuring2ndqtr<?php echo $seq;?>">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Are there more buyers in other categories? Or does this buyer handle all of Alpine categories?  If there are more, who are they and start all questions to each buyer.
             						</label>
             						<div class="col-lg-4">
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr","notesShowHide()", $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, false);
-    			                        				echo $select;
-	                             					?>
+												$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr","springNotesShowHide(".$seq.")", $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, true,"N/A");
+												echo $select;
+											?>
             						</div>
             					</div>
             				</div>
-							<div class="form-group" id="springNotesDiv">
+							<div class="form-group" id="springNotesDiv<?php echo $seq;?>">
 	                        	<div class="panel panel-primary">
 									<div class="panel-heading">Notes</div>
 									<div class="panel-body">
-	                                   		<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="notes" ><?php echo $customerSpringQuestion->getNotes() ?></textarea>
+	                                   		<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="buyerhasmorecategorynotes" ><?php echo $customerSpringQuestion->getBuyerHasMoreCategoryNotes() ?></textarea>
 									</div>
 		                     	</div>
 	                        </div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
 										Have you sent them a Spring sample?</label>
             						<div class="col-lg-4">
-            							
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("issentsample", null, $customerSpringQuestion->getIsSentSample(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("issentsample", "showHideSpringSampleDateField(this)", $customerSpringQuestion->getIsSentSample(), "", true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
-<!--             					<div class="row m-b-xxs"> -->
-<!--             						<label -->
-<!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If -->
-<!--             							Yes, Date?</label> -->
-<!--             						<div class="col-lg-4"> -->
-<!--             							<div class="input-group date"> -->
-<!--             								<input type="text" name="strategicplanningmeetingdate" -->
-<!--             									value="<?php echo $customerSpringQuestion->getSpringSampleDate()?>" -->
-<!--             									id="strategicplanningmeetingdate" -->
-<!--             									class="form-control  dateControl"> <span -->
-<!--             									class="input-group-addon"><i class="fa fa-calendar"></i></span> -->
-<!--             							</div> -->
-<!--             						</div> -->
-<!--             					</div> -->
+            					<div class="row " id="springsampledateDiv" style="">
+            						<label
+            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
+            							Yes, Date?</label>
+            						<div class="col-lg-4" id="">
+            							<div class="input-group date">
+            								<input type="text" name="springsampledate"
+            									value="<?php echo $customerSpringQuestion->getSpringSampleDate()?>"
+            									id="springsampledate"
+            									class="form-control  dateControl"> <span
+            									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            							</div>
+            						</div>
+            					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have you made an appointment for a strategic planning meeting?
             						</label>
             						<div class="col-lg-4">
-            							
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeeting", null, $customerSpringQuestion->getIsStrategicPlanningMeeting(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("isstrategicplanningmeeting", null, $customerSpringQuestion->getIsStrategicPlanningMeeting(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
-<!--             					<div class="row m-b-xxs"> -->
-<!--             						<label -->
-<!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If -->
-<!--             							Yes, Date?</label> -->
-<!--             						<div class="col-lg-4"> -->
-<!--             							<div class="input-group date"> -->
-<!--             								<input type="text" name="strategicplanningmeetingdate" -->
-            									<!-- value="<?php echo $customerSpringQuestion->getStrategicPlanningMeetingDate()?>" -->
-<!--             									id="strategicplanningmeetingdate" -->
-<!--             									class="form-control  dateControl"> <span -->
-<!--             									class="input-group-addon"><i class="fa fa-calendar"></i></span> -->
-<!--             							</div> -->
-<!--             						</div> -->
-<!--             					</div> -->
-            				</div>
+            					<div class="row ">
+            						<label
+            							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
+            							Yes, Date?</label>
+            						<div class="col-lg-4">
+            							<div class="input-group date">
+            								<input type="text" name="strategicplanningmeetingdate"
+            									value="<?php echo $customerSpringQuestion->getStrategicPlanningMeetingDate()?>"
+            									id="strategicplanningmeetingdate"
+            									class="form-control  dateControl"> <span
+            									class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            							</div>
+            						</div>
+             					</div>
+            <!--				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
-										What categories have they not bought that We should sell them?
+										What categories have they not bought that we should sell them?
             						</label>
             						<div class="col-lg-4">
             							<select class="categoriesshouldsellthem form-control"
@@ -314,19 +313,19 @@ if(!empty($seq) && !$isadded){
             				</div>
             				
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
             							you invited them to Alpine's Spring showroom?</label>
             						<div class="col-lg-4">
             							
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isinvitedtospringshowroom", null, $customerSpringQuestion->getIsinvitedtospringshowroom(), false, false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isinvitedtospringshowroom", null, $customerSpringQuestion->getIsinvitedtospringshowroom(), false, true,"N/A");
     			                        				echo $select;
 	                             					?>
             						</div>
             					</div>
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If -->
 <!--             							Yes, Date?</label> -->
@@ -340,7 +339,7 @@ if(!empty($seq) && !$isadded){
 <!--             							</div> -->
 <!--             						</div> -->
 <!--             					</div> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If -->
 <!--             							No, Reminder Date?</label> -->
@@ -356,7 +355,7 @@ if(!empty($seq) && !$isadded){
 <!--             					</div> -->
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">When
             							are they reviewing Spring 2022?</label>
@@ -373,64 +372,70 @@ if(!empty($seq) && !$isadded){
             					
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Are we receiving sell thrus if they bought last year?
             						</label>
             						<div class="col-lg-4">
-            							
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("issellthrough", null, $customerSpringQuestion->getIsSellThrough(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("issellthrough", null, $customerSpringQuestion->getIsSellThrough(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							If they bought Spring last year, have you reviewed the sell thru?
             						</label>
             						<div class="col-lg-4">
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isreviewedsellthru", null, $customerSpringQuestion->getIsReviewedSellThru(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("isreviewedsellthru", null, $customerSpringQuestion->getIsReviewedSellThru(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Should
-            							we visit this customer during the 2ND qtr to comp shop their
+            							we visit this customer during the 2nd qtr to comp shop their
             							Spring items?</label>
             						<div class="col-lg-4">
-            							
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomer2qtr", null, $customerSpringQuestion->getIsvisitcustomer2qtr(), false, false);
-    			                        				echo $select;
-	                             					?>
+            							<?php
+											$select = DropDownUtils::getBooleanDropDown("isvisitcustomer2qtr", null, $customerSpringQuestion->getIsvisitcustomer2qtr(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
-            					<div class="row m-b-xxs">
+            				<div class="form-group" id="customerSelectingSpringItemsFromRow<?php echo $seq;?>">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Where
             							is the customer going to select the Spring items?
            							</label>
             						<div class="col-lg-4">
             							<?php 
-		                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectingspringitemsfrom", null, $customerSpringQuestion->getCustomerSelectingSpringItemsFrom(),false,true);
+		                        		    $select = DropDownUtils::getXmasItemFromDD("customerselectingspringitemsfrom", "onChangeIsCustomerGoingToSelectSpringItems(".$seq.")", $customerSpringQuestion->getCustomerSelectingSpringItemsFrom(),false,true);
          			                        echo $select;
      	                             	?>
             						</div>
             					</div>
             				</div>
+							<div class="form-group" id="customerIsGoingToSelectSpringItemsTextBoxRow<?php echo $seq;?>">
+								<div class="panel panel-primary">
+									<div class="panel-heading">Other</div>
+									<div class="panel-body">
+										<input  class="form-control h-auto" name="wherecustomerselectspringitems" value="<?php echo $customerSpringQuestion->getWhereCustomerSelectSpringItems()?>" />
+									</div>
+								</div>
+            				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Spring 2021 Comp Shop Completion Date?
@@ -448,16 +453,15 @@ if(!empty($seq) && !$isadded){
             				</div>
             				<div class="form-group">
             					
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Spring
             							2021 Comp Shop Summary Email sent to SA Team and Robby?</label>
             						<div class="col-lg-4">
-            							
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("iscompshopsummaryemailsent", null, $customerSpringQuestion->getIsCompShopSummaryEmailSent(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("iscompshopsummaryemailsent", null, $customerSpringQuestion->getIsCompShopSummaryEmailSent(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
@@ -475,56 +479,56 @@ if(!empty($seq) && !$isadded){
             				</div>
             				
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have we quoted for Spring 2022?
             						</label>
             						<div class="col-lg-4">
-											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isquotedforspring", null, $customerSpringQuestion->getIsQuotedForSpring(), false, false);
-    			                        				echo $select;
-	                             					?>
+										<?php
+											$select = DropDownUtils::getBooleanDropDown("isquotedforspring", null, $customerSpringQuestion->getIsQuotedForSpring(), false, true,"N/A");
+											echo $select;
+										?>
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
-            					<div class="row m-b-xxs">
+            				<div class="form-group" id="itemselectionfinalizedrow<?php echo $seq?>">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have they finalized their selections, if so how many items?
            							</label>
             						<div class="col-lg-4">
             							<input type="number" name="itemselectionfinalized"
             								value="<?php echo $customerSpringQuestion->getItemSelectionFinalized()?>"
-            								id="itemselectionfinalized" class="form-control">
+            								id="itemselectionfinalized<?php echo $seq?>" class="form-control" oninput="calculateTyVsLyForSpringQuestionaire(<?php echo $seq;?>)">
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
-            					<div class="row m-b-xxs">
+            				<div class="form-group" id="itemspurchasedlastyearrow<?php echo $seq;?>">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							How many items did they purchase last year?
            							</label>
             						<div class="col-lg-4">
             							<input type="number" name="itemspurchasedlastyear"
             								value="<?php echo $customerSpringQuestion->getItemsPurchasedLastYear()?>"
-            								id="itemspurchasedlastyear" class="form-control">
+            								id="itemspurchasedlastyear<?php echo $seq?>" class="form-control"  oninput="calculateTyVsLyForSpringQuestionaire(<?php echo $seq;?>)">
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
-            					<div class="row m-b-xxs">
+            				<div class="form-group" id="finalizedtyvslyrow<?php echo $seq?>">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							If they finalized, how many were TY vs LY?
            							</label>
             						<div class="col-lg-4">
             							<input type="number" name="finalizedtyvsly"
             								value="<?php echo $customerSpringQuestion->getFinalizedTyVsLy()?>"
-            								id="finalizedtyvsly" class="form-control">
+            								id="finalizedtyvsly<?php echo $seq?>" class="form-control">
             						</div>
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             						Are we expecting a PO ?
             							</label>
@@ -550,14 +554,14 @@ if(!empty($seq) && !$isadded){
             					</div>
             				</div>
             				<div class="form-group">
-            					<div class="row m-b-xxs">
+            					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have we sent them opportunities buys?
             						</label>
             						<div class="col-lg-4">
             							
 											<?php
- 	                        		    				$select = DropDownUtils::getBooleanDropDown("isopportunitiessent", null, $customerSpringQuestion->getIsOpportunitiesSent(), false, false);
+ 	                        		    				$select = DropDownUtils::getBooleanDropDown("isopportunitiessent", null, $customerSpringQuestion->getIsOpportunitiesSent(), false, true,"N/A");
     			                        				echo $select;
 	                             					?>
             						</div>
@@ -585,14 +589,14 @@ if(!empty($seq) && !$isadded){
             				
             
 <!--             				<div class="form-group"> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have -->
 <!--             							Robby Reviewed Sell through?</label> -->
 <!--             						<div class="col-lg-4"> -->
             						
 											<?php
-//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerSpringQuestion->getIsRobbyReviewedSellThrough(), false, false);
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isrobbyreviewedsellthrough", null, $customerSpringQuestion->getIsRobbyReviewedSellThrough(), false, true,"N/A");
 //     			                        				echo $select;
 // 	                             					?>
 <!--             						</div> -->
@@ -600,7 +604,7 @@ if(!empty($seq) && !$isadded){
 <!--             				</div> -->
             				
 <!--             				<div class="form-group"> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">When -->
 <!--             							do we need to quote you christmas by?</label> -->
@@ -615,7 +619,7 @@ if(!empty($seq) && !$isadded){
 <!--             					</div> -->
 <!--             				</div> -->
 <!--             				<div class="form-group"> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Should -->
 <!--             							we visit this customer during the 2ND qtr to comp shop their -->
@@ -623,14 +627,14 @@ if(!empty($seq) && !$isadded){
 <!--             						<div class="col-lg-4"> -->
             							
 											<?php
-//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr", null, $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, false);
+//  	                        		    				$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr", null, $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, true,"N/A");
 //     			                        				echo $select;
 // 	                             					?>
 <!--             						</div> -->
 <!--             					</div> -->
 <!--             				</div> -->
 <!--             				<div class="form-group"> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label -->
 <!--             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">When -->
 <!--             							do we need to qote you Spring by?</label> -->
@@ -649,7 +653,7 @@ if(!empty($seq) && !$isadded){
             				
             				
 <!--             				<div class="form-group"> -->
-<!--             					<div class="row m-b-xxs"> -->
+<!--             					<div class="row "> -->
 <!--             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve"> -->
 <!--             							Spring 2021 Comp Shop Completion Date? -->
 <!--             						</label> -->

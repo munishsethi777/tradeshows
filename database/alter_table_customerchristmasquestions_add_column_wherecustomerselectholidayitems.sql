@@ -1,0 +1,1 @@
+ALTER TABLE `customerchristmasquestions` ADD `wherecustomerselectholidayitems` VARCHAR(1000) NULL AFTER `customerselectxmasitemsfrom`; 

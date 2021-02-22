@@ -1,0 +1,1 @@
+ALTER TABLE `buyers` ADD `position` VARCHAR(200) NULL AFTER `skypeid`; 

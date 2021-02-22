@@ -9,6 +9,10 @@ require_once($ConstantsArray['dbServerUrl']. "Managers/ContainerScheduleMgr.php"
 require_once($ConstantsArray['dbServerUrl']. "DataStores/ContainerScheduleDataStore.php");
 require_once($ConstantsArray['dbServerUrl']. "Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl']. "Managers/InstructionManualLogsMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl']. "Managers/GraphicLogMgr.php");
+require_once($ConstantsArray['dbServerUrl']. "Managers/ContainerScheduleMgr.php");
+
 class ReportingDataMgr{
     private static $reportingDataMgr;
     private static $reportingDataDataStore;
@@ -34,19 +38,19 @@ class ReportingDataMgr{
                     if(strpos($key,'qc_') !== false){
                         $object = QCScheduleMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::QC_Schedules);
-                        $count = count(call_user_func(array($object,$value),""));
+                        $count = count(call_user_func(array($object,$value),BeanReturnDataType::count));
                     }elseif(strpos($key,'container_') !== false){
-                        $object = ContainerScheduleDataStore::getInstance();
+                        $object = ContainerScheduleMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::Container_Schedules);
                         $count = count(call_user_func(array($object,$value),""));
                     }elseif(strpos($key,'graphiclog_') !== false){
-                        $object = $this->getInstance();
+                        $object = GraphicLogMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::Graphics_Logs);
-                        $count = call_user_func(array($object,$value),"");
+                        $count = call_user_func(array($object,$value),BeanReturnDataType::count);
                     }elseif(strpos($key,'instruction_manual_') !== false){
                         $object = InstructionManualLogsMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::Instruction_Manual);
-                        $count = call_user_func(array($object,$value),"");
+                        $count = call_user_func(array($object,$value),BeanReturnDataType::count);
                     }
                     
                     $reportingData = new ReportingData();
@@ -61,68 +65,7 @@ class ReportingDataMgr{
             }             
         }
     }
-    // 	Methods for dashboard
-    
-    public function getProjectsCompletedCount(){
-        $query = "select COUNT(seq) from graphicslogs where graphiccompletiondate IS NOT NULL";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    
-    public function getProjectsOverDueTillNowCount(){
-        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate < '". date('Y-m-d') ."' and graphiccompletiondate is null";
-        $finalGraphicsDueDateCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return ($finalGraphicsDueDateCount);
-    }
-    
-    public function getProjectsInBuyerReviewCount(){
-        $query = "select COUNT(seq) from graphicslogs where graphicstatus like '".GraphicStatusType::getName(GraphicStatusType::buyers_reviewing)."'";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    
-    public function getProjectsInManagerReviewCount(){
-        $query = "select COUNT(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::manager_reviewing)."'";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    public function getProjectsInRobbyReviewCount(){
-        $query = "select COUNT(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::robby_reviewing)."'";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    public function getProjectMissingInfoFromChinaCount(){
-        $query = "select count(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china)."'";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    public function getProjectPassedDueWithMissingInfoFromChinaCount(){
-        $query = "select count(seq) from graphicslogs where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china) ."' and finalgraphicsduedate < '". date('Y-m-d') ."'";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    public function getProjectsDueForTodayCount(){
-        $query = "select COUNT(seq) from graphicslogs where finalgraphicsduedate = '".date("Y-m-d") ."' and graphiccompletiondate is null";
-        $graphicsLogs = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $graphicsLogs;
-    }
-    public function getProjectDueLessThan20DaysFromEntryDateCount(){
-        $query = "SELECT count(seq) from graphicslogs where DATEDIFF(finalgraphicsduedate,chinaofficeentrydate) IS NOT NULL AND DATEDIFF(finalgraphicsduedate,chinaofficeentrydate)<20 AND graphiccompletiondate IS NULL";
-        $projectDueLessThan20DaysFromEntryDateCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $projectDueLessThan20DaysFromEntryDateCount;
-    }
-    public function getProjectDueLessThan20DaysFromTodayCount(){
-        $query = "SELECT count(seq) from graphicslogs where DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."') IS NOT NULL AND DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."')<20 AND graphiccompletiondate IS NULL";
-        $projectDueLessThan20DaysFromTodayCount = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $projectDueLessThan20DaysFromTodayCount;
-    }
-    public function getGraphiclogAllCount(){
-        $query = "SELECT COUNT(seq) from graphicslogs";
-        $count = self::$reportingDataDataStore->executeCountQueryWithSql($query);
-        return $count;
-    }
-    
-    
+
     //fetch data from reportingdata table
     public function getReportingData($parameterType){
         $query = "SELECT count FROM `reportingdata` where parameter like '".$parameterType."' AND dated < '".date("Y-m-d")."' order by dated asc limit 30";
@@ -136,14 +79,18 @@ class ReportingDataMgr{
         $object = null;
         if(strpos($parameterType,"instruction_manual_") !== false){
             $object = InstructionManualLogsMgr::getInstance();
+            $todayReportData = call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),BeanReturnDataType::count);
         }elseif(strpos($parameterType,"container_") !== false){
-            $object = ContainerScheduleDataStore::getInstance();
+            $object = ContainerScheduleMgr::getInstance();
+            $todayReportData = call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),BeanReturnDataType::count);
         }elseif(strpos($parameterType,"graphiclog_") !== false){
-            $object = self::getInstance();
+            $object = GraphicLogMgr::getInstance();
+            $todayReportData = call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),BeanReturnDataType::count);
         }elseif(strpos($parameterType,"qc_") !== false){
-            $object = self::getInstance();
+            $object = QCScheduleMgr::getInstance();
+            $todayReportData = count(call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),BeanReturnDataType::count));
         }
-        $todayReportData = call_user_func(array($object,ReportingDataMethodNames::getValue($parameterType)),"");
+        
         $todayDate = date("Y-m-d");
         $labelsArr = array();
         $dataArr = array();

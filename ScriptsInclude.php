@@ -503,3 +503,4 @@ $(document).ready(function() {
         }
 </script>
 <script src="scripts/vue.js"></script>
+<script src="scripts/LoadReportingDataForFilterDivs.js"></script>

@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicStatusType.php");
 require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
 
 class GraphicLogMgr{
 	private static $graphicLogMgr;
@@ -17,6 +18,9 @@ class GraphicLogMgr{
 	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
 	private static $timeZone = "America/Los_Angeles";
+	private static $selectSql = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	private static $selectCountSql = "SELECT COUNT(seq) from graphicslogs";
+	private static $projectCompletedWhereClause = " where graphiccompletiondate IS NOT NULL";
 	public static function getInstance()
 	{
 		if (!self::$graphicLogMgr)
@@ -58,15 +62,15 @@ class GraphicLogMgr{
 		$graphicLogs = array();
 		$sessionUtil = SessionUtil::getInstance();
 		//if($_GET['exportOptionForGraphicsLogs'] != "template"){
-			$query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+			$query = self::$selectSql;
 				if(!empty($graphicLogsSeqs)){
 					$query .= " where graphicslogs.seq in ($graphicLogsSeqs)";
 				}
 			$graphicLogs = self::$dataStore->executeObjectQuery($query,true,true,true);
 		//}
 		
-		
-		ExportUtil::exportGraphicLogs($graphicLogs);
+		$fileName = "GraphicLogs";
+		ExportUtil::exportGraphicLogs($graphicLogs,$fileName);
 	}
 	
 	public function validateAndSaveFile($sheetData,$isUpdate,$updateItemNos){
@@ -415,7 +419,8 @@ class GraphicLogMgr{
 	    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 	    $loggedinUserSeq = $sessionUtil->getUserLoggedInSeq();
 	    $myTeamMembersArr  = $sessionUtil->getMyTeamMembers();
-	    $query = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+		$query = self::$selectSql;
+		
 		//We dont need teams etc for QC roles
 // 	    $isSessionQc= $sessionUtil->isSessionQC();
 // 	    if($isSessionQc){
@@ -610,9 +615,162 @@ class GraphicLogMgr{
 	    return $date;
 	}
 	
+	public function getProjectsCompleted($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . self::$projectCompletedWhereClause;
+        	$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+        	return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . self::$projectCompletedWhereClause;
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    
+    public function getProjectsOverDueTillNow($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where finalgraphicsduedate < '". date('Y-m-d') ."' and graphiccompletiondate is null";
+			$finalGraphicsDueDateCount = self::$dataStore->executeCountQueryWithSql($query);
+			return ($finalGraphicsDueDateCount);
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where finalgraphicsduedate < '". date('Y-m-d') ."' and graphiccompletiondate is null";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    
+    public function getProjectsInBuyerReview($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where graphicstatus like '".GraphicStatusType::getName(GraphicStatusType::buyers_reviewing)."'";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where graphicstatus like '".GraphicStatusType::getName(GraphicStatusType::buyers_reviewing)."'";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    
+    public function getProjectsInManagerReview($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::manager_reviewing)."'";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::manager_reviewing)."'";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getProjectsInRobbyReview($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::robby_reviewing)."'";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::robby_reviewing)."'";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getProjectMissingInfoFromChina($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china)."'";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china)."'";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getProjectPassedDueWithMissingInfoFromChina($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china) ."' and finalgraphicsduedate < '". date('Y-m-d') ."'";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where graphicstatus like '". GraphicStatusType::getName(GraphicStatusType::missing_info_from_china) ."' and finalgraphicsduedate < '". date('Y-m-d') ."'";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getProjectsDueForToday($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where finalgraphicsduedate = '".date("Y-m-d") ."' and graphiccompletiondate is null";
+			$graphicsLogs = self::$dataStore->executeCountQueryWithSql($query);
+			return $graphicsLogs;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where finalgraphicsduedate = '".date("Y-m-d") ."' and graphiccompletiondate is null";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}	
+    }
+    public function getProjectDueLessThan20DaysFromEntryDate($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where DATEDIFF(finalgraphicsduedate,chinaofficeentrydate) IS NOT NULL AND DATEDIFF(finalgraphicsduedate,chinaofficeentrydate)<20 AND graphiccompletiondate IS NULL";
+			$projectDueLessThan20DaysFromEntryDateCount = self::$dataStore->executeCountQueryWithSql($query);
+			return $projectDueLessThan20DaysFromEntryDateCount;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where DATEDIFF(finalgraphicsduedate,chinaofficeentrydate) IS NOT NULL AND DATEDIFF(finalgraphicsduedate,chinaofficeentrydate)<20 AND graphiccompletiondate IS NULL";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getProjectDueLessThan20DaysFromToday($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = self::$selectCountSql . " where DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."') IS NOT NULL AND DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."')<20 AND graphiccompletiondate IS NULL";
+        	$projectDueLessThan20DaysFromTodayCount = self::$dataStore->executeCountQueryWithSql($query);
+        	return $projectDueLessThan20DaysFromTodayCount;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql . " where DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."') IS NOT NULL AND DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."')<20 AND graphiccompletiondate IS NULL";
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
+    public function getGraphiclogAll($beanReturnDataType){
+        if($beanReturnDataType == BeanReturnDataType::count){
+			$query = "SELECT COUNT(seq) from graphicslogs";
+			$count = self::$dataStore->executeCountQueryWithSql($query);
+			return $count;
+		}elseif($beanReturnDataType == BeanReturnDataType::export){
+			$query = self::$selectSql;
+            return self::$dataStore->executeObjectQuery($query,true,true,true);
+		}
+    }
 	
-	
-	
+	// export functions calling, when user click on analytic filter export icon---------------------------------------
+        public function exportFilterData($filterId){
+            $graphicLogs = null;
+            $GraphicExportLogsAndFileName = array();
+            $fileName = "GraphicLogs";
+            if($filterId == "graphiclog_all_count_export_date"){
+                $graphicLogs = $this->getGraphiclogAll(BeanReturnDataType::getValue("export"));
+            }elseif($filterId == "graphiclog_projects_completed_count_export_date"){
+                $graphicLogs = $this->getProjectsCompleted(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsCompleted";
+            }elseif($filterId == "graphiclog_projects_over_due_till_now_count_export_date"){
+                $graphicLogs = $this->getProjectsOverDueTillNow(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsOverDueTillNow";
+            }elseif($filterId == "graphiclog_projects_in_buyer_review_count_export_date"){
+                $graphicLogs = $this->getProjectsInBuyerReview(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsInBuyerReview";
+            }elseif($filterId == "graphiclog_projects_in_manager_review_count_export_date"){
+                $graphicLogs = $this->getProjectsInManagerReview(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsInManagerReview";
+            }elseif($filterId == "graphiclog_projects_in_robby_review_count_export_date"){
+                $graphicLogs = $this->getProjectsInRobbyReview(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsInRobbyReview";
+            }elseif($filterId == "graphiclog_project_missing_info_from_china_count_export_date"){
+                $graphicLogs = $this->getProjectMissingInfoFromChina(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectMissingInfoFromChina";
+            }elseif($filterId == "graphiclog_project_passed_due_with_missing_info_from_china_count_export_date"){
+                $graphicLogs = $this->getProjectPassedDueWithMissingInfoFromChina(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsPassedDueWithMissingInfoFromChina";
+            }elseif($filterId == "graphiclog_project_due_for_today_count_export_date"){
+                $graphicLogs = $this->getProjectsDueForToday(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsDueForToday";
+            }elseif($filterId == "graphiclog_project_due_less_than_20_days_from_entry_date_count_export_date"){
+                $graphicLogs = $this->getProjectDueLessThan20DaysFromEntryDate(BeanReturnDataType::getValue("export"));
+                $fileName = "GraphicLogProjectsDueLessThan20DaysFromEntryDate";
+            }elseif($filterId == "graphiclog_project_due_less_than_20_days_from_today_count_export_date"){
+				$graphicLogs = $this->getProjectDueLessThan20DaysFromToday(BeanReturnDataType::getValue("export"));
+				$fileName = "GraphicLogProjectsDueLessThan20DaysFromToday";
+            }
+            $GraphicExportLogsAndFileName['graphicLogs'] = $graphicLogs;
+            $GraphicExportLogsAndFileName['fileName'] = $fileName;
+            return $GraphicExportLogsAndFileName;
+        }
 	
 	 
 }

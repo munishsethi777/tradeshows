@@ -18,6 +18,15 @@ class CustomerMgr{
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 17;
+	private static $selectSqlForGrid = "SELECT customers.*,salesadminlead.fullname as salesadminleadname,
+										insideaccountmanager.fullname as insideaccountmanagername FROM customers 
+										LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
+										LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
+	private static $exportQuery = "SELECT customers.*,buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes,salesadminlead.fullname as  salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername from customers 
+							LEFT JOIN buyers on customers.seq = buyers.customerseq
+							LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead
+							LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";									
+
 	public static function getInstance()
 	{
 		if (!self::$customerMgr)
@@ -177,8 +186,8 @@ class CustomerMgr{
 	    $output = array();
 	    parse_str($queryString, $output);
 	    $_GET = array_merge($_GET,$output);
-	    $query = "select customers.*,buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes from customers left join buyers on customers.seq = buyers.customerseq";
-	    $customers = self::$dataStore->executeQuery($query,true);
+	    $query = self::$exportQuery;
+	    $customers = self::$dataStore->executeQuery($query,true,true);
 	    $buyers = $this->group_by($customers);
 	    $data["customers"] = $customers;
 	    $data["buyers"] = $buyers;
@@ -312,7 +321,8 @@ class CustomerMgr{
 	}
 	
 	public function findAllArr($isApplyFilter = false){
-		$customerArr = self::$dataStore->findAllArr($isApplyFilter);
+		$query = self::$selectSqlForGrid;
+		$customerArr = self::$dataStore->executeQuery($query,$isApplyFilter,true);
 		$sessoinUtil = SessionUtil::getInstance();
 		$loggedInUserTimeZone = $sessoinUtil->getUserLoggedInTimeZone();
 		$mainArr = array();
@@ -533,6 +543,10 @@ class CustomerMgr{
 	    }
 	    return $mainArr;
 	}
-	
+	public function getCustomerArrayBySeq($seq){
+		$query = self::$selectSqlForGrid . " WHERE customers.seq=".$seq;
+		$customer = self::$dataStore->executeQuery($query,false,true);
+		return $customer[0];
+	}
 	
 }

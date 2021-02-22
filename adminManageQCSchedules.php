@@ -9,6 +9,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Managers/QcscheduleApprovalMgr.ph
 require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/User.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/UserConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/UserConfigurationType.php");
 
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
 $sessionUtil = SessionUtil::getInstance();
@@ -28,6 +29,8 @@ if($isAnalyticsQCDivExpanded){
 }
 $analyticsDivExpandedUserConfigKey = "";
 $isAnalyticsIMDivExpandedUserConfigValue = "";
+$defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("QCDefaultFilterSelection");
+$defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,$defaultFilterSelectionUserConfigKey,"qc_schedules_all_count");
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,7 +58,7 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<script src="scripts/UserConfigurations.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	
+	<script src="scripts/GridDataByReportingParameter.js"></script>
 	<script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
     <script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
 </head>
@@ -64,7 +67,9 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 	
     
 	<input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsQCDivExpanded;?>" />
-    <input id="analyticsDivExpandedUserConfigKey" class="analyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $userConfigKey; ?>" />
+	<input id="analyticsDivExpandedUserConfigKey" class="analyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $userConfigKey; ?>" />
+	<input id="defaultFilterSelectionUserConfigKey" class="defaultFilterSelectionUserConfigKey" type="hidden" value="<?php echo $defaultFilterSelectionUserConfigKey; ?>" />
+    <input id="defaultFilterSelectionReportDataType" class="defaultFilterSelectionReportDataType" type="hidden" value="<?php echo $defaultFilterSelectionReportDataType; ?>" />
 	<div id="wrapper">
 		<?php
 		include("adminmenuInclude.php"); ?>
@@ -82,7 +87,11 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 							<div class="ibox-content" style="background-color:#fafafa;padding:0px 5px 0px 13px;margin-bottom:0px">
                                 <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid;margin-bottom:0px">
                                     <div class="ibox-title">
-                                        <h5>QC Schedules Analytics</h5>
+										<h5>QC Schedules Analytics</h5>&nbsp;
+										<div id="currentFiterAppliedNameDiv" style="display:inline;">
+                                            &nbsp;Current Filter Applied : 
+                                            <span id="currentFiterAppliedName"></span>
+                                        </div>
                                         <div class="ibox-tools">
                                             <a class="collapse-link">
                                                 <i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
@@ -94,21 +103,20 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
                                     </div>
                                     <div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
                                         <div class="row reportDataCountRow">
+											<input id="gridId" type="hidden" name="gridId" value="qcscheduleGrid"/>
                                             <?php 
                                                 foreach($allReportingDataParameters as $key => $value){
                                                     if(strpos($key,'qc_') !== false){
                                                         ?>
-                                                        
                                                         <div class="col-lg-2 reportBlock" >
                                                             <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
-                                                                	<!-- <div class='reportFilterBlockTools floatRightTools'>
-                                                                    	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+                                                                	<div class='reportFilterBlockTools floatRightTools'>
+                                                                    	<!-- <i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i> -->
                                                                     	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
                                                                     	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
-                                                                	</div>-->
-                                                                	
-                                                                    <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
+                                                                	</div>
+                                                                	<h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
                                                                         <i class="fa" id='<?php echo $key ?>_change_arrow'></i>
                                                                         <span class="text-center" id='<?php echo $key ?>_diff'></span>
@@ -119,7 +127,6 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
                                                         <?php 
                                                     }
                                                 } 
@@ -186,6 +193,23 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 
 								<div id="qcscheduleGrid"></div>
 							</div>
+							<div class="modal fade" aria-hidden="true" id="qcScheduleFilterGraphModal">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" style="width:70%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 id="graphTitle"></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-12" id="graphContainer">
+                                                    <canvas id="qcScheduleFilterGraph"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -266,9 +290,19 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 				</div>
 			</div>
 		</div>
+	<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/QcScheduleAction.php" target='new'>
+    	<input type="hidden" name="call" value="exportFilterData" />
+    	<input type="hidden" name="filterId" id="filterId" />
+    </form>
 </body>
 <script type="text/javascript">
 	var analyticsDivExpandedKey = "<?php echo $userConfigKey;?>";
+	var source;
+    var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
+    var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
+    var selectedRows = [];
+    var style = getComputedStyle(document.body);
+    var filterGraphColor = style.getPropertyValue("--filterGraphColor");
 	function initDateRanges() {
 		var start = moment().subtract(29, 'days');
 		var end = moment();
@@ -297,7 +331,75 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 		cb(start, end);
 	}
 	$(document).ready(function() {
-		
+		loadGrid();
+		getDashboardCount();
+		loadReportingData("qc_");
+		var gridId = $("#gridId").val();
+        $(".fa-filter").click(function (){
+            var reportingParameter = $(this).attr("id");
+            var dataName = $(this).find("dataName").html();
+            var currentFiterAppliedName = $("#" + reportingParameter).find("#analyticName").html();
+            applyReportingFilter(reportingParameter,gridId,currentFiterAppliedName,defaultFilterSelectionUserConfigKey);
+            $(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
+            $("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
+            $("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
+            $("#exportFormForInstructionManualLog input[name=filterId").val(reportingParameter);
+		});
+		if(defaultFilterSelectionReportDataType != ''){
+            $("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("dataFilterBlockSelected");
+            $("#" + defaultFilterSelectionReportDataType +" .fa-filter").click();
+        }
+		$(".filterExportDataIcon").click(function(){
+            var filterId = $(this).attr('id');
+			$("#exportLogsForm #filterId").val(filterId);
+			$("#exportLogsForm").submit();
+		});
+		$(".fa-bar-chart").click(function(){
+            $("#graphContainer").html("");
+            $("#graphContainer").html("<canvas id='qcScheduleFilterGraph'></canvas>");
+            var graphIconId = $(this).attr("id");
+            $.getJSON("Actions/QCScheduleAction.php?call=showFilterGraph&graphIconId=" + graphIconId, (response)=>{
+                var graphTitle = response.data.graphTitle;
+                $("#qcScheduleFilterGraphModal").modal('show');
+                $("#graphTitle").text(graphTitle);
+                $("#instructionManualFilterGraph").html("");
+                var ctx = null;
+                ctx = document.getElementById("qcScheduleFilterGraph").getContext("2d");
+                var chart = null;
+                chart = new Chart(ctx,{
+                    type:"line",
+                    data: {
+                        labels: response.data.labels.split(','),
+                        datasets: [{
+                            label: graphTitle,
+                            backgroundColor: filterGraphColor,
+                            borderColor: filterGraphColor,
+                            data: response.data.data.split(',')
+                        }]
+                    },
+                    options:{
+                        scales:{
+                            xAxes:[{
+                                ticks: {
+                                    // to tilt the xaxes labels
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    // to skip axces labels 
+                                    callback: function(tick, index, array){
+                                        return (index % 3) ? "" : tick;
+                                    },
+                                } 
+                            }],
+                            yAxes:[{
+                                ticks: {
+                                    beginAtZero : true,
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+        });
 		function updateApprovalStatus() {
 			if ($("#updateQCScheduleApprovalForm")[0].checkValidity()) {
 				showHideProgress()
@@ -318,7 +420,6 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 		$("#updateApprovalStatusBtn").click(function(e) {
 			updateApprovalStatus()
 		});
-		loadGrid();
 		initDateRanges();
 		$('.i-checks').iCheck({
 			checkboxClass: 'icheckbox_square-green',
@@ -421,8 +522,6 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 		$("#exportBtn").click(function(e) {
 			exportFinal(e, this);
 		});
-		getDashboardCount();
-		loadReportingData();
 	});
 
 	function getFilterQueryData() {
@@ -867,7 +966,7 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 			}
 		]
 
-		var source = {
+		source = {
 			datatype: "json",
 			id: 'seq',
 			pagesize: 20,
@@ -1463,43 +1562,41 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 			}
 		})
 	}
-
-	function loadReportingData() {
-		$.getJSON("Actions/ReportingDataAction.php?call=getReportingData&for=qc_",
-			function(response) {
-    			$.each(response.data, function(key, value) {
-    				if (key.includes("change_arrow")) {
-    					$("#" + key).addClass(value);
-    				} else if (key.includes("change_color")) {
-    					$("#" + key).css("color", value);
-    				} else if (key.includes("thirty_days")) {//graph case
-    					if(value != ""){
-    						var graph = new Rickshaw.Graph( {
-    					        element: document.querySelector("#"+key),
-    					        height:'50',
-    					        width:'180',
-    					        series: [{
-    						        color: '#1ab394',
-    					            data: value,
-    					        }]
-    					    });
-    						var barElement = document.getElementById(key); 
-    						var resize = function () {
-        						graph.configure({
-            						width: barElement.clientWidth, //html is "auto-magically" rendering size
-            						height: barElement.clientHeight //leverage this for precise re-size scalling
-        						});
-        						graph.render();
-    						}
-    						window.addEventListener('resize', resize);
-    						resize();
-    					}
-    				} else {
-    					$("#" + key).text(value);
-    				}
-    			});
-
-			}
-		);
-	}
+	// function loadReportingData() {
+	// 	$.getJSON("Actions/ReportingDataAction.php?call=getReportingData&for=qc_",
+	// 		function(response) {
+    // 			$.each(response.data, function(key, value) {
+    // 				if (key.includes("change_arrow")) {
+    // 					$("#" + key).addClass(value);
+    // 				} else if (key.includes("change_color")) {
+    // 					$("#" + key).css("color", value);
+    // 				} else if (key.includes("thirty_days")) {//graph case
+    // 					if(value != ""){
+    // 						var graph = new Rickshaw.Graph( {
+    // 					        element: document.querySelector("#"+key),
+    // 					        height:'50',
+    // 					        width:'180',
+    // 					        series: [{
+    // 						        color: '#1ab394',
+    // 					            data: value,
+    // 					        }]
+    // 					    });
+    // 						var barElement = document.getElementById(key); 
+    // 						var resize = function () {
+    //     						graph.configure({
+    //         						width: barElement.clientWidth, //html is "auto-magically" rendering size
+    //         						height: barElement.clientHeight //leverage this for precise re-size scalling
+    //     						});
+    //     						graph.render();
+    // 						}
+    // 						window.addEventListener('resize', resize);
+    // 						resize();
+    // 					}
+    // 				} else {
+    // 					$("#" + key).text(value);
+    // 				}
+    // 			});
+	// 		}
+	// 	);
+	// }
 </script>

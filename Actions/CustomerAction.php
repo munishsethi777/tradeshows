@@ -28,6 +28,7 @@ if($call == "saveCustomer"){
                     && empty($_REQUEST["buyer_emailid"][$i]) && empty($_REQUEST["buyer_phone"][$i])
                     && empty($_REQUEST["buyer_phoneext"][$i]) && empty($_REQUEST["buyer_cellphone"][$i])
                     && empty($_REQUEST["buyer_skypePersonId"][$i]) && empty($_REQUEST["buyer_category"][$i])
+                    && empty($_REQUEST["buyer_position"][$i])
                     ){
                         // Do nothing if all fields are empty
                 }else{
@@ -38,7 +39,8 @@ if($call == "saveCustomer"){
                     $arr["phone"] = $_REQUEST["buyer_phone"][$i];
                     $arr["phoneext"] = $_REQUEST["buyer_phoneext"][$i];
                     $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
-                    $arr["skypepersonid"] = $_REQUEST["buyer_skypePersonId"][$i];
+                    // $arr["skypepersonid"] = $_REQUEST["buyer_skypePersonId"][$i];
+                    $arr["position"] = $_REQUEST["buyer_position"][$i];
                     $arr["category"] = $_REQUEST["buyer_category"][$i];
                     $arr["notes"] = $_REQUEST["buyer_notes"][$i];
                     $buyers[] = $arr;
@@ -51,6 +53,7 @@ if($call == "saveCustomer"){
                     && empty($_REQUEST["salesRep_emailid"][$i]) && empty($_REQUEST["salesRep_phone"][$i])
                     && empty($_REQUEST["salesRep_phoneext"][$i]) && empty($_REQUEST["salesRep_cellphone"][$i])
                     && empty($_REQUEST["salesRep_skypePersonId"][$i]) && empty($_REQUEST["salesRep_category"][$i])
+                    && empty($_REQUEST["salesRep_position"][$i])
                     ){ 
                         // Do nothing if all fields are empty
                 }else{
@@ -62,7 +65,8 @@ if($call == "saveCustomer"){
                     $arr["phoneext"] = $_REQUEST["salesRep_phoneext"][$i];
                     $arr["cellphone"] = $_REQUEST["salesRep_cellphone"][$i];
                     // $arr["responsiblity"] = $_REQUEST["salesRep_responsiblity"][$i];
-                    $arr["skypepersonid"] = $_REQUEST["salesRep_skypePersonId"][$i];
+                    // $arr["skypepersonid"] = $_REQUEST["salesRep_skypePersonId"][$i];
+                    $arr["position"] = $_REQUEST["salesRep_position"][$i];
                     $arr["category"] = $_REQUEST["salesRep_category"][$i];
                     $arr["notes"] = $_REQUEST["salesRep_notes"][$i];
                     $salesReps[] = $arr;
@@ -75,6 +79,7 @@ if($call == "saveCustomer"){
                     && empty($_REQUEST["internalSupport_emailid"][$i]) && empty($_REQUEST["internalSupport_phone"][$i])
                     && empty($_REQUEST["internalSupport_phoneext"][$i]) && empty($_REQUEST["internalSupport_cellphone"][$i])
                     && empty($_REQUEST["internalSupport_skypePersonId"][$i]) && empty($_REQUEST["internalSupport_category"][$i])
+                    && empty($_REQUEST["internalSupport_position"][$i])
                     ){
                         // Do nothing if all fields are empty
                 }else{
@@ -86,6 +91,7 @@ if($call == "saveCustomer"){
                     $arr["phoneext"] = $_REQUEST["internalSupport_phoneext"][$i];
                     $arr["cellphone"] = $_REQUEST["internalSupport_cellphone"][$i];
                     $arr["skypepersonid"] = $_REQUEST["internalSupport_skypePersonId"][$i];
+                    $arr["position"] = $_REQUEST["internalSupport_position"][$i];
                     $arr["category"] = $_REQUEST["internalSupport_category"][$i];
                     $arr["notes"] = $_REQUEST["internalSupport_notes"][$i];
                     $internalSupports[] = $arr;
@@ -126,7 +132,8 @@ if($call == "saveCustomer"){
             $buyerObj->setOfficePhoneExt($buyer["phoneext"]);
             $buyerObj->setCellPhone($buyer["cellphone"]);
             $buyerObj->setNotes($buyer["notes"]);
-            $buyerObj->setSkypeId($buyer["skypepersonid"]);
+            // $buyerObj->setSkypeId($buyer["skypepersonid"]);
+            $buyerObj->setPosition($buyer["position"]);
             $buyerObj->setCategory($buyer["category"]);
             $buyerObj->setCreatedon(new DateTime());
             $buyerObj->setLastmodifiedon(new DateTime());
@@ -136,7 +143,7 @@ if($call == "saveCustomer"){
             $buyerObjs[] = $buyerObj;
         }
         foreach($salesReps as $salesRep){
-            if(!($salesRep["firstname"] == "" && $salesRep["lastname"] == "" && $salesRep["emailid"] == "" && $salesRep["phone"] == "" && $salesRep["cellphone"] == "" && $salesRep["notes"] == "" && $salesRep["responsibility"] == "")){
+            if(!($salesRep["firstname"] == "" && $salesRep["lastname"] == "" && $salesRep["emailid"] == "" && $salesRep["phone"] == "" && $salesRep["cellphone"] == "" && $salesRep["notes"] == "")){
                 $buyerObj = new Buyer();
                 $buyerObj->setFirstName($salesRep["firstname"]);
                 $buyerObj->setLastName($salesRep["lastname"]);
@@ -144,7 +151,8 @@ if($call == "saveCustomer"){
                 $buyerObj->setOfficePhone($salesRep["phone"]);
                 $buyerObj->setOfficePhoneExt($salesRep["phoneext"]);
                 $buyerObj->setCellPhone($salesRep["cellphone"]);
-                $buyerObj->setSkypeId($salesRep["skypepersonid"]);
+                // $buyerObj->setSkypeId($salesRep["skypepersonid"]);
+                $buyerObj->setPosition($salesRep["position"]);
                 $buyerObj->setCategory($salesRep["category"]);
                 $buyerObj->setNotes($salesRep["notes"]);
                 // $buyerObj->setResponsibility($salesRep["responsiblity"]);
@@ -164,7 +172,8 @@ if($call == "saveCustomer"){
             $buyerObj->setOfficePhone($internalSupport["phone"]);
             $buyerObj->setOfficePhoneExt($internalSupport["phoneext"]);
             $buyerObj->setCellPhone($internalSupport["cellphone"]);
-            $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
+            // $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
+            $buyerObj->setPosition($internalSupport["position"]);
             $buyerObj->setCategory($internalSupport["category"]);
             $buyerObj->setNotes($internalSupport["notes"]);
             $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
@@ -211,7 +220,10 @@ if($call == "getAllCustomers"){
 }
 if($call == "export"){
 	try{
-	    $queryString = $_GET["queryString"];
+        $queryString = "";
+        if(isset($_GET["queryString"])){
+            $queryString = $_GET["queryString"];
+        }
 	    $response = $customerMgr->exportCustomers($queryString);
 	}catch(Exception $e){
 		$success = 0;
@@ -220,7 +232,7 @@ if($call == "export"){
 }
 if($call == "getCustomerDetails"){
 	try{
-		$customer = $customerMgr->findBySeq($_GET["seq"]);
+		$customer = $customerMgr->getCustomerArrayBySeq($_GET["seq"]);
 		$response["customer"] = $customer;
 		$buyerMgr = BuyerMgr::getInstance();
 		$buyers = $buyerMgr->findArrByCustomerSeq($_GET["seq"]);

@@ -7,6 +7,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ContainerScheduleReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/ExportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/ReportingDataMgr.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -18,6 +21,8 @@ if(isset($_GET["call"])){
 }
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
+$containerScheduleDataStore = ContainerScheduleDataStore::getInstance();
+$reportingDataMgr = ReportingDataMgr::getInstance();
 if($call == "saveContainerSchedule"){
 	try{
 	    $message = StringConstants::CONTAINER_SCHEDULE_SAVED_SUCCESSFULLY;
@@ -180,6 +185,31 @@ if($call == "getContainerScheduleActionDashboardCounts"){
 		$success = 0;
 		$message = $e->getMessage();
 		unset($response["data"]);
+	}
+}
+if($call == "exportFilterData"){
+	try{
+		$filterId = $_POST['filterId'];
+		$ContainerExportSchedulesAndFileName = $containerScheduleMgr->exportFilterData($filterId);
+		if($ContainerExportSchedulesAndFileName['containerSchedulesArr']){
+			ExportUtil::exportContainerSchedules($ContainerExportSchedulesAndFileName['containerSchedulesArr'],$ContainerExportSchedulesAndFileName['fileName']);
+		}
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
+if($call == "showFilterGraph"){
+	try{
+		$graphIconId = $_GET['graphIconId'];
+		$reportingParameter = str_replace("_show_graph","",$graphIconId);
+		$filterGraphData = $reportingDataMgr->getReportingDataForJsCharts($reportingParameter);
+		$graphTitle = ReportingDataParameterType::getValue($reportingParameter);
+		$response['data'] = $filterGraphData;
+		$response['data']['graphTitle'] = $graphTitle;
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
 	}
 }
 $response["success"] = $success;

@@ -41,6 +41,7 @@ if($isAnalyticsGraphicsDivExpanded){
 <script src="scripts/UserConfigurations.js"></script>
 	<script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
     <script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
+	<script src="scripts/GridDataByReportingParameter.js"></script>
 </head>
 <body>
 <?include "exportInclude.php"?>
@@ -86,11 +87,11 @@ if($isAnalyticsGraphicsDivExpanded){
                                                         <div class="col-lg-2 reportBlock" >
                                                             <div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
                                                                 <div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
-                                                                	<!-- <div class='reportFilterBlockTools floatRightTools'>
+                                                                	<div class='reportFilterBlockTools floatRightTools'>
                                                                     	<i title="Apply Filter" alt="Apply Filter" class="fa fa-filter" id="<?php echo $key;?>" ></i>
                                                                     	<i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></i>
                                                                     	<i title="Export Data" alt="Export Data" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
-                                                                	</div>-->
+                                                                	</div>
                                                                 	
                                                                     <h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
                                                                     <div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
@@ -141,12 +142,33 @@ if($isAnalyticsGraphicsDivExpanded){
 
 								<div id="graphiclogGrid"></div>
 							</div>
+							<div class="modal fade" aria-hidden="true" id="graphicLogFilterGraphModal">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" style="width:70%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 id="graphTitle"></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-12" id="graphContainer">
+                                                    <canvas id="graphicLogFilterGraph"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>
 			</div>
 	     </div>
    </div>
+   <form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/GraphicLogAction.php" target='new'>
+    	<input type="hidden" name="call" value="exportFilterData" />
+    	<input type="hidden" name="filterId" id="filterId" />
+    </form>
    <form id="form1" name="form1" method="GET" action="Actions/GraphicLogAction.php">
      	<input type="hidden" id="call" name="call" value="export" />
      	<input type="hidden" id="queryString" name="queryString"/>
@@ -157,6 +179,8 @@ if($isAnalyticsGraphicsDivExpanded){
 
 </body>
 <script type="text/javascript">
+var style = getComputedStyle(document.body);
+var filterGraphColor = style.getPropertyValue("--filterGraphColor");
 var analyticsDivExpandedKey = "<?php echo $userConfigKey;?>";
 var selectedRows = [];
 function showItemDetails(seq){
@@ -197,7 +221,58 @@ $(document).ready(function(){
    	loadGrid();
    	loadDashCounts();
    	loadReportingData();
-   	setInterval(function () {
+	$(".fa-bar-chart").click(function(){
+		$("#graphContainer").html("");
+		$("#graphContainer").html("<canvas id='graphicLogFilterGraph'></canvas>");
+		var graphIconId = $(this).attr("id");
+		$.getJSON("Actions/GraphicLogAction.php?call=showFilterGraph&graphIconId=" + graphIconId, (response)=>{
+			var graphTitle = response.data.graphTitle;
+			$("#graphicLogFilterGraphModal").modal('show');
+			$("#graphTitle").text(graphTitle);
+			$("#graphicLogFilterGraph").html("");
+			var ctx = null;
+			ctx = document.getElementById("graphicLogFilterGraph").getContext("2d");
+			var chart = null;
+			chart = new Chart(ctx,{
+				type:"line",
+				data: {
+					labels: response.data.labels.split(','),
+					datasets: [{
+						label: graphTitle,
+						backgroundColor: filterGraphColor,
+						borderColor: filterGraphColor,
+						data: response.data.data.split(',')
+					}]
+				},
+				options:{
+					scales:{
+						xAxes:[{
+							ticks: {
+								// to tilt the xaxes labels
+								maxRotation: 0,
+								minRotation: 0,
+								// to skip axces labels 
+								callback: function(tick, index, array){
+									return (index % 3) ? "" : tick;
+								},
+							} 
+						}],
+						yAxes:[{
+							ticks: {
+								beginAtZero : true,
+							}
+						}]
+					}
+				}
+			});
+		});
+	});
+	$(".filterExportDataIcon").click(function(){
+            var filterId = $(this).attr('id');
+			$("#exportLogsForm #filterId").val(filterId);
+			$("#exportLogsForm").submit();
+    });
+	setInterval(function () {
 		$.post('Actions/UserAction.php?call=refreshSession',function(data){
 			//alert(data);
 			if(data == 0){

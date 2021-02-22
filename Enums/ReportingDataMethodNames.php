@@ -2,27 +2,27 @@
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class ReportingDataMethodNames extends BasicEnum{
     // Graphiclog Cron Enums 
-    const graphiclog_all_count = "getGraphiclogAllCount";
-    const graphiclog_projects_completed_count = "getProjectsCompletedCount";
-    const graphiclog_projects_over_due_till_now_count = "getProjectsOverDueTillNowCount";
-    const graphiclog_projects_in_buyer_review_count = "getProjectsInBuyerReviewCount";
-    const graphiclog_projects_in_manager_review_count = "getProjectsInManagerReviewCount";
-    const graphiclog_projects_in_robby_review_count = "getProjectsInRobbyReviewCount";
-    const graphiclog_project_missing_info_from_china_count = "getProjectMissingInfoFromChinaCount";
-    const graphiclog_project_passed_due_with_missing_info_from_china_count = "getProjectPassedDueWithMissingInfoFromChinaCount";
-    const graphiclog_project_due_for_today_count = "getProjectsDueForTodayCount";
-    const graphiclog_project_due_less_than_20_days_from_entry_date_count = "getProjectDueLessThan20DaysFromEntryDateCount";
-    const graphiclog_project_due_less_than_20_days_from_today_count = "getProjectDueLessThan20DaysFromTodayCount";
+    const graphiclog_all_count = "getGraphiclogAll";
+    const graphiclog_projects_completed_count = "getProjectsCompleted";
+    const graphiclog_projects_over_due_till_now_count = "getProjectsOverDueTillNow";
+    const graphiclog_projects_in_buyer_review_count = "getProjectsInBuyerReview";
+    const graphiclog_projects_in_manager_review_count = "getProjectsInManagerReview";
+    const graphiclog_projects_in_robby_review_count = "getProjectsInRobbyReview";
+    const graphiclog_project_missing_info_from_china_count = "getProjectMissingInfoFromChina";
+    const graphiclog_project_passed_due_with_missing_info_from_china_count = "getProjectPassedDueWithMissingInfoFromChina";
+    const graphiclog_project_due_for_today_count = "getProjectsDueForToday";
+    const graphiclog_project_due_less_than_20_days_from_entry_date_count = "getProjectDueLessThan20DaysFromEntryDate";
+    const graphiclog_project_due_less_than_20_days_from_today_count = "getProjectDueLessThan20DaysFromToday";
     // Graphiclog Cron Enums Ends here---------
     // Qc Schedules Cron Enums
     const qc_schedules_all_count = "getAllQcSchedules";
-    const qc_schedules_final_missing_appointments = "getMissingAppoitmentForFinalInspectionDate";
-    const qc_schedules_middle_missing_appointments = "getMissingAppoitmentForMiddleInspectionDate";
-    const qc_schedules_first_missing_appointments = "getMissingAppoitmentForFirstInspectionDate";
-    const qc_schedules_final_incompleted_schedules = "getMissingActualFinalInspectionDate";
-    const qc_schedules_middle_incompleted_schedules = "getMissingActualMiddleInspectionDate";
-    const qc_schedules_first_incompleted_schedules = "getMissingActualFirstInspectionDate";
-    const qc_schedules_pending_qc_approvals = "getPendingQcForApprovals";
+    const qc_schedules_final_missing_appointments = "getAllMissingAppoitmentForFinalInspectionDate";
+    const qc_schedules_middle_missing_appointments = "getAllMissingAppoitmentForMiddleInspectionDate";
+    const qc_schedules_first_missing_appointments = "getAllMissingAppoitmentForFirstInspectionDate";
+    const qc_schedules_final_incompleted_schedules = "getAllMissingActualFinalInspectionDate";
+    const qc_schedules_middle_incompleted_schedules = "getAllMissingActualMiddleInspectionDate";
+    const qc_schedules_first_incompleted_schedules = "getAllMissingActualFirstInspectionDate";
+    const qc_schedules_pending_qc_approvals = "getAllPendingQcForApprovals";
     // Qc Schedules Cron Enums Ends here
     // Container Schedules Cron Methods Enum --------------
     const container_schedules_all_count = "getAllContainerSchedules";
@@ -38,17 +38,17 @@ class ReportingDataMethodNames extends BasicEnum{
     const container_schedules_missing_schedule_delivery_date_count = "getMissingScheduleDeliveryDate";
     // Container Schedules Cron Methods Enum ends here --------------
     // Instruction Manual Cron Methods Enum
-    const instruction_manual_all_count = "getInstructionManualAllCount";
-    const instruction_manual_total_projects_open = "getInstructionManualProjectsOpenCount";
-    const instruction_manual_total_projects_completed = "getInstructionManualProjectsCompletedCount";
-    const instruction_manual_total_projects_overdue = "getInstructionManualProjectsOverdueCount";
-    const instruction_manual_total_projects_in_supervisor_review = "getInstructionManualProjectsInSupervisorReviewCount";
-    const instruction_manual_total_projects_in_manager_review = "getInstructionManualProjectsInManagerReviewCount";
-    const instruction_manual_total_projects_in_buyer_review = "getInstructionManualProjectsInBuyerReviewCount";
-    const instruction_manual_total_projects_due_today = "getInstructionManualProjectsDueToday";
-    const instruction_manual_total_projects_due_in_next_14_days = "getInstructionManualProjectsDueInNext14Days";
-    const instruction_manual_total_projects_due_less_than_14_days_from_entry = "getInstructionManualProjectsDueLessThan14DaysFromEntry";
-    const instruction_manual_total_projects_not_started = "getInstructionManualProjectsNotStarted";
+    const instruction_manual_all_count = "getAllLogs";
+    const instruction_manual_total_projects_open = "getAllOpenLogs";
+    const instruction_manual_total_projects_completed = "getAllCompleteLogs";
+    const instruction_manual_total_projects_overdue = "getAllOverDueLogs";
+    const instruction_manual_total_projects_in_supervisor_review = "getAllSupervisorReviewLogs";
+    const instruction_manual_total_projects_in_manager_review = "getAllManagerReviewLogs";
+    const instruction_manual_total_projects_in_buyer_review = "getAllBuyerReviewLogs";
+    const instruction_manual_total_projects_due_today = "getAllDueTodayLogs";
+    const instruction_manual_total_projects_due_in_next_14_days = "getAllDueInNext14DaysLogs";
+    const instruction_manual_total_projects_due_less_than_14_days_from_entry = "getAllDueLessThan14DaysFromEntryLogs";
+    const instruction_manual_total_projects_not_started = "getAllNotStartedLogs";
     // Instruction Manual Cron Methods ends here--------------------
 }
 ?>
