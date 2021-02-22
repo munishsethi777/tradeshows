@@ -79,8 +79,8 @@ $isAnalyticsIMDivExpandedUserConfigValue = "";
 									<h4 class="p-h-sm font-normal">Manage QC Schedules</h4>
 								</nav>
 							</div>
-							<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
-                                <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
+							<div class="ibox-content" style="background-color:#fafafa;padding:0px 5px 0px 13px;margin-bottom:0px">
+                                <div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid;margin-bottom:0px">
                                     <div class="ibox-title">
                                         <h5>QC Schedules Analytics</h5>
                                         <div class="ibox-tools">
