@@ -41,8 +41,8 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/DepartmentType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
-require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerInsideAccountManagerNameTypes.php");
-require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesAdminNameTypes.php");
+// require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerInsideAccountManagerNameTypes.php");
+// require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesAdminNameTypes.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
