@@ -130,5 +130,8 @@ class PermissionUtil{
 			}
 		return false;
 	}
+	public function hasUserDepartment(){
+	    return in_array(DepartmentType::Users,self::$departments);
+	}
 	
 }

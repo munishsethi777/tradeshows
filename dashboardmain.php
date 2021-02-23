@@ -89,6 +89,17 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 									</div>
 								</div>
 							<?php }?>
+							<?php if($isSessionAdmin || $permissionUtil->hasUserDepartment()){?>
+								<div class="col-lg-3">
+									<div class="widget text-center p-h-xl" style="background-color: dimgray;">
+										<div class="row">
+											<a href="adminManageUsers.php">
+											<h1 class="m-t-xs font-bold"><i class="fa fa-user" aria-hidden="true"></i></h1>
+											<span>User Management</span></a>
+										</div>
+									</div>
+								</div>
+							<?php }?>
 		                    <?php if(empty( 
 		                        ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || 
 		                        ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || 
