@@ -703,7 +703,6 @@ if (in_array(11, $departmentSeqArr)) {
 															<?php  
 																$select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), false);
 																echo $select;
-																// include('timezoneselect.php');
 															?>
 														</div>
 														<label class="col-lg-2 col-form-label">Warehouse:</label>
@@ -711,7 +710,6 @@ if (in_array(11, $departmentSeqArr)) {
 															<?php  
 																$select = DropDownUtils::getWareHouseTypes("warehouse", "", $user->getWareHouse(), false);
 																echo $select;
-																// include('timezoneselect.php');
 															?>
 														</div>
                 									</div>

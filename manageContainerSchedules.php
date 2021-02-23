@@ -11,6 +11,8 @@ $userSeq = $sessionUtil->getUserLoggedInSeq();
 $userMgr = UserMgr::getInstance();
 $user = $userMgr->findBySeq($userSeq);
 $isAllFF = ($user->getFreightForwarder() == null) ? 1 : 0;
+$isAllFF = ($user->getWarehouse() == null) ? 1 : 0;
+
 $allReportingDataParameters = ReportingDataParameterType :: getAll(); 
 $sessionUtil = SessionUtil::getInstance();
 $userConfigurationMgr = UserConfigurationMgr::getInstance();

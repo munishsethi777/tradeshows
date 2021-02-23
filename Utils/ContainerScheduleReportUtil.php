@@ -507,7 +507,9 @@ class ContainerScheduleReportUtil
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_DATE_CHANGE_NOTIFICATION ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -561,7 +563,9 @@ class ContainerScheduleReportUtil
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHANGE_REQUESTED_DELIVERY_DATE ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -615,7 +619,9 @@ class ContainerScheduleReportUtil
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHANGE_TERMINAL_APPOINTMENT_DATE ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -665,7 +671,9 @@ class ContainerScheduleReportUtil
         if($bool){
             $emaillogMgr = EmailLogMgr::getInstance();
             foreach ($users as $user){
-                $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_CHARGE_BACK_ ,$user->getEmail(), null,$user->getSeq());
+                if(in_array($user->getEmail(),$toEmails)){
+                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                }
             }
         }
     }
@@ -711,7 +719,9 @@ class ContainerScheduleReportUtil
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog($emailLogType ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -739,11 +749,13 @@ class ContainerScheduleReportUtil
         $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
         if(!empty($toEmails)){
             $subject = "ALPINE BI Containers | Updated " .$noteType . " Updated";
-            $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
-            if($flag){
+            $bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
+            if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog($emailLogType ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -793,7 +805,9 @@ class ContainerScheduleReportUtil
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
                 foreach ($users as $user){
-                    $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    if(in_array($user->getEmail(),$toEmails)){
+                        $emaillogMgr->saveEmailLog(EmailLogType::CONTAINER_SCHEDULE_ETA_DATE_UPDATED ,$user->getEmail(), null,$user->getSeq());
+                    }
                 }
             }
         }
@@ -805,7 +819,7 @@ class ContainerScheduleReportUtil
             if((!empty($user->getFreightForwarder())) && ($user->getFreightForwarder() != $containerSchedule->getFreightForwarder())){
                 $bool = false;
             }
-            if((!empty($user->getFreightForwarder())) && ($user->getFreightForwarder() == $containerSchedule->getFreightForwarder()) && ($user->getWareHouse() != $containerSchedule->getWareHouse())){
+            if((!empty($user->getWareHouse())) && ($user->getWareHouse() != $containerSchedule->getWareHouse())){
                 $bool = false;
             }       
             if($bool){

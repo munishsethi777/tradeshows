@@ -182,7 +182,7 @@ class DropDownUtils {
 	        $wareHouseKey = $userWareHouse;
 	        $enums = [$wareHouseKey=>$wareHouseValue];
 	    }
-	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
 	}
 	
 	public static function getCustomExampStatusTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
