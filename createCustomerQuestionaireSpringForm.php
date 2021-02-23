@@ -226,9 +226,7 @@ if(!empty($seq) && !$isadded){
 											?>
             						</div>
             					</div>
-            				</div>
-							<div class="form-group" id="springNotesDiv<?php echo $seq;?>">
-	                        	<div class="panel panel-primary">
+	                        	<div class="panel panel-primary" id="springNotesDiv<?php echo $seq;?>">
 									<div class="panel-heading">Notes</div>
 									<div class="panel-body">
 	                                   		<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="buyerhasmorecategorynotes" ><?php echo $customerSpringQuestion->getBuyerHasMoreCategoryNotes() ?></textarea>
@@ -288,7 +286,7 @@ if(!empty($seq) && !$isadded){
             							</div>
             						</div>
              					</div>
-            <!--				</div>
+            				</div>
             				<div class="form-group">
             					<div class="row ">
             						<label
@@ -310,7 +308,7 @@ if(!empty($seq) && !$isadded){
                 					    </select>
             						</div>
             					</div>
-            				</div>
+            				<!--</div>
             				
             				<div class="form-group">
             					<div class="row ">
