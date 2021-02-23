@@ -54,6 +54,14 @@ class ContainerScheduleMgr{
 		    }
 		    $query .= " freightforwarder like '".$user->getFreightForwarder()."'";
 		}
+		if(!empty($user->getWareHouse())){
+			if(strpos($query,'where') == false){
+				$query .= " Where";
+			}else{
+				$query .= " AND";
+			}
+			$query .= " warehouse like '". $user->getWareHouse() ."'";
+		}
 		$containerSchedules = self::$dataStore->executeQuery($query,true,true);
 		$mainArr = array();
 		foreach ($containerSchedules as $containerSchedule){

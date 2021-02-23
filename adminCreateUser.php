@@ -692,15 +692,22 @@ if (in_array(11, $departmentSeqArr)) {
 													</label>
 													
 													<div class="form-group col-lg-12 row m-t-lg">
-                											<label class="col-lg-2 col-form-label">Freight Forwarder:</label>
-                                        					<div class="col-lg-4">
-                                        	                        		<?php
-                                                                
-                                                                $select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), false);
-                                                                echo $select;
-                                                                // include('timezoneselect.php');
-                                                                ?>
-                                                                </div>
+														<label class="col-lg-2 col-form-label">Freight Forwarder:</label>
+														<div class="col-lg-4">
+															<?php  
+																$select = DropDownUtils::getFreightForwarder("freightforwarder", "", $user->getFreightForwarder(), false);
+																echo $select;
+																// include('timezoneselect.php');
+															?>
+														</div>
+														<label class="col-lg-2 col-form-label">Warehouse:</label>
+														<div class="col-lg-4">
+															<?php  
+																$select = DropDownUtils::getWareHouseTypes("warehouse", "", $user->getWareHouse(), false);
+																echo $select;
+																// include('timezoneselect.php');
+															?>
+														</div>
                 									</div>
                 									<div class="col-lg-12">
 														<h4>Select Notifications</h4>

@@ -502,16 +502,7 @@ class ContainerScheduleReportUtil
             //$roleName = Permissions::getName(Permissions::container_information); //outside vendor (Black)
             
             //$users = $userMgr->getUserssByRoleAndDepartment($roleName, self::$CS_DEP_SEQ);
-            $toEmails = array();
-            foreach ($users as $user){
-                if(empty($user->getFreightForwarder())){
-                    array_push($toEmails,$user->getEmail());
-                }else{
-                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                        array_push($toEmails,$user->getEmail());
-                    }
-                }
-            }
+            $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -565,16 +556,7 @@ class ContainerScheduleReportUtil
             if(empty($users)){
                 return;
             }
-            $toEmails = array();
-            foreach ($users as $user){
-                if(empty($user->getFreightForwarder())){
-                    array_push($toEmails,$user->getEmail());
-                }else{
-                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                        array_push($toEmails,$user->getEmail());
-                    }
-                }
-            }
+            $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -628,16 +610,7 @@ class ContainerScheduleReportUtil
             if(empty($users)){
                 return;
             }
-            $toEmails = array();
-            foreach ($users as $user){
-                if(empty($user->getFreightForwarder())){
-                    array_push($toEmails,$user->getEmail());
-                }else{
-                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                        array_push($toEmails,$user->getEmail());
-                    }
-                }
-            }
+            $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -730,17 +703,8 @@ class ContainerScheduleReportUtil
         $content = file_get_contents("../ContainerScheduleNotesUpdatedTemplate.php");
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
-        $toEmails = array();
         $phAnValues = array();
-        foreach ($users as $user){
-            if(empty($user->getFreightForwarder())){
-                array_push($toEmails,$user->getEmail());
-            }else{
-                if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                    array_push($toEmails,$user->getEmail());
-                }
-            }
-        }
+        $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
         if(!empty($toEmails)){
             $subject = "ALPINE BI Containers | Updated " . $noteType . " Notes";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
@@ -771,17 +735,8 @@ class ContainerScheduleReportUtil
         $content = file_get_contents("../ContainerScheduleWarehouseUpdatedTemplate.php");
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
-        $toEmails = array();
         $phAnValues = array();
-        foreach ($users as $user){
-            if(empty($user->getFreightForwarder())){
-                    array_push($toEmails,$user->getEmail());
-            }else{
-                if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                    array_push($toEmails,$user->getEmail());
-                }
-            }
-        }
+        $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
         if(!empty($toEmails)){
             $subject = "ALPINE BI Containers | Updated " .$noteType . " Updated";
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
@@ -833,16 +788,7 @@ class ContainerScheduleReportUtil
             if(empty($users)){
                 return;
             }
-            $toEmails = array();
-            foreach ($users as $user){
-                if(empty($user->getFreightForwarder())){
-                    array_push($toEmails,$user->getEmail());
-                }else{
-                    if($containerSchedule->getFreightForwarder() == $user->getFreightForwarder()){
-                        array_push($toEmails,$user->getEmail());
-                    }
-                }
-            }
+            $toEmails = self::getEligibleUsersEmail($users,$containerSchedule);
             $bool = MailUtil::sendSmtpMail($subject, $body, $toEmails, true);
             if($bool){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -851,8 +797,21 @@ class ContainerScheduleReportUtil
                 }
             }
         }
-    
-    
-    
+    }
+    public static function getEligibleUsersEmail($users,$containerSchedule){
+        $toEmails = array();
+        foreach ($users as $user){
+            $bool = true;
+            if((!empty($user->getFreightForwarder())) && ($user->getFreightForwarder() != $containerSchedule->getFreightForwarder())){
+                $bool = false;
+            }
+            if((!empty($user->getFreightForwarder())) && ($user->getFreightForwarder() == $containerSchedule->getFreightForwarder()) && ($user->getWareHouse() != $containerSchedule->getWareHouse())){
+                $bool = false;
+            }       
+            if($bool){
+                array_push($toEmails,$user->getEmail());
+            }
+        }
+        return $toEmails;
     }
 }

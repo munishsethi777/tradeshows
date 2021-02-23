@@ -41,8 +41,6 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/DepartmentType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/DepartmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
-require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerInsideAccountManagerNameTypes.php");
-require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerSalesAdminNameTypes.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -177,10 +175,13 @@ class DropDownUtils {
 	    $enums = $userMgr->getSupervisors();
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,"Select Type");
 	}
-	
-	
-	public static function getWareHouseTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
-	    $enums = WareHouseType::getAll();
+	public static function getWareHouseTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$userWareHouse=null) {
+		$enums = WareHouseType::getAll();
+	    if($userWareHouse != null){
+	        $wareHouseValue = WareHouseType::getValue($userWareHouse);
+	        $wareHouseKey = $userWareHouse;
+	        $enums = [$wareHouseKey=>$wareHouseValue];
+	    }
 	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	

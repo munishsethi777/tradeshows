@@ -4,10 +4,14 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleMgr.php"
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/ContainerSchedule.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleDatesMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ContainerScheduleNotesMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 $containerSchedule = new ContainerSchedule();
+$userMgr = UserMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
+$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+$user = $userMgr->findBySeq($loggedInUserSeq);
 $containerScheduleMgr = ContainerScheduleMgr::getInstance();
 $idCompletedChecked = "";
 $hotnotes = "";
@@ -339,7 +343,7 @@ if(isset($_REQUEST["id"])){
 							    	<label class="col-lg-4 col-form-label bg-formLabelMauve">Warehouse:</label>
     	                        	<div class="col-lg-8">
                                     	<?php 
-                                    	    $select = DropDownUtils::getWareHouseTypes("warehouse", "", $containerSchedule->getWarehouse(),false);
+                                    	    $select = DropDownUtils::getWareHouseTypes("warehouse", "", $containerSchedule->getWarehouse(),false,false,$user->getWareHouse());
     			                            echo $select;
     	                             	?>
     	                            </div>
