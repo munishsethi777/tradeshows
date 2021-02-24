@@ -335,40 +335,4 @@ class DropDownUtils {
 		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_usa_team);
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
 	}
-	public static function getDepartmentType($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
-		$departmentMgr =  DepartmentMgr::getInstance();
-		$departments = $departmentMgr->findAllForDropDown();
-		return self::getDropDown1($departments, $selectName, $onChangeMethod, $selectedValue, $isRequired, true,"Select Any");
-	}
-	public static function getUsersForDDByPermission($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$permissionType){
-		$userMgr = UserMgr::getInstance();
-		$enums = $userMgr->getUsersForDDByPermission($permissionType);
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
-	}
-	public static function getCustomerPostions($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
-		$enums =  CustomerPositionTypes::getAll();
-		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
-	}
-	public static function getCustomerInsideAccountManagerNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
-		$userMgr = UserMgr::getInstance();
-		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("54,33,86,122,123,124");
-		$usersArray = array();
-		if(!empty($users)){
-			foreach($users as $key => $val){
-				$usersArray[$val['seq']] = $val['fullname'];
-			}
-		}
-		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod,$selectedValue,$isRequired,true);
-	}
-	public static function getCustomerSalesAdminNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
-		$userMgr = UserMgr::getInstance();
-		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("55,114,116,117,118,119,120,121,89");
-		$usersArray = array();
-		if(!empty($users)){
-			foreach($users as $key => $val){
-				$usersArray[$val['seq']] = $val['fullname'];
-			}
-		}
-		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
-	}
 }

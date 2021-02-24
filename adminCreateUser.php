@@ -59,12 +59,6 @@ $instructionManualDepartmentChecked = "";
 $instructionManualUsaTeamChecked = "";
 $instructionManualChinaTeamChecked = "";
 $instructionManualTechnicalTeamChecked = "";
-$userAsQcClassCodeSeqs="";
-$userAsPoinchargeClassCodeSeqs="";
-$requestManagementDepartmentChecked = "";
-$requestManagerPermissionChecked = "";
-$requestAssigneePermissionChecked = "";
-$requestRequesterPermissionChecked = ""; 
 
 if (isset($_POST["id"])) {
     $seq = $_POST["id"];
@@ -138,15 +132,6 @@ if (in_array(Permissions::instruction_manual_china_team, $userRoles)) {
 if (in_array(Permissions::instruction_manual_technical_team, $userRoles)) {
     $instructionManualTechnicalTeamChecked = "checked";
 }
-if (in_array(Permissions::request_management_manager, $userRoles)) {
-    $requestManagerPermissionChecked = "checked";
-}
-if (in_array(Permissions::request_management_assignee, $userRoles)) {
-    $requestAssigneePermissionChecked = "checked";
-}
-if (in_array(Permissions::request_management_requester, $userRoles)) {
-    $requestRequesterPermissionChecked = "checked";
-}
 if (in_array(1, $departmentSeqArr)) {
     $qcDepartmentChecked = "checked";
 }
@@ -173,9 +158,6 @@ if (in_array(3, $departmentSeqArr)) {
 }
 if (in_array(10, $departmentSeqArr)) {
     $instructionManualDepartmentChecked = "checked";
-}
-if (in_array(11, $departmentSeqArr)) {
-    $requestManagementDepartmentChecked = "checked";
 }
 /*
  * echo $optiondata = array('<script type="text/javascript">
@@ -967,42 +949,6 @@ if (in_array(11, $departmentSeqArr)) {
 											<div class="panel panel-primary">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
-														<input type="checkbox"  
-															<?php echo $requestManagementDepartmentChecked ?> value="11" 
-															id="requestManagementDepartment" name="departments[]" />
-													</div>
-													Request Management
-													<i class="fa fa-chevron-down pull-right" data-toggle="collapse"
-															data-target="#requestManagementPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
-												</div>
-												<div id='requestManagementPermissionsDiv'class="panel-body i-checks collapse">
-													<label 
-														class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"><input 
-														type="checkbox" <?php echo $requestManagerPermissionChecked ?>
-														value="request_management_manager" 
-														id="requestmanagerpermission" name="permissions[]"/> 
-														Manager
-													</label> <label	
-														class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input 
-														type="checkbox" <?php echo $requestAssigneePermissionChecked ?>
-														value="request_management_assignee"	
-														id="requestassigneepermission" name="permissions[]"/> 
-														Assignee
-													</label> <label	
-														class="col-lg-3 col-form-label bg-formLabelMauve"><input 
-														type="checkbox" <?php echo $requestRequesterPermissionChecked ?>
-														value="request_management_requester" 
-														id="requestrequesterpermission" name="permissions[]"/> 
-														Requester
-													</label>                									
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="panel panel-primary">
-												<div class="panel-heading">
-													<div class="pull-left m-r-sm">
 														<input type="checkbox" <?php echo $shippinglogDepartmentChecked?> value="9" id="shippinglogDepeartment" name = "departments[]">
 													</div>
 													Shipping Logs 
@@ -1170,9 +1116,6 @@ $(document).ready(function(){
 	  $('#instructionManualDepartment').on('ifChanged', function(event){
 		disabledInstructionManualLogs();
   	});
-	  $('#requestManagementDepartment').on('ifChanged', function(event){
-		disabledRequestManagementPermissions();
-  	});
 });
 function disabledGraphicPermissions(){
 	var flag  = $("#graphicDepartment").is(':checked');
@@ -1237,21 +1180,6 @@ function disabledInstructionManualLogs(){
         $("#instructionmanualusateampermission").removeAttr("disabled");
         $("#instructionmanualchinateampermission").removeAttr("disabled");
         $("#instructionmanualtechnicalteampermission").removeAttr("disabled");
-        
-    }
-}
-
-function disabledRequestManagementPermissions(){
-	var flag  = $("#requestManagementDepartment").is(':checked');
-	if(!flag){
-        $('#requestManagementPermissionsDiv').iCheck('uncheck')
-        $("#requestmanagerpermission").attr("disabled","disabled");
-        $("#requestassigneepermission").attr("disabled","disabled");
-        $("#requestrequesterpermission").attr("disabled","disabled");
- }else{
-        $("#requestmanagerpermission").removeAttr("disabled");
-        $("#requestassigneepermission").removeAttr("disabled");
-        $("#requestrequesterpermission").removeAttr("disabled");
         
     }
 }
