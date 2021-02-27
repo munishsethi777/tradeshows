@@ -1544,6 +1544,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 		// $qcSchedules = self::$dataStore->executeQuery($query);
     	// return $qcSchedules;
 	// }
+
 	// Multi purpose methods -----------------------------------------------------------------------------------------------------------------------
 	public function getAllQcSchedules($beanReturnDataType){
 		if($beanReturnDataType == BeanReturnDataType::grid){
@@ -1607,7 +1608,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			$qcSchedules = self::$dataStore->executeQuery($query);
 			return $qcSchedules;
 		}elseif($beanReturnDataType == BeanReturnDataType::export){
-			$query = self::$filterExportSelectSql . " group by po";
+			$query = self::$filterExportSelectSql;
 			$qcSchedules = self::$dataStore->executeQuery($query,true,true,true);
 			return $qcSchedules;
 		}
@@ -1617,11 +1618,9 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
 			$currentDate = self::$currentDate;
 			$query = $this->find_qc_sql . "where scfinalinspectiondate >= '$currentDate' and scfinalinspectiondate < '$currentDateWith14daysInterval' and  apfinalinspectiondate is NULL and acfinalinspectiondate is NULL and iscompleted = 0";
-			// $query = self::$countSql . self::$finalMissingAppointmentWhereClause . " group by po";
 			if(!empty($QCUser)){
 				$query .=  " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scfinalinspectiondate asc";
 			$query .= " order by qccode asc , scfinalinspectiondate asc";
 			$qcschedules = self::$dataStore->executeObjectQuery($query);
 			$qcschedules = $this->groupByPO($qcschedules);
@@ -1633,10 +1632,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .=  " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scfinalinspectiondate asc";
-			$query .= " group by po order by qccode asc , scfinalinspectiondate asc";
+			$query .= " order by qccode asc , scfinalinspectiondate asc";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}elseif($beanReturnDataType == BeanReturnDataType::grid){
 			$currentDateWith14daysInterval = self::$currentDateWith14daysInterval;
@@ -1707,7 +1704,6 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scmiddleinspectiondate asc";
 			$query .= " order by qccode asc , scmiddleinspectiondate asc";
 			$qcschedules = self::$dataStore->executeObjectQuery($query);
 			$qcschedules = $this->groupByPO($qcschedules);
@@ -1719,10 +1715,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scmiddleinspectiondate asc";
-			$query .= " group by po order by qccode asc , scmiddleinspectiondate asc";
+			$query .= " order by qccode asc , scmiddleinspectiondate asc";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	    
@@ -1735,7 +1729,6 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scfirstinspectiondate asc";
 			$query .= " order by qccode asc , scfirstinspectiondate asc";
 			$qcschedules = self::$dataStore->executeObjectQuery($query);
 			$qcschedules = $this->groupByPO($qcschedules);
@@ -1747,10 +1740,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			//$query .= " order by QC ASC, classcodes.classcode ASC,scfirstinspectiondate asc";
-			$query .= " group by po order by qccode asc , scfirstinspectiondate asc";
+			$query .= " order by qccode asc , scfirstinspectiondate asc";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	    
@@ -1772,9 +1763,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			$query .= " group by po order by qccode ASC, apfinalinspectiondate ASC,scfinalinspectiondate asc";
+			$query .= " order by qccode ASC, apfinalinspectiondate ASC,scfinalinspectiondate asc";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	}
@@ -1795,9 +1785,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			$query .= " group by po order by qccode ASC, apmiddleinspectiondate ASC,scmiddleinspectiondate asc";
+			$query .= " order by qccode ASC, apmiddleinspectiondate ASC,scmiddleinspectiondate asc";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	}
@@ -1818,9 +1807,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			if(!empty($QCUser)){
 				$query .= " and qcuser = $QCUser";
 			}
-			$query .= " group by po order by qccode ASC, apfirstinspectiondatenareason ASC,scfirstinspectiondate asc"; 
+			$query .= " order by qccode ASC, apfirstinspectiondatenareason ASC,scfirstinspectiondate asc"; 
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	}
@@ -1834,9 +1822,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 			$qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}elseif($beanReturnDataType == BeanReturnDataType::export){
-			$query = self::$filterExportSelectSql . "where qcschedulesapproval.responsetype = 'Pending' group by po order by appliedon";
+			$query = self::$filterExportSelectSql . "where qcschedulesapproval.responsetype = 'Pending' order by appliedon";
 			$qcschedules = self::$dataStore->executeQuery($query,false,true);
-			// $qcschedules = $this->groupByPO($qcschedules);
 			return $qcschedules;
 		}
 	}

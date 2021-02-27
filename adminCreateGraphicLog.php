@@ -35,6 +35,7 @@ if(!$hasGraphicDesignerPermission){
 $notesToChinaArr = array();
 $notesToGraphic = array();
 $notesToUsa = array();
+$createdBySeq = $sessionUtil->getUserLoggedInSeq();
 if(isset($_POST["id"])){
 	$seq = $_POST["id"];
  	$graphicLog = $graphicLogMgr->findBySeq($seq);
@@ -48,7 +49,6 @@ if(isset($_POST["id"])){
  	if($graphicLog->getIsPrivateLabel() == 1){
  		$hasPrivate = "checked";
  	}
- 	$enteredBySeq = $graphicLog->getUserSeq();
  	$disabled = "readonly";
  	$dateControl = "";
  	$containerScheduleNotesMgr = ContainerScheduleNotesMgr::getInstance();
@@ -62,6 +62,8 @@ if(isset($_POST["id"])){
  	if(isset($containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_usa_office])){
  	    $notesToUsa = $containerScheduleNotesArr[ContainerScheduleNoteType::notes_to_usa_office];
  	}
+	$createdBySeq = $graphicLog->getCreatedBy();
+	$enteredBySeq = $graphicLog->getUserSeq() != null ? $graphicLog->getUserSeq() : $enteredBySeq;
 }
 
 ?>
@@ -115,6 +117,8 @@ if(isset($_POST["id"])){
                  	 <form id="createGraphicLogForm" method="post" action="Actions/GraphicLogAction.php" class="m-t-lg">
                      	<input type="hidden" id ="call" name="call"  value="saveGraphicLog"/>
                         <input type="hidden" id ="seq" name="seq"  value="<?php echo $graphicLog->getSeq()?>"/>
+						<input type="hidden" id="createdby" name="createdby" value="<?echo $createdBySeq?>"/>
+						<input type="hidden" id="userseq" name="userseq" value="<?echo $enteredBySeq?>"/>
                         <div class="bg-white1 p-xs outterDiv" style="position:relative" id="usadiv">
                         	<div class="form-group row">
 	                       		<label class="col-lg-3 col-form-label bg-primary">To be Filled by USA Office</label>
@@ -127,6 +131,16 @@ if(isset($_POST["id"])){
                                 		<input tabindex="<?php echo $usaTabIndex?>" type="text" id="usaofficeentrydate" onchange="dateEnteredOnChange(this.value)" maxLength="250" value="<?php echo $graphicLog->getUSAOfficeEntryDate()?>" name="usaofficeentrydate" class="form-control dateControl" <?php echo $readOnlyPO?>>
 	                            		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 	                            	</div>
+	                            </div>
+								<label class="col-lg-2 col-form-label bg-formLabel">Created By:</label>
+	                       		<div class="col-lg-4">
+								   <div class="input-group date">
+		                        		<?php 
+				                           	$select = DropDownUtils::getUSATeamUsers("createdbyuser", "", $createdBySeq,'',true,"");
+				                            echo $select;
+	                             		?>
+	                                </div>
+	                            </div>
 	                            </div>
 	                            
 	                        </div>
@@ -300,7 +314,7 @@ if(isset($_POST["id"])){
 	                       		<div class="col-lg-4">
 		                        	<div class="input-group date">
 		                        		<?php 
-				                           	$select = DropDownUtils::getChinaTeamUsers("userseq", "", $enteredBySeq,false);
+				                           	$select = DropDownUtils::getChinaTeamUsers("enteredbyuser", "", $enteredBySeq,false);
 				                            echo $select;
 	                             		?>
 	                                </div>
@@ -543,6 +557,8 @@ $(document).ready(function(){
 		//showHideLabelType();
 	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
+	$("#createdbyuser").prop('disabled','true');
+	$("#enteredbyuser").prop('disabled','true');
 });
 
 function disabledDiv(divId){

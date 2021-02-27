@@ -18,7 +18,10 @@ class GraphicLogMgr{
 	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
 	private static $timeZone = "America/Los_Angeles";
-	private static $selectSql = "select users.fullname,classcode,graphicslogs.* from graphicslogs left join classcodes on graphicslogs.classcodeseq = classcodes.seq left join users on graphicslogs.userseq = users.seq";
+	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,graphicslogs.* from graphicslogs
+								left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
+								left join users as createdby on graphicslogs.createdby = createdby.seq
+								left join users as enteredby on graphicslogs.userseq = enteredby.seq";
 	private static $selectCountSql = "SELECT COUNT(seq) from graphicslogs";
 	private static $projectCompletedWhereClause = " where graphiccompletiondate IS NOT NULL";
 	public static function getInstance()

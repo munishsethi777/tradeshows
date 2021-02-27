@@ -182,7 +182,7 @@ class DropDownUtils {
 	        $wareHouseKey = $userWareHouse;
 	        $enums = [$wareHouseKey=>$wareHouseValue];
 	    }
-	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
+	    return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false,$isAll);
 	}
 	
 	public static function getCustomExampStatusTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false) {
@@ -334,5 +334,15 @@ class DropDownUtils {
 		$userMgr = UserMgr::getInstance();
 		$enums = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_usa_team);
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,false);
+	}
+	public static function getDepartmentType($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$departmentMgr =  DepartmentMgr::getInstance();
+		$departments = $departmentMgr->findAllForDropDown();
+		return self::getDropDown1($departments, $selectName, $onChangeMethod, $selectedValue, $isRequired, true,"Select Any");
+	}
+	public static function getUSATeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll,$firstOption) {
+		$userMgr = UserMgr::getInstance();
+		$users = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_usa_team);
+		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll,$firstOption);
 	}
 }

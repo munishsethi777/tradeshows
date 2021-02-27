@@ -555,7 +555,8 @@ function loadGrid(){
       { text: 'SKU', datafield: 'sku',width:"13%",filtercondition: 'STARTS_WITH'},
       { text: 'Customer', datafield: 'customername',width:"8%"},
       { text: 'Tag', datafield: 'tagtype',width:"8%"},
-      { text: 'Created By', datafield: 'fullname',width:"10%"},
+      { text: 'Created By', datafield: 'createdbyfullname',width:"10%"},
+	  { text: 'Entered By', datafield: 'enteredbyfullname',width:"10%"},
       { text: 'Modified On', datafield: 'lastmodifiedon',filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',width:"14%"}
 	]
    
@@ -583,7 +584,8 @@ function loadGrid(){
                     { name: 'po', type: 'string' },
                     { name: 'sku', type: 'string' } ,
                     { name: 'customername', type: 'string' },
-                    { name: 'fullname', type: 'fullname' },
+                    { name: 'createdbyfullname', type: 'fullname' },
+					{ name: 'enteredbyfullname', type: 'fullname' },
                     { name: 'graphicstatus', type: 'string' },  
                     { name: 'tagtype', type: 'string' }, 
                     { name: 'lastmodifiedon', type: 'date' } 

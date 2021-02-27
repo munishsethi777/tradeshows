@@ -168,9 +168,10 @@
         try{
             $filterId = $_POST['filterId'];
             $IMExportLogsAndFileName = $instructionManualLogMgr->exportFilterData($filterId);
-            if($IMExportLogsAndFileName['instructionManualLogs']){
-                PHPExcelUtil::exportInstructionManuals($IMExportLogsAndFileName['instructionManualLogs'],false,$IMExportLogsAndFileName['fileName']);
-            }
+            // if($IMExportLogsAndFileName['instructionManualLogs']){
+                PHPExcelUtil::exportInstructionManuals($IMExportLogsAndFileName['instructionManualLogs'],$IMExportLogsAndFileName['fileName']);
+            // }
+            return;
         }catch(Exception $e){
             $success = 0;
             $message = $e->getMessage();

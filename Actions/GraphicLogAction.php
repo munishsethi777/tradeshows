@@ -248,9 +248,7 @@ if($call == "exportFilterData"){
 	try{
 		$filterId = $_POST['filterId'];
 		$GraphicExportLogsAndFileName = $graphicLogMgr->exportFilterData($filterId);
-		if($GraphicExportLogsAndFileName['graphicLogs']){
-			ExportUtil::exportGraphicLogs($GraphicExportLogsAndFileName['graphicLogs'],$GraphicExportLogsAndFileName['fileName']);
-		}
+		ExportUtil::exportGraphicLogs($GraphicExportLogsAndFileName['graphicLogs'],$GraphicExportLogsAndFileName['fileName']);
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

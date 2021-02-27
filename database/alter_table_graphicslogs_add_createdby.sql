@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` ADD `createdby` INT NULL; 

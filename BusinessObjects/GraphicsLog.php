@@ -7,7 +7,7 @@ class GraphicsLog{
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
 	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$labeltype,$labellength,$labelwidth,$labelheight;
 	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate,$classcodeseq,$robbyreviewdate;
-	private $graphicstatuschangedate;
+	private $graphicstatuschangedate,$createdby;
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
 
@@ -292,7 +292,12 @@ class GraphicsLog{
 	public function getManagerReviewReturnDate(){
 		return $this->managerreviewreturndate;
 	}
-	
+	public function setCreatedBy($createdBySeq){
+		$this->createdby = $createdBySeq;
+	}
+	public function getCreatedBy(){
+		return $this->createdby;
+	}
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

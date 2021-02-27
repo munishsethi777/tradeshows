@@ -364,9 +364,9 @@ if($call == "exportFilterData"){
 	try{
 		$filterId = $_POST['filterId'];
 		$QCExportSchedulesAndFileName = $qcScheduleMgr->exportFilterData($filterId);
-		if($QCExportSchedulesAndFileName['qcSchedules']){
+		// if($QCExportSchedulesAndFileName['qcSchedules']){
 			PHPExcelUtil::exportQCSchedules($QCExportSchedulesAndFileName['qcSchedules'],false,$QCExportSchedulesAndFileName['fileName']);
-		}
+		// }
 	}catch(Exception $e){
 		$message = $e->getMessage();
 		$success = "0";

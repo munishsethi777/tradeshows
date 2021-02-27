@@ -108,12 +108,12 @@
             }
             $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
             if($filterId == "instruction_manual_total_projects_overdue"){
-                $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
+                $query = self::$filterExportSelectSql . self::$logsOverDueWhereClause . self::$groupByInstructionManualLogSeq;
             }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry"){
                 $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
             }
             $instructionManuals = self::$dataStore->executeQuery($query,true,true);
-            PHPExcelUtil::exportInstructionManuals($instructionManuals,false,"InstructionManuals");
+            PHPExcelUtil::exportInstructionManuals($instructionManuals,"InstructionManuals");
         }
         // ---------------------------Grid Functions Ends Here---------------------------------------------------------------->
         //-----------------------------/Cron Functions ends here-------------------------------------------------
@@ -252,44 +252,45 @@
 
         // export functions calling, when user click on analytic filter export icon---------------------------------------
         public function exportFilterData($filterId){
-            $containerSchedules = null;
-            $ContainerExportSchedulesAndFileName = array();
-            $fileName = "ContainerSchedule";
-            if($filterId == "container_schedules_all_count_export_date"){
-                $containerSchedules = $this->getAllOpenLogs(BeanReturnDataType::getValue("export"));
-            }elseif($filterId == "container_schedules_eta_report_count_export_date"){
-                $containerSchedules = $this->getAllCompleteLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "ContainerScheduleETAReports";
-            }elseif($filterId == "container_schedules_empty_return_date_past_empty_lfd_count_export_date"){
-                $containerSchedules = $this->getAllOverDueLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "ConstainerSchedule";
-            }elseif($filterId == "container_schedules_pending_schedule_delivery_date_count_export_date"){
-                $containerSchedules = $this->getAllSupervisorReviewLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsInSupervisorsReview";
-            }elseif($filterId == "container_schedules_missing_terminal_appointment_date_count_export_date"){
-                $containerSchedules = $this->getAllManagerReviewLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsInManagersReview";
-            }elseif($filterId == "container_schedules_empty_alpine_notification_pickup_date_count_export_date"){
-                $containerSchedules = $this->getAllBuyerReviewLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsInBuyersReview";
-            }elseif($filterId == "container_schedules_missing_confirmed_delivery_date_count_export_date"){
-                $containerSchedules = $this->getAllDueTodayLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsDueToday";
-            }elseif($filterId == "container_schedules_missing_id_count_export_date"){
-                $containerSchedules = $this->getAllDueInNext14DaysLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsDueInNext14Days";
-            }elseif($filterId == "container_schedules_missing_received_dates_in_oms_count_export_date"){
-                $containerSchedules = $this->getAllDueLessThan14DaysFromEntryLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectDueLessThan14DaysFromEntry";
-            }elseif($filterId == "container_schedules_missing_received_dates_in_wms_count_export_date"){
-                $containerSchedules = $this->getAllNotStartedLogs(BeanReturnDataType::getValue("export"));
-                $fileName = "InstructionManualTotalProjectsNotStarted";
-            }elseif($filterId == "container_schedules_missing_schedule_delivery_date_count_export_date"){
-                $containerSchedules = $this->getAllLogs(BeanReturnDataType::getValue("export"));
+            $instructionManuals = null;
+            $IMExportLogsAndFileName = array();
+            $fileName = "InstructionManualLogs";
+            if($filterId == "instruction_manual_total_projects_open_export_date"){
+                $instructionManuals = $this->getAllOpenLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Open_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_completed_export_date"){
+                $instructionManuals = $this->getAllCompleteLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Completed_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_overdue_export_date"){
+                $instructionManuals = $this->getAllOverDueLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Overdue_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_in_supervisor_review_export_date"){
+                $instructionManuals = $this->getAllSupervisorReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_In_Supervisor_Review_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_in_manager_review_export_date"){
+                $instructionManuals = $this->getAllManagerReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_In_Manager_Review_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_in_buyer_review_export_date"){
+                $instructionManuals = $this->getAllBuyerReviewLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Buyer_Review_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_due_today_export_date"){
+                $instructionManuals = $this->getAllDueTodayLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Due_Today_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_due_in_next_14_days_export_date"){
+                $instructionManuals = $this->getAllDueInNext14DaysLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Due_In_Next_14_Days_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_due_less_than_14_days_from_entry_export_date"){
+                $instructionManuals = $this->getAllDueLessThan14DaysFromEntryLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Due_Lessthan_14_Days_From_Entry_Logs";
+            }elseif($filterId == "instruction_manual_total_projects_not_started_export_date"){
+                $instructionManuals = $this->getAllNotStartedLogs(BeanReturnDataType::getValue("export"));
+                $fileName = "IMs_Not_Started_Logs";
+            }elseif($filterId == "instruction_manual_all_count_export_date"){
+                $instructionManuals = $this->getAllLogs(BeanReturnDataType::getValue("export"));
             }
-            $ContainerExportSchedulesAndFileName['containerSchedules'] = $containerSchedules;
-            $ContainerExportSchedulesAndFileName['fileName'] = $fileName;
-            return $ContainerExportSchedulesAndFileName;
+            $IMExportLogsAndFileName['instructionManualLogs'] = $instructionManuals;
+            $IMExportLogsAndFileName['fileName'] = $fileName;
+            return $IMExportLogsAndFileName;
         }    
     }
 ?>

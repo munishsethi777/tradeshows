@@ -42,7 +42,7 @@ class ReportingDataMgr{
                     }elseif(strpos($key,'container_') !== false){
                         $object = ContainerScheduleMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::Container_Schedules);
-                        $count = count(call_user_func(array($object,$value),""));
+                        $count = call_user_func(array($object,$value),BeanReturnDataType::count);
                     }elseif(strpos($key,'graphiclog_') !== false){
                         $object = GraphicLogMgr::getInstance();
                         $departmentType = DepartmentType::getName(DepartmentType::Graphics_Logs);

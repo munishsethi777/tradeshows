@@ -191,9 +191,9 @@ if($call == "exportFilterData"){
 	try{
 		$filterId = $_POST['filterId'];
 		$ContainerExportSchedulesAndFileName = $containerScheduleMgr->exportFilterData($filterId);
-		if($ContainerExportSchedulesAndFileName['containerSchedulesArr']){
+		// if($ContainerExportSchedulesAndFileName['containerSchedulesArr']){
 			ExportUtil::exportContainerSchedules($ContainerExportSchedulesAndFileName['containerSchedulesArr'],$ContainerExportSchedulesAndFileName['fileName']);
-		}
+		// }
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();

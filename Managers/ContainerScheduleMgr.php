@@ -498,6 +498,8 @@ class ContainerScheduleMgr{
 			"missing_received_dates_in_oms" => $missing_received_dates_in_oms
 		];
 	}
+
+	// Multi purpose functions -------------------------------------------------------------------------------------------------
 	public function getAllContainerSchedules($beanReturnDataType){
         if($beanReturnDataType == BeanReturnDataType::count){
             $query = self::$selectCountSql;
@@ -632,6 +634,9 @@ class ContainerScheduleMgr{
             return $containerSchedules;
         }
     }
+	// Multi purpose functions ends here ---------------------------------------------------------------------------------------------
+	
+	// Filter Export function
     public function exportFilterData($filterId){
         $containerSchedules = null;
         $ContainerExportSchedulesAndFileName = array();
