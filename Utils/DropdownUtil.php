@@ -39,8 +39,13 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleUpdateOptions.php
 require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/DepartmentType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestsSpecsFieldTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/DepartmentMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestPriorityTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestTypeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/WareHouseType.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -339,6 +344,37 @@ class DropDownUtils {
 		$departmentMgr =  DepartmentMgr::getInstance();
 		$departments = $departmentMgr->findAllForDropDown();
 		return self::getDropDown1($departments, $selectName, $onChangeMethod, $selectedValue, $isRequired, true,"Select Any");
+	}
+	public static function getUsersForDDByPermission($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$permissionType){
+		$userMgr = UserMgr::getInstance();
+		$enums = $userMgr->getUsersForDDByPermission($permissionType);
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
+	}
+	public static function getCustomerPostions($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$enums =  CustomerPositionTypes::getAll();
+		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
+	}
+	public static function getCustomerInsideAccountManagerNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$userMgr = UserMgr::getInstance();
+		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("54,33,86,122,123,124");
+		$usersArray = array();
+		if(!empty($users)){
+			foreach($users as $key => $val){
+				$usersArray[$val['seq']] = $val['fullname'];
+			}
+		}
+		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod,$selectedValue,$isRequired,true);
+	}
+	public static function getCustomerSalesAdminNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+		$userMgr = UserMgr::getInstance();
+		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("55,114,116,117,118,119,120,121,89");
+		$usersArray = array();
+		if(!empty($users)){
+			foreach($users as $key => $val){
+				$usersArray[$val['seq']] = $val['fullname'];
+			}
+		}
+		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
 	}
 	public static function getUSATeamUsers($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll,$firstOption) {
 		$userMgr = UserMgr::getInstance();
