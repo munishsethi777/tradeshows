@@ -1,10 +1,10 @@
 <?php
-class Requests{
+class Request{
     private $seq, $code, $priority, $title, $descriptiontext, $departmentseq, $requesttypeseq, $requestspecifications, $createdby, $assignedby, $assignedto, $duedate,
-        $startdate, $estimatedhours, $requeststatusseq, $isrequiredapprovalfrommanager, $isrequiredapprovalfromrequester, $isrequiredapprovalfromrobby, $approvedbymanagerdate,
+        $assigneeduedate,$startdate, $estimatedhours, $requeststatusseq, $isrequiredapprovalfrommanager, $isrequiredapprovalfromrequester, $isrequiredapprovalfromrobby, $approvedbymanagerdate,
         $approvedbyrequesterdate, $approvedbyrobbydate, $completeddate, $actualhours, $iscompleted, $createdon, $lastmodifiedon;
 
-        public static $className = "Requests";
+        public static $className = "Request";
         public static $tableName = "requests";
     
     public function setSeq($seq){
@@ -79,6 +79,12 @@ class Requests{
     public function getDueDate(){
         return $this->duedate;
     }
+    public function setAssigneeDueDate($assigneeDueDate){
+        $this->assigneeduedate = $assigneeDueDate;
+    }
+    public function getAssigneeDueDate(){
+        return $this->assigneeduedate;
+    }
     public function setStartDate($startdate){
         $this->startdate = $startdate;
     }
@@ -97,40 +103,40 @@ class Requests{
     public function getRequestStatusSeq(){
         return $this->requeststatusseq;
     }
-    public function setisRequiredApprovalFromManager($isrequiredapprovalfrommanager){
+    public function setIsRequiredApprovalFromManager($isrequiredapprovalfrommanager){
         $this->isrequiredapprovalfrommanager = $isrequiredapprovalfrommanager;
     }
-    public function getisRequiredApprovalFromManager(){
+    public function getIsRequiredApprovalFromManager(){
         return $this->isrequiredapprovalfrommanager;
     }
-    public function setisRequiredApprovalFromRequester($isrequiredapprovalfromrequester){
+    public function setIsRequiredApprovalFromRequester($isrequiredapprovalfromrequester){
         $this->isrequiredapprovalfromrequester = $isrequiredapprovalfromrequester;
     }
-    public function getisRequiredApprovalFromRequester(){
+    public function getIsRequiredApprovalFromRequester(){
         return $this->isrequiredapprovalfromrequester;
     }    
-    public function setisRequireAapprovalFromRobby($isrequiredapprovalfromrobby){
+    public function setIsRequireAapprovalFromRobby($isrequiredapprovalfromrobby){
         $this->isrequiredapprovalfromrobby = $isrequiredapprovalfromrobby;
     }
-    public function getisRequiredApprovalFromRobby(){
+    public function getIsRequiredApprovalFromRobby(){
         return $this->isrequiredapprovalfromrobby;
     }
-    public function setApprovedbyManagerDate($approvedbymanagerdate){
+    public function setApprovedByManagerDate($approvedbymanagerdate){
         $this->approvedbymanagerdate = $approvedbymanagerdate;
     }
-    public function getApprovedbyManagerDate(){
+    public function getApprovedByManagerDate(){
         return $this->approvedbymanagerdate;
     }
-    public function setApprovedbyRequesterDate($approvedbyrequesterdate){
+    public function setApprovedByRequesterDate($approvedbyrequesterdate){
         $this->approvedbyrequesterdate = $approvedbyrequesterdate;
     }
-    public function getApprovedbyRequesterDate(){
+    public function getApprovedByRequesterDate(){
         return $this->approvedbyrequesterdate;
     }
-    public function setApprovedbyRobbyDate($approvedbyrobbydate){
+    public function setApprovedByRobbyDate($approvedbyrobbydate){
         $this->approvedbyrobbydate = $approvedbyrobbydate;
     }
-    public function getApprovedbyRobbyDate(){
+    public function getApprovedByRobbyDate(){
         return $this->approvedbyrobbydate;
     }
     public function setCompletedDate($completeddate){

@@ -960,11 +960,8 @@ textarea .form-control{
                                 <div id="springQuesPanel"></div>
                                 <a onclick="javascript:addSpringQuestionForm(0,true,true)" class="pull-right">Add More</a>
                             </div>
-	                   		
 						</div>
-	                 </div> 
-	                   
-	                         
+	                </div>         
 	         	</div>
 	    	</div>
        	
@@ -1007,9 +1004,15 @@ $(document).ready(function(){
 	handleChristmasCategorySelect(customerSeq);
 	notesShowHide();
 	onChangeIsCustomerGoingToSelectHolidayItems("<?php echo $customerChristmasQuestion->getCustomerSelectXmasItemsFrom()?>");
+	loadChristmasQuesForm();
 });
+function loadChristmasQuesForm(){
+	$.getJson("Actions/CustomerChristmasQuestionAction.php?call=getByCustomerSeq&customerseq=" + customerseq, (data)=>{
+		
+	});
+}
 function loadSpringQuesForms(){
-	$.get("Actions/CustomerSpringQuestionAction.php?call=getByCustoimerSeq&customerseq="+customerSeq, function(data){
+	$.get("Actions/CustomerSpringQuestionAction.php?call=getByCustomerSeq&customerseq="+customerSeq, function(data){
    		var jsonData = $.parseJSON(data);
    		var springQuesArr = $.parseJSON(jsonData.data);
    		var length = springQuesArr.length;	

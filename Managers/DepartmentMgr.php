@@ -61,5 +61,15 @@ class DepartmentMgr{
 		self::$userDeptDataStore->deleteByAttribute($colValPair);
 		
 	}
-	
+	public function findAllForDropDown(){
+		$sql = "SELECT * FROM departments";
+		$departments = self::$dataStore->executeObjectQuery($sql);
+		$arr = array();
+		foreach ($departments as $department){
+			$title = $department->getTitle();
+			$seq = $department->getSeq();
+			$arr[$seq] = $title;
+		}
+		return $arr;
+	}
 }

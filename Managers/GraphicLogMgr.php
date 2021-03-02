@@ -22,7 +22,10 @@ class GraphicLogMgr{
 								left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 								left join users as createdby on graphicslogs.createdby = createdby.seq
 								left join users as enteredby on graphicslogs.userseq = enteredby.seq";
-	private static $selectCountSql = "SELECT COUNT(seq) from graphicslogs";
+	private static $selectCountSql = "SELECT COUNT(graphicslogs.seq) from graphicslogs
+									left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
+									left join users as createdby on graphicslogs.createdby = createdby.seq
+									left join users as enteredby on graphicslogs.userseq = enteredby.seq";
 	private static $projectCompletedWhereClause = " where graphiccompletiondate IS NOT NULL";
 	public static function getInstance()
 	{
