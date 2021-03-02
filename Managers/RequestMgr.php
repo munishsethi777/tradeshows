@@ -165,7 +165,7 @@ class RequestMgr{
 		$request->setApprovedByRobbyDate($approvedByRobbyDate);
 		$request->setCompletedDate(null);
 		$request->setActualHours(null);
-		$request->setIsCompleted(false);
+		$request->setIsCompleted(null);
         $request->setLastModifiedOn($currentDate);
 		
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
