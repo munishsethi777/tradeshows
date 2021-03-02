@@ -300,32 +300,7 @@ if($file == "dashboardmain.php"){
 						</a>
 					</li>
 					<?php }?>
-					<?php if( true || in_array(DepartmentType::Instruction_Manual,$departments)){?>
-					<!-- <li class="<?php ?>">
-						<a href="adminCreateRequestTypes.php">
-							<i class="fa fa-wrench"></i>
-							<span class="nav-label">Request Type</span>
-						</a>
-					</li> -->
-					<li class=''>
-						<a href='#'>
-							<i class='fa fa-bar-chart-o'></i> 
-							<span class='nav-label'>Requests</span>
-							<span class='fa arrow'></span>
-						</a>
-						<ul class='nav nav-second-level'>
-							<li class=''>
-								<a href='adminManageRequests.php'>Request</a>
-							</li>
-							<li class=''>
-								<a href='adminManageRequestTypes.php'>Request Type</a>
-							</li>
-							<li class=''>
-								<a href='adminCreateRequestType.php'>Add Request Type</a>
-							</li>
-						</ul>
-					</li>
-					<?php }?>
+					
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
 	                    	<span class="nav-label">Change Password</span>  
