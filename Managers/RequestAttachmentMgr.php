@@ -57,18 +57,17 @@ class RequestAttachmentMgr{
                     $thumbnailType = "fa fa-file-excel-o";
                 }elseif($requestAttachment['attachmenttype'] == 'application/pdf'){
                     $thumbnailType = "fa fa-file-pdf-o";
-                }
-                elseif($requestAttachment['attachmenttype'] == 'application/pdf'){
+                }elseif($requestAttachment['attachmenttype'] == 'application/pdf'){
                     $thumbnailType = "fa fa-file-pdf-o";
                 }elseif($requestAttachment['attachmenttype'] == 'text/plain'){
                     $thumbnailType = "fa fa-file-text";
                 }
-                $attachmentHtml .= "<div class='col-lg-2 p-3'>";
-                $attachmentHtml .= "<div class='row'>";
-                // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
-                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:100px'></i></a></div>";
-                $attachmentHtml .= "<div class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
-                $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
+                $attachmentHtml .= "<div class='col-lg-2 p-sm m-sm text-center bg-muted border'>";
+                    $attachmentHtml .= "<div class='row'>";
+                    // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
+                    $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
+                    $attachmentHtml .= "<div class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
+                    $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
                 $attachmentHtml .= "</div></div>";
                 $i++;
             }

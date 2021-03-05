@@ -133,5 +133,8 @@ class PermissionUtil{
 	public function hasUserDepartment(){
 	    return in_array(DepartmentType::Users,self::$departments);
 	}
+	public function hasRequestsDepartment(){
+	    return in_array(DepartmentType::Requests_Module,self::$departments);
+	}
 	
 }

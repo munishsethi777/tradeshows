@@ -32,7 +32,6 @@ $(document).ready(()=>{
         $("#commentBox").val("");
     });
     
-    
 });
 
 function populateRequestTypes(data){
@@ -108,22 +107,64 @@ const saveRequest = () => {
         // jsonObj.push(item);
     })
     var requestSpecsFieldsFormJson = JSON.stringify(item);
-    var departmentSeq = $("#departmentseq").val();
-    var requestTypeSeq = $("#requesttypeseq").val();
-    var priority = $("#priority").val();
-    var requestStatusSeq = $("#requeststatusseq").val();
-    var seq = $("#seq").val();
-    var assignedBySeq = $("#assignedbyseq").val();
-    var assignedToSeq = $("#assignedtoseq").val();
-    var dueDate = $("#duedate").val();
-    var assigneeDueDate = $("#assigneeduedate").val();
-    var estimatedHours = $("#estimatedhours").val();
-    var isRequiredApprovalFromManager = $("#isrequiredapprovalfrommanager").val();
-    var isRequiredApprovalFromRequester = $("#isrequiredapprovalfromrequester").val();
-    var isRequiredApprovalFromRobby = $("#isrequiredapprovalfromrobby").val();
-    var approvedByManagerDate = $("#approvedbymanagerdate").val();
-    var approvedByRequesterDate = $("#approvedbyrequesterdate").val();
-    var approvedByRobbyDate = $("#approvedbyrobbydate").val();
+    var departmentSeq="";
+    var requestTypeSeq="";
+    var priority="";
+    var requestStatusSeq="";
+    var seq="";
+    var assignedBySeq="";
+    var assignedToSeq="";
+    var dueDate="";
+    var assigneeDueDate="";
+    var estimatedHours="";
+    var isRequiredApprovalFromManager="";
+    var isRequiredApprovalFromRequester="";
+    var isRequiredApprovalFromRobby="";
+    
+    if($("#departmentseq").val()){
+    	departmentSeq = $("#departmentseq").val();
+    }
+    if($("#requesttypeseq").val()){
+    	requestTypeSeq = $("#requesttypeseq").val();
+    }
+    if($("#priority").val()){
+    	priority = $("#priority").val();
+    }
+    if($("#requeststatusseq").val()){
+    	requestStatusSeq = $("#requeststatusseq").val();
+    }
+    if($("#seq").val()){
+    	seq = $("#seq").val();
+    }
+    if($("#assignedbyseq").val()){
+    	assignedBySeq = $("#assignedbyseq").val();
+    }
+    if($("#assignedtoseq").val()){
+    	assignedToSeq = $("#assignedtoseq").val();
+    }
+    if($("#duedate").val()){
+    	dueDate = $("#duedate").val();
+    }
+    if($("#assigneeduedate").val()){
+    	assigneeDueDate = $("#assigneeduedate").val();
+	}
+    if($("#estimatedhours").val()){
+    	estimatedHours = $("#estimatedhours").val();
+    }
+    if($("#isrequiredapprovalfrommanager").val()){
+    	isRequiredApprovalFromManager = $("#isrequiredapprovalfrommanager").val();
+    }
+    if($("#isrequiredapprovalfromrequester").val()){
+    	isRequiredApprovalFromRequester = $("#isrequiredapprovalfromrequester").val();
+    }
+    if($("#isrequiredapprovalfromrobby").val()){
+    	isRequiredApprovalFromRobby = $("#isrequiredapprovalfromrobby").val();
+    }
+    
+    var approvedByManagerDate = "";
+    var approvedByRequesterDate = "";
+    var approvedByRobbyDate = "";
+    
     var attachmentfilename = $("input[name='attachmentfilename']").val();
     $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + requestSpecsFieldsFormJson + "&departmentSeq=" + departmentSeq 
             + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
@@ -136,13 +177,21 @@ const saveRequest = () => {
                 var responseObj = JSON.parse(response);
                 $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
                 Dropzone.autoDiscover = true;
-                requestAttachmentDropzone.processQueue();        
+                requestAttachmentDropzone.processQueue();
+                var flag = showResponseToastr(response,null,null,"ibox");
+                if(flag){
+                	$(".commentsAndHistoryDiv").show();
+                }else{
+                	toastr.error(responseObj.message,'Failed');
+                }
+                
                 // closeRequestForm();
                 // $("#requestGrid").jqxGrid('updatebounddata', 'cells');
         
     });
 }
 function editButtonClick(seq) {
+	$(".commentsAndHistoryDiv").show();
     requestAttachmentDropzone.options.autoProcessQueue = true;
     requestAttachmentDropzone.removeAllFiles(true);
     $("#requestFormDiv #requestSpecsFields").html("");

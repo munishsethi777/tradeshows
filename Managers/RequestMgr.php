@@ -12,7 +12,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
 class RequestMgr{
 	private static $requestMgr;
 	private static $dataStore;
-	private static $selectSqlForGrid = "SELECT requests.*,departments.title departmenttitle,requesttypes.title requesttypetitle,requeststatuses.title requeststatustitle,createdby.fullname as createdbyfullname,assignedby.fullname as assignedbyfullname, assignedto.fullname as assignedtofullname FROM `requests` 
+	private static $selectSqlForGrid = "SELECT requests.*,departments.title departmenttitle,requesttypes.title requesttypetitle,requesttypes.requesttypecode,requeststatuses.title requeststatustitle,createdby.fullname as createdbyfullname,assignedby.fullname as assignedbyfullname, assignedto.fullname as assignedtofullname FROM `requests` 
 										LEFT JOIN departments on departments.seq = requests.departmentseq
 										LEFT JOIN requesttypes on requesttypes.seq = requests.requesttypeseq
 										LEFT JOIN requeststatuses on requeststatuses.seq = requests.requeststatusseq
@@ -117,12 +117,12 @@ class RequestMgr{
 	public function save($globalRequestVariable,$loggedInUserSeq){
 		$currentDate = date("Y-m-d h:i:s");
 		$requestSpecsFieldsFormJson = $globalRequestVariable['requestSpecsFieldsFormJson'];
-		$departmentSeq = $globalRequestVariable['departmentSeq'];
-		$requestTypeSeq = $globalRequestVariable['requestTypeSeq'];
-		$priority = $globalRequestVariable['priority'];
-		$requestStatusSeq = $globalRequestVariable['requestStatusSeq'];
-		$assignedBy = $globalRequestVariable['assignedBySeq'] != '' ? $globalRequestVariable['assignedBySeq'] : null;
-		$assignedTo = $globalRequestVariable['assignedToSeq'] != '' ? $globalRequestVariable['assignedToSeq'] : null;
+		$departmentSeq = $globalRequestVariable['departmentSeq'] == '' ? null : $globalRequestVariable['departmentSeq'];;
+		$requestTypeSeq = $globalRequestVariable['requestTypeSeq'] == '' ? null : $globalRequestVariable['requestTypeSeq'];;
+		$priority = $globalRequestVariable['priority'] == '' ? null : $globalRequestVariable['priority'];;
+		$requestStatusSeq = $globalRequestVariable['requestStatusSeq'] == '' ? null : $globalRequestVariable['requestStatusSeq'];
+		$assignedBy = $globalRequestVariable['assignedBySeq'] == '' ?  null : $globalRequestVariable['assignedBySeq'];
+		$assignedTo = $globalRequestVariable['assignedToSeq'] == '' ?  null : $globalRequestVariable['assignedToSeq'];
 		$dueDate = null;
 		if($globalRequestVariable['dueDate'] != ''){
 			$dueDate = DateUtil::convertDateToFormat($globalRequestVariable['dueDate'],"m-d-Y","Y-m-d");
@@ -131,25 +131,23 @@ class RequestMgr{
 		if($globalRequestVariable['assigneeDueDate'] != '' ){
 			$assigneeDueDate = DateUtil::convertDateToFormat($globalRequestVariable['assigneeDueDate'],"m-d-Y","Y-m-d");
 		}
-		$estimatedHours = $globalRequestVariable['estimatedHours'];
+		$estimatedHours = $globalRequestVariable['estimatedHours'] == '' ? null : $globalRequestVariable['estimatedHours'];
 		$isrequiredapprovalfrommanager = $globalRequestVariable['isRequiredApprovalFromManager'] == 'yes' ? '1' : '0';
 		$isrequiredapprovalfromrequester = $globalRequestVariable['isRequiredApprovalFromRequester'] == 'yes' ? '1' : '0';
 		$isrequiredapprovalfromrobby = $globalRequestVariable['isRequiredApprovalFromRobby'] == 'yes' ? '1' : '0';
 		$approvedByManagerDate = null;
 		$approvedByRequesterDate = null;
 		$approvedByRobbyDate = null;
-		// $approvedByManagerDate = $globalRequestVariable['approvedByManagerDate'] == 'yes' ? $currentDate : '0';
-		// $approvedByRequesterDate = $globalRequestVariable['approvedByRequesterDate'] == 'yes' ? $currentDate : '0';
-		// $approvedByRobbyDate = $globalRequestVariable['approvedByRobbyDate'] == 'yes' ? $currentDate : '0';
+		
 		$request = new Request();
 		$request->setDepartmentSeq($departmentSeq);
 		$request->setRequestTypeSeq($requestTypeSeq);
 		$request->setPriority($priority);
 		$request->setRequestStatusSeq($requestStatusSeq);
 		$request->setRequestSpecifications($requestSpecsFieldsFormJson);
-		$request->setCode("na");
-		$request->setTitle("na");
-		$request->setDescriptionText("na");
+		$request->setCode(null);
+		$request->setTitle(null);
+		$request->setDescriptionText(null);
 		$request->setCreatedBy($loggedInUserSeq);
 		$request->setAssignedBy($assignedBy);
 		$request->setAssignedTo($assignedTo);
@@ -207,6 +205,7 @@ class RequestMgr{
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$arr = array();
 		foreach($rows as $row){
+		    $row["code"] = $row['requesttypecode'] . "-" . $row["seq"];
 			$row["createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","m-d-Y");
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y",$loggedInUserTimeZone);
 			$row["lastmodifiedon"] = $lastModifiedOn;

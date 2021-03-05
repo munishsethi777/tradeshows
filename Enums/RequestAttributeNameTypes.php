@@ -12,7 +12,7 @@
         const duedate = "Due Date";
         const assigneeduedate = "Assigned Due Date";
         const startdate = "Start Date";
-        const estimatedhours = "Estimated Hourse";
+        const estimatedhours = "Estimated Hours";
         const requeststatusseq = "Request Status Seq";
         const isrequiredapprovalfrommanager = "Is Required Approvel From Manager";
         const isrequiredapprovalfromrequester = "Is required Approvel From Requester";

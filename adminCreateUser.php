@@ -1244,10 +1244,10 @@ function disabledInstructionManualLogs(){
 function disabledRequestManagementPermissions(){
 	var flag  = $("#requestManagementDepartment").is(':checked');
 	if(!flag){
-        $('#requestManagementPermissionsDiv').iCheck('uncheck')
-        $("#requestmanagerpermission").attr("disabled","disabled");
-        $("#requestassigneepermission").attr("disabled","disabled");
-        $("#requestrequesterpermission").attr("disabled","disabled");
+        //$('#requestManagementPermissionsDiv').iCheck('uncheck')
+        //$("#requestmanagerpermission").attr("disabled","disabled");
+        //$("#requestassigneepermission").attr("disabled","disabled");
+        //$("#requestrequesterpermission").attr("disabled","disabled");
  }else{
         $("#requestmanagerpermission").removeAttr("disabled");
         $("#requestassigneepermission").removeAttr("disabled");

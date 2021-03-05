@@ -62,7 +62,7 @@
                         $requestLog->setOldValue($existingSavedRequestValue);
                         $requestLog->setNewValue($newSavingRequestValue);
                         $requestLog->setCreatedOn($currentDate);
-                        $requestLog->setIsSpecFieldChange(false);
+                        $requestLog->setIsSpecFieldChange(0);
                         self::$dataStore->save($requestLog);
                     }
                 }
@@ -188,12 +188,16 @@
                     if($requestLogHistoryRow['isspecfieldchange'] == true){// when specs fields are changed
                         $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> changed the <b>" . $specsFieldTypeArr[$requestLogHistoryRow['attributename']]['title'] . "</b> <br>";
                         $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
+                        
+                        $oldValue = $requestLogHistoryRow['oldvalue'] != null && $requestLogHistoryRow['oldvalue'] != '' ? $requestLogHistoryRow['oldvalue'] : "NA";
+                        $newValue = $requestLogHistoryRow['newvalue'] != null && $requestLogHistoryRow['newvalue'] != '' ? $requestLogHistoryRow['newvalue'] : "NA";
+                        
                         if($specsFieldTypeArr[$requestLogHistoryRow['attributename']]['fieldtype'] == 'textarea' ){
                             $historyLogHtml .= "<div class='row'>";
                             $historyLogHtml .= "<p class='m-t-sm col-lg-11'>";
-                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell' >" . $requestLogHistoryRow['oldvalue'] . "</span>";
+                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell' >" . $oldValue . "</span>";
                             $historyLogHtml .= "<i class='fa fa-arrow-right text-default' style='width:5%;display:table-cell;text-align:center;vertical-align:middle'></i>";
-                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell'>" . $requestLogHistoryRow['newvalue'] . "</span>";
+                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell'>" . $newValue . "</span>";
                             $historyLogHtml .= "</p>";
                             $historyLogHtml .= "</div>";
                         }elseif($specsFieldTypeArr[$requestLogHistoryRow['attributename']]['fieldtype'] == 'yes_no' ){
@@ -205,9 +209,9 @@
                             $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
                         }else{
                             $historyLogHtml .= "<p class='m-t-sm'>";
-                            $historyLogHtml .= "<span class='label label-default'>" . $requestLogHistoryRow['oldvalue'] . "</span>";
+                            $historyLogHtml .= "<span class='label label-default'>" . $oldValue . "</span>";
                             $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
-                            $historyLogHtml .= "<span class='label label-primary'>" . $requestLogHistoryRow['newvalue'] . "</span>";
+                            $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
                         }
                     }else{
                         $action = " changed";

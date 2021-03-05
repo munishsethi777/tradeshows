@@ -23,7 +23,7 @@ $isRequester = 0;
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | QC Schedule</title>
+<title>Requests Module</title>
 <?include "ScriptsInclude.php"?>
 <style type="text/css">
 .col-form-label{
@@ -67,10 +67,11 @@ div#myDropZone {
 }
 #attachmentsRow{
 	overflow-x: auto;
-	background:#eceef0;
+}
+.dropzone{
+    min-height:200px !important;
 }
 </style>
-<script src="scripts\plugins\dropzone\dropzone.js"></script>
 <script src="scripts/createRequest.js"></script>
 </head>
 <body>
@@ -98,22 +99,24 @@ div#myDropZone {
 						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;">
 							<input id="seq" type="hidden" name="seq" value=""/>
 							<div class="bg-white p-xs outterDiv">
-								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Assigned By</label>
-									<div class="col-lg-4">
-										<?php
-											$select = DropDownUtils::getUsersForDDByPermission("assignedbyseq", '', '', true, true, "Manager");
-											echo $select;
-										?>
-									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Assigned To</label>
-									<div class="col-lg-4">
-										<?php
-											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Assignee");
-											echo $select;
-										?>
-									</div>
-								</div>
+								<?php if (in_array(Permissions::request_management_assignee, $userRoles) || in_array(Permissions::request_management_manager, $userRoles)){?>
+    								<div class="form-group row">
+    									<label class="col-lg-2 col-form-label bg-formLabel">Assigned By</label>
+    									<div class="col-lg-4">
+    										<?php
+    											$select = DropDownUtils::getUsersForDDByPermission("assignedbyseq", '', '', true, true, "Manager");
+    											echo $select;
+    										?>
+    									</div>
+    									<label class="col-lg-2 col-form-label bg-formLabel">Assigned To</label>
+    									<div class="col-lg-4">
+    										<?php
+    											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Assignee");
+    											echo $select;
+    										?>
+    									</div>
+    								</div>
+    							<?php }?>
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label bg-formLabel">Department</label>
 									<div class="col-lg-4">
@@ -124,9 +127,10 @@ div#myDropZone {
 									</div>
 									<label class="col-lg-2 col-form-label bg-formLabel">Request Type</label>
 									<div class="col-lg-4">
-										<select id="requesttypeseq" class='form-control m-b' onchange="onRequestTypeChange(this)"></select>
+										<select id="requesttypeseq" class='form-control' onchange="onRequestTypeChange(this)"></select>
 									</div>
 								</div>
+
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label bg-formLabel">Priority</label>
 									<div class="col-lg-4">
@@ -135,13 +139,10 @@ div#myDropZone {
 											echo $select;
 										?>
 									</div>
-									<!-- <div id="requestStatuses" class="form-group row"> -->
-										<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
-										<div class="col-lg-4">
-											<select id="requeststatusseq" class="col-lg-4 form-control" name="requeststatusseq">
-											</select>
-										</div>
-									<!-- </div> -->
+									<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
+									<div class="col-lg-4">
+										<select id="requeststatusseq" class="col-lg-4 form-control" name="requeststatusseq"></select>
+									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-2 col-form-label bg-formLabel">Project Due Date</label>
@@ -156,78 +157,51 @@ div#myDropZone {
 							</div> 
 							<form id="requestSpecsFieldsForm" method="post">
 								<div class="bg-white p-xs outterDiv" style="background-color:rgb(236, 255, 237)">
-									<div id="requestSpecsFields">
-									</div>
-								</div>
-								<div class="bg-white p-xs outterDiv">
-									<div class="form-group row">
-									</div>
+									<div id="requestSpecsFields"></div>
 								</div>
 							</form>
+							
 							<div class="bg-white p-xs outterDiv">
-								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Assignee Due Date</label>
-									<div class="col-lg-4">
-										<div class='input-group date' >
-											<input type='text' id='assigneeduedate' name='assigneeduedate' class='form-control dateControl datepicker' readonly>
-											<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
-										</div>
-									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Estimated Hours</label>
-									<div class="col-lg-4">
-										<input id="estimatedhours" class="form-control" type="number" name="estimatedhours"/>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Requires Manager Approvel</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfrommanager", 'null','1',false,true);
-											echo $select;
-										?>
-									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Requires Requester's Approvel</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrequester", null,'0',false,true);
-											echo $select;
-										?>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Requires Robby's Approvel</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrobby", null,'0',false,true);
-											echo $select;
-										?>
-									</div>
-								</div>
-								<!-- <div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Approved By Manager</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("approvedbymanagerdate", 'null','0',false,true);
-											echo $select;
-										?>
-									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Approved By Requester</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("approvedbyrequesterdate", null,'0',false,true);
-											echo $select;
-										?>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Approved By Robby</label>
-									<div class="col-lg-4">
-										<?php 
-											$select = DropDownUtils::getBooleanDropDown("approvedbyrobbydate", 'null','0',false,true);
-											echo $select;
-										?>
-									</div>
-								</div> -->
+								<?php if (in_array(Permissions::request_management_assignee, $userRoles) || in_array(Permissions::request_management_manager, $userRoles)){?>
+    								<div class="form-group row">
+    									<label class="col-lg-2 col-form-label bg-formLabel">Assignee Due Date</label>
+    									<div class="col-lg-4">
+    										<div class='input-group date' >
+    											<input type='text' id='assigneeduedate' name='assigneeduedate' class='form-control dateControl datepicker' readonly>
+    											<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
+    										</div>
+    									</div>
+    									<label class="col-lg-2 col-form-label bg-formLabel">Estimated Hours</label>
+    									<div class="col-lg-4">
+    										<input id="estimatedhours" class="form-control" type="number" name="estimatedhours"/>
+    									</div>
+    								</div>
+    								<div class="form-group row">
+    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Manager Approvel</label>
+    									<div class="col-lg-4">
+    										<?php 
+    											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfrommanager", 'null','1',false,true);
+    											echo $select;
+    										?>
+    									</div>
+    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Requester's Approvel</label>
+    									<div class="col-lg-4">
+    										<?php 
+    											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrequester", null,'0',false,true);
+    											echo $select;
+    										?>
+    									</div>
+    								</div>
+    								<div class="form-group row">
+    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Robby's Approvel</label>
+    									<div class="col-lg-4">
+    										<?php 
+    											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrobby", null,'0',false,true);
+    											echo $select;
+    										?>
+    									</div>
+    								</div>
+    							<?php }?>
 								<div class="bg-white p-xs">
 									<div class="form-group row ">
 										<div class="col-lg-2 pull-right">
@@ -249,12 +223,11 @@ div#myDropZone {
 										<input id="requestattachmentfilename" name="requestattachmentfilename[]" type="file" multiple />
 									</div>
 								</form>
-								<div class='row' id='attachmentsRow' style="background:#eceef0;"></div>
-								<div class="form-group row">
+								
+								<div class='row p-sm m-xs' id='attachmentsRow'></div>
+								
+								<div class="form-group row m-t-sm commentsAndHistoryDiv">
 									<div class="col-lg-12">
-										<div class="form-group row">	
-											<label class="col-lg-2 col-form-label">Activity</label>
-										</div>
 										<div class="row">
 											<ul class="nav nav-tabs" role="tablist">
 												<li class="primaryLI active"><a class="nav-link" data-toggle="tab"  href="#tab-1"> Comments</a></li>
@@ -264,30 +237,19 @@ div#myDropZone {
 										<div class="row">
 											<div class="tab-content">
 												<div role="tabpanel" id="tab-1" class="tab-pane active">
-													<div id="loadComments">
-													</div>
+													<div id="loadComments"></div>
 													<textarea id="commentBox" class="form-control" name="commentbox" ></textarea>
-													<button id="saveRequestLogComments" type="button" class="btn btn-primary" disabled>Save</button>
-													<button id="commentCancelBtn" type="button" class="btn btn-light">Cancel</button>
+													<button id="saveRequestLogComments" type="button" class="btn btn-primary m-t-sm" disabled>Save</button>
+													<!-- <button id="commentCancelBtn" type="button" class="btn btn-light">Cancel</button> -->
 												</div>
 												<div role="tabpanel" id="tab-2" class="tab-pane">
-													<div id="loadHistory">
-														<!-- <div class="feed-element">
-															<div class="requestLogCommentsAvatar">
-																<p>MS</p>
-															</div>  
-															<div class="media-body ">
-																<small class="float-right">5m ago</small>
-																<strong id='username'></strong> created the <b>Request</b> <br>
-																<small class="text-muted" id="createdOnDate"></small>
-															</div>
-														</div> -->
-													</div>
+													<div id="loadHistory"></div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
+								
 							</div>
 						</div>
 					</div>           
@@ -298,8 +260,6 @@ div#myDropZone {
 </body>
 </html>
 <script type="text/javascript">
-var isRequester = <?php echo $isRequester ;?>;
-// alert(<?php echo $isRequester ;?>);
 $(document).ready(function(){
 	loadGrid()	
 	$('.dateControl').datetimepicker({
@@ -311,17 +271,10 @@ $(document).ready(function(){
 			//setDuration();
 		}
 	});
-	if(isRequester){
-		$("#assignedbyseq,#assignedtoseq").prop("disabled","true");
-	}
 });
 Dropzone.autoDiscover = false;
 const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm', {
-// 	addRemoveLink : true,
 	autoProcessQueue : false,
-// 	uploadMultiple : true,
-// 	paramName : 'file',
-// 	clickable : true,
 	url : 'Actions/RequestAction.php?call=saveRequestAttachment',
 	init : function(){
 		this.on("success", function(file, responseJson) {
@@ -352,7 +305,7 @@ function loadGrid(){
 		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
 		{ text: 'Department', datafield: 'departmenttitle', width:"13%"},
-		{ text: 'Request Name', datafield: 'title', width:"12%"},
+// 		{ text: 'Request Name', datafield: 'title', width:"12%"},
 		{ text: 'Request Code', datafield: 'code', width:"10%"},
 		{ text: 'Priority', datafield: 'priority', width:"5%"},
 		{ text: 'Request Type', datafield: 'requesttypetitle',width:"10%"}, 
@@ -360,7 +313,7 @@ function loadGrid(){
 		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"10%"},	
 		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%"},       
 		{ text: 'Status', datafield: 'requeststatustitle', width:"8%"},
-		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"10%",filtertype: 'date',cellsformat: 'dd-M-yyyy'},
+		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"10%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt'},
     ]
    
     var source =
@@ -441,8 +394,8 @@ function loadGrid(){
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
-            container.append(editButton);
-            container.append(deleteButton);
+//             container.append(editButton);
+//             container.append(deleteButton);
             container.append(reloadButton);
             statusbar.append(container);
             editButton.jqxButton({  width: 65, height: 18 });
@@ -452,7 +405,8 @@ function loadGrid(){
 
 			addButton.click(function (event) {
 				$("#seq").val("");
-				$("#requestFormDiv #requestSpecsFields").html("");
+				$(".commentsAndHistoryDiv").hide();
+				$("#requestFormDiv #requestSpecsFields").html("<center><small>Select request type to display related fields</small></center>");
 				$("#requestFormDiv #departmentseq").val("");
 				$("#requestFormDiv #requesttypeseq").empty();
 				$("#requestFormDiv #requeststatusseq ").empty();
