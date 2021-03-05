@@ -35,7 +35,7 @@ if($call == "saveSpringQuestion"){
     }
 }
 
-if($call == "getByCustoimerSeq"){
+if($call == "getByCustomerSeq"){
     try{
         $customerSeq =  $_REQUEST["customerseq"];
         $customerSpringQuestion = $CustomerSpringQuestionMgr->findArrByCustomerSeq($customerSeq);

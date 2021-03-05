@@ -12,7 +12,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
 class RequestMgr{
 	private static $requestMgr;
 	private static $dataStore;
-	private static $selectSqlForGrid = "SELECT requests.*,departments.title departmenttitle,requesttypes.title requesttypetitle,requesttypes.requesttypecode,requeststatuses.title requeststatustitle,createdby.fullname as createdbyfullname,assignedby.fullname as assignedbyfullname, assignedto.fullname as assignedtofullname FROM `requests` 
+	private static $selectSqlForGrid = "SELECT requests.*,departments.title departmenttitle,requesttypes.title requesttypetitle,requeststatuses.title requeststatustitle,createdby.fullname as createdbyfullname,assignedby.fullname as assignedbyfullname, assignedto.fullname as assignedtofullname FROM `requests` 
 										LEFT JOIN departments on departments.seq = requests.departmentseq
 										LEFT JOIN requesttypes on requesttypes.seq = requests.requesttypeseq
 										LEFT JOIN requeststatuses on requeststatuses.seq = requests.requeststatusseq

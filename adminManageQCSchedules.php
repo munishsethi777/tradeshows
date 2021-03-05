@@ -290,7 +290,7 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				</div>
 			</div>
 		</div>
-	<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/QcScheduleAction.php" target='new'>
+	<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/QCScheduleAction.php" target='new'>
     	<input type="hidden" name="call" value="exportFilterData" />
     	<input type="hidden" name="filterId" id="filterId" />
     </form>

@@ -27,7 +27,8 @@
         private static $logsDueLessThan14DaysFromEntryWhereClause = " where DATEDIFF(approvedmanualdueprintdate,entrydate) IS NOT NULL AND (iscompleted IS NULL OR iscompleted = false) AND DATEDIFF(approvedmanualdueprintdate,entrydate) < 14 AND DATEDIFF(approvedmanualdueprintdate,entrydate) >=0";
         private static $groupByInstructionManualLogSeq = " GROUP by instructionmanuallogs.seq";
         private static $gridSelectSql = "select users.fullname,classcodes.classcode,instructionmanuallogs.* from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
-        
+        private static $gridCountSelectSql = "select COUNT(instructionmanuallogs.seq) from instructionmanuallogs left join classcodes on instructionmanuallogs.classcodeseq = classcodes.seq left join users on instructionmanuallogs.createdby = users.seq";
+
         public static function getInstance(){
             if (!self::$instructionManualLogsMgr){
                 self::$instructionManualLogsMgr = new InstructionManualLogsMgr();
@@ -123,7 +124,7 @@
                 $query = self::$filterExportSelectSql . self::$logsOpenWhereClause . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsOpenWhereClause;
+                $query = self::$gridCountSelectSql . self::$logsOpenWhereClause;
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -133,7 +134,7 @@
                 $query = self::$filterExportSelectSql . self::$logsCompletedWhereClause . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsCompletedWhereClause;
+                $query = self::$gridCountSelectSql . self::$logsCompletedWhereClause;
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -143,7 +144,7 @@
                 $query = self::$filterExportSelectSql . self::$logsOverDueWhereClause . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName.self::$logsOverDueWhereClause;
+                $query = self::$gridCountSelectSql . self::$logsOverDueWhereClause;
                 $count = self::$dataStore->executeCountQueryWithSql($query,true);
                 return $count;
             }elseif($beanReturnDataType == BeanReturnDataType::grid){
@@ -160,7 +161,7 @@
                 $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'" . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
+                $query = self::$gridCountSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_supervisor)."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -170,7 +171,7 @@
                 $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'" . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'";
+                $query = self::$gridCountSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_manager)."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -180,7 +181,7 @@
                 $query = self::$filterExportSelectSql . "  where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'" . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'";
+                $query = self::$gridCountSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::in_review_buyer)."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -190,7 +191,7 @@
                 $query = self::$filterExportSelectSql . " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName. " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
+                $query = self::$gridCountSelectSql . " where (iscompleted IS NULL OR iscompleted = false) AND approvedmanualdueprintdate like '".date('Y-m-d')."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -200,7 +201,7 @@
                 $query = self::$filterExportSelectSql . " where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'" . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'";
+                $query = self::$gridCountSelectSql . " where approvedmanualdueprintdate > '".date('Y-m-d')."' AND approvedmanualdueprintdate <= '".date('Y-m-d',strtotime('14 days'))."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -210,7 +211,7 @@
                 $query = self::$filterExportSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName . self::$logsDueLessThan14DaysFromEntryWhereClause;
+                $query = self::$gridCountSelectSql . self::$logsDueLessThan14DaysFromEntryWhereClause;
                 $count = self::$dataStore->executeCountQueryWithSql($query,true);
                 return $count;
             }elseif($beanReturnDataType == BeanReturnDataType::grid){
@@ -227,7 +228,7 @@
                 $query = self::$filterExportSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'" . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true);
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "select COUNT(seq) from ".InstructionManualLogs::$tableName." where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'";
+                $query = self::$gridCountSelectSql . " where instructionmanuallogstatus LIKE '".InstructionManualLogStatus::getName(InstructionManualLogStatus::not_started)."'";
                 $count = self::$dataStore->executeCountQueryWithSql($query);
                 return $count;
             }
@@ -237,7 +238,7 @@
                 $query = self::$filterExportSelectSql . self::$groupByInstructionManualLogSeq;
                 return self::$dataStore->executeQuery($query,false,true); 
             }elseif($beanReturnDataType == BeanReturnDataType::count){
-                $query = "SELECT COUNT(seq) from " . InstructionManualLogs::$tableName;
+                $query = self::$gridCountSelectSql;
                 $count = self::$dataStore->executeCountQueryWithSql($query,true);
                 return $count; 
             }elseif($beanReturnDataType == BeanReturnDataType::grid){
