@@ -99,7 +99,7 @@ div#myDropZone {
 						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;">
 							<input id="seq" type="hidden" name="seq" value=""/>
 							<div class="bg-white p-xs outterDiv">
-								<?php if (in_array(Permissions::request_management_assignee, $userRoles) || in_array(Permissions::request_management_manager, $userRoles)){?>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
     									<label class="col-lg-2 col-form-label bg-formLabel">Assigned By</label>
     									<div class="col-lg-4">
@@ -162,7 +162,7 @@ div#myDropZone {
 							</form>
 							
 							<div class="bg-white p-xs outterDiv">
-								<?php if (in_array(Permissions::request_management_assignee, $userRoles) || in_array(Permissions::request_management_manager, $userRoles)){?>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
     									<label class="col-lg-2 col-form-label bg-formLabel">Assignee Due Date</label>
     									<div class="col-lg-4">

@@ -129,18 +129,23 @@
             $requestLog = self::$dataStore->executeQuery($query,false,true);
             return $requestLog;
         }
+        private static function getColor($num) {
+            $hash = md5('color' . $num); // modify 'color' to get a different palette
+            return array(
+                hexdec(substr($hash, 0, 2)), // r
+                hexdec(substr($hash, 2, 2)), // g
+                hexdec(substr($hash, 4, 2))); //b
+        }
         public function commentsHtml($requestLogComments){
             $commentHtml = "";
             if(!empty($requestLogComments)){
-                $colorArray = array("#FC766AFF","#5B84B1FF","#42EADDFF","#CDB599FF","#00A4CCFF","#F95700FF","#00203FFF","#ADEFD1FF","#606060FF","#2C5F2D","#00539CFF");
-                $backgroundColorArr = array();
                 foreach($requestLogComments as $requestLogCommentsRow){
-                    $backgroundColorArr[$requestLogCommentsRow['createdby']] =  $colorArray[array_rand($colorArray)];
-                }
-                foreach($requestLogComments as $requestLogCommentsRow){
+                    $backgroundColor = self::getColor($requestLogCommentsRow['createdby']);
+                    $backgroundColor = implode(",",$backgroundColor);
                     $commentHtml .= "<div class='feed-activity-list' id='commentRow". $requestLogCommentsRow['seq'] ."'>";
                     $commentHtml .= "<div class='feed-element' style='margin-top:15px'>";
-                    $commentHtml .= "<div class='requestLogCommentsAvatar' style='background:" . $backgroundColorArr[$requestLogCommentsRow['createdby']] . "'>";
+                    $commentHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(". $backgroundColor . ")'>";
+                    
 					$commentHtml .=	"<p>" . self::getUserNameInitials($requestLogCommentsRow['createdbyfullname']) . "</p>";
 					$commentHtml .= "</div>";
 					$commentHtml .=	"<div class='media-body'>";
@@ -163,13 +168,10 @@
                         LEFT JOIN users on users.seq = requests.createdby
                         where requests.seq = " . $requestLogHistory[0]['requestseq'];
                 $request = self::$dataStore->executeQuery($query,false,true);
-                $colorArray = array("#FC766AFF","#5B84B1FF","#42EADDFF","#CDB599FF","#000000FF","#FFFFFFFF","#00A4CCFF","#F95700FF","#00203FFF","#ADEFD1FF","#606060FF","#2C5F2D","#00539CFF");
-                $backgroundColorArr = array();
-                foreach($requestLogHistory as $requestLogHistoryRow){
-                    $backgroundColorArr[$requestLogHistoryRow['createdby']] =  $colorArray[array_rand($colorArray)];
-                }
+                $backgroundColor = self::getColor($request[0]['createdby']);
+                $backgroundColor = implode(",",$backgroundColor);
                 $historyLogHtml .= "<div class='feed-element'>";
-                $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:" . $backgroundColorArr[$request[0]['createdby']] . "'>";
+                $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
                 $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
                 $historyLogHtml .= "</div>";
                 $historyLogHtml .= "<div class='media-body'>";
@@ -179,8 +181,10 @@
                 $historyLogHtml .= "</div>";
                 $historyLogHtml .= "</div>";
                 foreach($requestLogHistory as $requestLogHistoryRow){
+                    $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
+                    $backgroundColor = implode(",",$backgroundColor);
                     $historyLogHtml .= "<div class='feed-element'>";
-                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:" . $backgroundColorArr[$requestLogHistoryRow['createdby']] . "'>";
+                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . ")'>";
                     $historyLogHtml .= "<p>" . self::getUserNameInitials($requestLogHistoryRow['createdbyfullname']) . "</p>";
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "<div class='media-body'>";
