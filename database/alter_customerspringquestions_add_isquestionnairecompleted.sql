@@ -1,0 +1,1 @@
+ALTER TABLE `customerspringquestions` ADD `isquestionnairecompleted` TINYINT NULL DEFAULT NULL; 

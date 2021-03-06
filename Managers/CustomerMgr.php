@@ -18,10 +18,21 @@ class CustomerMgr{
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 17;
-	private static $selectSqlForGrid = "SELECT customers.*,salesadminlead.fullname as salesadminleadname,
-										insideaccountmanager.fullname as insideaccountmanagername FROM customers 
+	private static $selectSqlForGrid = "SELECT customers.*,salesadminlead.fullname as salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername ,
+										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq) as springtotalquestionnaire, 
+										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq) as christmastotalquestionnaire,
+										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq and csq.isquestionnairecompleted = 1) as springcompletedquestionnaire, 
+										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq and ccq.isquestionnairecompleted = 1) as christmascompletedquestionnaire
+										FROM customers 
 										LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
 										LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
+										
+										// old sql
+										// "SELECT customers.*,salesadminlead.fullname as salesadminleadname,
+										// insideaccountmanager.fullname as insideaccountmanagername FROM customers 
+										// LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
+										// LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
+										
 	private static $exportQuery = "SELECT customers.*,buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes,salesadminlead.fullname as  salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername from customers 
 							LEFT JOIN buyers on customers.seq = buyers.customerseq
 							LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead
@@ -309,12 +320,21 @@ class CustomerMgr{
 	}
 	
 	public function getCustomersForGrid(){
-		$customers = $this->findAllArr(true);
-		$mainArr["Rows"] = $customers;
+		$query = self::$selectSqlForGrid;
+		$customers = self::$dataStore->executeQuery($query,false,true);
+		$row = array();
+		foreach($customers as $customer){	
+			$customer['questionnaireprogress'] = ($customer['springcompletedquestionnaire'] + $customer['christmascompletedquestionnaire']). "/" .($customer['springtotalquestionnaire'] + $customer['christmastotalquestionnaire']);
+			array_push($row,$customer);
+		}
+		$mainArr["Rows"] = $row;
 		$mainArr["TotalRows"] = $this->getAllCount(true);
 		return $mainArr;
 	}
-	
+	public function getCompletedQuestionnaireFormCounts($customerSeqsString){
+		$query = "SELECT COUNT(seq) from customerspringquestions WHERE customerseq in ($customerSeqsString) AND";
+		return self::$dataStore->executeQuery();
+	}
 	public function getAllCount($isApplyFilter){
 		$count = self::$dataStore->executeCountQuery(null,$isApplyFilter);
 		return $count;

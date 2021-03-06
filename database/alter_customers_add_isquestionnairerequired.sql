@@ -1,0 +1,1 @@
+ALTER TABLE `customers` ADD `isquestionnairerequired` TINYINT NULL; 

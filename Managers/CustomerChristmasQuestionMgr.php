@@ -1,6 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerChristmasQuestion.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 class CustomerChristmasQuestionMgr{
     
     
@@ -15,19 +16,69 @@ class CustomerChristmasQuestionMgr{
         }
         return self::$customerChritmasQuestionMgr;
     }
-    
-    public function saveCustomerSpecialProgram($customerChritmasQuestionMgr){
-        $this->deleteByCustomerSeq($customerChritmasQuestionMgr->getCustomerSeq());
-        $id = self::$dataStore->save($customerChritmasQuestionMgr);
+
+    public function findbySeq($seq){
+        $customerChristmasQuestion = self::$dataStore->findBySeq($seq);
+        $customerChristmasQuestion = $this->convertDateFormat($customerChristmasQuestion);
+        return $customerChristmasQuestion;
+    }
+    public function saveCustomerSpecialProgram($customerChritmas){
+        // $this->deleteByCustomerSeq($customerChritmas->getCustomerSeq());
+        if(!empty($customerChritmas->getIsAllCategoriesSelected())){
+            $allCategories = BuyerCategoryType::getAll();
+            $allCategoriesNames = array_keys($allCategories);
+            $allCategories = implode(",", $allCategoriesNames);
+            $customerChritmas->setCategory($allCategories);
+        }
+        // $this->validateFormCategories($customerChritmas);
+        $id = self::$dataStore->save($customerChritmas);
         return $id;
     }
-    
+    private function validateFormCategories($christmasQuestion){
+        // $springQuestion = new CustomerSpringQuestion();
+         $categories = $christmasQuestion->getCategory();
+         $categoriesArr = array();
+         if(!empty($categories)){
+             $categoriesArr = explode(",", $categories);
+         }
+         $existingCategories = $this->getCatgoriesByCustomerSeq($christmasQuestion);
+         $duplicateCategories = array();
+         foreach ($categoriesArr as $category){
+             foreach ($existingCategories as $existingCategory){
+                 $existingCategory = explode(",", $existingCategory);
+                 if(in_array($category, $existingCategory)){
+                     $categoryValue = BuyerCategoryType::getValue($category);
+                     array_push($duplicateCategories,$categoryValue);
+                 }
+             }
+         }
+         if(!empty($duplicateCategories)){
+             $duplicateCategories = implode(",", $duplicateCategories);
+             throw new Exception("Questionnarie already saved for categories :- " . $duplicateCategories);
+         }
+    }
+    private function getCatgoriesByCustomerSeq($springQuestion){
+        $seq = $springQuestion->getSeq();
+        $customerSeq = $springQuestion->getCustomerSeq();
+        $query = "select category from customerspringquestions where customerseq in ($customerSeq)";
+        if(!empty($seq)){
+            $query .= " and seq != $seq";
+        }
+        $springQuestions = self::$dataStore->executeQuery($query, false,true);
+        if(!empty($springQuestions)){
+            $category  = array_map(create_function('$o', 'return $o["category"];'), $springQuestions);
+            return $category;
+        }
+        return array();
+    }
     public function deleteByCustomerSeq($customerSeq){
         $query = "delete from customerchristmasquestions where customerseq in ($customerSeq)";
         return self::$dataStore->executeQuery($query);
     }
-    
-    
+    public function deleteBySeq($seq){
+        $flag = self::$dataStore->deleteBySeq($seq);
+        return $flag;
+    }
     //for edit mode
     public function findByCustomerSeq($customerSeq){
         $condition = array("customerseq"=>$customerSeq);
@@ -40,7 +91,7 @@ class CustomerChristmasQuestionMgr{
     }
     public function findArrByCustomerSeq($customerSeq){
     	$condition = array("customerseq"=>$customerSeq);
-    	$customerChritmasQuestion = self::$dataStore->executeConditionQueryForArray($condition);
+    	return $customerChritmasQuestion = self::$dataStore->executeConditionQueryForArray($condition);
     	if(!empty($customerChritmasQuestion)){
     	    $customerChritmasQuestion = $customerChritmasQuestion[0];
     	    $customerChritmasQuestion["isinterested"] = $this->getYesNo($customerChritmasQuestion["isinterested"]);

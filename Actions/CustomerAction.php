@@ -118,6 +118,7 @@ if($call == "saveCustomer"){
         $customer->setCreatedby($sessionUtil->getUserLoggedInSeq());
         $customer->setCreatedon(new DateTime());
         $customer->setLastmodifiedon(new DateTime());
+        $customer->setIsQuestionnaireRequired(isset($_REQUEST['isquestionnairerequired']) ? 1 : 0);
         if($seq > 0){
             $message = StringConstants::CUSTOMER_UPDATE_SUCCESSFULLY;
         }

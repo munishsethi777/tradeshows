@@ -2,7 +2,7 @@
 class Customer{
     private $seq,$fullname,$customerid,$customertype,$insideaccountmanager,$salesadminlead,$chainstoresalesadmin,$businesstype,$salespersonname,$salespersonid,$createdby,$createdon,$lastmodifiedon;
     private $priority,$isstore,$storeid,$storename,$businesscategory;
-    private $salespersonid2,$salespersonname2,$salespersonid3,$salespersonname3,$salespersonid4,$salespersonname4;
+    private $salespersonid2,$salespersonname2,$salespersonid3,$salespersonname3,$salespersonid4,$salespersonname4,$isquestionnairerequired;
     public static $className = "Customer";
     public static $tableName = "customers";
     public function setSeq($seq_){
@@ -68,6 +68,12 @@ class Customer{
     }
     public function getSalesPersonId(){
         return $this->salespersonid;
+    }
+    public function setIsQuestionnaireRequired($isQuestionnaireRequired){
+        $this->isquestionnairerequired = $isQuestionnaireRequired;
+    }
+    public function getIsQuestionnaireRequired(){
+        return $this->isquestionnairerequired;
     }
     /**
      * set the sales person name for second value

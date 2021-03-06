@@ -7,6 +7,7 @@ $customerMgr = CustomerMgr::getInstance();
 $customer = new Customer();
 $customerSeq = 0;
 $storeChecked = "";
+$isQuestionnaireRequiredChecked = "";
 $storeDisplay = "none";
 $customerTextDisplay = "";
 $customerSelectDisabled = "disabled";
@@ -23,6 +24,7 @@ if(isset($_POST["id"])){
         $customerIdDisabled = "readonly";
     }
     $customerSeq = $customer->getSeq();
+	$isQuestionnaireRequiredChecked = $customer->getIsQuestionnaireRequired() ? 'checked' : "";
 }
 ?>
 
@@ -116,7 +118,12 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input type="text" <?php echo $customerIdDisabled?> required  maxLength="250" value="<?php echo $customer->getCustomerId()?>" name="customerid" id="customerid" class="form-control">
 	                            </div>
-	                            
+								<div class="row i-checks">
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Is Questionnaire Required</label>
+									<div class="col-lg-4">
+										<input type="checkbox" name="isquestionnairerequired" <?php echo $isQuestionnaireRequiredChecked?> class="isquestionnairerequired"/>
+									</div>
+								</div>
 							</div>                       
 	                         <div class="form-group row storeDetailsDiv" style="display:<?php echo $storeDisplay?>">
 		                         	<label class="col-lg-2 col-form-label bg-formLabel">Customer Name</label>

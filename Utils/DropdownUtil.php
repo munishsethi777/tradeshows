@@ -40,7 +40,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/DepartmentType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
-
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRepTypes.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -375,5 +375,9 @@ class DropDownUtils {
 		$userMgr = UserMgr::getInstance();
 		$users = $userMgr->getUsersForDDByPermission(Permissions::instruction_manual_usa_team);
 		return self::getDropDown1 ($users, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll,$firstOption);
+	}
+	public static function getCustomerRepTypesForDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
+		$enums =  CustomerRepTypes::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 }

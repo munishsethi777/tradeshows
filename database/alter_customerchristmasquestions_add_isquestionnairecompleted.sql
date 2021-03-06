@@ -1,0 +1,1 @@
+ALTER TABLE `customerchristmasquestions` ADD `isquestionnairecompleted` TINYINT NULL DEFAULT NULL; 

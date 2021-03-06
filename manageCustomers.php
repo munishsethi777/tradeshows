@@ -300,29 +300,34 @@ function loadGrid(){
 	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
         data = $('#customerGrid').jqxGrid('getrowdata', row);
         ids[row] = data["seq"];
-        var html = "<div style='margin-left:9px;margin-top:1px;font-size:18px;'>"
+        var html = "";
+        if(data['isquestionnairerequired']){
+            html = "<div style='margin-left:9px;margin-top:1px;font-size:18px;'>"
             	html +="<a title='Add Questionnaire ' href='javascript:addQuestionnaire("+ data['seq'] + ")'></i><i class='fa fa-list-ul' title='Add Questionnaire'></i></a>";
             	// html += "<span style='margin-left:10px'><a title='Add Questionnaire ' href='javascript:addSplProg("+ data['seq'] + ")'><i class='fa fa-calendar' title='Add Special Prog.'></i></a></span>"
             html += "</div>";
+        }
         return html;
     }
     
 	var columns = [
-      { text: 'id', datafield: 'seq' , hidden:true},
-      { text: 'Customer ID', datafield: 'customerid',width:"10%",cellsrenderer:showCustomerDetailAction},
-      { text: 'Customer Name', datafield: 'fullname', width:"10%"},
-      { text: 'Store ID', datafield: 'storeid', width:"10%"},
-      { text: 'Chain Store Name', datafield: 'storename', width:"10%"},
+        { text: 'id', datafield: 'seq' , hidden:true},
+        { text: 'Customer ID', datafield: 'customerid',width:"10%",cellsrenderer:showCustomerDetailAction},
+        { text: 'Customer Name', datafield: 'fullname', width:"10%"},
+        { text: 'Store ID', datafield: 'storeid', width:"10%"},
+        { text: 'Chain Store Name', datafield: 'storename', width:"10%"},
     //   { text: 'Sales Rep', datafield: 'salesrep', width:"10%"},
-      { text: 'Customer Type', datafield: 'customertype', width:"10%"},
-      { text: 'Inside Account Manager', datafield: 'insideaccountmanagername', width:"15%"},
+        { text: 'Customer Type', datafield: 'customertype', width:"10%"},
+        { text: 'Inside Account Manager', datafield: 'insideaccountmanagername', width:"15%"},
     //   { text: 'BusinessType', datafield: 'businesstype',width:"10%"},
-      { text: 'Sales Admin Lead', datafield:'salesadminleadname', width:"10%"},
-      { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"18%"},
+        { text: 'Sales Admin Lead', datafield:'salesadminleadname', width:"10%"},
+        { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"10%"},
     //   { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
     //   { text: 'Category', datafield: 'businesscategory',width:"12%"},
     //   { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
-      { text: 'Actions', datafield: 'action',width:"5%",cellsrenderer:actions},
+        {text: 'Is Questionnaire Required', datafield: 'isquestionnairerequired', hidden:true},
+        { text: 'Ques Completion ', datafield: 'questionnaireprogress',width:"8%",},
+        { text: 'Actions', datafield: 'action',width:"5%",cellsrenderer:actions},
     ]
    
     var source =
@@ -346,7 +351,9 @@ function loadGrid(){
                     // { name: 'businesscategory', type: 'string' },
                     { name: 'salespersonname', type: 'string' },
                     { name: 'lastmodifiedon', type: 'date' },
-                    { name: 'action', type: 'string' }
+                    { name: 'questionnaireprogress', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'isquestionnairerequired', type: ''}
                     ],                          
         url: 'Actions/CustomerAction.php?call=getAllCustomers',
         root: 'Rows',

@@ -45,7 +45,7 @@ class CustomerSpringQuestion
     private $isdinnerappt;
     private $dinnerapptplace;
     private $buyerhasmorecategorynotes;
-    private $wherecustomerselectspringitems;
+    private $wherecustomerselectspringitems,$isquestionnairecompleted;
     
     public static $className = "CustomerSpringQuestion";
     public static $tableName = "customerspringquestions";
@@ -363,7 +363,12 @@ class CustomerSpringQuestion
     public function setWhereCustomerSelectSpringItems($whereCustomerSelectSpringItems){
         $this->wherecustomerselectspringitems = $whereCustomerSelectSpringItems;
     }
-    
+    public function getIsQuestionnaireCompleted(){
+        return $this->isquestionnairecompleted;
+    }
+    public function setIsQuestionnaireCompleted($isQuestionnaireCompleted){
+        $this->isquestionnairecompleted = $isQuestionnaireCompleted;
+    }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {
             $flag = property_exists ( self::$className, $attrName );

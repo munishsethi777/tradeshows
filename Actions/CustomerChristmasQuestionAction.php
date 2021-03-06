@@ -14,10 +14,10 @@ if(isset($_GET["call"])){
     $call = $_POST["call"];
 }
 $customerChristmassQuesMgr = CustomerChristmasQuestionMgr::getInstance();
-if($call == "savechristmasQuestion"){
+if($call == "saveChristmasQuestion"){
     try{
         $message = StringConstants::SAVED_SUCCESSFULLY;
-        $seq =  $_REQUEST["customerseq"];
+        $seq =  $_REQUEST["seq"];
         $christmasQuestion = new CustomerChristmasQuestion();
         $christmasQuestion->from_array($_REQUEST);
         if(isset($_REQUEST['isallcategoriesselected'])){
@@ -35,15 +35,39 @@ if($call == "savechristmasQuestion"){
         $christmasQuestion->setCategory($category);
         $christmasQuestion->setTradeShowsAreGoingTo($_REQUEST['tradeshowsaregoingto']);
         $christmasQuestion->setCategoriesShouldSellThem($categoriesShouldSellThem);
-
-        $christmasQuestion->setXmasSampleSentDate(DateUtil::convertDateToFormat($_REQUEST['xmassamplesentdate'],'m-d-Y','Y-m-d'));
-        
+        // $christmasQuestion->setXmasSampleSentDate(DateUtil::convertDateToFormat($_REQUEST['xmassamplesentdate'],'m-d-Y','Y-m-d'));
+        $christmasQuestion->setIsQuestionnaireCompleted($_REQUEST['isquestionnairecompleted'] == 'on' ? 1 : 0);
         if($seq > 0){
            $message = StringConstants::UPDATED_SUCCESSFULLY;
-       }
+        }
     //   var_dump($_REQUEST);
         $id = $customerChristmassQuesMgr->saveCustomerSpecialProgram($christmasQuestion);
         $response["seq"] = $id;
+    }catch(Exception $e){
+        $success = 0;
+        $message  = $e->getMessage();
+    }
+}
+if($call == 'getByCustomerSeq'){
+    try{
+        $customerSeq =  $_REQUEST["customerseq"];
+        $customerChristmasQuestion = $customerChristmassQuesMgr->findArrByCustomerSeq($customerSeq);
+        $response["data"] = $customerChristmasQuestion;
+    }catch(Exception $e){
+        $message = $e->getMessage();
+        $success = 0;
+    }
+}
+if($call == "deleteBySeq"){
+    try{
+        $seq =  $_REQUEST["seq"];
+        $flag = $customerChristmassQuesMgr->deleteBySeq($seq);
+        if($flag){
+            $message = "Deleted Successfully";
+        }else{
+            $message = "Action not completed,Server Error!";
+            $success = 0; 
+        }
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();

@@ -8,7 +8,7 @@ class CustomerChristmasQuestion{
     private $isxmasbuylastyear,$xmasbuylastyearamount,$isreceivingsellthru,$isrobbyreviewedsellthrough,$isvisitcustomerin4qtr,$christmasquotebydate;
     private $cataloglinkdate,$tradeshowsaregoingto,$isdinnerappt,$dinnerapptdate,$ispitchmainvendor,$istheremorebuyers,$xmassamplesentdate,$categoriesshouldsellthem;
     private $isreviewedsellthru,$compshopsummaryemailsentdate,$isquotedforxmas,$itemselectionfinalized,$itemspurchasedlastyear,$finalizedtyvsly,$arepoexpecting,$expectingpodate,$isopportunitiessent,$opportunitiessentdate;
-    private $year,$dinnerapptplace,$buyerhasmorecategorynotes,$wherecustomerselectholidayitems;
+    private $year,$dinnerapptplace,$buyerhasmorecategorynotes,$wherecustomerselectholidayitems,$isquestionnairecompleted;
     
     public function getSeq(){
         return $this->seq;
@@ -338,6 +338,12 @@ class CustomerChristmasQuestion{
     }
     public function setWhereCustomerSelectHolidayItems($whereCustomerSelectHolidayItems){
         $this->wherecustomerselectholidayitems = $whereCustomerSelectHolidayItems;
+    }
+    public function getIsQuestionnaireCompleted(){
+        return $this->isquestionnairecompleted;
+    }
+    public function setIsQuestionnaireCompleted($isQuestionnaireCompleted){
+        $this->isquestionnairecompleted = $isQuestionnaireCompleted;
     }
     public function from_array($array) {
         foreach ( get_object_vars ( $this ) as $attrName => $attrValue ) {

@@ -278,11 +278,26 @@ if($file == "dashboardmain.php"){
                             </a>
                         </li>
                     <?php } if(in_array(DepartmentType::Manage_Customers,$departments)){?>
-                    <li class="<?php echo $manageCustomers;?>">
+                    <!-- <li class="<?php echo $manageCustomers;?>">
                        <a href="manageCustomers.php"><i class="fa fa-group"></i> 
                     	   	<span class="nav-label">Manage Customers</span>  
                        </a>
-                	</li>
+                	</li> -->
+					<li class=''>
+						<a href='#'>
+							<i class='fa fa-bar-chart-o'></i> 
+							<span class='nav-label'>Customers</span>
+							<span class='fa arrow'></span>
+						</a>
+						<ul class='nav nav-second-level'>
+							<li class=''>
+								<a href='manageCustomers.php'>Manage Customers</a>
+							</li>
+							<li class=''>
+								<a href='adminManageCustomerRep.php'>Manage Customer Rep</a>
+							</li>
+						</ul>
+					</li>
 					<?php }?>
 					<?php if(in_array(DepartmentType::Shipping_Logs,$departments)){?>
 					<li>

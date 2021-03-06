@@ -180,4 +180,10 @@ class StringConstants{
 	// Instruction Manaul Logs Constants
 	const INSTRUCTION_MANUAL_LOG_SAVED_SUCCESSFULLY   = "Instruction Manual Log saved successfully!";
 	const INSTRUCTION_MANUAL_LOG_UPDATED_SUCCESSFULLY   = "Instruction Manual Log updated successfully!";
+	const REQUEST_TYPE_SAVED_SUCCESSFULLY = "Request Type saved successfully";
+	const REQUEST_TYPE_UPDATED_SUCCESSFULLY = "Request Type updated successfully";
+	const REQUEST_SAVED_SUCCESSFULLY = "Request Saved Successfully";
+	const REQUEST_UPDATED_SUCCESSFULLY = "Request Updated Successfully";
+	const CUSTOMER_REP_SAVED_SUCCESSFULLY = "Customer Rep Saved Successfully";
+	const CUSTOMER_REP_UPDATE_SUCCESSFULLY = "Customer Rep Updated Successfully";
 }

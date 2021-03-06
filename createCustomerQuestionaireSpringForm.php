@@ -19,6 +19,7 @@ $selectedCategory = array();
 $selectedCategoriesSpringQues = array();
 $tradeshowsaregoingto = array();
 $isAllChecked = "checked";
+$isQuestionnaireCompletedChecked = "";
 if(!empty($seq) && !$isadded){
     $seq = $seq;
     $customerSpringQuestionMgr= CustomerSpringQuestionMgr::getInstance();
@@ -38,6 +39,7 @@ if(!empty($seq) && !$isadded){
     if(!empty($customerSpringQuestion->getTradeshowsAreGoingTo())){
         $tradeshowsaregoingto = explode(",",$customerSpringQuestion->getTradeshowsAreGoingTo());
     }
+	$isQuestionnaireCompletedChecked = $customerSpringQuestion->getIsQuestionnaireCompleted() ? 'checked' : '';
 }
 
 
@@ -46,9 +48,9 @@ if(!empty($seq) && !$isadded){
     <div class="panel-heading">
         <h5 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" 
-            	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>')">Spring Questions for Category(s) - 
+            	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>','spring')">Spring Questions for Category(s) - 
             	<label class="springQuestionsPanelHeading<?echo $seq?>"></label></a>
-                <span style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
+                <span style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>','Spring')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
                 <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
         </h5>
     </div>
@@ -73,11 +75,11 @@ if(!empty($seq) && !$isadded){
             						<div class="col-lg-4">
             							<div>
 	            							<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselected"
-	            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
+	            								id="isallcategoriesselected<?echo $id?>" name="isallcategoriesselected"
 	            								<?php echo $isAllChecked?> /> <label>All</label>
 	            						</div>
 	            						<div class="m-t-sm">
-	            							<select id="springCategory<?echo $seq?>" class="formCategories form-control"
+	            							<select id="springCategory<?echo $id?>" class="formCategories form-control"
 	            								name="category[]" multiple>
 	            							<?php
 	            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
@@ -495,9 +497,9 @@ if(!empty($seq) && !$isadded){
             							Have they finalized their selections, if so how many items?
            							</label>
             						<div class="col-lg-4">
-            							<input type="number" name="itemselectionfinalized"
+            							<input type="number" name="itemselectionfinalized" min='0'
             								value="<?php echo $customerSpringQuestion->getItemSelectionFinalized()?>"
-            								id="itemselectionfinalized<?php echo $seq?>" class="form-control" oninput="calculateTyVsLyForSpringQuestionaire(<?php echo $seq;?>)">
+            								id="itemselectionfinalized<?php echo $seq?>" class="form-control" oninput="calculateTyVsLy(<?php echo $seq;?>,'Spring')">
             						</div>
             					</div>
             				</div>
@@ -507,9 +509,9 @@ if(!empty($seq) && !$isadded){
             							How many items did they purchase last year?
            							</label>
             						<div class="col-lg-4">
-            							<input type="number" name="itemspurchasedlastyear"
+            							<input type="number" name="itemspurchasedlastyear" min='0' 
             								value="<?php echo $customerSpringQuestion->getItemsPurchasedLastYear()?>"
-            								id="itemspurchasedlastyear<?php echo $seq?>" class="form-control"  oninput="calculateTyVsLyForSpringQuestionaire(<?php echo $seq;?>)">
+            								id="itemspurchasedlastyear<?php echo $seq?>" class="form-control"  oninput="calculateTyVsLy(<?php echo $seq;?>,'Spring')">
             						</div>
             					</div>
             				</div>
@@ -519,7 +521,7 @@ if(!empty($seq) && !$isadded){
             							If they finalized, how many were TY vs LY?
            							</label>
             						<div class="col-lg-4">
-            							<input type="number" name="finalizedtyvsly"
+            							<input type="number" name="finalizedtyvsly" min='0' 
             								value="<?php echo $customerSpringQuestion->getFinalizedTyVsLy()?>"
             								id="finalizedtyvsly<?php echo $seq?>" class="form-control">
             						</div>
@@ -577,15 +579,18 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            				
-            				
-            
-            
+							<div class="form-group">
+								<div class="row ">
+									<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
+										Is Questionnaire Completed.
+									</label>
+									<div class="col-lg-4">
+										<input type="checkbox" class="i-checks form-control pull-left isquestionnairecompleted" id="isquestionnairecompleted<?echo $id ?>" name="isquestionnairecompleted" <?php echo $isQuestionnaireCompletedChecked ?> />
+									</div>
+								</div>
+                        	</div>
             			</div>
             			<div class="col-lg-10">
-            				
-            				
-            
 <!--             				<div class="form-group"> -->
 <!--             					<div class="row "> -->
 <!--             						<label -->
