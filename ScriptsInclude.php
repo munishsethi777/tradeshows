@@ -174,6 +174,11 @@
  <link href="styles/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
  <script type="text/javascript" src="scripts/jquery.numeric.min.js"></script>
  
+<!-- Dropzone -->
+<script src="scripts/plugins/dropzone/dropzone.js"></script>
+ <link href="styles/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+ 
 <script>
 $(document).ready(function() {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });

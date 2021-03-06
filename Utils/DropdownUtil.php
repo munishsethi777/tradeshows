@@ -39,6 +39,11 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/QCScheduleUpdateOptions.php
 require_once($ConstantsArray['dbServerUrl'] . "Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/Permissions.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/DepartmentType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestsSpecsFieldTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/DepartmentMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestPriorityTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestTypeMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRepTypes.php");
 
@@ -339,6 +344,24 @@ class DropDownUtils {
 		$departmentMgr =  DepartmentMgr::getInstance();
 		$departments = $departmentMgr->findAllForDropDown();
 		return self::getDropDown1($departments, $selectName, $onChangeMethod, $selectedValue, $isRequired, true,"Select Any");
+	}
+	public static function getRequestsSpecsFieldTypes($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$enums =  RequestsSpecsFieldTypes::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, false);
+	}
+	public static function getRequestPriority($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$enums =  RequestPriorityTypes::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, false);
+	}
+	public static function getRequestTypes($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$requestTypeMgr =  RequestTypeMgr::getInstance();
+		$requestTypes = $requestTypeMgr->findAllForDropDown();
+		return self::getDropDown1($requestTypes, $selectName, $onChangeMethod, $selectedValue, $isRequired, false);
+	}
+	public static function getRequestStatuses($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false){
+		$requestStatusMgr =  RequestStatusMgr::getInstance();
+		$requestStatuses = $requestStatusMgr->findAllForDropDown();
+		return self::getDropDown1($requestStatuses, $selectName, $onChangeMethod, $selectedValue, $isRequired, false);
 	}
 	public static function getUsersForDDByPermission($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$permissionType){
 		$userMgr = UserMgr::getInstance();

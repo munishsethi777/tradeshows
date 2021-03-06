@@ -100,19 +100,35 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 									</div>
 								</div>
 							<?php }?>
-		                    <?php if(empty( 
-		                        ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || 
-		                        ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || 
-		                        ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment()) || 
-		                        ($isSessionAdmin || $permissionUtil->hasManageCustomerDepartment())
-		                        
-		                        ))
+							<?php if($isSessionAdmin || $permissionUtil->hasRequestsDepartment()){?>
+								<div class="col-lg-3">
+									<div class="widget text-center p-h-xl" style="background-color:#92967d;">
+										<div class="row">
+											<a href="adminManageRequests.php">
+											<h1 class="m-t-xs font-bold"><i class="fa fa-tasks" aria-hidden="true"></i></h1>
+											<span>Requests Management</span></a>
+										</div>
+									</div>
+								</div>
+							<?php }?>
+		                    <?php if(
+    		                          empty( 
+            		                        ($isSessionAdmin || $permissionUtil->hasQCDepartment()) || 
+            		                        ($isSessionAdmin || $permissionUtil->hasGraphicsDepartment()) || 
+            		                        ($isSessionAdmin || $permissionUtil->hasContainerScheduleDepartment()) || 
+            		                        ($isSessionAdmin || $permissionUtil->hasManageCustomerDepartment())||
+                                            ($isSessionAdmin || $permissionUtil->hasInstructionManualLogsDepartment())
+    		                         )
+		                          )
 		                     {
 		                         echo "<center> <b>". StringConstants::PERMISSION_AllOW . "</b> </center>";
 		                         echo '<a href="logout.php" class="clsLogout">Logout</a>';
 		                     }?>
 	                    </div>
             		</div>
+	                
+	                
+	                
 	            </div>
         	</div>
        </div>

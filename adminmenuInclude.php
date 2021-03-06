@@ -31,6 +31,9 @@ $manageContainerSchedules = "";
 $manageEmailLogs = "";
 $manageTeams ="";
 $manageInstructionManualLog = "";
+$manageRequestsParent= "";
+$manageRequests= "";
+$manageRequestTypes="";
 //echo  $file;
 if($file == "dashboardmain.php"){
 	$isDashboard = "active";
@@ -76,6 +79,12 @@ if($file == "dashboardmain.php"){
     $manageTeams = "active";
 }elseif($file == "adminManageInstructionManualLogs.php" || $file == "adminCreateInstructionManualLogs.php"){
     $manageInstructionManualLog = "active";
+}elseif($file == "adminManageRequests.php"){
+    $manageRequestsParent = "active";
+    $manageRequests = "active";
+}elseif($file == "adminManageRequestTypes.php"){
+    $manageRequestsParent = "active";
+    $manageRequestTypes = "active";
 }
 
 
@@ -199,6 +208,21 @@ if($file == "dashboardmain.php"){
                 	   	<span class="nav-label">Manage Customers</span>  
                    </a>
                 </li>
+                <li class="<?php echo $manageRequestsParent?>">
+					<a href='#'>
+						<i class='fa fa-tasks'></i> 
+						<span class='nav-label'>Requests</span>
+						<span class='fa arrow'></span>
+					</a>
+					<ul class='nav nav-second-level'>
+						<li class="<?php echo $manageRequests?>">
+							<a href='adminManageRequests.php'>Requests</a>
+						</li>
+						<li class="<?php echo $manageRequestTypes?>">
+							<a href='adminManageRequestTypes.php'>Request Types</a>
+						</li>
+					</ul>
+				</li>
                 <li class="<?php echo $isChangePassword;?>">
                     <a href="adminChangePassword.php"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Change Password</span>  
@@ -315,31 +339,22 @@ if($file == "dashboardmain.php"){
 						</a>
 					</li>
 					<?php }?>
-					<?php if( true || in_array(DepartmentType::Instruction_Manual,$departments)){?>
-					<!-- <li class="<?php ?>">
-						<a href="adminCreateRequestTypes.php">
-							<i class="fa fa-wrench"></i>
-							<span class="nav-label">Request Type</span>
-						</a>
-					</li> -->
-					<li class=''>
-						<a href='#'>
-							<i class='fa fa-bar-chart-o'></i> 
-							<span class='nav-label'>Requests</span>
-							<span class='fa arrow'></span>
-						</a>
-						<ul class='nav nav-second-level'>
-							<li class=''>
-								<a href='adminManageRequests.php'>Request</a>
-							</li>
-							<li class=''>
-								<a href='adminManageRequestTypes.php'>Request Type</a>
-							</li>
-							<li class=''>
-								<a href='adminCreateRequestType.php'>Add Request Type</a>
-							</li>
-						</ul>
-					</li>
+					<?php if( in_array(DepartmentType::Requests_Module,$departments)){?>
+						<li class="<?php echo $manageRequestsParent?>">
+							<a href='#'>
+								<i class='fa fa-tasks'></i> 
+								<span class='nav-label'>Requests</span>
+								<span class='fa arrow'></span>
+							</a>
+							<ul class='nav nav-second-level'>
+								<li class="<?php echo $manageRequests?>">
+									<a href='adminManageRequests.php'>Requests</a>
+								</li>
+								<li class="<?php echo $manageRequestTypes?>">
+									<a href='adminManageRequestTypes.php'>Request Types</a>
+								</li>
+							</ul>
+						</li>
 					<?php }?>
 	                <li class="<?php echo $isUserChangePassword?>">
 	                    <a href="userChangePassword.php"><i class="fa fa-key"></i> 
