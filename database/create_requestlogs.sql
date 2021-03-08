@@ -9,7 +9,7 @@ CREATE TABLE `requestlogs` (
   `createdon` datetime NOT NULL,
   `userseq` bigint(20) DEFAULT NULL,
   `requestattachmentseq` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `requestlogs`
   ADD PRIMARY KEY (`seq`),

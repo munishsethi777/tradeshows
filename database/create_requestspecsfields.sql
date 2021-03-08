@@ -7,7 +7,7 @@ CREATE TABLE `requestspecsfields` (
   `isrequired` tinyint(4) NOT NULL,
   `isvisible` tinyint(4) NOT NULL,
   `details` varchar(2000) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `requestspecsfields`
   ADD PRIMARY KEY (`seq`);
