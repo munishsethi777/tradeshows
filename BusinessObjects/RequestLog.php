@@ -3,7 +3,7 @@ class RequestLog{
     private $seq,$requestseq,$oldvalue,$newvalue,$attributename,$isspecfieldchange,$createdby,$createdon;
     
     public static $className = "RequestLog";
-    public static $tableName = "requestLogs";
+    public static $tableName = "requestlogs";
 
     public function setSeq($seq){
         $this->seq = $seq;
