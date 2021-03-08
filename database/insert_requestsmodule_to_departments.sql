@@ -1,0 +1,1 @@
+INSERT INTO `departments` (`seq`, `title`, `isenabled`, `createdon`, `lastmodifiedon`) VALUES ('11', 'Requests Module', '1', NULL, NULL);

@@ -72,5 +72,9 @@
             }
             return $arr;
         }
+        public function getAttributeBySeq($attribute,$seq){
+            $query = "SELECT " . $attribute . " FROM requesttypes WHERE seq = " . $seq;
+            return self::$dataStore->executeQuery($query,false,true)[0][$attribute];
+        }
     }
 ?>

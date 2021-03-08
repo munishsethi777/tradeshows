@@ -13,5 +13,5 @@ ALTER TABLE `requestspecsfields`
   ADD PRIMARY KEY (`seq`);
 
 ALTER TABLE `requestspecsfields`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=273;
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=324;
 COMMIT;

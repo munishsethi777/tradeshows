@@ -12,8 +12,8 @@ ALTER TABLE `requeststatuses`
   ADD KEY `requesttypeseq` (`requesttypeseq`);
 
 ALTER TABLE `requeststatuses`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
 
 ALTER TABLE `requeststatuses`
-  ADD CONSTRAINT `requesttypeseq` FOREIGN KEY (`requestTypeSeq`) REFERENCES `requesttypes` (`seq`);
+  ADD CONSTRAINT `requesttypeseq` FOREIGN KEY (`requesttypeseq`) REFERENCES `requesttypes` (`seq`);
 COMMIT;

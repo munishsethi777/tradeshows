@@ -86,7 +86,7 @@
                 }
             }
         }
-        public function getRequestLogs($requestLogSeq,$requestSeq,$attributeName,$excludeComments=false){
+        public function getRequestLogs($requestLogSeq,$requestSeq,$attributeName,$excludeComments=false,$requestLogSeqGreaterThan=""){
             $query = "SELECT requestlogs.*,createdby.fullname as createdbyfullname,oldvalue.fullname as oldvaluefullname,newvalue.fullname as newvaluefullname,requeststatusold.title as requeststatusold, requeststatusnew.title as requeststatusnew, requestattachments.attachmentfilename FROM `requestlogs`
                     LEFT JOIN users as createdby on createdby.seq = requestlogs.createdby 
                     LEFT JOIN users as oldvalue on oldvalue.seq = requestlogs.oldvalue
@@ -126,6 +126,14 @@
                 }
                 $query .= " requestlogs.attributename NOT LIKE '%comment%'";
             }
+            if($requestLogSeqGreaterThan != ''){
+                if(strpos($query,"WHERE") == false){
+                    $query .= " WHERE";
+                }else{
+                    $query .= " AND";
+                }
+                $query .= " requestlogs.seq > " . $requestLogSeqGreaterThan;
+            }
             $requestLog = self::$dataStore->executeQuery($query,false,true);
             return $requestLog;
         }
@@ -160,7 +168,7 @@
             } 
             return $commentHtml;
         }
-        public function historyLogHtml($requestLogHistory,$specsFieldTypeArr){
+        public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$inEditCase = false){
             $historyLogHtml = "";
             
             if(!empty($requestLogHistory)){
@@ -170,16 +178,18 @@
                 $request = self::$dataStore->executeQuery($query,false,true);
                 $backgroundColor = self::getColor($request[0]['createdby']);
                 $backgroundColor = implode(",",$backgroundColor);
-                $historyLogHtml .= "<div class='feed-element'>";
-                $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
-                $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
-                $historyLogHtml .= "</div>";
-                $historyLogHtml .= "<div class='media-body'>";
-                // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
-                $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
-                $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $request[0]['createon'] . "</small>";
-                $historyLogHtml .= "</div>";
-                $historyLogHtml .= "</div>";
+                if(!$inEditCase){
+                    $historyLogHtml .= "<div class='feed-element'>";
+                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
+                    $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "<div class='media-body'>";
+                    // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
+                    $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
+                    $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $request[0]['createdon'] . "</small>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "</div>";
+                }
                 foreach($requestLogHistory as $requestLogHistoryRow){
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
@@ -261,6 +271,8 @@
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "</div>";
                 }
+                $historyLogHtml .= "<input id='lastUpdatedHistorySeq' type='hidden' value='" . $requestLogHistoryRow['seq'] . "'/>";
+                $historyLogHtml .= "<input id='requestSeq' type='hidden' value='" . $requestLogHistoryRow['requestseq'] . "'/>";
             }
             return $historyLogHtml;
         }

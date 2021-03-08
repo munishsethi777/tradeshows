@@ -127,7 +127,7 @@ div#myDropZone {
 									</div>
 									<label class="col-lg-2 col-form-label bg-formLabel">Request Type</label>
 									<div class="col-lg-4">
-										<select id="requesttypeseq" class='form-control' onchange="onRequestTypeChange(this)"></select>
+										<select id="requesttypeseq" class='form-control' onchange="onRequestTypeChange(this)" required></select>
 									</div>
 								</div>
 
@@ -149,7 +149,7 @@ div#myDropZone {
 									<div class="col-lg-4">
 										<div class='input-group date' >
 											<input type='text' id='duedate' name='
-											' class='form-control dateControl datepicker' readonly>
+											' class='form-control dateControl datepicker' required>
 											<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
 										</div>
 									</div>
@@ -243,13 +243,13 @@ div#myDropZone {
 													<!-- <button id="commentCancelBtn" type="button" class="btn btn-light">Cancel</button> -->
 												</div>
 												<div role="tabpanel" id="tab-2" class="tab-pane">
+													
 													<div id="loadHistory"></div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								
 							</div>
 						</div>
 					</div>           
@@ -286,8 +286,10 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 		});
 		this.on("complete", function(file) {
 		   this.removeFile(file);
+		   loadHistory();
         });
 	}
+	
 });
 Dropzone.options.imageUpload = {
     maxFilesize:1,

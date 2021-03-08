@@ -16,7 +16,7 @@ ALTER TABLE `requestlogs`
   ADD KEY `requestseq` (`requestseq`);
 
 ALTER TABLE `requestlogs`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 ALTER TABLE `requestlogs`
   ADD CONSTRAINT `requestseq` FOREIGN KEY (`requestseq`) REFERENCES `requests` (`seq`);

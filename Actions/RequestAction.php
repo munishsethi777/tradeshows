@@ -172,6 +172,23 @@ if($call == "saveRequestAttachment"){
 		$message = $e->getMessage();
 	}
 }
+if($call == "loadHistory"){
+	try{
+		if(isset($_REQUEST['requestSeq']) && isset($_REQUEST['lastUpdatedHistorySeq'])){
+			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true,$_REQUEST['lastUpdatedHistorySeq']);
+			// $requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($request->getDepartmentSeq());
+		}else{
+			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true);
+		}
+		$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
+		$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
+		$requestLogHistoryHtml = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,false);
+		$response['data'] = $requestLogHistoryHtml;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);

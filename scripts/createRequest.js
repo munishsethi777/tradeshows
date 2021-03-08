@@ -120,7 +120,21 @@ const saveRequest = () => {
     var isRequiredApprovalFromManager="";
     var isRequiredApprovalFromRequester="";
     var isRequiredApprovalFromRobby="";
-    
+    var checkValidity = true;
+    var validateInput = "";
+
+    if(!document.getElementById("duedate").checkValidity()) {
+        checkValidity = false;
+        validateInput = "duedate";
+    }
+    if(!document.getElementById("requesttypeseq").checkValidity()) {
+        checkValidity = false;
+        validateInput = "requesttypeseq";
+    }
+    if(!document.getElementById("departmentseq").checkValidity()) {
+        checkValidity = false;
+        validateInput = "departmentseq";
+    }
     if($("#departmentseq").val()){
     	departmentSeq = $("#departmentseq").val();
     }
@@ -160,34 +174,53 @@ const saveRequest = () => {
     if($("#isrequiredapprovalfromrobby").val()){
     	isRequiredApprovalFromRobby = $("#isrequiredapprovalfromrobby").val();
     }
-    
     var approvedByManagerDate = "";
     var approvedByRequesterDate = "";
     var approvedByRobbyDate = "";
-    
     var attachmentfilename = $("input[name='attachmentfilename']").val();
-    $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + requestSpecsFieldsFormJson + "&departmentSeq=" + departmentSeq 
-            + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
-            + "&assignedBySeq=" + assignedBySeq + "&assignedToSeq=" + assignedToSeq + "&dueDate=" + dueDate + "&assigneeDueDate=" + assigneeDueDate
-            + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
-            + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
-            + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
-            + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename
-            ,(response)=>{
-                var responseObj = JSON.parse(response);
-                $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
-                Dropzone.autoDiscover = true;
-                requestAttachmentDropzone.processQueue();
-                var flag = showResponseToastr(response,null,null,"ibox");
-                if(flag){
-                	$(".commentsAndHistoryDiv").show();
-                }else{
-                	toastr.error(responseObj.message,'Failed');
-                }
-                
-                // closeRequestForm();
-                // $("#requestGrid").jqxGrid('updatebounddata', 'cells');
-        
+    if($("#requestSpecsFieldsForm")[0].checkValidity() == true && checkValidity == true){
+        $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + requestSpecsFieldsFormJson + "&departmentSeq=" + departmentSeq 
+                + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
+                + "&assignedBySeq=" + assignedBySeq + "&assignedToSeq=" + assignedToSeq + "&dueDate=" + dueDate + "&assigneeDueDate=" + assigneeDueDate
+                + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
+                + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
+                + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
+                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename
+                ,(response)=>{
+                    var responseObj = JSON.parse(response);
+                    $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
+                    Dropzone.autoDiscover = true;
+                    requestAttachmentDropzone.processQueue();
+                    var flag = showResponseToastr(response,null,null,"ibox");
+                    if(flag){
+                        $(".commentsAndHistoryDiv").show();
+                        loadHistory();
+                    }else{
+                        toastr.error(responseObj.message,'Failed');
+                    }
+                    
+                    // closeRequestForm();
+                    // $("#requestGrid").jqxGrid('updatebounddata', 'cells');
+            
+        });
+    }else{
+            if(!checkValidity){
+                document.getElementById(validateInput).reportValidity();
+            }else{
+                $("#requestSpecsFieldsForm")[0].reportValidity();
+            }
+    }
+}
+const loadHistory = () => {
+    var requestSeq = $("#seq").val();
+    var url = "Actions/RequestAction.php?call=loadHistory&requestSeq=" + requestSeq;;
+    if(($("#lastUpdatedHistorySeq").val() != undefined) && ($("#requestSeq").val() != undefined)){
+        var lastUpdatedHistorySeq = $("#lastUpdatedHistorySeq").val();
+        // var requestSeq = $("#requestSeq").val();
+        url = "Actions/RequestAction.php?call=loadHistory&lastUpdatedHistorySeq=" + lastUpdatedHistorySeq + "&requestSeq=" + requestSeq;
+    }
+    $.getJSON(url,(response)=>{
+        $('#loadHistory').append(response.data);
     });
 }
 function editButtonClick(seq) {

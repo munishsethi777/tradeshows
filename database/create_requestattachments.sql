@@ -8,8 +8,10 @@ CREATE TABLE `requestattachments` (
   `attachmenttype` varchar(15) DEFAULT NULL,
   `attachmenttitle` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 ALTER TABLE `requestattachments`
   ADD PRIMARY KEY (`seq`);
+
 ALTER TABLE `requestattachments`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 COMMIT;

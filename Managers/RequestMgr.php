@@ -78,13 +78,13 @@ class RequestMgr{
 
 				}elseif($fieldType == "date"){
 					$requestSpecsFieldsHTML .= "<div class='input-group date' >";
-					$requestSpecsFieldsHTML .= "<input type='text' id='" . $name . "' name='" . $name . "' value='' class='form-control dateControl datepicker' " . $isRequired . " readonly>";
+					$requestSpecsFieldsHTML .= "<input type='text' id='" . $name . "' name='" . $name . "' value='' class='form-control dateControl datepicker' " . $isRequired . ">";
 					$requestSpecsFieldsHTML .= "<span class='input-group-addon'><i class='fa fa-calendar'></i></span>";
 					$requestSpecsFieldsHTML .= "</div>";
 
 				}elseif($fieldType == "datetime"){
 					$requestSpecsFieldsHTML .= "<div class='input-group date' >";
-					$requestSpecsFieldsHTML .= "<input type='text' id='" . $name . "' name='" . $name . "' value='' class='form-control dateControl datetimepicker' " . $isRequired . " readonly>";
+					$requestSpecsFieldsHTML .= "<input type='text' id='" . $name . "' name='" . $name . "' value='' class='form-control dateControl datetimepicker' " . $isRequired . ">";
 					$requestSpecsFieldsHTML .= "<span class='input-group-addon'><i class='fa fa-calendar'></i></span>";
 					$requestSpecsFieldsHTML .= "</div>";
 				}elseif($fieldType == "textarea"){
@@ -117,8 +117,8 @@ class RequestMgr{
 	public function save($globalRequestVariable,$loggedInUserSeq){
 		$currentDate = date("Y-m-d h:i:s");
 		$requestSpecsFieldsFormJson = $globalRequestVariable['requestSpecsFieldsFormJson'];
-		$departmentSeq = $globalRequestVariable['departmentSeq'] == '' ? null : $globalRequestVariable['departmentSeq'];;
-		$requestTypeSeq = $globalRequestVariable['requestTypeSeq'] == '' ? null : $globalRequestVariable['requestTypeSeq'];;
+		$departmentSeq = $globalRequestVariable['departmentSeq'] == '' ? null : $globalRequestVariable['departmentSeq'];
+		$requestTypeSeq = $globalRequestVariable['requestTypeSeq'] == '' ? null : $globalRequestVariable['requestTypeSeq'];
 		$priority = $globalRequestVariable['priority'] == '' ? null : $globalRequestVariable['priority'];;
 		$requestStatusSeq = $globalRequestVariable['requestStatusSeq'] == '' ? null : $globalRequestVariable['requestStatusSeq'];
 		$assignedBy = $globalRequestVariable['assignedBySeq'] == '' ?  null : $globalRequestVariable['assignedBySeq'];
@@ -138,7 +138,10 @@ class RequestMgr{
 		$approvedByManagerDate = null;
 		$approvedByRequesterDate = null;
 		$approvedByRobbyDate = null;
-		
+		$requestTypeMgr = RequestTypeMgr::getInstance();
+		$requestTypeCode = $requestTypeMgr->getAttributeBySeq("requesttypecode",$requestTypeSeq);
+		$requestCode = "";
+
 		$request = new Request();
 		$request->setDepartmentSeq($departmentSeq);
 		$request->setRequestTypeSeq($requestTypeSeq);
@@ -168,12 +171,15 @@ class RequestMgr{
 		
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
+			$requestCode = $seq . "-" . $requestTypeCode;
 			$request->setSeq($seq);
+			$request->setCode($requestCode);
 			$requestLogMgr = RequestLogMgr::getInstance();
 			$existingRequest = $this->findBySeq($seq);
 			$request->setCreatedOn($existingRequest->getCreatedOn());
 			$request->setCreatedBy($existingRequest->getCreatedBy());
 			$requestLogMgr->saveUpdatedAttributes($existingRequest,$request,$loggedInUserSeq);
+			
 		}else{
 			$request->setCreatedOn($currentDate);
 			$request->setCreatedBy($loggedInUserSeq);
@@ -187,7 +193,14 @@ class RequestMgr{
 			// $requestLog->setIsSpecFieldChange(false);
 			// self::$dataStore->save($requestLog);
 		}
-		return self::$dataStore->save($request);
+		$seq = self::$dataStore->save($request);
+		if($requestCode == "" ){// It means new case
+			$requestCode = $seq . "-" . $requestTypeCode;
+			$attr = array("code" => $requestCode);
+			$condition = array("seq" => $seq);
+			self::$dataStore->updateByAttributes($attr,$condition);
+		}
+		return $seq;
 		// if(isset($_REQUEST['attachmentfilename']) && $_REQUEST['attachmentfilename'] != ''){
 		// 	$requestAttachmentMgr = RequestAttachmentMgr::getInstance();
 		// 	$requestAttachmentMgr->save($globalRequestVariable);
@@ -205,7 +218,6 @@ class RequestMgr{
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$arr = array();
 		foreach($rows as $row){
-		    $row["code"] = $row['requesttypecode'] . "-" . $row["seq"];
 			$row["createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","m-d-Y");
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y",$loggedInUserTimeZone);
 			$row["lastmodifiedon"] = $lastModifiedOn;

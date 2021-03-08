@@ -10,8 +10,9 @@ CREATE TABLE `requesttypes` (
 
 ALTER TABLE `requesttypes`
   ADD PRIMARY KEY (`seq`),
+  ADD UNIQUE KEY `Request Type Code` (`requesttypecode`) USING BTREE,
   ADD KEY `deptseq` (`departmentseq`);
 
 ALTER TABLE `requesttypes`
-  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 COMMIT;
