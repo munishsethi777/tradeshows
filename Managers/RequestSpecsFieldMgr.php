@@ -23,12 +23,12 @@
                         $requestSpecsField->setTitle($request['requestfieldtitle'][$i]);
                         $requestSpecsField->setName(strtolower(str_replace(' ','_',$request['requestfieldtitle'][$i])));
                         $requestSpecsField->setFieldType($request['requestfieldtype'][$i]);
-                        $isRequired = false;
+                        $isRequired = 0;
                         if(isset($request['required'][$i]) && $request['required'][$i] == 'yes' ){
                             $isRequired = true;
                         }
                         $requestSpecsField->setIsRequired($isRequired);
-                        $isVisible = false;
+                        $isVisible = 0;
                         if(isset($request['isvisible'][$i]) && $request['isvisible'][$i] == 'yes' ){
                             $isVisible = true;
                         }
