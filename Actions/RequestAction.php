@@ -83,7 +83,7 @@ if($call == "getRequestDataBySeqForEdit"){
 		$requestLogComments = $requestLogMgr->getRequestLogs(null,$seq,"comment");
 		$requestLogCommentsHtml = $requestLogMgr->commentsHtml($requestLogComments);
 		$requestLogHistory = $requestLogMgr->getRequestLogs(null,$seq,null,true);
-		$requestLogHistoryHtml = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr);
+		$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr);
 		$requestAttachments = $requestAttachmentMgr->findByRequestSeq($seq);
 		$requestAttachmentsHtml = $requestAttachmentMgr->attachmentHtml($requestAttachments);
 		$requestFormOtherFields = array();
@@ -91,7 +91,7 @@ if($call == "getRequestDataBySeqForEdit"){
 		$response['data']['requestspecsformhtml'] = $requestFormHtml;
 		$response['data']['requestspecificationjson'] = $request->getRequestSpecifications();
 		$response['data']['requestLogCommentsHtml'] = $requestLogCommentsHtml;
-		$response['data']['requestLogHistoryHtml'] = $requestLogHistoryHtml;
+		$response['data']['historyLog'] = $historyLog;
 		$requestFormOtherFields['departmentseq'] = $request->getDepartmentSeq();
 		$requestFormOtherFields['requesttypeseq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields['priority'] = $request->getPriority();
@@ -174,16 +174,21 @@ if($call == "saveRequestAttachment"){
 }
 if($call == "loadHistory"){
 	try{
-		if(isset($_REQUEST['requestSeq']) && isset($_REQUEST['lastUpdatedHistorySeq'])){
+		$isAppendingHistory = $_REQUEST['lastUpdatedHistorySeq'] == '' ? false : true;// will tell if we are appending logs history on UI or this is a new thread
+
+		if($_REQUEST['requestSeq'] !='' && $_REQUEST['lastUpdatedHistorySeq'] != ''){
 			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true,$_REQUEST['lastUpdatedHistorySeq']);
 			// $requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($request->getDepartmentSeq());
+			$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
+			$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
+			$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory);
 		}else{
 			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true);
+			$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
+			$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
+			$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory);
 		}
-		$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
-		$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
-		$requestLogHistoryHtml = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,false);
-		$response['data'] = $requestLogHistoryHtml;
+		$response['data'] = $historyLog;
 	}catch(Exception $e){
 		$message = $e->getMessage();
 		$success = 0;

@@ -168,9 +168,9 @@
             } 
             return $commentHtml;
         }
-        public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$inEditCase = false){
+        public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory = false){
             $historyLogHtml = "";
-            
+            $historyLog = array();
             if(!empty($requestLogHistory)){
                 $query = "SELECT requests.*,users.fullname FROM requests
                         LEFT JOIN users on users.seq = requests.createdby
@@ -178,7 +178,7 @@
                 $request = self::$dataStore->executeQuery($query,false,true);
                 $backgroundColor = self::getColor($request[0]['createdby']);
                 $backgroundColor = implode(",",$backgroundColor);
-                if(!$inEditCase){
+                if(!$isAppendingHistory){
                     $historyLogHtml .= "<div class='feed-element'>";
                     $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
                     $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
@@ -271,10 +271,10 @@
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "</div>";
                 }
-                $historyLogHtml .= "<input id='lastUpdatedHistorySeq' type='hidden' value='" . $requestLogHistoryRow['seq'] . "'/>";
-                $historyLogHtml .= "<input id='requestSeq' type='hidden' value='" . $requestLogHistoryRow['requestseq'] . "'/>";
             }
-            return $historyLogHtml;
+            $historyLog['historyLogHtml'] = $historyLogHtml;
+            $historyLog['lastUpdatedHistorySeq'] = $requestLogHistoryRow['seq'];
+            return $historyLog;
         }
         public static function getUserNameInitials($userName){
             $userNameArr = explode(" ",$userName);
