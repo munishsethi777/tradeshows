@@ -293,7 +293,7 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 });
 Dropzone.options.imageUpload = {
     maxFilesize:1,
-    acceptedFiles: ".jpeg,.jpg,.png,.gif"
+    acceptedFiles: ".jpeg,.jpg,.png,.gif,.xls,.pdf,.xlsx,.csv"
   };
 function loadGrid(){
 	var actions = function(row, columnfield, value, defaulthtml, columnproperties) {
