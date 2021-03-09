@@ -7,6 +7,8 @@ class TruckerType extends BasicEnum{
     const duncan_and_sons = "Duncan and Sons";
     const eco_express = "Eco Express";
     const forrest_logistics = "Forrest Logistics LLC";
+    const jhs = "JHS";
+    const jmcl_freightways = "JMCL Freightways";
     const alpine = "KKG";
     const kkgr = "KKGR";
     const m_and_a_dcw = "M&A / DCW";
@@ -14,6 +16,8 @@ class TruckerType extends BasicEnum{
     const pac_anchor_trucking = "Pac Anchor Trucking";
     const rbw_logistics = "RBW Logistics";
     const realitic_transportation = "Realistic Transportation";
+    const rps_transport = "RPS Transport ";
     const team_alliance = "Team alliance";
     const uls_group = "ULS United Logistics Services Group";
+    const youngs_transport = "Youngs Transport";
 }
