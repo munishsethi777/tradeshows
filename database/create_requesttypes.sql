@@ -6,7 +6,7 @@ CREATE TABLE `requesttypes` (
   `createdby` bigint(20) NOT NULL,
   `createdon` datetime NOT NULL,
   `lastmodifiedon` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `requesttypes`
   ADD PRIMARY KEY (`seq`),

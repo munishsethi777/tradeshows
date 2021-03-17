@@ -149,7 +149,7 @@ $exportLimit =5000;
     	<input type="hidden" name="call" value="exportFilterData" />
     	<input type="hidden" name="filterId" id="filterId" />
     </form>
-    <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_self'>
+    <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_blank'>
         <input type="hidden" id="id" name="id" />
     </form>
 
@@ -292,7 +292,7 @@ $exportLimit =5000;
             {text: 'Class',datafield: 'classcode',width: "5%",filtercondition: 'STARTS_WITH'},
             {text: 'Entry Date',datafield: 'entrydate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
             {text: 'PO Ship Date',datafield: 'poshipdate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
-            {text: 'IM Due Date',datafield: 'approvedmanualdueprintdate',filtertype: 'date',width: "10%",cellsformat: 'M-dd-yyyy'},
+            {text: 'IM Due Date',datafield: 'finalduedate',filtertype: 'date',width: "10%",cellsformat: 'M-dd-yyyy'},
             {text: 'Status',datafield: 'instructionmanuallogstatus',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: statusTypes,filtercondition: 'equal'},
             {text: 'Modified On',datafield: 'instructionmanuallogs.lastmodifiedon',filtertype: 'date',width: "12%",cellsformat: 'M-dd-yyyy hh:mm tt'}
         ]
@@ -311,7 +311,7 @@ $exportLimit =5000;
                 {name: 'classcode',type: 'string'},
                 {name: 'entrydate',type: 'date'},
                 {name: 'poshipdate',type: 'date'},
-                {name: 'approvedmanualdueprintdate',type: 'date'},
+                {name: 'finalduedate',type: 'date'},
                 {name: 'instructionmanuallogstatus',type: 'string'},
                 {name: 'iscompleted',type: 'boolean'},
                 {name: 'neworrevised',type: 'string'},

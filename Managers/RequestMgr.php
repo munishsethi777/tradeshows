@@ -115,7 +115,7 @@ class RequestMgr{
 		return $htmlArray;
 	}
 	public function save($globalRequestVariable,$loggedInUserSeq){
-		$currentDate = date("Y-m-d h:i:s");
+		$currentDateTime = new DateTime();
 		$requestSpecsFieldsFormJson = $globalRequestVariable['requestSpecsFieldsFormJson'];
 		$departmentSeq = $globalRequestVariable['departmentSeq'] == '' ? null : $globalRequestVariable['departmentSeq'];
 		$requestTypeSeq = $globalRequestVariable['requestTypeSeq'] == '' ? null : $globalRequestVariable['requestTypeSeq'];
@@ -167,7 +167,7 @@ class RequestMgr{
 		$request->setCompletedDate(null);
 		$request->setActualHours(null);
 		$request->setIsCompleted(null);
-        $request->setLastModifiedOn($currentDate);
+        $request->setLastModifiedOn($currentDateTime);
 		
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
@@ -181,7 +181,7 @@ class RequestMgr{
 			$requestLogMgr->saveUpdatedAttributes($existingRequest,$request,$loggedInUserSeq);
 			
 		}else{
-			$request->setCreatedOn($currentDate);
+			$request->setCreatedOn($currentDateTime);
 			$request->setCreatedBy($loggedInUserSeq);
 			// $requestLog = new RequestLog();
 			// $requestLog->setRequestSeq($requestSeq);
@@ -218,8 +218,8 @@ class RequestMgr{
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$arr = array();
 		foreach($rows as $row){
-			$row["createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","m-d-Y");
-			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y",$loggedInUserTimeZone);
+			$row["createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
 			$row["lastmodifiedon"] = $lastModifiedOn;
 			$row["priority"] = RequestPriorityTypes::getValue($row['priority']);
 			array_push($arr,$row);

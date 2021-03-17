@@ -7,7 +7,7 @@ CREATE TABLE `requestattachments` (
   `attachmentbytes` int(11) DEFAULT NULL,
   `attachmenttype` varchar(15) DEFAULT NULL,
   `attachmenttitle` varchar(250) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `requestattachments`
   ADD PRIMARY KEY (`seq`);

@@ -194,14 +194,15 @@ const saveRequest = () => {
                     var flag = showResponseToastr(response,null,null,"ibox");
                     if(flag){
                         $(".commentsAndHistoryDiv").show();
+                        requestAttachmentDropzone.options.autoProcessQueue = true;
+                        requestAttachmentDropzone.removeAllFiles(true);
                         loadHistory();
                     }else{
                         toastr.error(responseObj.message,'Failed');
                     }
                     
                     // closeRequestForm();
-                    // $("#requestGrid").jqxGrid('updatebounddata', 'cells');
-            
+                    $("#requestGrid").jqxGrid('updatebounddata', 'cells');
         });
     }else{
             if(!checkValidity){
@@ -213,14 +214,12 @@ const saveRequest = () => {
 }
 const loadHistory = () => {
     var requestSeq = $("#seq").val();
-    var url = "Actions/RequestAction.php?call=loadHistory&requestSeq=" + requestSeq;;
-    if(($("#lastUpdatedHistorySeq").val() != undefined) && ($("#requestSeq").val() != undefined)){
-        var lastUpdatedHistorySeq = $("#lastUpdatedHistorySeq").val();
-        // var requestSeq = $("#requestSeq").val();
-        url = "Actions/RequestAction.php?call=loadHistory&lastUpdatedHistorySeq=" + lastUpdatedHistorySeq + "&requestSeq=" + requestSeq;
-    }
+    var lastUpdatedHistorySeq = $("#lastUpdatedHistorySeq").val();
+    var url = "Actions/RequestAction.php?call=loadHistory&lastUpdatedHistorySeq=" + lastUpdatedHistorySeq + "&requestSeq=" + requestSeq;
+
     $.getJSON(url,(response)=>{
-        $('#loadHistory').append(response.data);
+        $('#loadHistory').append(response.data.historyLogHtml);
+        $('#lastUpdatedHistorySeq').val(response.data.lastUpdatedHistorySeq);
     });
 }
 function editButtonClick(seq) {
@@ -246,6 +245,8 @@ function editButtonClick(seq) {
     $("#requestFormDiv #approvedbyrobbydate").val('');
     $("#loadHistory,#loadComments").html("");
     $("#saveRequestLogComments").prop('disabled','true');
+    $("#lastUpdatedHistorySeq").val('');
+    
     // $("#requestAttachmentDropzoneForm").empty('');
     // requestAttachmentDropzone.removeFile(file);
     $("#attachmentsRow").html("");
@@ -280,7 +281,8 @@ function editButtonClick(seq) {
             $("#" + index).val(value);
         });
         $('#loadComments').html(response.data.requestLogCommentsHtml);
-        $('#loadHistory').append(response.data.requestLogHistoryHtml);
+        $('#loadHistory').append(response.data.historyLog.historyLogHtml);
+        $('#lastUpdatedHistorySeq').val(response.data.historyLog.lastUpdatedHistorySeq);
         $("#requestAttachmentDropzoneForm #requestSeqForRequestAttachment").val(seq);
         $("#attachmentsRow").html(response.data.requestAttachmentsHtml);
     });

@@ -84,8 +84,7 @@
             foreach($rows as $row){
                 $row["entrydate"] = DateUtil::convertDateToFormat($row["entrydate"],"Y-m-d","Y-m-d H:i:s");
                 $row["poshipdate"] = DateUtil::convertDateToFormat($row["poshipdate"],"Y-m-d","Y-m-d H:i:s");
-                $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
-                
+                $row["finalduedate"] = DateUtil::convertDateToFormat($row["finalduedate"], "Y-m-d", "Y-m-d H:i:s");
                 $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
                 $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
                 $row["instructionmanuallogs.lastmodifiedon"] = $lastModifiedOn;

@@ -243,7 +243,7 @@ div#myDropZone {
 													<!-- <button id="commentCancelBtn" type="button" class="btn btn-light">Cancel</button> -->
 												</div>
 												<div role="tabpanel" id="tab-2" class="tab-pane">
-													
+													<input id="lastUpdatedHistorySeq" type="hidden" value="">
 													<div id="loadHistory"></div>
 												</div>
 											</div>
@@ -293,7 +293,7 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 });
 Dropzone.options.imageUpload = {
     maxFilesize:1,
-    acceptedFiles: ".jpeg,.jpg,.png,.gif"
+    acceptedFiles: ".jpeg,.jpg,.png,.gif,.xls,.pdf,.xlsx,.csv"
   };
 function loadGrid(){
 	var actions = function(row, columnfield, value, defaulthtml, columnproperties) {
@@ -308,11 +308,11 @@ function loadGrid(){
 		{ text: 'id', datafield: 'seq' , hidden:true},
 		{ text: 'Department', datafield: 'departmenttitle', width:"13%"},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},
-		{ text: 'Request Code', datafield: 'code', width:"10%"},
+		{ text: 'Request Code', datafield: 'code', width:"15%"},
 		{ text: 'Priority', datafield: 'priority', width:"5%"},
 		{ text: 'Request Type', datafield: 'requesttypetitle',width:"10%"}, 
 		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%"},
-		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"10%"},	
+		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"14%"},	
 		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%"},       
 		{ text: 'Status', datafield: 'requeststatustitle', width:"8%"},
 		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"10%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt'},
@@ -421,6 +421,7 @@ function loadGrid(){
 				$("#requestFormDiv #assigneeDueDate").val('');
 				$("#requestFormDiv #assignedbyseq").val('');
         		$("#requestFormDiv #assignedtoseq").val('');
+				$("#lastUpdatedHistorySeq").val('');
 				// $("#requestAttachmentDropzoneForm").empty('');
 				$('#requestFormDiv').modal('show');
 				$("#loadHistory,#loadComments").html("");
