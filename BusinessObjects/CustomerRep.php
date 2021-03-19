@@ -1,6 +1,8 @@
 <?php
     class CustomerRep{
-        private $seq,$fullname,$email,$ext,$cellphone,$position,$category,$skypeid,$customerreptype;
+        private $seq,$fullname,$email,$ext,$cellphone,$position,$category,$skypeid,$customerreptype,$repnumber,$omscustid,$territory,
+        $companyname,$shiptoaddress,$city,$state,$zip,$commission,$isreceivesmonthlysalesreport,$pricingtier,$seniorrephandlingaccount,
+        $salesadminassigned;
 
         public static $className = "CustomerRep";
         public static $tableName = "customerreps";  
@@ -58,6 +60,84 @@
         }
         public function getCustomerRepType(){
             return $this->customerreptype;
+        }
+        public function setRepNumber($repNumber){
+            $this->repnumber = $repNumber;
+        }
+        public function getRepNumber(){
+            return $this->repnumber;
+        }
+        public function setOmsCustId($omsCustId){
+            $this->omscustid = $omsCustId;
+        }
+        public function getOmsCustId(){
+            return $this->omscustid;
+        }
+        public function setTerritory($territory){
+            $this->territory = $territory;
+        }
+        public function getTerritory(){
+            return $this->territory;
+        }
+        public function setCompanyName($companyName){
+            $this->companyname = $companyName;
+        }
+        public function getCompanyName(){
+            return $this->companyname;
+        }
+        public function setShipToAddress($shipToAddress){
+            $this->shiptoaddress = $shipToAddress;
+        }
+        public function getShipToAddress(){
+            return $this->shiptoaddress;
+        }
+        public function setCity($city){
+            $this->city = $city;
+        }
+        public function getCity(){
+            return $this->city;
+        }
+        public function setState($state){
+            $this->state = $state;
+        }
+        public function getState(){
+            return $this->state;
+        }
+        public function setZip($zip){
+            $this->zip = $zip;
+        }
+        public function getZip(){
+            return $this->zip;
+        }
+        public function setCommission($commission){
+            $this->commission = $commission;
+        }
+        public function getCommission(){
+            return $this->commission;
+        }
+        public function setIsReceivesMonthlySalesReport($isReceivesMonthlySalesReport){
+            $this->isreceivesmonthlysalesreport = $isReceivesMonthlySalesReport;
+        }
+        public function getIsReceivesMonthlySalesReport(){
+            return $this->isreceivesmonthlysalesreport;
+        }
+        public function setPricingTier($pricingTier){
+            $this->pricingtier = $pricingTier;
+        }
+        public function getPricingTier(){
+            return $this->pricingtier;
+        }
+        public function setSeniorRepHandlingAccount($seniorRepHandlingAccount){
+            $this->seniorrephandlingaccount = $seniorRepHandlingAccount;
+        }
+        public function getSeniorRepHandlingAccount(){
+            return $this->seniorrephandlingaccount;
+        }
+        public function setSalesAdminAssigned($salesAdminAssigned){
+            $this->salesadminassigned = $salesAdminAssigned;
+        }
+        public function getSalesAdminAssigned(){
+            return $this->salesadminassigned;
         }
         public function createFromRequest($request){
             if (is_array($request)){

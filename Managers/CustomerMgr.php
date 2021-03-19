@@ -10,11 +10,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerBusinessType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BusinessCategoryType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerRepAllotment.php");
 
 class CustomerMgr{
 	
 	private static  $customerMgr;
 	private static $dataStore;
+	private static $customerRepAllotmentDataStore;
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 17;
@@ -44,6 +46,7 @@ class CustomerMgr{
 		{
 			self::$customerMgr = new CustomerMgr();
 			self::$dataStore = new BeanDataStore(Customer::$className, Customer::$tableName);
+			self::$customerRepAllotmentDataStore = new BeanDataStore(CustomerRepAllotment::$className, CustomerRepAllotment::$tableName);
 		}
 		return self::$customerMgr;
 	}
@@ -61,7 +64,13 @@ class CustomerMgr{
         }
         return $id;
     }
-    
+    public function saveCustomerRepAllotment($customerRepAllotment){
+		$id = self::$customerRepAllotmentDataStore->save($customerRepAllotment);
+		return $id;
+	}
+	public function deleteCustomerRepAllotmentByAttribute($colValuePair){
+		self::$customerRepAllotmentDataStore->deleteByAttribute($colValuePair);
+	}
     public function updateOject($conn,$customer,$condition){
     	self::$dataStore->updateObject($customer, $condition, $conn);
     }
@@ -568,5 +577,27 @@ class CustomerMgr{
 		$customer = self::$dataStore->executeQuery($query,false,true);
 		return $customer[0];
 	}
-	
+	public function searchCustomerRep($searchString,$customerRepType){
+		$sql = "select customerreps.* from customerreps";
+		if($searchString != null){
+			$sql .= " WHERE fullname like '%". $searchString ."%'";
+		}
+		if($customerRepType != null){
+			if(strpos($sql,"WHERE") == false){
+				$sql .= " WHERE";
+			}else{
+				$sql .= " AND";
+			}
+			$sql .= " customerreptype='" . $customerRepType ."'";
+		}
+		$users =   self::$dataStore->executeQuery($sql,false,true);
+		return $users;
+	}
+	public function getCustomerRepAllotmentByCustomerSeq($seq){
+		$query = "SELECT customerrepallotments.customerrepseq,customerrepallotments.seq as customerrepallotmentseq,customerreps.* from customerrepallotments
+				LEFT JOIN customerreps on customerreps.seq = customerrepallotments.customerrepseq
+				WHERE customerseq = " . $seq;
+		$customerReps = self::$customerRepAllotmentDataStore->executeQuery($query,false,true);
+		return $customerReps;
+	}
 }

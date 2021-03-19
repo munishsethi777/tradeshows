@@ -3,6 +3,7 @@ require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerRepAllotment.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -23,81 +24,97 @@ if($call == "saveCustomer"){
         $salesReps = array();
         $internalSupports = array();
         try{
-            for($i = 0;$i< count($_REQUEST["buyer_firstname"]);$i++){
-                if(empty($_REQUEST["buyer_firstname"][$i]) && empty($_REQUEST["buyer_lastname"][$i]) 
-                    && empty($_REQUEST["buyer_emailid"][$i]) && empty($_REQUEST["buyer_phone"][$i])
-                    && empty($_REQUEST["buyer_phoneext"][$i]) && empty($_REQUEST["buyer_cellphone"][$i])
-                    && empty($_REQUEST["buyer_skypePersonId"][$i]) && empty($_REQUEST["buyer_category"][$i])
-                    && empty($_REQUEST["buyer_position"][$i])
-                    ){
-                        // Do nothing if all fields are empty
-                }else{
-                    $arr = array();
-                    $arr["firstname"] = $_REQUEST["buyer_firstname"][$i];
-                    $arr["lastname"] = $_REQUEST["buyer_lastname"][$i];
-                    $arr["emailid"] = $_REQUEST["buyer_emailid"][$i];
-                    $arr["phone"] = $_REQUEST["buyer_phone"][$i];
-                    $arr["phoneext"] = $_REQUEST["buyer_phoneext"][$i];
-                    $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
-                    // $arr["skypepersonid"] = $_REQUEST["buyer_skypePersonId"][$i];
-                    $arr["position"] = $_REQUEST["buyer_position"][$i];
-                    $arr["category"] = $_REQUEST["buyer_category"][$i];
-                    $arr["notes"] = $_REQUEST["buyer_notes"][$i];
-                    $buyers[] = $arr;
+            if(isset($_REQUEST["buyer_firstname"])){
+                for($i = 0;$i< count($_REQUEST["buyer_firstname"]);$i++){
+                    if(empty($_REQUEST["buyer_firstname"][$i]) && empty($_REQUEST["buyer_lastname"][$i]) 
+                        && empty($_REQUEST["buyer_emailid"][$i]) && empty($_REQUEST["buyer_phone"][$i])
+                        && empty($_REQUEST["buyer_phoneext"][$i]) && empty($_REQUEST["buyer_cellphone"][$i])
+                        && empty($_REQUEST["buyer_skypePersonId"][$i]) && empty($_REQUEST["buyer_category"][$i])
+                        && empty($_REQUEST["buyer_position"][$i])
+                        ){
+                            // Do nothing if all fields are empty
+                    }else{
+                        $arr = array();
+                        $arr["firstname"] = $_REQUEST["buyer_firstname"][$i];
+                        $arr["lastname"] = $_REQUEST["buyer_lastname"][$i];
+                        $arr["emailid"] = $_REQUEST["buyer_emailid"][$i];
+                        $arr["phone"] = $_REQUEST["buyer_phone"][$i];
+                        $arr["phoneext"] = $_REQUEST["buyer_phoneext"][$i];
+                        $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
+                        // $arr["skypepersonid"] = $_REQUEST["buyer_skypePersonId"][$i];
+                        $arr["position"] = $_REQUEST["buyer_position"][$i];
+                        $arr["category"] = $_REQUEST["buyer_category"][$i];
+                        $arr["notes"] = $_REQUEST["buyer_notes"][$i];
+                        $buyers[] = $arr;
+                    }
                 }
             }
         }catch(Exception $e){}
-        if(isset($_REQUEST["salesRep_firstname"])){
-            for($i = 0;$i<count($_REQUEST["salesRep_firstname"]);$i++){
-                if(empty($_REQUEST["salesRep_firstname"][$i]) && empty($_REQUEST["salesRep_lastname"][$i]) 
-                    && empty($_REQUEST["salesRep_emailid"][$i]) && empty($_REQUEST["salesRep_phone"][$i])
-                    && empty($_REQUEST["salesRep_phoneext"][$i]) && empty($_REQUEST["salesRep_cellphone"][$i])
-                    && empty($_REQUEST["salesRep_skypePersonId"][$i]) && empty($_REQUEST["salesRep_category"][$i])
-                    && empty($_REQUEST["salesRep_position"][$i])
-                    ){ 
-                        // Do nothing if all fields are empty
-                }else{
-                    $arr = array();
-                    $arr["firstname"] = $_REQUEST["salesRep_firstname"][$i];
-                    $arr["lastname"] = $_REQUEST["salesRep_lastname"][$i];
-                    $arr["emailid"] = $_REQUEST["salesRep_emailid"][$i];
-                    $arr["phone"] = $_REQUEST["salesRep_phone"][$i];
-                    $arr["phoneext"] = $_REQUEST["salesRep_phoneext"][$i];
-                    $arr["cellphone"] = $_REQUEST["salesRep_cellphone"][$i];
-                    // $arr["responsiblity"] = $_REQUEST["salesRep_responsiblity"][$i];
-                    // $arr["skypepersonid"] = $_REQUEST["salesRep_skypePersonId"][$i];
-                    $arr["position"] = $_REQUEST["salesRep_position"][$i];
-                    $arr["category"] = $_REQUEST["salesRep_category"][$i];
-                    $arr["notes"] = $_REQUEST["salesRep_notes"][$i];
-                    $salesReps[] = $arr;
-                }
-            }
-        }
-        if(isset($_REQUEST["internalSupport_firstname"])){
-            for($i = 0;$i < count($_REQUEST["internalSupport_firstname"]);$i++){
-                if(empty($_REQUEST["internalSupport_firstname"][$i]) && empty($_REQUEST["internalSupport_lastname"][$i]) 
-                    && empty($_REQUEST["internalSupport_emailid"][$i]) && empty($_REQUEST["internalSupport_phone"][$i])
-                    && empty($_REQUEST["internalSupport_phoneext"][$i]) && empty($_REQUEST["internalSupport_cellphone"][$i])
-                    && empty($_REQUEST["internalSupport_skypePersonId"][$i]) && empty($_REQUEST["internalSupport_category"][$i])
-                    && empty($_REQUEST["internalSupport_position"][$i])
-                    ){
-                        // Do nothing if all fields are empty
-                }else{
-                    $arr = array();
-                    $arr["firstname"] = $_REQUEST["internalSupport_firstname"][$i];
-                    $arr["lastname"] = $_REQUEST["internalSupport_lastname"][$i];
-                    $arr["emailid"] = $_REQUEST["internalSupport_emailid"][$i];
-                    $arr["phone"] = $_REQUEST["internalSupport_phone"][$i];
-                    $arr["phoneext"] = $_REQUEST["internalSupport_phoneext"][$i];
-                    $arr["cellphone"] = $_REQUEST["internalSupport_cellphone"][$i];
-                    $arr["skypepersonid"] = $_REQUEST["internalSupport_skypePersonId"][$i];
-                    $arr["position"] = $_REQUEST["internalSupport_position"][$i];
-                    $arr["category"] = $_REQUEST["internalSupport_category"][$i];
-                    $arr["notes"] = $_REQUEST["internalSupport_notes"][$i];
-                    $internalSupports[] = $arr;
-                }
-            }
-        }
+        // if(isset($_REQUEST["salesRep_firstname"])){
+        //     for($i = 0;$i<count($_REQUEST["salesRep_firstname"]);$i++){
+        //         if(empty($_REQUEST["salesRep_firstname"][$i]) && empty($_REQUEST["salesRep_lastname"][$i]) 
+        //             && empty($_REQUEST["salesRep_emailid"][$i]) && empty($_REQUEST["salesRep_phone"][$i])
+        //             && empty($_REQUEST["salesRep_phoneext"][$i]) && empty($_REQUEST["salesRep_cellphone"][$i])
+        //             && empty($_REQUEST["salesRep_skypePersonId"][$i]) && empty($_REQUEST["salesRep_category"][$i])
+        //             && empty($_REQUEST["salesRep_position"][$i])
+        //             ){ 
+        //                 // Do nothing if all fields are empty
+        //         }else{
+        //             $arr = array();
+        //             $arr["firstname"] = $_REQUEST["salesRep_firstname"][$i];
+        //             $arr["lastname"] = $_REQUEST["salesRep_lastname"][$i];
+        //             $arr["emailid"] = $_REQUEST["salesRep_emailid"][$i];
+        //             $arr["phone"] = $_REQUEST["salesRep_phone"][$i];
+        //             $arr["phoneext"] = $_REQUEST["salesRep_phoneext"][$i];
+        //             $arr["cellphone"] = $_REQUEST["salesRep_cellphone"][$i];
+        //             // $arr["responsiblity"] = $_REQUEST["salesRep_responsiblity"][$i];
+        //             // $arr["skypepersonid"] = $_REQUEST["salesRep_skypePersonId"][$i];
+        //             $arr["position"] = $_REQUEST["salesRep_position"][$i];
+        //             $arr["category"] = $_REQUEST["salesRep_category"][$i];
+        //             $arr["notes"] = $_REQUEST["salesRep_notes"][$i];
+        //             $arr["repnumber"] = $_REQUEST["salesRep_repNumber"][$i];
+        //             $arr["omscustid"] = $_REQUEST["salesRep_omsCustId"][$i];
+        //             $arr["territory"] = $_REQUEST["salesRep_territory"][$i];
+        //             $arr["companyname"] = $_REQUEST["salesRep_companyName"][$i];
+        //             $arr["shiptoaddress"] = $_REQUEST["salesRep_shipToAddress"][$i];
+        //             $arr["city"] = $_REQUEST["salesRep_city"][$i];
+        //             $arr["state"] = $_REQUEST["salesRep_state"][$i];
+        //             $arr["zip"] = $_REQUEST["salesRep_zip"][$i];
+        //             $arr["commission"] = $_REQUEST["salesRep_commission"][$i];
+        //             $arr["isreceivesmonthlysalesreport"] = $_REQUEST["salesRep_isReceivesMonthlySalesReport"][$i];
+        //             $arr["pricingtier"] = $_REQUEST["salesRep_pricingTier"][$i];
+        //             $arr["seniorrephandlingaccount"] = $_REQUEST["salesRep_seniorRepHandlingAccount"][$i];
+        //             $arr["salesadminassigned"] = $_REQUEST["salesRep_salesAdminAssigned"][$i];
+        //             $salesReps[] = $arr;
+        //         }
+        //     }
+        // }
+        
+        // if(isset($_REQUEST["internalSupport_firstname"])){
+        //     for($i = 0;$i < count($_REQUEST["internalSupport_firstname"]);$i++){
+        //         if(empty($_REQUEST["internalSupport_firstname"][$i]) && empty($_REQUEST["internalSupport_lastname"][$i]) 
+        //             && empty($_REQUEST["internalSupport_emailid"][$i]) && empty($_REQUEST["internalSupport_phone"][$i])
+        //             && empty($_REQUEST["internalSupport_phoneext"][$i]) && empty($_REQUEST["internalSupport_cellphone"][$i])
+        //             && empty($_REQUEST["internalSupport_skypePersonId"][$i]) && empty($_REQUEST["internalSupport_category"][$i])
+        //             && empty($_REQUEST["internalSupport_position"][$i])
+        //             ){
+        //                 // Do nothing if all fields are empty
+        //         }else{
+        //             $arr = array();
+        //             $arr["firstname"] = $_REQUEST["internalSupport_firstname"][$i];
+        //             $arr["lastname"] = $_REQUEST["internalSupport_lastname"][$i];
+        //             $arr["emailid"] = $_REQUEST["internalSupport_emailid"][$i];
+        //             $arr["phone"] = $_REQUEST["internalSupport_phone"][$i];
+        //             $arr["phoneext"] = $_REQUEST["internalSupport_phoneext"][$i];
+        //             $arr["cellphone"] = $_REQUEST["internalSupport_cellphone"][$i];
+        //             $arr["skypepersonid"] = $_REQUEST["internalSupport_skypePersonId"][$i];
+        //             $arr["position"] = $_REQUEST["internalSupport_position"][$i];
+        //             $arr["category"] = $_REQUEST["internalSupport_category"][$i];
+        //             $arr["notes"] = $_REQUEST["internalSupport_notes"][$i];
+        //             $internalSupports[] = $arr;
+        //         }
+        //     }
+        // }
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
         if(isset($_REQUEST["fullNameSelect"])){
@@ -123,6 +140,29 @@ if($call == "saveCustomer"){
             $message = StringConstants::CUSTOMER_UPDATE_SUCCESSFULLY;
         }
         $seq = $customerMgr->saveCustomerObject($customer);
+        $colValurArr = array();
+        $colValueArr['customerseq'] = $seq;
+        $customerMgr->deleteCustomerRepAllotmentByAttribute($colValurArr);
+        if(isset($_REQUEST['salesRep_name'])){
+            for($i = 0; $i < count($_REQUEST['salesRep_name']); $i++){
+                if(!empty($_REQUEST['salesRep_name'][$i])){
+                    $customerRepAllotment = new CustomerRepAllotment();
+                    $customerRepAllotment->setCustomerSeq($seq);
+                    $customerRepAllotment->setCustomerRepSeq($_REQUEST['salesRep_seq'][$i]);
+                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                }
+            }
+        }
+        if(isset($_REQUEST['internalSupport_name'])){
+            for($i = 0; $i < count($_REQUEST['internalSupport_name']); $i++){
+                if(!empty($_REQUEST['internalSupport_name'][$i])){
+                    $customerRepAllotment = new CustomerRepAllotment();
+                    $customerRepAllotment->setCustomerSeq($seq);
+                    $customerRepAllotment->setCustomerRepSeq($_REQUEST['internalSupport_seq'][$i]);
+                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                }
+            }
+        }
         $buyerObjs = array();
         foreach($buyers as $buyer){
             $buyerObj = new Buyer();
@@ -143,47 +183,47 @@ if($call == "saveCustomer"){
             $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
             $buyerObjs[] = $buyerObj;
         }
-        foreach($salesReps as $salesRep){
-            if(!($salesRep["firstname"] == "" && $salesRep["lastname"] == "" && $salesRep["emailid"] == "" && $salesRep["phone"] == "" && $salesRep["cellphone"] == "" && $salesRep["notes"] == "")){
-                $buyerObj = new Buyer();
-                $buyerObj->setFirstName($salesRep["firstname"]);
-                $buyerObj->setLastName($salesRep["lastname"]);
-                $buyerObj->setEmail($salesRep["emailid"]);
-                $buyerObj->setOfficePhone($salesRep["phone"]);
-                $buyerObj->setOfficePhoneExt($salesRep["phoneext"]);
-                $buyerObj->setCellPhone($salesRep["cellphone"]);
-                // $buyerObj->setSkypeId($salesRep["skypepersonid"]);
-                $buyerObj->setPosition($salesRep["position"]);
-                $buyerObj->setCategory($salesRep["category"]);
-                $buyerObj->setNotes($salesRep["notes"]);
-                // $buyerObj->setResponsibility($salesRep["responsiblity"]);
-                $buyerObj->setCreatedon(new DateTime());
-                $buyerObj->setLastmodifiedon(new DateTime());
-                $buyerObj->setCustomerSeq($seq);
-                $buyerObj->setBuyerType("salesrep");
-                $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
-                $buyerObjs[] = $buyerObj;
-            }
-        }
-        foreach($internalSupports as $internalSupport){
-            $buyerObj = new Buyer();
-            $buyerObj->setFirstName($internalSupport["firstname"]);
-            $buyerObj->setLastName($internalSupport["lastname"]);
-            $buyerObj->setEmail($internalSupport["emailid"]);
-            $buyerObj->setOfficePhone($internalSupport["phone"]);
-            $buyerObj->setOfficePhoneExt($internalSupport["phoneext"]);
-            $buyerObj->setCellPhone($internalSupport["cellphone"]);
-            // $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
-            $buyerObj->setPosition($internalSupport["position"]);
-            $buyerObj->setCategory($internalSupport["category"]);
-            $buyerObj->setNotes($internalSupport["notes"]);
-            $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
-            $buyerObj->setCreatedon(new DateTime());
-            $buyerObj->setLastmodifiedon(new DateTime());
-            $buyerObj->setCustomerSeq($seq);
-            $buyerObj->setBuyerType("internalSupport");
-            $buyerObjs[] = $buyerObj;
-        }
+        // foreach($salesReps as $salesRep){
+        //     if(!($salesRep["firstname"] == "" && $salesRep["lastname"] == "" && $salesRep["emailid"] == "" && $salesRep["phone"] == "" && $salesRep["cellphone"] == "" && $salesRep["notes"] == "")){
+        //         $buyerObj = new Buyer();
+        //         $buyerObj->setFirstName($salesRep["firstname"]);
+        //         $buyerObj->setLastName($salesRep["lastname"]);
+        //         $buyerObj->setEmail($salesRep["emailid"]);
+        //         $buyerObj->setOfficePhone($salesRep["phone"]);
+        //         $buyerObj->setOfficePhoneExt($salesRep["phoneext"]);
+        //         $buyerObj->setCellPhone($salesRep["cellphone"]);
+        //         // $buyerObj->setSkypeId($salesRep["skypepersonid"]);
+        //         $buyerObj->setPosition($salesRep["position"]);
+        //         $buyerObj->setCategory($salesRep["category"]);
+        //         $buyerObj->setNotes($salesRep["notes"]);
+        //         // $buyerObj->setResponsibility($salesRep["responsiblity"]);
+        //         $buyerObj->setCreatedon(new DateTime());
+        //         $buyerObj->setLastmodifiedon(new DateTime());
+        //         $buyerObj->setCustomerSeq($seq);
+        //         $buyerObj->setBuyerType("salesrep");
+        //         $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
+        //         $buyerObjs[] = $buyerObj;
+        //     }
+        // }
+        // foreach($internalSupports as $internalSupport){
+        //     $buyerObj = new Buyer();
+        //     $buyerObj->setFirstName($internalSupport["firstname"]);
+        //     $buyerObj->setLastName($internalSupport["lastname"]);
+        //     $buyerObj->setEmail($internalSupport["emailid"]);
+        //     $buyerObj->setOfficePhone($internalSupport["phone"]);
+        //     $buyerObj->setOfficePhoneExt($internalSupport["phoneext"]);
+        //     $buyerObj->setCellPhone($internalSupport["cellphone"]);
+        //     // $buyerObj->setSkypeId($internalSupport["skypepersonid"]);
+        //     $buyerObj->setPosition($internalSupport["position"]);
+        //     $buyerObj->setCategory($internalSupport["category"]);
+        //     $buyerObj->setNotes($internalSupport["notes"]);
+        //     $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
+        //     $buyerObj->setCreatedon(new DateTime());
+        //     $buyerObj->setLastmodifiedon(new DateTime());
+        //     $buyerObj->setCustomerSeq($seq);
+        //     $buyerObj->setBuyerType("internalSupport");
+        //     $buyerObjs[] = $buyerObj;
+        // }
         $buyerMgr = BuyerMgr::getInstance();
         $buyerMgr->deleteByCustomerSeq($seq);
         foreach($buyerObjs as $buyerObj){
@@ -318,6 +358,28 @@ if($call == "deleteCustomers"){
     }catch(Exception $e){
         $success = 0;
         $message = $e->getMessage();
+    }
+}
+if($call =="searchCustomerRep"){
+    $customerRepType = $_GET['customerRepType'];
+    $searchString = $_GET["q"];
+    $customersReps  = $customerMgr->searchCustomerRep($searchString,$customerRepType);
+    $response['results'] = array();
+    foreach($customersReps as $customersRep){
+        $customersRep['id'] = $customersRep['seq'];
+        $customersRep['text'] = $customersRep['fullname'];
+        array_push($response['results'],$customersRep);
+    }
+    echo json_encode($response);
+    return;
+}
+if($call == "getCustomerRepAllotmentsByCustomerSeq"){
+    try{
+        $customerRepAllotments = $customerMgr->getCustomerRepAllotmentByCustomerSeq($_REQUEST['customerseq']);
+        $response['data'] = $customerRepAllotments;
+    }catch(Exception $e){
+        $message = $e->getMessage();
+        $success = 0;
     }
 }
 $response["success"] = $success;

@@ -186,7 +186,7 @@
         html += "</div>";
         $("#addRequestStatusDiv").append(html);
     }
-    function addMoreRequestsFields(requestSpecsFields){
+    function addMoreRequestsFields(requestSpecsFields = ""){
         var seq = "";
         var name = "";
         var title = "";

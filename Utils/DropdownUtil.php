@@ -46,6 +46,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestTypeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRepTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/CustomerRepMgr.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -373,23 +374,27 @@ class DropDownUtils {
 		return self::getDropDown1 ($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);
 	}
 	public static function getCustomerInsideAccountManagerNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
-		$userMgr = UserMgr::getInstance();
-		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("54,33,86,122,123,124");
+		$colValuePair = array();
+		$colValuePair['customerreptype'] = 'internalsupport';
+		$customerRepMgr = CustomerRepMgr::getInstance();
+		$customerReps =  $customerRepMgr->findByAttributes($colValuePair);
 		$usersArray = array();
-		if(!empty($users)){
-			foreach($users as $key => $val){
-				$usersArray[$val['seq']] = $val['fullname'];
+		if(!empty($customerReps)){
+			foreach($customerReps as $customerRep => $val){
+				$usersArray[$val->getSeq()] = $val->getFullName();
 			}
 		}
 		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod,$selectedValue,$isRequired,true);
 	}
 	public static function getCustomerSalesAdminNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
-		$userMgr = UserMgr::getInstance();
-		$users =  $userMgr->getUsersSeqsAndFullnamesBySeqs("55,114,116,117,118,119,120,121,89");
+		$colValuePair = array();
+		$colValuePair['customerreptype'] = 'salesrep';
+		$customerRepMgr = CustomerRepMgr::getInstance();
+		$customerReps =  $customerRepMgr->findByAttributes($colValuePair);
 		$usersArray = array();
-		if(!empty($users)){
-			foreach($users as $key => $val){
-				$usersArray[$val['seq']] = $val['fullname'];
+		if(!empty($customerReps)){
+			foreach($customerReps as $customerRep => $val){
+				$usersArray[$val->getSeq()] = $val->getFullName();
 			}
 		}
 		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod, $selectedValue,$isRequired,true);

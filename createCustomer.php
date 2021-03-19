@@ -302,14 +302,26 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
 	                       	<div class="form-group row m-b-xs">
-							   <label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+							   	<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
 								<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Rep Number</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">OMS Cust Id</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Territory</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Company Name</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Ship To Address</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">City</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">State</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Zip</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Commission</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Is Receives Monthly Sales Report</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Pricing Tier</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin assigned</label>
 	                       	</div>
 	                       	<div id="salesRep" class="salesRep">
 	                       	</div>
@@ -324,14 +336,26 @@ if(isset($_POST["id"])){
 									<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 								</div>
 								<div class="form-group row m-b-xs">
-									<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
 									<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
 									<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
 									<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Rep Number</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">OMS Cust Id</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Territory</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Company Name</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Ship To Address</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">City</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">State</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Zip</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Commission</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Is Receives Monthly Sales Report</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Pricing Tier</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin assigned</label>
 								</div>
 								<div id="internalSupport" class="internalSupport">
 								</div>
@@ -437,7 +461,9 @@ $(document).ready(function(){
   	});
 	populateCustomerBuyers();
 	loadCustomers();
-	
+	$('#salesadminlead').select2();
+	$('#insideaccountmanager').select2();
+	populateCustomerReps();
 });
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
@@ -557,6 +583,7 @@ function addBuyer(isDefaultRow,buyer){
 }
 
 function addSalesRep(isDefaultRow,salesRep){
+	var seq           = ""
 	var firstName     = "";
 	var lastName      = "";
 	var phone         = "";
@@ -568,91 +595,168 @@ function addSalesRep(isDefaultRow,salesRep){
 	var position = "";
 	var category      = "";
 	var ext           = "";
+	var repnumber     = "";
+	var omscustid     = "";
+	var territory     = "";
+	var companyname   = "";
+	var shiptoaddress = "";
+	var city     	  = "";
+	var state     	  = "";
+	var zip     	  = "";
+	var commission    = "";
+	var isreceivesmonthlysalesreport = "";
+	var pricingtier   = "";
+	var seniorrephandlingaccount     = "";
+	var salesadminassigned = "";
 	index++;
 	var id = index;
 	if(typeof salesRep !== "undefined"){
-		if(salesRep.firstname != null){
-			firstName = salesRep.firstname;
+		if(salesRep.customerrepseq != null){
+			seq = salesRep.customerrepseq;
 		}
-		if(salesRep.lastname != null){
-			lastName = salesRep.lastname;
+		if(salesRep.fullname != null){
+			firstName = salesRep.firstname;
 		}
 		if(salesRep.email != null){
 			emailid = salesRep.email;
 		}
-		if(salesRep.officephone != null){
-			phone = salesRep.officephone;
-		}
-		if(salesRep.officephoneext != null){
-			ext = salesRep.officephoneext;
+		if(salesRep.ext != null){
+			ext = salesRep.ext;
 		}
 		if(salesRep.cellphone != null){
 			cellPhone = salesRep.cellphone;
 		}
-		if(salesRep.notes != null){
-			note = salesRep.notes;
+		if(salesRep.position != null){
+			position = salesRep.position;
 		}
-		if(salesRep.responsibility != null){
-			console.log(salesRep.responsibility);
-			responsiblity = salesRep.responsibility;
+		if(salesRep.category != null){
+			category = salesRep.category;
 		}
 		if(salesRep.skypeid != null){
 			skypePersonId = salesRep.skypeid;
 		}
-		if(salesRep.position != null){
-			position = salesRep.position;
+		if(salesRep.repnumber != null){
+			repnumber = salesRep.repnumber;
 		}
-		category = salesRep.category;
-		id = salesRep.seq;
+		if(salesRep.omscustid != null){
+			omscustid = salesRep.omscustid;
+		}
+		if(salesRep.territory != null){
+			territory = salesRep.territory;
+		}
+		if(salesRep.companyname != null){
+			companyname = salesRep.companyname;
+		}
+		if(salesRep.shiptoaddress != null){
+			shiptoaddress = salesRep.shiptoaddress;
+		}
+		if(salesRep.city != null){
+			city = salesRep.city;
+		}
+		if(salesRep.state != null){
+			state = salesRep.state;
+		}
+		if(salesRep.zip != null){
+			zip = salesRep.zip;
+		}
+		if(salesRep.commission != null){
+			commission = salesRep.commission;
+		}
+		if(salesRep.isreceivesmonthlysalesreport != null){
+			isreceivesmonthlysalesreport = salesRep.isreceivesmonthlysalesreport;
+		}
+		if(salesRep.pricingtier != null){
+			pricingtier = salesRep.pricingtier;
+		}
+		if(salesRep.seniorrephandlingaccount != null){
+			seniorrephandlingaccount = salesRep.seniorrephandlingaccount;
+		}
+		if(salesRep.salesadminassigned != null){
+			salesadminassigned = salesRep.salesadminassigned;
+		}
+		// id = salesRep.customerrepallotmentseq;
 	}
 	var ddId = 'categorySalesRepSelectDiv'+id;
 	// var ddId = 'responsibilitySelectDiv'+id;
 	var html = '<div class="salesRepDiv">';
    		html += "<div class='form-group row m-b-xs salesRepRow' id='salesRep" + id + "'>";
-		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="salesRep_firstname[]" class="form-control" placeholder="firstname">
-				</div>
-				<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="lastName${id}"  maxLength="250" value="${lastName}" name="salesRep_lastname[]" class="form-control" placeholder="lastname">
-				</div>`;
+		html += "<div class='col-lg-2 p-xxs no-margins'>";
+		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="salesRep_seq[]" class="form-control"/>';
+		html += "<select class='saledRep_name' id='saledRep_name" + id + "' name='salesRep_name[]'></select>";
+		html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
+		html += "</div>";
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input id="email" type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid" readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone">';
+		html += '<input id="phone" type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone" readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="ext.">';
+		html += '<input id="ext" type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="ext." readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<input id="cellphone" type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone" readonly>';
 		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">';
-		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		// html += '<div class="col-lg-1 p-xxs no-margins">'; 
+		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id" readonly>';
 		// html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += "<?php $select = DropDownUtils::getCustomerPostions('salesRep_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="salesRep_category[]" class="form-control">';
+		html += '<div id="'+ddId+'"><select name="salesRep_category[]" class="form-control" >';
 		html += '</select></div>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="repnumber" type="text"  maxLength="250" value="'+ repnumber +'" name="salesRep_repNumber[]" class="form-control" placeholder="Rep number." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="omscustid" type="text"  maxLength="250" value="'+ omscustid +'" name="salesRep_omsCustid[]" class="form-control" placeholder="OMS Cust Id." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="territory" type="text"  maxLength="250" value="'+ territory +'" name="salesRep_territory[]" class="form-control" placeholder="territory." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="companyname" type="text"  maxLength="250" value="'+ companyname +'" name="salesRep_companyName[]" class="form-control" placeholder="Company Name." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="shiptoaddress" type="text"  maxLength="250" value="'+ shiptoaddress +'" name="salesRep_shipToAddress[]" class="form-control" placeholder="Ship To Address." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="city" type="text"  maxLength="250" value="'+ city +'" name="salesRep_city[]" class="form-control" placeholder="City." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="state" type="text"  maxLength="250" value="'+ state +'" name="salesRep_state[]" class="form-control" placeholder="State." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="zip" type="text"  maxLength="250" value="'+ zip +'" name="salesRep_zip[]" class="form-control" placeholder="Zip." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="commission" type="text"  maxLength="250" value="'+ commission +'" name="salesRep_commission[]" class="form-control" placeholder="Commission." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="isreceivesmonthlysalesreport" type="text"  maxLength="250" value="'+ isreceivesmonthlysalesreport +'" name="salesRep_isReceivesMonthlySalesReport[]" class="form-control" placeholder="Is Receives Monthly Salses Rep Report" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="pricingtier" type="text"  maxLength="250" value="' + pricingtier + '" name="salesRep_pricingTier[]" class="form-control" placeholder="Pricing Tier" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="seniorrephandlingaccount" type="text"  maxLength="250" value="'+ seniorrephandlingaccount +'" name="salesRep_seniorRepHandlingAccount[]" class="form-control" placeholder="Senior Rep Handling Account" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="salesadminassigned" type="text"  maxLength="250" value="'+ salesadminassigned +'" name="salesRep_salesAdminAssigned[]" class="form-control" placeholder="Sales Admin Assigned" readonly>';
 		html += '</div>';
 		// html += '<div class="col-lg-1 p-xxs no-margins">';
 		// html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
 		// html += '</select></div>';
 		// html += '</div>';
 		
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+		// if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
 			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div><div class="col-sm-6">'
-			html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
-			html += '</div></div></div>';
-		}else{
-			html += '<div class="col-lg-1 pull-right">';
-			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div>';
-		}
+			html += '</div>'
+			html += '</div></div>';
+		// }
 		html += '</div>';
 		html += '<!--<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">-->';
@@ -662,109 +766,261 @@ function addSalesRep(isDefaultRow,salesRep){
 		html += '</div></div>-->';
 		$("#salesRep").append(html);
 		$("#salesRep" + id + " #salesRep_position").val(position);
+		$("#salesRep" + id + " #salesRep_position").attr('disabled','true');
+		$("#saledRep_name" + id).select2({
+			ajax: {
+				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=salesrep",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+					return {
+						q: params.term, // search term
+						page: params.page
+					};
+				},
+				processResults: function (data, page) {
+				return data;
+				},
+				cache: true
+			},
+			minimumInputLength: 1,
+			width: '100%'
+		}).on('select2:select', function(event) {
+			// This is how I got ahold of the data
+			var data = event.params.data;
+			$.each(data,function(index,value){
+				$('#salesRep' + id + ' #' + index).val(value);
+			});
+		});
 		populateSalesRepCategories(category,ddId);
+		if(typeof salesRep !== "undefined"){
+			var newOption = new Option(salesRep.fullname, salesRep.customerrepseq, true, true);
+			// Append it to the select2
+			$('#saledRep_name' + id).append(newOption).trigger('change');
+		}
+		// $("#saledRep_name" + id).select2().val(customerRepSeq).trigger('change');
 		// populateSalesRepResponsibilities(responsiblity,ddId);
 		//populateSalesRepCategories(responsibility,ddId);
 }
-
 function addInternalSupport(isDefaultRow,internalSupport){
+	var seq           = ""
 	var firstName     = "";
 	var lastName      = "";
 	var phone         = "";
 	var emailid       = "";
 	var cellPhone     = "";
 	var note          = "";
+	var responsiblity = "";
 	var skypePersonId = "";
 	var position = "";
 	var category      = "";
 	var ext           = "";
+	var repnumber     = "";
+	var omscustid     = "";
+	var territory     = "";
+	var companyname   = "";
+	var shiptoaddress = "";
+	var city     	  = "";
+	var state     	  = "";
+	var zip     	  = "";
+	var commission    = "";
+	var isreceivesmonthlysalesreport = "";
+	var pricingtier   = "";
+	var seniorrephandlingaccount     = "";
+	var salesadminassigned = "";
 	index++;
 	var id = index;
 	if(typeof internalSupport !== "undefined"){
-		if(internalSupport.firstname != null){
-			firstName = internalSupport.firstname;
+		if(internalSupport.customerrepseq != null){
+			seq = internalSupport.customerrepseq;
 		}
-		if(internalSupport.lastname != null){
-			lastName = internalSupport.lastname;
+		if(internalSupport.fullname != null){
+			firstName = internalSupport.firstname;
 		}
 		if(internalSupport.email != null){
 			emailid = internalSupport.email;
 		}
-		if(internalSupport.officephone != null){
-			phone = internalSupport.officephone;
-		}
-		if(internalSupport.officephoneext != null){
-			ext = internalSupport.officephoneext;
+		if(internalSupport.ext != null){
+			ext = internalSupport.ext;
 		}
 		if(internalSupport.cellphone != null){
 			cellPhone = internalSupport.cellphone;
 		}
-		if(internalSupport.notes != null){
-			note = internalSupport.notes;
+		if(internalSupport.position != null){
+			position = internalSupport.position;
+		}
+		if(internalSupport.category != null){
+			category = internalSupport.category;
 		}
 		if(internalSupport.skypeid != null){
 			skypePersonId = internalSupport.skypeid;
 		}
-		if(internalSupport.position != null){
-			position = internalSupport.position;
+		if(internalSupport.repnumber != null){
+			repnumber = internalSupport.repnumber;
 		}
-		category = internalSupport.category;
-		id = internalSupport.seq;
+		if(internalSupport.omscustid != null){
+			omscustid = internalSupport.omscustid;
+		}
+		if(internalSupport.territory != null){
+			territory = internalSupport.territory;
+		}
+		if(internalSupport.companyname != null){
+			companyname = internalSupport.companyname;
+		}
+		if(internalSupport.shiptoaddress != null){
+			shiptoaddress = internalSupport.shiptoaddress;
+		}
+		if(internalSupport.city != null){
+			city = internalSupport.city;
+		}
+		if(internalSupport.state != null){
+			state = internalSupport.state;
+		}
+		if(internalSupport.zip != null){
+			zip = internalSupport.zip;
+		}
+		if(internalSupport.commission != null){
+			commission = internalSupport.commission;
+		}
+		if(internalSupport.isreceivesmonthlysalesreport != null){
+			isreceivesmonthlysalesreport = internalSupport.isreceivesmonthlysalesreport;
+		}
+		if(internalSupport.pricingtier != null){
+			pricingtier = internalSupport.pricingtier;
+		}
+		if(internalSupport.seniorrephandlingaccount != null){
+			seniorrephandlingaccount = internalSupport.seniorrephandlingaccount;
+		}
+		if(internalSupport.salesadminassigned != null){
+			salesadminassigned = internalSupport.salesadminassigned;
+		}
+		// id = salesRep.customerrepallotmentseq;
 	}
-	var ddId = 'categoryInternalSupportSelectDiv'+id;
+	var ddId = 'categorySalesRepSelectDiv'+id;
+	// var ddId = 'responsibilitySelectDiv'+id;
 	var html = '<div class="internalSupportDiv">';
-   		html += "<div class='form-group row m-b-xs internalSupportRow' id='internalSupportRow" + id + "'>";
-		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="firstName${id}" maxLength="250" value="${firstName}" name="internalSupport_firstname[]" class="form-control" placeholder="firstname">
-				</div>
-				<div class="col-lg-2 p-xxs no-margins">
-					<input type="text" id="lastName${id}" maxLength="250" value="${lastName}" name="internalSupport_lastname[]" class="form-control" placeholder="lastname">
-				</div>`;
+   		html += "<div class='form-group row m-b-xs internalSupportRow' id='internalSupport" + id + "'>";
+		html += "<div class='col-lg-2 p-xxs no-margins'>";
+		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="internalSupport_seq[]" class="form-control"/>';
+		html += "<select class='internalSupport_name' id='internalSupport_name" + id + "' name='internalSupport_name[]'></select>";
+		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
+		html += "</div>";
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input id="email" type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid" readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone">';
+		html += '<input id="phone" type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone" readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="ext.">';
+		html += '<input id="ext" type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="ext." readonly>';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone">';
+		html += '<input id="cellphone" type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone" readonly>';
 		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">';
-		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
+		// html += '<div class="col-lg-1 p-xxs no-margins">'; 
+		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id" readonly>';
 		// html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += "<?php $select = DropDownUtils::getCustomerPostions('internalSupport_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control">';
+		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control" >';
 		html += '</select></div>';
 		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="repnumber" type="text"  maxLength="250" value="'+ repnumber +'" name="internalSupport_repNumber[]" class="form-control" placeholder="Rep number." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="omscustid" type="text"  maxLength="250" value="'+ omscustid +'" name="internalSupport_omsCustid[]" class="form-control" placeholder="OMS Cust Id." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="territory" type="text"  maxLength="250" value="'+ territory +'" name="internalSupport_territory[]" class="form-control" placeholder="territory." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="companyname" type="text"  maxLength="250" value="'+ companyname +'" name="internalSupport_companyName[]" class="form-control" placeholder="Company Name." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="shiptoaddress" type="text"  maxLength="250" value="'+ shiptoaddress +'" name="internalSupport_shipToAddress[]" class="form-control" placeholder="Ship To Address." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="city" type="text"  maxLength="250" value="'+ city +'" name="internalSupport_city[]" class="form-control" placeholder="City." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="state" type="text"  maxLength="250" value="'+ state +'" name="internalSupport_state[]" class="form-control" placeholder="State." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="zip" type="text"  maxLength="250" value="'+ zip +'" name="internalSupport_zip[]" class="form-control" placeholder="Zip." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="commission" type="text"  maxLength="250" value="'+ commission +'" name="internalSupport_commission[]" class="form-control" placeholder="Commission." readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="isreceivesmonthlysalesreport" type="text"  maxLength="250" value="'+ isreceivesmonthlysalesreport +'" name="internalSupport_isReceivesMonthlySalesReport[]" class="form-control" placeholder="Is Receives Monthly Salses Rep Report" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="pricingtier" type="text"  maxLength="250" value="' + pricingtier + '" name="internalSupport_pricingTier[]" class="form-control" placeholder="Pricing Tier" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="seniorrephandlingaccount" type="text"  maxLength="250" value="'+ seniorrephandlingaccount +'" name="internalSupport_seniorRepHandlingAccount[]" class="form-control" placeholder="Senior Rep Handling Account" readonly>';
+		html += '</div>';
+		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<input id="salesadminassigned" type="text"  maxLength="250" value="'+ salesadminassigned +'" name="internalSupport_salesAdminAssigned[]" class="form-control" placeholder="Sales Admin Assigned" readonly>';
+		html += '</div>';
+		// html += '<div class="col-lg-1 p-xxs no-margins">';
+		// html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
+		// html += '</select></div>';
+		// html += '</div>';
 		
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
+		// if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
 			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="showNotes(${id})" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div><div class="col-sm-6">'
-    		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
-    		html += '</div></div></div>';
-		}else{
-			html += '<div class="col-lg-1 pull-right">';
 			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div>';
-		}
-		
+			html += '</div>'
+			html += '</div></div>';
+		// }
 		html += '</div>';
 		html += '<!--<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">-->';
-		html += `<input type="hidden" id="NotesText${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html +='<!--</div>-->';
+ 		html += `<input type="hidden" id="NotesText${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
+		html += '<!--</div>-->';
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
 		$("#internalSupport").append(html);
-		$("#internalSupportRow" + id + "#internal_position").val(position);
-		populateInternalSupportRepCategories(category,ddId);
+		$("#internalSupport" + id + " #internalSupport_position").val(position);
+		$("#internalSupport" + id + " #internalSupport_position").attr('disabled','true');
+		$("#internalSupport_name" + id).select2({
+			ajax: {
+				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=internalsupport",
+				dataType: 'json',
+				delay: 250,
+				data: function (params) {
+					return {
+						q: params.term, // search term
+						page: params.page
+					};
+				},
+				processResults: function (data, page) {
+				return data;
+				},
+				cache: true
+			},
+			minimumInputLength: 1,
+			width: '100%'
+		}).on('select2:select', function(event) {
+			// This is how I got ahold of the data
+			var data = event.params.data;
+			$.each(data,function(index,value){
+				$('#internalSupport' + id + ' #' + index).val(value);
+			});
+		});
+		populateSalesRepCategories(category,ddId);
+		if(typeof internalSupport !== "undefined"){
+			var newOption = new Option(internalSupport.fullname, internalSupport.customerrepseq, true, true);
+			// Append it to the select2
+			$('#internalSupport_name' + id).append(newOption).trigger('change');
+		}
+		// $("#saledRep_name" + id).select2().val(customerRepSeq).trigger('change');
+		// populateSalesRepResponsibilities(responsiblity,ddId);
+		//populateSalesRepCategories(responsibility,ddId);
 }
 
 function populateCustomerBuyers(){
@@ -823,6 +1079,19 @@ function populateCustomerBuyers(){
 		addInternalSupport(true);
 	}
 }
+function populateCustomerReps(){
+	if(customerSeq != 0){
+		$.getJSON("Actions/CustomerAction.php?call=getCustomerRepAllotmentsByCustomerSeq&customerseq=" + customerSeq , (response)=>{
+			$.each(response.data,function(index,value){
+				if(value.customerreptype == 'salesrep'){
+					addSalesRep(true,value);
+				}else if(value.customerreptype == 'internalsupport'){
+					addInternalSupport(true,value);
+				}
+			});
+		});
+	}
+}
 function setCustomerId(seq){
 	$.get("Actions/CustomerAction.php?call=getCustomerIdBySeq&seq="+seq, function(data){
    		var jsonData = $.parseJSON(data);
@@ -872,6 +1141,7 @@ function populateSalesRepCategories(selected, selectDivId){
 		var ddhtml = jsonData.categoryDD;
 		ddhtml = ddhtml.replace("name='category[]'","name=\"salesRep_category[]\"");
 		$("#"+selectDivId).html(ddhtml);
+		$("#"+selectDivId+" select").attr('disabled','true');
 	});
 }
 

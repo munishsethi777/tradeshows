@@ -22,6 +22,7 @@
         public function save($REQUEST){
             $customerRep = new CustomerRep();
             $customerRep->createFromRequest($REQUEST);
+            $customerRep->setIsReceivesMonthlySalesReport($REQUEST['isreceivesmonthlysalesreport'] == 'yes' ? 1 : 0);
             self::$dataStore->save($customerRep);
         }
         public function getAllCustomerReps(){
@@ -49,6 +50,10 @@
         public function deleteBySeqs($ids) {
             $flag = self::$dataStore->deleteInList ( $ids );
             return $flag;
+        }
+        public function findByAttributes($colValuePairArr){
+            $customerReps = self::$dataStore->executeConditionQuery($colValuePairArr);
+            return $customerReps;
         }
     }
 ?>
