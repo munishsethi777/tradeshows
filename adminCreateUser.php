@@ -346,7 +346,7 @@ if (in_array(11, $departmentSeqArr)) {
 
 									<div class="form-group row i-checks m-t-xl">
 										<div class="col-lg-12">
-											<div class="panel panel-primary">
+											<div class="panel panel-primary ibox">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
 														<input type="checkbox" class="i-checks"
@@ -354,11 +354,11 @@ if (in_array(11, $departmentSeqArr)) {
 															id="qcDepartment" name="departments[]" />
 													</div>
 													QC Schedules 
-														<i class="fa fa-chevron-down  pull-right" data-toggle="collapse"
-															data-target="#qcPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
+														<a class="collapse-link pull-right">
+															<i class="fa fa-chevron-down" style="color:#fff;"></i>
+														</a>
 												</div>
-												<div id="qcPermissionsDiv" class="panel-body i-checks collapse">
+												<div id="qcPermissionsDiv" class="panel-body i-checks ibox-content collapse">
 													<label class="col-lg-3 col-form-label"> <input
 														type="checkbox" <?php echo $qcChecked?> value="qc"
 														id="qcpermission" name="permissions[]" /> Quality
@@ -512,7 +512,7 @@ if (in_array(11, $departmentSeqArr)) {
 										</div>
 
 										<div class="col-lg-12">
-											<div class="panel panel-primary">
+											<div class="panel panel-primary ibox">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
 														<input type="checkbox"
@@ -520,11 +520,11 @@ if (in_array(11, $departmentSeqArr)) {
 															id="graphicDepartment" name="departments[]" />
 													</div>
 													Graphic Logs
-													<i class="fa fa-chevron-down pull-right" data-toggle="collapse"
-															data-target="#graphicPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
+														<a class="collapse-link pull-right">
+																<i class="fa fa-chevron-down" style="color:#fff;"></i>
+														</a>
 												</div>
-												<div id="graphicPermissionsDiv" class="panel-body i-checks collapse">
+												<div id="graphicPermissionsDiv" class="panel-body i-checks ibox-content collapse">
 													<label class="col-lg-3 col-form-label"> <input
 														type="checkbox" <?php echo $usaTeamChecked?>
 														value="usa_team" id="usaTeamPermission"
@@ -664,7 +664,7 @@ if (in_array(11, $departmentSeqArr)) {
 											</div>
 										</div>
 										<div class="col-lg-12">
-											<div class="panel panel-primary">
+											<div class="panel panel-primary ibox">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
 														<input type="checkbox"
@@ -672,11 +672,11 @@ if (in_array(11, $departmentSeqArr)) {
 															id="containerDepartment" name="departments[]" />
 													</div>
 													Container Schedule
-													<i class="fa fa-chevron-down pull-right" data-toggle="collapse"
-															data-target="#containerPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
+														<a class="collapse-link pull-right">
+															<i class="fa fa-chevron-down" style="color:#fff;"></i>
+														</a>
 												</div>
-												<div id='containerPermissionsDiv' class="panel-body i-checks">
+												<div id='containerPermissionsDiv' class="panel-body i-checks ibox-content collapse">
 													<label
 														class="col-lg-3 col-form-label bg-formLabelDark m-r-sm"> <input
 														type="checkbox" <?php echo $containerInformationChecked?>
@@ -875,7 +875,7 @@ if (in_array(11, $departmentSeqArr)) {
 											</div>
 										</div>
 										<div class="col-lg-12">
-											<div class="panel panel-primary">
+											<div class="panel panel-primary ibox">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
 														<input type="checkbox"
@@ -883,12 +883,12 @@ if (in_array(11, $departmentSeqArr)) {
 															id="instructionManualDepartment" name="departments[]" />
 													</div>
 													Instruction Manual Logs
-													<i class="fa fa-chevron-down pull-right" data-toggle="collapse"
-															data-target="#instructionManualPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
+														<a class="collapse-link pull-right">
+															<i class="fa fa-chevron-down" style="color:#fff;"></i>
+														</a>
 												</div>
 												<div id='instructionManualPermissionsDiv'
-													class="panel-body i-checks collapse">
+													class="panel-body i-checks ibox-content collapse">
 													<label
 														class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"> <input
 														type="checkbox" <?php echo $instructionManualUsaTeamChecked?>
@@ -964,7 +964,7 @@ if (in_array(11, $departmentSeqArr)) {
 											</div>
 										</div>
 										<div class="col-lg-12">
-											<div class="panel panel-primary">
+											<div class="panel panel-primary ibox">
 												<div class="panel-heading">
 													<div class="pull-left m-r-sm">
 														<input type="checkbox"  
@@ -972,11 +972,11 @@ if (in_array(11, $departmentSeqArr)) {
 															id="requestManagementDepartment" name="departments[]" />
 													</div>
 													Request Management
-													<i class="fa fa-chevron-down pull-right" data-toggle="collapse"
-															data-target="#requestManagementPermissionsDiv" aria-hidden="true"
-															style="font-size: 20px;"></i>
+														<a class="collapse-link pull-right">
+															<i class="fa fa-chevron-down" style="color:#fff;"></i>
+														</a>
 												</div>
-												<div id='requestManagementPermissionsDiv'class="panel-body i-checks collapse">
+												<div id='requestManagementPermissionsDiv'class="panel-body i-checks ibox-content collapse">
 													<label 
 														class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"><input 
 														type="checkbox" <?php echo $requestManagerPermissionChecked ?>
