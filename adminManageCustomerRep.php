@@ -85,13 +85,13 @@ $sessionUtil = SessionUtil::getInstance();
 	var columns = [
             {text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
             {text: 'id',datafield: 'seq',hidden: true},
-            {text: 'Fullname',datafield: 'fullname',width: "5%"},
-            {text: 'email',datafield: 'email',width: "6%"},
+            {text: 'Fullname',datafield: 'fullname',width: "10%"},
+            {text: 'email',datafield: 'email',width: "20%"},
             {text: 'Ext', datafield: 'ext',width:"10%"},
             {text: 'Cellphone',datafield: 'cellphone',width: "10%"},
-            {text: 'Position',datafield: 'position',width: "5%"},
+            {text: 'Position',datafield: 'position',width: "15%"},
             {text: 'Category',datafield: 'category',width: "8%"},
-            {text: 'Skype Id',datafield: 'skypeid',width: "8%",},
+            {text: 'Skype Id',datafield: 'skypeid',width: "12%",},
             {text: 'Cutomer Rep Type',datafield: 'customerreptype',width: "10%"}
         ]
    

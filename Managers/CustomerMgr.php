@@ -11,6 +11,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BusinessCategoryType.php");
 include $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerRepAllotment.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerPositionTypes.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerRepTypes.php");
 
 class CustomerMgr{
 	
@@ -35,10 +37,15 @@ class CustomerMgr{
 										// LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
 										// LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
 										
-	private static $exportQuery = "SELECT customers.*,buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes,salesadminlead.fullname as  salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername from customers 
-							LEFT JOIN buyers on customers.seq = buyers.customerseq
-							LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead
-							LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";									
+	private static $exportQuery = "SELECT customers.*,customerrepallotments.customerrepseq,customerrepallotments.notes as repnotes,customerreps.fullname as repfullname,customerreps.email as repemail,customerreps.ext as repext,customerreps.cellphone as repcellphone,customerreps.position as repposition,customerreps.category as repcategory,customerreps.skypeid as repskypeid,customerreps.customerreptype as reptype,customerreps.repnumber as repnumber,customerreps.omscustid as repomscustid,customerreps.territory as repterritory,customerreps.companyname as repcompanyname,customerreps.shiptoaddress as repshiptoaddress,customerreps.city as repcity,customerreps.state as repstate,customerreps.zip as repzip,customerreps.commission as repcommission, customerreps.isreceivesmonthlysalesreport as repisreceivesmonthlysalesreport,customerreps.pricingtier as reppricingtier, customerreps.seniorrephandlingaccount as repseniorrephandlingaccount,customerreps.salesadminassigned as repsalesadminassigned,
+									buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes,
+									salesadminlead.fullname as  salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername 
+									from customers 
+									LEFT JOIN buyers on customers.seq = buyers.customerseq
+									LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead
+									LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager
+									LEFT JOIN  customerrepallotments on customerrepallotments.customerseq = customers.seq
+									LEFT JOIN customerreps on customerreps.seq = customerrepallotments.customerrepseq";									
 
 	public static function getInstance()
 	{
@@ -208,16 +215,22 @@ class CustomerMgr{
 	    $_GET = array_merge($_GET,$output);
 	    $query = self::$exportQuery;
 	    $customers = self::$dataStore->executeQuery($query,true,true);
-	    $buyers = $this->group_by($customers);
+	    $groupByData = $this->group_by($customers);
+		$buyers = $groupByData['buyers'];
+		$customerreps = $groupByData['customerreps'];
 	    $data["customers"] = $customers;
 	    $data["buyers"] = $buyers;
+		$data["customerreps"] = $customerreps;
 	    ExportUtil::exportCustomers($data);
 	}
 	
 	function group_by($array) {
 	    $return = array();
+		$buyers = array();
+		$customerreps = array();
 	    foreach($array as $val) {
 	        $buyer = array();
+			$customerrep = array();
 	        if(isset($val["firstname"])){
     	        $buyer["firstname"] = $val["firstname"];
     	        $buyer["lastname"] = $val["lastname"];
@@ -226,8 +239,34 @@ class CustomerMgr{
     	        $buyer["officephone"] = $val["officephone"];
     	        $buyer["category"] = $val["category"];
     	        $buyer["notes"] = $val["notes"];
+				$buyers[$val["seq"]][] = $buyer;
 	        }
-	        $return[$val["seq"]][] = $buyer;
+			if(isset($val['repfullname'])){
+				$customerrep['fullname'] = $val['repfullname'];
+				$customerrep['email'] = $val['repemail'];
+				$customerrep['ext'] = $val['repext'];
+				$customerrep['cellphone'] = $val['repcellphone'];
+				$customerrep['position'] = $val['repposition'];
+				$customerrep['category'] = $val['repcategory'];
+				$customerrep['skypeid'] = $val['repskypeid'];
+				$customerrep['repnumber'] = $val['repnumber'];
+				$customerrep['omscustid'] = $val['repomscustid'];
+				$customerrep['territory'] = $val['repterritory'];
+				$customerrep['companyname'] = $val['repcompanyname'];
+				$customerrep['shiptoaddress'] = $val['repshiptoaddress'];
+				$customerrep['city'] = $val['repcity'];
+				$customerrep['state'] = $val['repstate'];
+				$customerrep['zip'] = $val['repzip'];
+				$customerrep['commission'] = $val['repcommission'];
+				$customerrep['isreceivesmonthlysalesreport'] = $val['repisreceivesmonthlysalesreport'];
+				$customerrep['pricingtier'] = $val['reppricingtier'];
+				$customerrep['seniorrephandlingaccount'] = $val['repseniorrephandlingaccount'];
+				$customerrep['salesadminassigned'] = $val['repsalesadminassigned'];
+				$customerrep['notes'] = $val['repnotes'];
+				$customerreps[$val["seq"]][] = $customerrep;
+			}
+			$return['buyers'] = $buyers;
+			$return['customerreps'] = $customerreps;
 	    }
 	    return $return;
 	}
@@ -594,10 +633,20 @@ class CustomerMgr{
 		return $users;
 	}
 	public function getCustomerRepAllotmentByCustomerSeq($seq){
-		$query = "SELECT customerrepallotments.customerrepseq,customerrepallotments.seq as customerrepallotmentseq,customerreps.* from customerrepallotments
+		$query = "SELECT customerrepallotments.notes,customerrepallotments.customerrepseq,customerrepallotments.seq as customerrepallotmentseq,customerreps.* from customerrepallotments
 				LEFT JOIN customerreps on customerreps.seq = customerrepallotments.customerrepseq
 				WHERE customerseq = " . $seq;
-		$customerReps = self::$customerRepAllotmentDataStore->executeQuery($query,false,true);
+		$tempCustomerReps = self::$customerRepAllotmentDataStore->executeQuery($query,false,true);
+		$customerReps = array();
+		if(!empty($tempCustomerReps)){
+			foreach($tempCustomerReps as $customerRep){
+				$customerRep['position'] = CustomerPositionTypes::getValue($customerRep['position']);
+				$customerRep['category'] = BuyerCategoryType::getValue($customerRep['category']);
+				$customerRep['reptype'] = CustomerRepTypes::getValue($customerRep['customerreptype']);
+				$customerRep['isreceivesmonthlysalesreport'] = $customerRep['isreceivesmonthlysalesreport'] == '1' ? 'Yes' : "No";
+				array_push($customerReps,$customerRep);
+			}
+		}
 		return $customerReps;
 	}
 }

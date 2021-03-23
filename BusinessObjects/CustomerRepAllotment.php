@@ -1,6 +1,6 @@
 <?php
     class CustomerRepAllotment{
-        private $seq,$customerseq,$customerrepseq;
+        private $seq,$customerseq,$customerrepseq,$notes;
 
         public static $className = "CustomerRepAllotment";
         public static $tableName = "customerrepallotments";  
@@ -23,6 +23,12 @@
         public function getCustomerRepSeq(){
             return $this->customerrepseq;
         }
+        public function setNotes($notes){
+            $this->notes = $notes;
+        }
+        public function getNotes(){
+            return $this->notes;
+        } 
         public function createFromRequest($request){
             if (is_array($request)){
                 $this->from_array($request);

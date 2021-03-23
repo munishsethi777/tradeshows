@@ -41,8 +41,7 @@ if(!empty($seq) && !$isadded){
     }
 	$isQuestionnaireCompletedChecked = $customerSpringQuestion->getIsQuestionnaireCompleted() ? 'checked' : '';
 }
-
-
+$hideIfNo = "style='display:none'";
 ?>
 <div id="panelMainDiv<?echo $seq?>" class="panel panel-default">
     <div class="panel-heading">
@@ -74,7 +73,7 @@ if(!empty($seq) && !$isadded){
             						<label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
             						<div class="col-lg-4">
             							<div>
-	            							<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselected"
+	            							<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselectedspring"
 	            								id="isallcategoriesselected<?echo $id?>" name="isallcategoriesselected"
 	            								<?php echo $isAllChecked?> /> <label>All</label>
 	            						</div>
@@ -108,7 +107,7 @@ if(!empty($seq) && !$isadded){
                                     </div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Date you sent them Spring catalog link?
@@ -120,11 +119,13 @@ if(!empty($seq) && !$isadded){
     			                        				echo $select;
 	                             			?>
             						</div>
+								</div>
+								<div class="row hideIfNo" <?php if($customerSpringQuestion->getIsSentCatalogLink() != '1'){echo $hideIfNo;} ?>>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Date?</label>
             						<div class="col-lg-4">
-            							<div class="input-group date">
+            							<div class="input-group date ">
             								<input type="text" name="springcataloglinkdate"
             									value="<?php echo $customerSpringQuestion->getSpringCatalogLinkDate()?>"
             									id="springcataloglinkdata"
@@ -166,7 +167,7 @@ if(!empty($seq) && !$isadded){
                 					</div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have you made an appointment or dinner appt with them?
@@ -179,7 +180,7 @@ if(!empty($seq) && !$isadded){
 	                             					?>
             						</div>
             					</div>
-            					<div class="row ">
+            					<div class="row hideIfNo" <?php if($customerSpringQuestion->getIsDinnerAppt() != '1'){echo $hideIfNo;} ?>>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Place?</label>
@@ -235,7 +236,7 @@ if(!empty($seq) && !$isadded){
 									</div>
 		                     	</div>
 	                        </div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row">
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
@@ -247,7 +248,7 @@ if(!empty($seq) && !$isadded){
 										?>
             						</div>
             					</div>
-            					<div class="row " id="springsampledateDiv" style="">
+            					<div class="row hideIfNo" id="springsampledateDiv" <?php if($customerSpringQuestion->getIsSentSample() != '1'){echo $hideIfNo;} ?>>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Date?</label>
@@ -262,7 +263,7 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have you made an appointment for a strategic planning meeting?
@@ -274,7 +275,7 @@ if(!empty($seq) && !$isadded){
 										?>
             						</div>
             					</div>
-            					<div class="row ">
+            					<div class="row hideIfNo" <?php if($customerSpringQuestion->getIsStrategicPlanningMeeting() != '1'){echo $hideIfNo;} ?>>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Date?</label>
@@ -296,18 +297,7 @@ if(!empty($seq) && !$isadded){
 										What categories have they not bought that we should sell them?
             						</label>
             						<div class="col-lg-4">
-            							<select class="categoriesshouldsellthem form-control"
-            								name="categoriesshouldsellthem[]" multiple>
-            							<?php
-            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
-            									$selected = "";
-            									if (in_array ( $key, $selectedCategoriesSpringQues )) {
-            										$selected = "selected";
-            									}
-            										echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-            									}
-            							?>
-                					    </select>
+										<input type="text" name="categoriesshouldsellthem" value="<?php echo $customerSpringQuestion->getCategoriesShouldSellThem() ?>" id="categoriesshouldsellthem" class="form-control" placeholder="Enter Category">
             						</div>
             					</div>
             				<!--</div>
@@ -451,7 +441,7 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					
             					<div class="row ">
             						<label
@@ -463,6 +453,8 @@ if(!empty($seq) && !$isadded){
 											echo $select;
 										?>
             						</div>
+								</div>
+								<div class="row hideIfNo" <?php if($customerSpringQuestion->getIsCompShopSummaryEmailSent() != '1'){echo $hideIfNo;} ?>>
             						<label
             							class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
             							Yes, Date?</label>
@@ -527,7 +519,7 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             						Are we expecting a PO ?
@@ -535,10 +527,12 @@ if(!empty($seq) && !$isadded){
             						<div class="col-lg-4">
             							
 											<?php
-											$select = DropDownUtils::getIsPoExpecting("arepoexpecting", null, $customerSpringQuestion->getArePoExpecting(), false, false);
+											$select = DropDownUtils::getIsPoExpecting("arepoexpecting", null, $customerSpringQuestion->getArePoExpecting(), false, true, "N/A");
     											echo $select;
 	                             			?>
             						</div>
+								</div>
+								<div class="row hideIfNo" <?php if($customerSpringQuestion->getArePoExpecting() != 'yes'){echo $hideIfNo;} ?>>
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							When are we expecting PO?
             						</label>
@@ -553,7 +547,7 @@ if(!empty($seq) && !$isadded){
             						</div>
             					</div>
             				</div>
-            				<div class="form-group">
+            				<div class="form-group booleanSelect">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Have we sent them opportunities buys?
@@ -565,6 +559,8 @@ if(!empty($seq) && !$isadded){
     			                        				echo $select;
 	                             					?>
             						</div>
+								</div>
+								<div class="row hideIfNo" <?php if($customerSpringQuestion->getIsOpportunitiesSent() != '1'){echo $hideIfNo;} ?>>
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							If so, what is the last date you sent to them.
             						</label>

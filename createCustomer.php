@@ -78,6 +78,15 @@ if(isset($_POST["id"])){
     display: flex;
     justify-content: flex-end;
 }
+.customerRepMainTable td{
+	padding:5px;
+	overflow-x: auto;
+	white-space: pre;
+	border:1px solid #aa9b9b52;
+}
+
+
+
 </style>
 </head>
 <body>
@@ -200,7 +209,7 @@ if(isset($_POST["id"])){
 								
 	                        </div>
 	                        <div class="form-group row">
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Lead Name</label>
 		                        <div class="col-lg-4">
 		                        	<!-- <input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control"> -->
 									<?php 
@@ -208,7 +217,7 @@ if(isset($_POST["id"])){
     			                        echo $select;
 	                             	?>
 								</div>
-								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin</label>
+								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin Name	</label>
 		                        <div class="col-lg-4">
 		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
 		                        </div>
@@ -301,33 +310,36 @@ if(isset($_POST["id"])){
 							<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
-	                       	<div class="form-group row m-b-xs">
-							   	<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Rep Number</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">OMS Cust Id</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Territory</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Company Name</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Ship To Address</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">City</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">State</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Zip</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Commission</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Is Receives Monthly Sales Report</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Pricing Tier</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin assigned</label>
-	                       	</div>
-	                       	<div id="salesRep" class="salesRep">
-	                       	</div>
+							<div class="" style="overflow:auto">
+								<table class="customerRepMainTable" id="salesrep">
+									<tr class="customerRepLabels">
+										<td class="col-form-label bg-formLabel">Full Name</td>
+										<td class="col-form-label bg-formLabel">Email</td>
+										<td class="col-form-label bg-formLabel">Phone</td>
+										<td class="col-form-label bg-formLabel">EXT.</td>
+										<td class="col-form-label bg-formLabel">CellPhone</td>
+										<td class="col-form-label bg-formLabel">Skype Id</td>
+										<td class="col-form-label bg-formLabel">Position</td>
+										<td class="col-form-label bg-formLabel">Category</td>
+										<td class="col-form-label bg-formLabel">Rep Number</td>
+										<td class="col-form-label bg-formLabel">OMS Cust Id</td>
+										<td class="col-form-label bg-formLabel">Territory</td>
+										<td class="col-form-label bg-formLabel">Company Name</td>
+										<td class="col-form-label bg-formLabel">Ship To Address</td>
+										<td class="col-form-label bg-formLabel">City</td>
+										<td class="col-form-label bg-formLabel">State</td>
+										<td class="col-form-label bg-formLabel">Zip</td>
+										<td class="col-form-label bg-formLabel">Commission</td>
+										<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
+										<td class="col-form-label bg-formLabel">Pricing Tier</td>
+										<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
+										<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+									</tr>
+								</table>
+							</div>
 	                        <div class="col-lg-12 pull-right ">
 	                       		<div class="col-lg-1 pull-right addButtonDiv">
-	                        		<button class="btn btn-xs btn-success" id="addSalesRepBtn" onclick="addSalesRep()" type="button">
+	                        		<button class="btn btn-xs btn-success" id="addSalesRepBtn" onclick="addCustomerRep('salesrep')" type="button">
 	                        		<i class="fa fa-plus"></i> Sales Rep</button>
 	                        	</div>
 	                        </div>
@@ -335,33 +347,36 @@ if(isset($_POST["id"])){
 								<div class="form-group row m-b-xs">
 									<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 								</div>
-								<div class="form-group row m-b-xs">
-									<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
-									<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
-									<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-									<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-									<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Rep Number</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">OMS Cust Id</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Territory</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Company Name</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Ship To Address</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">City</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">State</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Zip</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Commission</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Is Receives Monthly Sales Report</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Pricing Tier</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
-									<label class="col-lg-2 col-form-label bg-formLabel">Sales Admin assigned</label>
-								</div>
-								<div id="internalSupport" class="internalSupport">
+								<div class="" style="overflow:auto">
+									<table class="customerRepMainTable" id="internalsupport">
+										<tr class="customerRepLabels">
+											<td class="col-form-label bg-formLabel">Full Name</td>
+											<td class="col-form-label bg-formLabel">Email</td>
+											<td class="col-form-label bg-formLabel">Phone</td>
+											<td class="col-form-label bg-formLabel">EXT.</td>
+											<td class="col-form-label bg-formLabel">CellPhone</td>
+											<td class="col-form-label bg-formLabel">Skype Id</td>
+											<td class="col-form-label bg-formLabel">Position</td>
+											<td class="col-form-label bg-formLabel">Category</td>
+											<td class="col-form-label bg-formLabel">Rep Number</td>
+											<td class="col-form-label bg-formLabel">OMS Cust Id</td>
+											<td class="col-form-label bg-formLabel">Territory</td>
+											<td class="col-form-label bg-formLabel">Company Name</td>
+											<td class="col-form-label bg-formLabel">Ship To Address</td>
+											<td class="col-form-label bg-formLabel">City</td>
+											<td class="col-form-label bg-formLabel">State</td>
+											<td class="col-form-label bg-formLabel">Zip</td>
+											<td class="col-form-label bg-formLabel">Commission</td>
+											<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
+											<td class="col-form-label bg-formLabel">Pricing Tier</td>
+											<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
+											<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+										</tr>
+									</table>
 								</div>
 								<div class="col-lg-12 pull-right ">
 									<div class="col-lg-1 pull-right addButtonDiv">
-										<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addInternalSupport()" type="button">
+										<button class="btn btn-xs btn-success" id="addInternalSupportBtn" onclick="addCustomerRep('internalsupport')" type="button">
 										<i class="fa fa-plus"></i> Internal Support</button>
 									</div>
 								</div>
@@ -459,11 +474,12 @@ $(document).ready(function(){
 	$('.isstore').on('ifChanged', function(event){
 		showHideStoreFields();
   	});
-	populateCustomerBuyers();
 	loadCustomers();
+	populateCustomerReps();
+	populateCustomerBuyers();
 	$('#salesadminlead').select2();
 	$('#insideaccountmanager').select2();
-	populateCustomerReps();
+	
 });
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
@@ -529,7 +545,7 @@ function addBuyer(isDefaultRow,buyer){
 	}
 	var ddId =  'categorySelectDiv'+id;
 	var html = '<div class="buyerDiv">';
-   		html += "<div class='form-group row m-b-xs salesRepRow' id='buyerRep" + id +"'>";
+   		html += "<div class='form-group row m-b-xs' id='buyerRep" + id +"'>";
 		html += `<div class="col-lg-2 p-xxs no-margins">
 					<input type="text"  maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
 				</div>
@@ -582,7 +598,7 @@ function addBuyer(isDefaultRow,buyer){
 		populateBuyerCategories(category,ddId);
 }
 
-function addSalesRep(isDefaultRow,salesRep){
+function addCustomerRep(htmlFor='',customerRep){
 	var seq           = ""
 	var firstName     = "";
 	var lastName      = "";
@@ -608,168 +624,136 @@ function addSalesRep(isDefaultRow,salesRep){
 	var pricingtier   = "";
 	var seniorrephandlingaccount     = "";
 	var salesadminassigned = "";
+	var notes = "";
 	index++;
 	var id = index;
-	if(typeof salesRep !== "undefined"){
-		if(salesRep.customerrepseq != null){
-			seq = salesRep.customerrepseq;
+	if(typeof customerRep !== "undefined"){
+		if(customerRep.customerrepseq != null){
+			seq = customerRep.customerrepseq;
 		}
-		if(salesRep.fullname != null){
-			firstName = salesRep.firstname;
+		if(customerRep.fullname != null){
+			firstName = customerRep.firstname;
 		}
-		if(salesRep.email != null){
-			emailid = salesRep.email;
+		if(customerRep.email != null){
+			emailid = customerRep.email;
 		}
-		if(salesRep.ext != null){
-			ext = salesRep.ext;
+		if(customerRep.ext != null){
+			ext = customerRep.ext;
 		}
-		if(salesRep.cellphone != null){
-			cellPhone = salesRep.cellphone;
+		if(customerRep.cellphone != null){
+			cellPhone = customerRep.cellphone;
 		}
-		if(salesRep.position != null){
-			position = salesRep.position;
+		if(customerRep.position != null){
+			position = customerRep.position;
 		}
-		if(salesRep.category != null){
-			category = salesRep.category;
+		if(customerRep.category != null){
+			category = customerRep.category;
 		}
-		if(salesRep.skypeid != null){
-			skypePersonId = salesRep.skypeid;
+		if(customerRep.skypeid != null){
+			skypePersonId = customerRep.skypeid;
 		}
-		if(salesRep.repnumber != null){
-			repnumber = salesRep.repnumber;
+		if(customerRep.repnumber != null){
+			repnumber = customerRep.repnumber;
 		}
-		if(salesRep.omscustid != null){
-			omscustid = salesRep.omscustid;
+		if(customerRep.omscustid != null){
+			omscustid = customerRep.omscustid;
 		}
-		if(salesRep.territory != null){
-			territory = salesRep.territory;
+		if(customerRep.territory != null){
+			territory = customerRep.territory;
 		}
-		if(salesRep.companyname != null){
-			companyname = salesRep.companyname;
+		if(customerRep.companyname != null){
+			companyname = customerRep.companyname;
 		}
-		if(salesRep.shiptoaddress != null){
-			shiptoaddress = salesRep.shiptoaddress;
+		if(customerRep.shiptoaddress != null){
+			shiptoaddress = customerRep.shiptoaddress;
 		}
-		if(salesRep.city != null){
-			city = salesRep.city;
+		if(customerRep.city != null){
+			city = customerRep.city;
 		}
-		if(salesRep.state != null){
-			state = salesRep.state;
+		if(customerRep.state != null){
+			state = customerRep.state;
 		}
-		if(salesRep.zip != null){
-			zip = salesRep.zip;
+		if(customerRep.zip != null){
+			zip = customerRep.zip;
 		}
-		if(salesRep.commission != null){
-			commission = salesRep.commission;
+		if(customerRep.commission != null){
+			commission = customerRep.commission;
 		}
-		if(salesRep.isreceivesmonthlysalesreport != null){
-			isreceivesmonthlysalesreport = salesRep.isreceivesmonthlysalesreport;
+		if(customerRep.isreceivesmonthlysalesreport != null){
+			isreceivesmonthlysalesreport = customerRep.isreceivesmonthlysalesreport;
 		}
-		if(salesRep.pricingtier != null){
-			pricingtier = salesRep.pricingtier;
+		if(customerRep.pricingtier != null){
+			pricingtier = customerRep.pricingtier;
 		}
-		if(salesRep.seniorrephandlingaccount != null){
-			seniorrephandlingaccount = salesRep.seniorrephandlingaccount;
+		if(customerRep.seniorrephandlingaccount != null){
+			seniorrephandlingaccount = customerRep.seniorrephandlingaccount;
 		}
-		if(salesRep.salesadminassigned != null){
-			salesadminassigned = salesRep.salesadminassigned;
+		if(customerRep.salesadminassigned != null){
+			salesadminassigned = customerRep.salesadminassigned;
+		}
+		if(customerRep.notes != null){
+			notes = customerRep.notes;
+		}
+		if(htmlFor == ''){
+			htmlFor = customerRep.customerreptype;
 		}
 		// id = salesRep.customerrepallotmentseq;
 	}
 	var ddId = 'categorySalesRepSelectDiv'+id;
-	// var ddId = 'responsibilitySelectDiv'+id;
-	var html = '<div class="salesRepDiv">';
-   		html += "<div class='form-group row m-b-xs salesRepRow' id='salesRep" + id + "'>";
-		html += "<div class='col-lg-2 p-xxs no-margins'>";
-		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="salesRep_seq[]" class="form-control"/>';
-		html += "<select class='saledRep_name' id='saledRep_name" + id + "' name='salesRep_name[]'></select>";
-		html += '<a onclick="deleteSalesRep(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
-		html += "</div>";
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input id="email" type="text"  maxLength="250" value="'+emailid+'" name="salesRep_emailid[]" class="form-control" placeholder="emailid" readonly>';
+	var html = "<tr class='customerRepRow form-group "+ htmlFor +"Row' id='" + htmlFor + id + "'>";
+		html += "<td class='' style='display:flex;width:250px'>";
+		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="'+ htmlFor +'_seq[]" class="form-control"/>';
+		html += "<select class='"+ htmlFor +"_name' id='"+ htmlFor +"_name" + id + "' name='"+ htmlFor +"_name[]'></select>";
+		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
+		html += `<a onclick="delete${htmlFor}(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>`;
+		html += "</td>";
+		html += '<td class="" id="email">'+emailid;
+		html += '</td>';
+		html += '<td class="" id="phone">'+phone;
+		html += '</td>';
+		html += '<td class="" id="ext">'+ext;
+		html += '</td>';
+		html += '<td class="" id="cellphone">'+cellPhone;
+		html += '</td>';
+		html += '<td class="" id="skypeid">'+ skypePersonId; 
+		html += '</td>';
+		html += '<td class="" id="position">'+position;
+		html += '</td>';
+		html += '<td class="" id="category">'+category;
+		html += '</td>';
+		html += '<td class="" id="repnumber">'+ repnumber;
+		html += '</td>';
+		html += '<td class="" id="omscustid">'+ omscustid;
+		html += '</td>';
+		html += '<td class="" id="territory">'+ territory;
+		html += '</td>';
+		html += '<td class="" id="companyname">'+ companyname;
+		html += '</td>';
+		html += '<td class="" id="shiptoaddress">'+ shiptoaddress;
+		html += '</td>';
+		html += '<td class="" id="city">'+ city ;
+		html += '</td>';
+		html += '<td class="" id="state">'+ state;
+		html += '</td>';
+		html += '<td class="" id="zip">'+ zip;
+		html += '</td>';
+		html += '<td class="" id="commission">'+ commission;
+		html += '</td>';
+		html += '<td class="" id="isreceivesmonthlysalesreport">'+ isreceivesmonthlysalesreport;
+		html += '</td>';
+		html += '<td class="" id="pricingtier">'+ pricingtier;
+		html += '</td>';
+		html += '<td class="" id="seniorrephandlingaccount">'+ seniorrephandlingaccount;
+		html += '</td>';
+		html += '<td class="" id="salesadminassigned">'+ salesadminassigned;
+		html += '</td>';
+		html += '</tr>';
 		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="phone" type="text"  maxLength="250" value="'+phone+'" name="salesRep_phone[]" class="form-control" placeholder="phone" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="ext" type="text"  maxLength="250" value="'+ext+'" name="salesRep_phoneext[]" class="form-control" placeholder="ext." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="cellphone" type="text"  maxLength="250" value="'+cellPhone+'" name="salesRep_cellphone[]" class="form-control" placeholder="cellphone" readonly>';
-		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">'; 
-		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="salesRep_skypePersonId[]" class="form-control" placeholder="Skype Person Id" readonly>';
-		// html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += "<?php $select = DropDownUtils::getCustomerPostions('salesRep_position[]', null, '1', false, true); echo $select;?>";
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="salesRep_category[]" class="form-control" >';
-		html += '</select></div>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="repnumber" type="text"  maxLength="250" value="'+ repnumber +'" name="salesRep_repNumber[]" class="form-control" placeholder="Rep number." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="omscustid" type="text"  maxLength="250" value="'+ omscustid +'" name="salesRep_omsCustid[]" class="form-control" placeholder="OMS Cust Id." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="territory" type="text"  maxLength="250" value="'+ territory +'" name="salesRep_territory[]" class="form-control" placeholder="territory." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="companyname" type="text"  maxLength="250" value="'+ companyname +'" name="salesRep_companyName[]" class="form-control" placeholder="Company Name." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="shiptoaddress" type="text"  maxLength="250" value="'+ shiptoaddress +'" name="salesRep_shipToAddress[]" class="form-control" placeholder="Ship To Address." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="city" type="text"  maxLength="250" value="'+ city +'" name="salesRep_city[]" class="form-control" placeholder="City." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="state" type="text"  maxLength="250" value="'+ state +'" name="salesRep_state[]" class="form-control" placeholder="State." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="zip" type="text"  maxLength="250" value="'+ zip +'" name="salesRep_zip[]" class="form-control" placeholder="Zip." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="commission" type="text"  maxLength="250" value="'+ commission +'" name="salesRep_commission[]" class="form-control" placeholder="Commission." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="isreceivesmonthlysalesreport" type="text"  maxLength="250" value="'+ isreceivesmonthlysalesreport +'" name="salesRep_isReceivesMonthlySalesReport[]" class="form-control" placeholder="Is Receives Monthly Salses Rep Report" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="pricingtier" type="text"  maxLength="250" value="' + pricingtier + '" name="salesRep_pricingTier[]" class="form-control" placeholder="Pricing Tier" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="seniorrephandlingaccount" type="text"  maxLength="250" value="'+ seniorrephandlingaccount +'" name="salesRep_seniorRepHandlingAccount[]" class="form-control" placeholder="Senior Rep Handling Account" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="salesadminassigned" type="text"  maxLength="250" value="'+ salesadminassigned +'" name="salesRep_salesAdminAssigned[]" class="form-control" placeholder="Sales Admin Assigned" readonly>';
-		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">';
-		// html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
-		// html += '</select></div>';
-		// html += '</div>';
-		
-		// if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div>'
-			html += '</div></div>';
-		// }
-		html += '</div>';
-		html += '<!--<div class="form-group row">';
-		html += '<div class="col-lg-11 p-xxs">-->';
- 		html += `<input type="hidden" id="NotesText${id}" name="salesRep_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html += '<!--</div>-->';
-		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
-		html += '</div></div>-->';
-		$("#salesRep").append(html);
-		$("#salesRep" + id + " #salesRep_position").val(position);
-		$("#salesRep" + id + " #salesRep_position").attr('disabled','true');
-		$("#saledRep_name" + id).select2({
+ 		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
+		$("#" + htmlFor).append(html);
+		$("#" + htmlFor + "_name" + id).select2({
 			ajax: {
-				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=salesrep",
+				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=" + htmlFor,
 				dataType: 'json',
 				delay: 250,
 				data: function (params) {
@@ -789,238 +773,15 @@ function addSalesRep(isDefaultRow,salesRep){
 			// This is how I got ahold of the data
 			var data = event.params.data;
 			$.each(data,function(index,value){
-				$('#salesRep' + id + ' #' + index).val(value);
+				$('#' + htmlFor + id + ' #' + index).text(value);
 			});
+			$('#' + htmlFor + id + ' #seq').val(data.seq);
 		});
-		populateSalesRepCategories(category,ddId);
-		if(typeof salesRep !== "undefined"){
-			var newOption = new Option(salesRep.fullname, salesRep.customerrepseq, true, true);
+		if(typeof customerRep !== "undefined"){
+			var newOption = new Option(customerRep.fullname, customerRep.customerrepseq, true, true);
 			// Append it to the select2
-			$('#saledRep_name' + id).append(newOption).trigger('change');
+			$('#' + htmlFor + '_name' + id).append(newOption).trigger('change');
 		}
-		// $("#saledRep_name" + id).select2().val(customerRepSeq).trigger('change');
-		// populateSalesRepResponsibilities(responsiblity,ddId);
-		//populateSalesRepCategories(responsibility,ddId);
-}
-function addInternalSupport(isDefaultRow,internalSupport){
-	var seq           = ""
-	var firstName     = "";
-	var lastName      = "";
-	var phone         = "";
-	var emailid       = "";
-	var cellPhone     = "";
-	var note          = "";
-	var responsiblity = "";
-	var skypePersonId = "";
-	var position = "";
-	var category      = "";
-	var ext           = "";
-	var repnumber     = "";
-	var omscustid     = "";
-	var territory     = "";
-	var companyname   = "";
-	var shiptoaddress = "";
-	var city     	  = "";
-	var state     	  = "";
-	var zip     	  = "";
-	var commission    = "";
-	var isreceivesmonthlysalesreport = "";
-	var pricingtier   = "";
-	var seniorrephandlingaccount     = "";
-	var salesadminassigned = "";
-	index++;
-	var id = index;
-	if(typeof internalSupport !== "undefined"){
-		if(internalSupport.customerrepseq != null){
-			seq = internalSupport.customerrepseq;
-		}
-		if(internalSupport.fullname != null){
-			firstName = internalSupport.firstname;
-		}
-		if(internalSupport.email != null){
-			emailid = internalSupport.email;
-		}
-		if(internalSupport.ext != null){
-			ext = internalSupport.ext;
-		}
-		if(internalSupport.cellphone != null){
-			cellPhone = internalSupport.cellphone;
-		}
-		if(internalSupport.position != null){
-			position = internalSupport.position;
-		}
-		if(internalSupport.category != null){
-			category = internalSupport.category;
-		}
-		if(internalSupport.skypeid != null){
-			skypePersonId = internalSupport.skypeid;
-		}
-		if(internalSupport.repnumber != null){
-			repnumber = internalSupport.repnumber;
-		}
-		if(internalSupport.omscustid != null){
-			omscustid = internalSupport.omscustid;
-		}
-		if(internalSupport.territory != null){
-			territory = internalSupport.territory;
-		}
-		if(internalSupport.companyname != null){
-			companyname = internalSupport.companyname;
-		}
-		if(internalSupport.shiptoaddress != null){
-			shiptoaddress = internalSupport.shiptoaddress;
-		}
-		if(internalSupport.city != null){
-			city = internalSupport.city;
-		}
-		if(internalSupport.state != null){
-			state = internalSupport.state;
-		}
-		if(internalSupport.zip != null){
-			zip = internalSupport.zip;
-		}
-		if(internalSupport.commission != null){
-			commission = internalSupport.commission;
-		}
-		if(internalSupport.isreceivesmonthlysalesreport != null){
-			isreceivesmonthlysalesreport = internalSupport.isreceivesmonthlysalesreport;
-		}
-		if(internalSupport.pricingtier != null){
-			pricingtier = internalSupport.pricingtier;
-		}
-		if(internalSupport.seniorrephandlingaccount != null){
-			seniorrephandlingaccount = internalSupport.seniorrephandlingaccount;
-		}
-		if(internalSupport.salesadminassigned != null){
-			salesadminassigned = internalSupport.salesadminassigned;
-		}
-		// id = salesRep.customerrepallotmentseq;
-	}
-	var ddId = 'categorySalesRepSelectDiv'+id;
-	// var ddId = 'responsibilitySelectDiv'+id;
-	var html = '<div class="internalSupportDiv">';
-   		html += "<div class='form-group row m-b-xs internalSupportRow' id='internalSupport" + id + "'>";
-		html += "<div class='col-lg-2 p-xxs no-margins'>";
-		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="internalSupport_seq[]" class="form-control"/>';
-		html += "<select class='internalSupport_name' id='internalSupport_name" + id + "' name='internalSupport_name[]'></select>";
-		html += '<a onclick="deleteInternalSupport(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>';
-		html += "</div>";
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input id="email" type="text"  maxLength="250" value="'+emailid+'" name="internalSupport_emailid[]" class="form-control" placeholder="emailid" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="phone" type="text"  maxLength="250" value="'+phone+'" name="internalSupport_phone[]" class="form-control" placeholder="phone" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="ext" type="text"  maxLength="250" value="'+ext+'" name="internalSupport_phoneext[]" class="form-control" placeholder="ext." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="cellphone" type="text"  maxLength="250" value="'+cellPhone+'" name="internalSupport_cellphone[]" class="form-control" placeholder="cellphone" readonly>';
-		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">'; 
-		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="internalSupport_skypePersonId[]" class="form-control" placeholder="Skype Person Id" readonly>';
-		// html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += "<?php $select = DropDownUtils::getCustomerPostions('internalSupport_position[]', null, '1', false, true); echo $select;?>";
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="internalSupport_category[]" class="form-control" >';
-		html += '</select></div>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="repnumber" type="text"  maxLength="250" value="'+ repnumber +'" name="internalSupport_repNumber[]" class="form-control" placeholder="Rep number." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="omscustid" type="text"  maxLength="250" value="'+ omscustid +'" name="internalSupport_omsCustid[]" class="form-control" placeholder="OMS Cust Id." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="territory" type="text"  maxLength="250" value="'+ territory +'" name="internalSupport_territory[]" class="form-control" placeholder="territory." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="companyname" type="text"  maxLength="250" value="'+ companyname +'" name="internalSupport_companyName[]" class="form-control" placeholder="Company Name." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="shiptoaddress" type="text"  maxLength="250" value="'+ shiptoaddress +'" name="internalSupport_shipToAddress[]" class="form-control" placeholder="Ship To Address." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="city" type="text"  maxLength="250" value="'+ city +'" name="internalSupport_city[]" class="form-control" placeholder="City." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="state" type="text"  maxLength="250" value="'+ state +'" name="internalSupport_state[]" class="form-control" placeholder="State." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="zip" type="text"  maxLength="250" value="'+ zip +'" name="internalSupport_zip[]" class="form-control" placeholder="Zip." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="commission" type="text"  maxLength="250" value="'+ commission +'" name="internalSupport_commission[]" class="form-control" placeholder="Commission." readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="isreceivesmonthlysalesreport" type="text"  maxLength="250" value="'+ isreceivesmonthlysalesreport +'" name="internalSupport_isReceivesMonthlySalesReport[]" class="form-control" placeholder="Is Receives Monthly Salses Rep Report" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="pricingtier" type="text"  maxLength="250" value="' + pricingtier + '" name="internalSupport_pricingTier[]" class="form-control" placeholder="Pricing Tier" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="seniorrephandlingaccount" type="text"  maxLength="250" value="'+ seniorrephandlingaccount +'" name="internalSupport_seniorRepHandlingAccount[]" class="form-control" placeholder="Senior Rep Handling Account" readonly>';
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input id="salesadminassigned" type="text"  maxLength="250" value="'+ salesadminassigned +'" name="internalSupport_salesAdminAssigned[]" class="form-control" placeholder="Sales Admin Assigned" readonly>';
-		html += '</div>';
-		// html += '<div class="col-lg-1 p-xxs no-margins">';
-		// html += '<div id="'+ddId+'"><select name="salesRep_responsibility[]" class="form-control">';
-		// html += '</select></div>';
-		// html += '</div>';
-		
-		// if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div>'
-			html += '</div></div>';
-		// }
-		html += '</div>';
-		html += '<!--<div class="form-group row">';
-		html += '<div class="col-lg-11 p-xxs">-->';
- 		html += `<input type="hidden" id="NotesText${id}" name="internalSupport_notes[]" placeholder="notes" class="form-control" value="${note}"></input>`;
-		html += '<!--</div>-->';
-		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
-		html += '</div></div>-->';
-		$("#internalSupport").append(html);
-		$("#internalSupport" + id + " #internalSupport_position").val(position);
-		$("#internalSupport" + id + " #internalSupport_position").attr('disabled','true');
-		$("#internalSupport_name" + id).select2({
-			ajax: {
-				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=internalsupport",
-				dataType: 'json',
-				delay: 250,
-				data: function (params) {
-					return {
-						q: params.term, // search term
-						page: params.page
-					};
-				},
-				processResults: function (data, page) {
-				return data;
-				},
-				cache: true
-			},
-			minimumInputLength: 1,
-			width: '100%'
-		}).on('select2:select', function(event) {
-			// This is how I got ahold of the data
-			var data = event.params.data;
-			$.each(data,function(index,value){
-				$('#internalSupport' + id + ' #' + index).val(value);
-			});
-		});
-		populateSalesRepCategories(category,ddId);
-		if(typeof internalSupport !== "undefined"){
-			var newOption = new Option(internalSupport.fullname, internalSupport.customerrepseq, true, true);
-			// Append it to the select2
-			$('#internalSupport_name' + id).append(newOption).trigger('change');
-		}
-		// $("#saledRep_name" + id).select2().val(customerRepSeq).trigger('change');
-		// populateSalesRepResponsibilities(responsiblity,ddId);
-		//populateSalesRepCategories(responsibility,ddId);
 }
 
 function populateCustomerBuyers(){
@@ -1038,13 +799,14 @@ function populateCustomerBuyers(){
 					if(buyer.buyertype == "buyer"){
 						   addBuyer(true,buyer);
 						   buyerCount = true;
-					}else if(buyer.buyertype == "salesrep"){
-						addSalesRep(true, buyer);
-						salesRepCount = true;
-					}else if(buyer.buyertype == "internalsupport"){
-						addInternalSupport(true,buyer);
-						internalSupportCount = true;
 					}
+					// else if(buyer.buyertype == "salesrep"){
+					// 	addSalesRep(true, buyer);
+					// 	salesRepCount = true;
+					// }else if(buyer.buyertype == "internalsupport"){
+					// 	addInternalSupport(true,buyer);
+					// 	internalSupportCount = true;
+					// }
            		}else{
 					if(buyer.buyertype == "buyer"){
 						if(!buyerCount){
@@ -1053,21 +815,22 @@ function populateCustomerBuyers(){
 						}else{
 						   addBuyer(false, buyer);
 						}
-					}else if(buyer.buyertype == "salesrep"){
-						if(!salesRepCount){
-							addSalesRep(true, buyer);
-							salesRepCount = true;
-						}else{
-							addSalesRep(false, buyer);
-						}
-					}else if(buyer.buyertype == "internalsupport"){
-						if(!internalSupportCount){
-							addInternalSupport(true, buyer);
-							internalSupportCount = true;
-						}else{
-							addInternalSupport(false, buyer);
-						}
 					}
+					// else if(buyer.buyertype == "salesrep"){
+					// 	if(!salesRepCount){
+					// 		addSalesRep(true, buyer);
+					// 		salesRepCount = true;
+					// 	}else{
+					// 		addSalesRep(false, buyer);
+					// 	}
+					// }else if(buyer.buyertype == "internalsupport"){
+					// 	if(!internalSupportCount){
+					// 		addInternalSupport(true, buyer);
+					// 		internalSupportCount = true;
+					// 	}else{
+					// 		addInternalSupport(false, buyer);
+					// 	}
+					// }
            		} 
            		i++;
        		});
@@ -1075,21 +838,18 @@ function populateCustomerBuyers(){
 		});
 	}else{
 		addBuyer(true)
-		addSalesRep(true);
-		addInternalSupport(true);
 	}
 }
 function populateCustomerReps(){
 	if(customerSeq != 0){
 		$.getJSON("Actions/CustomerAction.php?call=getCustomerRepAllotmentsByCustomerSeq&customerseq=" + customerSeq , (response)=>{
 			$.each(response.data,function(index,value){
-				if(value.customerreptype == 'salesrep'){
-					addSalesRep(true,value);
-				}else if(value.customerreptype == 'internalsupport'){
-					addInternalSupport(true,value);
-				}
+				addCustomerRep("",value);
 			});
 		});
+	}else{
+		addCustomerRep('salesrep');
+		addCustomerRep('internalsupport');
 	}
 }
 function setCustomerId(seq){
@@ -1135,16 +895,6 @@ function populateBuyerCategories(selected,selectDivId){
 	});
 }
 
-function populateSalesRepCategories(selected, selectDivId){
-	$.get("Actions/CustomerAction.php?call=getBuyerCategories&selected="+selected, (data) =>{
-		var jsonData = $.parseJSON(data);
-		var ddhtml = jsonData.categoryDD;
-		ddhtml = ddhtml.replace("name='category[]'","name=\"salesRep_category[]\"");
-		$("#"+selectDivId).html(ddhtml);
-		$("#"+selectDivId+" select").attr('disabled','true');
-	});
-}
-
 function populateSalesRepResponsibilities(selected, selectDivId){
 	$.get("Actions/CustomerAction.php?call=getSellerResponsibilitiesType&selected="+selected, (data)=>{
 		var jsonData = $.parseJSON(data);
@@ -1170,12 +920,12 @@ function deleteBuyer(btn){
 // 	}
 }
 
-function deleteSalesRep(btn){
-	$(btn).closest('.salesRepDiv').remove();
+function deletesalesrep(btn){
+	$(btn).closest('.salesrepRow').remove();
 }
 
-function deleteInternalSupport(btn){
-	$(btn).closest('.internalSupportDiv').remove();
+function deleteinternalsupport(btn){
+	$(btn).closest('.internalsupportRow').remove();
 }
 
 function saveCustomer(){

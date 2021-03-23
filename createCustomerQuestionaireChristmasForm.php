@@ -45,7 +45,7 @@ if (!empty($seq) && !$isadded) {
     }
     $isQuestionnaireCompletedChecked = $customerChristmasQuestion->getIsQuestionnaireCompleted() ? 'checked' : '';
 }
-
+$hideIfNo = "style='display:none'";
 
 ?>
 <div id="panelMainDiv<?echo $seq?>" class="panel panel-default">
@@ -77,7 +77,7 @@ if (!empty($seq) && !$isadded) {
                                 <label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
                                 <div class="col-lg-4">
                                     <div>
-                                        <input type="checkbox" class="i-checks form-control pull-left isallcategoriesselected" id="isallcategoriesselected<?echo $id ?>" name="isallcategoriesselected" <?php echo $isAllChecked ?> /> <label>All</label>
+                                        <input type="checkbox" class="i-checks form-control pull-left isallcategoriesselectedchristmas" id="isallcategoriesselected<?echo $id ?>" name="isallcategoriesselected" <?php echo $isAllChecked ?> /> <label>All</label>
                                     </div>
                                     <div class="m-t-sm">
                                         <select id="christmasCategory<?echo $id?>" class="formCategories form-control category " name="category[]" multiple>
@@ -119,8 +119,8 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="row ">
+                        <div class="form-group booleanSelect">
+                            <div class="row">
                                 <label class="col-lg-8 col-form-label bg-formLabel">Date you sent them holiday catalog link?</label>
                                 <div class="col-lg-4">
                                     <?php
@@ -129,7 +129,7 @@ if (!empty($seq) && !$isadded) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="row ">
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsCatalogLinkSent() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel">If Yes, Date</label>
                                 <div class="col-lg-4">
                                     <div class="input-group date">
@@ -163,7 +163,7 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     Have you made an appointment or dinner appt with them?
@@ -176,10 +176,10 @@ if (!empty($seq) && !$isadded) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="row ">
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsDinnerAppt() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
                                     Yes, Place?</label>
-                                <div class="col-lg-4">
+                                <div class="col-lg-4 ">
 
                                     <input type="text" name="dinnerapptplace" value="<?php echo $customerChristmasQuestion->getDinnerApptPlace() ?>" id="dinnerapptplace" class="form-control">
 
@@ -218,7 +218,7 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">Have
                                     we sent them any Holiday sample?</label>
@@ -230,7 +230,7 @@ if (!empty($seq) && !$isadded) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="row ">
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsXmasSamplesSent() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
                                     Yes, Date?</label>
                                 <div class="col-lg-4">
@@ -240,7 +240,7 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     Have we made an appointment for a strategic planning meeting?
@@ -253,7 +253,7 @@ if (!empty($seq) && !$isadded) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="row ">
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsStrategicPlanningMeetingAppointment() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
                                     Yes, Date?</label>
                                 <div class="col-lg-4">
@@ -269,17 +269,7 @@ if (!empty($seq) && !$isadded) {
                                     categories have they not bought that we should sell them?
                                 </label>
                                 <div class="col-lg-4">
-                                    <select class="categoriesshouldsellthem form-control" name="categoriesshouldsellthem[]" multiple>
-                                        <?php
-                                        foreach ($buyerCategoriesSpringQues as $key => $value) {
-                                            $selected = "";
-                                            if (in_array($key, $categoriesShouldSellThem)) {
-                                                $selected = "selected";
-                                            }
-                                            echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-                                        }
-                                        ?>
-                                    </select>
+                                    <input type="text" name="categoriesshouldsellthem" value="<?php echo $customerChristmasQuestion->getCategoriesShouldSellThem() ?>" id="categoriesshouldsellthem" class="form-control" placeholder="Enter Category"> 
                                 </div>
                             </div>
                         </div>
@@ -380,8 +370,7 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel">Holiday 2020 Comp Shop Summary Email sent to SA Team and Robby?</label>
                                 <div class="col-lg-4">
@@ -390,10 +379,12 @@ if (!empty($seq) && !$isadded) {
                                     echo $select;
                                     ?>
                                 </div>
+                            </div>
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsHolidayShopComSummaryEmailSent() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">If
                                     Yes, Date?</label>
                                 <div class="col-lg-4">
-                                    <div class="input-group date">
+                                    <div class="input-group date ">
                                         <input type="text" name="compshopsummaryemailsentdate" value="<?php echo $customerChristmasQuestion->getCompShopSummaryEmailSentDate() ?>" id="compshopsummaryemailsentdate" class="form-control  dateControl"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -442,7 +433,7 @@ if (!empty($seq) && !$isadded) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     Are we expecting a PO ?
@@ -454,17 +445,19 @@ if (!empty($seq) && !$isadded) {
                                     echo $select;
                                     ?>
                                 </div>
+                            </div>
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getArePoExpecting() != 'yes'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     When are we expecting PO?
                                 </label>
                                 <div class="col-lg-4">
-                                    <div class="input-group date">
+                                    <div class="input-group date ">
                                         <input type="text" name="expectingpodate" value="<?php echo $customerChristmasQuestion->getExpectingPoDate() ?>" id="expectingpodate" class="form-control  dateControl"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     Have we sent them opportunities buys?
@@ -476,11 +469,13 @@ if (!empty($seq) && !$isadded) {
                                     echo $select;
                                     ?>
                                 </div>
+                            </div>
+                            <div class="row hideIfNo" <?php if($customerChristmasQuestion->getIsOpportunitiesSent() != '1'){echo $hideIfNo;} ?>>
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     If so, what is the last date you sent to them.
                                 </label>
                                 <div class="col-lg-4">
-                                    <div class="input-group date">
+                                    <div class="input-group date ">
                                         <input type="text" name="opportunitiessentdate" value="<?php echo $customerChristmasQuestion->getOpportunitiesSentDate() ?>" id="opportunitiessentdate" class="form-control  dateControl"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>

@@ -25,18 +25,16 @@ if($call == "saveChristmasQuestion"){
         }else{
             $christmasQuestion->setIsAllCategoriesSelected(0);
         }
+        $category = "";
         if(isset($_REQUEST['category'])){
             $category = implode(",",$_REQUEST['category']);
         }
         // $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
-        if(isset($_REQUEST['categoriesshouldsellthem'])){
-            $categoriesShouldSellThem = implode(",",$_REQUEST['categoriesshouldsellthem']);
-        }
         $christmasQuestion->setCategory($category);
         $christmasQuestion->setTradeShowsAreGoingTo($_REQUEST['tradeshowsaregoingto']);
-        $christmasQuestion->setCategoriesShouldSellThem($categoriesShouldSellThem);
+        $christmasQuestion->setCategoriesShouldSellThem($_REQUEST['categoriesshouldsellthem']);
         // $christmasQuestion->setXmasSampleSentDate(DateUtil::convertDateToFormat($_REQUEST['xmassamplesentdate'],'m-d-Y','Y-m-d'));
-        $christmasQuestion->setIsQuestionnaireCompleted($_REQUEST['isquestionnairecompleted'] == 'on' ? 1 : 0);
+        $christmasQuestion->setIsQuestionnaireCompleted(isset($_REQUEST['isquestionnairecompleted']) && $_REQUEST['isquestionnairecompleted'] == 'on' ? 1 : 0);
         if($seq > 0){
            $message = StringConstants::UPDATED_SUCCESSFULLY;
         }

@@ -303,17 +303,12 @@ $(document).ready(function(){
 	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.tradeshowsgoingto').select2({companies: true,width:245,placeholder: "Select Shows",});
-
-	$(document).on('change','.isallcategoriesselected',function(){
-		alert();
-		id = this.id.replace('isallcategoriesselected','');
-		handleCategorySelect(id,'spring');
-		handleChristmasCategorySelect(id,'christmas');
-	});
+	
 	loadSpringQuesForms();
 	notesShowHide();
 	loadChristmasQuesForm();
-});
+	
+});	
 
 function loadChristmasQuesForm(){
 	$.getJSON("Actions/CustomerChristmasQuestionAction.php?call=getByCustomerSeq&customerseq=" + customerSeq, (response)=>{
@@ -393,10 +388,7 @@ function addChristmasQuestionForm(seq,isAdded,isLast){
     	  	$('#christmasQuesDiv' + seq).html(data); // display data
     	  	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
     		$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
-    		$('.i-checks').iCheck({
-    			checkboxClass: 'icheckbox_square-green',
-    		   	radioClass: 'iradio_square-green',
-    		});
+			$('.formCategories').select2().next().hide();
     		$('.dateControl').datetimepicker({
     		    timepicker:false,
     		    format:'m-d-Y',
@@ -405,17 +397,27 @@ function addChristmasQuestionForm(seq,isAdded,isLast){
     			onSelectDate:function(ct,$i){
     			}
     		});
-    		
+    		$('.isallcategoriesselectedchristmas').iCheck({
+				checkboxClass: 'icheckbox_square-green',
+				radioClass: 'iradio_square-green',
+			}).on('ifChanged', function(event){
+				// alert("christmas");
+				id = this.id.replace('isallcategoriesselected','');
+				handleCategorySelect(id,'christmas');
+			});
+			$('.isquestionnairecompleted').iCheck({
+    			checkboxClass: 'icheckbox_square-green',
+    		   	radioClass: 'iradio_square-green',
+    		});
 			$('#christmasCategory' + seq).on('change', function (e) {
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq,'christmas')
     	 	});
-			handleChristmasCategorySelect(seq,'christmas');
+			handleCategorySelect(seq,'spring');
     		if(!isAdded){
     			var selectedValues = $('#christmasCategory' + seq).select2('data');
     			setCategoriesOnHeader(selectedValues,seq,'christmas');
     		}
-    		// handleCategorySelect(seq);
     		$("#createChristmasQuesForm"+seq).dirrty().on("dirty", function(){
 		
 				$("#saveChristmasQuesBtn"+seq).removeAttr("disabled");
@@ -433,6 +435,16 @@ function addChristmasQuestionForm(seq,isAdded,isLast){
 			onChangeIsCustomerGoingToSelectSpringItems(seq);
 			springNotesShowHide(seq);
 			onChangeIsCustomerGoingToSelectHolidayItems(seq);
+			$('.booleanSelect select').on('change',function(){
+				var val = $(this).val();
+				// alert($(this).parent().closest('hideIfNo'));
+				
+				if(val == 'yes'){
+					$(this).parents('.booleanSelect').find('.hideIfNo').show();
+				}else{
+					$(this).parents('.booleanSelect').find('.hideIfNo').hide();
+				}
+			});
     	});	
 	}
 }
@@ -450,10 +462,18 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     	  	$('#springQuesDiv' + seq).html(data); // display data
     	  	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
     		$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
-    		$('.i-checks').iCheck({
+			$('.formCategories').hide();
+			$('.isquestionnairecompleted').iCheck({
     			checkboxClass: 'icheckbox_square-green',
     		   	radioClass: 'iradio_square-green',
     		});
+    		$('.isallcategoriesselectedspring').iCheck({
+    			checkboxClass: 'icheckbox_square-green',
+    		   	radioClass: 'iradio_square-green',
+    		}).on('ifChanged', function(event){
+				id = this.id.replace('isallcategoriesselected','');
+				handleCategorySelect(id,'spring');
+			});
     		$('.dateControl').datetimepicker({
     		    timepicker:false,
     		    format:'m-d-Y',
@@ -462,6 +482,7 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     			onSelectDate:function(ct,$i){
     			}
     		});
+			handleCategorySelect(seq,'spring');
 			$('#springCategory' + seq).on('change', function (e) {
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq,'spring');
@@ -483,9 +504,18 @@ function addSpringQuestionForm(seq,isAdded,isLast){
 					$("#springDiv"+seq).hide();
 				}
 			});
-			handleCategorySelect(seq,'spring');
 			onChangeIsCustomerGoingToSelectSpringItems(seq);
 			springNotesShowHide(seq);
+			$('.booleanSelect select').on('change',function(){
+				var val = $(this).val();
+				// alert($(this).parent().closest('hideIfNo'));
+				
+				if(val == 'yes'){
+					$(this).parents('.booleanSelect').find('.hideIfNo').show();
+				}else{
+					$(this).parents('.booleanSelect').find('.hideIfNo').hide();
+				}
+			});
     	});	
 	}
 }
@@ -498,27 +528,14 @@ function handleCategorySelect(seq,isFor){
 	var flag  = $("#isallcategoriesselected" + seq).is(':checked');
 	var selectedValues = [{text:"All"}];
 	if(flag){
-		$('#springCategory' + seq).attr("disabled","disabled");
-		$('#springCategory' + seq).next(".select2-container").hide();	
+		$('#'+ isFor +'Category' + seq).attr("disabled","disabled");
+		$('#'+ isFor +'Category' + seq).next(".select2-container").hide();	
 	}else{
-		$('#springCategory' + seq).removeAttr("disabled")
-		$('#springCategory' + seq).next(".select2-container").show();
-		selectedValues = $('#springCategory' + seq).select2('data');
+		$('#'+ isFor +'Category' + seq).removeAttr("disabled")
+		$('#'+ isFor +'Category' + seq).next(".select2-container").show();
+		selectedValues = $('#'+ isFor +'Category' + seq).select2('data');
 	}
 	setCategoriesOnHeader(selectedValues,seq,isFor)
-}
-function handleChristmasCategorySelect(id,isFor){
-	var flag  = $("#isallcategoriesselected" + id).is(':checked');
-	var selectedValues = [{text:"All"}];
-	if(flag){
-		$('#christmasCategory' + id).attr("disabled","disabled");
-		$('#christmasCategory' + id).next(".select2-container").hide();
-	}else{
-		$('#christmasCategory' + id).removeAttr("disabled")
-		$('#christmasCategory' + id).next(".select2-container").show();
-		selectedValues = $('#christmasCategory' + id).select2('data');	
-	}
-	setCategoriesOnHeader(selectedValues,id,isFor)
 }
 function setCategoriesOnHeader(selectedValues,seq,isFor){
 	var textArr =[];
