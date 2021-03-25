@@ -23,7 +23,15 @@ if($call == "saveSpringQuestion"){
             $customerSpringQuestion->setIsAllCategoriesSelected(1);
         }else{
             $customerSpringQuestion->setIsAllCategoriesSelected(0);
-        }        
+        }
+        $category = "";
+        if(isset($_REQUEST['category'])){
+            $category = implode(",",$_REQUEST['category']);
+        }
+        if($customerSpringQuestion->getIsAllCategoriesSelected() == 0 && $category == "" ){
+            throw new Exception("Please select atleast one category");
+        }
+        $customerSpringQuestion->setCategory($category);      
         if($seq > 0){
             $message = StringConstants::UPDATED_SUCCESSFULLY;
         }

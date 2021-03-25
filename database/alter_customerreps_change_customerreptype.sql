@@ -1,0 +1,1 @@
+ALTER TABLE `customerreps` CHANGE `customerreptype` `customerreptype` ENUM('salesrep','internalsupport','sales_admin_lead','inside_account_manager','buyer') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL; 

@@ -50,12 +50,15 @@ $hideIfNo = "style='display:none'";
 ?>
 <div id="panelMainDiv<?echo $seq?>" class="panel panel-default">
     <div class="panel-heading">
-        <h5 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" 
+        <h5 class="panel-title row" style="display:flex;align-items:center">
+            <a class='col-lg-11' data-toggle="collapse" data-parent="#accordion" 
             	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>','christmas')">Holiday Questions for Category(s) - 
-            	<label class="christmasQuestionsPanelHeading<?echo $seq?>"></label></a>
-                <span style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>','Christmas')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
-                <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createChristmasQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
+            	<label class="christmasQuestionsPanelHeading<?echo $seq?>"></label>
+            </a>
+            <div class='col-lg-1'>
+                <span class='col-lg-6' style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createChristmasQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
+                <span class='col-lg-6' style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>','Christmas')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
+            </div>
         </h5>
     </div>
     	<?php if($isadded || $islast){?>
@@ -77,10 +80,10 @@ $hideIfNo = "style='display:none'";
                                 <label class="col-lg-8 col-form-label bg-formLabel">Select Category(s)</label>
                                 <div class="col-lg-4">
                                     <div>
-                                        <input type="checkbox" class="i-checks form-control pull-left isallcategoriesselectedchristmas" id="isallcategoriesselected<?echo $id ?>" name="isallcategoriesselected" <?php echo $isAllChecked ?> /> <label>All</label>
+                                        <input type="checkbox" class="i-checks form-control pull-left isallcategoriesselectedchristmas" id="isallcategoriesselected<?echo $seq ?>" name="isallcategoriesselected" <?php echo $isAllChecked ?> /> <label>All</label>
                                     </div>
                                     <div class="m-t-sm">
-                                        <select id="christmasCategory<?echo $id?>" class="formCategories form-control category " name="category[]" multiple>
+                                        <select id="christmasCategory<?echo $seq?>" class="formCategories form-control category " name="category[]" multiple>
                                             <?php
                                             foreach ($buyerCategoriesChristmasQues as $key => $value) {
                                                 $selected = "";
@@ -147,18 +150,6 @@ $hideIfNo = "style='display:none'";
                                     What trade shows are they going to in 2021?
                                 </label>
                                 <div class="col-lg-4">
-                                    <!-- <select id="tradeshowsaregoingto" class="formCategories form-control"
-                                    								name="tradeshowsaregoingto[]" multiple> -->
-                                    <?php
-                                    // foreach ( $buyerCategoriesSpringQues as $key => $value ) {
-                                    // 	$selected = "";
-                                    // 	if (in_array ( $key, $tradeshowsaregoingto )) {
-                                    // 		$selected = "selected";
-                                    // 	}
-                                    // 	echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-                                    // }
-                                    ?>
-                                    <!-- </select> -->
                                     <input class="form-control" id="tradeshowsaregoingto" type="text" name="tradeshowsaregoingto" value="<?php echo $customerChristmasQuestion->getTradeshowsAreGoingTo() ?>" />
                                 </div>
                             </div>
@@ -199,19 +190,19 @@ $hideIfNo = "style='display:none'";
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group booleanSelect">
                             <div class="row ">
                                 <label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
                                     Are there more buyers in other categories? Or does this buyer handle all of Holiday categories? If there are more buyers, who are they and ask all questions to each buyer.
                                 </label>
                                 <div class="col-lg-4">
                                     <?php
-                                    $select = DropDownUtils::getBooleanDropDown("istheremorebuyers", "notesShowHide()", $customerChristmasQuestion->getIsThereMoreBuyers(), false, true, 'N/A');
+                                    $select = DropDownUtils::getBooleanDropDown("istheremorebuyers", "", $customerChristmasQuestion->getIsThereMoreBuyers(), false, true, 'N/A');
                                     echo $select;
                                     ?>
                                 </div>
                             </div>
-                            <div class="panel panel-primary" id="christmasNotesDiv">
+                            <div class="panel panel-primary hideIfNo" id="christmasNotesDiv" <?php if($customerChristmasQuestion->getIsThereMoreBuyers() != '1'){echo $hideIfNo;} ?>>
                                 <div class="panel-heading">Notes</div>
                                 <div class="panel-body">
                                     <textarea tabindex="" class="form-control h-auto" maxLength="1000" name="buyerhasmorecategorynotes"><?php echo $customerChristmasQuestion->getBuyerHasMoreCategoryNotes() ?></textarea>
@@ -487,7 +478,7 @@ $hideIfNo = "style='display:none'";
                                     Is Questionnaire Completed.
                                 </label>
                                 <div class="col-lg-4">
-                                    <input type="checkbox" class="i-checks form-control pull-left isquestionnairecompleted" id="isquestionnairecompleted<?echo $id ?>" name="isquestionnairecompleted" <?php echo $isQuestionnaireCompletedChecked ?> />
+                                    <input type="checkbox" class="i-checks form-control pull-left ischristmasquestionnairecompleted" id="ischristmasquestionnairecompleted<?echo $id ?>" name="isquestionnairecompleted" <?php echo $isQuestionnaireCompletedChecked ?> />
                                 </div>
                             </div>
                         </div>
@@ -711,7 +702,7 @@ $hideIfNo = "style='display:none'";
                 </div>
                 <div class="form-group row buttonsDiv">
                     <div class="col-lg-2">
-                        <button class="btn btn-primary" id="saveChristmasQuesBtn<?echo $seq?>" onclick="saveQuestionnaire('createChristmasQuesForm<?echo $seq?>')" type="button" style="width:85%">Save</button>
+                        <button disabled class="btn btn-primary" id="saveChristmasQuesBtn<?echo $seq?>" onclick="saveQuestionnaire('createChristmasQuesForm<?echo $seq?>')" type="button" style="width:85%">Save</button>
                     </div>
                 </div>
             </div>

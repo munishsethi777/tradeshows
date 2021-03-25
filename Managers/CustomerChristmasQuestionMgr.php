@@ -30,7 +30,7 @@ class CustomerChristmasQuestionMgr{
             $allCategories = implode(",", $allCategoriesNames);
             $customerChritmas->setCategory($allCategories);
         }
-        // $this->validateFormCategories($customerChritmas);
+        $this->validateFormCategories($customerChritmas);
         $id = self::$dataStore->save($customerChritmas);
         return $id;
     }
@@ -57,16 +57,16 @@ class CustomerChristmasQuestionMgr{
              throw new Exception("Questionnarie already saved for categories :- " . $duplicateCategories);
          }
     }
-    private function getCatgoriesByCustomerSeq($springQuestion){
-        $seq = $springQuestion->getSeq();
-        $customerSeq = $springQuestion->getCustomerSeq();
-        $query = "select category from customerspringquestions where customerseq in ($customerSeq)";
+    private function getCatgoriesByCustomerSeq($christmasQuestion){
+        $seq = $christmasQuestion->getSeq();
+        $customerSeq = $christmasQuestion->getCustomerSeq();
+        $query = "select category from customerchristmasquestions where customerseq in ($customerSeq)";
         if(!empty($seq)){
             $query .= " and seq != $seq";
         }
-        $springQuestions = self::$dataStore->executeQuery($query, false,true);
-        if(!empty($springQuestions)){
-            $category  = array_map(create_function('$o', 'return $o["category"];'), $springQuestions);
+        $christmasQuestions = self::$dataStore->executeQuery($query, false,true);
+        if(!empty($christmasQuestions)){
+            $category  = array_map(create_function('$o', 'return $o["category"];'), $christmasQuestions);
             return $category;
         }
         return array();

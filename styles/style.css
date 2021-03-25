@@ -58,12 +58,12 @@ h5 {
   color: #999c9e;
 }
 .nav > li.active > a {
-  color: #ffffff;
+  color: #3a3a3a;
 }
 .navbar-default .nav > li > a:hover,
 .navbar-default .nav > li > a:focus {
-  background-color: #293846;
-  color: white;
+  background-color: #e5e5e5;
+  color: #3a3a3a;
 }
 .nav .open > a,
 .nav .open > a:hover,
@@ -195,6 +195,7 @@ ul.nav-second-level {
 }
 .nav.nav-second-level > li.active {
   border: none;
+  background: #e5e5e5;
 }
 .nav.nav-second-level.collapse[style] {
   height: auto !important;

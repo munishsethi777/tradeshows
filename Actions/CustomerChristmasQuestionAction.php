@@ -29,16 +29,16 @@ if($call == "saveChristmasQuestion"){
         if(isset($_REQUEST['category'])){
             $category = implode(",",$_REQUEST['category']);
         }
-        // $tradeShowsAreGoingTo = implode(",",$_REQUEST['tradeshowsaregoingto']);
+        if($christmasQuestion->getIsAllCategoriesSelected() == 0 && $category == "" ){
+            throw new Exception("Please select atleast one category");
+        }
         $christmasQuestion->setCategory($category);
         $christmasQuestion->setTradeShowsAreGoingTo($_REQUEST['tradeshowsaregoingto']);
         $christmasQuestion->setCategoriesShouldSellThem($_REQUEST['categoriesshouldsellthem']);
-        // $christmasQuestion->setXmasSampleSentDate(DateUtil::convertDateToFormat($_REQUEST['xmassamplesentdate'],'m-d-Y','Y-m-d'));
         $christmasQuestion->setIsQuestionnaireCompleted(isset($_REQUEST['isquestionnairecompleted']) && $_REQUEST['isquestionnairecompleted'] == 'on' ? 1 : 0);
         if($seq > 0){
            $message = StringConstants::UPDATED_SUCCESSFULLY;
         }
-    //   var_dump($_REQUEST);
         $id = $customerChristmassQuesMgr->saveCustomerSpecialProgram($christmasQuestion);
         $response["seq"] = $id;
     }catch(Exception $e){

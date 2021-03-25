@@ -8,7 +8,7 @@
     class CustomerRepMgr{
         private static $customerRepMgr;
         private static $dataStore;
-        private static $selectSqlForGrid = "SELECT * From customerreps";
+        private static $selectSqlForGrid = "SELECT * From customerreps WHERE customerreptype NOT LIKE 'buyer'";
 
         public static function getInstance()
         {
@@ -23,7 +23,7 @@
             $customerRep = new CustomerRep();
             $customerRep->createFromRequest($REQUEST);
             $customerRep->setIsReceivesMonthlySalesReport($REQUEST['isreceivesmonthlysalesreport'] == 'yes' ? 1 : 0);
-            self::$dataStore->save($customerRep);
+            return self::$dataStore->save($customerRep);
         }
         public function getAllCustomerReps(){
             $query = self::$selectSqlForGrid;
@@ -54,6 +54,12 @@
         public function findByAttributes($colValuePairArr){
             $customerReps = self::$dataStore->executeConditionQuery($colValuePairArr);
             return $customerReps;
+        }
+        public function deleteBuyerReps($customerSeq){
+            $query = "DELETE customerreps.*, customerrepallotments.* FROM customerreps
+                    LEFT JOIN customerrepallotments on customerrepallotments.customerrepseq = customerreps.seq 
+                    WHERE customerrepallotments.customerseq = ". $customerSeq ." AND customerreps.customerreptype like 'buyer'";
+            self::$dataStore->executeQuery($query);
         }
     }
 ?>

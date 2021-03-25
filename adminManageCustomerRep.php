@@ -168,16 +168,22 @@ $sessionUtil = SessionUtil::getInstance();
             var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var deleteButton = $("<div title='Delete' alt='Delete' style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+            var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
             container.append(deleteButton);
             statusbar.append(container);
+            container.append(reloadButton);
             addButton.jqxButton({  width: 65, height: 18 });
             deleteButton.jqxButton({ width: 65, height:18 });
+            reloadButton.jqxButton({  width: 70, height: 18 });
             addButton.click(function (event) {
                 location.href = ("adminCreateCustomerRep.php");
             });
             deleteButton.click(function(event){ 
                deleteRows("customerRepGrid","Actions/CustomerRepAction.php?call=deleteCustomerRep");
+            });
+            reloadButton.click(function (event) {
+                $("#customerRepGrid").jqxGrid({ source: dataAdapter });
             });
             $("#customerRepGrid").bind('rowselect', function (event) {
                 var selectedRowIndex = event.args.rowindex;

@@ -34,6 +34,9 @@ $manageInstructionManualLog = "";
 $manageRequestsParent= "";
 $manageRequests= "";
 $manageRequestTypes="";
+$manageCustomers = "";
+$manageCustomerRep = "";
+$collapse = "";
 //echo  $file;
 if($file == "dashboardmain.php"){
 	$isDashboard = "active";
@@ -85,6 +88,12 @@ if($file == "dashboardmain.php"){
 }elseif($file == "adminManageRequestTypes.php"){
     $manageRequestsParent = "active";
     $manageRequestTypes = "active";
+}elseif($file == "manageCustomers.php" || $file == "createCustomer.php" || $file == "createCustomerQuestionaire.php"){
+	$manageCustomers = "active";
+	$collapse = "collapse in";
+}elseif($file == "adminManageCustomerRep.php" || $file == "adminCreateCustomerRep.php"){
+	$manageCustomerRep = "active";
+	$collapse = "collapse in";
 }
 
 
@@ -313,11 +322,11 @@ if($file == "dashboardmain.php"){
 							<span class='nav-label'>Customers</span>
 							<span class='fa arrow'></span>
 						</a>
-						<ul class='nav nav-second-level'>
-							<li class=''>
+						<ul class='nav metismenu nav-second-level <?php echo $collapse?>'>
+							<li class='<?php echo $manageCustomers;?>'>
 								<a href='manageCustomers.php'>Manage Customers</a>
 							</li>
-							<li class=''>
+							<li class='<?php echo $manageCustomerRep;?>'>
 								<a href='adminManageCustomerRep.php'>Manage Customer Rep</a>
 							</li>
 						</ul>

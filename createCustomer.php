@@ -385,13 +385,12 @@ if(isset($_POST["id"])){
     	                       	<label class="col-lg-12 m-xxs txt-primary" >Buyers</label>
 							</div>
 	                       <div class="form-group row m-b-xs">
-						  		<label class="col-lg-2 col-form-label bg-formLabel">First Name</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Last Name</label>
+						  		<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
-	                        	<label class="col-lg-1 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-1 col-form-label bg-formLabel">Position</label>
+	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
+								<label class="col-lg-2 col-form-label bg-formLabel">Position</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                       </div>
 	                       <div id="buyers" class="buyers">
@@ -405,7 +404,6 @@ if(isset($_POST["id"])){
 	                   </form>      
 	         	</div>
 	    	</div>
-       	
      </div>   	
     </div>
     </div>
@@ -477,9 +475,6 @@ $(document).ready(function(){
 	loadCustomers();
 	populateCustomerReps();
 	populateCustomerBuyers();
-	$('#salesadminlead').select2();
-	$('#insideaccountmanager').select2();
-	
 });
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
@@ -500,9 +495,8 @@ function showHideStoreFields(){
 }
 var index = 0;
 function addBuyer(isDefaultRow,buyer){
-	var firstName = "";
-	var lastName  = "";
-	var emailid   = "";
+	var fullname = "";
+	var email   = "";
 	var phone     = "";
 	var cellPhone = "";
 	var note      = "";
@@ -513,20 +507,14 @@ function addBuyer(isDefaultRow,buyer){
 	index++;
 	var id = index;
 	if (typeof buyer !== "undefined"){
-		if(buyer.firstname != null){
-			firstName = buyer.firstname;
-		}
-		if(buyer.lastname != null){
-			lastName = buyer.lastname;
+		if(buyer.fullname != null){
+			fullname = buyer.fullname;
 		}
 		if(buyer.email != null){
-			emailid = buyer.email;
+			email = buyer.email;
 		}
-		if(buyer.officephone != null){
-			phone = buyer.officephone;
-		}
-		if(buyer.officephoneext != null){
-			ext = buyer.officephoneext;
+		if(buyer.ext != null){
+			ext = buyer.ext;
 		}
 		if(buyer.cellphone != null){
 			cellPhone = buyer.cellphone;
@@ -537,37 +525,36 @@ function addBuyer(isDefaultRow,buyer){
 		if(buyer.skypeid != null){
 			skypePersonId = buyer.skypeid;
 		}
-		if(buyer.position != null){
-			position = buyer.position;
+		if(buyer.position_key != null){
+			position = buyer.position_key;
 		}
-		category = buyer.category;
+		if(buyer.category_key != null){
+			category = buyer.category_key;
+		}
 		id = buyer.seq
 	}
 	var ddId =  'categorySelectDiv'+id;
 	var html = '<div class="buyerDiv">';
    		html += "<div class='form-group row m-b-xs' id='buyerRep" + id +"'>";
 		html += `<div class="col-lg-2 p-xxs no-margins">
-					<input type="text"  maxLength="250" value="${firstName}" id="firstName${id}" name="buyer_firstname[]" class="form-control" placeholder="firstname">
-				</div>
-				<div class="col-lg-2 p-xxs no-margins">
-					<input type="text"  maxLength="250" value="${lastName}" id="lastName${id}" name="buyer_lastname[]" class="form-control" placeholder="lastname">
+					<input type="text"  maxLength="250" value="${fullname}" id="fullname${id}" name="buyer_fullname[]" class="form-control" placeholder="Fullname">
 				</div>`;
 		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+emailid+'" name="buyer_emailid[]" class="form-control" placeholder="emailid">';
+		html += '<input type="text"  maxLength="250" value="'+email+'" name="buyer_email[]" class="form-control" placeholder="email">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+phone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_phoneext[]" class="form-control" placeholder="ext.">';
+		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_ext[]" class="form-control" placeholder="ext.">';
 		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+cellPhone+'" name="buyer_cellphone[]" class="form-control" placeholder="cellphone">';
 		html += '</div>';
 		// html += '<div class="col-lg-1 p-xxs no-margins">';
 		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="buyer_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
 		// html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += "<?php $select = DropDownUtils::getCustomerPostions('buyer_position[]', null, '1', false, true); echo $select;?>";
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
@@ -594,7 +581,6 @@ function addBuyer(isDefaultRow,buyer){
 		html += '</div></div>-->';
 		$("#buyers").append(html);
 		$("#buyerRep"+ id +" #buyer_position").val(position);
-		
 		populateBuyerCategories(category,ddId);
 }
 
@@ -844,7 +830,11 @@ function populateCustomerReps(){
 	if(customerSeq != 0){
 		$.getJSON("Actions/CustomerAction.php?call=getCustomerRepAllotmentsByCustomerSeq&customerseq=" + customerSeq , (response)=>{
 			$.each(response.data,function(index,value){
-				addCustomerRep("",value);
+				if(value.customerreptype == 'buyer'){
+					addBuyer(false,value);
+				}else{
+					addCustomerRep("",value);
+				}
 			});
 		});
 	}else{

@@ -45,12 +45,15 @@ $hideIfNo = "style='display:none'";
 ?>
 <div id="panelMainDiv<?echo $seq?>" class="panel panel-default">
     <div class="panel-heading">
-        <h5 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" 
+        <h5 class="panel-title row" style="display:flex;align-items:center">
+            <a class='col-lg-11' data-toggle="collapse" data-parent="#accordion" 
             	href="#collapse<?echo $seq?>" onclick="collapseAll('collapse<?php echo $seq?>','spring')">Spring Questions for Category(s) - 
-            	<label class="springQuestionsPanelHeading<?echo $seq?>"></label></a>
-                <span style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>','Spring')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
-                <span style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
+            	<label class="springQuestionsPanelHeading<?echo $seq?>"></label>
+			</a>
+			<div class='col-lg-1'>
+				<span class='col-lg-6' style="font-size: 18px;"><a title="Save" onclick="saveQuestionnaire('createSpringQuesForm<?echo $seq?>')" class="pull-right"><i class="fa fa-save"></i></a></span>
+				<span class='col-lg-6' style="font-size: 18px;"><a title="Delete" id="deletePanel<?echo $seq?>" onclick="removePanel('<?echo $seq?>','Spring')" class="pull-right m-l-sm"><i class="fa fa-times"></i></a></span>
+			</div>
         </h5>
     </div>
     	<?php if($isadded || $islast){?>
@@ -74,11 +77,11 @@ $hideIfNo = "style='display:none'";
             						<div class="col-lg-4">
             							<div>
 	            							<input type="checkbox" class="i-checks form-control pull-left isallcategoriesselectedspring"
-	            								id="isallcategoriesselected<?echo $id?>" name="isallcategoriesselected"
+	            								id="isallcategoriesselected<?echo $seq?>" name="isallcategoriesselected"
 	            								<?php echo $isAllChecked?> /> <label>All</label>
 	            						</div>
 	            						<div class="m-t-sm">
-	            							<select id="springCategory<?echo $id?>" class="formCategories form-control"
+	            							<select id="springCategory<?echo $seq?>" class="formCategories form-control col-lg-4"
 	            								name="category[]" multiple>
 	            							<?php
 	            								foreach ( $buyerCategoriesSpringQues as $key => $value ) {
@@ -151,19 +154,7 @@ $hideIfNo = "style='display:none'";
             							What trade shows are they going to in 2021?
 									</label>
             						<div class="col-lg-4">
-            							<!-- <select id="tradeshowsaregoingto<?echo $seq?>" class="formCategories form-control"
-            								name="tradeshowsaregoingto[]" multiple> -->
-            							<?php
-            								// foreach ( $buyerCategoriesSpringQues as $key => $value ) {
-            								// 	$selected = "";
-            								// 	if (in_array ( $key, $tradeshowsaregoingto )) {
-            								// 		$selected = "selected";
-            								// 	}
-            								// 	echo ('<option ' . $selected . ' value="' . $key . '">' . $value . '</option>');
-            								// }
-            							?>
-                					    <!-- </select> -->
-										<input class="form-control" id="tradeshowsaregoingto" type="text" name="tradeshowsaregoingto" value=""/>
+										<input class="form-control" id="tradeshowsaregoingto" type="text" name="tradeshowsaregoingto" value="<?php echo $customerSpringQuestion->getTradeshowsAreGoingTo() ?>"/>
                 					</div>
             					</div>
             				</div>
@@ -217,19 +208,19 @@ $hideIfNo = "style='display:none'";
 <!--             						</div> -->
 <!--             					</div> -->
             				</div>
-            				<div class="form-group" id="isVisitCustomerDuring2ndqtr<?php echo $seq;?>">
+            				<div class="form-group booleanSelect" id="isVisitCustomerDuring2ndqtr<?php echo $seq;?>">
             					<div class="row ">
             						<label class="col-lg-8 col-form-label bg-formLabel bg-formLabelMauve">
             							Are there more buyers in other categories? Or does this buyer handle all of Alpine categories?  If there are more, who are they and start all questions to each buyer.
             						</label>
             						<div class="col-lg-4">
 											<?php
-												$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr","springNotesShowHide(".$seq.")", $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, true,"N/A");
+												$select = DropDownUtils::getBooleanDropDown("isvisitcustomerduring2ndqtr","", $customerSpringQuestion->getIsVisitCustomerDuring2ndQtr(), false, true,"N/A");
 												echo $select;
 											?>
             						</div>
             					</div>
-	                        	<div class="panel panel-primary" id="springNotesDiv<?php echo $seq;?>">
+	                        	<div class="panel panel-primary hideIfNo" id="springNotesDiv<?php echo $seq;?>" <?php if($customerSpringQuestion->getIsVisitCustomerDuring2ndQtr() != '1'){echo $hideIfNo;} ?>>
 									<div class="panel-heading">Notes</div>
 									<div class="panel-body">
 	                                   		<textarea  tabindex="" class="form-control h-auto" maxLength="1000" name="buyerhasmorecategorynotes" ><?php echo $customerSpringQuestion->getBuyerHasMoreCategoryNotes() ?></textarea>
@@ -581,7 +572,7 @@ $hideIfNo = "style='display:none'";
 										Is Questionnaire Completed.
 									</label>
 									<div class="col-lg-4">
-										<input type="checkbox" class="i-checks form-control pull-left isquestionnairecompleted" id="isquestionnairecompleted<?echo $id ?>" name="isquestionnairecompleted" <?php echo $isQuestionnaireCompletedChecked ?> />
+										<input type="checkbox" class="i-checks form-control pull-left isspringquestionnairecompleted" id="isspringquestionnairecompleted<?echo $id ?>" name="isspringquestionnairecompleted" <?php echo $isQuestionnaireCompletedChecked ?> />
 									</div>
 								</div>
                         	</div>

@@ -157,6 +157,9 @@ if(isset($_POST["customerSeq"])){
 textarea .form-control{
 	height:auto !important;
 }
+.select2-container{
+	width:100% !important;
+}
 </style>
 </head>
 <body>
@@ -284,7 +287,7 @@ var customerSeq = "<?php echo $customerSeq ?>";
 var index = 0;
 $(document).ready(function(){
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		notesShowHide();
+		// notesShowHide();
 	});
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
@@ -303,11 +306,8 @@ $(document).ready(function(){
 	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
 	$('.tradeshowsgoingto').select2({companies: true,width:245,placeholder: "Select Shows",});
-	
 	loadSpringQuesForms();
-	notesShowHide();
 	loadChristmasQuesForm();
-	
 });	
 
 function loadChristmasQuesForm(){
@@ -317,7 +317,6 @@ function loadChristmasQuesForm(){
 		if(length > 0){
    	   		$i = 1;
    	   		isLast = 0;
-   	   		
        		$.each(christmasQuesArr,function(key,value){
            		if($i == length){
            			isLast = true;
@@ -338,7 +337,6 @@ function loadSpringQuesForms(){
    		if(length > 0){
    	   		$i = 1;
    	   		isLast = 0;
-   	   		
        		$.each(springQuesArr,function(key,value){
            		if($i == length){
            			isLast = true;
@@ -404,22 +402,26 @@ function addChristmasQuestionForm(seq,isAdded,isLast){
 				// alert("christmas");
 				id = this.id.replace('isallcategoriesselected','');
 				handleCategorySelect(id,'christmas');
+				$("#saveChristmasQuesBtn"+id).removeAttr("disabled");
 			});
-			$('.isquestionnairecompleted').iCheck({
+			$('.ischristmasquestionnairecompleted').iCheck({
     			checkboxClass: 'icheckbox_square-green',
     		   	radioClass: 'iradio_square-green',
     		});
+			$('.ischristmasquestionnairecompleted').on('ifChanged', function(event){
+				id = this.id.replace('ischristmasquestionnairecompleted','');
+				$("#saveChristmasQuesBtn"+id).removeAttr("disabled");
+			});
 			$('#christmasCategory' + seq).on('change', function (e) {
         		var selectedValues = $(this).select2('data');
         		setCategoriesOnHeader(selectedValues,seq,'christmas')
     	 	});
-			handleCategorySelect(seq,'spring');
+			handleCategorySelect(seq,'christmas');
     		if(!isAdded){
     			var selectedValues = $('#christmasCategory' + seq).select2('data');
     			setCategoriesOnHeader(selectedValues,seq,'christmas');
     		}
     		$("#createChristmasQuesForm"+seq).dirrty().on("dirty", function(){
-		
 				$("#saveChristmasQuesBtn"+seq).removeAttr("disabled");
     		}).on("clean", function(){
     			$("#saveChristmasQuesBtn"+seq).attr("disabled", "disabled");
@@ -433,7 +435,7 @@ function addChristmasQuestionForm(seq,isAdded,isLast){
 				}
 			});
 			onChangeIsCustomerGoingToSelectSpringItems(seq);
-			springNotesShowHide(seq);
+			// springNotesShowHide(seq);
 			onChangeIsCustomerGoingToSelectHolidayItems(seq);
 			$('.booleanSelect select').on('change',function(){
 				var val = $(this).val();
@@ -463,16 +465,21 @@ function addSpringQuestionForm(seq,isAdded,isLast){
     	  	$('.categoriesshouldsellthem').select2({companies: true,width:245,placeholder: "Select Categories",});
     		$('.formCategories').select2({companies: true,width:245,placeholder: "Select Categories",});
 			$('.formCategories').hide();
-			$('.isquestionnairecompleted').iCheck({
+			$('.isspringquestionnairecompleted').iCheck({
     			checkboxClass: 'icheckbox_square-green',
     		   	radioClass: 'iradio_square-green',
     		});
+			$('.isspringquestionnairecompleted').on('ifChanged', function(event){
+				id = this.id.replace('isspringquestionnairecompleted','');
+				$("#saveSpringQuesBtn"+id).removeAttr("disabled");
+			});
     		$('.isallcategoriesselectedspring').iCheck({
     			checkboxClass: 'icheckbox_square-green',
     		   	radioClass: 'iradio_square-green',
     		}).on('ifChanged', function(event){
 				id = this.id.replace('isallcategoriesselected','');
 				handleCategorySelect(id,'spring');
+				$("#saveSpringQuesBtn"+id).removeAttr("disabled");
 			});
     		$('.dateControl').datetimepicker({
     		    timepicker:false,
@@ -505,11 +512,9 @@ function addSpringQuestionForm(seq,isAdded,isLast){
 				}
 			});
 			onChangeIsCustomerGoingToSelectSpringItems(seq);
-			springNotesShowHide(seq);
 			$('.booleanSelect select').on('change',function(){
 				var val = $(this).val();
 				// alert($(this).parent().closest('hideIfNo'));
-				
 				if(val == 'yes'){
 					$(this).parents('.booleanSelect').find('.hideIfNo').show();
 				}else{
@@ -599,26 +604,8 @@ function SomethingChanged(control){
          control.IsDirty = false;
     alert(control.IsDirty);
 }
-
-function notesShowHide(){
-	isYes = $("#istheremorebuyers :selected").val();
-	if( isYes == "yes"){
-		$("#christmasNotesDiv").slideDown();
-	}else{
-		$("#christmasNotesDiv").slideUp();
-		$("#christmasNotesDiv textarea").val("");
-	}
-	isYes = $("#isvisitcustomerduring2ndqtr :selected").val();
-	if( isYes == "yes"){
-		$("#springNotesDiv").slideDown();
-	}else{
-		$("#springNotesDiv").slideUp();
-		$("#springNotesDiv textarea").val("");
-	}
-}
 function showHideSpringSampleDateField(currentValue){
 	var val = $(currentValue).val();
-	// alert(val);
 	if(val == 'yes'){
 		$("#springsampledateDiv").show();
 	}else{

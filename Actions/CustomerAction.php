@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BuyerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerRepAllotment.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/CustomerRep.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerRepMgr.php");
 $success = 1;
 $message ="";
@@ -26,33 +27,6 @@ if($call == "saveCustomer"){
         $buyers = array();
         $salesReps = array();
         $internalSupports = array();
-        try{
-            if(isset($_REQUEST["buyer_firstname"])){
-                for($i = 0;$i< count($_REQUEST["buyer_firstname"]);$i++){
-                    if(empty($_REQUEST["buyer_firstname"][$i]) && empty($_REQUEST["buyer_lastname"][$i]) 
-                        && empty($_REQUEST["buyer_emailid"][$i]) && empty($_REQUEST["buyer_phone"][$i])
-                        && empty($_REQUEST["buyer_phoneext"][$i]) && empty($_REQUEST["buyer_cellphone"][$i])
-                        && empty($_REQUEST["buyer_skypePersonId"][$i]) && empty($_REQUEST["buyer_category"][$i])
-                        && empty($_REQUEST["buyer_position"][$i])
-                        ){
-                            // Do nothing if all fields are empty
-                    }else{
-                        $arr = array();
-                        $arr["firstname"] = $_REQUEST["buyer_firstname"][$i];
-                        $arr["lastname"] = $_REQUEST["buyer_lastname"][$i];
-                        $arr["emailid"] = $_REQUEST["buyer_emailid"][$i];
-                        $arr["phone"] = $_REQUEST["buyer_phone"][$i];
-                        $arr["phoneext"] = $_REQUEST["buyer_phoneext"][$i];
-                        $arr["cellphone"] = $_REQUEST["buyer_cellphone"][$i];
-                        // $arr["skypepersonid"] = $_REQUEST["buyer_skypePersonId"][$i];
-                        $arr["position"] = $_REQUEST["buyer_position"][$i];
-                        $arr["category"] = $_REQUEST["buyer_category"][$i];
-                        $arr["notes"] = $_REQUEST["buyer_notes"][$i];
-                        $buyers[] = $arr;
-                    }
-                }
-            }
-        }catch(Exception $e){}
         $customer->from_array($_REQUEST);
         $seq = $_REQUEST['seq'];
         if(isset($_REQUEST["fullNameSelect"])){
@@ -63,8 +37,6 @@ if($call == "saveCustomer"){
         if(isset($_REQUEST["isstore"])){
             $isStore = 1;
         }
-        //$customer->setFreightForwarderEmail($_REQUEST['freightforwarderemail']);
-        //$customer->setFreightForwarderName($_REQUEST['freightforwardername']);
         $customer->setCustomerType($_REQUEST["customertype"]);
         $customer->setInsideAccountManager($_REQUEST["insideaccountmanager"]);
         $customer->setSalesAdminLead($_REQUEST["salesadminlead"]);
@@ -80,6 +52,7 @@ if($call == "saveCustomer"){
         $seq = $customerMgr->saveCustomerObject($customer);
         $colValueArr = array();
         $colValueArr['customerseq'] = $seq;
+        $customerRepMgr->deleteBuyerReps($seq);
         $customerMgr->deleteCustomerRepAllotmentByAttribute($colValueArr);
         if(isset($_REQUEST['salesrep_name'])){
             for($i = 0; $i < count($_REQUEST['salesrep_name']); $i++){
@@ -103,30 +76,27 @@ if($call == "saveCustomer"){
                 }
             }
         }
-        $buyerObjs = array();
-        foreach($buyers as $buyer){
-            $buyerObj = new Buyer();
-            $buyerObj->setFirstName($buyer["firstname"]);
-            $buyerObj->setLastName($buyer["lastname"]);
-            $buyerObj->setEmail($buyer["emailid"]);
-            $buyerObj->setOfficePhone($buyer["phone"]);
-            $buyerObj->setOfficePhoneExt($buyer["phoneext"]);
-            $buyerObj->setCellPhone($buyer["cellphone"]);
-            $buyerObj->setNotes($buyer["notes"]);
-            // $buyerObj->setSkypeId($buyer["skypepersonid"]);
-            $buyerObj->setPosition($buyer["position"]);
-            $buyerObj->setCategory($buyer["category"]);
-            $buyerObj->setCreatedon(new DateTime());
-            $buyerObj->setLastmodifiedon(new DateTime());
-            $buyerObj->setCustomerSeq($seq);
-            $buyerObj->setBuyerType("buyer");
-            $buyerObj->setCreatedby($sessionUtil->getUserLoggedInSeq());
-            $buyerObjs[] = $buyerObj;
-        }
-        $buyerMgr = BuyerMgr::getInstance();
-        $buyerMgr->deleteByCustomerSeq($seq);
-        foreach($buyerObjs as $buyerObj){
-            $buyerMgr->saveBuyer($buyerObj);
+        if(isset($_REQUEST['buyer_fullname'])){
+            for($i = 0; $i < count($_REQUEST['buyer_fullname']); $i++){
+                if(!empty($_REQUEST['buyer_fullname'][$i])){
+                    $customerRepArr = [];
+                    $customerRepArr['fullname'] = $_REQUEST['buyer_fullname'][$i];
+                    $customerRepArr['email'] = $_REQUEST['buyer_email'][$i];
+                    $customerRepArr['ext'] = $_REQUEST['buyer_ext'][$i];
+                    $customerRepArr['cellphone'] = $_REQUEST['buyer_cellphone'][$i];
+                    $customerRepArr['position'] = $_REQUEST['buyer_position'][$i];
+                    $customerRepArr['category'] = $_REQUEST['buyer_category'][$i];
+                    $customerRepArr['notes'] = $_REQUEST['buyer_notes'][$i];
+                    $customerRepArr['customerreptype'] = 'buyer';
+                    $customerRepArr['isreceivesmonthlysalesreport'] = "no";
+                    $customerRepSeq = $customerRepMgr->save($customerRepArr);
+                    $customerRepAllotment = new CustomerRepAllotment();
+                    $customerRepAllotment->setCustomerSeq($seq);
+                    $customerRepAllotment->setCustomerRepSeq($customerRepSeq);
+                    $customerRepAllotment->setNotes($_REQUEST['buyer_notes'][$i]);
+                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                }
+            }
         }
     }catch(Exception $e){
         $success = 0;
