@@ -352,15 +352,15 @@ if($file == "dashboardmain.php"){
 						<li class="<?php echo $manageRequestsParent?>">
 							<a href='#'>
 								<i class='fa fa-tasks'></i> 
-								<span class='nav-label'>Requests</span>
+								<span class='nav-label'>Projects Management</span>
 								<span class='fa arrow'></span>
 							</a>
 							<ul class='nav nav-second-level'>
 								<li class="<?php echo $manageRequests?>">
-									<a href='adminManageRequests.php'>Requests</a>
+									<a href='adminManageRequests.php'>Projects</a>
 								</li>
 								<li class="<?php echo $manageRequestTypes?>">
-									<a href='adminManageRequestTypes.php'>Request Types</a>
+									<a href='adminManageRequestTypes.php'>Project Types</a>
 								</li>
 							</ul>
 						</li>

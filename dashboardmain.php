@@ -106,7 +106,7 @@ $isSessionAdmin = $sessionUtil->isSessionAdmin();
 										<div class="row">
 											<a href="adminManageRequests.php">
 											<h1 class="m-t-xs font-bold"><i class="fa fa-tasks" aria-hidden="true"></i></h1>
-											<span>Requests Management</span></a>
+											<span>Project Management</span></a>
 										</div>
 									</div>
 								</div>

@@ -9,7 +9,7 @@ $sessionUtil = SessionUtil::getInstance();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Manage Requests</title>
+    <title>Manage Project Types</title>
     <?include "ScriptsInclude.php"?>
     <style type="text/css">
         .itemDetailsModalDiv .lblDesc {

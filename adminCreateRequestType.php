@@ -22,7 +22,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Request Type</title>
+    <title>Create Project Type</title>
     <?include "ScriptsInclude.php"?>
 </head>
 
@@ -36,7 +36,7 @@
                         <div class="ibox-title">
                             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                                 <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                                <h5 class="pageTitle">Create/Edit Request Type</h5>
+                                <h5 class="pageTitle">Create/Edit Project Type</h5>
                             </nav>
                         </div>
                         <div class="ibox-content">
@@ -68,22 +68,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label bg-formLabel">Request Type Title</label>
+                                    <label class="col-lg-2 col-form-label bg-formLabel">Project Type Title</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $requestType->getTitle();?>" id="title" name="title" class="form-control" placeholder="Enter Request Type Title" required>
+                                        <input type="text" maxLength="250" value="<?php echo $requestType->getTitle();?>" id="title" name="title" class="form-control" placeholder="enter project type title" required>
                                     </div>
-                                    <label class="col-lg-2 col-form-label bg-formLabel">Request Type Code</label>
+                                    <label class="col-lg-2 col-form-label bg-formLabel">Project Type Code</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $requestType->getRequestTypeCode();?>" id="title" name="requesttypecode" class="form-control" placeholder="Enter Request Type Code" required>
+                                        <input type="text" maxLength="250" value="<?php echo $requestType->getRequestTypeCode();?>" id="title" name="requesttypecode" class="form-control" placeholder="enter project type code" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row m-b-xs">
-                                    <label class="col-lg-12 m-xxs txt-primary">Add Request Status</label>
+                                    <label class="col-lg-12 m-xxs txt-primary">Add Project Status</label>
                                 </div>
                                 
                                 <div id="addRequestStatusLabelDiv" class="form-group row m-b-xs">
-                                    <label class="col-lg-11 col-form-label bg-formLabel">Request status</label>
+                                    <label class="col-lg-11 col-form-label bg-formLabel">Project status</label>
                                     <label class="col-lg-1 col-form-label bg-formLabel">Action</label>
                                 </div>
                                 
@@ -94,7 +94,7 @@
                                         <i class="fa fa-plus"></i> Add more</button>
                                 </div>
                                 <div class="form-group row m-b-xs">
-                                    <label class="col-lg-12 m-xxs txt-primary">Add Request Fields</label>
+                                    <label class="col-lg-12 m-xxs txt-primary">Add Project Fields</label>
                                 </div>
                                 <div id="addRequestFieldsLabelDiv" class="form-group row m-b-xs">
                                     <label class="col-lg-4 col-form-label bg-formLabel">Field Title</label>
@@ -177,7 +177,7 @@
         }
         var html = "<div class='form-group row m-b-xs requestStatusRow'>";
         html += "<div class='col-lg-11 p-xxs no-margins'>";
-        html += "<input type='text' id='' maxLength='' value='" + title + "' name='requeststatus[]' class='form-control' placeholder='Enter request status'>";
+        html += "<input type='text' id='' maxLength='' value='" + title + "' name='requeststatus[]' class='form-control' placeholder='enter project status'>";
         html += "</div>";
         html += "<div class='col-lg-1 p-xxs no-margins'>";
         html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick='deleteRequestStatusRow(this)'>";
