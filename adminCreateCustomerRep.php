@@ -124,6 +124,10 @@ if(isset($_POST["id"])){
                                     
                                 </div>
                                 <div class="row form-group">
+                                    <label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
+                                    <div class="col-lg-4">
+                                        <input type="text" required maxLength="250" value="<?php echo $customerRep->getTelephone() ?>" name="telephone" id="telephone" class="form-control" placeholder="Enter telephone"/>
+                                    </div>
                                     <label class="col-lg-2 col-form-label bg-formLabel">Position</label>
                                     <div class="col-lg-4">
                                     <?php 
@@ -131,6 +135,8 @@ if(isset($_POST["id"])){
                                             echo $select;
                                         ?>
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Category</label>
                                     <div class="col-lg-4">
                                         <?php 
@@ -138,12 +144,12 @@ if(isset($_POST["id"])){
                                             echo $select;
                                         ?>
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">SkypeId</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getSkypeId() ?>" name="skypeid" id="skypeid" class="form-control" placeholder="Enter skypeid">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Customer Rep Type</label>
                                     <div class="col-lg-4">
                                         <?php 
@@ -151,52 +157,52 @@ if(isset($_POST["id"])){
                                             echo $select;
                                         ?>
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Rep Number</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getRepNumber() ?>" name="repnumber" id="repnumber" class="form-control" placeholder="Enter Rep Number">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">OMS Cust Id</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getOmsCustId() ?>" name="omscustid" id="omscustid" class="form-control" placeholder="Enter OMS Cust Id">
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Territory</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getTerritory() ?>" name="territory" id="territory" class="form-control" placeholder="Enter Territory">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Company name</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getCompanyName() ?>" name="companyname" id="companyname" class="form-control" placeholder="Enter Company Name">
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Ship to address</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getShipToAddress() ?>" name="shiptoaddress" id="shiptoaddress" class="form-control" placeholder="Enter Ship To Address">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">City</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getCity() ?>" name="city" id="city" class="form-control" placeholder="Enter City">
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">State</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getState() ?>" name="state" id="state" class="form-control" placeholder="Enter State">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Zip</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getZip() ?>" name="zip" id="zip" class="form-control" placeholder="Enter Zip">
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Commission</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getCommission() ?>" name="commission" id="commission" class="form-control" placeholder="Enter Commission">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Is Receives Monthly Sales Report</label>
                                     <div class="col-lg-4">
                                         <?php
@@ -204,18 +210,16 @@ if(isset($_POST["id"])){
                                             echo $select;
                                         ?>
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Pricing Tier</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getPricingTier() ?>" name="pricingtier" id="pricingtier" class="form-control" placeholder="Enter Pricing Tier">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getSeniorRepHandlingAccount() ?>" name="seniorrephandlingaccount" id="seniorrephandlingaccount" class="form-control" placeholder="Enter Senior Rep Handling Account">
                                     </div>
-                                </div>
-                                <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Assigned</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getSalesAdminAssigned() ?>" name="salesadminassigned" id="salesadminassigned" class="form-control" placeholder="Enter Sales Admin Assigned">

@@ -1,0 +1,1 @@
+ALTER TABLE `customerreps` ADD `telephone` VARCHAR(50) NULL DEFAULT NULL AFTER `lastmodifiedon`; 

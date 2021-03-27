@@ -100,6 +100,7 @@ if($call == "saveCustomer"){
                     $customerRepArr['position'] = $_REQUEST['buyer_position'][$i];
                     $customerRepArr['category'] = $_REQUEST['buyer_category'][$i];
                     $customerRepArr['notes'] = $_REQUEST['buyer_notes'][$i];
+                    $customerRepArr['telephone'] = $_REQUEST['buyer_telephone'][$i];
                     $customerRepArr['customerreptype'] = 'buyer';
                     $customerRepArr['isreceivesmonthlysalesreport'] = "no";
                     try{
@@ -245,6 +246,7 @@ if($call =="searchCustomerRep"){
     foreach($customersReps as $customersRep){
         $customersRep['id'] = $customersRep['seq'];
         $customersRep['text'] = $customersRep['fullname'];
+        $customersRep['isreceivesmonthlysalesreport'] = $customersRep['isreceivesmonthlysalesreport'] == 1 ? 'Yes' : 'No';
         array_push($response['results'],$customersRep);
     }
     echo json_encode($response);

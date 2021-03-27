@@ -189,9 +189,9 @@ function showCustomerDetails(seq,rowId){
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><th>Category</th><!--<th>Notes</th>--></tr>';
-        var  salesRep_html = '<h3>Sales Rep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
-        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
+        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Telephone</th><th>Ext</th><th>Cell Phone</th><th>Category</th><!--<th>Notes</th>--></tr>';
+        var  salesRep_html = '<h3>Sales Rep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Telephone</th><th>Ext</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
+        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Telephone</th><th>Ext</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
         var buyer_tablerows = "";
         var salesRep_tablerows = "";
         var internalSupport_tablerows = "";
@@ -199,6 +199,8 @@ function showCustomerDetails(seq,rowId){
 		    var dppic = "";
             var fullname = "";
 			var email = "";
+            var ext = "";
+            var telephone = "";
 			var cellPhone = "";
 			var category = "";
 			var notes = "";
@@ -231,15 +233,21 @@ function showCustomerDetails(seq,rowId){
             if(customerRep.skypeid != null){
                 skypeid = customerRep.skypeid;
             }
+            if(customerRep.ext != null){
+                ext = customerRep.ext;
+            }
+            if(customerRep.telephone != null){
+                telephone = customerRep.telephone;
+            }
             switch(customerRep.customerreptype){
                 case "salesrep":
-                    salesRep_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
+                    salesRep_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;
                 case "internalsupport":
-                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
+                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;
                 case "buyer":
-                    buyer_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
+                    buyer_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;
             }
         });

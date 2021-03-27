@@ -496,7 +496,7 @@ var index = 0;
 function addBuyer(buyer){
 	var fullname = "";
 	var email   = "";
-	var phone     = "";
+	var telephone = "";
 	var cellPhone = "";
 	var note      = "";
 	var skypePersonId = "";
@@ -529,6 +529,9 @@ function addBuyer(buyer){
 		}
 		if(buyer.category_key != null){
 			category = buyer.category_key;
+		}
+		if(buyer.telephone != null){
+			telephone = buyer.telephone;
 		}
 		id = buyer.seq
 	}
@@ -580,7 +583,7 @@ function addBuyer(buyer){
 function addCustomerRep(htmlFor='',customerRep){
 	var seq           = ""
 	var fullName     = "";
-	var phone         = "";
+	var telephone     = "";
 	var emailid       = "";
 	var cellPhone     = "";
 	var note          = "";
@@ -671,6 +674,9 @@ function addCustomerRep(htmlFor='',customerRep){
 		}
 		if(customerRep.notes != null){
 			notes = customerRep.notes;
+		}
+		if(customerRep.telephone != ""){
+			telephone = customerRep.telephone;
 		}
 		if(htmlFor == ''){
 			htmlFor = customerRep.customerreptype;

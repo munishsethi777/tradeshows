@@ -30,7 +30,7 @@ class CustomerMgr{
 										LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 										LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
 										LEFT JOIN customerreps cr2 on cr2.seq = customers.insideaccountmanager
-										LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead GROUP BY customers.seq";								
+										LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead";								
 	private static $exportQuery = "SELECT customers.seq as customerseq,customers.customerid as customerid,customers.fullname as customerfullname,customers.businesstype as businesstype,customers.salespersonid as salespersonid,customers.salespersonname as salespersonname,customers.salespersonid2 as salespersonid2,customers.salespersonname2 as salespersonname2,customers.salespersonid3 as salespersonid3,customers.salespersonname3 as salespersonname3,customers.salespersonid4 as salespersonid4,customers.salespersonname4 as salespersonname4,customers.isstore as isstore,customers.storeid as storeid,customers.storename as storename,customers.priority as priority,customers.businesscategory as businesscategory,customers.customertype as customertype,customers.chainstoresalesadmin as chainstoresalesadmin,cr1.*,cr2.fullname insideaccountmanager,cr3.fullname as salesadminlead,customerrepallotments.notes from customers 
 									LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 									LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
@@ -351,7 +351,7 @@ class CustomerMgr{
 	}
 	
 	public function getCustomersForGrid(){
-		$query = self::$selectSqlForGrid;
+		$query = self::$selectSqlForGrid . " group by customers.seq";
 		$customers = self::$dataStore->executeQuery($query,true,true);
 		$row = array();
 		foreach($customers as $customer){	
