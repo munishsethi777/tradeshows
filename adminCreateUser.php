@@ -16,6 +16,7 @@ require_once ($ConstantsArray['dbServerUrl'] . "Utils/DropdownUtil.php");
 require_once ($ConstantsArray['dbServerUrl'] . "BusinessObjects/ClassCode.php");
 require_once ($ConstantsArray['dbServerUrl'] . "Managers/ClassCodeMgr.php");
 require_once ($ConstantsArray['dbServerUrl'] . "Enums/InstructionManualNotificationType.php");
+require_once ($ConstantsArray['dbServerUrl'] . "Enums/RequestNotificationType.php");
 
 $userTypes = UserType::getAll();
 $departmentMgr = DepartmentMgr::getInstance();
@@ -995,7 +996,103 @@ if (in_array(11, $departmentSeqArr)) {
 														value="request_management_requester" 
 														id="requestrequesterpermission" name="permissions[]"/> 
 														Requester
-													</label>                									
+													</label>
+													<div class="col-lg-12 m-t-sm">
+														<h4>Select Notifications</h4>
+													</div>
+													<ul class="col-lg-6 todo-list ui-sortable p-xs">
+														<li><input name="permissions[]" type="checkbox"
+															value="new_project_creation"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::new_project_creation), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">New Project Creation</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="QC Schedule Approval Response type is 'Pending'"></label>
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="project_assignee_assignment"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::project_assignee_assignment), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Project Assignee assignment</span> <label
+															class="fa fa-question-circle" data-toggle="tooltip"
+															data-placement="left" title="A Total QC Planner Report"></label>
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="project_assigner_assignment"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::project_assigner_assignment), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Project Assigner assignment</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Notify when a Schedule Log is Approved or Rejected"></label>
+														</li>														
+														<li><input name="permissions[]"
+															value="status_change"
+															type="checkbox"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::status_change), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Status Change</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Scheduled Final Inspection Date is in next 14 Days &#10;Actual Final Inspection is Empty"></label>															
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="projects_due_in_next_week"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::projects_due_in_next_week), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Projects due in next week</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Schedule Final Inspection Date is in next 14 Days&#10;Approval Final Inspection Date is Empty &#10;Actual Final Inspection Date is Empty &#10;QC Schedule is incompleted"></label>															
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="projects_past_due_in_last_week"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::projects_past_due_in_last_week), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Projects past due in last week</span> 
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Schedule Final Inspection Date is in Past &#10;Approval Final Inspection Date is in past or Empty &#10;Actual Final Inspection Date is Empty &#10;QC Schedule is incompleted"></label>															
+ 														</li> 															
+													</ul>
+													<ul class="col-lg-6 todo-list ui-sortable p-h-xs">
+														<li><input name="permissions[]" type="checkbox"
+															value="assignee_due_in_next_week"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::assignee_due_in_next_week), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Assignee due in next week</span> 
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Updating Various Fields using Bulk Functionality"></label>
+														</li>
+														<li><input name="permissions[]"
+															value="assignee_past_due_in_last_week"
+															type="checkbox"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::assignee_past_due_in_last_week), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Assignee past due in last week</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Scheduled Final Inspection Date is in next 14 Days &#10;Actual Final Inspection is Empty"></label>															
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="comments_added"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::comments_added), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Comments added</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Schedule Final Inspection Date is in next 14 Days&#10;Approval Final Inspection Date is Empty &#10;Actual Final Inspection Date is Empty &#10;QC Schedule is incompleted"></label>															
+														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="files_uploaded"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::files_uploaded), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Files uploaded</span> 
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Schedule Final Inspection Date is in Past &#10;Approval Final Inspection Date is in past or Empty &#10;Actual Final Inspection Date is Empty &#10;QC Schedule is incompleted"></label>
+ 														</li> 
+														<li><input name="permissions[]" type="checkbox"
+															value="marked_completed"
+															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::marked_completed), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">Marked Completed</span> 
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Updating Various Fields using Bulk Functionality"></label>
+														</li>
+													</ul>												      									
 												</div>
 											</div>
 										</div>
