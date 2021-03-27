@@ -310,7 +310,7 @@ if(isset($_POST["id"])){
 							<div class="form-group row m-b-xs">
 	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
-							<div class="" style="overflow:auto">
+							<div class="row" style="overflow:auto">
 								<table class="customerRepMainTable" id="salesrep">
 									<tr class="customerRepLabels">
 										<td class="col-form-label bg-formLabel">Full Name</td>
@@ -347,7 +347,7 @@ if(isset($_POST["id"])){
 								<div class="form-group row m-b-xs">
 									<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 								</div>
-								<div class="" style="overflow:auto">
+								<div class="row" style="overflow:auto">
 									<table class="customerRepMainTable" id="internalsupport">
 										<tr class="customerRepLabels">
 											<td class="col-form-label bg-formLabel">Full Name</td>
