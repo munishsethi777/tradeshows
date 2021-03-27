@@ -57,7 +57,7 @@ if($call == "saveCustomer"){
             $customerRepMgr->deleteBuyerReps($seq,$conn);
             $customerMgr->deleteCustomerRepAllotmentByAttribute($seq,$conn);
         }catch(Exception $e){
-			throw new Exception("Invailid Execution");
+			throw new Exception($e);
 		}
         if(isset($_REQUEST['salesrep_name'])){
             for($i = 0; $i < count($_REQUEST['salesrep_name']); $i++){
@@ -69,7 +69,7 @@ if($call == "saveCustomer"){
                     try{
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
                     }catch(Exception $e){
-                        throw new Exception("Problem has occurred while saving <b> Sales Rep - " . $_REQUEST['salesrep_text'][$i] . "</b>");
+                        throw new Exception("Problem occurred while saving <b> Sales Rep - " . $_REQUEST['salesrep_text'][$i] . "</b>");
                     }
                 }
             }
@@ -84,7 +84,7 @@ if($call == "saveCustomer"){
                     try{
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
                     }catch(Exception $e){
-                        throw new Exception("Problem has occurred while saving <b> Internal Support - " . $_REQUEST['internalsupport_text'][$i] . "</b>");
+                        throw new Exception("Problem occurred while saving <b> Internal Support - " . $_REQUEST['internalsupport_text'][$i] . "</b>");
                     }
                 }
             }
@@ -110,7 +110,7 @@ if($call == "saveCustomer"){
                         $customerRepAllotment->setNotes($_REQUEST['buyer_notes'][$i]);
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
                     }catch(Exception $e){
-                        throw new Exception("Problem has occurred while saving <b> Buyer - " . $_REQUEST['buyer_fullname'][$i] . "</b>");
+                        throw new Exception("Problem occurred while saving <b> Buyer - " . $_REQUEST['buyer_fullname'][$i] . "</b>");
                     }
                 }
             }
