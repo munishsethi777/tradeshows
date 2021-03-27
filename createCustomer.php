@@ -675,7 +675,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		if(customerRep.notes != null){
 			notes = customerRep.notes;
 		}
-		if(customerRep.telephone != ""){
+		if(customerRep.telephone != null){
 			telephone = customerRep.telephone;
 		}
 		if(htmlFor == ''){
