@@ -1512,7 +1512,8 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 					"qcuser" => $userseq
 				];
 				$conditionValuePair = [
-					"classcodeseq" => implode(",",$classCodeSeqsArr)
+					"classcodeseq" => implode(",",$classCodeSeqsArr),
+				    "iscompleted" => 0
 				];
 				$result = self::$dataStore->updateByAttributesWithBindParams(
 								$columnValuePair,
