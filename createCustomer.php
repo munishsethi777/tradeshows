@@ -545,7 +545,7 @@ function addBuyer(buyer){
 		html += '<input type="text"  maxLength="250" value="'+email+'" name="buyer_email[]" class="form-control" placeholder="email">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<input type="text"  maxLength="250" value="'+phone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
+		html += '<input type="text"  maxLength="250" value="'+telephone+'" name="buyer_phone[]" class="form-control" placeholder="phone">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+ext+'" name="buyer_ext[]" class="form-control" placeholder="ext.">';
@@ -694,7 +694,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += "</td>";
 		html += '<td class="" id="email">'+emailid;
 		html += '</td>';
-		html += '<td class="" id="phone">'+phone;
+		html += '<td class="" id="phone">'+telephone;
 		html += '</td>';
 		html += '<td class="" id="ext">'+ext;
 		html += '</td>';
