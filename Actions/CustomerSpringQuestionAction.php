@@ -35,7 +35,7 @@ if($call == "saveSpringQuestion"){
         if($seq > 0){
             $message = StringConstants::UPDATED_SUCCESSFULLY;
         }
-        $customerSpringQuestion->setIsQuestionnaireCompleted(isset($_REQUEST['isquestionnairecompleted']) && $_REQUEST['isquestionnairecompleted'] == 'on' ? 1 : 0);
+        $customerSpringQuestion->setIsQuestionnaireCompleted(isset($_REQUEST['isspringquestionnairecompleted']) && $_REQUEST['isspringquestionnairecompleted'] == 'on' ? 1 : 0);
         $id = $CustomerSpringQuestionMgr->saveSpringQuestion($customerSpringQuestion);
         $response["seq"] = $id;
     }catch(Exception $e){

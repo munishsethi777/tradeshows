@@ -23,6 +23,9 @@ $customerMgr = CustomerMgr::getInstance();
 if($call == "saveCustomer"){
     try{
         $message = StringConstants::CUSTOMER_SAVED_SUCCESSFULLY;
+        $db_New = MainDB::getInstance();
+		$conn = $db_New->getConnection();
+		$conn->beginTransaction();
         $customer = new Customer();
         $buyers = array();
         $salesReps = array();
@@ -49,11 +52,13 @@ if($call == "saveCustomer"){
         if($seq > 0){
             $message = StringConstants::CUSTOMER_UPDATE_SUCCESSFULLY;
         }
-        $seq = $customerMgr->saveCustomerObject($customer);
-        $colValueArr = array();
-        $colValueArr['customerseq'] = $seq;
-        $customerRepMgr->deleteBuyerReps($seq);
-        $customerMgr->deleteCustomerRepAllotmentByAttribute($colValueArr);
+        try{
+            $seq = $customerMgr->saveCustomer($conn,$customer);
+            $customerRepMgr->deleteBuyerReps($seq,$conn);
+            $customerMgr->deleteCustomerRepAllotmentByAttribute($seq,$conn);
+        }catch(Exception $e){
+			throw new Exception("Invailid Execution");
+		}
         if(isset($_REQUEST['salesrep_name'])){
             for($i = 0; $i < count($_REQUEST['salesrep_name']); $i++){
                 if(!empty($_REQUEST['salesrep_name'][$i])){
@@ -61,7 +66,11 @@ if($call == "saveCustomer"){
                     $customerRepAllotment->setCustomerSeq($seq);
                     $customerRepAllotment->setCustomerRepSeq($_REQUEST['salesrep_seq'][$i]);
                     $customerRepAllotment->setNotes($_REQUEST['salesrep_notes'][$i]);
-                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                    try{
+                        $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
+                    }catch(Exception $e){
+                        throw new Exception("Problem has occurred while saving <b> Sales Rep - " . $_REQUEST['salesrep_text'][$i] . "</b>");
+                    }
                 }
             }
         }
@@ -72,7 +81,11 @@ if($call == "saveCustomer"){
                     $customerRepAllotment->setCustomerSeq($seq);
                     $customerRepAllotment->setCustomerRepSeq($_REQUEST['internalsupport_seq'][$i]);
                     $customerRepAllotment->setNotes($_REQUEST['internalsupport_notes'][$i]);
-                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                    try{
+                        $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
+                    }catch(Exception $e){
+                        throw new Exception("Problem has occurred while saving <b> Internal Support - " . $_REQUEST['internalsupport_text'][$i] . "</b>");
+                    }
                 }
             }
         }
@@ -89,18 +102,24 @@ if($call == "saveCustomer"){
                     $customerRepArr['notes'] = $_REQUEST['buyer_notes'][$i];
                     $customerRepArr['customerreptype'] = 'buyer';
                     $customerRepArr['isreceivesmonthlysalesreport'] = "no";
-                    $customerRepSeq = $customerRepMgr->save($customerRepArr);
-                    $customerRepAllotment = new CustomerRepAllotment();
-                    $customerRepAllotment->setCustomerSeq($seq);
-                    $customerRepAllotment->setCustomerRepSeq($customerRepSeq);
-                    $customerRepAllotment->setNotes($_REQUEST['buyer_notes'][$i]);
-                    $customerMgr->saveCustomerRepAllotment($customerRepAllotment);
+                    try{
+                        $customerRepSeq = $customerRepMgr->save($customerRepArr);
+                        $customerRepAllotment = new CustomerRepAllotment();
+                        $customerRepAllotment->setCustomerSeq($seq);
+                        $customerRepAllotment->setCustomerRepSeq($customerRepSeq);
+                        $customerRepAllotment->setNotes($_REQUEST['buyer_notes'][$i]);
+                        $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
+                    }catch(Exception $e){
+                        throw new Exception("Problem has occurred while saving <b> Buyer - " . $_REQUEST['buyer_fullname'][$i] . "</b>");
+                    }
                 }
             }
         }
+        $conn->commit();
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();
+        $conn->rollBack();
     }
 }
 if($call == "importCustomers"){
@@ -144,10 +163,7 @@ if($call == "getCustomerDetails"){
 	try{
 		$customer = $customerMgr->getCustomerArrayBySeq($_GET["seq"]);
 		$response["customer"] = $customer;
-		$buyerMgr = BuyerMgr::getInstance();
-		$buyers = $buyerMgr->findArrByCustomerSeq($_GET["seq"]);
         $customerReps = $customerMgr->getCustomerRepAllotmentByCustomerSeq($_GET['seq']);
-		$response["buyers"] = $buyers;
         $response["customerreps"] = $customerReps;
 	}catch(Exception $e){
 		$success = 0;
@@ -160,16 +176,6 @@ if($call == "getCustomerIdBySeq"){
     try{
         $customerId = $customerMgr->getCustomerIdBySeq($_GET["seq"]);
         $response["customerid"] = $customerId;
-    }catch(Exception $e){
-        $success = 0;
-        $message  = $e->getMessage();
-    }
-}
-
-if($call == "getCustomerBuyers"){
-    try{
-        $customer = $customerMgr->getCustomerBuyers($_GET["id"]);
-        $response["buyers"] = $customer;
     }catch(Exception $e){
         $success = 0;
         $message  = $e->getMessage();

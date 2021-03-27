@@ -55,11 +55,11 @@
             $customerReps = self::$dataStore->executeConditionQuery($colValuePairArr);
             return $customerReps;
         }
-        public function deleteBuyerReps($customerSeq){
+        public function deleteBuyerReps($customerSeq,$conn){
             $query = "DELETE customerreps.*, customerrepallotments.* FROM customerreps
                     LEFT JOIN customerrepallotments on customerrepallotments.customerrepseq = customerreps.seq 
                     WHERE customerrepallotments.customerseq = ". $customerSeq ." AND customerreps.customerreptype like 'buyer'";
-            self::$dataStore->executeQuery($query);
+            self::$dataStore->executeQueryWithConn($conn,$query);
         }
     }
 ?>

@@ -474,7 +474,6 @@ $(document).ready(function(){
   	});
 	loadCustomers();
 	populateCustomerReps();
-	populateCustomerBuyers();
 });
 function showHideStoreFields(){
 	var flag  = $(".isstore").is(':checked');
@@ -494,7 +493,7 @@ function showHideStoreFields(){
 	}
 }
 var index = 0;
-function addBuyer(isDefaultRow,buyer){
+function addBuyer(buyer){
 	var fullname = "";
 	var email   = "";
 	var phone     = "";
@@ -561,17 +560,11 @@ function addBuyer(isDefaultRow,buyer){
 		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
 		html += '</select></div>';
 		html += '</div>';
-		if (typeof isDefaultRow === "undefined" || isDefaultRow == false) {
-			html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div><div class="col-sm-6">'
-    		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
-    		html += '</div></div></div>';
-		}else{
-			html += '<div class="col-lg-1 pull-right">';
-			html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
-			html += '</div>';
-		}
+		html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
+		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+		html += '</div><div class="col-sm-6">'
+		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
+		html += '</div></div></div>';
 		html += '</div>';
 		html += '<!--<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">-->';
@@ -586,8 +579,7 @@ function addBuyer(isDefaultRow,buyer){
 
 function addCustomerRep(htmlFor='',customerRep){
 	var seq           = ""
-	var firstName     = "";
-	var lastName      = "";
+	var fullName     = "";
 	var phone         = "";
 	var emailid       = "";
 	var cellPhone     = "";
@@ -618,7 +610,7 @@ function addCustomerRep(htmlFor='',customerRep){
 			seq = customerRep.customerrepseq;
 		}
 		if(customerRep.fullname != null){
-			firstName = customerRep.firstname;
+			fullName = customerRep.fullname;
 		}
 		if(customerRep.email != null){
 			emailid = customerRep.email;
@@ -690,6 +682,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += "<td class='' style='display:flex;width:250px'>";
 		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="'+ htmlFor +'_seq[]" class="form-control"/>';
 		html += "<select class='"+ htmlFor +"_name' id='"+ htmlFor +"_name" + id + "' name='"+ htmlFor +"_name[]'></select>";
+		html += "<input type='hidden' id='"+ htmlFor +"_text" + id + "' name='"+ htmlFor +"_text[]' value='" + fullName + "'/>";
 		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
 		html += `<a onclick="delete${htmlFor}(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>`;
 		html += "</td>";
@@ -762,6 +755,7 @@ function addCustomerRep(htmlFor='',customerRep){
 				$('#' + htmlFor + id + ' #' + index).text(value);
 			});
 			$('#' + htmlFor + id + ' #seq').val(data.seq);
+			$('#' + htmlFor + '_text' + id).val(data.fullname);
 		});
 		if(typeof customerRep !== "undefined"){
 			var newOption = new Option(customerRep.fullname, customerRep.customerrepseq, true, true);
@@ -769,69 +763,12 @@ function addCustomerRep(htmlFor='',customerRep){
 			$('#' + htmlFor + '_name' + id).append(newOption).trigger('change');
 		}
 }
-
-function populateCustomerBuyers(){
-	if(customerSeq != 0){
-    	$.get("Actions/CustomerAction.php?call=getCustomerBuyers&id=<?php echo $customerSeq ?>", function(data){
-       		var jsonData = $.parseJSON(data);
-       		var buyers = jsonData.buyers;
-			   var i = 0;
-			   var buyerCount = false;
-			   var salesRepCount = false;
-			   var internalSupportCount = false;
-       		$.each( buyers, function( index, buyer ){
-           		if(i == 0){
-					  
-					if(buyer.buyertype == "buyer"){
-						   addBuyer(true,buyer);
-						   buyerCount = true;
-					}
-					// else if(buyer.buyertype == "salesrep"){
-					// 	addSalesRep(true, buyer);
-					// 	salesRepCount = true;
-					// }else if(buyer.buyertype == "internalsupport"){
-					// 	addInternalSupport(true,buyer);
-					// 	internalSupportCount = true;
-					// }
-           		}else{
-					if(buyer.buyertype == "buyer"){
-						if(!buyerCount){
-							addBuyer(true, buyer);
-							buyerCount = true;
-						}else{
-						   addBuyer(false, buyer);
-						}
-					}
-					// else if(buyer.buyertype == "salesrep"){
-					// 	if(!salesRepCount){
-					// 		addSalesRep(true, buyer);
-					// 		salesRepCount = true;
-					// 	}else{
-					// 		addSalesRep(false, buyer);
-					// 	}
-					// }else if(buyer.buyertype == "internalsupport"){
-					// 	if(!internalSupportCount){
-					// 		addInternalSupport(true, buyer);
-					// 		internalSupportCount = true;
-					// 	}else{
-					// 		addInternalSupport(false, buyer);
-					// 	}
-					// }
-           		} 
-           		i++;
-       		});
-       		
-		});
-	}else{
-		addBuyer(true)
-	}
-}
 function populateCustomerReps(){
 	if(customerSeq != 0){
 		$.getJSON("Actions/CustomerAction.php?call=getCustomerRepAllotmentsByCustomerSeq&customerseq=" + customerSeq , (response)=>{
 			$.each(response.data,function(index,value){
 				if(value.customerreptype == 'buyer'){
-					addBuyer(false,value);
+					addBuyer(value);
 				}else{
 					addCustomerRep("",value);
 				}
@@ -840,6 +777,7 @@ function populateCustomerReps(){
 	}else{
 		addCustomerRep('salesrep');
 		addCustomerRep('internalsupport');
+		addBuyer();
 	}
 }
 function setCustomerId(seq){

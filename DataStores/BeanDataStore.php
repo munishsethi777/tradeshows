@@ -753,5 +753,44 @@ class BeanDataStore {
 		}
 		return (substr ( $haystack, - $length ) === $needle);
 	}
+	//RollBack
+	public function executeQueryWithConn($conn,$query, $isApplyFilter = false, $ommitIntegerArrayElements =false,$isGroupBy = false) {
+		try {
+			if ($isApplyFilter) {
+				$query = FilterUtil::applyFilter ( $query,true,$isGroupBy );
+			}
+			$sth = $conn->prepare ( $query );
+			$sth->execute ();
+			$this->throwException ( $sth->errorInfo () );
+			$objList = null;
+			if($ommitIntegerArrayElements){
+				$objList = $sth->fetchAll(PDO::FETCH_ASSOC);
+			}else{
+				$objList = $sth->fetchAll();
+			}
+			return $objList;
+		} catch ( Exception $e ) {
+			$this->logger->error ( "Error occured :" . $e );
+			throw $e ;
+		}
+	}
+	//RollBack
+	public function deleteByAttributeWithConn($conn,$colValuePair = null) {
+		try {
+			foreach ( $colValuePair as $key => $value ) {
+				$query_array [] = " $key in ('$value') ";
+			}
+			$query = "delete FROM " . $this->tableName;
+			if ($colValuePair != null) {
+				$query .= " WHERE " . implode ( " AND ", $query_array );
+			}
+			$STH = $conn->prepare ( $query );
+			$STH->execute ();
+			$this->throwException ( $STH->errorInfo () );
+		} catch ( Exception $e ) {
+			$this->logger->error ( "Error occured :" . $e );
+			throw  $e ;
+		}
+	}
 }
 ?>

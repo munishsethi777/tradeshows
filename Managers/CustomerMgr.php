@@ -28,23 +28,7 @@ class CustomerMgr{
 										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq and ccq.isquestionnairecompleted = 1) as christmascompletedquestionnaire
 										FROM customers 
 										LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
-										LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
-										
-										// old sql
-										// "SELECT customers.*,salesadminlead.fullname as salesadminleadname,
-										// insideaccountmanager.fullname as insideaccountmanagername FROM customers 
-										// LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
-										// LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";
-										
-	// private static $exportQuery = "SELECT customers.*,customerrepallotments.customerrepseq,customerrepallotments.notes as repnotes,customerreps.fullname as repfullname,customerreps.email as repemail,customerreps.ext as repext,customerreps.cellphone as repcellphone,customerreps.position as repposition,customerreps.category as repcategory,customerreps.skypeid as repskypeid,customerreps.customerreptype as reptype,customerreps.repnumber as repnumber,customerreps.omscustid as repomscustid,customerreps.territory as repterritory,customerreps.companyname as repcompanyname,customerreps.shiptoaddress as repshiptoaddress,customerreps.city as repcity,customerreps.state as repstate,customerreps.zip as repzip,customerreps.commission as repcommission, customerreps.isreceivesmonthlysalesreport as repisreceivesmonthlysalesreport,customerreps.pricingtier as reppricingtier, customerreps.seniorrephandlingaccount as repseniorrephandlingaccount,customerreps.salesadminassigned as repsalesadminassigned,
-	// 								buyers.firstname,buyers.lastname,buyers.category,buyers.email,buyers.cellphone,buyers.officephone,buyers.notes,
-	// 								salesadminlead.fullname as  salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername 
-	// 								from customers 
-	// 								LEFT JOIN buyers on customers.seq = buyers.customerseq
-	// 								LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead
-	// 								LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager
-	// 								LEFT JOIN  customerrepallotments on customerrepallotments.customerseq = customers.seq
-	// 								LEFT JOIN customerreps on customerreps.seq = customerrepallotments.customerrepseq";									
+										LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";								
 	private static $exportQuery = "SELECT customers.seq as customerseq,customers.customerid as customerid,customers.fullname as customerfullname,customers.businesstype as businesstype,customers.salespersonid as salespersonid,customers.salespersonname as salespersonname,customers.salespersonid2 as salespersonid2,customers.salespersonname2 as salespersonname2,customers.salespersonid3 as salespersonid3,customers.salespersonname3 as salespersonname3,customers.salespersonid4 as salespersonid4,customers.salespersonname4 as salespersonname4,customers.isstore as isstore,customers.storeid as storeid,customers.storename as storename,customers.priority as priority,customers.businesscategory as businesscategory,customers.customertype as customertype,customers.chainstoresalesadmin as chainstoresalesadmin,cr1.*,cr2.fullname insideaccountmanager,cr3.fullname as salesadminlead,customerrepallotments.notes from customers 
 									LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 									LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
@@ -62,7 +46,7 @@ class CustomerMgr{
 	}
 	  
     public function saveCustomer($conn,$customer){
-    	$id = self::$dataStore->saveObject($customer, $conn);
+    	$id = self::$dataStore->saveObject($customer,$conn);
     	return $id;
     }
     
@@ -74,12 +58,14 @@ class CustomerMgr{
         }
         return $id;
     }
-    public function saveCustomerRepAllotment($customerRepAllotment){
-		$id = self::$customerRepAllotmentDataStore->save($customerRepAllotment);
+    public function saveCustomerRepAllotment($customerRepAllotment,$conn){
+		$id = self::$customerRepAllotmentDataStore->saveObject($customerRepAllotment,$conn);
 		return $id;
 	}
-	public function deleteCustomerRepAllotmentByAttribute($colValuePair){
-		self::$customerRepAllotmentDataStore->deleteByAttribute($colValuePair);
+	public function deleteCustomerRepAllotmentByAttribute($seq,$conn){
+		$colValuePair = array();
+        $colValuePair['customerseq'] = $seq;
+		self::$customerRepAllotmentDataStore->deleteByAttributeWithConn($conn,$colValuePair);
 	}
     public function updateOject($conn,$customer,$condition){
     	self::$dataStore->updateObject($customer, $condition, $conn);
@@ -218,45 +204,52 @@ class CustomerMgr{
 	    $_GET = array_merge($_GET,$output);
 	    $query = self::$exportQuery;
 	    $customers = self::$dataStore->executeQuery($query,true,true);
-	    $groupByData = $this->group_by($customers);
-		$customerreps = $groupByData['customerreps'];
-	    $data["customers"] = $customers;
-		$data["customerreps"] = $customerreps;
-	    ExportUtil::exportCustomers($data);
+	    $customers = $this->group_by($customers);
+	    ExportUtil::exportCustomers($customers);
 	}
 	
 	function group_by($array) {
-	    $return = array();
-		$customerreps = array();
+		$customers = [];
 	    foreach($array as $val) {
+			if(!isset($customers[$val["customerseq"]])){
+				$customers[$val["customerseq"]]["customerseq"] = $val['customerseq'];
+				$customers[$val["customerseq"]]['customerid'] = $val['customerid']; 
+				$customers[$val["customerseq"]]['storeid'] = $val['storeid'];
+				$customers[$val["customerseq"]]['insideaccountmanager'] = $val['insideaccountmanager'];
+				$customers[$val["customerseq"]]['salesadminlead'] = $val['salesadminlead'];
+				$customers[$val["customerseq"]]['customerfullname'] = $val['customerfullname'];  
+				$customers[$val["customerseq"]]['businesstype'] = $val['businesstype'];
+				$customers[$val["customerseq"]]['salespersonid'] = $val['salespersonid'];
+				$customers[$val["customerseq"]]['salespersonname'] = $val['salespersonname'];
+				$customers[$val["customerseq"]]['salespersonid2'] = $val['salespersonid2'];
+				$customers[$val["customerseq"]]['salespersonname2'] = $val['salespersonname2'];
+				$customers[$val["customerseq"]]['salespersonid3'] = $val['salespersonid3'];
+				$customers[$val["customerseq"]]['salespersonname3'] = $val['salespersonname3'];
+				$customers[$val["customerseq"]]['salespersonid4'] = $val['salespersonid4'];
+				$customers[$val["customerseq"]]['salespersonname4'] = $val['salespersonname4'];
+				$customers[$val["customerseq"]]['isstore'] = $val['isstore'];
+				$customers[$val["customerseq"]]['storename'] = $val['storename'];
+				$customers[$val["customerseq"]]['priority'] = $val['priority'];
+				$customers[$val["customerseq"]]['customertype'] = $val['customertype'];
+				$customers[$val["customerseq"]]['chainstoresalesadmin'] = $val['chainstoresalesadmin'];
+			}
+			
 			$customerrep = array();
+			if(!isset($customers[$val['customerseq']]['customerreps'])){
+				$customers[$val['customerseq']]['customerreps'] = array();
+			}
 			if(isset($val['fullname'])){
 				$customerrep['fullname'] = $val['fullname'];
 				$customerrep['email'] = $val['email'];
 				$customerrep['ext'] = $val['ext'];
 				$customerrep['cellphone'] = $val['cellphone'];
 				$customerrep['position'] = $val['position'];
-				$customerrep['category'] = $val['category'];
-				// $customerrep['skypeid'] = $val['skypeid'];
-				// $customerrep['repnumber'] = $val['number'];
-				// $customerrep['omscustid'] = $val['omscustid'];
-				// $customerrep['territory'] = $val['territory'];
-				// $customerrep['companyname'] = $val['companyname'];
-				// $customerrep['shiptoaddress'] = $val['shiptoaddress'];
-				// $customerrep['city'] = $val['city'];
-				// $customerrep['state'] = $val['state'];
-				// $customerrep['zip'] = $val['zip'];
-				// $customerrep['commission'] = $val['commission'];
-				// $customerrep['isreceivesmonthlysalesreport'] = $val['isreceivesmonthlysalesreport'];
-				// $customerrep['pricingtier'] = $val['pricingtier'];
-				// $customerrep['seniorrephandlingaccount'] = $val['seniorrephandlingaccount'];
-				// $customerrep['salesadminassigned'] = $val['salesadminassigned'];
+				$customerrep['category'] = BuyerCategoryType::getValue($val['category']);
 				$customerrep['notes'] = $val['notes'];
-				$customerreps[$val["customerseq"]][] = $customerrep;
+				array_push($customers[$val['customerseq']]['customerreps'],$customerrep);
 			}
-			$return['customerreps'] = $customerreps;
 	    }
-	    return $return;
+	    return $customers;
 	}
 	
 	private function getCustomerObj($data){
@@ -357,7 +350,7 @@ class CustomerMgr{
 	
 	public function getCustomersForGrid(){
 		$query = self::$selectSqlForGrid;
-		$customers = self::$dataStore->executeQuery($query,false,true);
+		$customers = self::$dataStore->executeQuery($query,true,true);
 		$row = array();
 		foreach($customers as $customer){	
 			$customer['questionnaireprogress'] = ($customer['springcompletedquestionnaire'] + $customer['christmascompletedquestionnaire']). "/" .($customer['springtotalquestionnaire'] + $customer['christmastotalquestionnaire']);
@@ -432,13 +425,6 @@ class CustomerMgr{
 	    $customer = self::$dataStore->findBySeq($seq);
 	    return $customer;
 	}
-	
-	function getCustomerBuyers($customerSeq){
-	    $buyerMgr = BuyerMgr::getInstance();
-	    $buyers = $buyerMgr->getBuyersByCustomerSeq($customerSeq);
-	    return $buyers;
-	}
-	
 	function getCustomerBuyerObjects($customerSeq){
 	    $buyerMgr = BuyerMgr::getInstance();
 	    $buyers = $buyerMgr->getBuyersObjectByCustomerSeq($customerSeq);

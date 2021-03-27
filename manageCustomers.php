@@ -184,81 +184,17 @@ function showCustomerDetails(seq,rowId){
 	$.getJSON("Actions/CustomerAction.php?call=getCustomerDetails&seq="+seq, function(data){
 		showHideProgress();
         var item = data.customer;
-        var buyer = data.buyers;
         var customerReps = data.customerreps;
 		$('#customerDetailsModal').modal('show');
 		$.each(item,function(key,val){
 			$("."+key).text(val);
 		});
-        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Phone</th><th>Cell Phone</th><th>Category</th><!--<th>Notes</th>--></tr>';
+        var buyer_html ='<h3>Buyers</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><th>Category</th><!--<th>Notes</th>--></tr>';
         var  salesRep_html = '<h3>Sales Rep</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
-        var internalSupport_html = '<h3>Internal</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
+        var internalSupport_html = '<h3>Internal Support</h3><table class="table table-striped"><tr><th>Image</th><th>Name</th><th>Email</th><th>Cell Phone</th><!--<th>Skype Id</th>--><th>Category</th><!--<th>Notes</th>--></tr>';
         var buyer_tablerows = "";
         var salesRep_tablerows = "";
         var internalSupport_tablerows = "";
-	    $.each(buyer,function(key,buyer){
-		    var dppic = "";
-            var firstname = "";
-			var lastName = "";
-			var email = "";
-			var officePhone = "";
-			var cellPhone = "";
-			var category = "";
-			var notes = "";
-            var lastmodifiedon = "";
-            var responsibility = "";
-            var skypeid = "";
-            if(buyer.imageextension != null){
-                dppic = "<?php echo $ConstantsArray['buyerImagePath'];?>" + buyer.imageextension;
-            }else{
-                dppic = "<?php echo $ConstantsArray['buyerImagePath'];?>" + "dummy.jpg";
-            }
-			if(buyer.firstname  != null ){
-				firstname = buyer.firstname;
-			}
-			if(buyer.email  != null ){
-				email = buyer.email;
-                
-			}
-			if(buyer.officephone  != null ){
-				officePhone = buyer.officephone;
-			}
-			
-			if(buyer.cellphone  != null ){
-				cellPhone =  buyer.cellphone;
-			}
-			if(buyer.category  != null ){
-				category = buyer.category;
-			}
-			if(buyer.notes  != null ){
-				notes = buyer.notes;
-			}
-			if(buyer.lastmodifiedon  != null ){
-				lastmodifiedon = buyer.lastmodifiedon;
-            }
-            if(buyer.responsibility != null){
-                responsibility = buyer.responsibility;
-            }
-            if(buyer.skypeid != null){
-                skypeid = buyer.skypeid;
-            }
-            switch(buyer.buyertype){
-                case "buyer":
-                    buyer_tablerows += "<tr class='tabRows'><td><img src="+dppic+" alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>"+ firstname + "</td><td>"+  email  + "</td><td>"+  officePhone  + "</td><td>" + cellPhone  +"</td><td>" + category  +"</td><!--<td>"+ notes +"</td>--></tr>";
-                    break;
-                case "salesrep":
-                    salesRep_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--><td>" + lastmodifiedon + "</td></tr>";
-                    break;
-                case "internalsupport":
-                    internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + firstname + "</td><td>" + email + "</td><td>" + officePhone + "</td><td>" + cellPhone + "</td><td>" + skypeid + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--><td>" + lastmodifiedon + "</td></tr>";
-                    break;
-            }
-        });
-        if(buyer_tablerows == ""){
-            buyer_html = "<label>No Buyers</label";
-        }else{
-            buyer_html += buyer_tablerows;
-        }
         $.each(customerReps,function(key,customerRep){
 		    var dppic = "";
             var fullname = "";
@@ -302,6 +238,9 @@ function showCustomerDetails(seq,rowId){
                 case "internalsupport":
                     internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;
+                case "buyer":
+                    buyer_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
+                    break;
             }
         });
         if(salesRep_tablerows == ""){
@@ -314,7 +253,12 @@ function showCustomerDetails(seq,rowId){
         }else{
             internalSupport_html += internalSupport_tablerows;
         }
-            $(".buyers").html(buyer_html);
+        if(buyer_tablerows == ""){
+            buyer_html = "<label>No Buyers</label";
+        }else{
+            buyer_html += buyer_tablerows;
+        }
+        $(".buyers").html(buyer_html);
         $(".salesRep").html(salesRep_html);
         $(".internalSupport").html(internalSupport_html);
 	});
