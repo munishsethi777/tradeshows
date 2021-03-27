@@ -21,14 +21,16 @@ class CustomerMgr{
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 17;
-	private static $selectSqlForGrid = "SELECT customers.*,salesadminlead.fullname as salesadminleadname,insideaccountmanager.fullname as insideaccountmanagername ,
+	private static $selectSqlForGrid = "SELECT customers.*,cr2.fullname insideaccountmanagername,cr3.fullname as salesadminleadname ,
 										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq) as springtotalquestionnaire, 
 										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq) as christmastotalquestionnaire,
 										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq and csq.isquestionnairecompleted = 1) as springcompletedquestionnaire, 
 										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq and ccq.isquestionnairecompleted = 1) as christmascompletedquestionnaire
 										FROM customers 
-										LEFT JOIN users as salesadminlead on salesadminlead.seq = customers.salesadminlead 
-										LEFT JOIN users as insideaccountmanager on insideaccountmanager.seq = customers.insideaccountmanager";								
+										LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
+										LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
+										LEFT JOIN customerreps cr2 on cr2.seq = customers.insideaccountmanager
+										LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead";								
 	private static $exportQuery = "SELECT customers.seq as customerseq,customers.customerid as customerid,customers.fullname as customerfullname,customers.businesstype as businesstype,customers.salespersonid as salespersonid,customers.salespersonname as salespersonname,customers.salespersonid2 as salespersonid2,customers.salespersonname2 as salespersonname2,customers.salespersonid3 as salespersonid3,customers.salespersonname3 as salespersonname3,customers.salespersonid4 as salespersonid4,customers.salespersonname4 as salespersonname4,customers.isstore as isstore,customers.storeid as storeid,customers.storename as storename,customers.priority as priority,customers.businesscategory as businesscategory,customers.customertype as customertype,customers.chainstoresalesadmin as chainstoresalesadmin,cr1.*,cr2.fullname insideaccountmanager,cr3.fullname as salesadminlead,customerrepallotments.notes from customers 
 									LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 									LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq

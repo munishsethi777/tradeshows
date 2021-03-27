@@ -4,6 +4,7 @@
     require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerRepTypes.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/BuyerCategoryType.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/CustomerPositionTypes.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 
     class CustomerRepMgr{
         private static $customerRepMgr;
@@ -23,16 +24,22 @@
             $customerRep = new CustomerRep();
             $customerRep->createFromRequest($REQUEST);
             $customerRep->setIsReceivesMonthlySalesReport($REQUEST['isreceivesmonthlysalesreport'] == 'yes' ? 1 : 0);
+            $customerRep->setCreatedon(new DateTime());
+            $customerRep->setLastmodifiedon(new DateTime());
             return self::$dataStore->save($customerRep);
         }
         public function getAllCustomerReps(){
+            $sessionUtil = SessionUtil::getInstance();
+		    $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $query = self::$selectSqlForGrid;
-            $customerReps = self::$dataStore->executeQuery($query,false,true);
+            $customerReps = self::$dataStore->executeQuery($query,true,true);
             $row = array();
             foreach($customerReps as $customerRep){
                 $customerRep['customerreptype'] = CustomerRepTypes::getValue($customerRep['customerreptype']);
                 $customerRep['category'] = BuyerCategoryType::getValue($customerRep['category']);
                 $customerRep['position'] = CustomerPositionTypes::getValue($customerRep['position']);
+                $customerRep["createdon"] = DateUtil::convertDateToFormatWithTimeZone($customerRep["createdon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
+                $customerRep["lastmodifiedon"] = DateUtil::convertDateToFormatWithTimeZone($customerRep["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
                 array_push($row,$customerRep);
             }
             $mainArr["Rows"] = $row;

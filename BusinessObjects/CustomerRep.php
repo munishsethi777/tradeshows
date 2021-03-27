@@ -2,7 +2,7 @@
     class CustomerRep{
         private $seq,$fullname,$email,$ext,$cellphone,$position,$category,$skypeid,$customerreptype,$repnumber,$omscustid,$territory,
         $companyname,$shiptoaddress,$city,$state,$zip,$commission,$isreceivesmonthlysalesreport,$pricingtier,$seniorrephandlingaccount,
-        $salesadminassigned;
+        $salesadminassigned,$createdon,$lastmodifiedon;
 
         public static $className = "CustomerRep";
         public static $tableName = "customerreps";  
@@ -138,6 +138,18 @@
         }
         public function getSalesAdminAssigned(){
             return $this->salesadminassigned;
+        }
+        public function setCreatedOn($createdOn){
+            $this->createdon = $createdOn;
+        }
+        public function getCreatedOn(){
+            return $this->createdon;
+        }
+        public function setLastModifiedOn($lastModifiedOn){
+            $this->lastmodifiedon = $lastModifiedOn;
+        }
+        public function getLastModifiedOn(){
+            return $this->lastmodifiedon;
         }
         public function createFromRequest($request){
             if (is_array($request)){

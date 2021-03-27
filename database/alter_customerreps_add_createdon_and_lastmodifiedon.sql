@@ -1,0 +1,1 @@
+ALTER TABLE `customerreps` ADD `createdon` DATETIME NULL AFTER `salesadminassigned`, ADD `lastmodifiedon` DATETIME NULL AFTER `createdon`; 

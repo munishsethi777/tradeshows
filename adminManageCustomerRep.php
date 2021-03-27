@@ -100,8 +100,8 @@ $sessionUtil = SessionUtil::getInstance();
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'createdon',
-        sortdirection: 'asc',
+        sortcolumn: 'lastmodifiedon',
+        sortdirection: 'desc',
         datafields: [
 				{name: 'id',type: 'integer'},
                 {name: 'seq',type: 'integer'},
