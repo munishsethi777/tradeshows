@@ -23,7 +23,7 @@ $isRequester = 0;
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Requests Module</title>
+<title>Projects Management</title>
 <?include "ScriptsInclude.php"?>
 <style type="text/css">
 .col-form-label{
@@ -86,7 +86,7 @@ div#myDropZone {
 						<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 							<a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
 								href="#"><i class="fa fa-bars"></i> </a>
-								<h5 class="pageTitle">Create Request</h5>
+								<h5 class="pageTitle">Create Project</h5>
 						</nav>
 					</div>
 					
@@ -125,7 +125,7 @@ div#myDropZone {
 											echo $select;
 										?>
 									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Request Type</label>
+									<label class="col-lg-2 col-form-label bg-formLabel">Project Type</label>
 									<div class="col-lg-4">
 										<select id="requesttypeseq" class='form-control' onchange="onRequestTypeChange(this)" required></select>
 									</div>
@@ -139,12 +139,6 @@ div#myDropZone {
 											echo $select;
 										?>
 									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
-									<div class="col-lg-4">
-										<select id="requeststatusseq" class="col-lg-4 form-control" name="requeststatusseq"></select>
-									</div>
-								</div>
-								<div class="form-group row">
 									<label class="col-lg-2 col-form-label bg-formLabel">Project Due Date</label>
 									<div class="col-lg-4">
 										<div class='input-group date' >
@@ -154,6 +148,15 @@ div#myDropZone {
 										</div>
 									</div>
 								</div>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
+    								<div class="form-group row">
+										<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
+										<div class="col-lg-4">
+											<select id="requeststatusseq" class="col-lg-4 form-control" name="requeststatusseq"></select>
+										</div>
+										
+									</div>
+								<?php }?>
 							</div> 
 							<form id="requestSpecsFieldsForm" method="post">
 								<div class="bg-white p-xs outterDiv" style="background-color:rgb(236, 255, 237)">
@@ -308,9 +311,9 @@ function loadGrid(){
 		{ text: 'id', datafield: 'seq' , hidden:true},
 		{ text: 'Department', datafield: 'departmenttitle', width:"13%"},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},
-		{ text: 'Request Code', datafield: 'code', width:"15%"},
+		{ text: 'Project Code', datafield: 'code', width:"15%"},
 		{ text: 'Priority', datafield: 'priority', width:"5%"},
-		{ text: 'Request Type', datafield: 'requesttypetitle',width:"10%"}, 
+		{ text: 'Project Type', datafield: 'requesttypetitle',width:"10%"}, 
 		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%"},
 		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"14%"},	
 		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%"},       
