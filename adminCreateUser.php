@@ -142,7 +142,7 @@ if (in_array(Permissions::instruction_manual_technical_team, $userRoles)) {
 if (in_array(Permissions::request_management_manager, $userRoles)) {
     $requestManagerPermissionChecked = "checked";
 }
-if (in_array(Permissions::request_management_assignee, $userRoles)) {
+if (in_array(Permissions::request_management_employee, $userRoles)) {
     $requestAssigneePermissionChecked = "checked";
 }
 if (in_array(Permissions::request_management_requester, $userRoles)) {
@@ -987,9 +987,9 @@ if (in_array(11, $departmentSeqArr)) {
 													</label> <label	
 														class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input 
 														type="checkbox" <?php echo $requestAssigneePermissionChecked ?>
-														value="request_management_assignee"	
+														value="request_management_employee"	
 														id="requestassigneepermission" name="permissions[]"/> 
-														Assignee
+														Employee
 													</label> <label	
 														class="col-lg-3 col-form-label bg-formLabelMauve"><input 
 														type="checkbox" <?php echo $requestRequesterPermissionChecked ?>

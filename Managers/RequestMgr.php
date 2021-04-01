@@ -168,7 +168,10 @@ class RequestMgr{
 		$request->setActualHours(null);
 		$request->setIsCompleted(null);
         $request->setLastModifiedOn($currentDateTime);
-		
+        if(isset($globalRequestVariable["isCompleted"])){
+            $request->setIsCompleted($globalRequestVariable["isCompleted"]);
+        }
+        
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
 			$requestCode = $seq . "-" . $requestTypeCode;
@@ -207,7 +210,23 @@ class RequestMgr{
 		// }
 	}
 	public function getAllRequests(){
-		$rows = self::$dataStore->executeQuery(self::$selectSqlForGrid,true,true);
+	    
+	    $userMgr = UserMgr::getInstance();
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+        $userRoles = $userMgr->getUserRolesArr($loggedInUserSeq);
+        $sql = self::$selectSqlForGrid;
+        
+        if(in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){
+            //$sql .= " where requests.assignedto = ". $loggedInUserSeq;
+            //to be coded as per manager's departments
+        }else if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles)){
+            $sql .= " where (requests.assignedto = ". $loggedInUserSeq ." OR requests.createdby = ". $loggedInUserSeq .")";
+        }else if(in_array(Permissions::getName(Permissions::request_management_requester), $userRoles)){
+            $sql .= " where requests.createdby = ". $loggedInUserSeq;
+        }
+			    
+		$rows = self::$dataStore->executeQuery($sql,true,true);
 		$mainArr["Rows"] = $this->processRowsForGrid($rows);
 		$count = self::$dataStore->executeCountQueryWithSql(self::$selectCountSql,true);
 		$mainArr["TotalRows"] = $count;

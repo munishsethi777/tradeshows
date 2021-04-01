@@ -122,7 +122,8 @@ const saveRequest = () => {
     var isRequiredApprovalFromRobby="";
     var checkValidity = true;
     var validateInput = "";
-
+    var isCompleted = 0;
+    
     if(!document.getElementById("duedate").checkValidity()) {
         checkValidity = false;
         validateInput = "duedate";
@@ -174,6 +175,9 @@ const saveRequest = () => {
     if($("#isrequiredapprovalfromrobby").val()){
     	isRequiredApprovalFromRobby = $("#isrequiredapprovalfromrobby").val();
     }
+    if($("#iscompleted").val() == "on"){
+    	isCompleted = 1;
+    }
     var approvedByManagerDate = "";
     var approvedByRequesterDate = "";
     var approvedByRobbyDate = "";
@@ -185,7 +189,7 @@ const saveRequest = () => {
                 + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
                 + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
                 + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
-                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename
+                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted
                 ,(response)=>{
                     var responseObj = JSON.parse(response);
                     $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
@@ -246,7 +250,7 @@ function editButtonClick(seq) {
     $("#loadHistory,#loadComments").html("");
     $("#saveRequestLogComments").prop('disabled','true');
     $("#lastUpdatedHistorySeq").val('');
-    
+    $("#isCompleted").val('');
     // $("#requestAttachmentDropzoneForm").empty('');
     // requestAttachmentDropzone.removeFile(file);
     $("#attachmentsRow").html("");
@@ -277,6 +281,11 @@ function editButtonClick(seq) {
         $.each(response.data.requestformotherfields,(key,value)=>{
             $("#requestFormDiv #" + key).val(value);
         });
+        if(response.data.requestformotherfields.isCompleted == 1){
+        	$('#isCompleted').iCheck('check');
+        }else{
+        	$('#isCompleted').iCheck('uncheck');
+        }
         $.each($.parseJSON(response.data.requestspecificationjson),function(index,value){
             $("#" + index).val(value);
         });

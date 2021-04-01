@@ -108,6 +108,7 @@ if($call == "getRequestDataBySeqForEdit"){
 		$requestFormOtherFields['approvedbymanagerdate'] = $request->getApprovedByManagerDate();
 		$requestFormOtherFields['approvedbyrequesterdate'] = $request->getApprovedByRequesterDate();
 		$requestFormOtherFields['approvedbyrobbydate'] = $request->getApprovedByRobbyDate();
+		$requestFormOtherFields['isCompleted'] = $request->getIsCompleted();
 		$response['data']['requestformotherfields'] = $requestFormOtherFields;
 	}catch(Exception $e){
 		$message = $e->getMessage();

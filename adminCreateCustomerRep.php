@@ -144,7 +144,7 @@ if(isset($_POST["id"])){
                                             echo $select;
                                         ?>
                                     </div>
-                                    <label class="col-lg-2 col-form-label bg-formLabel">SkypeId</label>
+                                    <label class="col-lg-2 col-form-label bg-formLabel">Imessage Id</label>
                                     <div class="col-lg-4">
                                         <input type="text" maxLength="250" value="<?php echo $customerRep->getSkypeId() ?>" name="skypeid" id="skypeid" class="form-control" placeholder="Enter skypeid">
                                     </div>
@@ -218,11 +218,17 @@ if(isset($_POST["id"])){
                                 <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Senior Rep Handling Account</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $customerRep->getSeniorRepHandlingAccount() ?>" name="seniorrephandlingaccount" id="seniorrephandlingaccount" class="form-control" placeholder="Enter Senior Rep Handling Account">
+                                    	<?php 
+        									$select = DropDownUtils::getCustomerInsideAccountManagerNameTypes("seniorrephandlingaccount","", $customerRep->getSeniorRepHandlingAccount(),true,true);
+        			                        echo $select;
+    	                             	?>
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Assigned</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $customerRep->getSalesAdminAssigned() ?>" name="salesadminassigned" id="salesadminassigned" class="form-control" placeholder="Enter Sales Admin Assigned">
+                                    	<?php 
+        									$select = DropDownUtils::getCustomerSalesAdminNameTypes("salesadminassigned","", $customerRep->getSalesAdminAssigned(),true,true);
+        			                        echo $select;
+    	                             	?>
                                     </div>
                                 </div>
                                 <div class="form-group row">

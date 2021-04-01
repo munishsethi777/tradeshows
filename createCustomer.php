@@ -219,7 +219,10 @@ if(isset($_POST["id"])){
 								</div>
 								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin Name	</label>
 		                        <div class="col-lg-4">
-		                        	<input type="text"  maxLength="250" value="<?php echo $customer->getChainStoreSalesAdmin()?>" name="chainstoresalesadmin" class="form-control">
+		                        	<?php 
+        									$select = DropDownUtils::getCustomerSalesAdminNameTypes("chainstoresalesadmin","", $customer->getChainStoreSalesAdmin(),true,true);
+        			                        echo $select;
+    	                             	?>
 		                        </div>
 	                        </div>
 	                        
@@ -314,26 +317,27 @@ if(isset($_POST["id"])){
 								<table class="customerRepMainTable" id="salesrep">
 									<tr class="customerRepLabels">
 										<td class="col-form-label bg-formLabel">Full Name</td>
+										<td class="col-form-label bg-formLabel">Company Name</td>
+										<td class="col-form-label bg-formLabel">Position</td>
+										<td class="col-form-label bg-formLabel">Category</td>
 										<td class="col-form-label bg-formLabel">Email</td>
 										<td class="col-form-label bg-formLabel">Phone</td>
 										<td class="col-form-label bg-formLabel">EXT.</td>
 										<td class="col-form-label bg-formLabel">CellPhone</td>
-										<td class="col-form-label bg-formLabel">Skype Id</td>
-										<td class="col-form-label bg-formLabel">Position</td>
-										<td class="col-form-label bg-formLabel">Category</td>
+										<td class="col-form-label bg-formLabel">iMessage Id</td>
 										<td class="col-form-label bg-formLabel">Rep Number</td>
-										<td class="col-form-label bg-formLabel">OMS Cust Id</td>
-										<td class="col-form-label bg-formLabel">Territory</td>
-										<td class="col-form-label bg-formLabel">Company Name</td>
+										<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
+										<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+										<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
 										<td class="col-form-label bg-formLabel">Ship To Address</td>
 										<td class="col-form-label bg-formLabel">City</td>
 										<td class="col-form-label bg-formLabel">State</td>
 										<td class="col-form-label bg-formLabel">Zip</td>
-										<td class="col-form-label bg-formLabel">Commission</td>
-										<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
+										<td class="col-form-label bg-formLabel">OMS Cust Id</td>
+										<td class="col-form-label bg-formLabel">Territory</td>
+<!-- 										<td class="col-form-label bg-formLabel">Commission</td> -->
 										<td class="col-form-label bg-formLabel">Pricing Tier</td>
-										<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
-										<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+										
 									</tr>
 								</table>
 							</div>
@@ -350,27 +354,27 @@ if(isset($_POST["id"])){
 								<div class="row" style="overflow:auto">
 									<table class="customerRepMainTable" id="internalsupport">
 										<tr class="customerRepLabels">
-											<td class="col-form-label bg-formLabel">Full Name</td>
-											<td class="col-form-label bg-formLabel">Email</td>
-											<td class="col-form-label bg-formLabel">Phone</td>
-											<td class="col-form-label bg-formLabel">EXT.</td>
-											<td class="col-form-label bg-formLabel">CellPhone</td>
-											<td class="col-form-label bg-formLabel">Skype Id</td>
-											<td class="col-form-label bg-formLabel">Position</td>
-											<td class="col-form-label bg-formLabel">Category</td>
-											<td class="col-form-label bg-formLabel">Rep Number</td>
-											<td class="col-form-label bg-formLabel">OMS Cust Id</td>
-											<td class="col-form-label bg-formLabel">Territory</td>
-											<td class="col-form-label bg-formLabel">Company Name</td>
-											<td class="col-form-label bg-formLabel">Ship To Address</td>
-											<td class="col-form-label bg-formLabel">City</td>
-											<td class="col-form-label bg-formLabel">State</td>
-											<td class="col-form-label bg-formLabel">Zip</td>
-											<td class="col-form-label bg-formLabel">Commission</td>
-											<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
-											<td class="col-form-label bg-formLabel">Pricing Tier</td>
-											<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
-											<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+    										<td class="col-form-label bg-formLabel">Full Name</td>
+    										<td class="col-form-label bg-formLabel">Company Name</td>
+    										<td class="col-form-label bg-formLabel">Position</td>
+    										<td class="col-form-label bg-formLabel">Category</td>
+    										<td class="col-form-label bg-formLabel">Email</td>
+    										<td class="col-form-label bg-formLabel">Phone</td>
+    										<td class="col-form-label bg-formLabel">EXT.</td>
+    										<td class="col-form-label bg-formLabel">CellPhone</td>
+    										<td class="col-form-label bg-formLabel">iMessage Id</td>
+    										<td class="col-form-label bg-formLabel">Rep Number</td>
+    										<td class="col-form-label bg-formLabel">Senior Rep Handling Account</td>
+    										<td class="col-form-label bg-formLabel">Sales Admin assigned</td>
+    										<td class="col-form-label bg-formLabel">Is Receives Monthly Sales Report</td>
+    										<td class="col-form-label bg-formLabel">Ship To Address</td>
+    										<td class="col-form-label bg-formLabel">City</td>
+    										<td class="col-form-label bg-formLabel">State</td>
+    										<td class="col-form-label bg-formLabel">Zip</td>
+    										<td class="col-form-label bg-formLabel">OMS Cust Id</td>
+    										<td class="col-form-label bg-formLabel">Territory</td>
+    <!-- 										<td class="col-form-label bg-formLabel">Commission</td> -->
+    										<td class="col-form-label bg-formLabel">Pricing Tier</td>
 										</tr>
 									</table>
 								</div>
@@ -386,12 +390,14 @@ if(isset($_POST["id"])){
 							</div>
 	                       <div class="form-group row m-b-xs">
 						  		<label class="col-lg-2 col-form-label bg-formLabel">Full Name</label>
+						  		<label class="col-lg-2 col-form-label bg-formLabel">Position</label>
+						  		<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">Email</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">Phone</label>
 	                        	<label class="col-lg-1 col-form-label bg-formLabel">EXT.</label>
 	                        	<label class="col-lg-2 col-form-label bg-formLabel">CellPhone</label>
-								<label class="col-lg-2 col-form-label bg-formLabel">Position</label>
-	                        	<label class="col-lg-2 col-form-label bg-formLabel">Category</label>
+								
+	                        	
 	                       </div>
 	                       <div id="buyers" class="buyers">
 	                       </div>
@@ -542,6 +548,13 @@ function addBuyer(buyer){
 					<input type="text"  maxLength="250" value="${fullname}" id="fullname${id}" name="buyer_fullname[]" class="form-control" placeholder="Fullname">
 				</div>`;
 		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += "<?php $select = DropDownUtils::getCustomerPostions('buyer_position[]', null, '1', false, true); echo $select;?>";
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
+		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
+		html += '</select></div>';
+		html += '</div>';
+		html += '<div class="col-lg-2 p-xxs no-margins">';
 		html += '<input type="text"  maxLength="250" value="'+email+'" name="buyer_email[]" class="form-control" placeholder="email">';
 		html += '</div>';
 		html += '<div class="col-lg-1 p-xxs no-margins">';
@@ -556,13 +569,8 @@ function addBuyer(buyer){
 		// html += '<div class="col-lg-1 p-xxs no-margins">';
 		// html += '<input type="text" maxLength="250" value="' + skypePersonId + '" name="buyer_skypePersonId[]" class="form-control" placeholder="Skype Person Id">';
 		// html += '</div>';
-		html += '<div class="col-lg-2 p-xxs no-margins">';
-		html += "<?php $select = DropDownUtils::getCustomerPostions('buyer_position[]', null, '1', false, true); echo $select;?>";
-		html += '</div>';
-		html += '<div class="col-lg-1 p-xxs no-margins">';
-		html += '<div id="'+ddId+'"><select name="buyer_category[]" class="form-control">';
-		html += '</select></div>';
-		html += '</div>';
+
+		
 		html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
 		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
 		html += '</div><div class="col-sm-6">'
@@ -692,46 +700,25 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
 		html += `<a onclick="delete${htmlFor}(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>`;
 		html += "</td>";
-		html += '<td class="" id="email">'+emailid;
-		html += '</td>';
-		html += '<td class="" id="phone">'+telephone;
-		html += '</td>';
-		html += '<td class="" id="ext">'+ext;
-		html += '</td>';
-		html += '<td class="" id="cellphone">'+cellPhone;
-		html += '</td>';
-		html += '<td class="" id="skypeid">'+ skypePersonId; 
-		html += '</td>';
-		html += '<td class="" id="position">'+position;
-		html += '</td>';
-		html += '<td class="" id="category">'+category;
-		html += '</td>';
-		html += '<td class="" id="repnumber">'+ repnumber;
-		html += '</td>';
-		html += '<td class="" id="omscustid">'+ omscustid;
-		html += '</td>';
-		html += '<td class="" id="territory">'+ territory;
-		html += '</td>';
-		html += '<td class="" id="companyname">'+ companyname;
-		html += '</td>';
-		html += '<td class="" id="shiptoaddress">'+ shiptoaddress;
-		html += '</td>';
-		html += '<td class="" id="city">'+ city ;
-		html += '</td>';
-		html += '<td class="" id="state">'+ state;
-		html += '</td>';
-		html += '<td class="" id="zip">'+ zip;
-		html += '</td>';
-		html += '<td class="" id="commission">'+ commission;
-		html += '</td>';
-		html += '<td class="" id="isreceivesmonthlysalesreport">'+ isreceivesmonthlysalesreport;
-		html += '</td>';
-		html += '<td class="" id="pricingtier">'+ pricingtier;
-		html += '</td>';
-		html += '<td class="" id="seniorrephandlingaccount">'+ seniorrephandlingaccount;
-		html += '</td>';
-		html += '<td class="" id="salesadminassigned">'+ salesadminassigned;
-		html += '</td>';
+		html += '<td class="" id="companyname">'+ companyname +'</td>';
+		html += '<td class="" id="position">'+position +'</td>';
+		html += '<td class="" id="category">'+category +'</td>';
+		html += '<td class="" id="email">'+emailid +'</td>';
+		html += '<td class="" id="phone">'+telephone +'</td>';
+		html += '<td class="" id="ext">'+ext +'</td>';
+		html += '<td class="" id="cellphone">'+cellPhone +'</td>';
+		html += '<td class="" id="skypeid">'+ skypePersonId +'</td>';
+		html += '<td class="" id="repnumber">'+ repnumber +'</td>';
+		html += '<td class="" id="seniorrephandlingaccount">'+ seniorrephandlingaccount +'</td>';
+		html += '<td class="" id="salesadminassigned">'+ salesadminassigned +'</td>';
+		html += '<td class="" id="isreceivesmonthlysalesreport">'+ isreceivesmonthlysalesreport +'</td>';
+		html += '<td class="" id="shiptoaddress">'+ shiptoaddress +'</td>';
+		html += '<td class="" id="city">'+ city +'</td>';
+		html += '<td class="" id="state">'+ state +'</td>';
+		html += '<td class="" id="zip">'+ zip +'</td>';
+		html += '<td class="" id="omscustid">'+ omscustid +'</td>';
+// 		html += '<td class="" id="commission">'+ commission +'</td>';
+		html += '<td class="" id="pricingtier">'+ pricingtier +'</td>';
 		html += '</tr>';
 		html += '</div>';
  		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;

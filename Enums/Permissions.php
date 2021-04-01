@@ -19,6 +19,6 @@ class Permissions extends BasicEnum{
 	const instruction_manual_china_team = "Instruction Manual China Team";
 	const instruction_manual_technical_team = "Instruction Manual Technical Team";
 	const request_management_manager = "Manager";
-	const request_management_assignee = "Assignee";
+	const request_management_employee = "Employee";
 	const request_management_requester = "Requester";
 }

@@ -99,7 +99,7 @@ div#myDropZone {
 						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;">
 							<input id="seq" type="hidden" name="seq" value=""/>
 							<div class="bg-white p-xs outterDiv">
-								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
     									<label class="col-lg-2 col-form-label bg-formLabel">Assigned By</label>
     									<div class="col-lg-4">
@@ -111,7 +111,7 @@ div#myDropZone {
     									<label class="col-lg-2 col-form-label bg-formLabel">Assigned To</label>
     									<div class="col-lg-4">
     										<?php
-    											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Assignee");
+    											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Employee");
     											echo $select;
     										?>
     									</div>
@@ -148,7 +148,7 @@ div#myDropZone {
 										</div>
 									</div>
 								</div>
-								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
 										<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
 										<div class="col-lg-4">
@@ -165,7 +165,7 @@ div#myDropZone {
 							</form>
 							
 							<div class="bg-white p-xs outterDiv">
-								<?php if (in_array(Permissions::getName(Permissions::request_management_assignee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
+								<?php if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
     									<label class="col-lg-2 col-form-label bg-formLabel">Assignee Due Date</label>
     									<div class="col-lg-4">
@@ -195,7 +195,7 @@ div#myDropZone {
     										?>
     									</div>
     								</div>
-    								<div class="form-group row">
+    								<div class="form-group row i-checks">
     									<label class="col-lg-2 col-form-label bg-formLabel">Requires Robby's Approvel</label>
     									<div class="col-lg-4">
     										<?php 
@@ -203,10 +203,15 @@ div#myDropZone {
     											echo $select;
     										?>
     									</div>
+    									
+    									<label class="col-lg-2 col-form-label bg-formLabel" style="background-color:#0d879d">Project Completed</label>
+    									<div class="col-lg-4">
+	                        				<input type="checkbox" id="isCompleted" name="isCompleted"/>
+	                            		</div>
     								</div>
     							<?php }?>
 								<div class="bg-white p-xs">
-									<div class="form-group row ">
+									<div class="form-group row">
 										<div class="col-lg-2 pull-right">
 											<a class="btn btn-default" onclick="closeRequestForm()" type="button" style="width:85%">
 												Close
@@ -274,6 +279,10 @@ $(document).ready(function(){
 			//setDuration();
 		}
 	});
+	$('.i-checks').iCheck({
+		checkboxClass: 'icheckbox_square-green',
+	   	radioClass: 'iradio_square-green',
+	});
 });
 Dropzone.autoDiscover = false;
 const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm', {
@@ -306,19 +315,27 @@ function loadGrid(){
             html += "</div>";
             return html;
         }
+	var cellsRenderer = function (row, column, value, rowData){
+		data = $('#requestGrid').jqxGrid('getrowdata', row);
+		if (data.assignedtofullname == null){
+            return '<span style="font-weight: 600;">' + rowData + '</span>';
+        }else{
+            return rowData;
+        }
+    };
 	var columns = [
 		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
-		{ text: 'Department', datafield: 'departmenttitle', width:"13%"},
+		{ text: 'Department', datafield: 'departmenttitle', width:"13%",cellsrenderer: cellsRenderer},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},
-		{ text: 'Project Code', datafield: 'code', width:"15%"},
-		{ text: 'Priority', datafield: 'priority', width:"5%"},
-		{ text: 'Project Type', datafield: 'requesttypetitle',width:"10%"}, 
-		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%"},
-		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"14%"},	
-		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%"},       
-		{ text: 'Status', datafield: 'requeststatustitle', width:"8%"},
-		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"10%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt'},
+		{ text: 'Project No', datafield: 'code', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Priority', datafield: 'priority', width:"5%",cellsrenderer: cellsRenderer},
+		{ text: 'Project Type', datafield: 'requesttypetitle',width:"10%",cellsrenderer: cellsRenderer}, 
+		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"14%",cellsrenderer: cellsRenderer},	
+		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%",cellsrenderer: cellsRenderer},       
+		{ text: 'Status', datafield: 'requeststatustitle', width:"8%",cellsrenderer: cellsRenderer},
+		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"13%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
     ]
    
     var source =

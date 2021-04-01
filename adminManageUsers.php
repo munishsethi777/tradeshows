@@ -188,15 +188,15 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 													<div class="pull-left m-r-sm" style="pointer-events: none;">
 														<input type="checkbox" value="10" id="requestManagementDepartment" name="departments[]" />
 													</div>
-													Request Management
+													Project Management
 												</div>
 												<div id='requestManagementPermissionsDiv'
 													class="panel-body i-checks" style="pointer-events: none;"   >
 													<label class="col-lg-3 col-form-label bg-formLabelPeach m-r-sm"><input type="checkbox" value="request_management_manager" id="requestmanagerpermission"
 														name="permissions[]" /> Manager
 													        </label> 
-                                                    <label class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input type="checkbox" value="request_management_assignee" id="requestassigneepermission" 
-                                                        name="permissions[]" />	Assignee
+                                                    <label class="col-lg-3 col-form-label bg-formLabelYellow m-r-sm"><input type="checkbox" value="request_management_employee" id="requestassigneepermission" 
+                                                        name="permissions[]" />	Employee
 													        </label> 
                                                     <label class="col-lg-3 col-form-label bg-formLabelMauve"><input type="checkbox" value="request_management_requester" id="requestrequesterpermission" 
                                                         name="permissions[]" readonly="readonly" />	Requester
@@ -362,7 +362,7 @@ function showUserDetails(seq, rowId){
             $("#requestManagementDepartment").prop('checked', true);   
         }if(userRoles.includes("Manager")){    
             $("#requestmanagerpermission").prop('checked', true);
-        }if(userRoles.includes("Assignee")){    
+        }if(userRoles.includes("Employee")){    
             $("#requestassigneepermission").prop('checked', true);
         }if(userRoles.includes("Requester")){    
             $("#requestrequesterpermission").prop('checked', true);  

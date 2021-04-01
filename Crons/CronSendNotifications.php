@@ -39,8 +39,9 @@ try{
 			}
 		}
 		if($flag){
-			backups::backup_mysql_database();
+			
 			if(!($isDeveloperModeOn)){
+			    backups::backup_mysql_database();
 				$configurationMgr->saveConfiguration(Configuration::$CRON_BACKUP_LAST_EXE,$currentDate);
 			}
 			$logger->info("Cron Backup completed Successfully");
