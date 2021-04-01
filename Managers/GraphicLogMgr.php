@@ -17,7 +17,7 @@ class GraphicLogMgr{
 	private $fieldNames;
 	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
-	private static $timeZone = "America/Los_Angeles";
+	private static $timeZone = "Asia/Hong_Kong";
 	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,graphicslogs.* from graphicslogs
 								left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 								left join users as createdby on graphicslogs.createdby = createdby.seq
@@ -559,7 +559,8 @@ class GraphicLogMgr{
 	
 	
 	public function getForProjectDueLessThan20FromEntry(){
-	    $query = $this->select . "where datediff(finalgraphicsduedate,chinaofficeentrydate) < 20 and graphiccompletiondate is null";
+	    //$query = $this->select . "where datediff(finalgraphicsduedate,chinaofficeentrydate) < 20 and graphiccompletiondate is null";
+	    $query = $this->select . "where DATEDIFF(finalgraphicsduedate,chinaofficeentrydate) IS NOT NULL AND DATEDIFF(finalgraphicsduedate,chinaofficeentrydate)<20 AND graphiccompletiondate IS NULL";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}
@@ -567,7 +568,8 @@ class GraphicLogMgr{
 	public function getForProjectDueLessThan20FromToday(){
 	    $currentDate = DateUtil::getDateInDBFormat(0,null,self::$timeZone);
 	    $lastDate = DateUtil::getDateInDBFormatWithInterval(1,null,true,self::$timeZone);
-	    $query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20 and graphiccompletiondate is null";
+	    //$query = $this->select . "where DATE_FORMAT(graphicslogs.createdon,'%Y-%m-%d')  = '$lastDate' and   datediff(finalgraphicsduedate,'$currentDate') < 20 and graphiccompletiondate is null";
+	    $query = $this->select . " where DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."') IS NOT NULL AND DATEDIFF(finalgraphicsduedate,'".date('Y-m-d')."')<20 AND graphiccompletiondate IS NULL";
 	    $graphicLogs = self::$dataStore->executeObjectQuery($query);
 	    return $graphicLogs;
 	}

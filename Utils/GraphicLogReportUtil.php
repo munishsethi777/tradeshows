@@ -34,13 +34,16 @@ class GraphicLogReportUtil
         if(count($graphiclogs) > 25){
             $subject .= " 25+";
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $dateWithInterval = DateUtil::getDateWithInterval(6,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y) . "_to_" . $dateWithInterval->format(self::$N_J_Y);
+        
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
+       
         $attachments = array($fileName=>$excelData);
         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " for dates $currentDateStr to $dateWithIntervalStr";
@@ -73,11 +76,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_OVERDUE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
         //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -119,13 +123,14 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_COMPLETED_PREVIOUS_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(1,null,true,self::$timeZone);
         $dateWithInterval = DateUtil::getDateWithInterval(7,null,true,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $dateWithIntervalStr = $dateWithInterval->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $dateWithInterval->format(self::$N_J_Y) . "_to_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
        // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " For last week for dates $dateWithIntervalStr to $currentDateStr";
@@ -159,11 +164,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_BUYER_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
         //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -196,11 +202,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_MANAGER_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
 //         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -233,11 +240,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_ROBBY_REVIEW_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
 //         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -273,7 +281,6 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
         if(!$isDaily){
@@ -281,6 +288,8 @@ class GraphicLogReportUtil
         }
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
 //         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -316,11 +325,13 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
+        
         $reportName = StringConstants::PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval();
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
 //         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -353,11 +364,11 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_TODAY_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
         $attachments = array($fileName=>$excelData);
 //         $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " for date $currentDateStr";
@@ -390,11 +401,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_ENTRY_DATE_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
        // $userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " till date $currentDateStr";
@@ -426,11 +438,12 @@ class GraphicLogReportUtil
         if(empty($graphiclogs)){
             return;
         }
-        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,true);
         $reportName = StringConstants::PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT_NAME;
         $currentDate = DateUtil::getDateWithInterval(0,null,false,self::$timeZone);
         $currentDateStr = $currentDate->format(DateUtil::$US_FORMAT);
         $fileName = $reportName . "_" . $currentDate->format(self::$N_J_Y);
+        $excelData = ExportUtil::exportGraphicLogs($graphiclogs,$fileName,true);
+        
         $attachments = array($fileName=>$excelData);
         //$userMgr = UserMgr::getInstance();
         $reportDetail = $reportName . " from date $currentDateStr";
