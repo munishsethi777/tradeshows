@@ -611,8 +611,8 @@ function addCustomerRep(htmlFor='',customerRep){
 	var commission    = "";
 	var isreceivesmonthlysalesreport = "";
 	var pricingtier   = "";
-	var seniorrephandlingaccount     = "";
-	var salesadminassigned = "";
+	var seniorrephandlingaccountname  = "";
+	var salesadminassignedname = "";
 	var notes = "";
 	index++;
 	var id = index;
@@ -674,11 +674,11 @@ function addCustomerRep(htmlFor='',customerRep){
 		if(customerRep.pricingtier != null){
 			pricingtier = customerRep.pricingtier;
 		}
-		if(customerRep.seniorrephandlingaccount != null){
-			seniorrephandlingaccount = customerRep.seniorrephandlingaccount;
+		if(customerRep.seniorrephandlingaccountname != null){
+			seniorrephandlingaccountname = customerRep.seniorrephandlingaccountname;
 		}
-		if(customerRep.salesadminassigned != null){
-			salesadminassigned = customerRep.salesadminassigned;
+		if(customerRep.salesadminassignedname != null){
+			salesadminassignedname = customerRep.salesadminassignedname;
 		}
 		if(customerRep.notes != null){
 			notes = customerRep.notes;
@@ -704,13 +704,13 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += '<td class="" id="position">'+position +'</td>';
 		html += '<td class="" id="category">'+category +'</td>';
 		html += '<td class="" id="email">'+emailid +'</td>';
-		html += '<td class="" id="phone">'+telephone +'</td>';
+		html += '<td class="" id="telephone">'+telephone +'</td>';
 		html += '<td class="" id="ext">'+ext +'</td>';
 		html += '<td class="" id="cellphone">'+cellPhone +'</td>';
 		html += '<td class="" id="skypeid">'+ skypePersonId +'</td>';
 		html += '<td class="" id="repnumber">'+ repnumber +'</td>';
-		html += '<td class="" id="seniorrephandlingaccount">'+ seniorrephandlingaccount +'</td>';
-		html += '<td class="" id="salesadminassigned">'+ salesadminassigned +'</td>';
+		html += '<td class="" id="seniorrephandlingaccountname">'+ seniorrephandlingaccountname +'</td>';
+		html += '<td class="" id="salesadminassignedname">'+ salesadminassignedname +'</td>';
 		html += '<td class="" id="isreceivesmonthlysalesreport">'+ isreceivesmonthlysalesreport +'</td>';
 		html += '<td class="" id="shiptoaddress">'+ shiptoaddress +'</td>';
 		html += '<td class="" id="city">'+ city +'</td>';
@@ -718,6 +718,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += '<td class="" id="zip">'+ zip +'</td>';
 		html += '<td class="" id="omscustid">'+ omscustid +'</td>';
 // 		html += '<td class="" id="commission">'+ commission +'</td>';
+		html += '<td class="" id="territory">'+ territory +'</td>';
 		html += '<td class="" id="pricingtier">'+ pricingtier +'</td>';
 		html += '</tr>';
 		html += '</div>';

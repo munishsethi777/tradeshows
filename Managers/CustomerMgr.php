@@ -21,7 +21,7 @@ class CustomerMgr{
 	private $validationErrors;
 	private $fieldNames;
 	private static $FIELD_COUNT = 17;
-	private static $selectSqlForGrid = "SELECT customers.*,cr2.fullname insideaccountmanagername,cr3.fullname as salesadminleadname ,
+	private static $selectSqlForGrid = "SELECT customers.*,cr2.fullname insideaccountmanagername,cr3.fullname as salesadminleadname,cr4.fullname as chainstoresalesadminname,
 										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq) as springtotalquestionnaire, 
 										(SELECT COUNT(*) FROM customerchristmasquestions ccq where ccq.customerseq = customers.seq) as christmastotalquestionnaire,
 										(SELECT COUNT(*) FROM customerspringquestions csq WHERE csq.customerseq = customers.seq and csq.isquestionnairecompleted = 1) as springcompletedquestionnaire, 
@@ -30,12 +30,14 @@ class CustomerMgr{
 										LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 										LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
 										LEFT JOIN customerreps cr2 on cr2.seq = customers.insideaccountmanager
-										LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead";								
-	private static $exportQuery = "SELECT customers.seq as customerseq,customers.customerid as customerid,customers.fullname as customerfullname,customers.businesstype as businesstype,customers.salespersonid as salespersonid,customers.salespersonname as salespersonname,customers.salespersonid2 as salespersonid2,customers.salespersonname2 as salespersonname2,customers.salespersonid3 as salespersonid3,customers.salespersonname3 as salespersonname3,customers.salespersonid4 as salespersonid4,customers.salespersonname4 as salespersonname4,customers.isstore as isstore,customers.storeid as storeid,customers.storename as storename,customers.priority as priority,customers.businesscategory as businesscategory,customers.customertype as customertype,customers.chainstoresalesadmin as chainstoresalesadmin,cr1.*,cr2.fullname insideaccountmanager,cr3.fullname as salesadminlead,customerrepallotments.notes from customers 
+										LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead
+										LEFT JOIN customerreps cr4 on cr4.seq = customers.chainstoresalesadmin";								
+	private static $exportQuery = "SELECT customers.seq as customerseq,customers.customerid as customerid,customers.fullname as customerfullname,customers.businesstype as businesstype,customers.salespersonid as salespersonid,customers.salespersonname as salespersonname,customers.salespersonid2 as salespersonid2,customers.salespersonname2 as salespersonname2,customers.salespersonid3 as salespersonid3,customers.salespersonname3 as salespersonname3,customers.salespersonid4 as salespersonid4,customers.salespersonname4 as salespersonname4,customers.isstore as isstore,customers.storeid as storeid,customers.storename as storename,customers.priority as priority,customers.businesscategory as businesscategory,customers.customertype as customertype,customers.chainstoresalesadmin as chainstoresalesadmin,cr1.*,cr2.fullname insideaccountmanager,cr3.fullname as salesadminlead,customerrepallotments.notes,cr4.fullname as chainstoresalesadminname from customers 
 									LEFT JOIN customerrepallotments on customerrepallotments.customerseq = customers.seq
 									LEFT JOIN customerreps cr1 on cr1.seq = customerrepallotments.customerrepseq
 									LEFT JOIN customerreps cr2 on cr2.seq = customers.insideaccountmanager
-									LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead";
+									LEFT JOIN customerreps cr3 on cr3.seq = customers.salesadminlead
+									LEFT JOIN customerreps cr4 on cr4.seq = customers.chainstoresalesadmin";
 	public static function getInstance()
 	{
 		if (!self::$customerMgr)
@@ -233,7 +235,7 @@ class CustomerMgr{
 				$customers[$val["customerseq"]]['storename'] = $val['storename'];
 				$customers[$val["customerseq"]]['priority'] = $val['priority'];
 				$customers[$val["customerseq"]]['customertype'] = $val['customertype'];
-				$customers[$val["customerseq"]]['chainstoresalesadmin'] = $val['chainstoresalesadmin'];
+				$customers[$val["customerseq"]]['chainstoresalesadminname'] = $val['chainstoresalesadminname'];
 			}
 			
 			$customerrep = array();
@@ -593,9 +595,11 @@ class CustomerMgr{
 		return $customer[0];
 	}
 	public function searchCustomerRep($searchString,$customerRepType){
-		$sql = "select customerreps.* from customerreps";
+		$sql = "SELECT customerreps.*,seniorrephandlingaccount.fullname as seniorrephandlingaccountname,salesadminassigned.fullname as salesadminassignedname from customerreps 
+				LEFT JOIN customerreps seniorrephandlingaccount on seniorrephandlingaccount.seq = customerreps.seniorrephandlingaccount
+				LEFT JOIN customerreps salesadminassigned on salesadminassigned.seq = customerreps.salesadminassigned";
 		if($searchString != null){
-			$sql .= " WHERE fullname like '%". $searchString ."%'";
+			$sql .= " WHERE customerreps.fullname like '%". $searchString ."%'";
 		}
 		if($customerRepType != null){
 			if(strpos($sql,"WHERE") == false){
@@ -603,14 +607,16 @@ class CustomerMgr{
 			}else{
 				$sql .= " AND";
 			}
-			$sql .= " customerreptype='" . $customerRepType ."'";
+			$sql .= " customerreps.customerreptype='" . $customerRepType ."'";
 		}
 		$users =   self::$dataStore->executeQuery($sql,false,true);
 		return $users;
 	}
 	public function getCustomerRepAllotmentByCustomerSeq($seq){
-		$query = "SELECT customerrepallotments.notes,customerrepallotments.customerrepseq,customerrepallotments.seq as customerrepallotmentseq,customerreps.* from customerrepallotments
+		$query = "SELECT customerrepallotments.notes,customerrepallotments.customerrepseq,customerrepallotments.seq as customerrepallotmentseq,customerreps.*,seniorrephandlingaccount.fullname as seniorrephandlingaccountname,salesadminassigned.fullname as salesadminassignedname from customerrepallotments
 				LEFT JOIN customerreps on customerreps.seq = customerrepallotments.customerrepseq
+				LEFT JOIN customerreps seniorrephandlingaccount on seniorrephandlingaccount.seq = customerreps.seniorrephandlingaccount
+				LEFT JOIN customerreps salesadminassigned on salesadminassigned.seq = customerreps.salesadminassigned
 				WHERE customerseq = " . $seq;
 		$tempCustomerReps = self::$customerRepAllotmentDataStore->executeQuery($query,false,true);
 		$customerReps = array();

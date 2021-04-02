@@ -112,7 +112,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
                      		<label class="col-lg-2">Sales Admin Lead</label>
                             	<div class="col-lg-4"><label class="salesadminleadname lblDesc"></label></div>
                             <label class="col-lg-3">Chain Store Sales Admin</label>
-                          	<div class="col-lg-3"><label class="chainstoresalesadmin lblDesc"></label></div>
+                          	<div class="col-lg-3"><label class="chainstoresalesadminname lblDesc"></label></div>
                         </div>
                         <div class="form-group row">
                        		 <label class="col-lg-2">Business Type</label>
@@ -319,7 +319,7 @@ function loadGrid(){
         { text: 'Inside Account Manager', datafield: 'insideaccountmanagername', width:"15%"},
     //   { text: 'BusinessType', datafield: 'businesstype',width:"10%"},
         { text: 'Sales Admin Lead', datafield:'salesadminleadname', width:"10%"},
-        { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadmin', width:"10%"},
+        { text: 'Chain Store Sales Admin', datafield:'chainstoresalesadminname', width:"10%"},
     //   { text: 'Inside Account Manager', datafield: 'insideaccountmanager', width:"8%"},
     //   { text: 'Category', datafield: 'businesscategory',width:"12%"},
     //   { text: 'Sales Person', datafield: 'salespersonname',width:"12%"},
@@ -343,7 +343,7 @@ function loadGrid(){
                     // { name: 'businesstype', type: 'string' },
                     { name: 'insideaccountmanagername', type: 'string'},
                     { name: 'salesadminleadname', type: 'string'},
-                    { name: 'chainstoresalesadmin', type: 'string'},  
+                    { name: 'chainstoresalesadminname', type: 'string'},  
                     { name: 'storeid', type: 'string' },
                     { name: 'storename', type: 'string' }, 
                     // { name: 'businesscategory', type: 'string' },

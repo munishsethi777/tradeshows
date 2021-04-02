@@ -75,7 +75,7 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["salesadminlead"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["chainstoresalesadmin"]);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $customer["chainstoresalesadminname"]);
 			$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 			$businessType = $customer["businesstype"];
 			if(!empty($businessType)){
