@@ -633,7 +633,9 @@ function onChangeIsCustomerGoingToSelectHolidayItems(seq){
 function calculateTyVsLy(seq,isFor){
 	var itemsPurchasedLastYear = $("#create" + isFor + "QuesForm" + seq + " #itemspurchasedlastyear" + seq).val();
 	var itemsSelectionFinalized = $("#create" + isFor + "QuesForm" + seq + " #itemselectionfinalized" + seq).val();
-	$("#create" + isFor + "QuesForm" + seq + " #finalizedtyvsly" + seq).val(Math.abs(itemsPurchasedLastYear - itemsSelectionFinalized));
+	if(itemsPurchasedLastYear != ""){
+		$("#create" + isFor + "QuesForm" + seq + " #finalizedtyvsly" + seq).val(parseInt(itemsSelectionFinalized) - parseInt(itemsPurchasedLastYear));
+	}
 }
 function springNotesShowHide(seq){
 	var val = $("#isVisitCustomerDuring2ndqtr"+seq+" #isvisitcustomerduring2ndqtr").val();

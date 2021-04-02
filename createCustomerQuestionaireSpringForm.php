@@ -504,7 +504,7 @@ $hideIfNo = "style='display:none'";
             							If they finalized, how many were TY vs LY?
            							</label>
             						<div class="col-lg-4">
-            							<input type="number" name="finalizedtyvsly" min='0' 
+            							<input type="text" name="finalizedtyvsly" min='0' 
             								value="<?php echo $customerSpringQuestion->getFinalizedTyVsLy()?>"
             								id="finalizedtyvsly<?php echo $seq?>" class="form-control">
             						</div>

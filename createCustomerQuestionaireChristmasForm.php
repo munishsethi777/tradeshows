@@ -420,7 +420,7 @@ $hideIfNo = "style='display:none'";
                                     If they finalized, how many were TY vs LY?
                                 </label>
                                 <div class="col-lg-4">
-                                    <input type="number" name="finalizedtyvsly" value="<?php echo $customerChristmasQuestion->getFinalizedTyVsLy() ?>" min='0' id="finalizedtyvsly<?php echo $seq;?>" class="form-control" >
+                                    <input type="text" name="finalizedtyvsly" value="<?php echo $customerChristmasQuestion->getFinalizedTyVsLy() ?>" min='0' id="finalizedtyvsly<?php echo $seq;?>" class="form-control" >
                                 </div>
                             </div>
                         </div>
