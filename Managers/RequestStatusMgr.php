@@ -15,7 +15,23 @@
             return self::$requesStatusMgr;
         }
         public function save($request,$loggedInUserSeq,$requestTypeSeq){
+            $earlierStatuses = $this->findByRequestTypeSeq($requestTypeSeq);
             $currentDate = new DateTime();
+            if(count($earlierStatuses)){
+                foreach($earlierStatuses as $earlierRequestStatus){
+                    if(!empty($request['editingrequeststatus'.$earlierRequestStatus['seq']])){
+                        $colValuePair = array();
+                        $colValuePair['title'] = $request['editingrequeststatus'.$earlierRequestStatus['seq']];
+                        $colValuePair['lastmodifiedon'] = $currentDate;
+                        $conditionPair = array();
+                        $conditionPair['seq'] = $earlierRequestStatus['seq'];
+                        self::$dataStore->updateByAttributes($colValuePair,$conditionPair);
+                    }else{
+                        self::$dataStore->deleteBySeq($earlierRequestStatus['seq']);
+                    }
+                }
+            }
+            
             if(isset($request['requeststatus'])){
                 for($i=0; $i <= count($request['requeststatus']); $i++){
                     if(!empty($request['requeststatus'][$i])){
@@ -29,6 +45,7 @@
                     }
                 } 
             }
+            
         }
         public function deleteByRequestTypeSeq($seq){
             $colValuePair['requestTypeSeq'] = $seq;
