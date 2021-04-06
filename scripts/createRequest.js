@@ -42,7 +42,7 @@ function populateRequestTypes(data){
         $("#requesttypeseq").append(option);
     });
 }
-function onChangeDepartment(departmentSeq){
+function onChangeDepartment(department){
     $("#requestFormDiv #requestSpecsFields").html("");
     $("#requestFormDiv #requesttypeseq").empty();
     $("#requestFormDiv #requeststatusseq").empty();
@@ -54,7 +54,7 @@ function onChangeDepartment(departmentSeq){
     $("#isrequiredapprovalfromrequester").val("no");
     $("#isrequiredapprovalfromrobby").val("yes");
     $('#requestFormDiv').modal('show');
-    $.getJSON("Actions/RequestAction.php?call=getRequestTypesByDepartmentSeq&departmentSeq=" + departmentSeq,(response)=>{
+    $.getJSON("Actions/RequestAction.php?call=getRequestTypesByDepartmentSeq&department=" + department,(response)=>{
         populateRequestTypes(response.data);
     });
 }
@@ -107,7 +107,7 @@ const saveRequest = () => {
         // jsonObj.push(item);
     })
     var requestSpecsFieldsFormJson = JSON.stringify(item);
-    var departmentSeq="";
+    var department="";
     var requestTypeSeq="";
     var priority="";
     var requestStatusSeq="";
@@ -132,12 +132,12 @@ const saveRequest = () => {
         checkValidity = false;
         validateInput = "requesttypeseq";
     }
-    if(!document.getElementById("departmentseq").checkValidity()) {
+    if(!document.getElementById("department").checkValidity()) {
         checkValidity = false;
-        validateInput = "departmentseq";
+        validateInput = "department";
     }
-    if($("#departmentseq").val()){
-    	departmentSeq = $("#departmentseq").val();
+    if($("#department").val()){
+    	department = $("#department").val();
     }
     if($("#requesttypeseq").val()){
     	requestTypeSeq = $("#requesttypeseq").val();
@@ -182,15 +182,16 @@ const saveRequest = () => {
     var approvedByRequesterDate = "";
     var approvedByRobbyDate = "";
     var attachmentfilename = $("input[name='attachmentfilename']").val();
+
     if($("#requestSpecsFieldsForm")[0].checkValidity() == true && checkValidity == true){
-        $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + requestSpecsFieldsFormJson + "&departmentSeq=" + departmentSeq 
+        var url = "Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + encodeURIComponent(requestSpecsFieldsFormJson) + "&department=" + department 
                 + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
                 + "&assignedBySeq=" + assignedBySeq + "&assignedToSeq=" + assignedToSeq + "&dueDate=" + dueDate + "&assigneeDueDate=" + assigneeDueDate
                 + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
                 + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
                 + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
-                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted
-                ,(response)=>{
+                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted;
+        $.post(url,(response)=>{
                     var responseObj = JSON.parse(response);
                     $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
                     Dropzone.autoDiscover = true;
@@ -208,12 +209,19 @@ const saveRequest = () => {
                     // closeRequestForm();
                     $("#requestGrid").jqxGrid('updatebounddata', 'cells');
         });
+        return true;
     }else{
-            if(!checkValidity){
-                document.getElementById(validateInput).reportValidity();
-            }else{
-                $("#requestSpecsFieldsForm")[0].reportValidity();
-            }
+        if(!checkValidity){
+            document.getElementById(validateInput).reportValidity();
+        }else{
+            $("#requestSpecsFieldsForm")[0].reportValidity();
+        }
+        return false;
+    }
+}
+const saveRequestAndClose = () =>{
+    if(saveRequest()){
+        $('#requestFormDiv').modal('hide');
     }
 }
 const loadHistory = () => {
@@ -231,7 +239,7 @@ function editButtonClick(seq) {
     requestAttachmentDropzone.options.autoProcessQueue = true;
     requestAttachmentDropzone.removeAllFiles(true);
     $("#requestFormDiv #requestSpecsFields").html("");
-    $("#requestFormDiv #departmentseq").val("");
+    $("#requestFormDiv #department").val("");
     $("#requestFormDiv #requeststatusseq").empty();
     $("#requestFormDiv #requesttypeseq").val("");
     $("#requestFormDiv #requeststatusseq").val("");
@@ -256,7 +264,7 @@ function editButtonClick(seq) {
     $("#attachmentsRow").html("");
     $('#requestFormDiv').modal('show');
     $.getJSON("Actions/RequestAction.php?call=getRequestDataBySeqForEdit&requestSeq=" + seq,(response)=>{
-        $("#requestFormDiv #departmentseq").val(response.data.departmentseq);
+        $("#requestFormDiv #department").val(response.data.department);
         populateRequestTypes(response.data.requestformotherfields.requesttypes);
         $("#requeststatusseq").append(response.data.requestspecsformhtml.requestStatusHTML);
         $("#requestSpecsFields").html(response.data.requestspecsformhtml.requestSpecsFieldsHTML);
@@ -282,13 +290,13 @@ function editButtonClick(seq) {
             $("#requestFormDiv #" + key).val(value);
         });
         if(response.data.requestformotherfields.isCompleted == 1){
-        	$('#isCompleted').iCheck('check');
+        	$('#iscompleted').iCheck('check');
         }else{
-        	$('#isCompleted').iCheck('uncheck');
+        	$('#iscompleted').iCheck('uncheck');
         }
-        $.each($.parseJSON(response.data.requestspecificationjson),function(index,value){
-            $("#" + index).val(value);
-        });
+        // $.each($.parseJSON(response.data.requestspecificationjson),function(index,value){
+        //     $("#" + index).val(value);
+        // });
         $('#loadComments').html(response.data.requestLogCommentsHtml);
         $('#loadHistory').append(response.data.historyLog.historyLogHtml);
         $('#lastUpdatedHistorySeq').val(response.data.historyLog.lastUpdatedHistorySeq);

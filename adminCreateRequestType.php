@@ -62,7 +62,7 @@
                                     <label class="col-lg-2 col-form-label bg-formLabel">Department</label>
                                     <div class="col-lg-4">
                                         <?php
-                                            $select = DropDownUtils::getDepartmentType("departmentseq", null, $requestType->getDepartmentSeq(), true, true);
+                                            $select = DropDownUtils::getRequestDepartments("department", null, $requestType->getDepartment(), true, true);
                                             echo $select;
                                         ?>
                                     </div>
@@ -186,7 +186,7 @@
         html += "</div>";
         $("#addRequestStatusDiv").append(html);
     }
-    function addMoreRequestsFields(requestSpecsFields = ""){
+    function addMoreRequestsFields(requestSpecsFields){
         var seq = "";
         var name = "";
         var title = "";
