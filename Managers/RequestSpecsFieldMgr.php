@@ -15,6 +15,35 @@
             return self::$requestSpecsFieldMgr;
         }
         public function save($request,$requestTypeSeq){
+            $earlierRequestFields = self::findByRequestTypeSeq($requestTypeSeq);
+            if(count($earlierRequestFields)){
+                foreach($earlierRequestFields as $earlierRequestField){
+                    $requestFieldSeq = $earlierRequestField['seq'];
+                    if(!empty($request['requestfieldtitle'.$requestFieldSeq])){
+                         $isRequired = 0;
+                        if(isset($request['required'.$requestFieldSeq]) && $request['required'.$requestFieldSeq] == 'yes' ){
+                            $isRequired = true;
+                        }
+                        $isVisible = 0;
+                        if(isset($request['isvisible'.$requestFieldSeq]) && $request['isvisible'.$requestFieldSeq] == 'yes' ){
+                            $isVisible = true;
+                        }
+                        $colValuePair = array();
+                        $colValuePair['title'] = $request['requestfieldtitle'.$requestFieldSeq];
+                        $colValuePair['fieldtype'] = $request['requestfieldtype'.$requestFieldSeq];
+                        $colValuePair['isrequired'] = $isRequired;
+                        $colValuePair['isvisible'] = $isVisible;
+                        
+                        
+                        $conditionPair = array();
+                        $conditionPair['seq'] = $requestFieldSeq;
+                        self::$dataStore->updateByAttributes($colValuePair,$conditionPair);
+
+                    }else{
+                        self::$dataStore->deleteBySeq($requestFieldSeq);
+                    }
+                }
+            }
             if(isset($request['requestfieldtitle'])){
                 for($i=0; $i < count($request['requestfieldtitle']); $i++){
                     if(!empty($request['requestfieldtitle'][$i])){

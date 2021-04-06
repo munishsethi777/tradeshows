@@ -183,7 +183,7 @@ const saveRequest = () => {
     var approvedByRobbyDate = "";
     var attachmentfilename = $("input[name='attachmentfilename']").val();
     if($("#requestSpecsFieldsForm")[0].checkValidity() == true && checkValidity == true){
-        $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + requestSpecsFieldsFormJson + "&departmentSeq=" + departmentSeq 
+        $.post("Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + encodeURIComponent(requestSpecsFieldsFormJson) + "&departmentSeq=" + departmentSeq 
                 + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
                 + "&assignedBySeq=" + assignedBySeq + "&assignedToSeq=" + assignedToSeq + "&dueDate=" + dueDate + "&assigneeDueDate=" + assigneeDueDate
                 + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 

@@ -25,8 +25,8 @@
             $message = StringConstants::REQUEST_TYPE_SAVED_SUCCESSFULLY;
             $requestTypeSeq = $requestTypeMgr->save($_REQUEST,$loggedInUserSeq);
             if(isset($_REQUEST['seq']) && !empty($_REQUEST['seq'])){
-                $requestStatusMgr->deleteByRequestTypeSeq($_REQUEST['seq']);
-                $requestSpecsFieldMgr->deleteByRequestTypeSeq($_REQUEST['seq']);
+                //$requestStatusMgr->deleteByRequestTypeSeq($_REQUEST['seq']);
+                //$requestSpecsFieldMgr->deleteByRequestTypeSeq($_REQUEST['seq']);
                 $message = StringConstants::REQUEST_TYPE_UPDATED_SUCCESSFULLY;
             }
             $requestStatusMgr->save($_REQUEST,$loggedInUserSeq,$requestTypeSeq);

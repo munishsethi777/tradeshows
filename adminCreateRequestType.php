@@ -169,15 +169,13 @@
         }
     }
     function addMoreRequestStatus(requestStatus){
-        var title = "";
-        if(typeof requestStatus !== "undefined"){
-            if(requestStatus.title != ""){
-                title = requestStatus.title;
-            }
-        }
         var html = "<div class='form-group row m-b-xs requestStatusRow'>";
         html += "<div class='col-lg-11 p-xxs no-margins'>";
-        html += "<input type='text' id='' maxLength='' value='" + title + "' name='requeststatus[]' class='form-control' placeholder='enter project status'>";
+        if(typeof requestStatus !== "undefined"){
+        	html += "<input type='text' id='' maxLength='' value='" + requestStatus.title + "' name='editingrequeststatus"+requestStatus.seq+"' class='form-control' placeholder='enter project status'>";
+        }else{
+        	html += "<input type='text' id='' maxLength='' name='requeststatus[]' class='form-control' placeholder='enter project status'>";
+        }
         html += "</div>";
         html += "<div class='col-lg-1 p-xxs no-margins'>";
         html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick='deleteRequestStatusRow(this)'>";
@@ -194,7 +192,9 @@
         var isRequired = "";
         var isVisible = ""
         var details = "";
-        if(typeof requestSpecsFields !== "undefined"){
+       	var html ="";
+        
+        if(requestSpecsFields != ""){
             seq = requestSpecsFields.seq;
             if(requestSpecsFields.name != ""){
                 name = requestSpecsFields.name;
@@ -224,26 +224,50 @@
             if(requestSpecsFields.details != ""){
                 details = requestSpecsFields.details;
             }
+            html = "<div class='form-group row m-b-xs fieldTypeRow' id='fieldTypeRow"+ seq +"'>";
+            html += "<div class='col-lg-4 p-xxs no-margins'>";
+            html += "<input type='text' id='' maxLength='250' value='" + title + "' name='requestfieldtitle"+seq+"' class='form-control' placeholder='Enter field title'>";
+            html += "</div>";
+            html += "<div class='col-lg-4 p-xxs no-margins'>"; 
+            html += "<?php $select = DropDownUtils::getRequestsSpecsFieldTypes('requestfieldtype', 'onFieldTypeChange(this)','', true, true);echo $select ?>";   
+            html += "<textarea name='details[]' style='width:100%;display:none'></textarea>";
+            html += "</div>";
+            html += "<div class='col-lg-2 p-xxs no-margins'>";
+            html += "<?php $select = DropDownUtils::getBooleanDropDown('required', null, '1', false, true); echo $select;?>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";
+            html += "<?php $select = DropDownUtils::getBooleanDropDown('isvisible', null, '1', false, true); echo $select;?>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";
+            html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick = 'deleteFieldTypeRow(this)'>";
+            html += "<i class='fa fa-minus'></i> Remove</button>";
+            html += "</div>";
+            $("#requestFieldsDiv").append(html);
+            $("#fieldTypeRow"+ seq +" #requestfieldtype").attr('name', 'requestfieldtype' + seq);
+            $("#fieldTypeRow"+ seq +" #required").attr('name', 'required' + seq);
+            $("#fieldTypeRow"+ seq +" #isvisible").attr('name', 'isvisible' + seq);
+        }else{
+            html = "<div class='form-group row m-b-xs fieldTypeRow' id='fieldTypeRow'>";
+            html += "<div class='col-lg-4 p-xxs no-margins'>";
+            html += "<input type='text' id='' maxLength='250' value='" + title + "' name='requestfieldtitle[]' class='form-control' placeholder='Enter field title'>";
+            html += "</div>";
+            html += "<div class='col-lg-4 p-xxs no-margins'>"; 
+            html += "<?php $select = DropDownUtils::getRequestsSpecsFieldTypes('requestfieldtype[]', 'onFieldTypeChange(this)','', true, true);echo $select ?>";   
+            html += "<textarea name='details[]' style='width:100%;display:none'></textarea>";
+            html += "</div>";
+            html += "<div class='col-lg-2 p-xxs no-margins'>";
+            html += "<?php $select = DropDownUtils::getBooleanDropDown('required[]', null, '1', false, true); echo $select;?>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";
+            html += "<?php $select = DropDownUtils::getBooleanDropDown('isvisible[]', null, '1', false, true); echo $select;?>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";
+            html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick = 'deleteFieldTypeRow(this)'>";
+            html += "<i class='fa fa-minus'></i> Remove</button>";
+            html += "</div>";
+            $("#requestFieldsDiv").append(html);
         }
-        var html = "<div class='form-group row m-b-xs fieldTypeRow' id='fieldTypeRow"+ seq +"'>";
-        html += "<div class='col-lg-4 p-xxs no-margins'>";
-        html += "<input type='text' id='' maxLength='250' value='" + title + "' name='requestfieldtitle[]' class='form-control' placeholder='Enter field title'>";
-        html += "</div>";
-        html += "<div class='col-lg-4 p-xxs no-margins'>"; 
-        html += "<?php $select = DropDownUtils::getRequestsSpecsFieldTypes('requestfieldtype[]', 'onFieldTypeChange(this)','', true, true);echo $select ?>";   
-        html += "<textarea name='details[]' style='width:100%;display:none'></textarea>";
-        html += "</div>";
-        html += "<div class='col-lg-2 p-xxs no-margins'>";
-        html += "<?php $select = DropDownUtils::getBooleanDropDown('required[]', null, '1', false, true); echo $select;?>";
-        html += "</div>";
-        html += "<div class='col-lg-1 p-xxs no-margins'>";
-        html += "<?php $select = DropDownUtils::getBooleanDropDown('isvisible[]', null, '1', false, true); echo $select;?>";
-        html += "</div>";
-        html += "<div class='col-lg-1 p-xxs no-margins'>";
-        html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick = 'deleteFieldTypeRow(this)'>";
-        html += "<i class='fa fa-minus'></i> Remove</button>";
-        html += "</div>";
-        $("#requestFieldsDiv").append(html);
+        
         $("#fieldTypeRow"+requestSpecsFields.seq+" #requestfieldtype").val(fieldType);
         if(fieldType == "dropdown"){
             $("#fieldTypeRow"+requestSpecsFields.seq+" textarea").show();
