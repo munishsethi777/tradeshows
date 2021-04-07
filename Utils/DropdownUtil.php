@@ -387,9 +387,9 @@ class DropDownUtils {
 		}
 		return self::getDropDown1 ($usersArray, $selectName, $onChangeMethod,$selectedValue,$isRequired,true);
 	}
-	public static function getCustomerSalesAdminNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
+	public static function getCustomerInternalSupportNameTypes($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false){
 		$colValuePair = array();
-		$colValuePair['customerreptype'] = 'sales_admin_lead';
+		$colValuePair['customerreptype'] = 'internalsupport';
 		$customerRepMgr = CustomerRepMgr::getInstance();
 		$customerReps =  $customerRepMgr->findByAttributes($colValuePair);
 		$usersArray = array();

@@ -213,14 +213,14 @@ if(isset($_POST["id"])){
 		                        <div class="col-lg-4">
 		                        	<!-- <input type="text"  maxLength="250" value="<?php echo $customer->getSalesAdminLead()?>" name="salesadminlead" class="form-control"> -->
 									<?php 
-    									$select = DropDownUtils::getCustomerSalesAdminNameTypes("salesadminlead","", $customer->getSalesAdminLead(),true,true);
+    									$select = DropDownUtils::getCustomerInternalSupportNameTypes("salesadminlead","", $customer->getSalesAdminLead(),true,true);
     			                        echo $select;
 	                             	?>
 								</div>
 								<label class="col-lg-2 col-form-label bg-formLabelMauve">Chain Store Sales Admin Name	</label>
 		                        <div class="col-lg-4">
 		                        	<?php 
-        									$select = DropDownUtils::getCustomerSalesAdminNameTypes("chainstoresalesadmin","", $customer->getChainStoreSalesAdmin(),true,true);
+        									$select = DropDownUtils::getCustomerInternalSupportNameTypes("chainstoresalesadmin","", $customer->getChainStoreSalesAdmin(),true,true);
         			                        echo $select;
     	                             	?>
 		                        </div>
@@ -723,7 +723,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += '</tr>';
 		html += '</div>';
  		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
-		$("#" + htmlFor).append(html);
+ 		$("#" + htmlFor).append(html);
 		$("#" + htmlFor + "_name" + id).select2({
 			ajax: {
 				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=" + htmlFor,

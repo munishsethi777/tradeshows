@@ -240,6 +240,9 @@ if($call == "deleteCustomers"){
 }
 if($call =="searchCustomerRep"){
     $customerRepType = $_GET['customerRepType'];
+    if($customerRepType == "salesrep"){
+        $customerRepType = "salesrep,inside_account_manager";
+    }
     $searchString = $_GET["q"];
     $customersReps  = $customerMgr->searchCustomerRep($searchString,$customerRepType);
     $response['results'] = array();

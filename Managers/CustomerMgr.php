@@ -607,7 +607,9 @@ class CustomerMgr{
 			}else{
 				$sql .= " AND";
 			}
-			$sql .= " customerreps.customerreptype='" . $customerRepType ."'";
+			$customerRepTypeArr = explode(",",$customerRepType);
+			$commaSeparatedRepTypes = "'" . implode ( "', '", $customerRepTypeArr ) . "'";
+			$sql .= " customerreps.customerreptype in(" . $commaSeparatedRepTypes .")";
 		}
 		$users =   self::$dataStore->executeQuery($sql,false,true);
 		return $users;

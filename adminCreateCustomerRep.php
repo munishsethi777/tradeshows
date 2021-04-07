@@ -226,7 +226,7 @@ if(isset($_POST["id"])){
                                     <label class="col-lg-2 col-form-label bg-formLabel">Sales Admin Assigned</label>
                                     <div class="col-lg-4">
                                     	<?php 
-        									$select = DropDownUtils::getCustomerSalesAdminNameTypes("salesadminassigned","", $customerRep->getSalesAdminAssigned(),false,true);
+        									$select = DropDownUtils::getCustomerInternalSupportNameTypes("salesadminassigned","", $customerRep->getSalesAdminAssigned(),false,true);
         			                        echo $select;
     	                             	?>
                                     </div>
