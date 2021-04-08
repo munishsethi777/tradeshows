@@ -407,6 +407,7 @@ class DropDownUtils {
 	}
 	public static function getCustomerRepTypesForDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
 		$enums =  CustomerRepTypes::getAll();
+		unset($enums[CustomerRepTypes::getName(CustomerRepTypes::buyer)]);
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	public static function getRequestDepartments($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false,$isMultipleSelect = false,$disabled=false){

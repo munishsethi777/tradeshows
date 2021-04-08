@@ -74,6 +74,21 @@ if($call == "saveCustomer"){
                 }
             }
         }
+        if(isset($_REQUEST['inside_account_manager_name'])){
+            for($i = 0; $i < count($_REQUEST['inside_account_manager_name']); $i++){
+                if(!empty($_REQUEST['inside_account_manager_name'][$i])){
+                    $customerRepAllotment = new CustomerRepAllotment();
+                    $customerRepAllotment->setCustomerSeq($seq);
+                    $customerRepAllotment->setCustomerRepSeq($_REQUEST['inside_account_manager_seq'][$i]);
+                    $customerRepAllotment->setNotes($_REQUEST['inside_account_manager_notes'][$i]);
+                    try{
+                        $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
+                    }catch(Exception $e){
+                        throw new Exception("Problem occurred while saving <b> Sales Rep - " . $_REQUEST['salesrep_text'][$i] . "</b>");
+                    }
+                }
+            }
+        }
         if(isset($_REQUEST['internalsupport_name'])){
             for($i = 0; $i < count($_REQUEST['internalsupport_name']); $i++){
                 if(!empty($_REQUEST['internalsupport_name'][$i])){

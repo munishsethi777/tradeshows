@@ -208,12 +208,42 @@ class CustomerMgr{
 	    $_GET = array_merge($_GET,$output);
 	    $query = self::$exportQuery;
 	    $customers = self::$dataStore->executeQuery($query,true,true);
-	    $customers = $this->group_by($customers);
-	    ExportUtil::exportCustomers($customers);
+	    $customersMainArray = $this->group_by($customers);
+	    ExportUtil::exportCustomers($customersMainArray);
 	}
 	
 	function group_by($array) {
+		$mainArray = [];
 		$customers = [];
+		$customerRepType = '';
+		$i = 1;
+		$repHeadingArray = array();
+		$allRepHeadingCountArr = array();
+		$customerSalesRepsCount = $this->getCustomerSalesRepsCount();
+		$customerInternalSupportsCount = $this->getCustomerInternalSupportsCount();
+		$customerBuyersCount = $this->getCustomerBuyersCount();
+		$allRepHeadingCountArr['salesrep'] = $customerSalesRepsCount;
+		$allRepHeadingCountArr['internalsupport'] = $customerInternalSupportsCount;
+		$allRepHeadingCountArr['buyers'] = $customerBuyersCount;
+		foreach($allRepHeadingCountArr as $key => $repHeadingCount){
+			$repName = '';
+			if(strpos($key, 'salesrep') !== false){
+				$repName = 'Sales Rep';
+			}else if(strpos($key, 'internalsupport') !== false){
+				$repName = 'Internal Support';
+			}else if(strpos($key, 'buyers') !== false){
+				$repName = 'Buyer';
+			}
+			for($k = 1; $k<=$repHeadingCount; $k++){
+				array_push($repHeadingArray, $repName . ' ' . $k . " Fullname");
+				array_push($repHeadingArray, $repName . ' ' . $k . " email");
+				// array_push($repHeadingArray,'Sales Rep ' . $k . " ext");
+				array_push($repHeadingArray, $repName . ' ' . $k . " cellphone");
+				// array_push($repHeadingArray,'Sales Rep ' . $k . " Position");
+				array_push($repHeadingArray, $repName . ' ' . $k . " Category");
+				array_push($repHeadingArray, $repName . ' ' . $k . " Notes");
+			}
+		}
 	    foreach($array as $val) {
 			if(!isset($customers[$val["customerseq"]])){
 				$customers[$val["customerseq"]]["customerseq"] = $val['customerseq'];
@@ -243,6 +273,10 @@ class CustomerMgr{
 				$customers[$val['customerseq']]['customerreps'] = array();
 			}
 			if(isset($val['fullname'])){
+				$customerRepTypeTemp = $val['customerreptype'] == 'inside_account_manager' ? "salesrep" : $val['customerreptype'];
+				if($customerRepTypeTemp != $customerRepType && $customerRepType != ''){
+					$i = 1;
+				}
 				$customerrep['fullname'] = $val['fullname'];
 				$customerrep['email'] = $val['email'];
 				$customerrep['ext'] = $val['ext'];
@@ -250,12 +284,58 @@ class CustomerMgr{
 				$customerrep['position'] = $val['position'];
 				$customerrep['category'] = BuyerCategoryType::getValue($val['category']);
 				$customerrep['notes'] = $val['notes'];
+				$customerrep['customerreptype'] = $val['customerreptype'];
+
+				
+				if($val['customerreptype'] == 'salesrep' || $val['customerreptype'] == 'inside_account_manager' ){
+					$customerrep['headingtext'] = "Sales Rep " . $i;
+					// $customerRepTypeTemp = 'salesrep';
+				}else if($val['customerreptype'] == 'internalsupport'){
+					$customerrep['headingtext'] = "Internal Support " . $i;
+					// $customerRepTypeTemp = $val['customerreptype'];
+				}else if($val['customerreptype'] == 'buyer'){
+					$customerrep['headingtext'] = "Buyer " . $i;
+					// $customerRepTypeTemp = $val['customerreptype'];
+				}
+				
 				array_push($customers[$val['customerseq']]['customerreps'],$customerrep);
+				$i++;
+				$customerRepType = $customerRepTypeTemp;
 			}
 	    }
-	    return $customers;
+		$mainArray['customerrepsheading'] = $repHeadingArray;
+		$mainArray['customers'] = $customers;
+		$mainArray['allrepheadingcountarr'] = $allRepHeadingCountArr;
+		$mainArray['maxrepcount'] = $customerSalesRepsCount + $customerInternalSupportsCount + $customerBuyersCount;
+	    return $mainArray;
 	}
-	
+	public function getCustomerSalesRepsCount(){
+		$query = "select cra1.customerseq,count(cra1.customerseq) as repcount from customers
+				left join customerrepallotments cra1 on cra1.customerseq = customers.seq
+				left join customerreps cr1 on cr1.seq = cra1.customerrepseq 
+				where cr1.customerreptype = 'salesrep' OR cr1.customerreptype = 'inside_account_manager' 
+				group by cra1.customerseq order by count(cra1.customerseq) DESC Limit 1";
+		$data = self::$dataStore->executeQuery($query,false,true);
+		return $data[0]['repcount'];
+	}
+	public function getCustomerInternalSupportsCount(){
+		$query = "select cra1.customerseq,count(cra1.customerseq) as repcount from customers
+				left join customerrepallotments cra1 on cra1.customerseq = customers.seq
+				left join customerreps cr1 on cr1.seq = cra1.customerrepseq 
+				where cr1.customerreptype = 'internalsupport'  
+				group by cra1.customerseq order by count(cra1.customerseq) DESC Limit 1";
+		$data = self::$dataStore->executeQuery($query,false,true);
+		return $data[0]['repcount'];
+	}
+	public function getCustomerBuyersCount(){
+		$query = "select cra1.customerseq,count(cra1.customerseq) as repcount from customers
+				left join customerrepallotments cra1 on cra1.customerseq = customers.seq
+				left join customerreps cr1 on cr1.seq = cra1.customerrepseq 
+				where cr1.customerreptype = 'buyer' 
+				group by cra1.customerseq order by count(cra1.customerseq) DESC Limit 1";
+		$data = self::$dataStore->executeQuery($query,false,true);
+		return $data[0]['repcount'];
+	}
 	private function getCustomerObj($data){
 		$customer = new Customer();
 		$customerId = $data[0];
