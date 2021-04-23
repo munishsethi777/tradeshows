@@ -143,7 +143,7 @@ if(isset($_POST["id"])){
 	                            </div>
 	                            </div>
 	                            
-	                        </div>
+	                        
 	                        <div class="form-group row">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">PO :</label>
 	                        	<div class="col-lg-4">
@@ -558,7 +558,7 @@ $(document).ready(function(){
 	//});
 	$(".positive-integer").numeric({ decimalPlaces: 2, negative: false }, function() { alert("Positive integers only"); this.value = ""; this.focus(); });
 	$("#createdbyuser").prop('disabled','true');
-	$("#enteredbyuser").prop('disabled','true');
+	//$("#enteredbyuser").prop('disabled','true');
 });
 
 function disabledDiv(divId){
