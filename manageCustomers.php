@@ -243,6 +243,9 @@ function showCustomerDetails(seq,rowId){
                 case "salesrep":
                     salesRep_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;
+                case "inside_account_manager":
+                    salesRep_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
+                    break;    
                 case "internalsupport":
                     internalSupport_tablerows += "<tr class='tabRows'><td><img src=" + dppic + " alt=\"images\" class=\"rounded-circle\" width=50 height=50></td><td>" + fullname + "</td><td>" + email + "</td><td>" + telephone + "</td><td>" + ext + "</td><td>" + cellPhone + "</td><td>" + category + "</td><!--<td>" + notes + "</td>--></tr>";
                     break;

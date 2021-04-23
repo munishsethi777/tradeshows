@@ -5,6 +5,6 @@
         //const sales_admin_lead = "Sales Admin Lead";
         const internalsupport = "Internal Support";
         const inside_account_manager= "Inside Account Manager";
-        // const buyer = "Buyer";
+        const buyer = "Buyer";
     }
 ?>

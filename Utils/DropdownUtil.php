@@ -47,6 +47,7 @@ require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRepTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/CustomerRepMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestDepartments.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -406,6 +407,11 @@ class DropDownUtils {
 	}
 	public static function getCustomerRepTypesForDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
 		$enums =  CustomerRepTypes::getAll();
+		unset($enums[CustomerRepTypes::getName(CustomerRepTypes::buyer)]);
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	public static function getRequestDepartments($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false,$isMultipleSelect = false,$disabled=false){
+		$enums =  RequestDepartments::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll,"Select Any",$isMultipleSelect,$disabled);
 	}
 }

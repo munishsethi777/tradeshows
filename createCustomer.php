@@ -314,7 +314,7 @@ if(isset($_POST["id"])){
 	                       		<label class="col-lg-12 m-xxs txt-primary" >Sales Rep</label>
 	                       	</div>
 							<div class="row" style="overflow:auto">
-								<table class="customerRepMainTable" id="salesrep">
+								<table class="customerRepMainTable salesrep inside_account_manager">
 									<tr class="customerRepLabels">
 										<td class="col-form-label bg-formLabel">Full Name</td>
 										<td class="col-form-label bg-formLabel">Company Name</td>
@@ -352,7 +352,7 @@ if(isset($_POST["id"])){
 									<label class="col-lg-12 m-xxs txt-primary" >Internal Support</label>
 								</div>
 								<div class="row" style="overflow:auto">
-									<table class="customerRepMainTable" id="internalsupport">
+									<table class="customerRepMainTable internalsupport">
 										<tr class="customerRepLabels">
     										<td class="col-form-label bg-formLabel">Full Name</td>
     										<td class="col-form-label bg-formLabel">Company Name</td>
@@ -572,14 +572,14 @@ function addBuyer(buyer){
 
 		
 		html += '<div class="col-lg-1 pull-right"><div class="row"><div class="col-sm-6">';
-		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+		html += `<a onclick="showNotes('${id}','${fullname}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary"></i></h2></a>`;
+		html += `<input type="hidden" name="buyer_notes[]" id="NotesText${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
 		html += '</div><div class="col-sm-6">'
 		html += '<a onclick="deleteBuyer(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger"></i></h2></a>'
 		html += '</div></div></div>';
 		html += '</div>';
 		html += '<!--<div class="form-group row">';
 		html += '<div class="col-lg-11 p-xxs">-->';
- 		html += `<input type="hidden" name="buyer_notes[]" id="NotesText${id}" placeholder="notes" class="form-control" value="${note}"></input>`;
 		html +='<!--</div>-->';
 		html += '<!--<div class="col-lg-12 p-xxs" style="border-bottom: 1px silver dashed;"></div>';
 		html += '</div></div>-->';
@@ -697,7 +697,8 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="'+ htmlFor +'_seq[]" class="form-control"/>';
 		html += "<select class='"+ htmlFor +"_name' id='"+ htmlFor +"_name" + id + "' name='"+ htmlFor +"_name[]'></select>";
 		html += "<input type='hidden' id='"+ htmlFor +"_text" + id + "' name='"+ htmlFor +"_text[]' value='" + fullName + "'/>";
-		html += `<a onclick="showNotes('${id}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
+		html += `<a onclick="showNotes('${id}','${fullName}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
+		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
 		html += `<a onclick="delete${htmlFor}(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>`;
 		html += "</td>";
 		html += '<td class="" id="companyname">'+ companyname +'</td>';
@@ -722,8 +723,8 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += '<td class="" id="pricingtier">'+ pricingtier +'</td>';
 		html += '</tr>';
 		html += '</div>';
- 		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
- 		$("#" + htmlFor).append(html);
+ 		
+ 		$("." + htmlFor).append(html);
 		$("#" + htmlFor + "_name" + id).select2({
 			ajax: {
 				url: "Actions/CustomerAction.php?call=searchCustomerRep&customerRepType=" + htmlFor,
@@ -845,10 +846,13 @@ function deleteBuyer(btn){
 function deletesalesrep(btn){
 	$(btn).closest('.salesrepRow').remove();
 }
-
+function deleteinside_account_manager(btn){
+	$(btn).closest('.inside_account_managerRow').remove();
+}
 function deleteinternalsupport(btn){
 	$(btn).closest('.internalsupportRow').remove();
 }
+
 
 function saveCustomer(){
 	if($("#createCustomerForm")[0].checkValidity()) {
@@ -864,11 +868,11 @@ function saveCustomer(){
 		$("#createCustomerForm")[0].reportValidity();
 	}
 }
-function showNotes(id){
+function showNotes(id,fullname){
 	// Set the TextArea
 	$(`#NotesModalText`).val($(`#NotesText${id}`).val());
 	// Set The Label
-	html = `Enter Notes For ` + $(`#firstName${id}`).val() + ` ` + $(`#lastName${id}`).val();
+	html = "Enter Notes For " + fullname ;
 	$(`#NotesModalLabel`).html(html);
 	// set id
 	$("#NotesId").val(id);
