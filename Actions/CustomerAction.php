@@ -72,17 +72,21 @@ if($call == "saveCustomer"){
                     $customerRepAllotment->setCustomerRepSeq($_REQUEST['salesrep_seq'][$i]);
                     $customerRepAllotment->setNotes($_REQUEST['salesrep_notes'][$i]);
                     $repSeq = $_REQUEST['salesrep_seq'][$i];
-                    if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
-                        if(count($commissionData) && $commissionData != null){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                    try{
+                        if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
+                            if(count($commissionData) && $commissionData != null){
+                                $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                            }
                         }
-                    }
-                    if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
-                        if(count($commissionData) && $commissionData != null){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData);
+                        if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
+                            if(count($commissionData) && $commissionData != null){
+                                $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData);
+                            }
                         }
+                    }catch(Exception $e){
+                        throw new Exception("Problem occurred while saving <b> Sales Rep - " . $_REQUEST['salesrep_text'][$i] . " Commissions</b>");
                     }
                     try{
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
@@ -101,17 +105,21 @@ if($call == "saveCustomer"){
                     $customerRepAllotment->setCustomerRepSeq($_REQUEST['inside_account_manager_seq'][$i]);
                     $customerRepAllotment->setNotes($_REQUEST['inside_account_manager_notes'][$i]);
                     $repSeq = $_REQUEST['inside_account_manager_seq'][$i];
-                    if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
-                        if(count($commissionData) && $commissionData != null){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                    try{
+                        if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
+                            if(count($commissionData) && $commissionData != null){
+                                $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                            }
                         }
-                    }
-                    if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
-                        if(count($commissionData) && $commissionData != null){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData);
+                        if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
+                            if(count($commissionData) && $commissionData != null){
+                                $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData); 
+                            }
                         }
+                    }catch(Exception $e){
+                        throw new Exception("Problem occurred while saving <b> Sales Rep - " . $_REQUEST['inside_account_manager_text'][$i] . " Commissions</b>");
                     }
                     try{
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);
@@ -129,17 +137,21 @@ if($call == "saveCustomer"){
                     $customerRepAllotment->setCustomerRepSeq($_REQUEST['internalsupport_seq'][$i]);
                     $customerRepAllotment->setNotes($_REQUEST['internalsupport_notes'][$i]);
                     $repSeq = $_REQUEST['internalsupport_seq'][$i];
-                    if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
-                        if(count($commissionData)){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                    try{
+                        if($_REQUEST['commissiondomesticdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondomesticdata' . $repSeq],true);
+                            if(count($commissionData)){
+                                $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_domestic,$commissionData);
+                            }
                         }
-                    }
-                    if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
-                        $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
-                        if(count($commissionData) && $commissionData != null){
-                            $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData);
+                        if($_REQUEST['commissiondirectimportdata' . $repSeq] != ''){
+                            $commissionData = json_decode($_REQUEST['commissiondirectimportdata' . $repSeq],true);
+                            if(count($commissionData) && $commissionData != null){
+                                    $customerRepCommissionMgr->saveFromCommissionsArray($conn,$seq,$repSeq,CommissionCategoryTypes::commission_direct_import,$commissionData); 
+                            }
                         }
+                    }catch(Exception $e){
+                        throw new Exception("Problem occurred while saving <b> Internal Support - " . $_REQUEST['internalsupport_text'][$i] . " Commissions</b>");
                     }
                     try{
                         $customerMgr->saveCustomerRepAllotment($customerRepAllotment,$conn);

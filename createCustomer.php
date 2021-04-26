@@ -421,24 +421,20 @@ $directImportCommissionOptions = json_encode(CustomerDirectImportCommissionTypes
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content animated fadeInRight">
 				<div class="modal-body itemDetailsModalDiv mainDiv">
-					<div class="ibox">
-						<div class="ibox-content" style="height:115px;">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group row m-t-sm">
-										<label class="col-sm-4 lblTitle bg-formLabel" id="NotesModalLabel">Enter Notes For ${firstName} ${lastName}</label>
-										<div class="col-sm-4">
-											<label class="containerreceivedinwmsdate lblDesc text-primary"></label>
-										</div>
-										<input type="hidden" id="NotesId" value="${id}">
-										<textarea id="NotesModalText" name="notes" placeholder="notes" class="form-control">${note}</textarea>
-										<div class="col-sm-4">
-											<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
-										</div>
-									</div>
-								</div>        
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group row m-t-sm">
+								<label class="col-sm-4 lblTitle bg-formLabel" id="NotesModalLabel">Enter Notes For ${firstName} ${lastName}</label>
+								<div class="col-sm-4">
+									<label class="containerreceivedinwmsdate lblDesc text-primary"></label>
+								</div>
+								<input type="hidden" id="NotesId" value="${id}">
+								<textarea id="NotesModalText" name="notes" placeholder="notes" class="form-control">${note}</textarea>
+								<div class="col-sm-4">
+									<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
+								</div>
 							</div>
-						</div>
+						</div>        
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -451,58 +447,54 @@ $directImportCommissionOptions = json_encode(CustomerDirectImportCommissionTypes
 	<div class="modal inmodal bs-example-modal-lg" id="commissionModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content animated fadeInRight">
-				<div class="modal-body mainDiv">
-					<div class="ibox">
-						<div class="ibox-content" style="height:115px;">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group row m-t-sm">
-										<label class="col-sm-4 lblTitle bg-formLabel" id="commissionModalMainLabel">
-											<span id='repType'></span> -
-											<span id='repName'></span>
-										</label>
-									</div>
-									<div class="form-group row m-t-sm">
-										<div class="col-sm-6">
-											<div class="row">
-												<label class="col-md-12 lblTitle bg-formLabelRustic p-2" id="commissionModalLabel">Add Domestic Commission</label>
-											</div>
-											<form id='commissionDomesticForm'>
-												<div id="commissionDomesticHtmlDiv" class="row">
-												</div>
-											</form>
-											<div class="row" style='margin-top:5px'>
-												<div class="col-lg-12 pull-right ">
-													<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDomesticField()" type="button">
-													<i class="fa fa-plus"></i> Add Domestic Commission</button>
-												</div>
-											</div>	
-										</div>
-										<div class="col-sm-6">
-											<div class="row">
-												<label class="col-md-12 lblTitle bg-formLabelMauve" id="commissionModalLabel">Add Direct Import Commission</label>
-											</div>
-											<form id='commissionDirectImportForm'>
-												<div id="commissionDirectImportHtmlDiv" class="row">
-												</div>
-											</form>
-											<div class="row" style='margin-top:5px'>
-												<div class="col-lg-12">
-													<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDirectImportField()" type="button">
-													<i class="fa fa-plus"></i> Add Direct Import Commission</button>
-												</div>
-											</div>
-										</div>
-										<input type='hidden' id='customerRepSeq' name='customerrepseq'/>
-										<input type='hidden' id='repRowSeq' name='reprowseq'/>
-										<input type='hidden' id='htmlFor' name='htmlfor' />
-										<div class="col-sm-4">
-											<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
-										</div>
-									</div>
-								</div>        
+				<div class="modal-body mainDiv">	
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group row m-t-sm">
+								<label class="col-sm-4 lblTitle bg-formLabel" id="commissionModalMainLabel">
+									<span id='repType'></span> -
+									<span id='repName'></span>
+								</label>
 							</div>
-						</div>
+							<div class="form-group row m-t-sm">
+								<div class="col-sm-6">
+									<div class="row">
+										<label class="col-md-12 lblTitle bg-formLabelRustic p-2" id="commissionModalLabel">Add Domestic Commission</label>
+									</div>
+									<form id='commissionDomesticForm'>
+										<div id="commissionDomesticHtmlDiv" class="row">
+										</div>
+									</form>
+									<div class="row" style='margin-top:5px'>
+										<div class="col-lg-12 pull-right ">
+											<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDomesticField()" type="button">
+											<i class="fa fa-plus"></i> Add Domestic Commission</button>
+										</div>
+									</div>	
+								</div>
+								<div class="col-sm-6">
+									<div class="row">
+										<label class="col-md-12 lblTitle bg-formLabelMauve" id="commissionModalLabel">Add Direct Import Commission</label>
+									</div>
+									<form id='commissionDirectImportForm'>
+										<div id="commissionDirectImportHtmlDiv" class="row">
+										</div>
+									</form>
+									<div class="row" style='margin-top:5px'>
+										<div class="col-lg-12">
+											<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDirectImportField()" type="button">
+											<i class="fa fa-plus"></i> Add Direct Import Commission</button>
+										</div>
+									</div>
+								</div>
+								<input type='hidden' id='customerRepSeq' name='customerrepseq'/>
+								<input type='hidden' id='repRowSeq' name='reprowseq'/>
+								<input type='hidden' id='htmlFor' name='htmlfor' />
+								<div class="col-sm-4">
+									<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
+								</div>
+							</div>
+						</div>        
 					</div>
 				</div>
 				<div class="modal-footer">
