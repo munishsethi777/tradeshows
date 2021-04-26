@@ -48,6 +48,9 @@ require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerPositionTypes.php")
 require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerRepTypes.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/CustomerRepMgr.php");
 require_once($ConstantsArray['dbServerUrl'] . "Enums/RequestDepartments.php");
+require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerDomesticCommissionTypes.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/CustomerDirectImportCommissionTypes.php");
 
 class DropDownUtils {
    public static function getDropDown($values, $selectName, $onChangeMethod, $selectedValue,$isAll = false,$firstOption = "Select Any") {
@@ -411,7 +414,25 @@ class DropDownUtils {
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 	public static function getRequestDepartments($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false,$isMultipleSelect = false,$disabled=false){
+		$sessionUtil = SessionUtil::getInstance();
+		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+		$userMgr = UserMgr::getInstance();
+		$user = $userMgr->findBySeq($loggedInUserSeq);
+		$userDepartmentsArr = explode(",",$user->getRequestDepartments());
 		$enums =  RequestDepartments::getAll();
+		foreach($enums as $key => $val){
+			if(!in_array($key,$userDepartmentsArr)){
+				unset($enums[$key]);
+			}
+		}
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll,"Select Any",$isMultipleSelect,$disabled);
+	}
+	public static function getCustomerDomesticCommissionDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
+		$enums =  CustomerDomesticCommissionTypes::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
+	public static function getCustomerDirectImportCommissionDD($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
+		$enums =  CustomerDirectImportCommissionTypes::getAll();
+		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
 }

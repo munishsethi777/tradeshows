@@ -3,8 +3,10 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/GraphicsLog.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/CustomerRepCommissionMgr.php");
 $customerMgr = CustomerMgr::getInstance();
 $customer = new Customer();
+$customerRepCommissionMgr = CustomerRepCommissionMgr::getInstance();
 $customerSeq = 0;
 $storeChecked = "";
 $isQuestionnaireRequiredChecked = "";
@@ -26,6 +28,8 @@ if(isset($_POST["id"])){
     $customerSeq = $customer->getSeq();
 	$isQuestionnaireRequiredChecked = $customer->getIsQuestionnaireRequired() ? 'checked' : "";
 }
+$domesticCommissionOptions = json_encode(CustomerDomesticCommissionTypes::getAll());
+$directImportCommissionOptions = json_encode(CustomerDirectImportCommissionTypes::getAll());
 ?>
 
 <!DOCTYPE html>
@@ -444,10 +448,78 @@ if(isset($_POST["id"])){
 			</div>
 		</div>
 	</div>
+	<div class="modal inmodal bs-example-modal-lg" id="commissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated fadeInRight">
+				<div class="modal-body mainDiv">
+					<div class="ibox">
+						<div class="ibox-content" style="height:115px;">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group row m-t-sm">
+										<label class="col-sm-4 lblTitle bg-formLabel" id="commissionModalMainLabel">
+											<span id='repType'></span> -
+											<span id='repName'></span>
+										</label>
+									</div>
+									<div class="form-group row m-t-sm">
+										<div class="col-sm-6">
+											<div class="row">
+												<label class="col-md-12 lblTitle bg-formLabelRustic p-2" id="commissionModalLabel">Add Domestic Commission</label>
+											</div>
+											<form id='commissionDomesticForm'>
+												<div id="commissionDomesticHtmlDiv" class="row">
+												</div>
+											</form>
+											<div class="row" style='margin-top:5px'>
+												<div class="col-lg-12 pull-right ">
+													<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDomesticField()" type="button">
+													<i class="fa fa-plus"></i> Add Domestic Commission</button>
+												</div>
+											</div>	
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<label class="col-md-12 lblTitle bg-formLabelMauve" id="commissionModalLabel">Add Direct Import Commission</label>
+											</div>
+											<form id='commissionDirectImportForm'>
+												<div id="commissionDirectImportHtmlDiv" class="row">
+												</div>
+											</form>
+											<div class="row" style='margin-top:5px'>
+												<div class="col-lg-12">
+													<button class="btn btn-xs btn-success pull-right" id="" onclick="addNewCommissionDirectImportField()" type="button">
+													<i class="fa fa-plus"></i> Add Direct Import Commission</button>
+												</div>
+											</div>
+										</div>
+										<input type='hidden' id='customerRepSeq' name='customerrepseq'/>
+										<input type='hidden' id='repRowSeq' name='reprowseq'/>
+										<input type='hidden' id='htmlFor' name='htmlfor' />
+										<div class="col-sm-4">
+											<label class="samplesreceivedinwmsdate lblDesc text-primary"></label>
+										</div>
+									</div>
+								</div>        
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" onclick="setCommissions()" id="commissionContinueBtn" class="btn btn-white">Continue</button>
+					<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
 var customerSeq = "<?php echo $customerSeq ?>";
+var exitingSalesRepSeqsArr = [];
+var exitingInternalSupportSeqsArr = [];
+var domesticCommissionOptions = <?php echo $domesticCommissionOptions; ?>;
+var directImportCommissionOptions = <?php echo $directImportCommissionOptions; ?>;
 $(document).ready(function(){
 	setInterval(function () {
 		$.post('Actions/UserAction.php?call=refreshSession',function(data){
@@ -457,6 +529,11 @@ $(document).ready(function(){
 			}
 		});
     },6000);
+	$("#commissionModal").on("hidden.bs.modal",function(){
+		$("#commissionDomesticHtmlDiv,#commissionDirectImportHtmlDiv").html("");
+		commissionDomesticCounter = 1;
+		commissionDirectImportCounter = 1;
+	});
     
 	showInternalSupportFields();
 	$('.i-checks').iCheck({
@@ -590,7 +667,7 @@ function addBuyer(buyer){
 
 function addCustomerRep(htmlFor='',customerRep){
 	var seq           = ""
-	var fullName     = "";
+	var fullName      = "";
 	var telephone     = "";
 	var emailid       = "";
 	var cellPhone     = "";
@@ -614,6 +691,8 @@ function addCustomerRep(htmlFor='',customerRep){
 	var seniorrephandlingaccountname  = "";
 	var salesadminassignedname = "";
 	var notes = "";
+	var commissiondomesticdata = "";
+	var commissiondirectimportdata = "";
 	index++;
 	var id = index;
 	if(typeof customerRep !== "undefined"){
@@ -686,16 +765,22 @@ function addCustomerRep(htmlFor='',customerRep){
 		if(customerRep.telephone != null){
 			telephone = customerRep.telephone;
 		}
+		if(customerRep.commissiondomesticdata != null){
+			commissiondomesticdata = customerRep.commissiondomesticdata;
+		}
+		if(customerRep.commissiondirectimportdata != null){
+			commissiondirectimportdata = customerRep.commissiondirectimportdata;
+		}
 		if(htmlFor == ''){
 			htmlFor = customerRep.customerreptype;
 		}
 		// id = salesRep.customerrepallotmentseq;
 	}
-	var ddId = 'categorySalesRepSelectDiv'+id;
 	var html = "<tr class='customerRepRow form-group "+ htmlFor +"Row' id='" + htmlFor + id + "'>";
-		html += "<td class='' style='display:flex;width:250px'>";
+		html += "<td class='' style='display:flex;width:400px'>";
 		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="'+ htmlFor +'_seq[]" class="form-control"/>';
 		html += "<select class='"+ htmlFor +"_name' id='"+ htmlFor +"_name" + id + "' name='"+ htmlFor +"_name[]'></select>";
+		html += `<a id='showCommission' onclick="showCommission('${htmlFor}',${id},'${seq}','${fullName}')" title="Add Commission" alt="Add Commission"><h2><i class="fa fa-credit-card text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
 		html += "<input type='hidden' id='"+ htmlFor +"_text" + id + "' name='"+ htmlFor +"_text[]' value='" + fullName + "'/>";
 		html += `<a onclick="showNotes('${id}','${fullName}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
 		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
@@ -721,6 +806,8 @@ function addCustomerRep(htmlFor='',customerRep){
 // 		html += '<td class="" id="commission">'+ commission +'</td>';
 		html += '<td class="" id="territory">'+ territory +'</td>';
 		html += '<td class="" id="pricingtier">'+ pricingtier +'</td>';
+		html += `<input id='commissiondomesticdata${id}' type='hidden' name="commissiondomesticdata${seq}" value='${commissiondomesticdata}'/>`;
+		html += `<input id='commissiondirectimportdata${id}' type='hidden' name='commissiondirectimportdata${seq}' value='${commissiondirectimportdata}'/>`;
 		html += '</tr>';
 		html += '</div>';
  		
@@ -746,16 +833,37 @@ function addCustomerRep(htmlFor='',customerRep){
 		}).on('select2:select', function(event) {
 			// This is how I got ahold of the data
 			var data = event.params.data;
+			if($(`input[name='commissiondomesticdata${data.seq}']`).val() != undefined){
+				alert("Rep is already added to the list");
+				$(this).val(null).trigger('change');
+				return;
+			}	
 			$.each(data,function(index,value){
 				$('#' + htmlFor + id + ' #' + index).text(value);
 			});
 			$('#' + htmlFor + id + ' #seq').val(data.seq);
 			$('#' + htmlFor + '_text' + id).val(data.fullname);
+			$(`#commissiondomesticdata${id}`).attr("name","commissiondomesticdata" + data.seq);
+			$(`#commissiondirectimportdata${id}`).attr("name","commissiondirectimportdata" + data.seq);
+			$(`#${htmlFor}${id} #showCommission`).removeAttr("onclick");
+			$(`#${htmlFor}${id} #showCommission`).attr("onclick",`showCommission('${htmlFor}',${id},'${data.seq}','${data.fullname}')`);
+			if(htmlFor == 'salesrep' || htmlFor == 'inside_account_manager'){
+				exitingSalesRepSeqsArr.push(data.seq);
+			}
+			if(htmlFor == 'internal_support'){
+				exitingInternalSupportSeqsArr.push(data.seq);
+			}
 		});
 		if(typeof customerRep !== "undefined"){
 			var newOption = new Option(customerRep.fullname, customerRep.customerrepseq, true, true);
 			// Append it to the select2
 			$('#' + htmlFor + '_name' + id).append(newOption).trigger('change');
+			if(htmlFor == 'salesrep' || htmlFor == 'inside_account_manager'){
+				exitingSalesRepSeqsArr.push(customerRep.customerrepseq);
+			}
+			if(htmlFor == 'internal_support'){
+				exitingInternalSupportSeqsArr.push(customerRep.customerrepseq);
+			}
 		}
 }
 function populateCustomerReps(){
@@ -897,5 +1005,131 @@ function showInternalSupportFields(){
 		$("#internalSupportMainDiv input,#internalSupportMainDiv select").val("");
 		$("#internalSupportMainDiv").hide();
 	}
+}
+var commissionDomesticCounter = 1;
+var commissionDirectImportCounter = 1;
+function addNewCommissionDomesticField(){
+	var html = '';
+	var repSeq = $('#commissionModal #customerRepSeq').val();
+	html = `
+			<div id="commission_domestic_row${commissionDomesticCounter}" class='col-md-12 commissionRow' style='margin-top:5px'>
+				<div class="col-md-6">
+					<select id='commission_domestic_type${commissionDomesticCounter}' class='form-control domestic_commission' name='commission_domestic_type${commissionDomesticCounter}' required></select>
+				</div>
+				<div class="col-md-5">
+					<input id='commission_domestic_value${commissionDomesticCounter}' class="form-control" type='number' name='commission_domestic_value${commissionDomesticCounter}' min='0' required/>
+				</div>
+				<div class="col-md-1">
+					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
+				</div>
+			</div>
+			`;
+	$("#commissionDomesticHtmlDiv").append(html);
+	var newOption = new Option('Select Any', '', true, true);
+	$(`#commission_domestic_type${commissionDomesticCounter}`).append(newOption);
+	for(var key in domesticCommissionOptions){
+		newOption = new Option(domesticCommissionOptions[key], key, true, true);
+		$(`#commission_domestic_type${commissionDomesticCounter}`).append(newOption);
+	}
+	$(`#commission_domestic_type${commissionDomesticCounter}`).val('');
+	commissionDomesticCounter++;
+}
+function addNewCommissionDirectImportField(){
+	html = `<div id="commission_direct_import_row${commissionDirectImportCounter}" class='col-md-12 commissionRow' style='margin-top:5px'>
+				<div class="col-md-6">
+					<select id='commission_direct_import_type${commissionDirectImportCounter}' class='form-control direct_import_commission' name='commission_direct_import_type${commissionDirectImportCounter}' required></select>
+				</div>
+				<div class="col-md-5">
+					<input id='commission_direct_import_value${commissionDirectImportCounter}' class="form-control" type='number' name='commission_direct_import_value${commissionDirectImportCounter}' min='0' required />
+				</div>
+				<div class="col-md-1">
+					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
+				</div>
+			</div>`;
+	$("#commissionDirectImportHtmlDiv").append(html);
+	var newOption = new Option('Select Any', '', true, true);
+	$(`#commission_direct_import_type${commissionDirectImportCounter}`).append(newOption);
+	for(var key in directImportCommissionOptions){
+		newOption = new Option(directImportCommissionOptions[key], key, true, true);
+		$(`#commission_direct_import_type${commissionDirectImportCounter}`).append(newOption);
+	}
+	$(`#commission_direct_import_type${commissionDirectImportCounter}`).val('');
+	commissionDirectImportCounter++;
+}
+function showCommission(htmlFor,repRowSeq,customerRepSeq,fullname=''){
+	var repType = htmlFor == 'salesrep' ? "Sales Rep" : (htmlFor == 'inside_account_manager' ? "Sales Rep" : (htmlFor == 'internalsupport' ? "Internal Support" : "Customer Rep"));
+	$(`#commissionModal`).modal("show");
+	$(`#commissionModalMainLabel #repType`).text(repType);
+	$(`#commissionModalMainLabel #repName`).text(fullname);
+	$('#commissionModal #customerRepSeq').val(customerRepSeq);
+	$('#commissionModal #repRowSeq').val(repRowSeq);
+	$('#commissionModal #htmlFor').val(htmlFor);
+	var commissionDomesticDataObj = JSON.parse($(`#commissiondomesticdata${repRowSeq}`).val());
+	var commissionDirectImportDataObj = JSON.parse($(`#commissiondirectimportdata${repRowSeq}`).val());
+	for(var key in commissionDomesticDataObj){
+		addNewCommissionDomesticField();
+		$(`#commission_domestic_type${commissionDomesticCounter-1}`).val(key);
+		$(`#commission_domestic_value${commissionDomesticCounter-1}`).val(commissionDomesticDataObj[key]);
+	}
+	for(var key in commissionDirectImportDataObj){
+		addNewCommissionDirectImportField();
+		$(`#commission_direct_import_type${commissionDirectImportCounter-1}`).val(key);
+		$(`#commission_direct_import_value${commissionDirectImportCounter-1}`).val(commissionDirectImportDataObj[key]);
+	}
+}
+function populateCommissionDD(id,commissionType=''){
+	$.getJSON("Actions/CustomerAction.php?call=getCommissionsDD&commissiontype=" + commissionType,(response)=>{
+		$.each(response.data,function(key,value){
+			$("#" + key + "_type" + id).html(value);
+		});
+	});
+}
+function deleteCommissionRow(thisObject){
+	$(thisObject).closest(".commissionRow").remove();
+}
+function setCommissions(){
+	var htmlFor = $("#htmlFor").val();
+	var customerRepSeq = $("#customerRepSeq").val();
+	var reqRowSeq = $("#repRowSeq").val();
+	if($("#commissionDomesticForm")[0].checkValidity() == true && $("#commissionDirectImportForm")[0].checkValidity() == true){	
+		var commissionDomesticFormArray = $("#commissionDomesticForm").serializeArray();
+		var domesticCount = commissionDomesticFormArray.length /2;// dividing by 2 because key value are separate fields
+		var commissionDirectImportFormArray = $("#commissionDirectImportForm").serializeArray();
+		var directImportCount = commissionDirectImportFormArray.length / 2;// dividing by 2 because key value are separate fields
+		var dataString;
+		commissionDomesticData = [];
+		commissionDirectImportData = [];
+		var commissionDomesticKeyValueArr = {};
+		var commissionDirectImportKeyValueArr = {};
+		$(commissionDomesticFormArray).each((i,field)=>{
+			commissionDomesticData[field.name] = field.value;
+		});
+		$(commissionDirectImportFormArray).each((i,field)=>{
+			commissionDirectImportData[field.name] = field.value;
+		});
+		for(var key in commissionDomesticData){
+			if(key.includes('type') && commissionDomesticData[key] != ''){
+				var counter = key.match(/\d+/g);
+				commissionDomesticKeyValueArr[commissionDomesticData[key]] = commissionDomesticData["commission_domestic_value" + counter[0]];
+			}
+		}
+		for(var key in commissionDirectImportData){
+			if(key.includes('type') && commissionDirectImportData[key] != ''){
+				var counter = key.match(/\d+/g);
+				commissionDirectImportKeyValueArr[commissionDirectImportData[key]] = commissionDirectImportData["commission_direct_import_value" + counter[0]];
+			}
+		}
+		dataString = JSON.stringify(commissionDomesticKeyValueArr);
+		$("#"+ htmlFor + reqRowSeq + " #commissiondomesticdata" + reqRowSeq).val(dataString);
+		dataString = JSON.stringify(commissionDirectImportKeyValueArr);
+		$("#"+ htmlFor + reqRowSeq + " #commissiondirectimportdata" + reqRowSeq).val(dataString);
+		$("#commissionDomesticHtmlDiv,#commissionDirectImportHtmlDiv").html("");
+		$("#commissionModal").modal('hide');
+		commissionDomesticCounter = 1;
+		commissionDirectImportCounter = 1;
+	}else{
+		$("#commissionDomesticForm")[0].reportValidity();
+		$("#commissionDirectImportForm")[0].reportValidity();
+	}	
 }
 </script>
