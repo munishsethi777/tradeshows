@@ -715,4 +715,12 @@ class CustomerMgr{
 		}
 		return $customerReps;
 	}
+	public function getCustomerDomesticCommissionDD(){
+		$ddhtml = DropDownUtils::getCustomerDomesticCommissionDD("commission_domestic[]", "","", false,true);
+	    return $ddhtml;
+	}
+	public function getCustomerDirectImportCommissionDD(){
+		$ddhtml = DropDownUtils::getCustomerDirectImportCommissionDD("commission_direct_import[]", "", "", false,true);
+	    return $ddhtml;
+	}
 }
