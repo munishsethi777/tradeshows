@@ -772,7 +772,7 @@ function addCustomerRep(htmlFor='',customerRep){
 		html += "<td class='' style='display:flex;width:400px'>";
 		html += '<input id="seq" type="hidden"  value="'+ seq +'" name="'+ htmlFor +'_seq[]" class="form-control"/>';
 		html += "<select class='"+ htmlFor +"_name' id='"+ htmlFor +"_name" + id + "' name='"+ htmlFor +"_name[]'></select>";
-		html += `<a id='showCommission' onclick="showCommission('${htmlFor}',${id},'${seq}','${fullName}')" title="Add Commission" alt="Add Commission"><h2><i class="fa fa-credit-card text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
+		html += `<a id='showCommission' onclick="showCommission('${htmlFor}',${id},'${seq}','${fullName}')" title="Add Commission" alt="Add Commission"><h2><i class="fa fa-dollar text-primary" style='margin:0 0 0 10px'></i></h2></a>`;
 		html += "<input type='hidden' id='"+ htmlFor +"_text" + id + "' name='"+ htmlFor +"_text[]' value='" + fullName + "'/>";
 		html += `<a onclick="showNotes('${id}','${fullName}')" title="Notes" alt="Notes"><h2><i class="fa fa-clipboard text-primary" style='margin:0 10px 0 20px'></i></h2></a>`;
 		html += `<input type="hidden" id="NotesText${id}" name="${htmlFor}_notes[]" placeholder="notes" class="form-control" value="${notes}"></input>`;
@@ -1012,7 +1012,7 @@ function addNewCommissionDomesticField(){
 					<input id='commission_domestic_value${commissionDomesticCounter}' class="form-control" type='number' name='commission_domestic_value${commissionDomesticCounter}' min='0' required/>
 				</div>
 				<div class="col-md-1">
-					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
+					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2 style="margin-top:0px"><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
 				</div>
 			</div>
 			`;
@@ -1035,7 +1035,7 @@ function addNewCommissionDirectImportField(){
 					<input id='commission_direct_import_value${commissionDirectImportCounter}' class="form-control" type='number' name='commission_direct_import_value${commissionDirectImportCounter}' min='0' required />
 				</div>
 				<div class="col-md-1">
-					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
+					<a onclick="deleteCommissionRow(this)" title="Delete" alt="Delete"><h2 style="margin-top:0px"><i class="fa fa-remove text-danger" style='margin:0 10px'></i></h2></a>
 				</div>
 			</div>`;
 	$("#commissionDirectImportHtmlDiv").append(html);

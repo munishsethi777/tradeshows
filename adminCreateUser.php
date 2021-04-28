@@ -395,7 +395,7 @@ $requestDepartments = RequestDepartments::getAll();
 													<div class="col-lg-3">
 														<input type="text" maxLength="250"
 															value="<?php echo $user->getQCCode()?>" id="qccode"
-															name="qccode" class="form-control">
+															name="qccode" class="form-control"> (Caps Only)
 													</div>
 
 													<label class="col-lg-6 col-form-label"> <input
