@@ -23,6 +23,9 @@ function changeSourceUrl(gridId) {
     }else if(gridId == "qcscheduleGrid"){
         source.url = "Actions/QCScheduleAction.php?call=getAllQCSchedules";
         isSourceChange = 0;
+    }else if(gridId == "requestGrid"){
+        source.url = "Actions/RequestAction.php?call=getAllRequestsForGrid";
+        isSourceChange = 0;
     }
 }
 function applyReportingFilter(reportingDataParameter, gridId, currentFiterAppliedName = "", defaultFilterSelectionUserConfigKey) {
@@ -168,5 +171,81 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
         // isSourceChange = 1;
     }
     // ************************************** QC filters ends here ***************************************************************
+    setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey, reportingDataParameter);
+}
+function applyReportingFilterForRequestManagement(reportingDataParameter, gridId, currentFiterAppliedName = "", defaultFilterSelectionUserConfigKey) {
+    var filtergroup = new $.jqx.filter();
+    var filterGetGridDataByReportingParameter = "";
+    var filter_or_operator = 0;
+    var filterCondition = "EQUAL";
+    var filterType = "";
+    var filterValue = "";
+
+    $("#currentFiterAppliedNameDiv #currentFiterAppliedName").html(currentFiterAppliedName);
+    clearFilters(gridId);
+
+    if (reportingDataParameter == "request_management_all_request") {
+        if (isSourceChange) {
+            changeSourceUrl(gridId);
+        }
+        $("#" + gridId).jqxGrid('applyfilters');
+    } else if (reportingDataParameter == "request_management_completed_request") {
+        if (isSourceChange) {
+            changeSourceUrl(gridId);
+        }
+        filterValue = "1";
+        filterType = "numericfilter";
+        filterFieldNameArr.push("iscompleted");
+        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
+        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        $("#" + gridId).jqxGrid('addfilter', "iscompleted", filtergroup);
+        $("#" + gridId).jqxGrid('applyfilters');
+    } else if (reportingDataParameter == "request_management_incompleted_request") {
+        if (isSourceChange) {
+            changeSourceUrl(gridId);
+        }
+        filterValue = "0";
+        filterType = "numericfilter";
+        filterFieldNameArr.push("iscompleted");
+        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
+        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        $("#" + gridId).jqxGrid('addfilter', "iscompleted", filtergroup);
+        $("#" + gridId).jqxGrid('applyfilters');
+    } else if (reportingDataParameter == "request_management_requests_due_today") {
+        source.url = "Actions/RequestAction.php?call=getRequestsDueToday";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_requests_due_in_next_week") {
+        source.url = "Actions/RequestAction.php?call=getRequestsDueInNextWeek";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_requests_due_passed") {
+        source.url = "Actions/RequestAction.php?call=getRequestsDuePassed";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_assignee_requests_due_today") {
+        source.url = "Actions/RequestAction.php?call=getAssigneeRequestsDueToday";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_assignee_requests_due_in_next_week") {
+        source.url = "Actions/RequestAction.php?call=getAssigneeRequestsDueInNextWeek";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_assignee_requests_due_passed") {
+        source.url = "Actions/RequestAction.php?call=getAssigneeRequestsDuePassed";
+        $("#" + gridId).jqxGrid('applyfilters');
+        isSourceChange = 1;
+    } else if (reportingDataParameter == "request_management_unassigned") {
+        if (isSourceChange) {
+            changeSourceUrl(gridId);
+        }
+        filterCondition = "NULL";
+        filterType = "stringfilter";
+        filterFieldNameArr.push("assignedto.fullname");
+        filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
+        filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
+        $("#" + gridId).jqxGrid('addfilter', "assignedto.fullname", filtergroup);
+        $("#" + gridId).jqxGrid('applyfilters');
+    } 
     setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey, reportingDataParameter);
 }

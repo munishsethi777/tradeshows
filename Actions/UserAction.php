@@ -75,6 +75,8 @@ if($call == "saveUser"){
 		if(!in_array("qc",$permissions) && !in_array("po_incharge",$permissions)){
 			$user->setQCCode(null);
 		}
+		$requestDepartmentsArr = implode(",",$_REQUEST['requestdepartments']);
+		$user->setRequestDepartments($requestDepartmentsArr);
 		$id = $userMgr->saveUser($user);
 		$departmentMgr->deleteUseDepartments($id);
 		$userMgr->deleteUseRoles($id);
@@ -82,6 +84,13 @@ if($call == "saveUser"){
 			$userRole = new UserRole();
 			$userRole->setUserSeq($id);
 			$userRole->setRole($value);
+			$userRole->setCreatedOn(new DateTime());
+			$userMgr->saveUserRole($userRole);
+		}
+		if(isset($_REQUEST['request_permissions'])){
+			$userRole = new UserRole();
+			$userRole->setUserSeq($id);
+			$userRole->setRole($_REQUEST['request_permissions']);
 			$userRole->setCreatedOn(new DateTime());
 			$userMgr->saveUserRole($userRole);
 		}

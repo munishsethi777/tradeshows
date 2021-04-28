@@ -1,6 +1,6 @@
 <?php
 class RequestLog{ 	
-    private $seq,$requestseq,$oldvalue,$newvalue,$attributename,$isspecfieldchange,$createdby,$createdon;
+    private $seq,$requestseq,$oldvalue,$newvalue,$attributename,$isspecfieldchange,$createdby,$createdon,$requestspecfieldseq;
     
     public static $className = "RequestLog";
     public static $tableName = "requestlogs";
@@ -52,6 +52,12 @@ class RequestLog{
     }
     public function getCreatedOn(){
         return $this->createdon;
+    }
+    public function setRequestSpecFieldSeq($requestSpecFieldSeq){
+        $this->requestspecfieldseq = $requestSpecFieldSeq;
+    }
+    public function getRequestSpecFieldSeq(){
+        return $this->requestspecfieldseq;
     }
     public function createFromRequest($request){
 		if (is_array($request)){

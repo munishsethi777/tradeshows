@@ -175,7 +175,7 @@ const saveRequest = () => {
     if($("#isrequiredapprovalfromrobby").val()){
     	isRequiredApprovalFromRobby = $("#isrequiredapprovalfromrobby").val();
     }
-    if($("#iscompleted").val() == "on"){
+    if($("#iscompleted").prop("checked")){
     	isCompleted = 1;
     }
     var approvedByManagerDate = "";
@@ -231,13 +231,16 @@ const loadHistory = () => {
 
     $.getJSON(url,(response)=>{
         $('#loadHistory').append(response.data.historyLogHtml);
-        $('#lastUpdatedHistorySeq').val(response.data.lastUpdatedHistorySeq);
+        if(response.data.lastUpdatedHistorySeq != null){
+            $('#lastUpdatedHistorySeq').val(response.data.lastUpdatedHistorySeq);
+        }
     });
 }
 function editButtonClick(seq) {
 	$(".commentsAndHistoryDiv").show();
     requestAttachmentDropzone.options.autoProcessQueue = true;
     requestAttachmentDropzone.removeAllFiles(true);
+    $("#requestFormDiv #requestcode").text("");
     $("#requestFormDiv #requestSpecsFields").html("");
     $("#requestFormDiv #department").val("");
     $("#requestFormDiv #requeststatusseq").empty();
@@ -258,7 +261,7 @@ function editButtonClick(seq) {
     $("#loadHistory,#loadComments").html("");
     $("#saveRequestLogComments").prop('disabled','true');
     $("#lastUpdatedHistorySeq").val('');
-    $("#isCompleted").val('');
+    $("#iscompleted").iCheck("uncheck")
     // $("#requestAttachmentDropzoneForm").empty('');
     // requestAttachmentDropzone.removeFile(file);
     $("#attachmentsRow").html("");
@@ -289,6 +292,7 @@ function editButtonClick(seq) {
         $.each(response.data.requestformotherfields,(key,value)=>{
             $("#requestFormDiv #" + key).val(value);
         });
+        $("#requestFormDiv #code").text(response.data.requestformotherfields.code);
         if(response.data.requestformotherfields.isCompleted == 1){
         	$('#iscompleted').iCheck('check');
         }else{

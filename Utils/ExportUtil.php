@@ -122,7 +122,7 @@ class ExportUtil{
 		$salesRepStartsFromColIndex = 9;
 		$internalSupportRepStartsFromColIndex = ($data['allrepheadingcountarr']['salesrep'] * 5) + $salesRepStartsFromColIndex;
 		$buyerRepStartsFromColIndex = ($data['allrepheadingcountarr']['internalsupport'] * 5)  + $internalSupportRepStartsFromColIndex;
-		$objPHPExcel->getActiveSheet()->getStyle($alphas[$salesRepStartsFromColIndex]."1:". $alphas[--$internalSupportRepStartsFromColIndex] ."1")->getFill()
+		$objPHPExcel->getActiveSheet()->getStyle($alphas[$salesRepStartsFromColIndex]."1:". $alphas[$internalSupportRepStartsFromColIndex-1] ."1")->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('f8cbad');

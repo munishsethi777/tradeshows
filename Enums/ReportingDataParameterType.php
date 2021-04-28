@@ -43,5 +43,16 @@ class ReportingDataParameterType extends BasicEnum{
     const instruction_manual_total_projects_due_in_next_14_days = "Due In Next 14 Days";
     const instruction_manual_total_projects_due_less_than_14_days_from_entry = "Due < 14 Days from Entry";
     const instruction_manual_total_projects_not_started = "IMs Not Started"; 
+    // Request Management Parameters
+    const request_management_all_request = "All Projects";
+    const request_management_completed_request = "Completed Projects";
+    const request_management_incompleted_request = "Incompleted Projects";
+    const request_management_requests_due_today = "Projects Due Today";
+    const request_management_requests_due_in_next_week = "Projects Due In Next Week";
+    const request_management_requests_due_passed = "Project Due Passed";
+    const request_management_assignee_requests_due_today = "Assignee Due Today";
+    const request_management_assignee_requests_due_in_next_week = "Assignee Due In Next Week";
+    const request_management_assignee_requests_due_passed = "Assignee Due Passed";
+    const request_management_unassigned = "Unassigned Projects";
 }
 ?>

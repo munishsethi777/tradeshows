@@ -151,8 +151,7 @@ $exportLimit =5000;
     </form>
     <form id="form2" name="form2" method="post" action="adminCreateInstructionManualLogs.php" target='_blank'>
         <input type="hidden" id="id" name="id" />
-    </form>
-
+    </form> 
 </body>
 <script type="text/javascript">
 	var coll = document.getElementsByClassName("collapsible");

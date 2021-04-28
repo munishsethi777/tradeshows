@@ -43,7 +43,9 @@ class RequestAttachmentMgr{
         $requestAttachment->setCreatedOn($requestAttachmentArr['createdon']);
         $requestAttachment->setCreatedBy($requestAttachmentArr['loggedinuserseq']);
         $requestAttachment->setAttachmentTitle($requestAttachmentArr['attachmenttitle']);
-        return self::$dataStore->save($requestAttachment);
+        $id = self::$dataStore->save($requestAttachment);
+        RequestReportUtil::sendFileAddedOnRequestNotification($requestAttachmentArr['requestseq'],$requestAttachmentArr['attachmenttitle']);
+        return $id;
     }
     public function attachmentHtml($requestAttachments){
         $attachmentHtml = "";

@@ -1,0 +1,2 @@
+ALTER TABLE `users` ADD `projectdepartments` VARCHAR(2000) NULL DEFAULT NULL AFTER `warehouse`; 
+ALTER TABLE `users` CHANGE `projectdepartments` `requestdepartments` VARCHAR(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL; 

@@ -119,14 +119,14 @@ if(isset($_POST["id"])){
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabel">Cellphone</label>
                                     <div class="col-lg-4">
-                                        <input type="text" required maxLength="250" value="<?php echo $customerRep->getCellPhone() ?>" name="cellphone" id="cellphone" class="form-control" placeholder="Enter cellphone"/>
+                                        <input type="text" maxLength="250" value="<?php echo $customerRep->getCellPhone() ?>" name="cellphone" id="cellphone" class="form-control" placeholder="Enter cellphone"/>
                                     </div>
                                     
                                 </div>
                                 <div class="row form-group">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Phone</label>
                                     <div class="col-lg-4">
-                                        <input type="text" required maxLength="250" value="<?php echo $customerRep->getTelephone() ?>" name="telephone" id="telephone" class="form-control" placeholder="Enter telephone"/>
+                                        <input type="text" maxLength="250" value="<?php echo $customerRep->getTelephone() ?>" name="telephone" id="telephone" class="form-control" placeholder="Enter telephone"/>
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabel">Position</label>
                                     <div class="col-lg-4">

@@ -7,6 +7,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/ReportingDataParameterType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Enums/UserConfigurationType.php");
 
 $userMgr = UserMgr::getInstance();
 $permissionUtil = PermissionUtil::getInstance();
@@ -17,6 +20,23 @@ $userRoles = $userMgr->getUserRolesArr($loggedInUserSeq);
 $requestLogMgr = RequestLogMgr::getInstance();
 $isRequester = 0;
 // $isRequester = in_array('request_management_requester',$userRoles);
+$userRoles = $userMgr->getUserRolesArr($loggedInUserSeq);
+$allReportingDataParameters = ReportingDataParameterType :: getAll();
+if(in_array(Permissions::getName(Permissions::request_management_employee), $userRoles)){
+	unset($allReportingDataParameters[ReportingDataParameterType::getName((ReportingDataParameterType::request_management_unassigned))]);
+}
+
+$userConfigurationMgr = UserConfigurationMgr::getInstance();
+$userSeq = $sessionUtil->getUserLoggedInSeq();
+$analyticsDivExpandedUserConfigKey = "AnalyticsRequestDivExpanded";
+$isAnalyticsDivExpandedUserConfigValue = $userConfigurationMgr->getConfigurationValue($userSeq,$analyticsDivExpandedUserConfigKey,"1");
+$analyticsDivState = "collapsed";
+if($isAnalyticsDivExpandedUserConfigValue){
+	$analyticsDivState = "";
+}
+$defaultFilterSelectionUserConfigKey = UserConfigurationType::getName("RequestManagementDefaultFilterSelection");
+$defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationValue($userSeq,$defaultFilterSelectionUserConfigKey,"request_management_all_request");
+$exportLimit =5000;
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,8 +93,17 @@ div#myDropZone {
 }
 </style>
 <script src="scripts/createRequest.js"></script>
+<script src="scripts/UserConfigurations.js"></script>
+<script src="scripts/GridDataByReportingParameter.js"></script>
+<script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
+<script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
 </head>
 <body>
+	<?include "exportInclude.php"?>
+	<input id="isAnalyticsDivExpandedUserConfigValue" class="isAnalyticsDivExpandedUserConfigValue" type="hidden" name="isAnalyticsDivExpandedUserConfigValue" value="<?php echo $isAnalyticsDivExpandedUserConfigValue;?>" />
+    <input id="analyticsDivExpandedUserConfigKey" class="analyticsDivExpandedUserConfigKey" type="hidden" value="<?php echo $analyticsDivExpandedUserConfigKey; ?>" />
+	<input id="defaultFilterSelectionUserConfigKey" class="defaultFilterSelectionUserConfigKey" type="hidden" value="<?php echo $defaultFilterSelectionUserConfigKey; ?>" />
+    <input id="defaultFilterSelectionReportDataType" class="defaultFilterSelectionReportDataType" type="hidden" value="<?php echo $defaultFilterSelectionReportDataType; ?>" />
     <div id="wrapper">
 		<?php include("adminmenuInclude.php")?>  
 		<input id="loggedInUserSeq" type="hidden" name="loggedinuserseq" value="<?php echo $loggedInUserSeq;?>" />
@@ -89,7 +118,56 @@ div#myDropZone {
 								<h5 class="pageTitle">Create Project</h5>
 						</nav>
 					</div>
-					
+					<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
+						<div class="ibox <?php echo $analyticsDivState ?>" style="border:1px #e7eaec solid">
+							<div class="ibox-title">
+								<h5>Project Management Analytics</h5>&nbsp;
+								<div id="currentFiterAppliedNameDiv" style="display:inline;">
+									&nbsp;Current Filter Applied : 
+									<span id="currentFiterAppliedName"></span>
+								</div>
+								<div class="ibox-tools">
+									<a class="collapse-link">
+										<i class="fa fa-chevron-up" id="analyticsDivExpandedIcon"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content" style="background-color:#fafafa;padding-bottom:0px;">
+								<div class="row reportDataCountRow">
+									<input id="gridId" type="hidden" name="gridId" value="requestGrid"/>
+									<?php 
+										foreach($allReportingDataParameters as $key => $value){
+											if(strpos($key,'request_management_') !== false){
+												?>
+												
+												<div class="col-lg-2 reportBlock" >
+													<div class="ibox float-e-margins reportFilterBlock bg-white" id="<?php echo $key ?>">
+														<div class="ibox-content text-center" id="<?php echo $key."_ibox_content"?>">
+															<div class='reportFilterBlockTools floatRightTools'>
+																<i title="Apply Filter" alt="Apply Filter" style="font-size:14px" class="fa fa-filter" id="<?php echo $key;?>" ></i>
+																<!-- <	i title="Show Graph" alt="Show Graph" class="fa fa-bar-chart" id="<?php echo $key . "_show_graph";?>" ></> -->
+																<i title="Export Data" alt="Export Data" style="font-size:14px" class="fa fa-file-excel-o filterExportDataIcon" id="<?php echo $key . "_export_date";?>" ></i>
+															</div>
+															
+															<h1 class="no-margins" id='<?php echo $key ?>_current'></h1>
+															<div class="col-lg-12 stat-percent font-bold text-info" id='<?php echo $key ?>_change_color' >
+																<i class="fa" id='<?php echo $key ?>_change_arrow'></i>
+																<span class="text-center" id='<?php echo $key ?>_diff'></span>
+																<span id='<?php echo $key ?>_percent'></span>
+															</div>
+															<small id="analyticName" class="analyticName"><?php echo $value ?></small>
+															<span class="bar" id='<?php echo $key ?>_thirty_days'></span>
+														</div>
+													</div>
+												</div>
+												<?php 
+											}
+										} 
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="ibox-content">
 						<div id="requestGrid">						
 						</div>
@@ -99,16 +177,21 @@ div#myDropZone {
 						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;">
 							<input id="seq" type="hidden" name="seq" value=""/>
 							<div class="bg-white p-xs outterDiv">
+								<div class="form-group row">
+									<lable class="col-lg-2 col-form-label bg-formLabelDarkSm">
+										<b><span>Project Code</span> - <span id='code'></span></b>
+									</label>
+								</div>
 								<?php if (in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
-    								<div class="form-group row">
-    									<label class="col-lg-2 col-form-label bg-formLabel">Assigned By</label>
+    								<div class="form-group row" <?php if (!in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){}?>>
+    									<label class="col-lg-2 col-form-label bg-formLabelPeach">Assigned By</label>
     									<div class="col-lg-4">
     										<?php
     											$select = DropDownUtils::getUsersForDDByPermission("assignedbyseq", '', '', true, true, "Manager");
     											echo $select;
     										?>
     									</div>
-    									<label class="col-lg-2 col-form-label bg-formLabel">Assigned To</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelPeach">Assigned To</label>
     									<div class="col-lg-4">
     										<?php
     											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Employee");
@@ -116,30 +199,33 @@ div#myDropZone {
     										?>
     									</div>
     								</div>
-    							<?php }?>
+    							<?php }else{?>
+									<input id="assignedbyseq" type="hidden" name="assignedbyseq"/>
+									<input id="assignedtoseq" type="hidden" name="assignedtoseq"/>
+									<?php }?>
 								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Department</label>
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Department</label>
 									<div class="col-lg-4">
 										<?php
-											$select = DropDownUtils::getDepartmentType("departmentseq", 'onChangeDepartment(this.value)', '', true, true);
+											$select = DropDownUtils::getRequestDepartments("department", 'onChangeDepartment(this.value)', '', true);
 											echo $select;
 										?>
 									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Project Type</label>
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Project Type</label>
 									<div class="col-lg-4">
 										<select id="requesttypeseq" class='form-control' onchange="onRequestTypeChange(this)" required></select>
 									</div>
 								</div>
 
 								<div class="form-group row">
-									<label class="col-lg-2 col-form-label bg-formLabel">Priority</label>
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Priority</label>
 									<div class="col-lg-4">
 										<?php 
 											$select = DropDownUtils::getRequestPriority("priority", null,'',false,true);
 											echo $select;
 										?>
 									</div>
-									<label class="col-lg-2 col-form-label bg-formLabel">Project Due Date</label>
+									<label class="col-lg-2 col-form-label bg-formLabelMauve">Project Due Date</label>
 									<div class="col-lg-4">
 										<div class='input-group date' >
 											<input type='text' id='duedate' name='
@@ -150,7 +236,7 @@ div#myDropZone {
 								</div>
 								<?php if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
-										<label class="col-lg-2 col-form-label bg-formLabel">Status</label>
+										<label class="col-lg-2 col-form-label bg-formLabelYellow">Status</label>
 										<div class="col-lg-4">
 											<select id="requeststatusseq" class="col-lg-4 form-control" name="requeststatusseq"></select>
 										</div>
@@ -167,27 +253,27 @@ div#myDropZone {
 							<div class="bg-white p-xs outterDiv">
 								<?php if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles) || in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){?>
     								<div class="form-group row">
-    									<label class="col-lg-2 col-form-label bg-formLabel">Assignee Due Date</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelYellow">Assignee Due Date</label>
     									<div class="col-lg-4">
     										<div class='input-group date' >
     											<input type='text' id='assigneeduedate' name='assigneeduedate' class='form-control dateControl datepicker' readonly>
     											<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
     										</div>
     									</div>
-    									<label class="col-lg-2 col-form-label bg-formLabel">Estimated Hours</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelYellow">Estimated Hours</label>
     									<div class="col-lg-4">
     										<input id="estimatedhours" class="form-control" type="number" name="estimatedhours"/>
     									</div>
     								</div>
     								<div class="form-group row">
-    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Manager Approvel</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelYellow">Requires Manager Approvel</label>
     									<div class="col-lg-4">
     										<?php 
     											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfrommanager", 'null','1',false,true);
     											echo $select;
     										?>
     									</div>
-    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Requester's Approvel</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelYellow">Requires Requester's Approvel</label>
     									<div class="col-lg-4">
     										<?php 
     											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrequester", null,'0',false,true);
@@ -196,7 +282,7 @@ div#myDropZone {
     									</div>
     								</div>
     								<div class="form-group row i-checks">
-    									<label class="col-lg-2 col-form-label bg-formLabel">Requires Robby's Approvel</label>
+    									<label class="col-lg-2 col-form-label bg-formLabelYellow">Requires Robby's Approvel</label>
     									<div class="col-lg-4">
     										<?php 
     											$select = DropDownUtils::getBooleanDropDown("isrequiredapprovalfromrobby", null,'0',false,true);
@@ -205,9 +291,9 @@ div#myDropZone {
     									</div>
     									
     									<label class="col-lg-2 col-form-label bg-formLabel" style="background-color:#0d879d">Project Completed</label>
-    									<div class="col-lg-4">
-	                        				<input type="checkbox" id="isCompleted" name="isCompleted"/>
-	                            		</div>
+										<div class="col-lg-4">
+											<input type="checkbox" class="i-checks form-control pull-left" id="iscompleted" name="iscompleted"/>
+										</div>
     								</div>
     							<?php }?>
 								<div class="bg-white p-xs">
@@ -220,6 +306,11 @@ div#myDropZone {
 										<div class="col-lg-2 pull-right">
 											<button class="btn btn-primary" onclick="saveRequest()" type="button" style="width:85%">
 												Save
+											</button>
+										</div>
+										<div class="col-lg-2 pull-right">
+											<button class="btn btn-primary" onclick="saveRequestAndClose()" type="button" style="width:85%">
+												Save and Close
 											</button>
 										</div>
 									</div>
@@ -265,11 +356,20 @@ div#myDropZone {
 			</div>  
 		</div> 	
 	</div>
+	<form id="exportLogsForm" name="exportLogsForm" method="post" action="Actions/RequestAction.php">
+    	<input type="hidden" name="call" value="exportFilterData" />
+    	<input type="hidden" name="filterId" id="filterId" />
+    </form>
 </body>
 </html>
 <script type="text/javascript">
+var defaultFilterSelectionReportDataType = $("#defaultFilterSelectionReportDataType").val();
+var defaultFilterSelectionUserConfigKey = $("#defaultFilterSelectionUserConfigKey").val();
+var source ;
+var selectedRows = [];
 $(document).ready(function(){
-	loadGrid()	
+	loadGrid();
+	loadReportingData('request_management_');
 	$('.dateControl').datetimepicker({
 		timepicker:false,
 		format:'m-d-Y',
@@ -282,6 +382,29 @@ $(document).ready(function(){
 	$('.i-checks').iCheck({
 		checkboxClass: 'icheckbox_square-green',
 	   	radioClass: 'iradio_square-green',
+	});
+	$(".filterExportDataIcon").click(function(){
+		var filterId = $(this).attr('id');
+		$("#exportLogsForm #filterId").val(filterId);
+		$("#exportLogsForm").submit();
+	});
+	var gridId = $("#gridId").val();
+	$(".fa-filter").click(function (){
+		var reportingParameter = $(this).attr("id");
+		var filterExportBtnId = $(this).parents(".reportFilterBlockTools").find(".filterExportDataIcon").attr("id");
+		var currentFiterAppliedName = $("#" + reportingParameter).find("#analyticName").html();
+		applyReportingFilterForRequestManagement(reportingParameter,gridId,currentFiterAppliedName,defaultFilterSelectionUserConfigKey);
+		$(".get-grid-data-by-reporting-data, .ibox-content").removeClass("dataFilterBlockSelected");
+		$("#"+reportingParameter +" .ibox-content").removeClass("bg-white");
+		$("#"+reportingParameter + " .ibox-content").addClass("dataFilterBlockSelected");
+		$("#exportFormForRequests input[name=filterId").val(filterExportBtnId);
+	});
+	if(defaultFilterSelectionReportDataType != ''){
+		$("#" + defaultFilterSelectionReportDataType + " .ibox-content").addClass("dataFilterBlockSelected");
+		$("#" + defaultFilterSelectionReportDataType +" .fa-filter").click();
+	} 
+	$("#exportBtnForRequests").click(function(e) {
+		exportFinal(e, this);
 	});
 });
 Dropzone.autoDiscover = false;
@@ -326,19 +449,20 @@ function loadGrid(){
 	var columns = [
 		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
-		{ text: 'Department', datafield: 'departmenttitle', width:"13%",cellsrenderer: cellsRenderer},
-// 		{ text: 'Request Name', datafield: 'title', width:"12%"},
+		{ text: 'Department', datafield: 'department', width:"13%",cellsrenderer: cellsRenderer},
+// 		{ text: 'Request Name', datafield: 'title', width:"12%"},	
 		{ text: 'Project No', datafield: 'code', width:"10%",cellsrenderer: cellsRenderer},
 		{ text: 'Priority', datafield: 'priority', width:"5%",cellsrenderer: cellsRenderer},
 		{ text: 'Project Type', datafield: 'requesttypetitle',width:"10%",cellsrenderer: cellsRenderer}, 
 		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%",cellsrenderer: cellsRenderer},
-		{ text: 'Assigned By', datafield: 'assignedbyfullname', width:"14%",cellsrenderer: cellsRenderer},	
-		{ text: 'Assigned To', datafield: 'assignedtofullname', width:"10%",cellsrenderer: cellsRenderer},       
-		{ text: 'Status', datafield: 'requeststatustitle', width:"8%",cellsrenderer: cellsRenderer},
+		{ text: 'Assigned By', datafield: 'assignedby.fullname', width:"14%",cellsrenderer: cellsRenderer},	
+		{ text: 'Assigned To', datafield: 'assignedto.fullname', width:"10%",cellsrenderer: cellsRenderer},       
+		{ text: 'Status', datafield: 'requeststatustitle', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Is Completed',datafield: 'iscompleted', columntype: 'checkbox',width: "5%"},
 		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"13%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
     ]
    
-    var source =
+    source =
     {
         datatype: "json",
         id: 'id',
@@ -348,19 +472,20 @@ function loadGrid(){
         datafields: [
 			{ name: 'id', type: 'integer' },
 			{ name: 'seq', type: 'integer' }, 
-			{ name: 'departmenttitle', type: 'integer' },
+			{ name: 'department', type: 'integer' },
 			{ name: 'title', type: 'string' },
 			{ name: 'code', type: 'string' },
 			{ name: 'priority', type: 'string' },
             { name: 'requesttypetitle', type: 'string' },
             { name: 'createdbyfullname', type: 'string'},
-			{ name: 'assignedbyfullname', type: 'string'},  
-			{ name: 'assignedtofullname', type: 'string'},              
+			{ name: 'assignedby.fullname', type: 'string'},  
+			{ name: 'assignedto.fullname', type: 'string'},
+			{ name: 'iscompleted',type: 'boolean'},              
             { name: 'lastmodifiedon', type: 'date' },
 			{ name: 'requeststatustitle', type: 'string'},
             { name: 'action', type: 'string' } 
         ],                          
-        url: 'Actions/RequestAction.php?call=getAllRequestsForGrid',
+        url: '',
         root: 'Rows',
         cache: false,
         beforeprocessing: function(data)
@@ -414,22 +539,24 @@ function loadGrid(){
             var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
             var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+			var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
 //             container.append(editButton);
-//             container.append(deleteButton);
+            container.append(exportButton);
             container.append(reloadButton);
             statusbar.append(container);
             editButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
             deleteButton.jqxButton({  width: 65, height: 18 });
             reloadButton.jqxButton({  width: 70, height: 18 });
+			exportButton.jqxButton({  width: 65, height: 18 });
 
 			addButton.click(function (event) {
 				$("#seq").val("");
 				$(".commentsAndHistoryDiv").hide();
 				$("#requestFormDiv #requestSpecsFields").html("<center><small>Select request type to display related fields</small></center>");
-				$("#requestFormDiv #departmentseq").val("");
+				$("#requestFormDiv #department").val("");
 				$("#requestFormDiv #requesttypeseq").empty();
 				$("#requestFormDiv #requeststatusseq ").empty();
 				$("#requestFormDiv #seq").val("");
@@ -446,6 +573,7 @@ function loadGrid(){
 				$('#requestFormDiv').modal('show');
 				$("#loadHistory,#loadComments").html("");
     			$("#saveRequestLogComments").prop('disabled','true');
+				$("#iscompleted").iCheck("uncheck")
 				requestAttachmentDropzone.removeAllFiles(true);
 				requestAttachmentDropzone.options.autoProcessQueue = false;
 				$("#attachmentsRow").html("");
@@ -489,10 +617,64 @@ function loadGrid(){
             reloadButton.click(function (event) {
                 $("#requestGrid").jqxGrid({ source: dataAdapter });
             });
+			exportButton.click(function(event) {
+				filterQstr = getFilterString("requestGrid");
+				exportItemsConfirm(filterQstr);
+			});
         }
     });
-
+	$('#requestGrid').on('rowselect', function(event) {
+		var args = event.args;
+		var rowBoundIndex = args.rowindex;
+		var rowData = args.row;
+		selectedRows[rowBoundIndex] = rowData;
+	});
+	$('#requestGrid').on('rowunselect', function(event) {
+		var args = event.args;
+		var rowBoundIndex = args.rowindex;
+		delete selectedRows[rowBoundIndex];
+	});
 }
-
+function exportItemsConfirm(filterString) {
+	var selectedRowIndexes = $("#requestGrid").jqxGrid('selectedrowindexes');
+	$('#exportModalFormForRequests').modal('show');
+	$("#queryStringForRequests").val(filterString);
+}
+function exportFinal(e, btn) {
+	var exportOption = $('input[name=exportOptionForRequests]:checked').val()
+	var rowscount = 0;
+	var limit = <?php echo $exportLimit ?>;
+	if (exportOption == "selectedRows") {
+		var selectedRowIndexes = $("#requestGrid").jqxGrid('selectedrowindexes');
+		if (selectedRowIndexes.length > 0) {} else {
+			noRowSelectedAlert();
+			return;
+		}
+		rowscount = selectedRowIndexes.length;
+		if (rowscount > limit) {
+			bootbox.alert("Cannot export more than <?php echo $exportLimit ?> rows!", function() {});
+			return;
+		}
+		var ids = [];
+		$.each(selectedRowIndexes, function(index, value) {
+			if (value != -1) {
+				var dataRow = selectedRows[value];
+				ids.push(dataRow.seq);
+			}
+		});
+		$("#requestSeqs").val(ids);
+	} else {
+		// var datainformation = $('#reuqestGrid').jqxGrid('getdatainformation');
+		// rowscount = datainformation.rowscount;
+		$("#requestSeqs").val("");
+	}
+	e.preventDefault();
+	var l = Ladda.create(btn);
+	l.start();
+	$('#exportFormForRequests').submit();
+	l.stop();
+	$('#exportFormForRequests').modal('hide');
+	$('#requestGrid').jqxGrid('clearselection');
+}
 
 </script>

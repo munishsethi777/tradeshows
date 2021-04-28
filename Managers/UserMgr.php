@@ -281,7 +281,18 @@ where userdepartments.departmentseq = $departmentSeq and (users.usertype = 'SUPE
 	    }
 	    return $return;
 	}
-	
+	public function getAllUsersWithProjectDepartments(){
+		$sql = "SELECT users.requestdepartments,users.email,users.seq FROM `users` ";
+		$allUsers = self::$userDataStore->executeQuery($sql,false,true);
+		$users = array();
+		foreach($allUsers as $user){
+			if(isset($user['requestdepartments'])){
+				$users[$user['seq']]['requestdepartments'] = explode(",",$user['requestdepartments']);
+				$users[$user['seq']]['email'] = $user['email'];
+			}
+		}
+		return $users;
+	}
 	public function getAllUsersForGraphicLogs(){
 	    $usaTeam = Permissions::getName(Permissions::usa_team);
 	    $chinaTeam = Permissions::getName(Permissions::china_team);
@@ -442,6 +453,34 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 	public function getUsersSeqsAndFullnamesBySeqs($seqs){
 		$query = "SELECT seq,fullname FROM `users` where seq IN($seqs) ORDER BY fullname asc";
 		$users = self::$userDataStore->executeQuery($query,false,true);
+		return $users;
+	}
+	public function getUsersByPermission($permissionType){
+		$permissionName = Permissions::getName($permissionType);
+		$query = "SELECT userdepartments.departmentseq,userroles.role,users.* FROM users inner join userdepartments on userdepartments.userseq = users.seq inner join userroles on users.seq = userroles.userseq where userroles.role = '". $permissionName ."' group by users.seq ";
+		$users = self::$userDataStore->executeObjectQuery($query);
+		return $users;
+	}
+	public function getUsersByPermissionTypeAndNotificationType($permissionType = "",$notificationType = ""){
+		$sql = "SELECT users.* from users";
+		if($permissionType != ""){
+			$sql .= " LEFT JOIN userroles as permissions on permissions.userseq = users.seq";
+		}
+		if($notificationType != ""){
+			$sql .= " LEFT JOIN userroles as notifications on notifications.userseq = users.seq";
+		}
+		if($permissionType != ""){
+			$sql .= " WHERE permissions.role = '" . $permissionType . "'";
+		}
+		if($notificationType != ""){
+			if(strpos($sql, "WHERE") == false){
+		        $sql .= " WHERE";
+		    }else{
+		        $sql .= " AND";
+		    }
+			$sql .= " notifications.role = '" . $notificationType . "'";
+		}
+		$users = self::$userDataStore->executeQuery($sql,false,true);
 		return $users;
 	}
 }

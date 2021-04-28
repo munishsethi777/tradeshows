@@ -762,4 +762,75 @@ class PHPExcelUtil {
 		
 		return $objPHPExcel;
 	}
+	// Export Requests
+	public static function exportRequests($requestTypesArr,$fileName,$isEmail = false){
+		$objPHPExcel = new PHPExcel ();
+		$objPHPExcel->getProperties ()->setCreator ( "AlpineBIAdmin" )->setLastModifiedBy ( "AlpineBIAdmin" )->setTitle ( "Project" )->setSubject ( "Project" )->setDescription ( "Project" )->setKeywords ( "office 2007 openxml php" )->setCategory ( "Report" );
+		$sheetNo = 0;
+		
+		foreach($requestTypesArr as $key => $value){
+			
+			$objPHPExcel->setActiveSheetIndex($sheetNo)->setTitle($key);
+			self::cookRequestsPHPExcelHeader($value[0],$objPHPExcel,$sheetNo);
+			self::loadRequestsInExcel($value, $objPHPExcel, 2, $sheetNo);
+			if($sheetNo < count($requestTypesArr) - 1){
+				$objPHPExcel->createSheet();
+			}
+			$sheetNo++;
+		}
+		$objPHPExcel->setActiveSheetIndex ( 0 );
+		if($isEmail){
+			ob_start();
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+			$excelOutput = ob_get_contents();
+			ob_end_clean();
+			return $excelOutput;
+		}
+		// der ( 'Content-Type: application/vnd.ms-excel' );
+		header ( "Content-Disposition: attachment;filename=".$fileName.".xls" );
+		header ( 'Cache-Control: max-age=0' );
+		header ( 'Cache-Control: max-age=1' );
+		header ( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' ); // Date in the past
+		header ( 'Last-Modified: ' . gmdate ( 'D, d M Y H:i:s' ) . ' GMT' ); // always modified
+		header ( 'Cache-Control: cache, must-revalidate' ); // HTTP/1.1
+		header ( 'Pragma: public' ); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter ( $objPHPExcel, 'Excel5' );
+		ob_end_clean ();
+		$objWriter->save ( 'php://output' );
+	}
+	private static function cookRequestsPHPExcelHeader($headerStr,$objPHPExcel,$sheetNo){
+		$count = 1;
+		$i = 0;
+		$colName = self::getColName($i ++, $count);
+		$headerArr = explode(",",$headerStr);
+		foreach($headerArr as $key => $value){
+			$objPHPExcel->setActiveSheetIndex ( $sheetNo )->setCellValue ( $colName, $value );
+			$objPHPExcel->setActiveSheetIndex ( $sheetNo )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+			$colName = self::getColName($i ++, $count);
+		}
+		$i-=2;
+		$colName = self::getColName($i, $count);
+		$objPHPExcel->setActiveSheetIndex ( $sheetNo );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFont()->setSize(12);
+	}
+	private static function loadRequestsInExcel($records,$objPHPExcel,$startFromRow,$sheetNo){
+		$colName = '';
+		$count = $startFromRow;
+		foreach ( $records as $key => $recordStr ) {
+			if($key == 0){
+				continue;
+			}
+			$recordArr = explode(",",$recordStr);
+			$i = 0;
+			foreach($recordArr as $record){
+				$colName = self::getColName($i ++, $count);
+				$objPHPExcel->setActiveSheetIndex ( $sheetNo )->setCellValue ( $colName, $record );
+			}
+			$count ++;
+			$i = 0;
+		}
+	}
 }

@@ -87,14 +87,10 @@
             return $requestStatus;
         }
         public function getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($requestTypeSeq){
-            $query = "SELECT name,title,fieldtype FROM `requestspecsfields` where requesttypeseq=" . $requestTypeSeq;
+            $query = "SELECT name,seq,title,fieldtype FROM `requestspecsfields` where requesttypeseq=" . $requestTypeSeq;
             $requestSpecsFieldArray = self::$dataStore->executeQuery($query,false,true);
-            $tempArr = array();
             $specsFieldTypeArr = array();
             foreach($requestSpecsFieldArray as $arr){
-                $tempArr['name'] = $arr['fieldtype'];
-                $tempArr['title'] = $arr['fieldtype'];
-                $tempArr['fieldtype'] = $arr['fieldtype'];
                 $specsFieldTypeArr[$arr['name']] =  $arr;
             }
             return $specsFieldTypeArr;
