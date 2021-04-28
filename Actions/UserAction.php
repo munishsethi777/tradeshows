@@ -59,9 +59,13 @@ if($call == "saveUser"){
 		}
 		$classCodeMgr = ClassCodeMgr::getInstance();
 		
-		$classCodeMgr->updateQcUser($_REQUEST["classcodesforqcuser"],$seq);
+		if(isset($_REQUEST["classcodesforqcuser"])){
+			$classCodeMgr->updateQcUser($_REQUEST["classcodesforqcuser"],$seq);
+		}
 		
-		$classCodeMgr->updatePoInchargeUser($_REQUEST["classcodesforpoinchargeuser"],$seq);
+		if(isset($_REQUEST["classcodesforpoinchargeuser"])){
+			$classCodeMgr->updatePoInchargeUser($_REQUEST["classcodesforpoinchargeuser"],$seq);
+		}
 		
 		//if($user->getUserType() != UserType::QC){
 			//$user->setQCCode(null);
