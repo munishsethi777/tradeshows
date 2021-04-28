@@ -40,7 +40,7 @@ $sessionUtil = SessionUtil::getInstance();
                             <div class="ibox-title">
                                 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                                    <h4 class="p-h-sm font-normal">Manage Requests</h4>
+                                    <h4 class="p-h-sm font-normal">Manage Project Types</h4>
                                 </nav>
                             </div>
                             <div class="ibox-content">

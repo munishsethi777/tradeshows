@@ -1,6 +1,6 @@
 <?php 
     class RequestType{
-        private $seq, $departmentseq, $title, $requesttypecode, $createdby, $createdon, $lastmodifiedon;
+        private $seq, $department, $title, $requesttypecode, $createdby, $createdon, $lastmodifiedon;
 
         public static $className = "RequestType";
         public static $tableName = "requesttypes";
@@ -11,11 +11,11 @@
         public function getSeq(){
             return $this->seq;
         } 
-        public function setDepartmentSeq($departmentseq ){
-            $this->departmentseq  = $departmentseq ;
+        public function setDepartment($department){
+            $this->department = $department;
         } 
-        public function getDepartmentSeq(){
-            return $this->departmentseq;
+        public function getDepartment(){
+            return $this->department;
         } 
         public function setTitle($title){
             $this->title = $title;

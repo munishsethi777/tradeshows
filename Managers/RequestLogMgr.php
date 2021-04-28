@@ -4,6 +4,7 @@
     require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestAttributeNameTypes.php");
     require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestMgr.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestPriorityTypes.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/RequestReportUtil.php");
 
     class RequestLogMgr{
         private static $requestLogMgr;
@@ -28,7 +29,9 @@
             $requestLog->setAttributeName("comment");
             $requestLog->setCreatedBy($loggedInUserSeq);
             $requestLog->setCreatedOn($currentDate);
-            return self::$dataStore->save($requestLog);
+            $id =  self::$dataStore->save($requestLog);
+            RequestReportUtil::sendCommentAddedOnRequestNotification($requestSeq,$comment);
+            return $id;
         }
         public function findByRequestSeq($seq){
             $query = self::$selectSql . " WHERE requestseq = " . $seq;
@@ -76,24 +79,29 @@
                     $currentDate = new DateTime();
                     $requestLog = new RequestLog();
                     $requestLog->setRequestSeq($requestSeq);
-                    $requestLog->setAttributeName($key);
+                    // $requestLog->setAttributeName($key);
                     $requestLog->setCreatedBy($userSeq);
                     $requestLog->setOldValue($oldValue);    
                     $requestLog->setNewValue($currentSpecsArr[$key]);
                     $requestLog->setCreatedOn($currentDate);
                     $requestLog->setIsSpecFieldChange(true);
+                    $requestLog->setAttributeName("");
+                    $requestLog->setRequestSpecFieldSeq($key);
                     self::$dataStore->save($requestLog);
                 }
             }
         }
         public function getRequestLogs($requestLogSeq,$requestSeq,$attributeName,$excludeComments=false,$requestLogSeqGreaterThan=""){
-            $query = "SELECT requestlogs.*,createdby.fullname as createdbyfullname,oldvalue.fullname as oldvaluefullname,newvalue.fullname as newvaluefullname,requeststatusold.title as requeststatusold, requeststatusnew.title as requeststatusnew, requestattachments.attachmentfilename FROM `requestlogs`
+            $query = "SELECT requestlogs.*,createdby.fullname as createdbyfullname,oldvalue.fullname as oldvaluefullname,
+                    newvalue.fullname as newvaluefullname,requeststatusold.title as requeststatusold, requeststatusnew.title as requeststatusnew, 
+                    requestattachments.attachmentfilename, requestspecsfields.name as requestspecfieldname FROM `requestlogs`
                     LEFT JOIN users as createdby on createdby.seq = requestlogs.createdby 
                     LEFT JOIN users as oldvalue on oldvalue.seq = requestlogs.oldvalue
                     LEFT JOIN users as newvalue on newvalue.seq = requestlogs.newvalue
                     LEFT JOIN requeststatuses as requeststatusold on requeststatusold.seq = requestlogs.oldvalue
                     LEFT JOIN requeststatuses as requeststatusnew on requeststatusnew.seq = requestlogs.newvalue 
-                    LEFT JOIN requestattachments on requestattachments.seq = requestlogs.newvalue";
+                    LEFT JOIN requestattachments on requestattachments.seq = requestlogs.newvalue
+                    LEFT JOIN requestspecsfields on requestspecsfields.seq = requestlogs.requestspecfieldseq";
             if($requestLogSeq != ""){
                 if(strpos($query,"WHERE") == false){
                     $query .= " WHERE";
@@ -158,7 +166,7 @@
 					$commentHtml .= "</div>";
 					$commentHtml .=	"<div class='media-body'>";
                     // $commentHtml .= "<small class='float-right'>5m ago</small>";
-                    $commentHtml .= "<strong id='userName" . $requestLogCommentsRow['createdBy'] . "'>" . $requestLogCommentsRow['createdbyfullname'] . "</strong> posted a comment. <br>";
+                    $commentHtml .= "<strong id='userName" . $requestLogCommentsRow['createdby'] . "'>" . $requestLogCommentsRow['createdbyfullname'] . "</strong> posted a comment. <br>";
                     $commentHtml .= "<small class='text-muted'>" . $requestLogCommentsRow['createdon'] . "</small>";
 					$commentHtml .= "<p class='m-t-xs'>" . $requestLogCommentsRow['newvalue'] . ".</p>";
                     $commentHtml .= "</div>";
@@ -171,6 +179,7 @@
         public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory = false){
             $historyLogHtml = "";
             $historyLog = array();
+            $lastUpdatedHistorySeq = null;
             if(!empty($requestLogHistory)){
                 $query = "SELECT requests.*,users.fullname FROM requests
                         LEFT JOIN users on users.seq = requests.createdby
@@ -193,41 +202,46 @@
                 foreach($requestLogHistory as $requestLogHistoryRow){
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
-                    $historyLogHtml .= "<div class='feed-element'>";
-                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . ")'>";
-                    $historyLogHtml .= "<p>" . self::getUserNameInitials($requestLogHistoryRow['createdbyfullname']) . "</p>";
-                    $historyLogHtml .= "</div>";
-                    $historyLogHtml .= "<div class='media-body'>";
                     // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
                     if($requestLogHistoryRow['isspecfieldchange'] == true){// when specs fields are changed
-                        $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> changed the <b>" . $specsFieldTypeArr[$requestLogHistoryRow['attributename']]['title'] . "</b> <br>";
-                        $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
-                        
-                        $oldValue = $requestLogHistoryRow['oldvalue'] != null && $requestLogHistoryRow['oldvalue'] != '' ? $requestLogHistoryRow['oldvalue'] : "NA";
-                        $newValue = $requestLogHistoryRow['newvalue'] != null && $requestLogHistoryRow['newvalue'] != '' ? $requestLogHistoryRow['newvalue'] : "NA";
-                        
-                        if($specsFieldTypeArr[$requestLogHistoryRow['attributename']]['fieldtype'] == 'textarea' ){
-                            $historyLogHtml .= "<div class='row'>";
-                            $historyLogHtml .= "<p class='m-t-sm col-lg-11'>";
-                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell' >" . $oldValue . "</span>";
-                            $historyLogHtml .= "<i class='fa fa-arrow-right text-default' style='width:5%;display:table-cell;text-align:center;vertical-align:middle'></i>";
-                            $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell'>" . $newValue . "</span>";
-                            $historyLogHtml .= "</p>";
+                        if($requestLogHistoryRow['requestspecfieldname'] != null){
+                            $historyLogHtml .= "<div class='feed-element'>";
+                            $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . ")'>";
+                            $historyLogHtml .= "<p>" . self::getUserNameInitials($requestLogHistoryRow['createdbyfullname']) . "</p>";
                             $historyLogHtml .= "</div>";
-                        }elseif($specsFieldTypeArr[$requestLogHistoryRow['attributename']]['fieldtype'] == 'yes_no' ){
-                            $oldValue = $requestLogHistoryRow['oldvalue'] == '1' ? 'Yes' : 'No';
-                            $newValue = $requestLogHistoryRow['newvalue'] == '1' ? 'Yes' : 'No';
-                            $historyLogHtml .= "<p class='m-t-sm'>";
-                            $historyLogHtml .= "<span class='label label-default'>" . $oldValue . "</span>";
-                            $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
-                            $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
-                        }else{
-                            $historyLogHtml .= "<p class='m-t-sm'>";
-                            $historyLogHtml .= "<span class='label label-default'>" . $oldValue . "</span>";
-                            $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
-                            $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
+                            $historyLogHtml .= "<div class='media-body'>";
+                            $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> changed the <b>" . $specsFieldTypeArr[$requestLogHistoryRow['requestspecfieldname']]['title'] . "</b> <br>";
+                            $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
+                            $oldValue = $requestLogHistoryRow['oldvalue'] != null && $requestLogHistoryRow['oldvalue'] != '' ? $requestLogHistoryRow['oldvalue'] : "NA";
+                            $newValue = $requestLogHistoryRow['newvalue'] != null && $requestLogHistoryRow['newvalue'] != '' ? $requestLogHistoryRow['newvalue'] : "NA";
+                            if($specsFieldTypeArr[$requestLogHistoryRow['requestspecfieldname']]['fieldtype'] == 'textarea' ){
+                                $historyLogHtml .= "<div class='row'>";
+                                $historyLogHtml .= "<p class='m-t-sm col-lg-11'>";
+                                $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell' >" . $oldValue . "</span>";
+                                $historyLogHtml .= "<i class='fa fa-arrow-right text-default' style='width:5%;display:table-cell;text-align:center;vertical-align:middle'></i>";
+                                $historyLogHtml .= "<span class='label1' style='width:45%;display:table-cell'>" . $newValue . "</span>";
+                                $historyLogHtml .= "</p>";
+                                $historyLogHtml .= "</div>";
+                            }elseif($specsFieldTypeArr[$requestLogHistoryRow['requestspecfieldname']]['fieldtype'] == 'yes_no' ){
+                                $oldValue = $requestLogHistoryRow['oldvalue'] == '1' ? 'Yes' : 'No';
+                                $newValue = $requestLogHistoryRow['newvalue'] == '1' ? 'Yes' : 'No';
+                                $historyLogHtml .= "<p class='m-t-sm'>";
+                                $historyLogHtml .= "<span class='label label-default'>" . $oldValue . "</span>";
+                                $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
+                                $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
+                            }else{
+                                $historyLogHtml .= "<p class='m-t-sm'>";
+                                $historyLogHtml .= "<span class='label label-default'>" . $oldValue . "</span>";
+                                $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
+                                $historyLogHtml .= "<span class='label label-primary'>" . $newValue . "</span>";
+                            }
                         }
                     }else{
+                        $historyLogHtml .= "<div class='feed-element'>";
+                        $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . ")'>";
+                        $historyLogHtml .= "<p>" . self::getUserNameInitials($requestLogHistoryRow['createdbyfullname']) . "</p>";
+                        $historyLogHtml .= "</div>";
+                        $historyLogHtml .= "<div class='media-body'>";
                         $action = " changed";
                         if($requestLogHistoryRow['attributename'] == 'attachment'){
                             $action = " added";
@@ -262,6 +276,9 @@
                         }elseif($requestLogHistoryRow['attributename'] == 'attachment'){
                             $oldValueName = "NA";
                             $newValueName = $requestLogHistoryRow['attachmentfilename'];
+                        }elseif($requestLogHistoryRow['attributename'] == 'iscompleted'){
+                            $oldValueName = $requestLogHistoryRow['oldvalue'] == 1 ? 'On' : 'Off';
+                            $newValueName = $requestLogHistoryRow['newvalue'] == 1 ? 'On' : 'Off';
                         }
                         $historyLogHtml .= "<span class='label label-default'>" . $oldValueName . "</span>";
                         $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
@@ -270,10 +287,11 @@
                     $historyLogHtml .= "</p>";
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "</div>";
+                    $lastUpdatedHistorySeq = $requestLogHistoryRow['seq'];
                 }
             }
             $historyLog['historyLogHtml'] = $historyLogHtml;
-            $historyLog['lastUpdatedHistorySeq'] = $requestLogHistoryRow['seq'];
+            $historyLog['lastUpdatedHistorySeq'] = $lastUpdatedHistorySeq;
             return $historyLog;
         }
         public static function getUserNameInitials($userName){

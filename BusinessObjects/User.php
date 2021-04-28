@@ -4,7 +4,7 @@ class User{
 	public static $className = "user";
 	
 	private $seq,$email,$password,$fullname,$mobile,$isenabled,$qccode,$usertype,$issendnotifications,$createdon,$lastmodifiedon,$usertimezone;
-	private $lastloggedindate,$isenabledmobile,$deviceid,$gcmid,$freightforwarder,$warehouse;
+	private $lastloggedindate,$isenabledmobile,$deviceid,$gcmid,$freightforwarder,$warehouse,$requestdepartments;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -123,6 +123,12 @@ class User{
 	public function getWareHouse(){
 		return $this->warehouse;
 	}
+	public function setRequestDepartments($requestDepartments){
+		$this->requestdepartments = $requestDepartments;
+	}
+	public function getRequestDepartments(){
+		return $this->requestdepartments;
+	}
 	function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);
@@ -148,5 +154,4 @@ class User{
 	        }
 	    }
 	}
-	
 }

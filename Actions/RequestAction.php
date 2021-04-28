@@ -12,6 +12,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php"); 
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestAttachmentMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
 
 $success = 1;
 $message = '';
@@ -33,8 +34,8 @@ if(isset($_GET["call"])){
 }
 if($call == "getRequestTypesByDepartmentSeq"){
 	try{
-		$departmentSeq = $_REQUEST['departmentSeq'];
-		$requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($departmentSeq);
+		$department = $_REQUEST['department'];
+		$requestTypes = $requestTypeMgr->findByDepartmentForDropDown($department);
 		$response['data'] = $requestTypes;
 	}catch(Exception $e){
 		$message = $e->getMessage();
@@ -65,7 +66,7 @@ if($call == "saveRequest"){
 }
 if($call == "getAllRequestsForGrid"){
 	try{
-		$requests = $requestMgr->getAllRequests();
+		$requests = $requestMgr->getAllRequests(BeanReturnDataType::grid);
 		echo json_encode($requests);
 		return;
 	}catch(Exception $e){
@@ -77,9 +78,9 @@ if($call == "getRequestDataBySeqForEdit"){
 	try{
 		$seq = $_REQUEST['requestSeq'];
 		$request = $requestMgr->findBySeq($seq);
-		$requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($request->getDepartmentSeq());
+		$requestTypes = $requestTypeMgr->findByDepartmentForDropDown($request->getDepartment());
 		$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
-		$requestFormHtml = $requestMgr->createRequestFormHtml($request->getRequestTypeSeq(),$request);
+		$requestFormHtml = $requestMgr->createRequestFormHtml($request->getRequestTypeSeq(),$request,true,$request->getRequestSpecifications());
 		$requestLogComments = $requestLogMgr->getRequestLogs(null,$seq,"comment");
 		$requestLogCommentsHtml = $requestLogMgr->commentsHtml($requestLogComments);
 		$requestLogHistory = $requestLogMgr->getRequestLogs(null,$seq,null,true);
@@ -92,7 +93,8 @@ if($call == "getRequestDataBySeqForEdit"){
 		$response['data']['requestspecificationjson'] = $request->getRequestSpecifications();
 		$response['data']['requestLogCommentsHtml'] = $requestLogCommentsHtml;
 		$response['data']['historyLog'] = $historyLog;
-		$requestFormOtherFields['departmentseq'] = $request->getDepartmentSeq();
+		$requestFormOtherFields['code'] = $request->getCode();
+		$requestFormOtherFields['department'] = $request->getDepartment();
 		$requestFormOtherFields['requesttypeseq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields['priority'] = $request->getPriority();
 		$requestFormOtherFields['requeststatusseq'] = $request->getRequestStatusSeq();
@@ -177,24 +179,109 @@ if($call == "loadHistory"){
 	try{
 		$isAppendingHistory = $_REQUEST['lastUpdatedHistorySeq'] == '' ? false : true;// will tell if we are appending logs history on UI or this is a new thread
 
-		if($_REQUEST['requestSeq'] !='' && $_REQUEST['lastUpdatedHistorySeq'] != ''){
+		// if($_REQUEST['requestSeq'] !='' && $_REQUEST['lastUpdatedHistorySeq'] != ''){
 			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true,$_REQUEST['lastUpdatedHistorySeq']);
 			// $requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($request->getDepartmentSeq());
 			$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
 			$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
 			$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory);
-		}else{
-			$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true);
-			$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
-			$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
-			$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory);
-		}
+		// }else{
+		// 	$requestLogHistory = $requestLogMgr->getRequestLogs(null,$_REQUEST['requestSeq'],null,true);
+		// 	$request = $requestMgr->findBySeq($_REQUEST['requestSeq']);
+		// 	$specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($request->getRequestTypeSeq());
+		// 	$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory);
+		// }
 		$response['data'] = $historyLog;
 	}catch(Exception $e){
 		$message = $e->getMessage();
 		$success = 0;
 	}
 }
+if($call == "exportFilterData"){
+	try{
+		$filterId = $_POST['filterId'];
+		// $requetExportAndFileName = $requestMgr->exportFilterData($filterId);
+		$requestMgr->exportRequests("",$filterId);
+		PHPExcelUtil::exportRequests($requetExportAndFileName['requests'],$requetExportAndFileName['fileName']);
+		return;
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
+if($call == "export"){
+	try{
+		$queryString = $_GET["queryStringForRequests"];
+		$requestSeqs = $_GET["requestSeqs"];
+		$filterId = $_GET["filterId"];
+		$requestMgr->exportRequests($queryString,$filterId,$requestSeqs);
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
+if($call == "getRequestsDueToday"){
+	try{
+		$requests = $requestMgr->getAllRequestsDueToday(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+if($call == "getRequestsDueInNextWeek"){
+	try{
+		$requests = $requestMgr->getRequestsDueInNextWeek(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+if($call == "getRequestsDuePassed"){
+	try{
+		$requests = $requestMgr->getRequestDuePassed(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+if($call == "getAssigneeRequestsDueToday"){
+	try{
+		$requests = $requestMgr->getAssigneeRequestsDueToday(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+if($call == "getAssigneeRequestsDueInNextWeek"){
+	try{
+		$requests = $requestMgr->getAssigneeRequestsDueInNextWeek(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+if($call == "getAssigneeRequestsDuePassed"){
+	try{
+		$requests = $requestMgr->getAssigneeRequestsDuePassed(BeanReturnDataType::grid);
+		echo json_encode($requests);
+		return;
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
+	}
+}
+
+
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
