@@ -243,7 +243,7 @@
             }elseif($beanReturnDataType == BeanReturnDataType::grid){
                 $count = $this->getAllLogs(BeanReturnDataType::count);
                 $query = self::$gridSelectSql;
-                $rows = self::$dataStore->executeQuery($query,true);
+                $rows = self::$dataStore->executeQuery($query,true,true);
                 $mainArr["Rows"] = $this->processRowsForGrid($rows);
                 $mainArr["TotalRows"] = $count;
                 return $mainArr;
