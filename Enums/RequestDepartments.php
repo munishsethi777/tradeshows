@@ -8,5 +8,10 @@
         const users= "Users";
         const teams= "Teams";
         const manage_customers= "Manage Customers";
+        // const department1 = "Department 1";
+        // const department2 = "Department 2";
+        // const department3 = "Department 3";
+        const marketing = "Marketing";
+        const product_development = "Product Development";
     }
 ?>

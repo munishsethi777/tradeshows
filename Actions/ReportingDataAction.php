@@ -8,6 +8,7 @@
     require_once($ConstantsArray['dbServerUrl']. "Managers/GraphicLogMgr.php");
     require_once($ConstantsArray['dbServerUrl']. "Managers/QCScheduleMgr.php");
     require_once($ConstantsArray['dbServerUrl']. "Managers/ContainerScheduleMgr.php");
+    require_once($ConstantsArray['dbServerUrl']. "Managers/RequestMgr.php");
     
     
     $success=1;
@@ -23,7 +24,7 @@
     }else{
         $call = $_POST['call'];
     }
-    if($call == "getReportingData"){
+    if($call == "getReportingData"){// Action works to get dashboard counts only
         try{
             foreach ($reportingDataParameterTypeConstants as $key => $value ){
                 if(isset($_REQUEST['for'])){
@@ -46,6 +47,9 @@
                             $current = call_user_func(array($object,ReportingDataMethodNames::getValue($key)),BeanReturnDataType::count);
                         }elseif(strpos($key,'instruction_manual_') !== false){
                             $object = InstructionManualLogsMgr::getInstance();
+                            $current = call_user_func(array($object,ReportingDataMethodNames::getValue($key)),BeanReturnDataType::count);
+                        }elseif(strpos($key,'request_management_') !== false){
+                            $object = RequestMgr::getInstance();
                             $current = call_user_func(array($object,ReportingDataMethodNames::getValue($key)),BeanReturnDataType::count);
                         }
                         $arr[$key.'_current'] = $current;
@@ -82,7 +86,6 @@
                             $arr[$key.'_change_arrow'] = "fa-arrows-h";
                                 $arr[$key.'_change_color'] = "grey";
                         }
-                        
                     }
                 }
             }

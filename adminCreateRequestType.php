@@ -194,7 +194,7 @@
         var details = "";
        	var html ="";
         
-        if(requestSpecsFields != ""){
+        if(requestSpecsFields != "" && requestSpecsFields != undefined){
             seq = requestSpecsFields.seq;
             if(requestSpecsFields.name != ""){
                 name = requestSpecsFields.name;

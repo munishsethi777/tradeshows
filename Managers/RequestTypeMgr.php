@@ -1,13 +1,13 @@
 <?php
     require_once($ConstantsArray['dbServerUrl']. "BusinessObjects/RequestType.php");
     require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestDepartments.php");
 
     class RequestTypeMgr{
         private static $requestTypeMgr;
         private static $dataStore;
-        private static $selectSqlForGrid = "SELECT requesttypes.*, departments.title as departmenttitle, users.fullname as createdbyfullname FROM requesttypes 
-                                LEFT JOIN departments on departments.seq = requesttypes.departmentseq
-                                LEFT JOIN users on users.seq = requesttypes.createdby";
+        private static $selectSqlForGrid = "SELECT requesttypes.*, users.fullname as createdbyfullname FROM requesttypes
+                                            LEFT JOIN users on users.seq = requesttypes.createdby";
         private static $selectCountSql = "SELECT COUNT(seq) from requesttypes";
         private static $selectSql = "SELECT * FROM requesttypes";
         public static function getInstance(){
@@ -27,6 +27,7 @@
             $arr = array();
             foreach($rows as $row){
                 $row["createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","Y-m-d H:i:s");
+                $row["departmenttitle"] = RequestDepartments::getValue($row['department']);
                 // $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 // $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
                 $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
@@ -44,9 +45,17 @@
            return self::$dataStore->save($requestType);
         }
         public function getAllRequestTypes(){
-            $rows = self::$dataStore->executeQuery(self::$selectSqlForGrid,true);
+            $userMgr = UserMgr::getInstance();
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+            $user = $userMgr->findBySeq($loggedInUserSeq);
+            $requestDepartments = $user->getRequestDepartments();
+            $requestDepartments = implode("','",explode(',',$requestDepartments));
+            $sql = self::$selectSqlForGrid . " WHERE requesttypes.createdby = " . $loggedInUserSeq . " OR requesttypes.department IN ('" . $requestDepartments . "')"; 
+            $rows = self::$dataStore->executeQuery($sql,true,true);
             $mainArr["Rows"] = $this->processRowsForGrid($rows);
-            $count = self::$dataStore->executeCountQueryWithSql(self::$selectCountSql,true);
+            $countSql = self::$selectCountSql . " WHERE requesttypes.createdby = " . $loggedInUserSeq . " OR requesttypes.department IN ('" . $requestDepartments . "')";
+            $count = self::$dataStore->executeCountQueryWithSql($countSql,true);
             $mainArr["TotalRows"] = $count;
             return $mainArr;
         }
@@ -61,8 +70,8 @@
             }
             return $arr;
         }
-        public function findByDepartmentSeqForDropDown($seq){
-            $sql = self::$selectSql . " WHERE departmentseq = " . $seq;
+        public function findByDepartmentForDropDown($department){
+            $sql = self::$selectSql . " WHERE department = '" . $department . "'";
             $requestTypes = self::$dataStore->executeObjectQuery($sql);
             $arr = array();
             foreach ($requestTypes as $requestType){

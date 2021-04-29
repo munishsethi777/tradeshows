@@ -1,0 +1,1 @@
+ALTER TABLE `requests` CHANGE `departmentseq` `department` VARCHAR(100) NOT NULL;  

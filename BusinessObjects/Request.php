@@ -1,6 +1,6 @@
 <?php
 class Request{
-    private $seq, $code, $priority, $title, $descriptiontext, $departmentseq, $requesttypeseq, $requestspecifications, $createdby, $assignedby, $assignedto, $duedate,
+    private $seq, $code, $priority, $title, $descriptiontext, $department, $requesttypeseq, $requestspecifications, $createdby, $assignedby, $assignedto, $duedate,
         $assigneeduedate,$startdate, $estimatedhours, $requeststatusseq, $isrequiredapprovalfrommanager, $isrequiredapprovalfromrequester, $isrequiredapprovalfromrobby, $approvedbymanagerdate,
         $approvedbyrequesterdate, $approvedbyrobbydate, $completeddate, $actualhours, $iscompleted, $createdon, $lastmodifiedon;
 
@@ -37,11 +37,11 @@ class Request{
     public function getDescriptionText(){
         return $this->descriptiontext;
     }
-    public function setDepartmentSeq($departmentseq){
-        $this->departmentseq = $departmentseq;
+    public function setDepartment($department){
+        $this->department = $department;
     }
-    public function getDepartmentSeq(){
-        return $this->departmentseq;
+    public function getDepartment(){
+        return $this->department;
     }
     public function setRequestTypeSeq($requesttypeseq){
         $this->requesttypeseq = $requesttypeseq;

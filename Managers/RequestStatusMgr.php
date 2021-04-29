@@ -73,5 +73,8 @@
             $requestStatus = self::$dataStore->executeConditionQuery($colValuePair);
             return $requestStatus;
         }
+        public function findBySeq($seq){
+            return self::$dataStore->findBySeq($seq);
+        }
     }
 ?>

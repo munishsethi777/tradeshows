@@ -7,4 +7,6 @@ class UserConfigurationType extends BasicEnum{
     const QCDefaultFilterSelection = "QCDefaultFilterSelection";
     const AnalyticsGraphicsDivExpanded = "AnalyticsGraphicsDivExpanded";
     const AnalyticsContainersDivExpanded = "AnalyticsContainersDivExpanded";
+    const AnalyticsRequestDivExpanded = "AnalyticsRequestDivExpanded";
+    const RequestManagementDefaultFilterSelection = "RequestManagementDefaultFilterSelection";
 }

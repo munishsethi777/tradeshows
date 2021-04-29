@@ -55,5 +55,14 @@ class EmailLogType extends BasicEnum{
     const INSTRUCTION_MANUAL_DIAGRAM_SAVED_DATE_CHANGED = "InstructionManualDiagramSavedDateChanged";
     const INSTRUCTION_MANUAL_NOTES_TO_USA_CHANGED = "InstructionManualNotesToUsaChanged";
     const INSTRUCTION_MANUAL_STATUS_CHANGED = "InstructionManualStatusChanged";
-    
+    const NEW_REQUEST_CREATED = "New Project Created";
+    const COMMENT_ADDED_ON_REQUEST = "Comment Added On Project";
+    const REQUEST_STATUS_CHANGED = "Project Status Changed";
+    const REQUEST_ASSIGNED_TO_EMPLOYEE = "Project Assigned To Employee";
+    const FILE_ADDED_ON_REQUEST = "File Added On Project";
+    const REQUEST_MARKED_AS_COMPLETED = "Project Marked As Completed";
+    const REQUESTS_DUE_IN_NEXT_WEEK = "Projects Due In Next Week";
+    const REQUESTS_PASSED_DUE_IN_LAST_WEEK = "Projects Passed Due In Last Week";
+    const REQUESTS_ASSIGNEE_DUE_DATE_IN_NEXT_WEEK = "Projects Assignee Due Date In Next Week";
+    const REQUESTS_ASSIGNEE_DUE_DATE_PASSED_IN_LAST_WEEK = "Projects Assignee Due Date Passed In Last Week";
 }

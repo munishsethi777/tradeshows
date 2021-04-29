@@ -49,6 +49,19 @@ class ReportingDataMethodNames extends BasicEnum{
     const instruction_manual_total_projects_due_in_next_14_days = "getAllDueInNext14DaysLogs";
     const instruction_manual_total_projects_due_less_than_14_days_from_entry = "getAllDueLessThan14DaysFromEntryLogs";
     const instruction_manual_total_projects_not_started = "getAllNotStartedLogs";
-    // Instruction Manual Cron Methods ends here--------------------
+    // Instruction Manual Cron Methods Enums ends here--------------------
+    // Request Management Cron Methods Enums -------------------------
+    const request_management_all_request = "getAllRequests";
+    const request_management_completed_request = "getAllCompletedRequests";
+    const request_management_incompleted_request = "getAllIncompletedRequests";
+    const request_management_requests_due_today = "getAllRequestsDueToday";
+    const request_management_requests_due_in_next_week = "getRequestsDueInNextWeek";
+    const request_management_requests_due_passed = "getRequestDuePassed";
+    const request_management_assignee_requests_due_today = "getAssigneeRequestsDueToday";
+    const request_management_assignee_requests_due_in_next_week = "getAssigneeRequestsDueInNextWeek";
+    const request_management_assignee_requests_due_passed = "getAssigneeRequestsDuePassed";
+    const request_management_unassigned = "getAllUnassignedRequests";
+    // Request Management Cron Methods Enums ends here-------------------------
+
 }
 ?>

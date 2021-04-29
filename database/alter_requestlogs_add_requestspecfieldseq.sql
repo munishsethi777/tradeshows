@@ -1,0 +1,1 @@
+ALTER TABLE `requestlogs` ADD `requestspecfieldseq` BIGINT NULL DEFAULT NULL AFTER `requestattachmentseq`; 
