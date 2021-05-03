@@ -11,6 +11,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestDepartments.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/RequestReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");	
+require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestNotificationType.php");
 
 class RequestMgr{
 	private static $requestMgr;
@@ -135,6 +136,7 @@ class RequestMgr{
 	}
 	public function save($globalRequestVariable,$loggedInUserSeq){
 		// $newRequest = false;
+		$userMgr = UserMgr::getInstance();
 		$currentDateTime = new DateTime();
 		$requestSpecsFieldsFormJson = $globalRequestVariable['requestSpecsFieldsFormJson'];
 		$department = $globalRequestVariable['department'] == '' ? null : $globalRequestVariable['department'];
@@ -207,15 +209,25 @@ class RequestMgr{
 			$request->setCreatedBy($existingRequest->getCreatedBy());
 			$requestLogMgr->saveUpdatedAttributes($existingRequest,$request,$loggedInUserSeq);
 			if($existingRequest->getAssignedTo() != $request->getAssignedTo()){
-				$assignedToNotification = true;
+				$notificationType = RequestNotificationType::getName(RequestNotificationType::request_assignee_assignment);
+				$userRoles = $userMgr->getUserRolesArr($request->getAssignedTo());
+				if(in_array($notificationType, $userRoles)){
+					RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+				}
 			}
 			if($existingRequest->getRequestStatusSeq() != $request->getRequestStatusSeq()){
-				$statusChangedNotification = true;
+				$notificationType = RequestNotificationType::getName(RequestNotificationType::status_change);
+				$users = $userMgr->getUsersByPermissionTypeAndNotificationType("", $notificationType);
+				foreach ($users as $user){
+					$userDeptsArray = explode(",",$user['requestdepartments']);
+					if(in_array($request->getDepartment(), $userDeptsArray)){
+						RequestReportUtil::sendRequestStatusChangeNotificationToRequester($request,$existingRequest);
+					}
+				}
 			}
 			if($existingRequest->getIsCompleted()){
 				$markedCompletedNotification = false;
 			}
-			// $newRequest = true;
 		}else{
 			$request->setCreatedOn($currentDateTime);
 			$request->setCreatedBy($loggedInUserSeq);
@@ -239,17 +251,25 @@ class RequestMgr{
 			$condition = array("seq" => $seq);
 			self::$dataStore->updateByAttributes($attr,$condition);
 			$request->setCode($requestCode);
-			$newRequestNotification = true;
+			$notificationType = RequestNotificationType::getName(RequestNotificationType::new_request_creation);
+			$users = $userMgr->getUsersByPermissionTypeAndNotificationType("", $notificationType);
+			foreach ($users as $user){
+				$userDeptsArray = explode(",",$user['requestdepartments']);
+				if(in_array($request->getDepartment(), $userDeptsArray)){
+					RequestReportUtil::sendNewRequestNotificationToManagerOfDepartment($request);
+				}
+			}
 		}
-		if($assignedToNotification){
-			RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
-		}
-		if($statusChangedNotification){
-			RequestReportUtil::sendRequestStatusChangeNotificationToRequester($request,$existingRequest);
-		}
-		if($newRequestNotification){
-			RequestReportUtil::sendNewRequestNotificationToManagerOfDepartment($request);
-		}
+
+		// if($assignedToNotification){
+		// 	RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+		// }
+		// if($statusChangedNotification){
+			// RequestReportUtil::sendRequestStatusChangeNotificationToRequester($request,$existingRequest);
+		// }
+		// if($newRequestNotification){
+		// 	RequestReportUtil::sendNewRequestNotificationToManagerOfDepartment($request);
+		// }
 		if($markedCompletedNotification){
 			RequestReportUtil::sendRequestMarkedAsCompletedNotification($request);
 		}
