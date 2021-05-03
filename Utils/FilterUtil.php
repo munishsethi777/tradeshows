@@ -159,7 +159,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                 if($filterdatafield == "graphicstatus"){
                 	$filtervalue = GraphicStatusType::getName($filtervalue);
                 }
-                
+                //instruction manual type
+                if($filterdatafield == "instructionmanuallogstatus"){
+                    $filtervalue = InstructionManualLogStatus::getName($filtervalue);
+                }
                 // build the "WHERE" clause depending on the filter's condition, value and datafield.
                 switch($filtercondition)
                 {
@@ -203,10 +206,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     			}
                     			
                     		}
-                    	}elseif($filterdatafield == "instructionmanuallogstatus"){
-                            $filtervalue = InstructionManualLogStatus::getName($filtervalue);
-                            $where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
-                            break;
+//                     	}elseif($filterdatafield == "instructionmanuallogstatus"){
+//                             $filtervalue = InstructionManualLogStatus::getName($filtervalue);
+//                             $where .= " " . $filterdatafield . " = '" . $filtervalue ."'";
+//                             break;
                         }else{
                     		if($filterdatafield == "fullname"){
                     			if($filtervalue == "Admin"){

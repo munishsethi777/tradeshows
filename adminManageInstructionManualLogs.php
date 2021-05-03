@@ -280,20 +280,38 @@ $exportLimit =5000;
            html += "</div>";
            return html;
         }
-        var statusTypes = ["", "Not Started", "In Progress", "Awaiting Information From China", "Awaiting Information From Buyers", "In Review - Supervisor", "In Review - Manager", "In Review - Buyer", "Sent To China", "Cancelled", "Duplicate"];
+        var imTypeCellRenderer = function(row, columnfield, value, defaulthtml, columnproperties) {
+            data = $('#instructionManualLogGrid').jqxGrid('getrowdata', row);
+            var html = "<div style='text-align: left; margin-top:4px;padding-left:4px'>"
+			if(data['instructionmanualtype'] == "booklet"){
+				html += "Booklet"; 
+			}else if(data['instructionmanualtype'] == "international"){
+				html += "International"; 
+			}else if(data['instructionmanualtype'] == "fold"){
+				html += "Fold"; 
+			}else if(data['instructionmanualtype'] == null){
+				html += ""; 
+			}else{
+				html += data['instructionmanualtype'];
+			}
+           html += "</div>";
+           return html;
+        }
+        var statusTypes = ["", "Not Started", "In Progress", "Awaiting Information From China", "Awaiting Information From Buyers", "In Review - Supervisor", "In Review - Manager", "In Review - Buyer", "Sent to China", "Cancelled", "Duplicate"];
         var columns = [
 			{text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
             {text: 'id',datafield: 'seq',hidden: true},
             {text: 'Completed',datafield: 'iscompleted',columntype: 'checkbox',width: "5%"},
             {text: 'New/Revised',datafield: 'neworrevised',cellsrenderer: newRevisedCellRenderer,width: "6%"},
-            {text: 'Entered By', datafield: 'fullname',width:"10%"},
+            {text: 'Entered By', datafield: 'fullname',width:"8%"},
             {text: 'Item datafield',datafield: 'itemnumber',width: "10%"},
-            {text: 'Class',datafield: 'classcode',width: "5%",filtercondition: 'STARTS_WITH'},
+            {text: 'Type',datafield: 'instructionmanualtype',cellsrenderer: imTypeCellRenderer,width: "10%"},
+            {text: 'Class',datafield: 'classcode',width: "4%",filtercondition: 'STARTS_WITH'},
             {text: 'Entry Date',datafield: 'entrydate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
             {text: 'PO Ship Date',datafield: 'poshipdate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
-            {text: 'IM Due Date',datafield: 'finalduedate',filtertype: 'date',width: "10%",cellsformat: 'M-dd-yyyy'},
-            {text: 'Status',datafield: 'instructionmanuallogstatus',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: statusTypes,filtercondition: 'equal'},
-            {text: 'Modified On',datafield: 'instructionmanuallogs.lastmodifiedon',filtertype: 'date',width: "12%",cellsformat: 'M-dd-yyyy hh:mm tt'}
+            {text: 'IM Due Date',datafield: 'finalduedate',filtertype: 'date',width: "8%",cellsformat: 'M-dd-yyyy'},
+            {text: 'Status',datafield: 'instructionmanuallogstatus',width: "18%",hidden: false,filtertype: 'checkedlist',filteritems: statusTypes,filtercondition: 'equal'},
+            {text: 'Modified On',datafield: 'instructionmanuallogs.lastmodifiedon',filtertype: 'date',width: "10%",cellsformat: 'M-dd-yyyy hh:mm tt'}
         ]
 
         source = {
@@ -315,6 +333,7 @@ $exportLimit =5000;
                 {name: 'iscompleted',type: 'boolean'},
                 {name: 'neworrevised',type: 'string'},
                 {name: 'instructionmanuallogs.lastmodifiedon',type: 'date'},
+                {name: 'instructionmanualtype',type: 'string'},
             ],
             url: '',
             root: 'Rows',
@@ -362,6 +381,7 @@ $exportLimit =5000;
                 return dataAdapter.records;
             },
             ready: function() {
+            	AddStatusDefaultFilter();
             },
             renderstatusbar: function(statusbar) {
                 var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
@@ -445,6 +465,19 @@ $exportLimit =5000;
 			var rowBoundIndex = args.rowindex;
 			delete selectedRows[rowBoundIndex];
 		});
+    }
+    function AddStatusDefaultFilter(){
+        var filtergroup = new $.jqx.filter();
+        var filter_or_operator = 1;
+        
+//         var filterNullShow = filtergroup.createfilter('stringfilter', '', 'NULL');
+//         filtergroup.addfilter(filter_or_operator, filterNullShow);
+
+        var filterHideSentToPrint = filtergroup.createfilter('stringfilter', 'Sent to China', 'not_equal');
+        filtergroup.addfilter(filter_or_operator, filterHideSentToPrint);
+
+        $("#instructionManualLogGrid").jqxGrid('addfilter', 'instructionmanuallogstatus', filtergroup);
+        $("#instructionManualLogGrid").jqxGrid('applyfilters');
     }
     function exportItemsConfirm(filterString) {
 		var selectedRowIndexes = $("#instructionManualLogGrid").jqxGrid('selectedrowindexes');
