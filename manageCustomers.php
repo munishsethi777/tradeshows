@@ -336,8 +336,8 @@ function loadGrid(){
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'customerid',
-        sortdirection: 'asc',
+        sortcolumn: 'lastmodifiedon',
+        sortdirection: 'desc',
         datafields: [
                     { name: 'seq', type: 'integer' }, 
                     { name: 'customerid', type: 'string' },

@@ -67,6 +67,7 @@ $requestManagementDepartmentChecked = "";
 $requestManagerPermissionChecked = "";
 $requestAssigneePermissionChecked = "";
 $requestRequesterPermissionChecked = ""; 
+$createProjectTypePermission = "";
 $userRequestDepartments = array();
 if (isset($_POST["id"])) {
     $seq = $_POST["id"];
@@ -149,6 +150,9 @@ if (in_array(Permissions::request_management_employee, $userRoles)) {
 }
 if (in_array(Permissions::request_management_requester, $userRoles)) {
     $requestRequesterPermissionChecked = "checked";
+}
+if (in_array(Permissions::project_type_permission, $userRoles)) {
+    $createProjectTypePermission = "checked";
 }
 if (in_array(1, $departmentSeqArr)) {
     $qcDepartmentChecked = "checked";
@@ -1019,12 +1023,15 @@ $requestDepartments = RequestDepartments::getAll();
 																</select>
 															</div>
 														</div>
-													
+													<div class="col-lg-12 m-t-sm" style="margin-left: 20px;">
+														<input name="permissions[]" type="checkbox" <?php echo $createProjectTypePermission;?> value="project_type_permission" id="crateProjectTypePermission">
+														<label>Create Project Types</label>
+													</div>				
 													<div class="col-lg-12 m-t-sm">
 														<h4>Select Notifications</h4>
 													</div>
 													<ul class="col-lg-6 todo-list ui-sortable p-xs">
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="new_project_created_notification"><input name="permissions[]" type="checkbox"
 															value="new_request_creation"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::new_request_creation), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">New Project  notification to the Manager of the department (Instant)(Manager))</span>
@@ -1032,14 +1039,14 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="New Project  notification to the Manager of the department"></label>
 														</li>
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="new_project_assigned_notification"><input name="permissions[]" type="checkbox"
 															value="request_assignee_assignment"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::request_assignee_assignment), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">New Project Assignment Notificaiton to the employee (Instant)(Employee)</span> <label
 															class="fa fa-question-circle" data-toggle="tooltip"
 															data-placement="left" title="New Project Assignment Notificaiton to the employee(assignee)"></label>
 														</li>												
-														<li><input name="permissions[]"
+														<li class="projectNotificationsClass" id="project_status_changed_notification"><input name="permissions[]"
 															value="status_change"
 															type="checkbox"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::status_change), $userRoles) ?  "checked" : ""?> />
@@ -1048,7 +1055,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Status change notified to the Requester"></label>															
 														</li>
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_due_nxt_week_notification"><input name="permissions[]" type="checkbox"
 															value="request_due_in_next_week"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::request_due_in_next_week), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Project Due Date In next Week on Friday (Manager,Employee)</span>
@@ -1056,7 +1063,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Project Due Date In next Week on Friday"></label>															
 														</li>
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_due_date_passed_notification"><input name="permissions[]" type="checkbox"
 															value="request_passed_due_in_last_week"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::request_passed_due_in_last_week), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Project Due Date Passed in Last Week on Friday (Manager,Employee)</span> 
@@ -1066,7 +1073,7 @@ $requestDepartments = RequestDepartments::getAll();
  														</li> 															
 													</ul>
 													<ul class="col-lg-6 todo-list ui-sortable p-h-xs">
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_assignee_due_nxt_week_notification"><input name="permissions[]" type="checkbox"
 															value="assignee_due_in_next_week"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::assignee_due_in_next_week), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Assignee Due Date In next Week on Friday (Manager,Employee) </span> 
@@ -1074,7 +1081,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Assignee Due Date In next Week on Friday"></label>
 														</li>
-														<li><input name="permissions[]"
+														<li class="projectNotificationsClass" id="project_assignee_due_date_passed_notification"><input name="permissions[]"
 															value="assignee_passed_due_in_last_week"
 															type="checkbox"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::assignee_passed_due_in_last_week), $userRoles) ?  "checked" : ""?> />
@@ -1083,7 +1090,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Assignee Due Date Passed in Last Week on Friday"></label>															
 														</li>
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_comment_added_notification"><input name="permissions[]" type="checkbox"
 															value="comments_added"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::comments_added), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Comment added on a request (Instant)(Requester,Employee,Manager)</span>
@@ -1091,7 +1098,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Comment added on a request"></label>															
 														</li>
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_files_attached_notification"><input name="permissions[]" type="checkbox"
 															value="files_uploaded"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::files_uploaded), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Files added on the request (Instant)(Requester,Employee,Manager)</span> 
@@ -1099,7 +1106,7 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Files added on the request"></label>
  														</li> 
-														<li><input name="permissions[]" type="checkbox"
+														<li class="projectNotificationsClass" id="project_marked_completed_notification"><input name="permissions[]" type="checkbox"
 															value="marked_completed"
 															<?php echo in_array(RequestNotificationType::getName(RequestNotificationType::marked_completed), $userRoles) ?  "checked" : ""?> />
 															<span class="m-l-xs">Marked Completed (Instant)(Requester,Employee,Manager)</span> 
@@ -1285,7 +1292,45 @@ $(document).ready(function(){
 	  $('#requestManagementDepartment').on('ifChanged', function(event){
 		disabledRequestManagementPermissions();
   	});
+
+	var userProjectManagerNotification = [$("#new_project_created_notification"), $("#project_status_changed_notification"),
+					$("#project_due_nxt_week_notification"), $("#project_due_date_passed_notification"),
+					$("#project_assignee_due_nxt_week_notification"), $("#assignee_passed_due_in_last_week"),
+					$("#project_comment_added_notification"), $("#project_files_attached_notification"),
+					$("#project_marked_completed_notification"),$("#project_assignee_due_date_passed_notification")];
+
+	var userProjectEmployeeNotification = [$("#request_assignee_assignment"), $("#request_due_in_next_week"), $("#request_passed_due_in_last_week"),
+					$("#assignee_due_in_next_week"), $("#assignee_passed_due_in_last_week"), $("#project_comment_added_notification"),
+					$("#project_files_attached_notification"), $("#project_marked_completed_notification"), $("#new_project_assigned_notification"),
+					$("#project_due_nxt_week_notification"), $("#project_due_date_passed_notification"), $("#project_assignee_due_nxt_week_notification"),
+					$("#project_assignee_due_date_passed_notification")];
+
+	var userProjectRequesterNotification = [$("#project_status_changed_notification"),$("#project_comment_added_notification"),
+					$("#project_files_attached_notification"), $("#project_marked_completed_notification")];
+
+	$('#requestmanagerpermission').on('ifChanged', function(event){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectManagerNotification, function(index,value){
+			value.show();
+		});
+  	});
+
+	$('#requestassigneepermission').on('ifChanged', function(event){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectEmployeeNotification, function(index,value){
+			value.show();
+		});
+	});		
+
+	$('#requestrequesterpermission').on('ifChanged', function(event){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectRequesterNotification, function(index,value){
+			value.show();
+		});
+	});			
+
 });
+
 function disabledGraphicPermissions(){
 	var flag  = $("#graphicDepartment").is(':checked');
 	if(!flag){

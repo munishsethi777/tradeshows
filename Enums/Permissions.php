@@ -21,4 +21,5 @@ class Permissions extends BasicEnum{
 	const request_management_manager = "Manager";
 	const request_management_employee = "Employee";
 	const request_management_requester = "Requester";
+	const project_type_permission = "Project Type Permission";
 }

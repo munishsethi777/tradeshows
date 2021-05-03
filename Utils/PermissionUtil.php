@@ -68,6 +68,9 @@ class PermissionUtil{
 	public function hasInstructionManualTechnicalTeamPermission(){
 		return in_array(Permissions::getName(Permissions::instruction_manual_technical_team),self::$permissions);
 	}
+	public function hasProjectTypePermission(){
+		return in_array(Permissions::getName(Permissions::project_type_permission),self::$permissions);
+	}
 
 
 	
@@ -136,5 +139,4 @@ class PermissionUtil{
 	public function hasRequestsDepartment(){
 	    return in_array(DepartmentType::Requests_Module,self::$departments);
 	}
-	
 }

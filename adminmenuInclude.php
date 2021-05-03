@@ -359,9 +359,11 @@ if($file == "dashboardmain.php"){
 								<li class="<?php echo $manageRequests?>">
 									<a href='adminManageRequests.php'>Projects</a>
 								</li>
-								<li class="<?php echo $manageRequestTypes?>">
-									<a href='adminManageRequestTypes.php'>Project Types</a>
-								</li>
+								<?php if(in_array(Permissions::getName(Permissions::project_type_permission),$permissions)){?>
+									<li class="<?php echo $manageRequestTypes?>">
+										<a href='adminManageRequestTypes.php'>Project Types</a>
+									</li>
+								<?}?>
 							</ul>
 						</li>
 					<?php }?>

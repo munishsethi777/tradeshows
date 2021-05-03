@@ -53,7 +53,7 @@
                                         </button>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-default" href="#" type="button" style="width:85%">
+                                        <a class="btn btn-default" href="adminManageRequestTypes.php" type="button" style="width:85%">
                                             Cancel
                                         </a>
                                     </div>
