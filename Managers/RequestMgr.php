@@ -264,14 +264,19 @@ class RequestMgr{
 		$loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
 		$arr = array();
 		foreach($rows as $row){
-			$row["department"] = RequestDepartments::getValue($row['department']);
-			$row["createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
+			$row["requests.department"] = RequestDepartments::getValue($row['department']);
+			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
 			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
-			$row["lastmodifiedon"] = $lastModifiedOn;
-			$row["priority"] = RequestPriorityTypes::getValue($row['priority']);
-			$row["iscompleted"] = $row['iscompleted'] == 1 ? 1 : 0 ;
+			$row["requests.lastmodifiedon"] = $lastModifiedOn;
+			$row["requests.priority"] = RequestPriorityTypes::getValue($row['priority']);
+			$row["requests.iscompleted"] = $row['iscompleted'] == 1 ? 1 : 0 ;
 			$row["assignedto.fullname"] = $row['assignedtofullname'];
 			$row["assignedby.fullname"] = $row['assignedbyfullname'];
+			$row["requesttypes.title"] = $row['requesttypetitle'];
+			$row['requeststatuses.title'] = $row['requeststatustitle'];
+			// $row['requests.seq'] = $row['seq'];
+			$row['requests.code'] = $row['code'];
+			$row['requests.lastmodifiedon'] = $row['lastmodifiedon'];
 			array_push($arr,$row);
 		}
 		return $arr;
@@ -294,8 +299,8 @@ class RequestMgr{
 				//$sql .= " where requests.assignedto = ". $loggedInUserSeq;
 				//to be coded as per manager's departmentsprojectEmployeeDepartments
 				$managerDepartments = implode("','",explode(',',$requestDepartments));
-				$sql .= " where (requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
-				$countSql .= " where (requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
+				$sql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
+				$countSql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
 			}else if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles)){
 				$sql .= " WHERE requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
 				$countSql .= " where requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
@@ -589,7 +594,7 @@ class RequestMgr{
 			$sql .= " WHERE (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .") AND requests.assigneeduedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
 			$countSql .= " where (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .") AND requests.assigneeduedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
 		}else if(in_array(Permissions::getName(Permissions::request_management_requester), $userRoles)){
-			$sql .= " where requests.createdby = ". $loggedInUserSeq ."AND requests.assigneeduedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
+			$sql .= " where requests.createdby = ". $loggedInUserSeq ." AND requests.assigneeduedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
 			$countSql .= " where requests.createdby = ". $loggedInUserSeq ." AND requests.assigneeduedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
 		}else{
 			return;
@@ -709,7 +714,8 @@ class RequestMgr{
 		}
 		$dataForExport = [];
 		foreach($requests as $request){
-			$sheetName = $request['requesttypetitle'] . " - " . RequestDepartments::getValue($request['department']);
+			$fullSheetName = $request['requesttypetitle'] . " - " . RequestDepartments::getValue($request['department']);
+			$sheetName = substr($fullSheetName,0,30);
 			$specJsonArr = json_decode($request['requestspecifications'],true);
 			$headers = '';
 			$records = [];
@@ -757,6 +763,9 @@ class RequestMgr{
 			$headers = implode(',',array_keys($requestTemp));
 			$records = implode(',',array_values($requestTemp));
 			if(count($dataForExport[$sheetName]) == 0){
+				array_push($dataForExport[$sheetName],$fullSheetName);
+			}
+			if(count($dataForExport[$sheetName]) == 1){
 				array_push($dataForExport[$sheetName],$headers);
 			}
 			array_push($dataForExport[$sheetName],$records);
