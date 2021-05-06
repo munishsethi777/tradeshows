@@ -1008,7 +1008,8 @@ $requestDepartments = RequestDepartments::getAll();
 																Requester
 															</label>
 														</div>
-														<div class="col-lg-12">
+														<div class="col-lg-12" style='margin-top:10px'>
+															<label class="col-lg-3 col-form-label bg-formLabel"> Select Project Departments </label>
 															<div class="col-lg-9">
 																<select id="requestdepartments" class="formCategories form-control category " name="requestdepartments[]" multiple>
 																	<?php
@@ -1292,7 +1293,7 @@ $(document).ready(function(){
 	  $('#requestManagementDepartment').on('ifChanged', function(event){
 		disabledRequestManagementPermissions();
   	});
-
+	
 	var userProjectManagerNotification = [$("#new_project_created_notification"), $("#project_status_changed_notification"),
 					$("#project_due_nxt_week_notification"), $("#project_due_date_passed_notification"),
 					$("#project_assignee_due_nxt_week_notification"), $("#assignee_passed_due_in_last_week"),
@@ -1310,6 +1311,7 @@ $(document).ready(function(){
 
 	$('#requestmanagerpermission').on('ifChanged', function(event){
 		$(".projectNotificationsClass").hide();
+		$('.projectNotificationsClass').iCheck('uncheck');
 		$.each(userProjectManagerNotification, function(index,value){
 			value.show();
 		});
@@ -1317,6 +1319,7 @@ $(document).ready(function(){
 
 	$('#requestassigneepermission').on('ifChanged', function(event){
 		$(".projectNotificationsClass").hide();
+		$('.projectNotificationsClass').iCheck('uncheck');
 		$.each(userProjectEmployeeNotification, function(index,value){
 			value.show();
 		});
@@ -1324,10 +1327,29 @@ $(document).ready(function(){
 
 	$('#requestrequesterpermission').on('ifChanged', function(event){
 		$(".projectNotificationsClass").hide();
+		$('.projectNotificationsClass').iCheck('uncheck');
 		$.each(userProjectRequesterNotification, function(index,value){
 			value.show();
 		});
-	});			
+	});		
+	if($('#requestmanagerpermission').iCheck('update')[0].checked){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectManagerNotification, function(index,value){
+			value.show();
+		});
+	}
+	if($('#requestassigneepermission').iCheck('update')[0].checked){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectEmployeeNotification, function(index,value){
+			value.show();
+		});
+	}
+	if($('#requestrequesterpermission').iCheck('update')[0].checked){
+		$(".projectNotificationsClass").hide();
+		$.each(userProjectRequesterNotification, function(index,value){
+			value.show();
+		});
+	}
 
 });
 
@@ -1505,5 +1527,5 @@ function updateQCSchedule(){
 	$("#QcScheduleUpdateModal").modal("hide");                             
 }
 closeModal = () => $("#QcScheduleUpdateModal").modal("hide");
-$("#requestdepartments").select2({placeholder:"Select departments",width:"945"});
+$("#requestdepartments").select2({placeholder:"Select departments",width:"400"});
 </script>

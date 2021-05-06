@@ -186,17 +186,11 @@ div#myDropZone {
     								<div class="form-group row" <?php if (!in_array(Permissions::getName(Permissions::request_management_manager), $userRoles)){}?>>
     									<label class="col-lg-2 col-form-label bg-formLabelPeach">Assigned By</label>
     									<div class="col-lg-4">
-    										<?php
-    											$select = DropDownUtils::getUsersForDDByPermission("assignedbyseq", '', '', true, true, "Manager");
-    											echo $select;
-    										?>
+											<select id="assignedbyseq" class='form-control' required></select>
     									</div>
     									<label class="col-lg-2 col-form-label bg-formLabelPeach">Assigned To</label>
     									<div class="col-lg-4">
-    										<?php
-    											$select = DropDownUtils::getUsersForDDByPermission("assignedtoseq", '', '', true, true, "Employee");
-    											echo $select;
-    										?>
+											<select id="assignedtoseq" class='form-control' required></select>
     									</div>
     								</div>
     							<?php }else{?>
@@ -318,6 +312,7 @@ div#myDropZone {
 								<form action="Actions/RequestAction.php" class="dropzone" id="requestAttachmentDropzoneForm" enctype="multipart/form-data">
 									<input type="hidden" name="call" value="saveRequestAttachment" />
 									<input type="hidden" id="requestSeqForRequestAttachment" name="requestseq" value="" />
+									<input type="hidden" id="requestTypeSeqForRequestAttachment" name="requesttypeseq" value="" />
 									<div class="fallback">
 										<input id="requestattachmentfilename" name="requestattachmentfilename[]" type="file" multiple />
 									</div>
@@ -446,20 +441,21 @@ function loadGrid(){
             return rowData;
         }
     };
+	var priorityTypes = ["Highest", "High", "Medium", "Low", "Lowest"];
 	var columns = [
 		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
-		{ text: 'Department', datafield: 'department', width:"13%",cellsrenderer: cellsRenderer},
+		{ text: 'Department', datafield: 'requests.department', width:"13%",cellsrenderer: cellsRenderer},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},	
-		{ text: 'Project No', datafield: 'code', width:"10%",cellsrenderer: cellsRenderer},
-		{ text: 'Priority', datafield: 'priority', width:"5%",cellsrenderer: cellsRenderer},
-		{ text: 'Project Type', datafield: 'requesttypetitle',width:"10%",cellsrenderer: cellsRenderer}, 
-		{ text: 'Requested By', datafield: 'createdbyfullname', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Project No', datafield: 'requests.code', width:"10%",cellsrenderer: cellsRenderer},
+		{text: 'Priority',datafield: 'requests.priority',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: priorityTypes,filtercondition: 'equal'},
+		{ text: 'Project Type', datafield: 'requesttypes.title',width:"10%",cellsrenderer: cellsRenderer}, 
+		{ text: 'Requested By', datafield: 'createdby.fullname', width:"10%",cellsrenderer: cellsRenderer},
 		{ text: 'Assigned By', datafield: 'assignedby.fullname', width:"14%",cellsrenderer: cellsRenderer},	
 		{ text: 'Assigned To', datafield: 'assignedto.fullname', width:"10%",cellsrenderer: cellsRenderer},       
-		{ text: 'Status', datafield: 'requeststatustitle', width:"10%",cellsrenderer: cellsRenderer},
-		{ text: 'Is Completed',datafield: 'iscompleted', columntype: 'checkbox',width: "5%"},
-		{ text: 'Last Modified', datafield: 'lastmodifiedon',width:"13%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
+		{ text: 'Status', datafield: 'requeststatuses.title', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Is Completed',datafield: 'requests.iscompleted', columntype: 'checkbox',width: "5%"},
+		{ text: 'Last Modified', datafield: 'requests.lastmodifiedon',width:"13%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
     ]
    
     source =
@@ -467,22 +463,21 @@ function loadGrid(){
         datatype: "json",
         id: 'id',
         pagesize: 20,
-        sortcolumn: 'lastmodifiedon',
+        sortcolumn: 'requests.lastmodifiedon',
         sortdirection: 'desc',
         datafields: [
 			{ name: 'id', type: 'integer' },
 			{ name: 'seq', type: 'integer' }, 
-			{ name: 'department', type: 'integer' },
-			{ name: 'title', type: 'string' },
-			{ name: 'code', type: 'string' },
-			{ name: 'priority', type: 'string' },
-            { name: 'requesttypetitle', type: 'string' },
-            { name: 'createdbyfullname', type: 'string'},
+			{ name: 'requests.department', type: 'integer' },
+			{ name: 'requests.code', type: 'string' },
+			{ name: 'requests.priority', type: 'string' },
+            { name: 'requesttypes.title', type: 'string' },
+            { name: 'createdby.fullname', type: 'string'},
 			{ name: 'assignedby.fullname', type: 'string'},  
 			{ name: 'assignedto.fullname', type: 'string'},
-			{ name: 'iscompleted',type: 'boolean'},              
-            { name: 'lastmodifiedon', type: 'date' },
-			{ name: 'requeststatustitle', type: 'string'},
+			{ name: 'requests.iscompleted',type: 'boolean'},              
+            { name: 'requests.lastmodifiedon', type: 'date' },
+			{ name: 'requeststatuses.title', type: 'string'},
             { name: 'action', type: 'string' } 
         ],                          
         url: '',
@@ -531,6 +526,7 @@ function loadGrid(){
 		selectionmode: 'checkbox',
 		showstatusbar: true,
 		virtualmode: true,
+		showfilterrow:true,
 		rendergridrows: function (toolbar) {
           return dataAdapter.records;     
    		 },
@@ -542,9 +538,9 @@ function loadGrid(){
 			var exportButton = $("<div title='Export Data' alt='Export Data' style='float: left; margin-left: 5px;'><i class='fa fa-file-excel-o'></i><span style='margin-left: 4px; position: relative;'>Export</span></div>");
             var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
             container.append(addButton);
-//             container.append(editButton);
             container.append(exportButton);
             container.append(reloadButton);
+            container.append(deleteButton);
             statusbar.append(container);
             editButton.jqxButton({  width: 65, height: 18 });
             addButton.jqxButton({  width: 65, height: 18 });
@@ -557,6 +553,7 @@ function loadGrid(){
 				$(".commentsAndHistoryDiv").hide();
 				$("#requestFormDiv #requestSpecsFields").html("<center><small>Select request type to display related fields</small></center>");
 				$("#requestFormDiv #department").val("");
+				$("#requestFormDiv #code").text("");
 				$("#requestFormDiv #requesttypeseq").empty();
 				$("#requestFormDiv #requeststatusseq ").empty();
 				$("#requestFormDiv #seq").val("");

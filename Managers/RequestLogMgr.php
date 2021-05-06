@@ -5,6 +5,9 @@
     require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestMgr.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestPriorityTypes.php");
     require_once($ConstantsArray['dbServerUrl'] ."Utils/RequestReportUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestSpecsFieldMgr.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestTypeMgr.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestDepartments.php");
 
     class RequestLogMgr{
         private static $requestLogMgr;
@@ -47,15 +50,20 @@
             $newRequest = new \ReflectionClass($newSavingRequest);
             $existingRequestProps = $existingRequest->getProperties();
             $fieldsChangedArr = array();
+            $requestTypeSeq = $newSavingRequest->getRequestTypeSeq();
+            $existingRequestTypeSeq = $existingSavedRequest->getRequestTypeSeq();
+            $newRequestTypeSeq = $newSavingRequest->getRequestTypeSeq();
             foreach ($existingRequestProps as $prop) {
                 $prop->setAccessible(true);
                 $existingSavedRequestValue = $prop->getValue($existingSavedRequest);
                 $newRequestProps = $newRequest->getProperty($prop->getName());
                 $newRequestProps->setAccessible(true);
                 $newSavingRequestValue = $newRequestProps->getValue($newSavingRequest);
-                if ($existingSavedRequestValue != $newSavingRequestValue && $prop->getName() != 'lastmodifiedon') {
+                if ($existingSavedRequestValue != $newSavingRequestValue && $prop->getName() != 'lastmodifiedon' && $prop->getName() != 'code') {
                     if($prop->getName()=='requestspecifications'){
-                        $this->saveUpdatedSpecAttributes($existingSavedRequest->getSeq(),$existingSavedRequestValue,$newSavingRequestValue,$loggedInUserSeq);
+                        if($existingRequestTypeSeq == $newRequestTypeSeq){
+                            $this->saveUpdatedSpecAttributes($existingSavedRequest->getSeq(),$existingSavedRequestValue,$newSavingRequestValue,$loggedInUserSeq,$requestTypeSeq);
+                        }
                     }else{
                         $currentDate = new DateTime();
                         $requestLog = new RequestLog();
@@ -66,12 +74,13 @@
                         $requestLog->setNewValue($newSavingRequestValue);
                         $requestLog->setCreatedOn($currentDate);
                         $requestLog->setIsSpecFieldChange(0);
+                        $requestLog->setRequestTypeSeq($requestTypeSeq);
                         self::$dataStore->save($requestLog);
                     }
                 }
             }
         }
-        private function saveUpdatedSpecAttributes($requestSeq,$existingSpecJson,$currentSpecJson,$userSeq){
+        private function saveUpdatedSpecAttributes($requestSeq,$existingSpecJson,$currentSpecJson,$userSeq,$requestTypeSeq){
             $existingSpecsArr = json_decode($existingSpecJson,true);
             $currentSpecsArr = json_decode($currentSpecJson,true);
             foreach($existingSpecsArr as $key => $oldValue){
@@ -87,6 +96,7 @@
                     $requestLog->setIsSpecFieldChange(true);
                     $requestLog->setAttributeName("");
                     $requestLog->setRequestSpecFieldSeq($key);
+                    $requestLog->setRequestTypeSeq($requestTypeSeq);
                     self::$dataStore->save($requestLog);
                 }
             }
@@ -177,6 +187,8 @@
             return $commentHtml;
         }
         public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory = false){
+            $requestSpecsFieldMgr = RequestSpecsFieldMgr::getInstance();
+            $requestTypeMgr = RequestTypeMgr::getInstance();
             $historyLogHtml = "";
             $historyLog = array();
             $lastUpdatedHistorySeq = null;
@@ -200,6 +212,7 @@
                     $historyLogHtml .= "</div>";
                 }
                 foreach($requestLogHistory as $requestLogHistoryRow){
+                    $specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($requestLogHistoryRow['requesttypeseq']);
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
                     // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
@@ -279,6 +292,14 @@
                         }elseif($requestLogHistoryRow['attributename'] == 'iscompleted'){
                             $oldValueName = $requestLogHistoryRow['oldvalue'] == 1 ? 'On' : 'Off';
                             $newValueName = $requestLogHistoryRow['newvalue'] == 1 ? 'On' : 'Off';
+                        }elseif($requestLogHistoryRow['attributename'] == 'requesttypeseq'){
+                            $oldRequestType = $requestTypeMgr->findBySeq($requestLogHistoryRow['oldvalue']);
+                            $newRequestType = $requestTypeMgr->findBySeq($requestLogHistoryRow['newvalue']);
+                            $oldValueName = $oldRequestType->getTitle();
+                            $newValueName = $newRequestType->getTitle();
+                        }elseif($requestLogHistoryRow['attributename'] == 'department'){
+                            $oldValueName = RequestDepartments::getValue($requestLogHistoryRow['oldvalue']);
+                            $newValueName = RequestDepartments::getValue($requestLogHistoryRow['newvalue']);
                         }
                         $historyLogHtml .= "<span class='label label-default'>" . $oldValueName . "</span>";
                         $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
@@ -315,6 +336,7 @@
             $requestLog->setAttributeName($requestLogArr['attribute']);
             $requestLog->setCreatedBy($requestLogArr['createdby']);
             $requestLog->setCreatedOn($requestLogArr['createdon']);
+            $requestLog->setRequestTypeSeq($requestLogArr['requesttypeseq']);
             return self::$dataStore->save($requestLog);
         }
     }

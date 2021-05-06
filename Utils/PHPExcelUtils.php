@@ -771,8 +771,8 @@ class PHPExcelUtil {
 		foreach($requestTypesArr as $key => $value){
 			
 			$objPHPExcel->setActiveSheetIndex($sheetNo)->setTitle($key);
-			self::cookRequestsPHPExcelHeader($value[0],$objPHPExcel,$sheetNo);
-			self::loadRequestsInExcel($value, $objPHPExcel, 2, $sheetNo);
+			self::cookRequestsPHPExcelHeader($value,$objPHPExcel,$sheetNo);
+			self::loadRequestsInExcel($value, $objPHPExcel, 3, $sheetNo);
 			if($sheetNo < count($requestTypesArr) - 1){
 				$objPHPExcel->createSheet();
 			}
@@ -799,11 +799,17 @@ class PHPExcelUtil {
 		ob_end_clean ();
 		$objWriter->save ( 'php://output' );
 	}
-	private static function cookRequestsPHPExcelHeader($headerStr,$objPHPExcel,$sheetNo){
+	private static function cookRequestsPHPExcelHeader($records,$objPHPExcel,$sheetNo){
 		$count = 1;
 		$i = 0;
-		$colName = self::getColName($i ++, $count);
-		$headerArr = explode(",",$headerStr);
+		$colName = self::getColName($i, $count);
+		
+		$objPHPExcel->setActiveSheetIndex ( $sheetNo )->setCellValue ( $colName, $records[0] );
+		$objPHPExcel->setActiveSheetIndex ( $sheetNo )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$count++;
+		$colName = self::getColName($i++, $count);
+		$headerArr = explode(",",$records[1]);
+		
 		foreach($headerArr as $key => $value){
 			$objPHPExcel->setActiveSheetIndex ( $sheetNo )->setCellValue ( $colName, $value );
 			$objPHPExcel->setActiveSheetIndex ( $sheetNo )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
@@ -815,12 +821,16 @@ class PHPExcelUtil {
 		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
 		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFont()->setBold(true);
 		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFont()->setSize(12);
+		$colName = self::getColName($i, --$count);
+		$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:' . $colName );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'dbeaee' );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:' . $colName)->getFont()->setSize(16);
 	}
 	private static function loadRequestsInExcel($records,$objPHPExcel,$startFromRow,$sheetNo){
 		$colName = '';
 		$count = $startFromRow;
 		foreach ( $records as $key => $recordStr ) {
-			if($key == 0){
+			if($key == 0 || $key == 1){
 				continue;
 			}
 			$recordArr = explode(",",$recordStr);

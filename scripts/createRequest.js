@@ -42,20 +42,34 @@ function populateRequestTypes(data){
         $("#requesttypeseq").append(option);
     });
 }
+function populateAssignedByUsers(data){
+    $("#assignedbyseq").empty();
+    $("#assignedbyseq").append("<option value=''>Select any</option>");
+    $.each(data,function(text,value){
+        var option = new Option(value,text);
+        $("#assignedbyseq").append(option);
+    });
+}
+function populateAssignedToUsers(data){
+    $("#assignedtoseq").empty();
+    $("#assignedtoseq").append("<option value=''>Select any</option>");
+    $.each(data,function(text,value){
+        var option = new Option(value,text);
+        $("#assignedtoseq").append(option);
+    });
+}
 function onChangeDepartment(department){
     $("#requestFormDiv #requestSpecsFields").html("");
     $("#requestFormDiv #requesttypeseq").empty();
     $("#requestFormDiv #requeststatusseq").empty();
-    $("#requestFormDiv #seq").val("");
-    $("#duedate").val("");
-    $("#assigneeduedate").val("");
-    $("#estimatedhours").val("");
     $("#isrequiredapprovalfrommanager").val("yes");
     $("#isrequiredapprovalfromrequester").val("no");
     $("#isrequiredapprovalfromrobby").val("yes");
     $('#requestFormDiv').modal('show');
-    $.getJSON("Actions/RequestAction.php?call=getRequestTypesByDepartmentSeq&department=" + department,(response)=>{
-        populateRequestTypes(response.data);
+    $.getJSON("Actions/RequestAction.php?call=getRequestTypesAndAssignedByAndAssignedToUsersForDDByDepartmentSeq&department=" + department,(response)=>{
+        populateRequestTypes(response.data.requesttypes);
+        populateAssignedByUsers(response.data.assignedbyusers);
+        populateAssignedToUsers(response.data.assignedtousers);
     });
 }
 function onRequestTypeChange(thisObject){
@@ -85,6 +99,8 @@ function onRequestTypeChange(thisObject){
                 }
             });
         });
+    }else{
+        $("#requestSpecsFields").html("");
     }
 }
 function closeRequestForm(){
@@ -191,9 +207,11 @@ const saveRequest = () => {
                 + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
                 + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
                 + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted;
-        $.post(url,(response)=>{
+        $.get(url,(response)=>{
                     var responseObj = JSON.parse(response);
-                    $("#requestSeqForRequestAttachment,#seq").val(responseObj.data);
+                    $("#requestFormDiv #code").text(responseObj.data.code);
+                    $("#requestSeqForRequestAttachment,#seq").val(responseObj.data.seq);
+                    $("#requestTypeSeqForRequestAttachment").val(responseObj.data.requesttypeseq);
                     Dropzone.autoDiscover = true;
                     requestAttachmentDropzone.processQueue();
                     var flag = showResponseToastr(response,null,null,"ibox");
@@ -202,13 +220,12 @@ const saveRequest = () => {
                         requestAttachmentDropzone.options.autoProcessQueue = true;
                         requestAttachmentDropzone.removeAllFiles(true);
                         loadHistory();
+                        $("#requestGrid").jqxGrid('updatebounddata', 'cells');
                     }else{
                         toastr.error(responseObj.message,'Failed');
                     }
-                    
-                    // closeRequestForm();
-                    $("#requestGrid").jqxGrid('updatebounddata', 'cells');
         });
+        loadReportingData('request_management_');
         return true;
     }else{
         if(!checkValidity){
@@ -247,6 +264,7 @@ function editButtonClick(seq) {
     $("#requestFormDiv #requesttypeseq").val("");
     $("#requestFormDiv #requeststatusseq").val("");
     $("#requestFormDiv #seq").val(seq);
+    $("#requestFormDiv #code").text("");
     $("#requestFormDiv #dueDate").val('');
     $("#requestFormDiv #estimatedhours").val('');
     $("#requestFormDiv #isrequiredapprovalfrommanager").val('yes');
@@ -269,6 +287,8 @@ function editButtonClick(seq) {
     $.getJSON("Actions/RequestAction.php?call=getRequestDataBySeqForEdit&requestSeq=" + seq,(response)=>{
         $("#requestFormDiv #department").val(response.data.department);
         populateRequestTypes(response.data.requestformotherfields.requesttypes);
+        populateAssignedByUsers(response.data.requestformotherfields.assignedbyusers);
+        populateAssignedToUsers(response.data.requestformotherfields.assignedtousers);
         $("#requeststatusseq").append(response.data.requestspecsformhtml.requestStatusHTML);
         $("#requestSpecsFields").html(response.data.requestspecsformhtml.requestSpecsFieldsHTML);
         $('.datepicker').datetimepicker({
@@ -298,13 +318,14 @@ function editButtonClick(seq) {
         }else{
         	$('#iscompleted').iCheck('uncheck');
         }
-        // $.each($.parseJSON(response.data.requestspecificationjson),function(index,value){
-        //     $("#" + index).val(value);
-        // });
+        $.each($.parseJSON(response.data.requestspecificationjson),function(index,value){
+            $("#" + index).val(value);
+        });
         $('#loadComments').html(response.data.requestLogCommentsHtml);
         $('#loadHistory').append(response.data.historyLog.historyLogHtml);
         $('#lastUpdatedHistorySeq').val(response.data.historyLog.lastUpdatedHistorySeq);
         $("#requestAttachmentDropzoneForm #requestSeqForRequestAttachment").val(seq);
+        $("#requestAttachmentDropzoneForm #requestTypeSeqForRequestAttachment").val(response.data.requestTypeSeq);
         $("#attachmentsRow").html(response.data.requestAttachmentsHtml);
     });
 }

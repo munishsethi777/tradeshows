@@ -13,6 +13,8 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestAttachmentMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+
 
 $success = 1;
 $message = '';
@@ -27,16 +29,23 @@ $requestLogMgr = RequestLogMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 $requestAttachmentMgr = RequestAttachmentMgr::getInstance();
+$userMgr = UserMgr::getInstance(); 
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
 }else{
 	$call = $_POST["call"];
 }
-if($call == "getRequestTypesByDepartmentSeq"){
+if($call == "getRequestTypesAndAssignedByAndAssignedToUsersForDDByDepartmentSeq"){
 	try{
 		$department = $_REQUEST['department'];
+		$managers = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager));
+		$employees = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee));
+		$assignedByUsers = $requestMgr->getUsersByDepartmentForDD($managers,$department);
+		$assignedToUsers = $requestMgr->getUsersByDepartmentForDD($employees,$department);
 		$requestTypes = $requestTypeMgr->findByDepartmentForDropDown($department);
-		$response['data'] = $requestTypes;
+		$response['data']['requesttypes'] = $requestTypes;
+		$response['data']['assignedbyusers'] = $assignedByUsers;
+		$response['data']['assignedtousers'] = $assignedToUsers;
 	}catch(Exception $e){
 		$message = $e->getMessage();
 		$success = 0;
@@ -58,7 +67,10 @@ if($call == "saveRequest"){
 		if(isset($_REQUEST['seq']) && !empty($_REQUEST['seq'])){
 			$message = StringConstants::REQUEST_UPDATED_SUCCESSFULLY;
 		}
-		$response['data'] = $requestMgr->save($_REQUEST,$loggedInUserSeq);
+		$return = $requestMgr->save($_REQUEST,$loggedInUserSeq);
+		$response['data']['seq'] = $return['seq'];
+		$response['data']['code'] = $return['requestcode'];
+		$response['data']['requesttypeseq'] = $return['requesttypeseq'];
 	}catch(Exception $e){
 		$message = $e->getMessage();
 		$success = 0;
@@ -87,12 +99,17 @@ if($call == "getRequestDataBySeqForEdit"){
 		$historyLog = $requestLogMgr->historyLogHtml($requestLogHistory,$specsFieldTypeArr);
 		$requestAttachments = $requestAttachmentMgr->findByRequestSeq($seq);
 		$requestAttachmentsHtml = $requestAttachmentMgr->attachmentHtml($requestAttachments);
-		$requestFormOtherFields = array();
+		$managers = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager));
+		$employees = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee));
+		$assignedByUsers = $requestMgr->getUsersByDepartmentForDD($managers,$request->getDepartment());
+		$assignedToUsers = $requestMgr->getUsersByDepartmentForDD($employees,$request->getDepartment());
 		$response['data']['requestAttachmentsHtml'] = $requestAttachmentsHtml;
 		$response['data']['requestspecsformhtml'] = $requestFormHtml;
 		$response['data']['requestspecificationjson'] = $request->getRequestSpecifications();
 		$response['data']['requestLogCommentsHtml'] = $requestLogCommentsHtml;
 		$response['data']['historyLog'] = $historyLog;
+		$response['data']['requestTypeSeq'] = $request->getRequestTypeSeq();
+		$requestFormOtherFields = array();
 		$requestFormOtherFields['code'] = $request->getCode();
 		$requestFormOtherFields['department'] = $request->getDepartment();
 		$requestFormOtherFields['requesttypeseq'] = $request->getRequestTypeSeq();
@@ -111,6 +128,8 @@ if($call == "getRequestDataBySeqForEdit"){
 		$requestFormOtherFields['approvedbyrequesterdate'] = $request->getApprovedByRequesterDate();
 		$requestFormOtherFields['approvedbyrobbydate'] = $request->getApprovedByRobbyDate();
 		$requestFormOtherFields['isCompleted'] = $request->getIsCompleted();
+		$requestFormOtherFields['assignedbyusers'] = $assignedByUsers;
+		$requestFormOtherFields['assignedtousers'] = $assignedToUsers;
 		$response['data']['requestformotherfields'] = $requestFormOtherFields;
 	}catch(Exception $e){
 		$message = $e->getMessage();
@@ -162,6 +181,7 @@ if($call == "saveRequestAttachment"){
 				$requestLogArr['attribute'] = "attachment";
 				$requestLogArr['createdby'] = $loggedInUserSeq;
 				$requestLogArr['createdon'] = date('Y-m-d h:i:s');
+				$requestLogArr['requesttypeseq'] = $_REQUEST['requesttypeseq'];
 				$requestLogMgr = RequestLogMgr::getInstance();
 				$requestAttachmentSeq = $requestLogMgr->save($requestLogArr);
 				$requestAttachmentTempArr = array();
@@ -280,7 +300,16 @@ if($call == "getAssigneeRequestsDuePassed"){
 		$success = 0;
 	}
 }
-
+if($call == "deleteRequest"){
+	$ids = $_GET["ids"];
+	try{
+		$requestMgr->deleteBySeqs($ids);
+		$message = "Deleted Successfully";
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+}
 
 $response["success"] = $success;
 $response["message"] = $message;

@@ -83,11 +83,11 @@ $sessionUtil = SessionUtil::getInstance();
             },
             {
                 text: 'Departments',
-                datafield: 'departmenttitle',
+                datafield: 'department',
                 width: "22%"
             },
             {
-                text: 'Request Title',
+                text: 'Request Type Title',
                 datafield: 'title',
                 width: "22%"
             },
@@ -98,19 +98,19 @@ $sessionUtil = SessionUtil::getInstance();
             },
             {
                 text: 'Created   By',
-                datafield: 'createdbyfullname',
+                datafield: 'fullname',
                 width: "17%"
             },
             {
                 text: 'Created On',
-                datafield: 'createdon',
+                datafield: 'requesttypes.createdon',
                 filtertype: 'date',
                 width: "12%",
                 cellsformat: 'M-dd-yyyy hh:mm tt'
             },
             {
                 text: 'Modified On',
-                datafield: 'lastmodifiedon',
+                datafield: 'requesttypes.lastmodifiedon',
                 filtertype: 'date',
                 width: "12%",
                 cellsformat: 'M-dd-yyyy hh:mm tt'
@@ -132,7 +132,7 @@ $sessionUtil = SessionUtil::getInstance();
                     type: 'integer'
                 },
                 {
-                    name: 'departmenttitle',
+                    name: 'department',
                     type: 'string'
                 },
                 {
@@ -140,7 +140,7 @@ $sessionUtil = SessionUtil::getInstance();
                     type: 'string'
                 },
                 {
-                    name: 'createdbyfullname',
+                    name: 'fullname',
                     type: 'string'
                 },
                 {
@@ -148,11 +148,11 @@ $sessionUtil = SessionUtil::getInstance();
                     type: 'string'
                 },
                 {
-                    name: 'createdon',
+                    name: 'requesttypes.createdon',
                     type: 'date'
                 },
                 {
-                    name: 'lastmodifiedon',
+                    name: 'requesttypes.lastmodifiedon',
                     type: 'date'
                 },
             ],
@@ -211,8 +211,8 @@ $sessionUtil = SessionUtil::getInstance();
                 var deleteButton = $("<div title='Delete' alt='Delete' style='float: left; margin-left: 5px;'><i class='fa fa-remove'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
 
                 container.append(addButton);
-                container.append(importButton);
-                container.append(exportButton);
+                // container.append(importButton);
+                // container.append(exportButton);
                 container.append(reloadButton);
                 container.append(deleteButton);
                 statusbar.append(container);
@@ -240,7 +240,7 @@ $sessionUtil = SessionUtil::getInstance();
                     location.href = ("adminCreateRequestType.php");
                 });
                 deleteButton.click(function(event) {
-                    deleteRows("requestFieldsGrid", "Actions/");
+                	deleteRows("requestFieldsGrid","Actions/RequestTypeAction.php?call=deleteRequestType");
                 });
                 importButton.click(function(event) {
                     location.href = ("adminImportInstructionManualLogs.php");

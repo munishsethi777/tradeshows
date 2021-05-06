@@ -4,8 +4,8 @@
         const priority = "Priority";
         const title = "Title";
         const descriptiontext = "DescriptionText";
-        const departmentseq = "Department Seq";
-        const requesttypeseq = "Request Type Seq";
+        const department = "Department";
+        const requesttypeseq = "Request Type";
         const requestspecifications = "Request Specifications";
         const assignedby = "Assigned By";
         const assignedto = "Assigned To";
@@ -13,7 +13,7 @@
         const assigneeduedate = "Assigned Due Date";
         const startdate = "Start Date";
         const estimatedhours = "Estimated Hours";
-        const requeststatusseq = "Request Status Seq";
+        const requeststatusseq = "Request Status";
         const isrequiredapprovalfrommanager = "Is Required Approvel From Manager";
         const isrequiredapprovalfromrequester = "Is required Approvel From Requester";
         const isrequiredapprovalfromrobby = "Is Required Approvel From Robby";

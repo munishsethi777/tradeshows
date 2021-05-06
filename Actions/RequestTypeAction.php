@@ -72,6 +72,16 @@
         $requestTypes = $requestTypeMgr->findByDepartmentSeqForDropDown($departmentSeq);
         $response['data'] = $requestTypes;
     }
+    if($call == "deleteRequestType"){
+        $ids = $_GET["ids"];
+        try{
+            $requestTypeMgr->deleteBySeqs($ids);
+            $message = "Deleted Successfully";
+        }catch(Exception $e){
+            $success = 0;
+            $message = "This project type is use in some project";
+        }
+    }
     $response['success'] = $success;
     $response['message'] = $message;
     echo json_encode($response);

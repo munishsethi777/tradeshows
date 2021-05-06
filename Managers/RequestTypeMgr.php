@@ -6,9 +6,9 @@
     class RequestTypeMgr{
         private static $requestTypeMgr;
         private static $dataStore;
-        private static $selectSqlForGrid = "SELECT requesttypes.*, users.fullname as createdbyfullname FROM requesttypes
+        private static $selectSqlForGrid = "SELECT requesttypes.*, users.fullname FROM requesttypes
                                             LEFT JOIN users on users.seq = requesttypes.createdby";
-        private static $selectCountSql = "SELECT COUNT(seq) from requesttypes";
+        private static $selectCountSql = "SELECT COUNT(requesttypes.seq) from requesttypes LEFT JOIN users on users.seq = requesttypes.createdby";
         private static $selectSql = "SELECT * FROM requesttypes";
         public static function getInstance(){
             if (!self::$requestTypeMgr){
@@ -26,12 +26,12 @@
             $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $arr = array();
             foreach($rows as $row){
-                $row["createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","Y-m-d H:i:s");
-                $row["departmenttitle"] = RequestDepartments::getValue($row['department']);
+                $row["requesttypes.createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","Y-m-d H:i:s");
+                $row["department"] = RequestDepartments::getValue($row['department']);
                 // $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 // $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
                 $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
-                $row["lastmodifiedon"] = $lastModifiedOn;
+                $row["requesttypes.lastmodifiedon"] = $lastModifiedOn;
                 array_push($arr,$row);
             }
             return $arr;
@@ -51,10 +51,10 @@
             $user = $userMgr->findBySeq($loggedInUserSeq);
             $requestDepartments = $user->getRequestDepartments();
             $requestDepartments = implode("','",explode(',',$requestDepartments));
-            $sql = self::$selectSqlForGrid . " WHERE requesttypes.createdby = " . $loggedInUserSeq . " OR requesttypes.department IN ('" . $requestDepartments . "')"; 
+            $sql = self::$selectSqlForGrid ; 
             $rows = self::$dataStore->executeQuery($sql,true,true);
             $mainArr["Rows"] = $this->processRowsForGrid($rows);
-            $countSql = self::$selectCountSql . " WHERE requesttypes.createdby = " . $loggedInUserSeq . " OR requesttypes.department IN ('" . $requestDepartments . "')";
+            $countSql = self::$selectCountSql ;
             $count = self::$dataStore->executeCountQueryWithSql($countSql,true);
             $mainArr["TotalRows"] = $count;
             return $mainArr;
@@ -84,6 +84,10 @@
         public function getAttributeBySeq($attribute,$seq){
             $query = "SELECT " . $attribute . " FROM requesttypes WHERE seq = " . $seq;
             return self::$dataStore->executeQuery($query,false,true)[0][$attribute];
+        }
+        public function deleteBySeqs($ids) {
+            $flag = self::$dataStore->deleteInList ( $ids );
+            return $flag;
         }
     }
 ?>
