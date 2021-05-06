@@ -37,27 +37,35 @@ class RequestReportUtil
     }
     public static function sendNewRequestNotificationToManagerOfDepartment($request){ // Instant
         $userMgr = UserMgr::getInstance();
-        $usersByPermission = $userMgr->getUsersForDDByPermission(Permissions::request_management_manager);
-        $usersWithProjectDepartments = $userMgr->getAllUsersWithProjectDepartments();
-        $users = $userMgr->getAllUsersWithRoles();
-        $users = self::getRequestUsersByNotificationType($users,RequestNotificationType::new_request_creation);
         $toEmails = [];
         $usersForLogs = [];
         $tempUserArr = [];
-        if(empty($users)){
+        if($request->getAssignedBy() != null){
+            $user = $userMgr->findBySeq($request->getAssignedBy());
+            array_push($toEmails,$user->getEmail());
+            $tempUserArr['email'] = $user->getEmail();
+            $tempUserArr['seq'] = $user->getSeq();
+            array_push($usersForLogs,$tempUserArr);
+        }else{
+            $usersByPermission = $userMgr->getUsersForDDByPermission(Permissions::request_management_manager);
+            $usersWithProjectDepartments = $userMgr->getAllUsersWithProjectDepartments();
+            $users = $userMgr->getAllUsersWithRoles();
+            $users = self::getRequestUsersByNotificationType($users,RequestNotificationType::new_request_creation);
+            foreach($users as $key => $user){
+                if($user->getRequestDepartments() != null){
+                    if(in_array($request->getDepartment(),$usersWithProjectDepartments[$user->getSeq()]['requestdepartments']) &&
+                         isset($usersByPermission[$user->getSeq()])){
+                        array_push($toEmails,$user->getEmail());
+                        $tempUserArr['email'] = $user->getEmail();
+                        $tempUserArr['seq'] = $user->getSeq();
+                        array_push($usersForLogs,$tempUserArr);
+                    }
+                }
+            }   
+        }
+        if(empty($toEmails)){
             return;
         }
-        foreach($users as $key => $user){
-            if($user->getRequestDepartments() != null){
-                if(in_array($request->getDepartment(),$usersWithProjectDepartments[$user->getSeq()]['requestdepartments']) &&
-                     isset($usersByPermission[$user->getSeq()])){
-                    array_push($toEmails,$user->getEmail());
-                    $tempUserArr['email'] = $user->getEmail();
-                    $tempUserArr['seq'] = $user->getSeq();
-                    array_push($usersForLogs,$tempUserArr);
-                }
-            }
-        }   
         $sessionUtil = SessionUtil::getInstance();
         $loggedInUserName = $sessionUtil->getUserLoggedInName();
         $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
@@ -314,7 +322,6 @@ class RequestReportUtil
         $managerRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager),RequestNotificationType::getName(RequestNotificationType::request_due_in_next_week));
 
         $usersForLog = [];
@@ -349,7 +356,6 @@ class RequestReportUtil
         $employeeRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee),RequestNotificationType::getName(RequestNotificationType::request_due_in_next_week));
 
         $usersForLog = [];
@@ -382,7 +388,6 @@ class RequestReportUtil
         $managerRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager),RequestNotificationType::getName(RequestNotificationType::request_passed_due_in_last_week));
 
         $usersForLog = [];
@@ -417,7 +422,6 @@ class RequestReportUtil
         $employeeRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee),RequestNotificationType::getName(RequestNotificationType::request_passed_due_in_last_week));
 
         $usersForLog = [];
@@ -450,7 +454,6 @@ class RequestReportUtil
         $employeeRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee),RequestNotificationType::getName(RequestNotificationType::assignee_due_in_next_week));
 
         $usersForLog = [];
@@ -483,7 +486,6 @@ class RequestReportUtil
         $managerRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager),RequestNotificationType::getName(RequestNotificationType::assignee_due_in_next_week));
 
         $usersForLog = [];
@@ -518,7 +520,6 @@ class RequestReportUtil
         $employeeRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_employee),RequestNotificationType::getName(RequestNotificationType::assignee_passed_due_in_last_week));
 
         $usersForLog = [];
@@ -551,7 +552,6 @@ class RequestReportUtil
         $managerRequests = [];
         $userMgr = UserMgr::getInstance();
         $toEmails = array();
-        $users = $userMgr->getAllUsersWithRoles();
         $users = $userMgr->getUsersByPermissionTypeAndNotificationType(Permissions::getName(Permissions::request_management_manager),RequestNotificationType::getName(RequestNotificationType::assignee_passed_due_in_last_week));
         
         $usersForLog = [];

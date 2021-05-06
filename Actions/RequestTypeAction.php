@@ -77,9 +77,13 @@
         try{
             $requestTypeMgr->deleteBySeqs($ids);
             $message = "Deleted Successfully";
-        }catch(Exception $e){
+        }catch(\Exception $e){
             $success = 0;
-            $message = "This project type is use in some project";
+            $message = $e->getMessage();
+            $constraintName = "deleterequesttype";
+            if(strpos($message,$constraintName) !== false){
+                $message = "Can not delete this project type as it is used in other project";
+            }
         }
     }
     $response['success'] = $success;

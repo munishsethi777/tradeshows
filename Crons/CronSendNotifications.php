@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Crons/backups.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/ContainerScheduleReportUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/GraphicLogReportUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/RequestReportUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 $timeZone = "Asia/Kolkata";
 $datetimeZone = new DateTimeZone($timeZone);
@@ -147,7 +148,20 @@ try{
             $logger->info("End Daily notifications sent successfully");
         }
     }
-    
+    if($dayOfWeek == 5 || ($isDeveloperModeOn)){
+        if($hours == 19 || $isDeveloperModeOn ){
+            RequestReportUtil::sendRequestsDueInNextWeekNotificationToManagers();
+            RequestReportUtil::sendRequestsPassedDueInLastWeekNotificationToManagers();
+            RequestReportUtil::sendRequestsAssigneeDueDateInNextWeekNotificationToManager();
+            RequestReportUtil::sendRequestsAssigneeDueDatePassedInLastWeekNotificationToManager();
+        }
+        if($hours == 22 || $isDeveloperModeOn){
+            RequestReportUtil::sendRequestsDueInNextWeekNotificationToEmployee();
+            RequestReportUtil::sendRequestsPassedDueInLastWeekNotificationToEmployee();
+            RequestReportUtil::sendRequestsAssigneeDueDateInNextWeekNotificationToEmployee();
+            RequestReportUtil::sendRequestsAssigneeDueDatePassedInLastWeekNotificationToEmployee();
+        }
+    }
 }catch(Exception $e){
     $msg = "Error during cron - " . $e->getMessage();
     echo $msg;
