@@ -122,7 +122,7 @@ function showRequestsDetails(seq, rowId){
     $.getJSON("Actions/RequestAction.php?call=getRequestsDetails&seq=" + seq ,function(data){
 	});		
 }
-const saveRequest = () => {
+const saveRequest = (btn) => {
     var requestSpecsFieldsFormData = $("#requestSpecsFieldsForm").serializeArray();
     var jsonObj = [];
     item = {};
@@ -206,7 +206,8 @@ const saveRequest = () => {
     var approvedByRequesterDate = "";
     var approvedByRobbyDate = "";
     var attachmentfilename = $("input[name='attachmentfilename']").val();
-
+    var l = Ladda.create(btn);
+    l.start();
     if($("#requestSpecsFieldsForm")[0].checkValidity() == true && checkValidity == true){
         var url = "Actions/RequestAction.php?call=saveRequest&requestSpecsFieldsFormJson=" + encodeURIComponent(requestSpecsFieldsFormJson) + "&department=" + department 
                 + "&requestTypeSeq=" + requestTypeSeq + "&priority=" + priority + "&requestStatusSeq=" + requestStatusSeq + "&seq=" + seq 
@@ -234,6 +235,7 @@ const saveRequest = () => {
                     }
         });
         loadReportingData('request_management_');
+        l.stop();
         return true;
     }else{
         if(!checkValidity){
@@ -241,11 +243,12 @@ const saveRequest = () => {
         }else{
             $("#requestSpecsFieldsForm")[0].reportValidity();
         }
+        l.stop();
         return false;
     }
 }
-const saveRequestAndClose = () =>{
-    if(saveRequest()){
+const saveRequestAndClose = (btn) =>{
+    if(saveRequest(btn)){
         $('#requestFormDiv').modal('hide');
     }
 }
@@ -304,6 +307,7 @@ function editButtonClick(seq) {
             format:'m-d-Y',
             scrollMonth : false,
             scrollInput : false,
+            minDate : 0,
             onSelectDate:function(ct,$i){
                 //setDuration();
             }
@@ -313,6 +317,7 @@ function editButtonClick(seq) {
             format:'m-d-Y h:i: a',
             scrollMonth : false,
             scrollInput : false,
+            minDate : 0,
             onSelectDate:function(ct,$i){
                 //setDuration();
             }

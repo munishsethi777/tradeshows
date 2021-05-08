@@ -70,11 +70,11 @@
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label bg-formLabel">Project Type Title</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $requestType->getTitle();?>" id="title" name="title" class="form-control" placeholder="enter project type title" required>
+                                        <input type="text" maxLength="250" value="<?php echo $requestType->getTitle();?>" id="title" name="title" class="form-control" placeholder="Enter project type title" required>
                                     </div>
                                     <label class="col-lg-2 col-form-label bg-formLabel">Project Type Code</label>
                                     <div class="col-lg-4">
-                                        <input type="text" maxLength="250" value="<?php echo $requestType->getRequestTypeCode();?>" id="title" name="requesttypecode" class="form-control" placeholder="enter project type code" required>
+                                        <input type="text" maxLength="250" value="<?php echo $requestType->getRequestTypeCode();?>" id="title" name="requesttypecode" class="form-control" placeholder="Enter project type code" required>
                                     </div>
                                 </div>
 
@@ -172,14 +172,20 @@
         var html = "<div class='form-group row m-b-xs requestStatusRow'>";
         html += "<div class='col-lg-11 p-xxs no-margins'>";
         if(typeof requestStatus !== "undefined"){
-        	html += "<input type='text' id='' maxLength='' value='" + requestStatus.title + "' name='editingrequeststatus"+requestStatus.seq+"' class='form-control' placeholder='enter project status'>";
+        	html += "<input type='text' id='' maxLength='' value='" + requestStatus.title + "' name='editingrequeststatus"+requestStatus.seq+"' class='form-control' placeholder='Enter project status'>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";  
+            if(!requestStatus.isRequestTypeUsed){
+                html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick='deleteRequestStatusRow(this)'>";
+                html += "<i class='fa fa-minus'></i> Remove</button>";
+            }
         }else{
-        	html += "<input type='text' id='' maxLength='' name='requeststatus[]' class='form-control' placeholder='enter project status'>";
+        	html += "<input type='text' id='' maxLength='' name='requeststatus[]' class='form-control' placeholder='Enter project status'>";
+            html += "</div>";
+            html += "<div class='col-lg-1 p-xxs no-margins'>";
+            html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick='deleteRequestStatusRow(this)'>";
+            html += "<i class='fa fa-minus'></i> Remove</button>";
         }
-        html += "</div>";
-        html += "<div class='col-lg-1 p-xxs no-margins'>";
-        html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick='deleteRequestStatusRow(this)'>";
-        html += "<i class='fa fa-minus'></i> Remove</button>";
         html += "</div>";
         html += "</div>";
         $("#addRequestStatusDiv").append(html);
@@ -239,8 +245,10 @@
             html += "<?php $select = DropDownUtils::getBooleanDropDown('isvisible', null, '1', false, true); echo $select;?>";
             html += "</div>";
             html += "<div class='col-lg-1 p-xxs no-margins'>";
-            html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick = 'deleteFieldTypeRow(this)'>";
-            html += "<i class='fa fa-minus'></i> Remove</button>";
+            if(!requestSpecsFields.isRequestTypeUsed){
+                html += "<button class='btn btn-xs btn-success' id='removeRequestsFieldsBtn' type='button' onclick = 'deleteFieldTypeRow(this)'>";
+                html += "<i class='fa fa-minus'></i> Remove</button>";
+            }
             html += "</div>";
             $("#requestFieldsDiv").append(html);
             $("#fieldTypeRow"+ seq +" #requestfieldtype").attr('name', 'requestfieldtype' + seq);

@@ -306,12 +306,12 @@ div#myDropZone {
 											</a>
 										</div>
 										<div class="col-lg-2 pull-right">
-											<button class="btn btn-primary" onclick="saveRequest()" type="button" style="width:85%">
+											<button class="btn btn-primary" onclick="saveRequest(this)" type="button" style="width:85%">
 												Save
 											</button>
 										</div>
 										<div class="col-lg-2 pull-right">
-											<button class="btn btn-primary" onclick="saveRequestAndClose()" type="button" style="width:85%">
+											<button class="btn btn-primary" onclick="saveRequestAndClose(this)" type="button" style="width:85%">
 												Save and Close
 											</button>
 										</div>
@@ -378,6 +378,7 @@ $(document).ready(function(){
 		format:'m-d-Y',
 		scrollMonth : false,
 		scrollInput : false,
+		minDate : 0,
 		onSelectDate:function(ct,$i){
 			//setDuration();
 		}
@@ -452,12 +453,12 @@ function loadGrid(){
     };
 	var priorityTypes = ["Highest", "High", "Medium", "Low", "Lowest"];
 	var columns = [
-		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',filterable: false},
+		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',sortable: false,filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
 		{ text: 'Department', datafield: 'requests.department', width:"13%",cellsrenderer: cellsRenderer},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},	
 		{ text: 'Project No', datafield: 'requests.code', width:"10%",cellsrenderer: cellsRenderer},
-		{text: 'Priority',datafield: 'requests.priority',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: priorityTypes,filtercondition: 'equal'},
+		{text: 'Priority',datafield: 'requests.priority',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: priorityTypes,filtercondition: 'equal',sortable: false},
 		{ text: 'Project Type', datafield: 'requesttypes.title',width:"10%",cellsrenderer: cellsRenderer}, 
 		{ text: 'Requested By', datafield: 'createdby.fullname', width:"10%",cellsrenderer: cellsRenderer},
 		{ text: 'Assigned By', datafield: 'assignedby.fullname', width:"14%",cellsrenderer: cellsRenderer},	

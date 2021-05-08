@@ -26,7 +26,7 @@
             $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $arr = array();
             foreach($rows as $row){
-                $row["requesttypes.createdon"] = DateUtil::convertDateToFormat($row["createdon"],"Y-m-d H:i:s","Y-m-d H:i:s");
+                $row["requesttypes.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"],"Y-m-d H:i:s","m-d-Y H:i:s",$loggedInUserTimeZone);
                 $row["department"] = RequestDepartments::getValue($row['department']);
                 // $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 // $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
@@ -88,6 +88,11 @@
         public function deleteBySeqs($ids) {
             $flag = self::$dataStore->deleteInList ( $ids );
             return $flag;
+        }
+        public function isRequestTypeUsed($seq){
+            $sql = "SELECT count(seq) FROM requests WHERE requesttypeseq = " . $seq;
+            $count = self::$dataStore->executeCountQueryWithSql($sql);
+            return $count > 0 ? true : false;
         }
     }
 ?>

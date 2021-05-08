@@ -51,15 +51,22 @@
             $dataArr = array();
             $tempSpecsFieldArr = array();
             $requestTypeSeq = $_REQUEST['requestTypeSeq'];
-            $requestStatusArrOfArr = $requestStatusMgr->findByRequestTypeSeq($requestTypeSeq);
+            $isRequestTypeUsed = $requestTypeMgr->isRequestTypeUsed($requestTypeSeq);
+            $requestStatusArrTemp = $requestStatusMgr->findByRequestTypeSeq($requestTypeSeq);
+            $requestStatusArr = [];
+            foreach($requestStatusArrTemp as $requestStatus){
+                $requestStatus['isRequestTypeUsed'] = $isRequestTypeUsed;
+                array_push($requestStatusArr,$requestStatus);
+            }
             $requestSpecsFieldArrOfArr = $requestSpecsFieldMgr->findByRequestTypeSeq($requestTypeSeq);
             foreach($requestSpecsFieldArrOfArr as $key => $arr){
                if(isset($arr['details'])){
                     $arr['details'] = str_replace(",", "\n", $arr['details']);
                }
+               $arr['isRequestTypeUsed'] = $isRequestTypeUsed;
                array_push($tempSpecsFieldArr,$arr);
             }
-            $dataArr['requestStatus'] = $requestStatusArrOfArr;
+            $dataArr['requestStatus'] = $requestStatusArr;
             $dataArr['requestSpecsFields'] = $tempSpecsFieldArr;
             $response["data"] = $dataArr;
         }catch(Exception $e){

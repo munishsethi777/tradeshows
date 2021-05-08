@@ -241,8 +241,8 @@ class RequestMgr{
 		$arr = array();
 		foreach($rows as $row){
 			$row["requests.department"] = RequestDepartments::getValue($row['department']);
-			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
-			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "d-m-Y H:i:s",$loggedInUserTimeZone);
+			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
 			$row["requests.lastmodifiedon"] = $lastModifiedOn;
 			$row["requests.priority"] = RequestPriorityTypes::getValue($row['priority']);
 			$row["requests.iscompleted"] = $row['iscompleted'] == 1 ? 1 : 0 ;

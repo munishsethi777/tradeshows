@@ -51,7 +51,7 @@ class RequestAttachmentMgr{
         $attachmentHtml = "";
         $i=1;
         foreach($requestAttachments as $requestAttachment){
-            if($requestAttachment['attachmentfilename'] != ''){
+            if($requestAttachment['attachmentfilename'] != '' && file_exists($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/".$requestAttachment['attachmentfilename'])){
                 $thumbnailType = "fa fa-file";
                 if($requestAttachment['attachmenttype'] == 'image/jpeg'){
                     $thumbnailType = "fa fa-file-image-o";

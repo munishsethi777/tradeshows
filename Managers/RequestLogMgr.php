@@ -306,9 +306,13 @@
                             $oldValueName = "NA";
                             $newValueName = $requestLogHistoryRow['newvalue'];
                         }
-                        $historyLogHtml .= "<span class='label label-default'>" . $oldValueName . "</span>";
-                        $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
-                        $historyLogHtml .= "<span class='label label-primary'>" . $newValueName . "</span>";
+                        if($requestLogHistoryRow['attributename'] == 'deleteattachment' || $requestLogHistoryRow['attributename'] == 'attachment'){
+                            $historyLogHtml .= "<span class='label label-primary'>" . $newValueName . "</span>";
+                        }else{
+                            $historyLogHtml .= "<span class='label label-default'>" . $oldValueName . "</span>";
+                            $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";
+                            $historyLogHtml .= "<span class='label label-primary'>" . $newValueName . "</span>";
+                        }
                     }
                     $historyLogHtml .= "</p>";
                     $historyLogHtml .= "</div>";
