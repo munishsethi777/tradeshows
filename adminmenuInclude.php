@@ -85,7 +85,7 @@ if($file == "dashboardmain.php"){
 }elseif($file == "adminManageRequests.php"){
     $manageRequestsParent = "active";
     $manageRequests = "active";
-}elseif($file == "adminManageRequestTypes.php"){
+}elseif($file == "adminManageRequestTypes.php" || $file == 'adminCreateRequestType.php'){
     $manageRequestsParent = "active";
     $manageRequestTypes = "active";
 }elseif($file == "manageCustomers.php" || $file == "createCustomer.php" || $file == "createCustomerQuestionaire.php"){

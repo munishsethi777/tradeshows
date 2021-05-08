@@ -195,10 +195,10 @@ function applyReportingFilterForRequestManagement(reportingDataParameter, gridId
         }
         filterValue = "1";
         filterType = "numericfilter";
-        filterFieldNameArr.push("iscompleted");
+        filterFieldNameArr.push("requests.iscompleted");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter', "iscompleted", filtergroup);
+        $("#" + gridId).jqxGrid('addfilter', "requests.iscompleted", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "request_management_incompleted_request") {
         if (isSourceChange) {
@@ -206,10 +206,10 @@ function applyReportingFilterForRequestManagement(reportingDataParameter, gridId
         }
         filterValue = "0";
         filterType = "numericfilter";
-        filterFieldNameArr.push("iscompleted");
+        filterFieldNameArr.push("requests.iscompleted");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
-        $("#" + gridId).jqxGrid('addfilter', "iscompleted", filtergroup);
+        $("#" + gridId).jqxGrid('addfilter', "requests.iscompleted", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
     } else if (reportingDataParameter == "request_management_requests_due_today") {
         source.url = "Actions/RequestAction.php?call=getRequestsDueToday";

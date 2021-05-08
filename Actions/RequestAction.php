@@ -174,16 +174,17 @@ if($call == "saveRequestAttachment"){
 				$requestAttachmentArr['loggedinuserseq'] = $loggedInUserSeq;
 				$requestAttachmentArr['createdon'] = date('Y-m-d h:i:s');
 				$requestAttachmentSeq = $requestAttachmentMgr->save($requestAttachmentArr);
+				$requestAttachmentArr['seq'] = $requestAttachmentSeq;
 				$requestLogArr = array();
 				$requestLogArr['requestseq'] = $_REQUEST['requestseq'];
 				$requestLogArr['oldvalue'] = "";
-				$requestLogArr['newvalue'] = $requestAttachmentSeq;
+				$requestLogArr['newvalue'] = $attachmentTitle;
 				$requestLogArr['attribute'] = "attachment";
 				$requestLogArr['createdby'] = $loggedInUserSeq;
 				$requestLogArr['createdon'] = date('Y-m-d h:i:s');
 				$requestLogArr['requesttypeseq'] = $_REQUEST['requesttypeseq'];
 				$requestLogMgr = RequestLogMgr::getInstance();
-				$requestAttachmentSeq = $requestLogMgr->save($requestLogArr);
+				$requestLogSeq = $requestLogMgr->save($requestLogArr);
 				$requestAttachmentTempArr = array();
 				array_push($requestAttachmentTempArr,$requestAttachmentArr);
 				$attachmentHtml = $requestAttachmentMgr->attachmentHtml($requestAttachmentTempArr);
@@ -308,6 +309,27 @@ if($call == "deleteRequest"){
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();
+	}
+}
+if($call == "deleteAttachment"){
+	try{
+		$attachmentSeq = $_REQUEST['attachmentseq'];
+		$attachmentName = $_REQUEST['attachmentname'];
+		$requestSeq = $_REQUEST['requestseq'];
+		$attachmentTitle = $_REQUEST['attachmenttitle'];
+		$response['data'] = $requestAttachmentMgr->deleteAttachment($attachmentSeq,$attachmentName);
+		$requestLogArr['requestseq'] = $requestSeq;
+		$requestLogArr['oldvalue'] = "";
+		$requestLogArr['newvalue'] = $attachmentTitle;
+		$requestLogArr['attribute'] = "deleteattachment";
+		$requestLogArr['createdby'] = $loggedInUserSeq;
+		$requestLogArr['createdon'] = date('Y-m-d h:i:s');
+		$requestLogArr['requesttypeseq'] = '';
+		$requestLogMgr = RequestLogMgr::getInstance();
+		$requestLogSeq = $requestLogMgr->save($requestLogArr);
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
 	}
 }
 

@@ -64,17 +64,25 @@ class RequestAttachmentMgr{
                 }elseif($requestAttachment['attachmenttype'] == 'text/plain'){
                     $thumbnailType = "fa fa-file-text";
                 }
-                $attachmentHtml .= "<div class='col-lg-2 p-sm m-sm text-center bg-muted border'>";
-                    $attachmentHtml .= "<div class='row'>";
-                    // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
-                    $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
-                    $attachmentHtml .= "<div class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
-                    $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
+                $attachmentHtml .= "<div id='attachmentsMainOuter". $requestAttachment['seq'] ."' class='col-lg-2 p-sm m-sm bg-muted border attachmentsMainOuter'>";
+                $attachmentHtml .= "<span class='attachmentCrossBtn'><i class='fa fa-times-circle' onclick=deleteAttachment('". $requestAttachment['seq'] ."','" . $requestAttachment['attachmentfilename'] . "','". $requestAttachment['requestseq'] ."')></i></span>";
+                $attachmentHtml .= "<div class='row text-center'>";
+                // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
+                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
+                $attachmentHtml .= "<div id='attachmentTitle".$requestAttachment['seq']."' class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
+                $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
                 $attachmentHtml .= "</div></div>";
                 $i++;
             }
         }
         return $attachmentHtml;
+    }
+    public function deleteAttachment($attachmentSeq,$attachmentName){
+        $return = false;
+        if(unlink($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/$attachmentName")){
+            $return = self::$dataStore->deleteBySeq($attachmentSeq);
+        }
+        return $return;
     }
 }
 ?>

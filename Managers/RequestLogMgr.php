@@ -212,11 +212,11 @@
                     $historyLogHtml .= "</div>";
                 }
                 foreach($requestLogHistory as $requestLogHistoryRow){
-                    $specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($requestLogHistoryRow['requesttypeseq']);
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
                     // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
                     if($requestLogHistoryRow['isspecfieldchange'] == true){// when specs fields are changed
+                        $specsFieldTypeArr = $requestSpecsFieldMgr->getSpecsFieldsTypeWithNameTitleByRequestTypeSeq($requestLogHistoryRow['requesttypeseq']);
                         if($requestLogHistoryRow['requestspecfieldname'] != null){
                             $historyLogHtml .= "<div class='feed-element'>";
                             $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . ")'>";
@@ -258,6 +258,8 @@
                         $action = " changed";
                         if($requestLogHistoryRow['attributename'] == 'attachment'){
                             $action = " added";
+                        }elseif($requestLogHistoryRow['attributename'] == 'deleteattachment'){
+                            $action = " deleted";
                         }
                         $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> " . $action . " the <b>" . RequestAttributeNameTypes::getValue($requestLogHistoryRow['attributename']) . "</b> <br>";
                         $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
@@ -288,7 +290,7 @@
                             $newValueName = RequestPriorityTypes::getValue($requestLogHistoryRow['newvalue']);
                         }elseif($requestLogHistoryRow['attributename'] == 'attachment'){
                             $oldValueName = "NA";
-                            $newValueName = $requestLogHistoryRow['attachmentfilename'];
+                            $newValueName = $requestLogHistoryRow['newvalue'];
                         }elseif($requestLogHistoryRow['attributename'] == 'iscompleted'){
                             $oldValueName = $requestLogHistoryRow['oldvalue'] == 1 ? 'On' : 'Off';
                             $newValueName = $requestLogHistoryRow['newvalue'] == 1 ? 'On' : 'Off';
@@ -300,6 +302,9 @@
                         }elseif($requestLogHistoryRow['attributename'] == 'department'){
                             $oldValueName = RequestDepartments::getValue($requestLogHistoryRow['oldvalue']);
                             $newValueName = RequestDepartments::getValue($requestLogHistoryRow['newvalue']);
+                        }elseif($requestLogHistoryRow['attributename'] == 'deleteattachment'){
+                            $oldValueName = "NA";
+                            $newValueName = $requestLogHistoryRow['newvalue'];
                         }
                         $historyLogHtml .= "<span class='label label-default'>" . $oldValueName . "</span>";
                         $historyLogHtml .= "<i class='fa fa-arrow-right text-default'></i>";

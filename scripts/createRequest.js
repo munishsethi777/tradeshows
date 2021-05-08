@@ -31,6 +31,14 @@ $(document).ready(()=>{
     $("#commentCancelBtn").click(()=>{
         $("#commentBox").val("");
     });
+    $("#deleteRequestAttachmentBtn").click(()=>{
+        var attachmentSeq = $("#deleteAttachmentModalForm #attachmentseq").val();
+        $("#deleteAttachmentModalForm").ajaxSubmit((response)=>{
+            $("#deleteAttachmentModal").modal('hide');
+            $("#attachmentsMainOuter" + attachmentSeq).remove();
+            loadHistory();
+        });
+    });
     
 });
 
@@ -328,4 +336,13 @@ function editButtonClick(seq) {
         $("#requestAttachmentDropzoneForm #requestTypeSeqForRequestAttachment").val(response.data.requestTypeSeq);
         $("#attachmentsRow").html(response.data.requestAttachmentsHtml);
     });
+}
+
+const deleteAttachment = (attachmentSeq,attachmentName,requestseq) => {
+    var attachmentTitle = $("#attachmentTitle" + attachmentSeq).text();
+    $("#deleteAttachmentModal").modal('show');
+    $('#deleteAttachmentModalForm #attachmentseq').val(attachmentSeq);
+    $('#deleteAttachmentModalForm #attachmentname').val(attachmentName);
+    $('#deleteAttachmentModalForm #requestseq').val(requestseq);
+    $('#deleteAttachmentModalForm #attachmenttitle').val(attachmentTitle);
 }

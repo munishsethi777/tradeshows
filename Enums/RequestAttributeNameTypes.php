@@ -25,5 +25,7 @@
         const iscompleted  = "Is Completed";
         const createdon = "Created On";
         const lastmodifiedon = "Last Modified On";
+        const deleteattachment = "Attachment";
+        const attachment = "Attachment";
     }
 ?>

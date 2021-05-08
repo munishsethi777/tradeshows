@@ -175,3 +175,32 @@
             </div>
         </div>
     </div>
+    <div id="deleteAttachmentModal" class="modal fade" aria-hidden="true" style='z-index:2051 !important'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title">Do you want delete this attachment</h3>
+                </div>
+                <div class="modal-body exportMainDiv">
+                    <div class="row" >
+                        <div class="col-sm-12">
+                            <form role="form" method="GET" action="Actions/RequestAction.php" id="deleteAttachmentModalForm" class="form-horizontal" style='text-align:end'>
+                                <input type="hidden" value="deleteAttachment" name="call">
+                                <input type="hidden" id='attachmentseq' name="attachmentseq"/>
+                                <input type="hidden" id='attachmentname' name="attachmentname"/>
+                                <input type="hidden" id='requestseq' name="requestseq"/>
+                                <input type="hidden" id='attachmenttitle' name="attachmenttitle"/>
+                                
+                                    <button class="btn btn-primary ladda-button" data-style="expand-right" id="deleteRequestAttachmentBtn" type="button">
+                                        <span class="ladda-label">Yes</span>
+                                    </button>        
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                        
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

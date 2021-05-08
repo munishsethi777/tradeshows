@@ -91,6 +91,14 @@ div#myDropZone {
 .dropzone{
     min-height:200px !important;
 }
+
+.attachmentsMainOuter:hover .attachmentCrossBtn{
+	visibility:visible;
+}
+.attachmentCrossBtn{
+	position:absolute; right:-5px;top:-10px;font-size:20px;color:red;
+	visibility: hidden;
+}
 </style>
 <script src="scripts/createRequest.js"></script>
 <script src="scripts/UserConfigurations.js"></script>
@@ -174,7 +182,7 @@ div#myDropZone {
 						<form id="form1" name="form1" method="post" action="adminCreateUser.php">
 							<input type="hidden" id="id" name="id"/>
 						</form> 
-						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;">
+						<div class="modal fade mt-lg-t" tabindex="-1" role="dialog" aria-hidden="true" id="requestFormDiv" style="margin: auto; max-width: 80%;overflow-x:hidden !important;overflow-y:auto !important">
 							<input id="seq" type="hidden" name="seq" value=""/>
 							<div class="bg-white p-xs outterDiv">
 								<div class="form-group row">
@@ -406,6 +414,7 @@ Dropzone.autoDiscover = false;
 const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm', {
 	autoProcessQueue : false,
 	url : 'Actions/RequestAction.php?call=saveRequestAttachment',
+	addRemoveLinks: true, 
 	init : function(){
 		this.on("success", function(file, responseJson) {
 		   var response = JSON.parse(responseJson);
