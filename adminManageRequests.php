@@ -99,12 +99,13 @@ div#myDropZone {
 	position:absolute; right:-5px;top:-10px;font-size:20px;color:red;
 	visibility: hidden;
 }
+.reportBlock{
+    width:20%;
+}
 </style>
 <script src="scripts/createRequest.js"></script>
 <script src="scripts/UserConfigurations.js"></script>
 <script src="scripts/GridDataByReportingParameter.js"></script>
-<script src="scripts/plugins/rickshaw/vendor/d3.v3.js"></script>    
-<script src="scripts/plugins/rickshaw/rickshaw.min.js"></script>
 </head>
 <body>
 	<?include "exportInclude.php"?>
@@ -164,7 +165,6 @@ div#myDropZone {
 																<span id='<?php echo $key ?>_percent'></span>
 															</div>
 															<small id="analyticName" class="analyticName"><?php echo $value ?></small>
-															<span class="bar" id='<?php echo $key ?>_thirty_days'></span>
 														</div>
 													</div>
 												</div>
@@ -445,7 +445,7 @@ function loadGrid(){
         }
 	var cellsRenderer = function (row, column, value, rowData){
 		data = $('#requestGrid').jqxGrid('getrowdata', row);
-		if (data.assignedtofullname == null){
+		if (data['assignedto.fullname'] == null){
             return '<span style="font-weight: 600;">' + rowData + '</span>';
         }else{
             return rowData;
@@ -455,17 +455,17 @@ function loadGrid(){
 	var columns = [
 		{ text: 'Edit',datafield: 'Actions',cellsrenderer: actions,width: '3%',sortable: false,filterable: false},
 		{ text: 'id', datafield: 'seq' , hidden:true},
-		{ text: 'Department', datafield: 'requests.department', width:"13%",cellsrenderer: cellsRenderer},
+		{ text: 'Department', datafield: 'requests.department', width:"10%",cellsrenderer: cellsRenderer},
 // 		{ text: 'Request Name', datafield: 'title', width:"12%"},	
 		{ text: 'Project No', datafield: 'requests.code', width:"10%",cellsrenderer: cellsRenderer},
-		{text: 'Priority',datafield: 'requests.priority',width: "20%",hidden: false,filtertype: 'checkedlist',filteritems: priorityTypes,filtercondition: 'equal',sortable: false},
+		{ text: 'Priority',datafield: 'requests.priority',width: "10%",hidden: false,filtertype: 'checkedlist',filteritems: priorityTypes,filtercondition: 'equal',sortable: false,cellsrenderer: cellsRenderer},
 		{ text: 'Project Type', datafield: 'requesttypes.title',width:"10%",cellsrenderer: cellsRenderer}, 
 		{ text: 'Requested By', datafield: 'createdby.fullname', width:"10%",cellsrenderer: cellsRenderer},
-		{ text: 'Assigned By', datafield: 'assignedby.fullname', width:"14%",cellsrenderer: cellsRenderer},	
+		{ text: 'Assigned By', datafield: 'assignedby.fullname', width:"12%",cellsrenderer: cellsRenderer},	
 		{ text: 'Assigned To', datafield: 'assignedto.fullname', width:"10%",cellsrenderer: cellsRenderer},       
-		{ text: 'Status', datafield: 'requeststatuses.title', width:"10%",cellsrenderer: cellsRenderer},
+		{ text: 'Status', datafield: 'requeststatuses.title', width:"5%",cellsrenderer: cellsRenderer},
 		{ text: 'Is Completed',datafield: 'requests.iscompleted', columntype: 'checkbox',width: "5%"},
-		{ text: 'Last Modified', datafield: 'requests.lastmodifiedon',width:"13%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
+		{ text: 'Last Modified', datafield: 'requests.lastmodifiedon',width:"11%",filtertype: 'date',cellsformat: 'M-d-yyyy hh:mm tt',cellsrenderer: cellsRenderer},
     ]
    
     source =
