@@ -156,7 +156,7 @@ if($call == "saveRequestAttachment"){
 			$date = new DateTime();
 			$currentDate = $date->getTimestamp();
 			$requestAttachmentMgr = RequestAttachmentMgr::getInstance();
-			$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/tradeshows/images/requestattachments/';
+			$uploadDir = StringConstants::REQUEST_ATTACHMENTS_PATH;
 			$temp = explode(".",$_FILES['file']['name']);
 			$attachmentName = $temp[0] . $currentDate . "." . $temp[1];
 			$attachmentTitle = $_FILES['file']['name'];

@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestTypeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 
 class RequestAttachmentMgr{
 	private static $requestAttachmentMgr;
@@ -51,7 +52,7 @@ class RequestAttachmentMgr{
         $attachmentHtml = "";
         $i=1;
         foreach($requestAttachments as $requestAttachment){
-            if($requestAttachment['attachmentfilename'] != '' && file_exists($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/".$requestAttachment['attachmentfilename'])){
+            if($requestAttachment['attachmentfilename'] != '' && file_exists(StringConstants::REQUEST_ATTACHMENTS_PATH . $requestAttachment['attachmentfilename'])){
                 $thumbnailType = "fa fa-file";
                 if($requestAttachment['attachmenttype'] == 'image/jpeg'){
                     $thumbnailType = "fa fa-file-image-o";
@@ -79,7 +80,7 @@ class RequestAttachmentMgr{
     }
     public function deleteAttachment($attachmentSeq,$attachmentName){
         $return = false;
-        if(unlink($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/$attachmentName")){
+        if(unlink(StringConstants::REQUEST_ATTACHMENTS_PATH . $attachmentName)){
             $return = self::$dataStore->deleteBySeq($attachmentSeq);
         }
         return $return;
