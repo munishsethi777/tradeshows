@@ -535,7 +535,8 @@ function loadGrid(){
 	var statusTypes = ["","Sent to Print","No Update Needed","Not Started","Missing Info from China","In Progress","Buyer's Reviewing","Robby Reviewing","Manager Reviewing","Pending Customer Approval",
 	"Pending Attorney Approval","Preparing for Print"];
 	var columns = [
-		{ text: 'Actions', datafield: 'Actions', cellsrenderer:actions,width:'5%',filterable: false},
+	  { text: 'Edit', datafield: 'Actions', cellsrenderer:actions,width:'4%',filterable: false},
+	  { text: 'State', datafield: 'neworupdate',width:'4%'},
       { text: 'id', datafield: 'seq' , hidden:true},
       { text: 'US Entry', datafield: 'usaofficeentrydate', filtertype: 'date', width:"10%",cellsformat: 'M-dd-yyyy'},
       { text: 'Est Ship', datafield: 'estimatedshipdate', filtertype: 'date',width:"10%",cellsformat: 'M-dd-yyyy'},
@@ -588,7 +589,8 @@ function loadGrid(){
 					{ name: 'enteredbyfullname', type: 'fullname' },
                     { name: 'graphicstatus', type: 'string' },  
                     { name: 'tagtype', type: 'string' }, 
-                    { name: 'lastmodifiedon', type: 'date' } 
+                    { name: 'lastmodifiedon', type: 'date' },
+                    { name: 'neworupdate', type: 'string' }  
                     ],                          
         url: 'Actions/GraphicLogAction.php?call=getAllGraphicLogs',
         root: 'Rows',

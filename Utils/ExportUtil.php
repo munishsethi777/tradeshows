@@ -868,7 +868,7 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getChinaNotes());
 			
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicArtist());
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->graphicartistfullname);
 			
 			$graphicArtistStartDate = $graphicLog->getGraphicArtistStartDate();
 			if(!empty($graphicArtistStartDate)){

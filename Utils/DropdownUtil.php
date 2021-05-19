@@ -435,4 +435,9 @@ class DropDownUtils {
 		$enums =  CustomerDirectImportCommissionTypes::getAll();
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
+	public static function getGraphicNeworUpdate($selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll = false,$isMultiSelect=false){
+	    $enums =  CustomerDirectImportCommissionTypes::getAll();
+	    $constants = ["new"=>"New","update"=> "Update"];
+	    return self::getDropDown1($constants, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
+	}
 }

@@ -18,10 +18,12 @@ class GraphicLogMgr{
 	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
 	private static $timeZone = "Asia/Hong_Kong";
-	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,graphicslogs.* from graphicslogs
+	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,designedby.fullname as graphicartistfullname,graphicslogs.* from graphicslogs
 								left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 								left join users as createdby on graphicslogs.createdby = createdby.seq
-								left join users as enteredby on graphicslogs.userseq = enteredby.seq";
+								left join users as enteredby on graphicslogs.userseq = enteredby.seq
+	                            left join users as designedby on graphicslogs.graphicartist = designedby.seq";
+	
 	private static $selectCountSql = "SELECT COUNT(graphicslogs.seq) from graphicslogs
 									left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 									left join users as createdby on graphicslogs.createdby = createdby.seq

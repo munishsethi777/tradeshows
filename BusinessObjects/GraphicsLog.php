@@ -6,11 +6,12 @@ class GraphicsLog{
 	$confirmedposhipdate, $jeopardydate, $graphiclength, $graphicwidth, $graphicheight, $chinanotes, $finalgraphicsduedate, 
 	$graphicstochinanotes, $approxgraphicschinasentdate, $graphicstatus, $graphicartist, $graphicartiststartdate, $graphiccompletiondate,
 	$duration,$userseq,$createdon,$lastmodifiedon,$tagtype,$taglength,$tagwidth,$tagheight,$labeltype,$labellength,$labelwidth,$labelheight;
-	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate,$classcodeseq,$robbyreviewdate;
+	private $draftdate,$buyerreviewreturndate,$managerreviewreturndate,$classcodeseq,$robbyreviewdate,$neworupdate;
 	private $graphicstatuschangedate,$createdby;
 	public static $className = "GraphicsLog";
 	public static $tableName = "graphicslogs";
-
+    private static $excludeDateAttributes = array("neworupdate"); //variable used in from_array function to skip these variable to calculate date of out it
+    
 	public function setSeq($seq_){
 		$this->seq = $seq_;
 	}
@@ -298,6 +299,14 @@ class GraphicsLog{
 	public function getCreatedBy(){
 		return $this->createdby;
 	}
+	
+	public function setNewOrUpdate($newOrUpdate){
+	    $this->neworupdate = $newOrUpdate;
+	}
+	public function getNewOrUpdate(){
+	    return $this->neworupdate;
+	}
+	
 	public function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);
@@ -311,7 +320,7 @@ class GraphicsLog{
 			if($flag && $isExists){
 				$datePos = strpos(strtolower ($attrName),'date');
 				$value = $array[$attrName];
-				if($datePos !== false && !empty($value)){
+				if($datePos !== false && !empty($value) && !in_array($attrName,self::$excludeDateAttributes)){
 					$value = DateUtil::StringToDateByGivenFormat("m-d-Y", $value);
 				}
 				if(!empty($value)){

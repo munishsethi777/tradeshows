@@ -180,6 +180,14 @@ if(isset($_POST["id"])){
 	                        	<div class="col-lg-4">
 	                            	<input tabindex="<?php echo $usaTabIndex?>" type="text" maxLength="25" value="<?php echo $graphicLog->getSKU()?>" name="sku" class="form-control" <?php echo $readOnlyPO?>>
 	                            </div>
+	                            
+	                            <label class="col-lg-2 col-form-label bg-formLabel">New / Update :</label>
+	                        	<div class="col-lg-4">
+	                            	<?php 
+			                           	$select = DropDownUtils::getGraphicNeworUpdate("neworupdate", null, $graphicLog->getNewOrUpdate(),false,true,false);
+			                            echo $select;
+	                             	?>
+	                            </div>
 	                        </div>
 	                        <div class="form-group row i-checks">
 	                       		<label class="col-lg-2 col-form-label bg-formLabel">Type of Graphics :</label>
