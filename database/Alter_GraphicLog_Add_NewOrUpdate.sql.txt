@@ -1,0 +1,1 @@
+ALTER TABLE `graphicslogs` ADD `neworupdate` ENUM('new','update') NULL AFTER `createdby`;
