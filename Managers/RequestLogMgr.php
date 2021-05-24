@@ -152,6 +152,7 @@
                 }
                 $query .= " requestlogs.seq > " . $requestLogSeqGreaterThan;
             }
+            $query  = $query . " ORDER BY requestlogs.seq DESC";
             $requestLog = self::$dataStore->executeQuery($query,false,true);
             return $requestLog;
         }
@@ -199,18 +200,6 @@
                 $request = self::$dataStore->executeQuery($query,false,true);
                 $backgroundColor = self::getColor($request[0]['createdby']);
                 $backgroundColor = implode(",",$backgroundColor);
-                if(!$isAppendingHistory){
-                    $historyLogHtml .= "<div class='feed-element'>";
-                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
-                    $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
-                    $historyLogHtml .= "</div>";
-                    $historyLogHtml .= "<div class='media-body'>";
-                    // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
-                    $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
-                    $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $request[0]['createdon'] . "</small>";
-                    $historyLogHtml .= "</div>";
-                    $historyLogHtml .= "</div>";
-                }
                 foreach($requestLogHistory as $requestLogHistoryRow){
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
@@ -317,7 +306,21 @@
                     $historyLogHtml .= "</p>";
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "</div>";
-                    $lastUpdatedHistorySeq = $requestLogHistoryRow['seq'];
+                    if($lastUpdatedHistorySeq == null){
+                        $lastUpdatedHistorySeq = $requestLogHistoryRow['seq'];
+                    }
+                }
+                if(!$isAppendingHistory){
+                    $historyLogHtml .= "<div class='feed-element'>";
+                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
+                    $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "<div class='media-body'>";
+                    // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
+                    $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
+                    $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $request[0]['createdon'] . "</small>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "</div>";
                 }
             }
             $historyLog['historyLogHtml'] = $historyLogHtml;

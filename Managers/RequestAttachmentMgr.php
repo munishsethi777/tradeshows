@@ -85,5 +85,10 @@ class RequestAttachmentMgr{
         }
         return $return;
     }
+    public function getAttachmentFileNamesByRequestSeqs($seqs){
+        $sql = "SELECT requestattachments.attachmentfilename FROM `requestattachments` where requestseq IN($seqs)";
+        $attachmentFileNames = self::$dataStore->executeQuery($sql,false,true);
+        return $attachmentFileNames;
+    }
 }
 ?>

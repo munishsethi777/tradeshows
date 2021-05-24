@@ -157,8 +157,9 @@ if($call == "saveRequestAttachment"){
 			$currentDate = $date->getTimestamp();
 			$requestAttachmentMgr = RequestAttachmentMgr::getInstance();
 			$uploadDir = StringConstants::REQUEST_ATTACHMENTS_PATH;
-			$temp = explode(".",$_FILES['file']['name']);
-			$attachmentName = $temp[0] . $currentDate . "." . $temp[1];
+			$fileExtension = strrchr($_FILES['file']['name'],".");
+			$fileNameWithoutExtention = preg_replace("/\.[^.]+$/", "", $_FILES['file']['name']);
+			$attachmentName = $fileNameWithoutExtention . $currentDate . $fileExtension;
 			$attachmentTitle = $_FILES['file']['name'];
 			$uploadFilePath = $uploadDir . $attachmentName;
 			$attachmentBytes = $_FILES['file']['size'];

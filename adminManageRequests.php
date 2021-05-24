@@ -416,6 +416,7 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 	autoProcessQueue : false,
 	url : 'Actions/RequestAction.php?call=saveRequestAttachment',
 	addRemoveLinks: true, 
+  	parallelUploads: 1,
 	init : function(){
 		this.on("success", function(file, responseJson) {
 		   var response = JSON.parse(responseJson);
@@ -429,7 +430,6 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 		   loadHistory();
         });
 	}
-	
 });
 Dropzone.options.imageUpload = {
     maxFilesize:1,

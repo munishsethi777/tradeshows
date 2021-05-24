@@ -2,7 +2,9 @@
 class StringConstants{
     const WEB_PORTAL_LINK = "http://localhost/tradeshows/";
     //const WEB_PORTAL_LINK = "http://www.alpinebi.com";
-    
+    const REQUEST_ATTACHMENTS_PATH = "C:/xampp/htdocs/tradeshows/attachments/project/";
+	const REQUEST_ATTACHMENT_URL = 'http://localhost/tradeshows/attachments/project/';
+
 	//REPORTS SUBJECTS STARTS HERE -----------------
 	const UPCOMING_INSPECTION_SCHEDULE = "Alpine BI Quality| Upcoming Inspection Schedules";
 	const UPCOMING_INSPECTIONS = "Alpine BI Quality | Upcoming Inspections";

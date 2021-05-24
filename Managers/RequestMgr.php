@@ -790,7 +790,14 @@ class RequestMgr{
 		return $requests;
 	}
 	public function deleteBySeqs($ids) {
+		$requestAttachmentMgr = RequestAttachmentMgr::getInstance();	
+		$attachmentFileNames = $requestAttachmentMgr->getAttachmentFileNamesByRequestSeqs($ids);
 		$flag = self::$dataStore->deleteInList ( $ids );
+		if($flag){
+			foreach($attachmentFileNames as $attachmentFileName ){
+				unlink(StringConstants::REQUEST_ATTACHMENTS_PATH . $attachmentFileName['attachmentfilename']);
+			}
+		}
 		return $flag;
 	}
 	public function getUsersByDepartmentForDD($users,$department){

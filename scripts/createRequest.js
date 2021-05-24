@@ -14,7 +14,7 @@ $(document).ready(()=>{
         var comment = $("#commentBox").val().trim();
         if(comment != ''){
             $.getJSON("Actions/RequestAction.php?call=saveComment&requestSeq="+requestSeq+"&loggedInUserSeq="+loggedInUserSeq+"&comment="+comment,(response)=>{
-                $('#loadComments').append(response.data.requestLogCommentsHtml);
+                $('#loadComments').prepend(response.data.requestLogCommentsHtml);
                 $("#saveRequestLogComments").prop('disabled','true');
                 $("#commentBox").val("");
             });  
@@ -258,8 +258,8 @@ const loadHistory = () => {
     var url = "Actions/RequestAction.php?call=loadHistory&lastUpdatedHistorySeq=" + lastUpdatedHistorySeq + "&requestSeq=" + requestSeq;
 
     $.getJSON(url,(response)=>{
-        $('#loadHistory').append(response.data.historyLogHtml);
-        if(response.data.lastUpdatedHistorySeq != null){
+        if(response.data.lastUpdatedHistorySeq != null && response.data.lastUpdatedHistorySeq > lastUpdatedHistorySeq){
+            $('#loadHistory').prepend(response.data.historyLogHtml);
             $('#lastUpdatedHistorySeq').val(response.data.lastUpdatedHistorySeq);
         }
     });
