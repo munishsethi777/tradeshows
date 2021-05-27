@@ -2,8 +2,10 @@
 include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/UserMgr.php");
 $sessionUtil = SessionUtil::getInstance();
 $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+$userMgr = UserMgr::getInstance();
 if(!$userMgr->isUserHasDepartment(11,$loggedInUserSeq)){
 	header("Location:" . StringConstants::WEB_PORTAL_LINK . "dashboardmain.php");
 }
