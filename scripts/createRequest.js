@@ -131,6 +131,7 @@ const saveRequest = (btn) => {
         // jsonObj.push(item);
     })
     var requestSpecsFieldsFormJson = JSON.stringify(item);
+    var title = "";
     var department="";
     var requestTypeSeq="";
     var priority="";
@@ -147,6 +148,7 @@ const saveRequest = (btn) => {
     var checkValidity = true;
     var validateInput = "";
     var isCompleted = 0;
+
     
     if(!document.getElementById("duedate").checkValidity()) {
         checkValidity = false;
@@ -155,6 +157,13 @@ const saveRequest = (btn) => {
     if(!document.getElementById("requesttypeseq").checkValidity()) {
         checkValidity = false;
         validateInput = "requesttypeseq";
+    }
+    if(!document.getElementById("title").checkValidity()) {
+        checkValidity = false;
+        validateInput = "title";
+    }
+    if($("#title").val()) {
+        title = $("#title").val();
     }
     if(!document.getElementById("department").checkValidity()) {
         checkValidity = false;
@@ -215,7 +224,7 @@ const saveRequest = (btn) => {
                 + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
                 + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
                 + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
-                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted;
+                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted + "&title=" + title;
         $.get(url,(response)=>{
                     var responseObj = JSON.parse(response);
                     $("#requestFormDiv #code").text(responseObj.data.code);
@@ -270,6 +279,7 @@ function editButtonClick(seq) {
     requestAttachmentDropzone.removeAllFiles(true);
     $("#requestFormDiv #requestcode").text("");
     $("#requestFormDiv #requestSpecsFields").html("");
+    $("#requestFormDiv #title").val("");
     $("#requestFormDiv #department").val("");
     $("#requestFormDiv #requeststatusseq").empty();
     $("#requestFormDiv #requesttypeseq").val("");

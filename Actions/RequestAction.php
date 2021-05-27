@@ -111,6 +111,7 @@ if($call == "getRequestDataBySeqForEdit"){
 		$response['data']['requestTypeSeq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields = array();
 		$requestFormOtherFields['code'] = $request->getCode();
+		$requestFormOtherFields['title'] = $request->getTitle();
 		$requestFormOtherFields['department'] = $request->getDepartment();
 		$requestFormOtherFields['requesttypeseq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields['priority'] = $request->getPriority();

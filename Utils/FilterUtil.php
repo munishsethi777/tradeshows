@@ -136,8 +136,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
                     $tmpdatafield = $filterdatafield;            
                 }
                 else if ($tmpdatafield <> $filterdatafield)
-                {
-                    if($_GET[$tmpdatafield."operator"] == "and"){
+                {    $tmpdatafield1 = str_replace(".","_",$tmpdatafield);
+                    if($_GET[$tmpdatafield1."operator"] == "and"){
                     	$tmpfilteroperator = 0;
                     }
                 	if($tmpfilteroperator == 0){

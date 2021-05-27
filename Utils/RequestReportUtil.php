@@ -110,8 +110,9 @@ class RequestReportUtil
         $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         $loggedInUserDateTime = DateUtil::getCurrentDateTimeStrWithTimeZone($loggedInUserTimeZone);
         $phAnValues = array();
-        $phAnValues["ASSIGNED_TO"] = $user->getFullName();
-        $phAnValues["REQUEST_CODE"] = $request->getCode(); ;
+        $phAnValues["REQUEST_TITLE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getTitle()."</a>";
+        $phAnValues["REQUEST_CODE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getCode()."</a>"; 
+        $phAnValues["REQUEST_DEPARTMENT"] = RequestDepartments::getValue($request->getDepartment()); 
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestAssignmentNotificationToAssigneeTemplate.php";
@@ -159,7 +160,9 @@ class RequestReportUtil
         $phAnValues = array();
         $phAnValues["STATUS"] = $requestStatus != '' ? $requestStatus->getTitle() : "";
         $phAnValues["PREVIOUS_STATUS"] = $previousRequestStatus != "" ? $previousRequestStatus->getTitle() : "";
-        $phAnValues["REQUEST_CODE"] = $request->getCode(); ;
+        $phAnValues["REQUEST_TITLE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getTitle()."</a>";
+        $phAnValues["REQUEST_CODE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getCode()."</a>";
+        $phAnValues["REQUEST_DEPARTMENT"] = RequestDepartments::getValue($request->getDepartment()); 
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestStatusChangeNotificationToRequesterTemplate.php";
@@ -205,10 +208,12 @@ class RequestReportUtil
 
         $phAnValues = array();
         $phAnValues["COMMENT"] = $comment;
-        $phAnValues["REQUEST_CODE"] = $request->getCode(); ;
+        $phAnValues["REQUEST_TITLE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getTitle()."</a>";
+        $phAnValues["REQUEST_CODE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getCode()."</a>"; 
+        $phAnValues["REQUEST_DEPARTMENT"] = RequestDepartments::getValue($request->getDepartment()); 
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
-        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/CommentAddedNotificationTemplate.php";
+        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestCommentAddedNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
@@ -250,10 +255,12 @@ class RequestReportUtil
 
         $phAnValues = array();
         $phAnValues["ATTACHMENT_TITLE"] = $attachmentTitle;
-        $phAnValues["REQUEST_CODE"] = $request->getCode(); ;
+        $phAnValues["REQUEST_TITLE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getTitle()."</a>";
+        $phAnValues["REQUEST_CODE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getCode()."</a>"; 
+        $phAnValues["REQUEST_DEPARTMENT"] = RequestDepartments::getValue($request->getDepartment()); 
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
-        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/FileAddedNotificationTemplate.php";
+        $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestFileAddedNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
@@ -292,7 +299,9 @@ class RequestReportUtil
         $loggedInUserDateTime = DateUtil::getCurrentDateTimeStrWithTimeZone($loggedInUserTimeZone);
 
         $phAnValues = array();
-        $phAnValues["REQUEST_CODE"] = $request->getCode(); ;
+        $phAnValues["REQUEST_TITLE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getTitle()."</a>";
+        $phAnValues["REQUEST_CODE"] = "<a href='" . StringConstants::WEB_PORTAL_LINK . "adminManageRequests.php?projectno=". $request->getCode() ."'>".$request->getCode()."</a>";
+        $phAnValues["REQUEST_DEPARTMENT"] = RequestDepartments::getValue($request->getDepartment()); 
         $phAnValues["LOGGED_IN_USER_NAME"] = $loggedInUserName;
         $phAnValues["CURR_DATE_TIME"] = $loggedInUserDateTime;
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestMarkedAsCompletedNotificationTemplate.php";

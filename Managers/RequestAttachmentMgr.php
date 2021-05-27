@@ -49,6 +49,8 @@ class RequestAttachmentMgr{
         return $id;
     }
     public function attachmentHtml($requestAttachments){
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         $attachmentHtml = "";
         $i=1;
         foreach($requestAttachments as $requestAttachment){
@@ -71,7 +73,7 @@ class RequestAttachmentMgr{
                 // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
                 $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
                 $attachmentHtml .= "<div id='attachmentTitle".$requestAttachment['seq']."' class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
-                $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
+                $attachmentHtml .= "<div class='col-lg-12'>" . DateUtil::convertDateToFormatWithTimeZone($requestAttachment['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</div>";
                 $attachmentHtml .= "</div></div>";
                 $i++;
             }

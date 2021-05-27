@@ -170,7 +170,7 @@ class RequestMgr{
 		$request->setRequestStatusSeq($requestStatusSeq);
 		$request->setRequestSpecifications($requestSpecsFieldsFormJson);
 		$request->setCode(null);
-		$request->setTitle(null);
+		$request->setTitle($globalRequestVariable['title']);
 		$request->setDescriptionText(null);
 		$request->setCreatedBy($loggedInUserSeq);
 		$request->setAssignedBy($assignedBy);
@@ -196,7 +196,7 @@ class RequestMgr{
         
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
-			$requestCode = $seq . "-" . $requestTypeCode;
+			$requestCode = $requestTypeCode . "-" . $seq;
 			$request->setSeq($seq);
 			$request->setCode($requestCode);
 			$requestLogMgr = RequestLogMgr::getInstance();
@@ -252,6 +252,7 @@ class RequestMgr{
 			$row["requesttypes.title"] = $row['requesttypetitle'];
 			$row['requeststatuses.title'] = $row['requeststatustitle'];
 			// $row['requests.seq'] = $row['seq'];
+			$row['requests.title'] = $row['title'];
 			$row['requests.code'] = $row['code'];
 			$row['requests.lastmodifiedon'] = $row['lastmodifiedon'];
 			array_push($arr,$row);
