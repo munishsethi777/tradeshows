@@ -193,7 +193,7 @@ class RequestMgr{
             $request->setIsCompleted($globalRequestVariable["isCompleted"]);
 			$markedCompletedNotification = true;
         }
-        
+        $sendRequestAssignmentNotificationToEmployee = false;
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
 			$requestCode = $requestTypeCode . "-" . $seq;
@@ -205,7 +205,7 @@ class RequestMgr{
 			$request->setCreatedBy($existingRequest->getCreatedBy());
 			$requestLogMgr->saveUpdatedAttributes($existingRequest,$request,$loggedInUserSeq);
 			if($existingRequest->getAssignedTo() != $request->getAssignedTo()){
-				RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+				$sendRequestAssignmentNotificationToEmployee = true;
 			}
 			if($existingRequest->getRequestStatusSeq() != $request->getRequestStatusSeq()){
 				RequestReportUtil::sendRequestStatusChangeNotificationToRequester($request,$existingRequest);
@@ -217,12 +217,12 @@ class RequestMgr{
 			$request->setCreatedOn($currentDateTime);
 			$request->setCreatedBy($loggedInUserSeq);
 			if( $request->getAssignedTo() != null){
-				RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+				$sendRequestAssignmentNotificationToEmployee = true;
 			}
 		}
 		$seq = self::$dataStore->save($request);
 		if($requestCode == "" ){// It means new case
-			$requestCode = $seq . "-" . $requestTypeCode;
+			$requestCode = $requestTypeCode . "-" . $seq;
 			$attr = array("code" => $requestCode);
 			$condition = array("seq" => $seq);
 			self::$dataStore->updateByAttributes($attr,$condition);
@@ -231,6 +231,9 @@ class RequestMgr{
 		}
 		if($markedCompletedNotification){
 			RequestReportUtil::sendRequestMarkedAsCompletedNotification($request);
+		}
+		if($sendRequestAssignmentNotificationToEmployee){
+			RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
 		}
 		$return = array('seq' => $seq,'requestcode'=>$requestCode,'requesttypeseq'=>$requestTypeSeq);
 		return $return;

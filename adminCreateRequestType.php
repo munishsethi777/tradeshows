@@ -6,7 +6,13 @@
     require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
     require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestSpecsFieldMgr.php");
     require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/RequestType.php");
-
+    require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
+    
+    $sessionUtil = SessionUtil::getInstance();
+    $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+    if(!$userMgr->isUserHasDepartment(11,$loggedInUserSeq)){
+        header("Location:" . StringConstants::WEB_PORTAL_LINK . "dashboardmain.php");
+	}
     $requestType = new RequestType();
     $requestTypeMgr = RequestTypeMgr::getInstance();
     $requestStatusMgr = RequestStatusMgr::getInstance();

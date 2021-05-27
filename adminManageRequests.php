@@ -20,6 +20,9 @@ $permissionUtil = PermissionUtil::getInstance();
 $hasQCReadonly = $permissionUtil->hasQCReadonly();
 $sessionUtil = SessionUtil::getInstance();
 $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+if(!$userMgr->isUserHasDepartment(11,$loggedInUserSeq)){
+	header("Location:" . StringConstants::WEB_PORTAL_LINK . "dashboardmain.php");
+}
 $userRoles = $userMgr->getUserRolesArr($loggedInUserSeq);
 $requestLogMgr = RequestLogMgr::getInstance();
 $isRequester = 0;
@@ -439,6 +442,7 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 	url : 'Actions/RequestAction.php?call=saveRequestAttachment',
 	addRemoveLinks: true, 
   	parallelUploads: 1,
+	acceptedFiles: '.jpeg,.jpg,.png,.gif,.xls,.pdf,.xlsx,.csv,.doc,.docx,.txt',
 	init : function(){
 		this.on("success", function(file, responseJson) {
 		   var response = JSON.parse(responseJson);
@@ -455,7 +459,6 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 });
 Dropzone.options.imageUpload = {
     maxFilesize:1,
-    acceptedFiles: ".jpeg,.jpg,.png,.gif,.xls,.pdf,.xlsx,.csv"
 };
 function loadGrid(){
 	var actions = function(row, columnfield, value, defaulthtml, columnproperties) {
@@ -587,6 +590,9 @@ function loadGrid(){
 				$("#requestFormDiv #requestSpecsFields").html("<center><small>Select request type to display related fields</small></center>");
 				$("#requestFormDiv #department").val("");
 				$("#requestFormDiv #code").text("");
+				$("#requestFormDiv #title").val("");
+				$("#requestFormDiv #assigneeduedate").val("");
+				$("#requestFormDiv #estimatedhours").val("");
 				$("#requestFormDiv #requesttypeseq").empty();
 				$("#requestFormDiv #requeststatusseq ").empty();
 				$("#requestFormDiv #seq").val("");
