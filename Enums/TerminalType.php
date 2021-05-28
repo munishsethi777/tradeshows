@@ -3,6 +3,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
 class TerminalType extends BasicEnum{
     const apl = "APL";
     const apm = "APM";
+    const city_of_industry_alpine = "City of Industry - Alpine";
+    const commerce_alpine = "Commerce-Alpine";
+    const dhe = "DHE";
     const everport = "EVERPORT TERMINAL SERVICES";
     const felixstowe = "FELIXSTOWE";
     const garden_city = "GARDEN CITY";
@@ -17,8 +20,5 @@ class TerminalType extends BasicEnum{
     const tti = "TTI";
     const wbct = "WBCT";
     const yti = "YTI";
-    const yusen = "YUSEN";
-    const commerce_alpine = "Commerce-Alpine";
-    const city_of_industry_alpine = "City of Industry - Alpine";
-    const dhe = "DHE";
+    const yusen = "YUSEN"; 
 }
