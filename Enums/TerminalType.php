@@ -18,4 +18,7 @@ class TerminalType extends BasicEnum{
     const wbct = "WBCT";
     const yti = "YTI";
     const yusen = "YUSEN";
+    const commerce_alpine = "Commerce-Alpine";
+    const city_of_industry_alpine = "City of Industry - Alpine";
+    const dhe = "DHE";
 }

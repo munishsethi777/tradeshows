@@ -9,6 +9,7 @@ require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 
 class GraphicLogMgr{
 	private static $graphicLogMgr;
@@ -439,7 +440,7 @@ class GraphicLogMgr{
 // 		        $query .= " where users.seq in($myTeamMembersCommaSeparated)";
 // 		    }
 // 	    }
-		$rows = self::$dataStore->executeQuery($query,true);
+		$rows = self::$dataStore->executeQuery($query,true,true);
 		$arr = array();
 		foreach($rows as $row){	
 		    $row["usaofficeentrydate"] = DateUtil::convertDateToFormat($row["usaofficeentrydate"], "Y-m-d", "Y-m-d H:i:s");
@@ -451,6 +452,14 @@ class GraphicLogMgr{
     	    $row["lastmodifiedon"] = $lastModifiedOn;
     	    $row["graphicstatus"] = GraphicStatusType::getValue($row["graphicstatus"]);
     	    $row["tagtype"] = TagType::getValue($row["tagtype"]);
+			$row["graphictype"] = explode(',',$row['graphictype']);
+			$graphicTypeArr = [];
+			if(count($row["graphictype"])){
+				foreach($row["graphictype"] as $graphicType){
+					array_push($graphicTypeArr,GraphicType::getValue($graphicType));
+				}
+			}
+			$row["graphictype"] = implode(", ",$graphicTypeArr);
     	    array_push($arr,$row);		    
 		}
 		$mainArr["Rows"] = $arr;
