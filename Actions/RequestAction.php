@@ -174,7 +174,7 @@ if($call == "saveRequestAttachment"){
 				$requestAttachmentArr['attachmenttype'] = $attachmentType;
 				$requestAttachmentArr['loggedinuserseq'] = $loggedInUserSeq;
 				$requestAttachmentArr['loggedinuserseq'] = $loggedInUserSeq;
-				$requestAttachmentArr['createdon'] = date('Y-m-d h:i:s');
+				$requestAttachmentArr['createdon'] = date('Y-m-d H:i:s');
 				$requestAttachmentSeq = $requestAttachmentMgr->save($requestAttachmentArr);
 				$requestAttachmentArr['seq'] = $requestAttachmentSeq;
 				$requestLogArr = array();
@@ -183,7 +183,7 @@ if($call == "saveRequestAttachment"){
 				$requestLogArr['newvalue'] = $attachmentTitle;
 				$requestLogArr['attribute'] = "attachment";
 				$requestLogArr['createdby'] = $loggedInUserSeq;
-				$requestLogArr['createdon'] = date('Y-m-d h:i:s');
+				$requestLogArr['createdon'] = date('Y-m-d H:i:s');
 				$requestLogArr['requesttypeseq'] = $_REQUEST['requesttypeseq'];
 				$requestLogMgr = RequestLogMgr::getInstance();
 				$requestLogSeq = $requestLogMgr->save($requestLogArr);

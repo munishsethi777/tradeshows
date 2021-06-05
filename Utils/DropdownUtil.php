@@ -413,16 +413,18 @@ class DropDownUtils {
 		unset($enums[CustomerRepTypes::getName(CustomerRepTypes::buyer)]);
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue,$isRequired,$isAll);
 	}
-	public static function getRequestDepartments($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false,$isMultipleSelect = false,$disabled=false){
+	public static function getRequestDepartments($selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll = false,$isMultipleSelect = false,$disabled=false,$getAllDepartments = false){
 		$sessionUtil = SessionUtil::getInstance();
 		$loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
 		$userMgr = UserMgr::getInstance();
 		$user = $userMgr->findBySeq($loggedInUserSeq);
 		$userDepartmentsArr = explode(",",$user->getRequestDepartments());
 		$enums =  RequestDepartments::getAll();
-		foreach($enums as $key => $val){
-			if(!in_array($key,$userDepartmentsArr)){
-				unset($enums[$key]);
+		if(!$getAllDepartments){
+			foreach($enums as $key => $val){
+				if(!in_array($key,$userDepartmentsArr)){
+					unset($enums[$key]);
+				}
 			}
 		}
 		return self::getDropDown1($enums, $selectName, $onChangeMethod, $selectedValue, $isRequired, $isAll,"Select Any",$isMultipleSelect,$disabled);

@@ -1,6 +1,6 @@
 <div>
 	<p>
-		<b>{LOGGED_IN_USER_NAME}</b> added a <b>new attachment</b> on project
+		<b>{LOGGED_IN_USER_NAME}</b> added a <b>new attachment</b> on project<br>
 		<b>Project No: {REQUEST_CODE}</b><br>
 		<b>Title: {REQUEST_TITLE}</b><br>
 		<b>Department: {REQUEST_DEPARTMENT}</b><br>

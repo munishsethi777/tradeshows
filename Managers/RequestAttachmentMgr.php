@@ -9,6 +9,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestMgr.php");
 
 class RequestAttachmentMgr{
 	private static $requestAttachmentMgr;
@@ -45,10 +46,17 @@ class RequestAttachmentMgr{
         $requestAttachment->setCreatedBy($requestAttachmentArr['loggedinuserseq']);
         $requestAttachment->setAttachmentTitle($requestAttachmentArr['attachmenttitle']);
         $id = self::$dataStore->save($requestAttachment);
+        if($id){
+            $requestMgr = RequestMgr::getInstance();
+            $attr = array("lastmodifiedon" => new DateTime());
+			$condition = array("seq" => $requestAttachmentArr['requestseq']);
+            $requestMgr->updateByAttribute($attr,$condition);
+        }
         RequestReportUtil::sendFileAddedOnRequestNotification($requestAttachmentArr['requestseq'],$requestAttachmentArr['attachmenttitle']);
         return $id;
     }
     public function attachmentHtml($requestAttachments){
+        $requestAttachments = array_reverse($requestAttachments);
         $sessionUtil = SessionUtil::getInstance();
         $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         $attachmentHtml = "";
@@ -71,7 +79,7 @@ class RequestAttachmentMgr{
                 $attachmentHtml .= "<span class='attachmentCrossBtn'><i class='fa fa-times-circle' onclick=deleteAttachment('". $requestAttachment['seq'] ."','" . $requestAttachment['attachmentfilename'] . "','". $requestAttachment['requestseq'] ."')></i></span>";
                 $attachmentHtml .= "<div class='row text-center'>";
                 // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
-                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='attachments/project/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
+                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='".StringConstants::REQUEST_ATTACHMENTS_FOLDER_PATH . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
                 $attachmentHtml .= "<div id='attachmentTitle".$requestAttachment['seq']."' class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
                 $attachmentHtml .= "<div class='col-lg-12'>" . DateUtil::convertDateToFormatWithTimeZone($requestAttachment['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</div>";
                 $attachmentHtml .= "</div></div>";

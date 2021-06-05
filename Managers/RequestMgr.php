@@ -244,8 +244,8 @@ class RequestMgr{
 		$arr = array();
 		foreach($rows as $row){
 			$row["requests.department"] = RequestDepartments::getValue($row['department']);
-			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
-			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
+			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "m-d-Y h:i:s A",$loggedInUserTimeZone);
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y h:i:s A",$loggedInUserTimeZone);
 			$row["requests.lastmodifiedon"] = $lastModifiedOn;
 			$row["requests.priority"] = RequestPriorityTypes::getValue($row['priority']);
 			$row["requests.iscompleted"] = $row['iscompleted'] == 1 ? 1 : 0 ;
@@ -257,7 +257,6 @@ class RequestMgr{
 			// $row['requests.seq'] = $row['seq'];
 			$row['requests.title'] = $row['title'];
 			$row['requests.code'] = $row['code'];
-			$row['requests.lastmodifiedon'] = $row['lastmodifiedon'];
 			array_push($arr,$row);
 		}
 		return $arr;
@@ -730,7 +729,7 @@ class RequestMgr{
 							$requestSpecValue = $specJsonArr[$key];
 						}
 					}
-					 $specArr[preg_replace('/\s+/', '_',strtoupper($value['title']))] = $requestSpecValue;
+					$specArr[preg_replace('/\s+/', '_',strtoupper($value['title']))] = $requestSpecValue;
 				}
 			}
 			$keys = array_keys( $requestTemp );
@@ -754,12 +753,12 @@ class RequestMgr{
 		return $dataForExport;
 	}
 	public function findByDepartmentsForRequestsDueInNextWeekForManager($departments,$userSeq){ // CronRequestDueDateInNextWeekOnFriday for manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.duedate > '" . date('Y-m-d') . "'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('".$departments."') AND requests.duedate > '".date('Y-m-d')."' AND (requests.assignedby = " . $userSeq . " OR requests.assignedby IS NULL)";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
 	public function findByDepartmentsForRequestsPassedDueInLastWeekForManager($departments,$userSeq){ // CronRequestPassedDueDateInNextWeekOnFriday for manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.duedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('".$departments."') AND requests.duedate < '".date('Y-m-d')."' AND (requests.assignedby = " . $userSeq . " OR requests.assignedby IS NULL)";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
@@ -779,7 +778,7 @@ class RequestMgr{
 		return $requests;
 	}
 	public function findRequestsAssigneeDueDateInNextWeekForManager($departments,$userSeq){ //CronRequestAssigneeDueDateInNextWeekOnFriday for Manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.assigneeduedate > '" . date("Y-m-d") . "' AND requests.assigneeduedate <= '".date('Y-m-d',strtotime('7 days'))."'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('". $departments ."') AND (requests.assignedby IS NULL OR requests.assignedby = " . $userSeq . ") AND requests.assigneeduedate > '" . date("Y-m-d") . "' AND requests.assigneeduedate <= '".date('Y-m-d',strtotime('7 days'))."'";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
@@ -789,7 +788,7 @@ class RequestMgr{
 		return $requests;
 	}
 	public function findRequestsAssigneeDueDatePassedInLastWeekForManager($departments,$userSeq){ // CronRequestAssigneeDueDateInLastWeekOnFriday for Manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.assigneeduedate < '" . date("Y-m-d") . "'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('". $departments ."') AND (requests.assignedby IS NULL OR requests.assignedby = " . $userSeq . ") AND requests.assigneeduedate < '" . date("Y-m-d") . "'";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
@@ -813,6 +812,9 @@ class RequestMgr{
 			}
 		}
 		return $arr;
+	}
+	public function updateByAttribute($attr,$condition){
+		self::$dataStore->updateByAttributes($attr,$condition);
 	}
 }
 ?>

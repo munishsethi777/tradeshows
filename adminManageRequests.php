@@ -349,7 +349,7 @@ div#myDropZone {
 											<div class="tab-content">
 												<div role="tabpanel" id="tab-1" class="tab-pane active">
 													<textarea id="commentBox" class="form-control" name="commentbox" ></textarea>
-													<button id="saveRequestLogComments" type="button" class="btn btn-primary m-t-sm" disabled>Save</button>
+													<button id="saveRequestLogComments" type="button" class="btn btn-primary m-t-sm" disabled onclick="saveComment(this)">Save</button>
 													<div id="loadComments"></div>
 													<!-- <button id="commentCancelBtn" type="button" class="btn btn-light">Cancel</button> -->
 												</div>
@@ -446,7 +446,7 @@ const requestAttachmentDropzone = new Dropzone('#requestAttachmentDropzoneForm',
 	init : function(){
 		this.on("success", function(file, responseJson) {
 		   var response = JSON.parse(responseJson);
-		   $("#attachmentsRow").append(response.data);
+		   $("#attachmentsRow").prepend(response.data);
         });
 		this.on("processing", function(){
 			this.options.autoProcessQueue = true;

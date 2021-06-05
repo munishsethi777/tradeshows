@@ -8,18 +8,6 @@ $(document).ready(()=>{
             //setDuration();
         }
     });
-    $("#saveRequestLogComments").click(()=>{
-        var requestSeq = $("#seq").val();
-        var loggedInUserSeq = $("#loggedInUserSeq").val();
-        var comment = $("#commentBox").val().trim();
-        if(comment != ''){
-            $.getJSON("Actions/RequestAction.php?call=saveComment&requestSeq="+requestSeq+"&loggedInUserSeq="+loggedInUserSeq+"&comment="+comment,(response)=>{
-                $('#loadComments').prepend(response.data.requestLogCommentsHtml);
-                $("#saveRequestLogComments").prop('disabled','true');
-                $("#commentBox").val("");
-            });  
-        }
-    });
     $("#commentBox").keyup(()=>{
         var comment = $("#commentBox").val().trim();
         if(comment == ''){
@@ -41,7 +29,21 @@ $(document).ready(()=>{
     });
     
 });
-
+const saveComment = (btn)=>{
+    var requestSeq = $("#seq").val();
+    var loggedInUserSeq = $("#loggedInUserSeq").val();
+    var comment = $("#commentBox").val().trim();
+    var l = Ladda.create(btn);
+    if(comment != ''){
+        l.start();
+        $.getJSON("Actions/RequestAction.php?call=saveComment&requestSeq="+requestSeq+"&loggedInUserSeq="+loggedInUserSeq+"&comment="+comment,(response)=>{
+            $('#loadComments').prepend(response.data.requestLogCommentsHtml);
+            $("#saveRequestLogComments").prop('disabled','true');
+            $("#commentBox").val("");
+            l.stop();
+        });  
+    }
+}
 function populateRequestTypes(data){
     $("#requesttypeseq").empty();
     $("#requesttypeseq").append("<option value=''>Select any</option>");
@@ -242,9 +244,9 @@ const saveRequest = (btn) => {
                     }else{
                         toastr.error(responseObj.message,'Failed');
                     }
+                    loadReportingData('request_management_');
+                    l.stop();
         });
-        loadReportingData('request_management_');
-        l.stop();
         return true;
     }else{
         if(!checkValidity){
