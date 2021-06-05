@@ -8,7 +8,7 @@
     require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/RequestType.php");
     require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
     require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestSpecsFieldMgr.php");
-    
+    require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
     $userMgr = UserMgr::getInstance();
     $sessionUtil = SessionUtil::getInstance();
     $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
