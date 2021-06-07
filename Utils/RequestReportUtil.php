@@ -81,7 +81,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | New Project Created";
+            $subject = StringConstants::NEW_REQUEST_CREATED;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -123,7 +123,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | Project Assigned To";
+            $subject = StringConstants::REQUEST_ASSIGNED_TO;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -173,7 +173,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | Project Status Changed";
+            $subject = StringConstants::REQUEST_STATUS_CHANGED;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -221,7 +221,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | Comment Added On Project";
+            $subject = StringConstants::COMMENT_ADDED_ON_REQUEST;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -268,7 +268,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | File Added On Project";
+            $subject = StringConstants::FILE_ADDED_ON_REQUEST;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -312,7 +312,7 @@ class RequestReportUtil
         $content = MailUtil::replacePlaceHolders($phAnValues, $content);
         $html = MailUtil::appendToEmailTemplateContainer($content);
         if(!empty($toEmails)){
-            $subject = "Alpine BI | Project Marked As Completed";
+            $subject = StringConstants::REQUEST_MARKED_AS_COMPLETED;
             $flag = MailUtil::sendSmtpMail($subject, $html, $toEmails, true);
             if($flag){
                 $emaillogMgr = EmailLogMgr::getInstance();
@@ -343,7 +343,7 @@ class RequestReportUtil
             $managerRequests[$user['email']] = $requestMgr->findByDepartmentsForRequestsDueInNextWeekForManager($userDepartments,$user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Due In Next Week";
+        $subject = StringConstants::REQUESTS_DUE_IN_NEXT_WEEK;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsDueInNextWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -375,7 +375,7 @@ class RequestReportUtil
             $employeeRequests[$user['email']] = $requestMgr->findRequestsDueInNextWeekForEmployee($user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Due In Next Week";
+        $subject = StringConstants::REQUESTS_DUE_IN_NEXT_WEEK;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsDueInNextWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -409,7 +409,7 @@ class RequestReportUtil
             $managerRequests[$user['email']] = $requestMgr->findByDepartmentsForRequestsPassedDueInLastWeekForManager($userDepartments,$user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Passed Due In Last Week";
+        $subject = StringConstants::REQUESTS_DUE_PASSED;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsPassedDueInLastWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -441,7 +441,7 @@ class RequestReportUtil
             $employeeRequests[$user['email']] = $requestMgr->findRequestsPassedDueInNextWeekForEmployee($user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Passed Due In Last Week";
+        $subject = StringConstants::REQUESTS_DUE_PASSED;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsPassedDueInLastWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -473,7 +473,7 @@ class RequestReportUtil
             $employeeRequests[$user['email']] = $requestMgr->findRequestsAssigneeDueDateInNextWeekForEmployee($user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Assignee Due In Next Week";
+        $subject = StringConstants::REQUESTS_ASSIGNEE_DUE_DATE_IN_NEXT_WEEK;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsAssigneeDueDateInNextWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -507,7 +507,7 @@ class RequestReportUtil
             $managerRequests[$user['email']] = $requestMgr->findRequestsAssigneeDueDateInNextWeekForManager($userDepartments,$user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Assignee Due In Next Week";
+        $subject = StringConstants::REQUESTS_ASSIGNEE_DUE_DATE_IN_NEXT_WEEK;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsAssigneeDueDateInNextWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -539,7 +539,7 @@ class RequestReportUtil
             $employeeRequests[$user['email']] = $requestMgr->findRequestsAssigneeDueDatePassedInLastWeekForEmployee($user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Assignee Passed Due In Last Week";
+        $subject = StringConstants::REQUESTS_ASSIGNEE_DUE_DATE_PASSED;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsAssigneeDueDatePassedInLastWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
@@ -573,7 +573,7 @@ class RequestReportUtil
             $managerRequests[$user['email']] = $requestMgr->findRequestsAssigneeDueDatePassedInLastWeekForManager($userDepartments,$user['seq']);
             $usersForLog[$user['email']] = array("seq"=>$user['seq'],"email"=>$user['email']);
         }
-        $subject = "Projects Assignee Passed Due In Last Week";
+        $subject = StringConstants::REQUESTS_ASSIGNEE_DUE_DATE_PASSED;
         $phAnValues = array();
         $emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RequestsAssigneeDueDatePassedInLastWeekNotificationTemplate.php";
         $content = file_get_contents($emailTemplatePath);
