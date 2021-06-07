@@ -282,8 +282,8 @@ class RequestMgr{
 				$sql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
 				$countSql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
 			}else if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles)){
-				$sql .= " WHERE requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
-				$countSql .= " where requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
+				$sql .= " WHERE (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .")";
+				$countSql .= " where (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .")";
 			}else if(in_array(Permissions::getName(Permissions::request_management_requester), $userRoles)){
 				$sql .= " where requests.createdby = ". $loggedInUserSeq ;
 				$countSql .= " where requests.createdby = ". $loggedInUserSeq ;
