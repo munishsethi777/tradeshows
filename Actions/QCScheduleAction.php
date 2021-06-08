@@ -8,6 +8,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/QCNotificationsUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
 require_once($ConstantsArray['dbServerUrl'] . "Managers/ReportingDataMgr.php");
+require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/QCScheduleRevision.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/QCScheduleRevisionMgr.php");
 $success = 1;
 $message ="";
 $call = "";
@@ -21,6 +23,7 @@ if(isset($_GET["call"])){
  * @var QCScheduleMgr $qcScheduleMgr
  */
 $qcScheduleMgr = QCScheduleMgr::getInstance();
+$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
 $sessionUtil = SessionUtil::getInstance();
 $reportingDataMgr = ReportingDataMgr::getInstance();
 if($call == "saveQCSchedule"){
@@ -393,6 +396,16 @@ if($call == "showFilterGraph"){
 	}catch(Exception $e){
 		$success = 0;
 		$message = $e->getMessage();
+	}
+}
+if($call == "exportRevisions"){
+	try{
+		$qcSeq = $_REQUEST['qcSeq'];
+		$qcScheduleRevisons = $qcScheduleRevisionMgr->getQCRevisionsByQcSeq($qcSeq);
+		$response = PHPExcelUtil::exportQCSchedules($qcScheduleRevisons,false,"QCScheduleRevision",true);
+	}catch(Exception $e){
+		$message = $e->getMessage();
+		$success = 0;
 	}
 }
 function utf8ize($d) {
