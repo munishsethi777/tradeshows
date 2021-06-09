@@ -753,6 +753,8 @@ class QCScheduleImportUtil
         if (! empty($itemNo)) {
             $itemNoArr = $this->getItemNoArr($itemNo);
         }
+        $poQuantity = $data[$startingIndex++];
+        $sampleQuantity = $data[$startingIndex++];
         $shipDateStr = $data[$startingIndex++];
         $latestShipDateStr = $data[$startingIndex++];
         $readyDate = $data[$startingIndex++];
@@ -810,6 +812,12 @@ class QCScheduleImportUtil
         }
         if (! empty($itemNo)) {
             $qcSchedule->setItemNumbers($itemNo);
+        }
+        if(!empty($poQuantity)){
+            $qcSchedule->setPoQuantity($poQuantity);
+        }
+        if(!empty($sampleQuantity)){
+            $qcSchedule->setSampleQuantity($sampleQuantity);
         }
   
         if (! empty($shipDateStr)) {
