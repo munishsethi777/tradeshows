@@ -53,6 +53,14 @@ if($call == "saveQCSchedule"){
 		$seq = $_REQUEST["seq"];
 		$seqs = $_REQUEST["seqs"];
 		$seqs = explode(",",$seqs);
+		$poQuantity = null;
+		$sampleQuantity = null;
+		if(isset($_REQUEST['poQuantity'])){
+			$poQuantity = $_REQUEST['poQuantity'];
+		}
+		if(isset($_REQUEST['sampleQuantity'])){
+			$sampleQuantity = $_REQUEST['sampleQuantity'];
+		}
 		foreach (array_filter($itemNumbers) as $key=>$itemNumber){
 			$seq = 0;
 			$qcSchedule = new QCSchedule();
@@ -88,6 +96,8 @@ if($call == "saveQCSchedule"){
 			if($seq > 0){
 			    $message = StringConstants::QC_SCHEDULE_UPDATE_SUCCESSFULLY;
 			}
+			$qcSchedule->setPoQuantity($poQuantity);
+			$qcSchedule->setSampleQuantity($sampleQuantity);
 			//$qcSchedule->setSeq($seq);
 			$qcSchedule->setUserSeq($sessionUtil->getUserLoggedInSeq());
 			$qcSchedule->setCreatedOn(new DateTime());
