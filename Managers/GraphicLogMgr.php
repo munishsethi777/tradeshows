@@ -9,6 +9,7 @@ require_once $ConstantsArray['dbServerUrl'] . 'PHPExcel/IOFactory.php';
 require_once $ConstantsArray['dbServerUrl'] . 'Managers/ClassCodeMgr.php';
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/GraphicType.php");
 
 class GraphicLogMgr{
 	private static $graphicLogMgr;
@@ -18,10 +19,12 @@ class GraphicLogMgr{
 	private static $FIELD_COUNT = 30;
 	private static $currentDateWith7daysInterval;
 	private static $timeZone = "Asia/Hong_Kong";
-	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,graphicslogs.* from graphicslogs
+	private static $selectSql = "SELECT createdby.fullname as createdbyfullname,enteredby.fullname as enteredbyfullname,classcode,designedby.fullname as graphicartistfullname,graphicslogs.* from graphicslogs
 								left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 								left join users as createdby on graphicslogs.createdby = createdby.seq
-								left join users as enteredby on graphicslogs.userseq = enteredby.seq";
+								left join users as enteredby on graphicslogs.userseq = enteredby.seq
+	                            left join users as designedby on graphicslogs.graphicartist = designedby.seq";
+	
 	private static $selectCountSql = "SELECT COUNT(graphicslogs.seq) from graphicslogs
 									left join classcodes on graphicslogs.classcodeseq = classcodes.seq 
 									left join users as createdby on graphicslogs.createdby = createdby.seq
@@ -437,7 +440,7 @@ class GraphicLogMgr{
 // 		        $query .= " where users.seq in($myTeamMembersCommaSeparated)";
 // 		    }
 // 	    }
-		$rows = self::$dataStore->executeQuery($query,true);
+		$rows = self::$dataStore->executeQuery($query,true,true);
 		$arr = array();
 		foreach($rows as $row){	
 		    $row["usaofficeentrydate"] = DateUtil::convertDateToFormat($row["usaofficeentrydate"], "Y-m-d", "Y-m-d H:i:s");
@@ -449,6 +452,14 @@ class GraphicLogMgr{
     	    $row["lastmodifiedon"] = $lastModifiedOn;
     	    $row["graphicstatus"] = GraphicStatusType::getValue($row["graphicstatus"]);
     	    $row["tagtype"] = TagType::getValue($row["tagtype"]);
+			$row["graphictype"] = explode(',',$row['graphictype']);
+			$graphicTypeArr = [];
+			if(count($row["graphictype"])){
+				foreach($row["graphictype"] as $graphicType){
+					array_push($graphicTypeArr,GraphicType::getValue($graphicType));
+				}
+			}
+			$row["graphictype"] = implode(", ",$graphicTypeArr);
     	    array_push($arr,$row);		    
 		}
 		$mainArr["Rows"] = $arr;

@@ -170,7 +170,7 @@ class RequestMgr{
 		$request->setRequestStatusSeq($requestStatusSeq);
 		$request->setRequestSpecifications($requestSpecsFieldsFormJson);
 		$request->setCode(null);
-		$request->setTitle(null);
+		$request->setTitle($globalRequestVariable['title']);
 		$request->setDescriptionText(null);
 		$request->setCreatedBy($loggedInUserSeq);
 		$request->setAssignedBy($assignedBy);
@@ -193,10 +193,10 @@ class RequestMgr{
             $request->setIsCompleted($globalRequestVariable["isCompleted"]);
 			$markedCompletedNotification = true;
         }
-        
+        $sendRequestAssignmentNotificationToEmployee = false;
 		if(isset($globalRequestVariable['seq']) && $globalRequestVariable['seq'] != null){
 			$seq = $globalRequestVariable['seq'];
-			$requestCode = $seq . "-" . $requestTypeCode;
+			$requestCode = $requestTypeCode . "-" . $seq;
 			$request->setSeq($seq);
 			$request->setCode($requestCode);
 			$requestLogMgr = RequestLogMgr::getInstance();
@@ -205,7 +205,7 @@ class RequestMgr{
 			$request->setCreatedBy($existingRequest->getCreatedBy());
 			$requestLogMgr->saveUpdatedAttributes($existingRequest,$request,$loggedInUserSeq);
 			if($existingRequest->getAssignedTo() != $request->getAssignedTo()){
-				RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+				$sendRequestAssignmentNotificationToEmployee = true;
 			}
 			if($existingRequest->getRequestStatusSeq() != $request->getRequestStatusSeq()){
 				RequestReportUtil::sendRequestStatusChangeNotificationToRequester($request,$existingRequest);
@@ -217,12 +217,12 @@ class RequestMgr{
 			$request->setCreatedOn($currentDateTime);
 			$request->setCreatedBy($loggedInUserSeq);
 			if( $request->getAssignedTo() != null){
-				RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
+				$sendRequestAssignmentNotificationToEmployee = true;
 			}
 		}
 		$seq = self::$dataStore->save($request);
 		if($requestCode == "" ){// It means new case
-			$requestCode = $seq . "-" . $requestTypeCode;
+			$requestCode = $requestTypeCode . "-" . $seq;
 			$attr = array("code" => $requestCode);
 			$condition = array("seq" => $seq);
 			self::$dataStore->updateByAttributes($attr,$condition);
@@ -231,6 +231,9 @@ class RequestMgr{
 		}
 		if($markedCompletedNotification){
 			RequestReportUtil::sendRequestMarkedAsCompletedNotification($request);
+		}
+		if($sendRequestAssignmentNotificationToEmployee){
+			RequestReportUtil::sendRequestAssignmentNotificationToEmployee($request);
 		}
 		$return = array('seq' => $seq,'requestcode'=>$requestCode,'requesttypeseq'=>$requestTypeSeq);
 		return $return;
@@ -241,8 +244,8 @@ class RequestMgr{
 		$arr = array();
 		foreach($rows as $row){
 			$row["requests.department"] = RequestDepartments::getValue($row['department']);
-			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
-			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y H:i:s",$loggedInUserTimeZone);
+			$row["requests.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"], "Y-m-d H:i:s", "m-d-Y h:i:s A",$loggedInUserTimeZone);
+			$lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y h:i:s A",$loggedInUserTimeZone);
 			$row["requests.lastmodifiedon"] = $lastModifiedOn;
 			$row["requests.priority"] = RequestPriorityTypes::getValue($row['priority']);
 			$row["requests.iscompleted"] = $row['iscompleted'] == 1 ? 1 : 0 ;
@@ -252,8 +255,8 @@ class RequestMgr{
 			$row["requesttypes.title"] = $row['requesttypetitle'];
 			$row['requeststatuses.title'] = $row['requeststatustitle'];
 			// $row['requests.seq'] = $row['seq'];
+			$row['requests.title'] = $row['title'];
 			$row['requests.code'] = $row['code'];
-			$row['requests.lastmodifiedon'] = $row['lastmodifiedon'];
 			array_push($arr,$row);
 		}
 		return $arr;
@@ -279,8 +282,8 @@ class RequestMgr{
 				$sql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
 				$countSql .= " where ((requests.department IN('". $managerDepartments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq . ")";
 			}else if (in_array(Permissions::getName(Permissions::request_management_employee), $userRoles)){
-				$sql .= " WHERE requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
-				$countSql .= " where requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq;
+				$sql .= " WHERE (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .")";
+				$countSql .= " where (requests.assignedto = ". $loggedInUserSeq . " OR requests.createdby = " . $loggedInUserSeq .")";
 			}else if(in_array(Permissions::getName(Permissions::request_management_requester), $userRoles)){
 				$sql .= " where requests.createdby = ". $loggedInUserSeq ;
 				$countSql .= " where requests.createdby = ". $loggedInUserSeq ;
@@ -726,7 +729,7 @@ class RequestMgr{
 							$requestSpecValue = $specJsonArr[$key];
 						}
 					}
-					 $specArr[preg_replace('/\s+/', '_',strtoupper($value['title']))] = $requestSpecValue;
+					$specArr[preg_replace('/\s+/', '_',strtoupper($value['title']))] = $requestSpecValue;
 				}
 			}
 			$keys = array_keys( $requestTemp );
@@ -750,12 +753,12 @@ class RequestMgr{
 		return $dataForExport;
 	}
 	public function findByDepartmentsForRequestsDueInNextWeekForManager($departments,$userSeq){ // CronRequestDueDateInNextWeekOnFriday for manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.duedate > '" . date('Y-m-d') . "'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('".$departments."') AND requests.duedate > '".date('Y-m-d')."' AND (requests.assignedby = " . $userSeq . " OR requests.assignedby IS NULL)";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
 	public function findByDepartmentsForRequestsPassedDueInLastWeekForManager($departments,$userSeq){ // CronRequestPassedDueDateInNextWeekOnFriday for manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.duedate < '" . date("Y-m-d") . "' AND (requests.iscompleted = 0 OR requests.iscompleted IS NULL)";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('".$departments."') AND requests.duedate < '".date('Y-m-d')."' AND (requests.assignedby = " . $userSeq . " OR requests.assignedby IS NULL)";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
@@ -775,7 +778,7 @@ class RequestMgr{
 		return $requests;
 	}
 	public function findRequestsAssigneeDueDateInNextWeekForManager($departments,$userSeq){ //CronRequestAssigneeDueDateInNextWeekOnFriday for Manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.assigneeduedate > '" . date("Y-m-d") . "' AND requests.assigneeduedate <= '".date('Y-m-d',strtotime('7 days'))."'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('". $departments ."') AND (requests.assignedby IS NULL OR requests.assignedby = " . $userSeq . ") AND requests.assigneeduedate > '" . date("Y-m-d") . "' AND requests.assigneeduedate <= '".date('Y-m-d',strtotime('7 days'))."'";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
@@ -785,12 +788,19 @@ class RequestMgr{
 		return $requests;
 	}
 	public function findRequestsAssigneeDueDatePassedInLastWeekForManager($departments,$userSeq){ // CronRequestAssigneeDueDateInLastWeekOnFriday for Manager
-		$sql = self::$selectSqlForGrid . " WHERE (requests.department IN('". $departments ."') AND requests.assignedby IS NULL) OR requests.assignedby = " . $userSeq . " AND requests.assigneeduedate < '" . date("Y-m-d") . "'";
+		$sql = self::$selectSqlForGrid . " WHERE requests.department IN('". $departments ."') AND (requests.assignedby IS NULL OR requests.assignedby = " . $userSeq . ") AND requests.assigneeduedate < '" . date("Y-m-d") . "'";
 		$requests = self::$dataStore->executeQuery($sql,false,true);
 		return $requests;
 	}
 	public function deleteBySeqs($ids) {
+		$requestAttachmentMgr = RequestAttachmentMgr::getInstance();	
+		$attachmentFileNames = $requestAttachmentMgr->getAttachmentFileNamesByRequestSeqs($ids);
 		$flag = self::$dataStore->deleteInList ( $ids );
+		if($flag){
+			foreach($attachmentFileNames as $attachmentFileName ){
+				unlink(StringConstants::REQUEST_ATTACHMENTS_PATH . $attachmentFileName['attachmentfilename']);
+			}
+		}
 		return $flag;
 	}
 	public function getUsersByDepartmentForDD($users,$department){
@@ -802,6 +812,9 @@ class RequestMgr{
 			}
 		}
 		return $arr;
+	}
+	public function updateByAttribute($attr,$condition){
+		self::$dataStore->updateByAttributes($attr,$condition);
 	}
 }
 ?>

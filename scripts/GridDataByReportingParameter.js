@@ -174,7 +174,6 @@ function applyReportingFilter(reportingDataParameter, gridId, currentFiterApplie
     setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey, reportingDataParameter);
 }
 function applyReportingFilterForRequestManagement(reportingDataParameter, gridId, currentFiterAppliedName = "", defaultFilterSelectionUserConfigKey) {
-    var filtergroup = new $.jqx.filter();
     var filterGetGridDataByReportingParameter = "";
     var filter_or_operator = 0;
     var filterCondition = "EQUAL";
@@ -240,12 +239,13 @@ function applyReportingFilterForRequestManagement(reportingDataParameter, gridId
             changeSourceUrl(gridId);
         }
         filterCondition = "NULL";
+        filterValue = "";
         filterType = "stringfilter";
         filterFieldNameArr.push("assignedto.fullname");
         filterGetGridDataByReportingParameter = filtergroup.createfilter(filterType, filterValue, filterCondition);
         filtergroup.addfilter(filter_or_operator, filterGetGridDataByReportingParameter);
         $("#" + gridId).jqxGrid('addfilter', "assignedto.fullname", filtergroup);
         $("#" + gridId).jqxGrid('applyfilters');
-    } 
+    }
     setUserConfigForStickyAnalyticsDiv(defaultFilterSelectionUserConfigKey, reportingDataParameter);
 }

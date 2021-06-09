@@ -26,11 +26,11 @@
             $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $arr = array();
             foreach($rows as $row){
-                $row["requesttypes.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"],"Y-m-d H:i:s","m-d-Y H:i:s",$loggedInUserTimeZone);
+                $row["requesttypes.createdon"] = DateUtil::convertDateToFormatWithTimeZone($row["createdon"],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone);
                 $row["department"] = RequestDepartments::getValue($row['department']);
                 // $row["approvedmanualdueprintdate"] = DateUtil::convertDateToFormat($row["approvedmanualdueprintdate"], "Y-m-d", "Y-m-d H:i:s");
                 // $row["instructionmanuallogstatus"] = InstructionManualLogStatus::getValue($row["instructionmanuallogstatus"]);
-                $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "Y-m-d H:i:s",$loggedInUserTimeZone);
+                $lastModifiedOn = DateUtil::convertDateToFormatWithTimeZone($row["lastmodifiedon"], "Y-m-d H:i:s", "m-d-Y h:i:s A",$loggedInUserTimeZone);
                 $row["requesttypes.lastmodifiedon"] = $lastModifiedOn;
                 array_push($arr,$row);
             }

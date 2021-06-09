@@ -8,6 +8,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestTypeMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestStatusMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestLogMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestMgr.php");
 
 class RequestAttachmentMgr{
 	private static $requestAttachmentMgr;
@@ -44,14 +46,23 @@ class RequestAttachmentMgr{
         $requestAttachment->setCreatedBy($requestAttachmentArr['loggedinuserseq']);
         $requestAttachment->setAttachmentTitle($requestAttachmentArr['attachmenttitle']);
         $id = self::$dataStore->save($requestAttachment);
+        if($id){
+            $requestMgr = RequestMgr::getInstance();
+            $attr = array("lastmodifiedon" => new DateTime());
+			$condition = array("seq" => $requestAttachmentArr['requestseq']);
+            $requestMgr->updateByAttribute($attr,$condition);
+        }
         RequestReportUtil::sendFileAddedOnRequestNotification($requestAttachmentArr['requestseq'],$requestAttachmentArr['attachmenttitle']);
         return $id;
     }
     public function attachmentHtml($requestAttachments){
+        $requestAttachments = array_reverse($requestAttachments);
+        $sessionUtil = SessionUtil::getInstance();
+        $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
         $attachmentHtml = "";
         $i=1;
         foreach($requestAttachments as $requestAttachment){
-            if($requestAttachment['attachmentfilename'] != '' && file_exists($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/".$requestAttachment['attachmentfilename'])){
+            if($requestAttachment['attachmentfilename'] != '' && file_exists(StringConstants::REQUEST_ATTACHMENTS_PATH . $requestAttachment['attachmentfilename'])){
                 $thumbnailType = "fa fa-file";
                 if($requestAttachment['attachmenttype'] == 'image/jpeg'){
                     $thumbnailType = "fa fa-file-image-o";
@@ -68,9 +79,9 @@ class RequestAttachmentMgr{
                 $attachmentHtml .= "<span class='attachmentCrossBtn'><i class='fa fa-times-circle' onclick=deleteAttachment('". $requestAttachment['seq'] ."','" . $requestAttachment['attachmentfilename'] . "','". $requestAttachment['requestseq'] ."')></i></span>";
                 $attachmentHtml .= "<div class='row text-center'>";
                 // $attachmentHtml .= "<div class='col-lg-12 p-5 '><img style='border-radius:8px' width='100%' src='images/requestattachments/" . $requestAttachment['attachmentfilename'] . "' /></div>";
-                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='images/requestattachments/" . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
+                $attachmentHtml .="<div class='col-lg-12 p-5 '><a target='_blank' href='".StringConstants::REQUEST_ATTACHMENTS_FOLDER_PATH . $requestAttachment['attachmentfilename'] ."'><i class='". $thumbnailType ."' style='font-size:25px'></i></a></div>";
                 $attachmentHtml .= "<div id='attachmentTitle".$requestAttachment['seq']."' class='col-lg-12' style='word-wrap:anywhere'>" . $requestAttachment['attachmenttitle'] . "</div>";
-                $attachmentHtml .= "<div class='col-lg-12'>" . $requestAttachment['createdon'] . "</div>";
+                $attachmentHtml .= "<div class='col-lg-12'>" . DateUtil::convertDateToFormatWithTimeZone($requestAttachment['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</div>";
                 $attachmentHtml .= "</div></div>";
                 $i++;
             }
@@ -79,10 +90,15 @@ class RequestAttachmentMgr{
     }
     public function deleteAttachment($attachmentSeq,$attachmentName){
         $return = false;
-        if(unlink($_SERVER['DOCUMENT_ROOT']."/tradeshows/images/requestattachments/$attachmentName")){
+        if(unlink(StringConstants::REQUEST_ATTACHMENTS_PATH . $attachmentName)){
             $return = self::$dataStore->deleteBySeq($attachmentSeq);
         }
         return $return;
+    }
+    public function getAttachmentFileNamesByRequestSeqs($seqs){
+        $sql = "SELECT requestattachments.attachmentfilename FROM `requestattachments` where requestseq IN($seqs)";
+        $attachmentFileNames = self::$dataStore->executeQuery($sql,false,true);
+        return $attachmentFileNames;
     }
 }
 ?>

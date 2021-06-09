@@ -600,7 +600,7 @@ class ExportUtil{
 		->setKeywords("office 2007 openxml php")
 		->setCategory("Report");
 		$alphas = range('A', 'Z');
-		$alphas = ExportUtil::createColumnsArray("AE");
+		$alphas = ExportUtil::createColumnsArray("AF");
 		$count = 1;
 		$i = 0;
 		$top_vertical = PHPExcel_Style_Alignment::VERTICAL_CENTER;
@@ -688,6 +688,10 @@ class ExportUtil{
 		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 		$colName = $alphas[$i++]. $count;
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CONFIRMED P/O SHIP DATE");
+		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
+		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
+		$colName = $alphas[$i++]. $count;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, "CREATED BY");
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
 		self::setCellAligment(self::$VERTICAL,$top_vertical,$sheet,$colName);
 		$colName = $alphas[$i++]. $count;
@@ -850,7 +854,10 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $confirmedPOShipDate);
 			
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->fullname);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->createdbyfullname);
+
+			$colName = $alphas[$i++]. $count;
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->enteredbyfullname);
 				
 			
 			$colName = $alphas[$i++]. $count;
@@ -868,7 +875,7 @@ class ExportUtil{
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getChinaNotes());
 			
 			$colName = $alphas[$i++]. $count;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->getGraphicArtist());
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colName, $graphicLog->graphicartistfullname);
 			
 			$graphicArtistStartDate = $graphicLog->getGraphicArtistStartDate();
 			if(!empty($graphicArtistStartDate)){

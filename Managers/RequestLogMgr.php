@@ -8,6 +8,8 @@
     require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestSpecsFieldMgr.php");
     require_once($ConstantsArray['dbServerUrl'] ."Managers/RequestTypeMgr.php");
     require_once($ConstantsArray['dbServerUrl'] ."Enums/RequestDepartments.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 
     class RequestLogMgr{
         private static $requestLogMgr;
@@ -152,6 +154,7 @@
                 }
                 $query .= " requestlogs.seq > " . $requestLogSeqGreaterThan;
             }
+            $query  = $query . " ORDER BY requestlogs.seq DESC";
             $requestLog = self::$dataStore->executeQuery($query,false,true);
             return $requestLog;
         }
@@ -163,6 +166,8 @@
                 hexdec(substr($hash, 4, 2))); //b
         }
         public function commentsHtml($requestLogComments){
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $commentHtml = "";
             if(!empty($requestLogComments)){
                 foreach($requestLogComments as $requestLogCommentsRow){
@@ -177,7 +182,7 @@
 					$commentHtml .=	"<div class='media-body'>";
                     // $commentHtml .= "<small class='float-right'>5m ago</small>";
                     $commentHtml .= "<strong id='userName" . $requestLogCommentsRow['createdby'] . "'>" . $requestLogCommentsRow['createdbyfullname'] . "</strong> posted a comment. <br>";
-                    $commentHtml .= "<small class='text-muted'>" . $requestLogCommentsRow['createdon'] . "</small>";
+                    $commentHtml .= "<small class='text-muted'>" . DateUtil::convertDateToFormatWithTimeZone($requestLogCommentsRow['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</small>";
 					$commentHtml .= "<p class='m-t-xs'>" . $requestLogCommentsRow['newvalue'] . ".</p>";
                     $commentHtml .= "</div>";
                     $commentHtml .= "</div>";
@@ -187,6 +192,8 @@
             return $commentHtml;
         }
         public function historyLogHtml($requestLogHistory,$specsFieldTypeArr,$isAppendingHistory = false){
+            $sessionUtil = SessionUtil::getInstance();
+            $loggedInUserTimeZone = $sessionUtil->getUserLoggedInTimeZone();
             $requestSpecsFieldMgr = RequestSpecsFieldMgr::getInstance();
             $requestTypeMgr = RequestTypeMgr::getInstance();
             $historyLogHtml = "";
@@ -199,18 +206,6 @@
                 $request = self::$dataStore->executeQuery($query,false,true);
                 $backgroundColor = self::getColor($request[0]['createdby']);
                 $backgroundColor = implode(",",$backgroundColor);
-                if(!$isAppendingHistory){
-                    $historyLogHtml .= "<div class='feed-element'>";
-                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
-                    $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
-                    $historyLogHtml .= "</div>";
-                    $historyLogHtml .= "<div class='media-body'>";
-                    // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
-                    $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
-                    $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $request[0]['createdon'] . "</small>";
-                    $historyLogHtml .= "</div>";
-                    $historyLogHtml .= "</div>";
-                }
                 foreach($requestLogHistory as $requestLogHistoryRow){
                     $backgroundColor = self::getColor($requestLogHistoryRow['createdby']);
                     $backgroundColor = implode(",",$backgroundColor);
@@ -224,7 +219,7 @@
                             $historyLogHtml .= "</div>";
                             $historyLogHtml .= "<div class='media-body'>";
                             $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> changed the <b>" . $specsFieldTypeArr[$requestLogHistoryRow['requestspecfieldname']]['title'] . "</b> <br>";
-                            $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
+                            $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . DateUtil::convertDateToFormatWithTimeZone($requestLogHistoryRow['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</small>";
                             $oldValue = $requestLogHistoryRow['oldvalue'] != null && $requestLogHistoryRow['oldvalue'] != '' ? $requestLogHistoryRow['oldvalue'] : "NA";
                             $newValue = $requestLogHistoryRow['newvalue'] != null && $requestLogHistoryRow['newvalue'] != '' ? $requestLogHistoryRow['newvalue'] : "NA";
                             if($specsFieldTypeArr[$requestLogHistoryRow['requestspecfieldname']]['fieldtype'] == 'textarea' ){
@@ -262,7 +257,7 @@
                             $action = " deleted";
                         }
                         $historyLogHtml .= "<strong id='username'>" . $requestLogHistoryRow['createdbyfullname'] . "</strong> " . $action . " the <b>" . RequestAttributeNameTypes::getValue($requestLogHistoryRow['attributename']) . "</b> <br>";
-                        $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . $requestLogHistoryRow['createdon'] . "</small>";
+                        $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . DateUtil::convertDateToFormatWithTimeZone($requestLogHistoryRow['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</small>";
                         $historyLogHtml .= "<p class='m-t-sm'>";
                         $oldValueName = $requestLogHistoryRow['oldvalue'] != null && $requestLogHistoryRow['oldvalue'] != '' ? $requestLogHistoryRow['oldvalue'] : "NA";
                         $newValueName = $requestLogHistoryRow['newvalue'] != null && $requestLogHistoryRow['newvalue'] != '' ? $requestLogHistoryRow['newvalue'] : "NA";
@@ -317,7 +312,21 @@
                     $historyLogHtml .= "</p>";
                     $historyLogHtml .= "</div>";
                     $historyLogHtml .= "</div>";
-                    $lastUpdatedHistorySeq = $requestLogHistoryRow['seq'];
+                    if($lastUpdatedHistorySeq == null){
+                        $lastUpdatedHistorySeq = $requestLogHistoryRow['seq'];
+                    }
+                }
+                if(!$isAppendingHistory){
+                    $historyLogHtml .= "<div class='feed-element'>";
+                    $historyLogHtml .= "<div class='requestLogCommentsAvatar' style='background:RGB(" . $backgroundColor . "'>";
+                    $historyLogHtml .= "<p>" . self::getUserNameInitials($request[0]['fullname']) . "</p>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "<div class='media-body'>";
+                    // $historyLogHtml .= "<small class='float-right'>5m ago</small>";
+                    $historyLogHtml .= "<strong id='username'>" . $request[0]['fullname'] . "</strong> created the <b>Request</b> <br>";
+                    $historyLogHtml .= "<small class='text-muted' id='createdOnDate'>" . DateUtil::convertDateToFormatWithTimeZone($request[0]['createdon'],"Y-m-d H:i:s","m-d-Y h:i:s A",$loggedInUserTimeZone) . "</small>";
+                    $historyLogHtml .= "</div>";
+                    $historyLogHtml .= "</div>";
                 }
             }
             $historyLog['historyLogHtml'] = $historyLogHtml;

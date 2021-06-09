@@ -14,6 +14,7 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PHPExcelUtils.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BeanReturnDataType.php");
+require_once($ConstantsArray['dbServerUrl'] . "Managers/QCScheduleRevisionMgr.php");
 
 class QCScheduleMgr{
 	private static  $qcScheduleMgr;
@@ -26,13 +27,14 @@ class QCScheduleMgr{
 	private static $currentDate;
 	private static $currentDateWith14daysInterval;
 	private static $currentDateWith10daysInterval;
-	private static $gridSelectSql = "select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.* from qcschedules 
-					left join users on qcschedules.qcuser = users.seq 
-					left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq 
-					left join classcodes on qcschedules.classcodeseq = classcodes.seq 
-					left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 
-					and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) 
-					from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)";
+	private static $gridSelectSql = "select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.*,
+						(SELECT COUNT(qcschedulerevisions.seq) FROM qcschedulerevisions WHERE qcschedulerevisions.qcseq = qcschedules.seq) as revisions from qcschedules
+						left join users on qcschedules.qcuser = users.seq 
+						left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq 
+						left join classcodes on qcschedules.classcodeseq = classcodes.seq 
+						left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 
+						and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) 
+						from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq) ";
 	private static $filterExportSelectSql = "select poinchargeusers.qccode poqccode , qcschedules.seq as scheduleseq,classcode,users.qccode ,responsetype, qcschedules.poinchargeuser,qcschedules.* from qcschedules 
 					left join users on qcschedules.qcuser = users.seq 
 					left join classcodes on qcschedules.classcodeseq = classcodes.seq 
@@ -58,6 +60,11 @@ class QCScheduleMgr{
     }
     
     public function save($qcschedule){
+		if($qcschedule->getSeq()){
+			$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
+			$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcschedule);
+			$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
+		}
     	return self::$dataStore->save($qcschedule);
     }
     
@@ -182,7 +189,9 @@ class QCScheduleMgr{
 		$qcSchedulesOriginals = self::$dataStore->executeQuery($query,false,true);
 		
 		//Updating the schedules after fetching original values above
-		self::$dataStore->updateByAttributesWithBindParams($scheduleArrNewValues,$condition,true);
+		$isSuccessfullyUpdated = self::$dataStore->updateByAttributesWithBindParams($scheduleArrNewValues,$condition,true);
+
+		
 		
 		//Setting these strings after updating the qcschedules above to prevent making bad update sql
 		
@@ -200,7 +209,15 @@ class QCScheduleMgr{
 			$scheduleArrNewValues['responsetype'] = "Pending";
 		}
 		
-		QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedulesOriginals, $scheduleArrNewValues);
+		// QCNotificationsUtil::sendQCBulkUpdateNotification($qcSchedulesOriginals, $scheduleArrNewValues);
+		if($isSuccessfullyUpdated){
+			foreach($qcschedulesArr as $seq){
+				$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
+				$qcSchedule = $this->getBySeq($seq);
+				$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcSchedule);
+				$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
+			}
+		}
 	}
 	
 	public function exportQCSchedules($queryString,$qcscheduleSeqs){
@@ -530,6 +547,10 @@ class QCScheduleMgr{
     					$count = self::$dataStore->updateByAttributes($columnValuePair, $condition, true);
     					if($count){
     						$updateItemCount = $updateItemCount + 1;
+							$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
+							$qcSchedule = $this->getBySeq($seq);
+							$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcSchedule);
+							$qcScheduleRevisionMgr->saveQcScheduleRevisionWithConn($qcScheduleRevision,$conn);
     					}
 					}
 					$rowNos++;

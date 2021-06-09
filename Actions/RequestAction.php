@@ -111,6 +111,7 @@ if($call == "getRequestDataBySeqForEdit"){
 		$response['data']['requestTypeSeq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields = array();
 		$requestFormOtherFields['code'] = $request->getCode();
+		$requestFormOtherFields['title'] = $request->getTitle();
 		$requestFormOtherFields['department'] = $request->getDepartment();
 		$requestFormOtherFields['requesttypeseq'] = $request->getRequestTypeSeq();
 		$requestFormOtherFields['priority'] = $request->getPriority();
@@ -156,9 +157,10 @@ if($call == "saveRequestAttachment"){
 			$date = new DateTime();
 			$currentDate = $date->getTimestamp();
 			$requestAttachmentMgr = RequestAttachmentMgr::getInstance();
-			$uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/tradeshows/images/requestattachments/';
-			$temp = explode(".",$_FILES['file']['name']);
-			$attachmentName = $temp[0] . $currentDate . "." . $temp[1];
+			$uploadDir = StringConstants::REQUEST_ATTACHMENTS_PATH;
+			$fileExtension = strrchr($_FILES['file']['name'],".");
+			$fileNameWithoutExtention = preg_replace("/\.[^.]+$/", "", $_FILES['file']['name']);
+			$attachmentName = $fileNameWithoutExtention . $currentDate . $fileExtension;
 			$attachmentTitle = $_FILES['file']['name'];
 			$uploadFilePath = $uploadDir . $attachmentName;
 			$attachmentBytes = $_FILES['file']['size'];
@@ -172,7 +174,7 @@ if($call == "saveRequestAttachment"){
 				$requestAttachmentArr['attachmenttype'] = $attachmentType;
 				$requestAttachmentArr['loggedinuserseq'] = $loggedInUserSeq;
 				$requestAttachmentArr['loggedinuserseq'] = $loggedInUserSeq;
-				$requestAttachmentArr['createdon'] = date('Y-m-d h:i:s');
+				$requestAttachmentArr['createdon'] = date('Y-m-d H:i:s');
 				$requestAttachmentSeq = $requestAttachmentMgr->save($requestAttachmentArr);
 				$requestAttachmentArr['seq'] = $requestAttachmentSeq;
 				$requestLogArr = array();
@@ -181,7 +183,7 @@ if($call == "saveRequestAttachment"){
 				$requestLogArr['newvalue'] = $attachmentTitle;
 				$requestLogArr['attribute'] = "attachment";
 				$requestLogArr['createdby'] = $loggedInUserSeq;
-				$requestLogArr['createdon'] = date('Y-m-d h:i:s');
+				$requestLogArr['createdon'] = date('Y-m-d H:i:s');
 				$requestLogArr['requesttypeseq'] = $_REQUEST['requesttypeseq'];
 				$requestLogMgr = RequestLogMgr::getInstance();
 				$requestLogSeq = $requestLogMgr->save($requestLogArr);

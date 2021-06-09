@@ -8,18 +8,6 @@ $(document).ready(()=>{
             //setDuration();
         }
     });
-    $("#saveRequestLogComments").click(()=>{
-        var requestSeq = $("#seq").val();
-        var loggedInUserSeq = $("#loggedInUserSeq").val();
-        var comment = $("#commentBox").val().trim();
-        if(comment != ''){
-            $.getJSON("Actions/RequestAction.php?call=saveComment&requestSeq="+requestSeq+"&loggedInUserSeq="+loggedInUserSeq+"&comment="+comment,(response)=>{
-                $('#loadComments').append(response.data.requestLogCommentsHtml);
-                $("#saveRequestLogComments").prop('disabled','true');
-                $("#commentBox").val("");
-            });  
-        }
-    });
     $("#commentBox").keyup(()=>{
         var comment = $("#commentBox").val().trim();
         if(comment == ''){
@@ -41,7 +29,21 @@ $(document).ready(()=>{
     });
     
 });
-
+const saveComment = (btn)=>{
+    var requestSeq = $("#seq").val();
+    var loggedInUserSeq = $("#loggedInUserSeq").val();
+    var comment = $("#commentBox").val().trim();
+    var l = Ladda.create(btn);
+    if(comment != ''){
+        l.start();
+        $.getJSON("Actions/RequestAction.php?call=saveComment&requestSeq="+requestSeq+"&loggedInUserSeq="+loggedInUserSeq+"&comment="+comment,(response)=>{
+            $('#loadComments').prepend(response.data.requestLogCommentsHtml);
+            $("#saveRequestLogComments").prop('disabled','true');
+            $("#commentBox").val("");
+            l.stop();
+        });  
+    }
+}
 function populateRequestTypes(data){
     $("#requesttypeseq").empty();
     $("#requesttypeseq").append("<option value=''>Select any</option>");
@@ -131,6 +133,7 @@ const saveRequest = (btn) => {
         // jsonObj.push(item);
     })
     var requestSpecsFieldsFormJson = JSON.stringify(item);
+    var title = "";
     var department="";
     var requestTypeSeq="";
     var priority="";
@@ -147,6 +150,7 @@ const saveRequest = (btn) => {
     var checkValidity = true;
     var validateInput = "";
     var isCompleted = 0;
+
     
     if(!document.getElementById("duedate").checkValidity()) {
         checkValidity = false;
@@ -155,6 +159,13 @@ const saveRequest = (btn) => {
     if(!document.getElementById("requesttypeseq").checkValidity()) {
         checkValidity = false;
         validateInput = "requesttypeseq";
+    }
+    if(!document.getElementById("title").checkValidity()) {
+        checkValidity = false;
+        validateInput = "title";
+    }
+    if($("#title").val()) {
+        title = $("#title").val();
     }
     if(!document.getElementById("department").checkValidity()) {
         checkValidity = false;
@@ -215,7 +226,7 @@ const saveRequest = (btn) => {
                 + "&estimatedHours=" + estimatedHours + "&isRequiredApprovalFromManager=" + isRequiredApprovalFromManager 
                 + "&isRequiredApprovalFromRequester=" + isRequiredApprovalFromRequester + "&isRequiredApprovalFromRobby=" + isRequiredApprovalFromRobby 
                 + "&approvedByManagerDate=" + approvedByManagerDate + "&approvedByRequesterDate=" + approvedByRequesterDate + "&approvedByRobbyDate=" 
-                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted;
+                + approvedByRobbyDate + "&attachmentfilename=" + attachmentfilename + "&isCompleted=" + isCompleted + "&title=" + title;
         $.get(url,(response)=>{
                     var responseObj = JSON.parse(response);
                     $("#requestFormDiv #code").text(responseObj.data.code);
@@ -233,9 +244,9 @@ const saveRequest = (btn) => {
                     }else{
                         toastr.error(responseObj.message,'Failed');
                     }
+                    loadReportingData('request_management_');
+                    l.stop();
         });
-        loadReportingData('request_management_');
-        l.stop();
         return true;
     }else{
         if(!checkValidity){
@@ -258,8 +269,8 @@ const loadHistory = () => {
     var url = "Actions/RequestAction.php?call=loadHistory&lastUpdatedHistorySeq=" + lastUpdatedHistorySeq + "&requestSeq=" + requestSeq;
 
     $.getJSON(url,(response)=>{
-        $('#loadHistory').append(response.data.historyLogHtml);
-        if(response.data.lastUpdatedHistorySeq != null){
+        if(response.data.lastUpdatedHistorySeq != null && response.data.lastUpdatedHistorySeq > lastUpdatedHistorySeq){
+            $('#loadHistory').prepend(response.data.historyLogHtml);
             $('#lastUpdatedHistorySeq').val(response.data.lastUpdatedHistorySeq);
         }
     });
@@ -270,6 +281,7 @@ function editButtonClick(seq) {
     requestAttachmentDropzone.removeAllFiles(true);
     $("#requestFormDiv #requestcode").text("");
     $("#requestFormDiv #requestSpecsFields").html("");
+    $("#requestFormDiv #title").val("");
     $("#requestFormDiv #department").val("");
     $("#requestFormDiv #requeststatusseq").empty();
     $("#requestFormDiv #requesttypeseq").val("");

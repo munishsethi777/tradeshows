@@ -483,4 +483,13 @@ where userdepartments.departmentseq = 2 and (users.usertype = 'SUPERVISOR' or us
 		$users = self::$userDataStore->executeQuery($sql,false,true);
 		return $users;
 	}
+	public function isUserHasDepartment($departmentSeq,$userSeq){
+		$return = false;
+		$sql = "SELECT seq From userdepartments WHERE departmentseq = ". $departmentSeq ." AND userseq=" . $userSeq;
+		$users = self::$userDataStore->executeQuery($sql,false,true);
+		if($users){
+			$return = true;
+		}
+		return $return;
+	}
 }

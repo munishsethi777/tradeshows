@@ -1,17 +1,24 @@
 <?php
     require_once($ConstantsArray['dbServerUrl'] ."Enums/BasicEnum.php");
     class RequestDepartments extends BasicEnum{
-        const qc_schedules = "QC Schedules";   
-        const graphics_logs = "Graphics Logs";
-        const item_specs = "Item Specs";
+        
+        const accounts = "Accounts";
         const container_schedules= "Container Schedules";
-        const users= "Users";
-        const teams= "Teams";
+        const graphics_logs = "Graphics Logs";
+        const internet_sales = "Internet Sales";
+        const item_specs = "Item Specs";
+        const itdata = "IT/Data";
+        const logistics = "Logistics";
         const manage_customers= "Manage Customers";
-        // const department1 = "Department 1";
-        // const department2 = "Department 2";
-        // const department3 = "Department 3";
         const marketing = "Marketing";
         const product_development = "Product Development";
+        const procurement = "Procurement";
+        const qc_schedules = "QC Schedules";   
+        const quality = "Quality";
+        const teams= "Teams";
+        const users= "Users";
+        const warehouse = "Warehouse";
+        
+        
     }
 ?>

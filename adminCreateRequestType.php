@@ -6,7 +6,15 @@
     require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestStatusMgr.php");
     require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestSpecsFieldMgr.php");
     require_once($ConstantsArray['dbServerUrl'] . "BusinessObjects/RequestType.php");
-
+    require_once($ConstantsArray['dbServerUrl'] . "Utils/SessionUtil.php");
+    require_once($ConstantsArray['dbServerUrl'] . "Managers/RequestSpecsFieldMgr.php");
+    require_once($ConstantsArray['dbServerUrl'] ."Managers/UserMgr.php");
+    $userMgr = UserMgr::getInstance();
+    $sessionUtil = SessionUtil::getInstance();
+    $loggedInUserSeq = $sessionUtil->getUserLoggedInSeq();
+    if(!$userMgr->isUserHasDepartment(11,$loggedInUserSeq)){
+        header("Location:" . StringConstants::WEB_PORTAL_LINK . "dashboardmain.php");
+	}
     $requestType = new RequestType();
     $requestTypeMgr = RequestTypeMgr::getInstance();
     $requestStatusMgr = RequestStatusMgr::getInstance();
@@ -62,7 +70,7 @@
                                     <label class="col-lg-2 col-form-label bg-formLabel">Department</label>
                                     <div class="col-lg-4">
                                         <?php
-                                            $select = DropDownUtils::getRequestDepartments("department", null, $requestType->getDepartment(), true, true);
+                                            $select = DropDownUtils::getRequestDepartments("department", null, $requestType->getDepartment(), true, true,false,false,true);
                                             echo $select;
                                         ?>
                                     </div>

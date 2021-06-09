@@ -57,20 +57,25 @@
                         $arr[$key.'_diff'] = sizeof($earlierCounts) >= 2 ? abs($earlierCounts[0]['count']-$earlierCounts[1]['count']) : "0";
                         $arr[$key.'_percent'] = "";
                         
-                        $i=0;
-                        $earlierCountsNewArray = array();
-                        if(count($earlierCounts) == 0){
-                            $tmpArr = array('x'=> 0,'y'=>0);
-                            array_push($earlierCountsNewArray,$tmpArr);
-                        }else{
-                            foreach ($earlierCounts as $count){
-                                $tmpArr = array('x'=> $i++,'y'=>(int)$count['count']);
+                        if($object != RequestMgr::getInstance()){//Request/Project management does not has graphs supports
+                            //Graph code starts
+                            $i=0;
+                            $earlierCountsNewArray = array();
+                            if(count($earlierCounts) == 0){
+                                $tmpArr = array('x'=> 0,'y'=>0);
                                 array_push($earlierCountsNewArray,$tmpArr);
+                            }else{
+                                foreach ($earlierCounts as $count){
+                                    $tmpArr = array('x'=> $i++,'y'=>(int)$count['count']);
+                                    array_push($earlierCountsNewArray,$tmpArr);
+                                }
+                                array_push($earlierCountsNewArray,array('x'=> $i++,'y'=>(int)$current));
                             }
-                            array_push($earlierCountsNewArray,array('x'=> $i++,'y'=>(int)$current));
+                            $arr[$key.'_thirty_days'] = $earlierCountsNewArray;
+                            //Graph code ends
                         }
-                        //$earlierCountsNewArray = array_reverse($earlierCountsNewArray);
-                        $arr[$key.'_thirty_days'] = $earlierCountsNewArray;
+                        
+                        
                         if(isset($list[1])){
                             if($list[0]['count']>$list[1]['count']){
                                 $arr[$key.'_change_arrow'] = 'fa-level-up';
