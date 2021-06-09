@@ -1,7 +1,7 @@
 CREATE TABLE `qcschedulerevisions` (
-  `id` bigint(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `revisedbyuser` bigint(20) NOT NULL,
   `seq` bigint(20) NOT NULL,
+  `revisedbyuser` bigint(20) NOT NULL,
+  `qcseq` bigint(20) NOT NULL,
   `qc` varchar(50) DEFAULT NULL,
   `po` varchar(50) DEFAULT NULL,
   `potype` varchar(50) DEFAULT NULL,
@@ -40,4 +40,13 @@ CREATE TABLE `qcschedulerevisions` (
   `acmiddleinspectionnotes` varchar(2500) DEFAULT NULL,
   `acfirstinspectionnotes` varchar(2500) DEFAULT NULL,
   `iscompleted` tinyint(4) DEFAULT NULL
-)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `qcschedulerevisions`
+  ADD PRIMARY KEY (`seq`);
+
+
+ALTER TABLE `qcschedulerevisions`
+  MODIFY `seq` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+COMMIT;
