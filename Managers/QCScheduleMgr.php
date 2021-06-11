@@ -1881,4 +1881,32 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 		$QCExportSchedulesAndFileName['fileName'] = $fileName;
 		return $QCExportSchedulesAndFileName;
 	}
+	public function getRejectedQcScheduleSeqs(){
+		$sql = "select qcschedules.seq from qcschedules
+				left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 
+				and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)
+				where responsetype = 'rejected' and year(qcschedulesapproval.respondedon) = year(CURRENT_DATE)";
+		$array = self::$dataStore->executeQuery($sql,true,true);
+		$seqs = array();
+		foreach($array as $arr){
+			array_push($seqs,$arr['seq']);
+		}
+		return $seqs;
+	}
+	public function getAllRejectedQcSchedules(){
+		$seqs = $this->getRejectedQcScheduleSeqs();
+		$seqs = implode(',',$seqs);
+		$sql = "select poincharge.fullname as poinchargeusername, appliedby.fullname as appliedbyuser, respondedby.fullname as respondedbyuser,
+				classcodes.classcode, qcschedules.po, qcschedules.itemnumbers, qcschedules.classcodeseq, qcschedules.qc, qcschedules.poinchargeuser,
+				qcschedulesapproval.appliedon, qcschedulesapproval.respondedbyuserseq, qcschedulesapproval.respondedon,
+				qcschedulesapproval.responsetype, qcschedulesapproval.responsecomments from qcschedulesapproval
+				left join qcschedules on qcschedules.seq = qcschedulesapproval.qcscheduleseq
+				left join classcodes on classcodes.seq = qcschedules.classcodeseq
+				left join users as poincharge on poincharge.seq =  qcschedules.poinchargeuser
+				left join users as appliedby on appliedby.seq = qcschedulesapproval.userseq
+				left join users as respondedby on respondedby.seq = qcschedulesapproval.respondedbyuserseq
+				where qcschedulesapproval.qcscheduleseq in ($seqs)";
+		$rejectedQcsShedules = self::$dataStore->executeQuery($sql,false,true);
+		return $rejectedQcsShedules;
+	}
 }

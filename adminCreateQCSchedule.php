@@ -93,11 +93,11 @@ if($isSessionGeneralUser && !$isSessionSV){
     }else{
         $isCompleted = "";
 	}
-	$poQuantity = '';
-	$sampleQuantity = '';
-	$poQuantity = $qcSchedule->getPoQuantity();
-	$sampleQuantity = $qcSchedule->getSampleQuantity();
  }
+$poQuantity = '';
+$sampleQuantity = '';
+$poQuantity = $qcSchedule->getPoQuantity();
+$sampleQuantity = $qcSchedule->getSampleQuantity();
 ?>
 <!DOCTYPE html>
 <html>

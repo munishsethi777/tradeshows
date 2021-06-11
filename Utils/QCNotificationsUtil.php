@@ -91,6 +91,36 @@ class QCNotificationsUtil{
 	        return null;
 	    }
 	}
+
+	public static function sendRejectedQCApprovalNotification(){
+		$qcScheduleMgr = QCScheduleMgr::getInstance();
+		$userMgr = UserMgr::getInstance();
+		$rejectedQcSchedules = $qcScheduleMgr->getAllRejectedQcSchedules();
+	    $subject = StringConstants::QC_APPROVAL_REJECTED_WEEKLY_NOTIFICATION;
+		$fileName = EmailLogType::QC_REJECTED_APPROVALS_WEEKLY;
+		$excelData = PHPExcelUtil::exportRejectedQCSchedules($rejectedQcSchedules, $subject, true);
+		$attachments = array($fileName=>$excelData);
+		$rolName = QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_rejected_notification_weekly);
+	    $users = $userMgr->getUserssByRoleAndDepartment($rolName, 1);
+		$toEmails = array();
+		$emailTemplatePath = StringConstants::WEB_PORTAL_LINK . "/emailtemplates/RejectedQCScheduleNotificationEmailTemplate.php";
+		$html = file_get_contents($emailTemplatePath);
+		foreach ($users as $user){
+			array_push($toEmails,$user->getEmail());
+		}
+		if(!empty($toEmails)){
+			$bool = MailUtil::sendSmtpMail($subject, $html, $toEmails, true,$attachments);
+			$EmaillogMgr = EmailLogMgr::getInstance();
+			if($bool){
+				foreach ($users as $user){
+					$EmaillogMgr->saveEmailLog(EmailLogType::QC_REJECTED_APPROVALS_WEEKLY,$user->getEmail(),null,$user->getSeq());
+				}
+				
+			}
+			
+		}
+	}
+
 	public static function sendUpcomingInspectionNotification($userType,$users){
 	    $qcScheduleMgr = QCScheduleMgr::getInstance();
 	    $subject = StringConstants::UPCOMING_INSPECTIONS;

@@ -188,4 +188,7 @@ class StringConstants{
 	const REQUEST_UPDATED_SUCCESSFULLY = "Request Updated Successfully";
 	const CUSTOMER_REP_SAVED_SUCCESSFULLY = "Customer Rep Saved Successfully";
 	const CUSTOMER_REP_UPDATE_SUCCESSFULLY = "Customer Rep Updated Successfully";
+
+	// QC Approval Rejected Notifications
+	const QC_APPROVAL_REJECTED_WEEKLY_NOTIFICATION = "Alpine BI Quality | QC Rejected Approvals Weekly";
 }

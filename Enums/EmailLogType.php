@@ -65,4 +65,5 @@ class EmailLogType extends BasicEnum{
     const REQUESTS_PASSED_DUE_IN_LAST_WEEK = "Projects Passed Due In Last Week";
     const REQUESTS_ASSIGNEE_DUE_DATE_IN_NEXT_WEEK = "Projects Assignee Due Date In Next Week";
     const REQUESTS_ASSIGNEE_DUE_DATE_PASSED_IN_LAST_WEEK = "Projects Assignee Due Date Passed In Last Week";
+    const QC_REJECTED_APPROVALS_WEEKLY = "QC Approval Rejected Weekly";
 }

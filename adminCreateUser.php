@@ -515,6 +515,14 @@ $requestDepartments = RequestDepartments::getAll();
 															data-toggle="tooltip" data-placement="left"
 															title="Notify when a Schedule Log is Approved or Rejected"></label>
 														</li>
+														<li><input name="permissions[]" type="checkbox"
+															value="qc_rejected_notification_weekly"
+															<?php echo in_array(QCScheduleNotificationType::getName(QCScheduleNotificationType::qc_rejected_notification_weekly), $userRoles) ?  "checked" : ""?> />
+															<span class="m-l-xs">QC Rejected Notification (Weekly)</span>
+															<label class="fa fa-question-circle"
+															data-toggle="tooltip" data-placement="left"
+															title="Notify when a QC Schedule is Rejected"></label>
+														</li>
 													</ul>
 												</div>
 											</div>
