@@ -529,7 +529,7 @@ class QCScheduleMgr{
 					foreach((array)$qc_properties as $index => $qcschedule){
 						if($qcschedule->getName() == "seq"){
 							$condition["seq"] = $seq;
-						}elseif($qcschedule->getName() == "createdon" || $qcschedule->getName() == "lastmodifiedon"){
+						}elseif($qcschedule->getName() == "createdon"){
 							continue;
 						}else{
 							$val = $qc_methods[$index]->invoke($qc);
