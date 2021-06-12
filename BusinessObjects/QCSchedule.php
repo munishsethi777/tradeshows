@@ -6,7 +6,8 @@ class QCSchedule{
 	$apreadydate, $apfinalinspectiondate, $apmiddleinspectiondate, $apfirstinspectiondate, $approductionstartdate, $apgraphicsreceivedate,
 	$acreadydate, $acfinalinspectiondate, $acmiddleinspectiondate, $acfirstinspectiondate, $acproductionstartdate, $acgraphicsreceivedate, 
 	$notes,$status, $userseq, $createdon, $lastmodifiedon,$classcodeseq,$apmiddleinspectiondatenareason, $apfirstinspectiondatenareason,
-	$acmiddleinspectionnotes,$acfirstinspectionnotes,$iscompleted,$apgraphicsreceivedatenareason,$poinchargeuser;
+	$acmiddleinspectionnotes,$acfirstinspectionnotes,$iscompleted,$apgraphicsreceivedatenareason,$poinchargeuser,
+	$poquantity,$samplequantity;
 	
 	public static $className = "QCSchedule";
 	public static $tableName = "qcschedules";
@@ -253,6 +254,20 @@ class QCSchedule{
 	}
 	public function setPoInchargeUser($poinchargeuser){
 	    $this->poinchargeuser = $poinchargeuser;
+	}
+
+	public function setPoQuantity($val){
+		$this->poquantity = $val;
+	}
+	public function getPoQuantity(){
+		return $this->poquantity;
+	}
+
+	public function setSampleQuantity($val){
+		$this->samplequantity = $val;
+	}
+	public function getSampleQuantity(){
+		return $this->samplequantity;
 	}
 	
 	public function __construct($object = null) {

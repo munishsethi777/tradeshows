@@ -31,6 +31,33 @@ class PHPExcelUtil {
 		ob_end_clean ();
 		$objWriter->save ( 'php://output' );
 	}
+
+	public static function exportRejectedQCSchedules($rejectedQcSchedules, $isEmail = false) {
+		$objPHPExcel = self::cookRejectedQCScheduledPHPExcelHeader();
+		$objPHPExcel = self::loadRejectedQCSchedulesInExcel($rejectedQcSchedules, $objPHPExcel);
+		
+		if($isEmail){
+			ob_start();
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+			$excelOutput = ob_get_contents();
+			ob_end_clean();
+			return $excelOutput;
+		}
+		// der ( 'Content-Type: application/vnd.ms-excel' );
+		$date = new DateTime();
+		$fileName = "Rejected_QC_Schedule".$date->format('Y-m-d H-i-s');
+		header ( "Content-Disposition: attachment;filename=".$fileName.".xls" );
+		header ( 'Cache-Control: max-age=0' );
+		header ( 'Cache-Control: max-age=1' );
+		header ( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' ); // Date in the past
+		header ( 'Last-Modified: ' . gmdate ( 'D, d M Y H:i:s' ) . ' GMT' ); // always modified
+		header ( 'Cache-Control: cache, must-revalidate' ); // HTTP/1.1
+		header ( 'Pragma: public' ); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter ( $objPHPExcel, 'Excel5' );
+		ob_end_clean ();
+		$objWriter->save ( 'php://output' );
+	}
 	
 	public static function exportQCSchedulesBulkUpdate($qcSchedules,$qcScheduleNew,$isEmail=false){
 		$arr = array();
@@ -106,6 +133,12 @@ class PHPExcelUtil {
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $qcSchedule ["itemnumbers"] );
 		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $qcSchedule ["poquantity"] );
+
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $qcSchedule ["samplequantity"] );
+
 			$shipDate = $qcSchedule ["shipdate"];
 			if (! empty ( $shipDate )) {
 				$shipDate = self::getDateStr ( $shipDate );
@@ -299,36 +332,36 @@ class PHPExcelUtil {
 			$objPHPExcel->getActiveSheet()->getStyle ( 'A1:B1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'dff9d8');
 			$objPHPExcel->getActiveSheet()->getStyle ( 'A2:B2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'dff9d8' );
 
-			$objPHPExcel->getActiveSheet()->getStyle ( 'C1:Q1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'C2:Q2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'C1:S1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'C2:S2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'T1:AB1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'T2:AB2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'AC1:AK1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'AC2:AK2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'AL1:AN1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'AL2:AN2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
+			$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:B1' );
+			$objPHPExcel->getActiveSheet()->mergeCells ( 'C1:S1' );
+			$objPHPExcel->getActiveSheet()->mergeCells ( 'T1:AB1' );
+			$objPHPExcel->getActiveSheet()->mergeCells ( 'AC1:AK1' );
+			$objPHPExcel->getActiveSheet()->getStyle('A1:AN1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyle('A1:AN1')->getFont()->setSize(16);
+		}else{
+			$objPHPExcel->setActiveSheetIndex ( 0 );
+			$objPHPExcel->getActiveSheet()->setTitle ( "QCSchedules" );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'A1:Q1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
+			$objPHPExcel->getActiveSheet()->getStyle ( 'A2:Q2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'R1:Z1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'R2:Z2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'AA1:AI1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'AA2:AI2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'AJ1:AL1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
 			$objPHPExcel->getActiveSheet()->getStyle ( 'AJ2:AL2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
-			$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:B1' );
-			$objPHPExcel->getActiveSheet()->mergeCells ( 'C1:Q1' );
+			$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:Q1' );
 			$objPHPExcel->getActiveSheet()->mergeCells ( 'R1:Z1' );
 			$objPHPExcel->getActiveSheet()->mergeCells ( 'AA1:AI1' );
-			$objPHPExcel->getActiveSheet()->getStyle('A1:AK1')->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle('A1:AK1')->getFont()->setSize(16);
-		}else{
-			$objPHPExcel->setActiveSheetIndex ( 0 );
-			$objPHPExcel->getActiveSheet()->setTitle ( "QCSchedules" );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'A1:O1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'A2:O2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'cce6ff' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'P1:X1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'P2:X2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'e6ffcc' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'Y1:AG1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'Y2:AG2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffccdd' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'AH1:AJ1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
-			$objPHPExcel->getActiveSheet()->getStyle ( 'AH2:AJ2' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'ffc2b3' );
-			$objPHPExcel->getActiveSheet()->mergeCells ( 'A1:N1' );
-			$objPHPExcel->getActiveSheet()->mergeCells ( 'P1:X1' );
-			$objPHPExcel->getActiveSheet()->mergeCells ( 'Y1:AG1' );
-			$objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getFont()->setSize(16);
+			$objPHPExcel->getActiveSheet()->getStyle('A1:AL1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyle('A1:AL1')->getFont()->setSize(16);
 		}
 		
 		return $objPHPExcel;
@@ -353,14 +386,14 @@ class PHPExcelUtil {
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 			
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "R1", "Appointment" );
-			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "R1" )->getAlignment ()->applyFromArray ( array (
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "T1", "Appointment" );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "T1" )->getAlignment ()->applyFromArray ( array (
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 			
 			
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "AA1", "Actual" );
-			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "AA1" )->getAlignment ()->applyFromArray ( array (
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "AC1", "Actual" );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "AC1" )->getAlignment ()->applyFromArray ( array (
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 		}else{
@@ -370,14 +403,14 @@ class PHPExcelUtil {
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 			
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "P1", "Appointment" );
-			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "P1" )->getAlignment ()->applyFromArray ( array (
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "R1", "Appointment" );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "R1" )->getAlignment ()->applyFromArray ( array (
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 			
 			
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "Y1", "Actual" );
-			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "Y1" )->getAlignment ()->applyFromArray ( array (
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( "AA1", "Actual" );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->getStyle ( "AA1" )->getAlignment ()->applyFromArray ( array (
 					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
 			) );
 		}
@@ -415,6 +448,12 @@ class PHPExcelUtil {
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Item No" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Po Quantity" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Sample Quantity" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Ship Date" );
@@ -507,6 +546,101 @@ class PHPExcelUtil {
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Completed" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		return $objPHPExcel;
+	}
+	private static function cookRejectedQCScheduledPHPExcelHeader(){
+		$count = 1;
+		$i = 0;
+		$objPHPExcel = new PHPExcel ();
+		$objPHPExcel->getProperties ()->setCreator ( "AlpineBIAdmin" )->setLastModifiedBy ( "AlpineBIAdmin" )->setTitle ( "RejectedQCSchedules" )->setSubject ( "RejectedQCSchedules" )->setDescription ( "RejectedQCSchedules" )->setKeywords ( "office 2007 openxml php" )->setCategory ( "Report" );
+		$count = 1;
+		$i = 0;
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "PO" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Item Number" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Class Code" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "QC" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "PO Incharge" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Applied By" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Applied On" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Responded By" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Responded On" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Status" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		
+		$colName = self::getColName($i ++, $count);
+		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Comments" );
+		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+		return $objPHPExcel;
+	}
+	private static function loadRejectedQCSchedulesInExcel($rejectedQcSchedules, $objPHPExcel){
+		$count = 3;
+		$i = 0;
+		foreach ( $rejectedQcSchedules as $rejectedQcSchedule ) {
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["po"] );
+
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["itemnumbers"] );
+
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["classcodeseq"] );
+			
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["qc"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["poinchargeusername"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["appliedbyuser"] );
+
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["appliedon"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["respondedbyuser"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["respondedon"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["responsetype"] );
+		
+			$colName = self::getColName($i ++, $count);
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["responsecomments"] );
+			
+			$count ++;
+			$i = 0;
+		}
 		return $objPHPExcel;
 	}
 	private static function getDateStr($date){

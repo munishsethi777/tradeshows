@@ -1,0 +1,2 @@
+ALTER TABLE `qcschedulerevisions` ADD `poquantity` BIGINT NULL,
+ADD `samplequantity` BIGINT NULL AFTER `poquantity`;

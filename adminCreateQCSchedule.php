@@ -94,6 +94,10 @@ if($isSessionGeneralUser && !$isSessionSV){
         $isCompleted = "";
 	}
  }
+$poQuantity = '';
+$sampleQuantity = '';
+$poQuantity = $qcSchedule->getPoQuantity();
+$sampleQuantity = $qcSchedule->getSampleQuantity();
 ?>
 <!DOCTYPE html>
 <html>
@@ -213,6 +217,17 @@ if($isSessionGeneralUser && !$isSessionSV){
 	                           <label class="col-lg-2 col-form-label bg-formLabel">Latest Ship Date</label>
 	                        	<div class="col-lg-4">
 	                            	<input type="text" placeholder="Select Date" id="latestshipdate" maxLength="250" value="<?php echo $qcSchedule->getLatestShipDate()?>" name="latestshipdate" class="form-control dateControl" <?php echo isset($fieldStateArr["latestshipdate"])?$fieldStateArr["latestshipdate"]:""?>>
+	                            </div>
+	                        </div>
+							<div class="form-group row">
+	                       		<label class="col-lg-2 col-form-label bg-formLabel">PO Quantity</label>
+	                        	<div class="col-lg-4">
+	                        		<input class="form-control" type="text" value = "<? echo $poQuantity ?>" name="poQuantity">
+	                           </div>
+	                           
+	                           <label class="col-lg-2 col-form-label bg-formLabel">Sample Quantity</label>
+	                        	<div class="col-lg-4">
+	                            	<input class="form-control" type="text" value = "<? echo $sampleQuantity ?>" name="sampleQuantity">
 	                            </div>
 	                        </div>
 	                        

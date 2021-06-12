@@ -8,4 +8,5 @@ class QCScheduleNotificationType extends BasicEnum{
     const qc_planner_report_weekly = "QC Planner Report (Weelky)";
     const qc_approved_rejected_instant = "QC Approved/Rejected (Instant)";
     const qc_bulk_update_log = "QC Bulk Update log (Instant)";
+    const qc_rejected_notification_weekly = "QC Rejected Notification (Weekly)";
 }
