@@ -537,7 +537,11 @@ class BeanDataStore {
 				if ($value instanceof DateTime) {
 					$value = $value->format ( 'Y-m-d H:i:s' );
 				}
-				$attribute_array [] = $key . ' = ' . "'" . $value . "'";
+				if($value == 'NULL'){
+					$attribute_array [] = $key . ' = ' .  $value;	
+				}else{
+					$attribute_array [] = $key . ' = ' . "'" . $value . "'";
+				}
 			}
 			$query = "update " . $this->tableName . " set " . implode ( " , ", $attribute_array );
 			if ($conditionPair != null) {

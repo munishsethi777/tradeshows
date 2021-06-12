@@ -27,8 +27,7 @@ class QCScheduleMgr{
 	private static $currentDate;
 	private static $currentDateWith14daysInterval;
 	private static $currentDateWith10daysInterval;
-	private static $gridSelectSql = "select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.*,
-						(SELECT COUNT(qcschedulerevisions.seq) FROM qcschedulerevisions WHERE qcschedulerevisions.qcseq = qcschedules.seq) as revisions from qcschedules
+	private static $gridSelectSql = "select poinchargeusers.qccode poqccode,classcode,qcschedulesapproval.responsecomments , qcschedulesapproval.seq qcapprovalseq,responsetype, users.qccode , qcschedules.poinchargeuser ,qcschedules.* from qcschedules
 						left join users on qcschedules.qcuser = users.seq 
 						left join users poinchargeusers on qcschedules.poinchargeuser = poinchargeusers.seq 
 						left join classcodes on qcschedules.classcodeseq = classcodes.seq 
@@ -62,7 +61,7 @@ class QCScheduleMgr{
     public function save($qcschedule){
 		if($qcschedule->getSeq()){
 			$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
-			$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcschedule);
+			$qcScheduleRevision = $qcScheduleRevisionMgr->getQcRevisionObjectByQcSchedule($qcschedule);
 			$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
 		}
     	return self::$dataStore->save($qcschedule);
@@ -214,7 +213,7 @@ class QCScheduleMgr{
 			foreach($qcschedulesArr as $seq){
 				$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
 				$qcSchedule = $this->getBySeq($seq);
-				$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcSchedule);
+				$qcScheduleRevision = $qcScheduleRevisionMgr->getQcRevisionObjectByQcSchedule($qcSchedule);
 				$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
 			}
 		}
@@ -530,7 +529,7 @@ class QCScheduleMgr{
 					foreach((array)$qc_properties as $index => $qcschedule){
 						if($qcschedule->getName() == "seq"){
 							$condition["seq"] = $seq;
-						}elseif($qcschedule->getName() == "createdon" || $qcschedule->getName() == "lastmodifiedon"){
+						}elseif($qcschedule->getName() == "createdon"){
 							continue;
 						}else{
 							$val = $qc_methods[$index]->invoke($qc);
@@ -549,7 +548,7 @@ class QCScheduleMgr{
     						$updateItemCount = $updateItemCount + 1;
 							$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
 							$qcSchedule = $this->getBySeq($seq);
-							$qcScheduleRevision = $qcScheduleRevisionMgr->getQCRevisionObjectByQCSchedule($qcSchedule);
+							$qcScheduleRevision = $qcScheduleRevisionMgr->getQcRevisionObjectByQcSchedule($qcSchedule);
 							$qcScheduleRevisionMgr->saveQcScheduleRevisionWithConn($qcScheduleRevision,$conn);
     					}
 					}
@@ -1881,6 +1880,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 		$QCExportSchedulesAndFileName['fileName'] = $fileName;
 		return $QCExportSchedulesAndFileName;
 	}
+
 	public function getRejectedQcScheduleSeqs(){
 		$sql = "select qcschedules.seq from qcschedules
 				left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 

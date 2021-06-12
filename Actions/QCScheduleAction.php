@@ -58,10 +58,10 @@ if($call == "saveQCSchedule"){
 		$seqs = explode(",",$seqs);
 		$poQuantity = null;
 		$sampleQuantity = null;
-		if(isset($_REQUEST['poQuantity'])){
+		if(isset($_REQUEST['poQuantity']) && $_REQUEST['poQuantity'] != ""){
 			$poQuantity = $_REQUEST['poQuantity'];
 		}
-		if(isset($_REQUEST['sampleQuantity'])){
+		if(isset($_REQUEST['sampleQuantity']) && $_REQUEST['sampleQuantity'] != ""){
 			$sampleQuantity = $_REQUEST['sampleQuantity'];
 		}
 		foreach (array_filter($itemNumbers) as $key=>$itemNumber){
@@ -411,7 +411,7 @@ if($call == "showFilterGraph"){
 if($call == "exportRevisions"){
 	try{
 		$qcSeq = $_REQUEST['qcSeq'];
-		$qcScheduleRevisons = $qcScheduleRevisionMgr->getQCRevisionsByQcSeq($qcSeq);
+		$qcScheduleRevisons = $qcScheduleRevisionMgr->getQcRevisionsByQcSeq($qcSeq);
 		$response = PHPExcelUtil::exportQCSchedules($qcScheduleRevisons,false,"QCScheduleRevision",true);
 	}catch(Exception $e){
 		$message = $e->getMessage();

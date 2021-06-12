@@ -4,7 +4,7 @@ class StringConstants{
     //const WEB_PORTAL_LINK = "http://www.alpinebi.com";
     const REQUEST_ATTACHMENTS_PATH = "C:/xampp/htdocs/tradeshows/attachments/project/";
 	const REQUEST_ATTACHMENT_URL = 'http://localhost/tradeshows/attachments/project/';
-
+	const REQUEST_ATTACHMENTS_FOLDER_PATH = "attachments/project/";
 	//REPORTS SUBJECTS STARTS HERE -----------------
 	const UPCOMING_INSPECTION_SCHEDULE = "Alpine BI Quality| Upcoming Inspection Schedules";
 	const UPCOMING_INSPECTIONS = "Alpine BI Quality | Upcoming Inspections";
@@ -44,7 +44,21 @@ class StringConstants{
 	const PROJECT_DUE_LESS_THAN_20_FROM_TODAY_REPORT = "Alpine BI Graphics | Projects Due in less than 20 days";
 	const PROJECT_MISSING_INFO_FROM_CHINA_DAILY = "Alpine BI Graphics | Projects with Missing Info from China Team";
 	const PROJECT_PAST_DUE_IN_MISSING_INFO_FROM_CHINA_REPORT = "Alpine BI Graphics | Projects Past Due with Pending Info from China Team";
-	
+
+	// Request Email notification subjects
+		//instant notifications
+	const NEW_REQUEST_CREATED = "Alpine BI | New Project Created";
+	const REQUEST_ASSIGNED_TO = "Alpine BI | Project Assigned To";
+	const REQUEST_STATUS_CHANGED = "Alpine BI | Project Status Changed";
+	const COMMENT_ADDED_ON_REQUEST = "Alpine BI | Comment Added On Project";
+	const FILE_ADDED_ON_REQUEST = "Alpine BI | File Added On Project";
+	const REQUEST_MARKED_AS_COMPLETED = "Alpine BI | Project Marked As Completed";
+		// weekly notifications
+	const REQUESTS_DUE_IN_NEXT_WEEK = "Alpine BI | Projects Due In Next Week";
+	const REQUESTS_DUE_PASSED = "Alpine BI | Projects Due Passed";
+	const REQUESTS_ASSIGNEE_DUE_DATE_IN_NEXT_WEEK = "Alpine BI | Projects Assignee Due Date In Next Week";
+	const REQUESTS_ASSIGNEE_DUE_DATE_PASSED = "Alpine BI | Projects Assignee Due Date Passed";
+
 	//REPORT NAMES STARTS HERE -----------------
 	const EMPTY_RETURN_REPORT_NAME = "Empty Return Date past Empty LFD Report";
 	const DAILY_SCHEDULE_REPORT_NAME = "Daily Schedule Report";
@@ -160,7 +174,7 @@ class StringConstants{
 	
 	//MAIL UTIL STRING CONSTANT
 	const IS_DEVELOPER_MODE = "1";
-	const DEVELOPER_EMAIL_IDS  = "munishsethi777@gmail.com";
+	const DEVELOPER_EMAIL_IDS  = "mukesh.24065@gmail.com";
 	
 	//ALPINE SPECIAL PROGRAM
 	const ALPINE_PROG_SAVED_SUCCESSFULLY    = "Alpine Program saved successfully.";
@@ -189,6 +203,9 @@ class StringConstants{
 	const CUSTOMER_REP_SAVED_SUCCESSFULLY = "Customer Rep Saved Successfully";
 	const CUSTOMER_REP_UPDATE_SUCCESSFULLY = "Customer Rep Updated Successfully";
 
+
+	const PERMISSIBLE_FILES_FOR_REQUEST_ATTACHMENTS = ".jpeg,.jpg,.png,.gif,.xls,.pdf,.xlsx,.csv,.doc,.docx,.txt";
 	// QC Approval Rejected Notifications
 	const QC_APPROVAL_REJECTED_WEEKLY_NOTIFICATION = "Alpine BI Quality | QC Rejected Approvals Weekly";
+
 }
