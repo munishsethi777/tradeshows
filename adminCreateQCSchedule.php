@@ -6,11 +6,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DropdownUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/PermissionUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/QCScheduleRevisionMgr.php");
 $permissionUtil = PermissionUtil::getInstance();
 $hasQCReadonly = $permissionUtil->hasQCReadonly();
 
 $qcSchedule = new QCSchedule();
 $qcScheduleMgr = QCScheduleMgr::getInstance();
+$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
 $readOnlyPO = "";
 $middleInspectionChk = "";
 $firstInspectionChk = "";
@@ -34,6 +36,7 @@ if($isSessionGeneralUser && !$isSessionSV){
  $approvalChecked = "";
  $isCompleted = "";
  $readOnlyComplete = "readonly";
+ $revisionCount = "";
  $fieldStateArr = array();
  if(isset($_POST["id"])){
  	$seq = $_POST["id"];
@@ -44,6 +47,7 @@ if($isSessionGeneralUser && !$isSessionSV){
  		$fieldStateArr = $qcScheduleAndFieldState["fieldState"];
  	}else{
  		$qcSchedule = $qcScheduleMgr->findBySeq($seq);
+		$revisionCount = $qcScheduleRevisionMgr->getQcRevisionsCountByQcSeq($seq);
  	}
  	$qcSchedule->setItemNumbers($_POST["itemnumbers"]);
  	$itemNumbersArr = explode(",",$_POST["itemnumbers"]);
@@ -424,6 +428,9 @@ $sampleQuantity = $qcSchedule->getSampleQuantity();
 	                           </div>
 	                       		
 	                       	</div>
+							<div class="form-group row">
+								<a href="Actions/QCScheduleAction.php?call=exportRevisions&qcSeq=<?php echo $seqs?>">Download Qc Revisions <sup><?php echo $revisionCount?></sup> </a>
+	                       	</div>   
 	                    </div> 
 	                   
 	                    
@@ -444,9 +451,8 @@ $sampleQuantity = $qcSchedule->getSampleQuantity();
 		                        </div>
 		                    </div>
 	                    </div>
-	                    
 	                   </form>
-                	 </div>           
+                	</div>           
 	         	</div>
 	    	</div>
        	<div class="row">

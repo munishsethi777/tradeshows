@@ -228,10 +228,6 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 		<input type="hidden" id="call" name="call" value="exportPlanner" />
 		<input type="hidden" id="isCompleted" name="isCompleted" value="1" />
 	</form>
-	<form id="exportRevisions" name="exportRevisions" method="post" action="Actions/QCScheduleAction.php">
-		<input type="hidden" id="call" name="call" value="exportRevisions" />
-		<input type="hidden" id="qcSeq" name='qcSeq' />
-	</form>
 	<?include "exportInclude.php"?>
 	<div class="modal inmodal bs-example-modal-lg" id="updateQCScheduleApprovalModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
@@ -704,16 +700,6 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				return '<div title="Incompleted" alt="Incompleted" style="text-align:left;color:red;padding-bottom: 2px; margin-right: 2px; margin-left: 4px; margin-top: 7px;"><i style="font-size:16px" class="fa fa-square-o"></i></div>';
 			}
 		}
-		var revisions = function(row, columnfield, value, defaulthtml, columnproperties) {
-			data = $('#qcscheduleGrid').jqxGrid('getrowdata', row);
-			var isRevision = data["revisions"] > 0 ? true : false;
-			var html = "<div style='text-align: center; margin-top:1px;font-size:12px'>"
-			if (isRevision) {
-				html += "<a title='Revisions' href='javascript:exportRevisions(" + data['seq']+")'>" + data['revisions'] + " Revisions</a>";
-			}
-			html += "</div>";
-			return html;
-		}
 		var columns = [{
 				text: 'id',
 				datafield: 'seq',
@@ -959,14 +945,6 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				datafield: 'responsetype',
 				width: "7%",
 				cellsrenderer: actions
-			},
-			{
-				text: 'Revisions',
-				datafield: 'revisions',
-				width: "5%",
-				sortable: false,
-				filterable: false,
-				cellsrenderer: revisions
 			}
 		]
 
@@ -1123,10 +1101,6 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				{
 					name: 'lastmodifiedon',
 					type: 'date'
-				},
-				{
-					name: 'revisions',
-					type: 'string'
 				}
 			],
 			url: 'Actions/QCScheduleAction.php?call=getAllQCSchedules',
@@ -1569,9 +1543,5 @@ $defaultFilterSelectionReportDataType = $userConfigurationMgr->getConfigurationV
 				}
 			}
 		})
-	}
-	const exportRevisions = (qcSeq) => {
-		$("#exportRevisions #qcSeq").val(qcSeq);
-		$("#exportRevisions").submit();
 	}
 </script>

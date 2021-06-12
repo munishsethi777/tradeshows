@@ -26,12 +26,18 @@
         public function saveQcScheduleRevisionWithConn($qcScheduleRevision,$conn){
             return self::$dataStore->saveObject($qcScheduleRevision,$conn);
         }
-        public function getQCRevisionsByQcSeq($qcSeq){
+        public function getQcRevisionsByQcSeq($qcSeq){
             $sql = self::$filterExportSelectSql . " WHERE qcseq = " . $qcSeq;
             $qcRevisions = self::$dataStore->executeQuery($sql,false,true);
             return $qcRevisions;
         }
-        public function getQCRevisionObjectByQCSchedule($qcSchedule){
+        public function getQcRevisionsCountByQcSeq($qcSeq){
+            $colValuePair = [];
+            $colValuePair['qcseq'] = $qcSeq;
+            $count = self::$dataStore->executeCountQuery($colValuePair);
+            return $count;
+        }
+        public function getQcRevisionObjectByQcSchedule($qcSchedule){
             $sessionUtil = SessionUtil::getInstance();  
             $qcScheduleRevision = new QCScheduleRevision($qcSchedule);
             $qcScheduleRevision->setSeq(null);
