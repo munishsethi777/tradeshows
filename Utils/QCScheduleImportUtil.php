@@ -855,36 +855,52 @@ class QCScheduleImportUtil
             //$messages[] = "Ship Date - $shipDateStr can not be empty";
         }   
         if (! empty($latestShipDateStr)) {
-        	$latestShipDate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
-            if(!$latestShipDate){
-                $messages[] = " Invalid Latest Ship Date";
+            if(!$this->hasNULLString($latestShipDateStr)){
+                $latestShipDate = $this->ConvertToDate($latestShipDateStr,"m/d/y");
+                if(!$latestShipDate){
+                    $messages[] = " Invalid Latest Ship Date";
+                }else{
+                    $qcSchedule->setLatestShipDate($latestShipDate);
+                }
             }else{
-                $qcSchedule->setLatestShipDate($latestShipDate);
+                $qcSchedule->setLatestShipDate($latestShipDateStr);
             }
         }
         
         if (! empty($ap_readyDate)) {
-            $ap_readyDate = $this->convertStrToDate($ap_readyDate);
+            if(!$this->hasNULLString($ap_readyDate)){
+                $ap_readyDate = $this->convertStrToDate($ap_readyDate);
+            }
             $qcSchedule->setAPReadyDate($ap_readyDate);
         }
         if (! empty($ap_finalInspectionDate)) {
-            $ap_finalInspectionDate = $this->convertStrToDate($ap_finalInspectionDate);
+            if(!$this->hasNULLString($ap_finalInspectionDate)){
+                $ap_finalInspectionDate = $this->convertStrToDate($ap_finalInspectionDate);
+            }
             $qcSchedule->setAPFinalInspectionDate($ap_finalInspectionDate);
         }
         if (! empty($ap_middleInspectionDate)){
-           $ap_middleInspectionDate = $this->convertStrToDate($ap_middleInspectionDate);
+            if(!$this->hasNULLString($ap_middleInspectionDate)){
+                $ap_middleInspectionDate = $this->convertStrToDate($ap_middleInspectionDate);
+            }
            $qcSchedule->setAPMiddleInspectionDate($ap_middleInspectionDate);
         }
         if (! empty($ap_firstInpectionDate)) {
-           $ap_firstInpectionDate = $this->convertStrToDate($ap_firstInpectionDate);
+            if(!$this->hasNULLString($ap_firstInpectionDate)){
+                $ap_firstInpectionDate = $this->convertStrToDate($ap_firstInpectionDate);
+            }
            $qcSchedule->setAPFirstInspectionDate($ap_firstInpectionDate);
         }
         if (! empty($ap_productionStartDate)) {
-            $ap_productionStartDate = $this->convertStrToDate($ap_productionStartDate);
+            if(!$this->hasNULLString($ap_productionStartDate)){
+                $ap_productionStartDate = $this->convertStrToDate($ap_productionStartDate);
+            }
             $qcSchedule->setAPProductionStartDate($ap_productionStartDate);
         }
         if (! empty($ap_graphicDateReceive)) {
-            $ap_graphicDateReceive = $this->convertStrToDate($ap_graphicDateReceive);
+            if(!$this->hasNULLString($ap_graphicDateReceive)){
+                $ap_graphicDateReceive = $this->convertStrToDate($ap_graphicDateReceive);
+            }
             $qcSchedule->setAPGraphicsReceiveDate($ap_graphicDateReceive);
         }
         if (! empty($ap_firstInspectionNaReason)) {
@@ -898,41 +914,39 @@ class QCScheduleImportUtil
         }
         
         if (! empty($ac_readyDate)) {
-            $ac_readyDate = $this->convertStrToDate($ac_readyDate);
+            if(!$this->hasNULLString($ac_readyDate)){
+                $ac_readyDate = $this->convertStrToDate($ac_readyDate);
+            }
             $qcSchedule->setACReadyDate($ac_readyDate);
         }
         if (! empty($ac_finalInspectionDate)) {
-            $ac_finalInspectionDate = $this->convertStrToDate($ac_finalInspectionDate);
+            if(!$this->hasNULLString($ac_finalInspectionDate)){
+                $ac_finalInspectionDate = $this->convertStrToDate($ac_finalInspectionDate);
+            }
             $qcSchedule->setACFinalInspectionDate($ac_finalInspectionDate);
         }
         if (! empty($ac_middleInspectionDate)){
-//             if(is_string($ac_middleInspectionDate)){
-//                 $ac_middleInspectionDate = strtolower(str_replace(" ", "", $ac_middleInspectionDate));
-//             }
-//             if($ac_middleInspectionDate != "n/a"){
+            if(!$this->hasNULLString($ac_middleInspectionDate)){
                 $ac_middleInspectionDate = $this->convertStrToDate($ac_middleInspectionDate);
-                $qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
-            //}else{
-                //$qcSchedule->setApMiddleInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
-           // }
+            }
+            $qcSchedule->setACMiddleInspectionDate($ac_middleInspectionDate);
         }
         if (! empty($ac_firstInpectionDate)) {
-//             if(is_string($ac_firstInpectionDate)){
-//                 $ac_firstInpectionDate = strtolower(str_replace(" ", "", $ac_firstInpectionDate));
-//             }
-//             if($ac_firstInpectionDate != "n/a"){
+            if(!$this->hasNULLString($ac_firstInpectionDate)){
                 $ac_firstInpectionDate = $this->convertStrToDate($ac_firstInpectionDate);
-                $qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
-            //}else{
-                //$qcSchedule->setApFirstInspectionDateNaReason(ReasonCodeType::getName(ReasonCodeType::small_quantities));
-            //}
+            }
+            $qcSchedule->setACFirstInspectionDate($ac_firstInpectionDate);
         }
         if (! empty($ac_productionStartDate)) {
-            $ac_productionStartDate = $this->convertStrToDate($ac_productionStartDate);
+            if(!$this->hasNULLString($ac_productionStartDate)){
+                $ac_productionStartDate = $this->convertStrToDate($ac_productionStartDate);
+            }
             $qcSchedule->setACProductionStartDate($ac_productionStartDate);
         }
         if (! empty($ac_graphicDateReceive)) {
-            $ac_graphicDateReceive = $this->convertStrToDate($ac_graphicDateReceive);
+            if(!$this->hasNULLString($ac_graphicDateReceive)){
+                $ac_graphicDateReceive = $this->convertStrToDate($ac_graphicDateReceive);
+            }
             $qcSchedule->setACGraphicsReceiveDate($ac_graphicDateReceive);
         }
 
@@ -967,6 +981,12 @@ class QCScheduleImportUtil
         $importedData["items"] = $itemNoArr;
         $importedData["importingQCObj"] = $qcSchedule;
         return $importedData;
+    }
+    public function hasNULLString($val){
+        if($val == "NULL"){
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -1881,4 +1881,10 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 		$QCExportSchedulesAndFileName['fileName'] = $fileName;
 		return $QCExportSchedulesAndFileName;
 	}
+	public function getAllQCSchedulesByStatus($status){
+		$colValuePair = [];
+		$colValuePair['status'] = $status;
+		$qcSchedules = self::$dataStore->executeConditionQuery($colValuePair);
+		return $qcSchedules;
+	}
 }
