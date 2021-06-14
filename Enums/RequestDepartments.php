@@ -15,6 +15,8 @@
         const procurement = "Procurement";
         const qc_schedules = "QC Schedules";   
         const quality = "Quality";
+        const sales = "Sales";
+        const sales_admin_department = "Sales Admin Dept";
         const teams= "Teams";
         const users= "Users";
         const warehouse = "Warehouse";
