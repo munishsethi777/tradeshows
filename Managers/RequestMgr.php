@@ -694,7 +694,7 @@ class RequestMgr{
 		}
 		$dataForExport = [];
 		foreach($requests as $request){
-			$fullSheetName = $request['requesttypetitle'] . " - " . RequestDepartments::getValue($request['department']);
+			$fullSheetName = preg_replace("/\//"," - ",$request['requesttypetitle']) . " - " . preg_replace("/\//"," - ",RequestDepartments::getValue($request['department']));
 			$sheetName = substr($fullSheetName,0,30);
 			$specJsonArr = json_decode($request['requestspecifications'],true);
 			$headers = '';

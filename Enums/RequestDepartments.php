@@ -7,7 +7,7 @@
         const graphics_logs = "Graphics Logs";
         const internet_sales = "Internet Sales";
         const item_specs = "Item Specs";
-        const itdata = "IT/Data";
+        const itdata = "IT Data";
         const logistics = "Logistics";
         const manage_customers= "Manage Customers";
         const marketing = "Marketing";

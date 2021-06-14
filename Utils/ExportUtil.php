@@ -622,7 +622,7 @@ class ExportUtil{
 		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U".$count)->getAlignment()->applyFromArray(
 		    array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,)
 		    );
-		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("U".$count . ":AE" .$count);
+		$objPHPExcel->setActiveSheetIndex(0)->mergeCells("U".$count . ":AF" .$count);
 		$count = 2;
 		$i = 0;
 		$objPHPExcel->setActiveSheetIndex(0)->getColumnDimension($alphas[$i])->setAutoSize(true);
@@ -964,13 +964,13 @@ class ExportUtil{
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('ffbf80');
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U1:AE1")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U1:AF1")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
 		->setRGB('e6b3b3');
 		$objPHPExcel->getActiveSheet()->setTitle("Graphic Logs");
-		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U2:AE2")
+		$objPHPExcel->setActiveSheetIndex(0)->getStyle("U2:AF2")
 		->getFill()
 		->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
 		->getStartColor()
