@@ -1897,7 +1897,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 		$seqs = $this->getRejectedQcScheduleSeqs();
 		$seqs = implode(',',$seqs);
 		$sql = "select poincharge.fullname as poinchargeusername, appliedby.fullname as appliedbyuser, respondedby.fullname as respondedbyuser,
-				classcodes.classcode, qcschedules.po, qcschedules.itemnumbers, qcschedules.classcodeseq, qcschedules.qc, qcschedules.poinchargeuser,
+				classcodes.classcode, qcschedules.po, qcschedules.itemnumbers, qcschedules.classcodeseq, qcname.fullname as qcname, qcschedules.poinchargeuser,
 				qcschedulesapproval.appliedon, qcschedulesapproval.respondedbyuserseq, qcschedulesapproval.respondedon,
 				qcschedulesapproval.responsetype, qcschedulesapproval.responsecomments from qcschedulesapproval
 				left join qcschedules on qcschedules.seq = qcschedulesapproval.qcscheduleseq
@@ -1905,6 +1905,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 				left join users as poincharge on poincharge.seq =  qcschedules.poinchargeuser
 				left join users as appliedby on appliedby.seq = qcschedulesapproval.userseq
 				left join users as respondedby on respondedby.seq = qcschedulesapproval.respondedbyuserseq
+				left join users as qcname on qcname.seq = qcschedules.qcuser
 				where qcschedulesapproval.qcscheduleseq in ($seqs)";
 		$rejectedQcsShedules = self::$dataStore->executeQuery($sql,false,true);
 		return $rejectedQcsShedules;

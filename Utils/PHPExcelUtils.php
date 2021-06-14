@@ -621,7 +621,7 @@ class PHPExcelUtil {
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["classcode"] );
 			
 			$colName = self::getColName($i ++, $count);
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["qc"] );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["qcname"] );
 		
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["poinchargeusername"] );
