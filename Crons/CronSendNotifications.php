@@ -24,7 +24,7 @@ $allUsers = $userMgr->getAllUsersWithRoles();
 $supervisors = $userMgr->getAllUsersWithRoles(UserType::SUPERVISOR);
 $users = $userMgr->getAllUsersWithRoles(UserType::USER);
 $isDeveloperModeOn = StringConstants::IS_DEVELOPER_MODE == "1";
-QCNotificationsUtil::sendRejectedQCApprovalNotification();
+
 try{
 	if($hours == 17 || $hours == 23 || ($isDeveloperModeOn)){
 		$lastExeDay = getLastExecutionDate(Configuration::$CRON_BACKUP_LAST_EXE);
@@ -148,6 +148,9 @@ try{
             }
             $logger->info("End Daily notifications sent successfully");
         }
+    }
+    if($dayOfWeek == 5 && $hours == 21 || ($isDeveloperModeOn)){
+        QCNotificationsUtil::sendRejectedQCApprovalNotification();
     }
 }catch(Exception $e){
     $msg = "Error during cron - " . $e->getMessage();

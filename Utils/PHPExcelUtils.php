@@ -599,10 +599,16 @@ class PHPExcelUtil {
 		$colName = self::getColName($i ++, $count);
 		$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, "Comments" );
 		$objPHPExcel->setActiveSheetIndex ( 0 )->getColumnDimension ( self::getColName($i) )->setAutoSize ( true );
+
+		$objPHPExcel->setActiveSheetIndex ( 0 );
+		$objPHPExcel->getActiveSheet()->setTitle ( "QC Rejected" );
+		$objPHPExcel->getActiveSheet()->getStyle ( 'A1:K1' )->getFill ()->setFillType ( PHPExcel_Style_Fill::FILL_SOLID )->getStartColor ()->setRGB ( 'f8cbad' );
+		$objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setSize(14);
 		return $objPHPExcel;
 	}
 	private static function loadRejectedQCSchedulesInExcel($rejectedQcSchedules, $objPHPExcel){
-		$count = 3;
+		$count = 2;
 		$i = 0;
 		foreach ( $rejectedQcSchedules as $rejectedQcSchedule ) {
 			$colName = self::getColName($i ++, $count);
@@ -612,7 +618,7 @@ class PHPExcelUtil {
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["itemnumbers"] );
 
 			$colName = self::getColName($i ++, $count);
-			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["classcodeseq"] );
+			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["classcode"] );
 			
 			$colName = self::getColName($i ++, $count);
 			$objPHPExcel->setActiveSheetIndex ( 0 )->setCellValue ( $colName, $rejectedQcSchedule ["qc"] );

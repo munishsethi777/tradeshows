@@ -8,7 +8,7 @@
                     <div style="width:30%;display:inline-table"><img src="http://www.alpinebi.com/images/logo.png" style="width:75%;align: left"></div>
                     <div style="width:65%;text-align:right;display:inline-table"><a href="http://www.alpinebi.com/" style="float: right; color: grey; text-decoration: none;">www.AlpineBI.com</a></div>
                 </div>
-                <h3> This emial consist of the Excel file having all the rejected QC Schedules.</h3>
+                <h3> List of all QC Schedules with status Rejected. </h3>
             </div>
         </div>
     </div>

@@ -1886,7 +1886,7 @@ where qcschedules.acfinalinspectiondate is NULL and (iscompleted != 1 or iscompl
 				left join qcschedulesapproval on qcschedules.seq = qcschedulesapproval.qcscheduleseq 
 				and qcschedulesapproval.seq in (select max(qcschedulesapproval.seq) from qcschedulesapproval GROUP by qcschedulesapproval.qcscheduleseq)
 				where responsetype = 'rejected' and year(qcschedulesapproval.respondedon) = year(CURRENT_DATE)";
-		$array = self::$dataStore->executeQuery($sql,true,true);
+		$array = self::$dataStore->executeQuery($sql,false,true);
 		$seqs = array();
 		foreach($array as $arr){
 			array_push($seqs,$arr['seq']);

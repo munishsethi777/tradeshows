@@ -124,7 +124,8 @@ $isCompleted = "";
                              		?>
 	                            	<input style="display: none" type="text" id="po" maxLength="250" value="" name="po" class="form-control">
 	                            </div>
-	                           
+	                        </div>
+							<div class="form-group row">
 	                           <label class="col-lg-2 col-form-label bg-formLabel">Submit for Approval</label>
 	                        	<div class="col-lg-4">
 	                        		<input type="checkbox" id="isapproval" class="form-control i-checks" name="isapproval"/>
