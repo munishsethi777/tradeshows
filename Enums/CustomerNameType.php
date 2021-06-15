@@ -13,6 +13,7 @@ class CustomerNameType extends BasicEnum{
 	const FRED_MEYER = "AUBUCHON";
 	const GREENSTAR = "AUBUCHON";
 	const HAYNEEDLE = "AUBUCHON";
+	const HOME_HARDWARE = "HOME HARDWARE";
 	const IMPROVEMENTS = "AUBUCHON";
 	const JAVIC = "AUBUCHON";
 	const MEIJER = "AUBUCHON";
