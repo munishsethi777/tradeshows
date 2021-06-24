@@ -59,12 +59,14 @@ class QCScheduleMgr{
     }
     
     public function save($qcschedule){
-		if($qcschedule->getSeq()){
-			$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
-			$qcScheduleRevision = $qcScheduleRevisionMgr->getQcRevisionObjectByQcSchedule($qcschedule);
-			$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
+		$seq = self::$dataStore->save($qcschedule);
+		if(!$qcschedule->getSeq()){
+			$qcschedule->setSeq($seq);
 		}
-    	return self::$dataStore->save($qcschedule);
+		$qcScheduleRevisionMgr = QCScheduleRevisionMgr::getInstance();
+		$qcScheduleRevision = $qcScheduleRevisionMgr->getQcRevisionObjectByQcSchedule($qcschedule);
+		$qcScheduleRevisionMgr->saveQcScheduleRevision($qcScheduleRevision);
+		return $seq;
     }
     
     public function updateOject($conn,$item,$condition){
